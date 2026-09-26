@@ -60,6 +60,16 @@
 - **Brand purple** — skill 10 `--accent-purple:#8B5CF6` vs `_kernel#brand` `#7C3AED`. → align skill 10 to kernel (verify not intentional first).
 - **Fonts** — ✅ RESOLVED (fire 2): real culprit was `CONVENTIONS.md` (Heading/Body reversed vs kernel + skills 10/22), NOT skill 10 (recon mis-attributed). CONVENTIONS.md brand block now points to `#brand`. Lesson: verify recon per-item.
 
+## Fire-6 drift sweep (2026-09-25 — 9 findings, ~5% drift, mostly doc-sync not architectural)
+
+- **Bun** — `CLAUDE.md` "1.2+" vs `CONVENTIONS.md` "1.3" → converge to 1.3. clean-fix.
+- **Opus prompt-cache min** — `CONVENTIONS.md` still lists "Opus 4.7/4.6/4.5" → 4.8 primary (per fire-2 `#model`). clean-fix.
+- **Hono pin** — `CONVENTIONS.md` "v4.12.12+" vs `rules/hono-api.md` "v4.12.x" → unify "v4.12.12+". clean-fix.
+- **Dead/forbidden tech still shown as live** — Resend (README examples), Postiz (CONVENTIONS MCP list :293/:308), Supabase (cf-hyperdrive/cf-rag examples), Twilio (shared-api-pool, no SMS qualifier). Reframe as removed/legacy or qualify (WS-10). SCOPE-CHECK: Resend MCP *as a customer feature* is KEPT (per project CLAUDE.md) — only the send-rail is removed; Twilio voice/WhatsApp OK, SMS/phone-OTP forbidden.
+- **Brand purple** — skill 10 `#8B5CF6` vs kernel `#7C3AED` → verify skill 10 intent, then align. clean-fix (pending verify).
+- **Inngest vs CF Workflows v2** — `CLAUDE.md` "Inngest / Workflows v2" vs `CONVENTIONS.md` "Inngest v4" vs CF-native doctrine (projectsites REMOVED Inngest) → **Brian-decision** (in the question set).
+- CLEAN on versions: Angular 21 · Nx 20+ · Node 22 · TS 5.9 · ESLint 9 · Playwright v1.59+ · Tailwind v4 · Clerk Core 3 · Drizzle v1 — all uniform.
+
 ## Dedup candidates (→ cite `_kernel/standards.md#anchor`)
 
 - `CONVENTIONS.md` — brand hex `#brand`, stack table `#stack`, OWASP list `#owasp2025`, Playwright `#stack`.
