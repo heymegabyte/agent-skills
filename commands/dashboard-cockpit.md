@@ -6,7 +6,7 @@ argument-hint: [dashboard path or feature]
 <!-- <SUBAGENT-STOP>: skip this skill when running inside a subagent. Meta-skills must not leak into spawned subagent contexts. Source: obra/superpowers `using-superpowers` skill. -->
 <SUBAGENT-STOP/>
 
-Upgrade an Angular admin dashboard into a polished compact **black-and-cyan dev-cockpit PWA**. Repeatable — rerun to push density + polish one step further. Doctrine via cross-link, never duplicated: [[angular]] · [[angular]] · [[frontend-stack]] · [[cinematic-ui-patterns]] · [[text-contrast]] · [[agent-selection]] · [[e2e-tdd-organization]] · [[verification-loop]].
+Upgrade an Angular admin dashboard into a polished compact **black-and-cyan dev-cockpit PWA**. Repeatable — rerun to push density + polish one step further. Doctrine via cross-link, never duplicated: [[angular]] · [[angular]] · [[frontend-stack]] · [[cinematic-ui-patterns]] · [[text-contrast]] · [[agent-selection]] · [[e2e-testing]] · [[verification-loop]].
 
 **Purpose** — turn a working Angular admin into a dense, gorgeous, fully-i18n, PWA-packaged developer cockpit with zero full page reloads.
 **When to use** — any Angular dashboard that needs polish, feature-module structure, i18n, PWA, or SPA-navigation hardening; rerun each pass.
@@ -115,7 +115,7 @@ Command palette · keyboard shortcuts · breadcrumbs · density toggle · theme/
 - Sidebar/topbar DOM-identity assertion (same element handle survives navigation).
 - Playwright FAILS the run if any internal nav triggers a full reload.
 
-## Destructive Playwright E2E (homepage-first per [[e2e-tdd-organization]])
+## Destructive Playwright E2E (homepage-first per [[e2e-testing]])
 
 - **Resilience** — rapid-click sidebar links · spam language switcher · navigate while form dirty · submit invalid forms · browser-back during loading · repeated viewport resize · reload on deep routes · simulated API failure / slow network.
 - Assert **zero console errors** + **zero uncaught page errors** + **NO full reload** throughout.

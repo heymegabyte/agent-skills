@@ -126,7 +126,7 @@ When TTFR is the north star, "we'll optimize later" becomes impossible — becau
 - **[[gorgeous-by-default]]** — INP ≤ 100ms (cinematic) pairs with TTFR
 - **[[frontend-stack]]** — SSR/SSG mandatory specifically because of TTFR
 - **[[quality-metrics]]** — Lighthouse perf ≥75 hard gate (should be ≥90)
-- **[[e2e-tdd-organization]]** — Playwright measures TTFR in CI via `page.metrics()`
+- **[[e2e-testing]]** — Playwright measures TTFR in CI via `page.metrics()`
 - Ship as standalone rule? **Y**
 
 ---

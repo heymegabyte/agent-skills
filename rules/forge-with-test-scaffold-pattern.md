@@ -30,7 +30,7 @@ When any `/forge-*` command scaffolds new source code, it MUST also write:
 
 - **E2E spec** (`e2e/<feature>/<name>.spec.ts`) when the output is a Hono route, OAuth
   callback, webhook handler, or any HTTP-reachable surface. Uses real Playwright against
-  a local or PROD URL per `[[e2e-tdd-organization]]`.
+  a local or PROD URL per `[[e2e-testing]]`.
 - **Unit test** (`tests/<feature>/<name>.test.ts` or `<path>.test.ts` co-located) when
   the output is a typed client, utility module, schema transformer, or pure function.
   Uses Vitest 3 + `vi.fn()` — no network calls.
@@ -93,12 +93,12 @@ A new `commands/forge-*.md` is NOT shippable until it satisfies:
 - [ ] Generated test has `describe` label naming both the forge command and the feature
 - [ ] Generated test is runnable RED without the implementation wired
 - [ ] This rule file is cross-linked in the forge command's frontmatter or body
-- [ ] `e2e/FEATURES.md` entry added for any Playwright spec emitted (per `[[e2e-tdd-organization]]`)
+- [ ] `e2e/FEATURES.md` entry added for any Playwright spec emitted (per `[[e2e-testing]]`)
 
 ## Cross-links
 
 - `[[verification-loop]]` — RED before GREEN is mandatory; forge tests are the RED step
-- `[[e2e-tdd-organization]]` — directory layout, hermetic specs, 6-viewport × 3-browser matrix
+- `[[e2e-testing]]` — directory layout, hermetic specs, 6-viewport × 3-browser matrix
 - `[[06-build-and-slice-loop]]` — build slice = source + test; never source-only slice
 - `[[auto-integrate-recs]]` — test scaffolds are never Recs; they always ship inline
 - `[[conditional-ci-gates]]` — CI test run gates on spec presence (hashFiles pattern)

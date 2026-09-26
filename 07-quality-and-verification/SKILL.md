@@ -81,7 +81,7 @@ Any fail = blocker. Fix-forward per `rules/verification-loop.md`.
 - **Planner** — Markdown plan; **Generator** — test code; **Healer** — auto-fix broken selectors (run before manual rewrite)
 - `browser.bind()` for MCP interop; `page.screencast` for video receipts on flaky specs
 
-## Hermetic spec contract (per `rules/e2e-tdd-organization.md`)
+## Hermetic spec contract (per `rules/e2e-testing.md`)
 
 1. Starts at homepage (`/`); navigates via clicks/keyboard
 2. Seeds own data via `_fixtures/`; cleans own data after-each
@@ -104,7 +104,7 @@ Violating any = build fail.
 - New-section AI vision: `e2e/__seen-routes__.json` gates first render of unknown routes
 - Rubric: layout sane / contrast WCAG AA / brand / no slop / ≥9/10 (Claude Sonnet 4.6 or GPT Image 2 vision)
 - Baselines in `e2e/__snapshots__/`; pixelmatch tolerance 0.1% / 0.5% area
-- Per `rules/e2e-visual-inspection.md`
+- Per `rules/e2e-testing.md`
 
 ## Visual regression
 

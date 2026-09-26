@@ -128,6 +128,6 @@ In CI, `lighthouserc.json` enforces scores:
 - **[[gorgeous-by-default]]** — INP ≤ 100ms cinematic gate; motion must not hurt INP
 - **[[frontend-stack]]** — SSR/SSG mandatory; TanStack Start / vite-ssg patterns
 - **[[quality-metrics]]** — Lighthouse perf ≥75 hard gate (TTFR is the underlying reason)
-- **[[e2e-tdd-organization]]** — Playwright `page.metrics()` measures TTFR in CI
+- **[[e2e-testing]]** — Playwright `page.metrics()` measures TTFR in CI
 - **[[cinematic-ui-patterns]]** — scroll-driven animations must not block the main thread
 - **[[image-quality]]** — AVIF/WebP conversion, `fetchpriority`, dimension requirements

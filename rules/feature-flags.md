@@ -76,7 +76,7 @@ Admin UI (`src/pages/admin/feature-flags.tsx`):
 4. **Wire admin row** — every flag auto-appears in `/admin/feature-flags` via seed migration; manual entry only for hot-patch flags post-deploy.
 5. **Document owner** — `owner_email` column = team-member responsible for promotion.
 6. **Full description, not a tweet** — `description` is operator's runbook entry. Covers: (a) what feature does, (b) who sees when enabled, (c) surfaces touched (routes, tables, UI), (d) failure mode when off, (e) one-line acceptance. Minimum 240 chars; cap 1200.
-7. **E2E coverage column** — `e2e_tests` JSON array of spec paths exercising feature against prod URL per `e2e-tdd-organization.md`. Empty array = build fail. Every flag has at least one Playwright spec.
+7. **E2E coverage column** — `e2e_tests` JSON array of spec paths exercising feature against prod URL per `e2e-testing.md`. Empty array = build fail. Every flag has at least one Playwright spec.
 8. **Manual smoke-test column** — `smoke_steps` markdown ordered list a human runs in 2 min post-deploy. Minimum 3 steps.
 
 ## Stages

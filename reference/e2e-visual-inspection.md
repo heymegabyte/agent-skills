@@ -1,6 +1,6 @@
 # E2E Visual Inspection — implementation reference
 
-Sourced on demand by `rules/e2e-visual-inspection.md`.
+Sourced on demand by `rules/e2e-testing.md`.
 
 ## Helper API (`e2e/_helpers/snapshot.ts`)
 

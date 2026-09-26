@@ -1,6 +1,6 @@
 # E2E TDD Organization — Implementation Reference
 
-Sourced on demand by rules/e2e-tdd-organization.md.
+Sourced on demand by rules/e2e-testing.md.
 
 ---
 

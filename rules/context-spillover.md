@@ -38,15 +38,15 @@ For every file edited or feature surface touched:
 ### 3. Test coverage
 
 - Check: sibling spec exists? Updated within same calendar week as code? Exercises the changed path?
-- Missing or stale spec → write/update per `[[e2e-tdd-organization]]` same turn.
-- UI changes → extend `<feature>/visual.spec.ts` with `randomSnapshot` step per `[[e2e-visual-inspection]]`.
+- Missing or stale spec → write/update per `[[e2e-testing]]` same turn.
+- UI changes → extend `<feature>/visual.spec.ts` with `randomSnapshot` step per `[[e2e-testing]]`.
 
 ## Concrete patterns
 
 - **Editing one component** — scan 2-5 siblings; apply consistent brand tokens; add `data-testid` where missing; update CHANGELOG if user-visible.
 - **Adding one API route** — check `docs/<area>.md` mentions it; `e2e/<feature>/<spec>.spec.ts` exercises it; sibling routes follow same Zod-validator + audit-log pattern.
 - **Refactoring a helper** — grep all callsites; update outdated patterns (e.g. manual try/catch the helper now handles); run relevant spec dir.
-- **Writing a new feature** — add row to `e2e/FEATURES.md`; write `docs/<feature>.md`; add CLAUDE.md routes/components mention; add parallel-runner-ready specs per `[[e2e-tdd-organization]]`.
+- **Writing a new feature** — add row to `e2e/FEATURES.md`; write `docs/<feature>.md`; add CLAUDE.md routes/components mention; add parallel-runner-ready specs per `[[e2e-testing]]`.
 
 ## Cost discipline
 

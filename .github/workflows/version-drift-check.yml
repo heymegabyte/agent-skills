@@ -62,7 +62,7 @@ jobs:
             echo "pinned=$CURRENT"
             echo "drift=0"
             echo "threshold=99"
-            echo "fix-loc=rules/e2e-visual-inspection.md"
+            echo "fix-loc=rules/e2e-testing.md"
           } >> "$GITHUB_OUTPUT"
 
       - name: Probe Node LTS
