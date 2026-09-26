@@ -45,15 +45,15 @@
 |----|--------|----------------------|
 | 1  | ✅ done | `bin/collapse-forged-commands.mjs` removed 4,154 pages. Files 4,720→566 (−88%), lines 406,259→92,228 (−77%). Reversible via re-forge. |
 | 2  | 🔄 wip | Fire 2: `CONVENTIONS.md` brand block → cites `#brand` (killed reversed-fonts drift). Next inliners: `07-quality-and-verification/wcag-2-2-2026.md`→`#wcag22`, `12-media-orchestration/image-optimization.md`→`#budget`, CWV soft-targets (`agents/performance-profiler.md`, `rules/quality-metrics.md`)→`#cwv`. |
-| 3  | 🔄 wip | Fire 2: kernel `#model` refreshed Opus 4.7→4.8, defers to `rules/model-routing.md` (already current+cited). Next (need web research + confidence): Capacitor 6-vs-8, PrimeNG-vs-Spartan, React-vs-Angular phrasing, Playwright 1.56→1.59. |
+| 3  | 🔄 wip | Fire 3: **Capacitor 6→8** (web-verified current 8.5.1, conf 0.8) in frontend-stack + angular-nx-monorepo; **Playwright** left v1.59+ (current 1.62.1; `+` covers it); perf-profiler CWV description aligned to house `#cwv`. Next: PrimeNG-vs-Spartan + React-vs-Angular (both context-dependent 'both', not either/or) + WS-2 inliners (image budgets→`#budget`). |
 | 4–14 | queued | See plan above. |
 
 ## Contradiction candidates (UNVERIFIED — verify before acting; recon can be wrong)
 
 - **Frontend default** — `routing-matrix.md` "always React 19 + Vite" vs `CLAUDE.md`/`21-app-foundation` "Angular-preferred". Recent commit trend = Angular-preferred for apps, React for marketing/bolt. → verify + phrase once.
-- **Capacitor version** — `CONVENTIONS.md` "8" vs `CLAUDE.md`/rules "6". → **web-research current stable**, cite, state confidence.
+- **Capacitor** — ✅ RESOLVED (fire 3): web-verified current stable **8.5.1** (npm, Sept 2026); `CONVENTIONS.md` "8" was right, the 4 files' "6" was ~2yr stale. Standardized on **Capacitor 8** in `rules/frontend-stack.md` + `rules/angular-nx-monorepo.md`. Conf 0.8. OPEN: global `~/.claude/CLAUDE.md:100` still says "Capacitor 6" (outside plugin repo/gates — bump later).
 - **PrimeNG vs Spartan** — skill 10 line 129 + `CONVENTIONS.md` (PrimeNG) vs Spartan-only rule vs global CLAUDE.md "PrimeNG (admin)/Spartan (marketing)". → verify authority; likely admin=PrimeNG, marketing=Spartan.
-- **Playwright** — `CLAUDE.md` "v1.56+ agents (v1.59+ MCP)" vs rules "v1.59+". → unify to v1.59+.
+- **Playwright** — ✅ RESOLVED (fire 3): plugin uniformly "v1.59+" (the "1.56" was only in global `~/.claude/CLAUDE.md`). Current stable 1.62.1; "v1.59+" (`+`) already admits it → no file churn. Bump floor when mirrors regenerate (WS-14).
 - **Model IDs** — ✅ RESOLVED (fire 2): kernel `#model` Opus 4.7→4.8, defers to `rules/model-routing.md`. OPEN for Brian: **Fable 5** (`claude-fable-5`) exists in the live env but has no defined role in `rules/model-routing.md` — needs a routing decision (what is Fable 5 for vs Opus 4.8?).
 - **Email** — SES-sole is settled; residual Resend send-rail refs in `README`/`email-templates.md` → prune (WS-10).
 - **Brand purple** — skill 10 `--accent-purple:#8B5CF6` vs `_kernel#brand` `#7C3AED`. → align skill 10 to kernel (verify not intentional first).
@@ -65,6 +65,11 @@
 - `07-quality-and-verification/wcag-2-2-2026.md` — WCAG 9-criteria list → `#wcag22`.
 - `12-media-orchestration/image-optimization.md` — asset budgets → `#budget`.
 - `agents/performance-profiler.md` — CWV targets (softer than kernel) → `#cwv`.
+
+## Web-research log (quantitative choices + confidence)
+
+- **Capacitor** (fire 3, 2026-09-25) — current stable **8.5.1** per npm `@capacitor/core` (8.x is the active major line). Choice: **Capacitor 8**. Confidence **0.8** (npm-verified current; no intentional-"6"-pin note anywhere; CONVENTIONS.md already at 8). Source: npmjs.com/package/@capacitor/core.
+- **Playwright** (fire 3) — current stable **1.62.1** (1.63 landing) per npm + Wikipedia. Choice: keep **v1.59+** (the `+` admits current — no churn across 9 mirror files). Confidence **0.9**. Source: npmjs.com/package/@playwright/test.
 
 ## Operating rules for this loop
 

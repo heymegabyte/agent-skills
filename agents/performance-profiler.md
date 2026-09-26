@@ -1,6 +1,6 @@
 ---
 name: performance-profiler
-description: Runs Lighthouse audits, analyzes Core Web Vitals, suggests specific fixes with file:line references. Targets LCP<=2.5s, CLS<=0.1, INP<=200ms.
+description: Runs Lighthouse audits, analyzes Core Web Vitals, suggests specific fixes with file:line references. Targets the house cinematic bar (LCP<=2.0s, CLS<=0.05, INP<=100ms per _kernel/standards.md#cwv); classifies against Google good/NI/poor bands.
 tools: Read, Bash, Glob, Grep, mcp__playwright__*
 allowed-tools: Read Glob Grep Bash(npx:*) Bash(curl:*) mcp__playwright__*
 disallowedTools: Write, Edit
@@ -30,6 +30,8 @@ You are a web performance profiler. Analyze sites against Core Web Vitals thresh
 7. **Verify** — re-run after fixes to confirm improvement
 
 ## Thresholds
+
+**House target (cinematic, stricter than Google "good" — per `_kernel/standards.md#cwv`):** LCP≤2.0s · CLS≤0.05 · INP≤100ms. Google bands below classify pass/fail.
 
 - **LCP** — <=2.5s (good), <=4.0s (needs improvement), >4.0s (poor)
 - **CLS** — <=0.1 (good), <=0.25 (needs improvement), >0.25 (poor)

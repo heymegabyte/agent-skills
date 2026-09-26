@@ -34,7 +34,7 @@ When Angular is chosen (`frontend-stack.md`), build inside **Nx monorepo running
 - **Spartan UI** (shadcn-for-Angular) — ONE primary kit for admin AND marketing. NO PrimeNG / Material / Taiga / NG-ZORRO / Kendo / Syncfusion / Ionic-as-UI. Mixing kits = build fail.
 - **Tailwind v4** (OxIDE). Brand tokens via CSS custom properties + OKLCH.
 - **esbuild application builder** (default since 17). **SSR via `@angular/ssr` on Cloudflare Workers** behind adapter for SEO-critical + large surfaces.
-- **Ionic 8** + **Capacitor 6** for MOBILE NATIVE SHELLS ONLY. **Tauri 2** for desktop.
+- **Ionic 8** + **Capacitor 8** for MOBILE NATIVE SHELLS ONLY. **Tauri 2** for desktop.
 - **Angular built-in i18n** (`@angular/localize`). NOT ngx-translate, NOT Transloco.
 - **ESLint 9 + Prettier + @angular-eslint + eslint-plugin-rxjs** w/ `"strict": true` + `"noUncheckedIndexedAccess": true` + `"exactOptionalPropertyTypes": true`.
 - **Vitest** via `@analogjs/vitest-angular` (Karma deprecated as of 17). **Playwright** TDD-RED first per `e2e-tdd-organization.md`.
