@@ -2,6 +2,8 @@
 
 Every meaningful durable change is logged here. Future agents read this to understand why the system is shaped as it is.
 
+> **Active re-architecture loop:** see [`_REARCH_LEDGER.md`](_REARCH_LEDGER.md) for the 14-workstream plan + convergence state. Read it FIRST on any skill-library re-architecture fire.
+
 ## Entry Template
 
 ```
@@ -60,3 +62,16 @@ Every meaningful durable change is logged here. Future agents read this to under
 - **Follow-up risk:** Prompts 08-10 may be too broad. Watch for under-use and archive aggressively.
 - **Retrospective marker:** RETROSPECTIVE_DONE session=bootstrap turn=0
 RETROSPECTIVE_DONE session=bootstrap timestamp=2026-06-30T05:14:00Z
+
+## 2026-09-25 — Skill-library re-architecture loop, Phase 1 (forged-command collapse)
+
+- **Trigger phrase:** `/loop` — "re-architect + compress every skill in ~/.claude and ~/.agentskills; fewer files, less space, better for AI"
+- **Classification:** new-capability + drift-fix
+- **Destination:** `bin/collapse-forged-commands.mjs` (new tool), `_REARCH_LEDGER.md` (new steering doc), `skills/*/SKILL.md` (local pointers)
+- **Files changed:** `bin/collapse-forged-commands.mjs`, `_REARCH_LEDGER.md`, `LEDGER.md`; locally (gitignored `skills/`) removed 4,154 forged `commands/*.md` across 8 integrations + added a pointer to each `SKILL.md`
+- **Why this belongs here:** First fire of the re-architecture loop. Established the map (two populations: hand-authored doctrine vs forge-generated API refs), the 14-workstream plan, and executed the largest, safest reduction: 4,720→566 md files (−88%), 406,259→92,228 lines (−77%).
+- **Why this is not overfit:** The removed pages were generated, gitignored, unrouted, and duplicated by live MCP + Context7; the generator + typed clients + SKILL.md inventories remain, so it re-forges losslessly. The collapse tool is idempotent + reusable for any future forged skill.
+- **Repo sync performed:** no (global agent-config only)
+- **Verification:** `git status` clean pre-change; dry-run matched apply (4,154); post: `find skills -name '*.md'` = 8 SKILL.md; rules/ (160) + reference/ (42) + numbered skills untouched; all 8 SKILL.md carry the collapse pointer.
+- **Follow-up risk:** Re-forge overwrites the local SKILL.md pointer (acceptable — it also restores `commands/`). Doctrine workstreams 2–14 still pending; contradiction recon must be verified per-item (fonts flag was a false positive).
+- **Retrospective marker:** RETROSPECTIVE_DONE session=loop-rearch turn=1
