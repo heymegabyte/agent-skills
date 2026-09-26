@@ -47,7 +47,7 @@
 | 2  | 🔄 wip | Fires 2/4: `CONVENTIONS.md` brand→`#brand`; `image-optimization.md` budgets→`#budget` cite; CWV→`#cwv` (perf-profiler). `wcag-2-2-2026.md` KEPT (adds axe-testability mapping — value-add, not dup). Next: incidental brand/budget restatements in non-subject files. |
 | 3  | ✅ done | Fires 3/4/5: Capacitor 6→8; Playwright v1.59+; React/Angular reframed as context-split (routing-matrix + CLAUDE.md); **PrimeNG→Spartan (Brian ruled, 41 files)**; i18n→`@angular/localize` (dashboard-cockpit aligned + claim corrected). Contradiction cluster RESOLVED. Pending (outside plugin repo): global `~/.claude/CLAUDE.md` (React-default, Capacitor 6, i18n). |
 | 14 | ✅ V1 | Mirror single-source generator `bin/sync-mirrors.mjs` (fire 6) — stack-line synced across 31 targets + `--check`. Next: extend to full shared block; wire `--check` into lefthook (needs `/improve-lint` auth). |
-| 4–13 | 🔄 active | Brian (fire 6) chose KEEP loop running + invest in token-efficiency · capability · usability · FOSS; compression MODERATE. Next per that: capability-gap skills, usability entrypoint (llms.txt/INDEX), finish safe dedups. |
+| 4–13 | 🔄 active | Brian (fire 6): KEEP loop + token-efficiency · capability · usability · FOSS; MODERATE compression. Fire 7: ✅ **usability entrypoint** — `llms.txt` refreshed (stale counts 14→23 skills / 18→26 agents fixed; added routing spine + `rules/`/`_kernel`/`_packs` + the omitted skills 15/16/21–28; all links validate-skills-green). `doc-counts` gates README not llms.txt (left README alone). Next: capability-gap skills; finish safe fire-6 dedups (Bun 1.2→1.3, Opus cache-min 4.7→4.8, Hono pin). |
 
 ## Contradiction candidates (UNVERIFIED — verify before acting; recon can be wrong)
 
