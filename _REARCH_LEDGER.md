@@ -105,7 +105,8 @@
 
 Pattern (per pack, verified): merge members → `rules/<pack>.md` (union frontmatter, headings demoted, content preserved) → rewrite inbound `[[links]]` + `_packs`/router/reference refs → `git rm` old → **`rm ~/.claude/data/skills.db && skill-router.py sync-metadata`** (NOT rebuild-index — needs OpenAI key) → `markdownlint-cli2 --fix` → verify routing per member trigger → commit (24-gate).
 
-- ✅ compliance 2→1 (`7376079`) · ✅ payments 2→1 (`b619b1a`) · ✅ **angular 5→1, deduped** (`ed0ccee`). **160→154 rules.**
+- ✅ compliance 2→1 (`7376079`) · ✅ payments 2→1 (`b619b1a`) · ✅ angular 5→1 deduped (`ed0ccee`) · ✅ e2e-testing 2→1 (`d063c0a`). **160→153 rules.**
+- CLEAN COHESIVE MERGES ~EXHAUSTED. Remaining opportunities are thin: email-deliverability + -implementation pair (co-relevant, ~2→1); a couple orphan groupings. NOT worth merging: `quality-metrics` (→ kernel-dedup instead — it contradicts `#cwv` LCP 2.5 vs 2.0), infra (diverse members), design/content/frontend/media (shared members = responsiveness). Realistic floor ≈ 148-150 rules — the library is already well-factored; further merges trade responsiveness.
 - KEY FINDING: packs are MANY-TO-MANY (rules ∈ multiple packs = the routing reuse). Only pack-EXCLUSIVE clusters merge cleanly. angular was 5-exclusive/0-shared (ideal). Remaining exclusive cores: **testing (5 excl; `verification-loop` stays — it's tier-1 core), infra (7 excl; `secret-*` stay — shared w/ backend)**.
 - CANNOT cleanly merge (shared members): frontend/design/content/media (share copy-writing, text-contrast, cinematic-ui-patterns, gorgeous-by-default, image-quality, timeline-authenticity) — merging would duplicate or break reuse = sacrifice responsiveness.
 - CAREFUL: research — `competitor-research` big + cross-linked → leave standalone. Packs with skill members → keep the skill in the pack yaml, merge only rule members. Bounded end-state ≈ 140-145 (not 130 — shared members are more prevalent than first estimated).
