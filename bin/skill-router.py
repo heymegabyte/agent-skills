@@ -44,12 +44,26 @@ PROJECTS_DIR = CLAUDE_DIR / "projects"
 PACKS_DIR = PLUGIN_DIR / "_packs"
 DB_PATH = DATA_DIR / "skills.db"
 
-# OpenAI embedding model
-EMBED_MODEL = "text-embedding-3-small"  # $0.02 / 1M tokens
-EMBED_DIM = 1536
+# Embeddings — Cloudflare Workers AI (free, edge; no OpenAI dependency)
+CF_EMBED_MODEL = "@cf/baai/bge-base-en-v1.5"  # 768-dim, free on Workers AI
+CF_ACCOUNT_ID = "84fa0d1b16ff8086dd958c468ce7fd59"
+EMBED_DIM = 768
 
-# Token budget for preamble routing (aligned to the 1M context window)
-DEFAULT_BUDGET_TOKENS = 1_000_000
+
+# Token budget for preamble routing — provider-aware. Lean on DeepSeek's smaller
+# context window; generous (bounded) on Claude. Override via EMDASH_ROUTER_BUDGET.
+def _default_budget() -> int:
+    env = (os.environ.get("EMDASH_ROUTER_BUDGET") or "").strip()
+    if env.isdigit():
+        return int(env)
+    provider = (os.environ.get("ANTHROPIC_BASE_URL", "")
+                + " " + os.environ.get("ANTHROPIC_MODEL", "")).lower()
+    if "deepseek" in provider:
+        return 35_000    # DeepSeek — lean preamble fits the smaller window
+    return 200_000       # Claude / default — generous but bounded (was 1_000_000)
+
+
+DEFAULT_BUDGET_TOKENS = _default_budget()
 
 # -----------------------------------------------------------------------------
 # Secrets
@@ -166,27 +180,32 @@ def discover_skills() -> list[dict]:
 
 
 # -----------------------------------------------------------------------------
-# Embeddings (OpenAI text-embedding-3-small)
+# Embeddings (Cloudflare Workers AI — @cf/baai/bge-base-en-v1.5, free + edge)
 # -----------------------------------------------------------------------------
-def embed_text(text: str, api_key: str) -> list[float]:
-    """One embedding via OpenAI HTTPS — no SDK dependency."""
-    payload = json.dumps({"input": text[:8000], "model": EMBED_MODEL}).encode()
+def embed_text(text: str, api_key: str | None = None) -> list[float]:
+    """One embedding via Cloudflare Workers AI bge (free, edge) — no SDK dependency.
+    Auth: CF global key (X-Auth-Email + X-Auth-Key); account from env or const."""
+    account = os.environ.get("CF_ACCOUNT_ID") or CF_ACCOUNT_ID
+    cf_key = api_key or get_secret("CLOUDFLARE_API_KEY")
+    cf_email = os.environ.get("CLOUDFLARE_EMAIL") or "blzalewski@gmail.com"
+    payload = json.dumps({"text": [text[:4000]]}).encode()
     req = Request(
-        "https://api.openai.com/v1/embeddings",
+        f"https://api.cloudflare.com/client/v4/accounts/{account}/ai/run/{CF_EMBED_MODEL}",
         data=payload,
         headers={
-            "Authorization": f"Bearer {api_key}",
+            "X-Auth-Email": cf_email,
+            "X-Auth-Key": cf_key or "",
             "Content-Type": "application/json",
         },
         method="POST",
     )
-    with urlopen(req, timeout=15) as r:
+    with urlopen(req, timeout=20) as r:
         data = json.loads(r.read())
-    return data["data"][0]["embedding"]
+    return data["result"]["data"][0]
 
 
 def cosine(a: list[float], b: list[float]) -> float:
-    dot = sum(x * y for x, y in zip(a, b, strict=False))
+    dot = sum(x * y for x, y in zip(a, b))  # no strict= — router runs on py3.9
     na = sum(x * x for x in a) ** 0.5
     nb = sum(y * y for y in b) ** 0.5
     if na == 0 or nb == 0:
@@ -269,9 +288,9 @@ def cmd_sync_metadata():
 
 def cmd_rebuild_index():
     """Generate embeddings for every skill/rule. Idempotent — skips unchanged bodies."""
-    api_key = get_secret("OPENAI_API_KEY")
+    api_key = get_secret("CLOUDFLARE_API_KEY")
     if not api_key:
-        print("ERROR: OPENAI_API_KEY not in get-secret", file=sys.stderr)
+        print("ERROR: CLOUDFLARE_API_KEY not in get-secret (needed for Workers AI embeddings)", file=sys.stderr)
         sys.exit(1)
     conn = db_open()
     skills = discover_skills()
@@ -569,12 +588,12 @@ def match_triggers(prompt: str, conn: sqlite3.Connection) -> list[str]:
 # -----------------------------------------------------------------------------
 def embedding_topk(prompt: str, conn: sqlite3.Connection, k: int = 8) -> list[tuple[str, float]]:
     """Return [(skill_id, similarity)] sorted desc."""
-    api_key = get_secret("OPENAI_API_KEY")
+    api_key = get_secret("CLOUDFLARE_API_KEY")
     if not api_key:
         return []
     try:
         prompt_emb = embed_text(prompt, api_key)
-    except URLError:
+    except (URLError, KeyError, OSError):
         return []
     out = []
     cur = conn.execute("SELECT id, embedding FROM skills WHERE embedding IS NOT NULL")
