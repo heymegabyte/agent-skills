@@ -11,13 +11,13 @@ Upgrade an Angular admin dashboard into a polished compact **black-and-cyan dev-
 **Purpose** — turn a working Angular admin into a dense, gorgeous, fully-i18n, PWA-packaged developer cockpit with zero full page reloads.
 **When to use** — any Angular dashboard that needs polish, feature-module structure, i18n, PWA, or SPA-navigation hardening; rerun each pass.
 **Inputs** — `$ARGUMENTS` (dashboard path or feature); the live project; installed Angular version + package manager + build target.
-**Outputs** — feature-module routes + Spartan UI cockpit + cyan theme tokens + ngx-translate + PWA kit + docs + destructive Playwright E2E.
+**Outputs** — feature-module routes + Spartan UI cockpit + cyan theme tokens + @angular/localize i18n + PWA kit + docs + destructive Playwright E2E.
 **Verification** — project's real gates (`lint`/`typecheck`/`test`/`build`/`e2e`) green; full-reload detection passes; deploy + prod-E2E per [[verification-loop]].
 **Can update ~/.agentskills or ~/.claude?** NO — project work only; global config only via `/self-improve`.
 
 ## Mission
 
-- Angular 21 feature-module architecture · lazy-loaded features · **Spartan UI (shadcn-for-Angular) primary UI** · **ngx-translate** full i18n · **PWA** packaging.
+- Angular 21 feature-module architecture · lazy-loaded features · **Spartan UI (shadcn-for-Angular) primary UI** · **`@angular/localize`** full i18n · **PWA** packaging.
 - Ionic/Capacitor ONLY where they genuinely help (mobile drawer ergonomics / native shells already in repo).
 - Compact black/cyan dev-cockpit styling · strong a11y + perf · destructive Playwright E2E.
 
@@ -86,11 +86,11 @@ Compact dense panels · terminal/devtools inspiration · sharp borders · subtle
 }
 ```
 
-## ngx-translate — zero hardcoded user-facing strings
+## @angular/localize — zero hardcoded user-facing strings (per `rules/angular-nx-monorepo.md`)
 
-- Translate route labels · sidebar · buttons · table headings · forms · validation · empty/error/toast.
-- Shell language switcher swaps locale **without full reload** · persisted preference · fallback lang.
-- Files by feature: `public/i18n/en.json` + per-feature namespaces. English fully populated + 2nd-language scaffold.
+- Mark every user-facing string with `i18n` (templates) / `$localize` (TS): route labels · sidebar · buttons · table headings · forms · validation · empty/error/toast.
+- Extract to `messages.<locale>.xlf`; build ONE bundle per locale. Language switch = navigate to the locale build (`/en/`, `/es/`) — compile-time i18n has no in-app no-reload toggle (accepted tradeoff: build-time key safety + per-locale SEO URLs). Within a locale the cockpit stays no-reload SPA.
+- English fully populated + 2nd-locale scaffold. (In-app toggle without reload needs a runtime lib — out of current policy; raise with Brian if required.)
 
 ## PWA
 
@@ -119,7 +119,7 @@ Command palette · keyboard shortcuts · breadcrumbs · density toggle · theme/
 
 - **Resilience** — rapid-click sidebar links · spam language switcher · navigate while form dirty · submit invalid forms · browser-back during loading · repeated viewport resize · reload on deep routes · simulated API failure / slow network.
 - Assert **zero console errors** + **zero uncaught page errors** + **NO full reload** throughout.
-- Plus groups: **routing** (deep-link, refresh, wildcard 404) · **i18n** (switch persists, no reload, fallback) · **PWA** (manifest, SW, offline shell, update banner) · **UI resilience** (skeletons, empty/error states).
+- Plus groups: **routing** (deep-link, refresh, wildcard 404) · **i18n** (per-locale build served, locale-nav switch, fallback) · **PWA** (manifest, SW, offline shell, update banner) · **UI resilience** (skeletons, empty/error states).
 
 ## Docs
 
@@ -132,7 +132,7 @@ Create: `docs/dashboard-architecture.md` · `docs/dashboard-routing.md` · `docs
 | Router prevents full reloads | | |
 | Shell persists across child routes | | |
 | Feature routes lazy-loaded | | |
-| ngx-translate integrated | | |
+| @angular/localize integrated | | |
 | Spartan UI consistent | | |
 | Black/cyan UI implemented | | |
 | PWA implemented | | |
