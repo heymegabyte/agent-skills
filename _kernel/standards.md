@@ -91,10 +91,11 @@ Tier 3 (AI-heavy >10k LLM/mo): + AI Gateway
 
 ## #model — Model routing
 
-- Opus 4.7 (`claude-opus-4-7`) — architecture, security review, planning, visual QA, completeness, multi-file refactor. 1M context, 128K output. Adaptive thinking only.
-- Sonnet 4.6 (`claude-sonnet-4-6`) — standard implementation, feature, debug, test, simplify, deploy. 1M context, 64K output.
-- Haiku 4.5 (`claude-haiku-4-5`) — format, lint, changelog, content, simple review, hook eval, cost estimate. 200K context, 64K output.
+- Opus 4.8 (`claude-opus-4-8`) — architecture, security review, planning, visual QA, completeness, multi-file refactor. 1M ctx, 128K out. Adaptive thinking only. (4.7/4.6 = fallback chain.)
+- Sonnet 4.6 (`claude-sonnet-4-6`) — implementation, feature, debug, test, simplify, deploy. 1M ctx, 64K out.
+- Haiku 4.5 (`claude-haiku-4-5`) — format, lint, changelog, content, simple review, hook eval, cost estimate. 200K ctx, 64K out.
 - Subagent default: `CLAUDE_CODE_SUBAGENT_MODEL=claude-sonnet-4-6`
+- Full tiers · quota-fallback · effort params · DeepSeek/Workers-AI provider routing → `rules/model-routing.md`
 
 ## #cmdk — Cmd+K mandate
 

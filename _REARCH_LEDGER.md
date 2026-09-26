@@ -44,8 +44,8 @@
 | WS | Status | Result / next action |
 |----|--------|----------------------|
 | 1  | ✅ done | `bin/collapse-forged-commands.mjs` removed 4,154 pages. Files 4,720→566 (−88%), lines 406,259→92,228 (−77%). Reversible via re-forge. |
-| 2  | ⏭ next | Grep inline defs; migrate to `_kernel` anchors. Start w/ `CONVENTIONS.md`, `07-quality-and-verification/wcag-2-2-2026.md`, `12-media-orchestration/image-optimization.md`. |
-| 3  | queued | Verify+research the candidates below, one per fire; state confidence. |
+| 2  | 🔄 wip | Fire 2: `CONVENTIONS.md` brand block → cites `#brand` (killed reversed-fonts drift). Next inliners: `07-quality-and-verification/wcag-2-2-2026.md`→`#wcag22`, `12-media-orchestration/image-optimization.md`→`#budget`, CWV soft-targets (`agents/performance-profiler.md`, `rules/quality-metrics.md`)→`#cwv`. |
+| 3  | 🔄 wip | Fire 2: kernel `#model` refreshed Opus 4.7→4.8, defers to `rules/model-routing.md` (already current+cited). Next (need web research + confidence): Capacitor 6-vs-8, PrimeNG-vs-Spartan, React-vs-Angular phrasing, Playwright 1.56→1.59. |
 | 4–14 | queued | See plan above. |
 
 ## Contradiction candidates (UNVERIFIED — verify before acting; recon can be wrong)
@@ -54,10 +54,10 @@
 - **Capacitor version** — `CONVENTIONS.md` "8" vs `CLAUDE.md`/rules "6". → **web-research current stable**, cite, state confidence.
 - **PrimeNG vs Spartan** — skill 10 line 129 + `CONVENTIONS.md` (PrimeNG) vs Spartan-only rule vs global CLAUDE.md "PrimeNG (admin)/Spartan (marketing)". → verify authority; likely admin=PrimeNG, marketing=Spartan.
 - **Playwright** — `CLAUDE.md` "v1.56+ agents (v1.59+ MCP)" vs rules "v1.59+". → unify to v1.59+.
-- **Model IDs** — `_kernel#model` "Opus 4.7 / Sonnet 4.6 / Haiku 4.5"; live env shows **Opus 4.8 + Fable 5**. → refresh kernel to current IDs.
+- **Model IDs** — ✅ RESOLVED (fire 2): kernel `#model` Opus 4.7→4.8, defers to `rules/model-routing.md`. OPEN for Brian: **Fable 5** (`claude-fable-5`) exists in the live env but has no defined role in `rules/model-routing.md` — needs a routing decision (what is Fable 5 for vs Opus 4.8?).
 - **Email** — SES-sole is settled; residual Resend send-rail refs in `README`/`email-templates.md` → prune (WS-10).
 - **Brand purple** — skill 10 `--accent-purple:#8B5CF6` vs `_kernel#brand` `#7C3AED`. → align skill 10 to kernel (verify not intentional first).
-- **Fonts** — ✅ checked: skill 10 already matches kernel (Sora body / Space Grotesk headings). No action. (Recon false positive — lesson: verify.)
+- **Fonts** — ✅ RESOLVED (fire 2): real culprit was `CONVENTIONS.md` (Heading/Body reversed vs kernel + skills 10/22), NOT skill 10 (recon mis-attributed). CONVENTIONS.md brand block now points to `#brand`. Lesson: verify recon per-item.
 
 ## Dedup candidates (→ cite `_kernel/standards.md#anchor`)
 

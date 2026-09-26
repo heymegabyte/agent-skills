@@ -4,18 +4,7 @@ Shared constants and patterns. Reference instead of re-deriving.
 
 ## Brand Tokens
 
-### Colors
-
-- **Black** — `#060610`
-- **Cyan** — `#00E5FF`
-- **Blue** — `#50AAE3`
-- **Purple** (cosmic/space only) — `#7C3AED`
-
-### Fonts
-
-- **Heading** — Sora
-- **Body** — Space Grotesk
-- **Mono** — JetBrains Mono
+Brand colors, fonts, tone, and contact are canonical in `_kernel/standards.md#brand` — single source of truth; cite it, never restate (this block previously drifted on font roles: correct mapping is Sora = body, Space Grotesk = headings).
 
 ### Identity
 
