@@ -5,8 +5,6 @@ name: "supervisor-skills-index"
 priority: 4
 pack: "backend"
 triggers: []
-paths:
-  - "*"
 ---
 
 # Supervisor Skills Index

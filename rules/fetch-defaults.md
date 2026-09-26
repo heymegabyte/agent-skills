@@ -9,8 +9,6 @@ triggers:
   - "web fetch"
   - "curl"
   - "user agent"
-paths:
-  - "*"
 ---
 
 # Fetch Defaults

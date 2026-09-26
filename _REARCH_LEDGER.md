@@ -93,6 +93,14 @@
 - **FOSS mirror tools** (leverage-FOSS, for a fuller build): `lunetics/agent_sync` (13 tools) · `PanisHandsome/ai-rules-sync` (zero-dep + git hook). Neither covers all ~30 niche targets here AND both overwrite dirs — adopt only if the target set is trimmed to a covered subset. ⚠️ Windsurf caps rule files at 6K chars / 12K total; Codex 32KiB — guard when syncing multi-line blocks.
 - **Enforcement gap:** wiring `sync-mirrors --check` into `lefthook.yml` was blocked by `config-protection` — needs `/improve-lint` or `CLAUDE_CONFIG_CHANGE_AUTHORIZED=1`. Until then, run `node bin/sync-mirrors.mjs` manually.
 
+## Always-loaded reduction (fire 8 — Brian: provider-aware core + validate-first)
+
+- **Diagnosis:** the ~55-rule preamble is Claude Code auto-loading plugin rules; **44 carry `paths:["*"]`** (force every prompt). Both router hooks only emit TEXT hints, not file loads. `~/.agentskills` is a **symlink → the plugin** (already unified — just canonicalize refs; nothing to merge). All 44 verified reachable via pack/triggers → dropping `paths:["*"]` is safe (0 orphans, reversible).
+- **Levers:** supreme core = 11 `priority:1` rules (+ `01-operating-system`). Most of the 44 are `pack:core` (load via the core pack regardless of `paths`) → real levers are (a) demote **non-core-pack** `paths:["*"]` rules, (b) trim the core pack itself.
+- **Decision (Brian):** **provider-aware** core — lean (~11) on DeepSeek, fuller (~20) on Claude (needs a small router-logic change → `/improve-lint` auth); **validate the lever first**.
+- ✅ **Validation batch (fire 8):** demoted `fetch-defaults` (research), `quality-metrics` (testing), `supervisor-skills-index` (backend) — removed `paths:["*"]`; now load via pack/triggers. 44→41. Brian confirms next prompt whether they drop from "Loaded" (research/testing likely drop; backend reveals whether the loader is pack-aware).
+- **Next (after validation):** re-tier the remaining ~10 non-core-pack `paths:["*"]` rules; trim `pack:core` to the supreme set; add the provider-aware router branch (DeepSeek→lean core).
+
 ## Operating rules for this loop
 
 - **Verify before edit** — read the actual file; recon summaries can be wrong (fonts proved it).

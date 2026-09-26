@@ -8,8 +8,6 @@ triggers:
   - "lighthouse"
   - "perf"
   - "quality"
-paths:
-  - "*"
 ---
 
 # Quality Thresholds
