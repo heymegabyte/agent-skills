@@ -20,7 +20,7 @@ paths:
 
 Every webhook-emitting service Brian's stack consumes gets a **paired skill** at `skills/<provider>-webhooks/`.
 
-Cross-links: `[[webhook-receiver-architecture]]` `[[forge-from-openapi]]` `[[hono-api]]` `[[secret-provisioning]]` `[[payments-routing]]`
+Cross-links: `[[webhook-receiver-architecture]]` `[[forge-from-openapi]]` `[[hono-api]]` `[[secret-provisioning]]` `[[payments]]`
 
 ## Module structure (invariant across providers)
 

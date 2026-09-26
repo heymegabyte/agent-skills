@@ -22,7 +22,7 @@ Per `[[monitor-orchestration]]` + `[[source-site-enhancement]]` § Parallel-agen
 |---|---|
 | `architect` | Project structure, file inventory, DO/D1/KV/R2/Vectorize decisions per `[[05-architecture-and-stack]]` |
 | `auth-implementer` | Better Auth or Clerk wiring with D1 schema, social providers, magic links, session storage |
-| `payments-implementer` | Square (default for accept) or Stripe (SaaS billing) per `[[payments-routing]]`, webhook handlers, idempotency |
+| `payments-implementer` | Square (default for accept) or Stripe (SaaS billing) per `[[payments]]`, webhook handlers, idempotency |
 | `feature-builder` (×3) | Per-domain features — one agent per domain (auth, billing, core feature) |
 | `frontend-builder` | React 19 + Vite + TanStack Router + Tailwind v4 + shadcn/ui; SSR via vite-ssg or TanStack Start |
 | `content-writer` | Marketing copy (Flesch≥60, active voice, anti-slop) per `[[copy-writing]]` |
@@ -36,7 +36,7 @@ Per `[[cloudflare-lock-in-is-leverage]]`:
 - **Edge**: Workers + Hono
 - **DB**: D1 with Drizzle v1 RQBv2 + Zod schemas (per `[[zod-everywhere]]`)
 - **Auth**: Better Auth (D1 adapter) or Clerk (M2M JWT)
-- **Payments**: Square (accept) + Stripe Connect (payouts) per `[[payments-routing]]`
+- **Payments**: Square (accept) + Stripe Connect (payouts) per `[[payments]]`
 - **AI**: Workers AI (Llama 3.3 70B FP8 free first-pass) + Anthropic via AI Gateway for polish per `[[model-routing]]`
 - **State**: Durable Objects per tenant (sql\`\`-backed), KV for hot config, R2 for files
 - **Workflows**: CF Workflows for durable multi-step (NOT Inngest unless explicit)
@@ -87,5 +87,5 @@ Include: deployed URL, route inventory (count), validation gate matrix (pass/fai
 ## See also
 
 - `[[02-goal-and-brief]]`, `[[05-architecture-and-stack]]`, `[[06-build-and-slice-loop]]`, `[[15-site-generation]]`, `[[16-cinematic-website-prime-directive]]`
-- `[[source-site-enhancement]]` for rebuilds; `[[payments-routing]]`; `[[zod-everywhere]]`; `[[cloudflare-lock-in-is-leverage]]`
+- `[[source-site-enhancement]]` for rebuilds; `[[payments]]`; `[[zod-everywhere]]`; `[[cloudflare-lock-in-is-leverage]]`
 - `[[opus-quota-fallback]]` — degrade to Sonnet if Opus exhausted

@@ -112,7 +112,7 @@ CF lock-in is the declared exception: CF primitives are load-bearing BY DESIGN (
 - **[[cloudflare-lock-in-is-leverage]]** — intentional lock-in doctrine
 - **[[mcp-server-registry]]** — MCP server tier classification mirrors this pattern
 - **[[secret-provisioning]]** — rotation cadence per vendor tier
-- **[[payments-routing]]** — Stripe vs Square routing logic (both are load-bearing; never mix patterns)
+- **[[payments]]** — Stripe vs Square routing logic (both are load-bearing; never mix patterns)
 - Ship as standalone rule? **Y**
 
 ---
@@ -195,7 +195,7 @@ No manual refund process. Solo builder cannot staff a refund queue. Automate or 
 
 - **[[stripe-billing]]** — Stripe subscription lifecycle + proration
 - **[[square-payments]]** — Square dispute webhook pattern
-- **[[payments-routing]]** — which payment processor for which use case
+- **[[payments]]** — which payment processor for which use case
 - **[[hono-api]]** — webhook handler patterns
 - Ship as standalone rule? **Y**
 

@@ -108,7 +108,7 @@ Scope:
   - Donations / POS / e-commerce / one-time / sub-$100 tickets / hybrid in-person+online → **Square** (Web Payments SDK)
   - Recurring SaaS with ≥2 of: seat-based, usage-metered, Entitlements, net-30, multi-currency → **Stripe Billing**
   - Payouts to contractors / vendors / volunteers → **Stripe Connect Express**
-  - Full: `rules/payments-routing.md`
+  - Full: `rules/payments.md`
 - **Jobs** — Inngest / Workflows v2
 - **Email** — Amazon SES (sole transactional rail) + Listmonk (bulk); SendGrid break-glass
 - **Runtime** — Node 22 native TS / Bun 1.3+

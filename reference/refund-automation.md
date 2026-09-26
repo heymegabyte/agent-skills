@@ -1,6 +1,6 @@
 # Refund Automation — implementation reference
 
-Sourced on demand by rules/refund-automation.md.
+Sourced on demand by rules/payments.md.
 
 ---
 

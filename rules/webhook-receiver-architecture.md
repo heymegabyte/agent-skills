@@ -24,7 +24,7 @@ paths:
 # Webhook Receiver Architecture
 
 Universal pattern for receiving, verifying, deduplicating, and auditing webhooks on CF Workers + Hono + D1.
-Cross-links: `[[payments-routing]]` `[[secret-provisioning]]` `[[error-recovery]]` `[[hono-api]]`
+Cross-links: `[[payments]]` `[[secret-provisioning]]` `[[error-recovery]]` `[[hono-api]]`
 
 ## Core invariants (never violate)
 

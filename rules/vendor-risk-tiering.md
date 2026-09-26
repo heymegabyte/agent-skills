@@ -103,6 +103,6 @@ See `reference/vendor-risk-tiering.md` for the calendar entry format.
 
 - **[[cloudflare-lock-in-is-leverage]]** — CF lock-in as a deliberate architectural choice
 - **[[secret-provisioning]]** — rotation cadence by vendor tier
-- **[[payments-routing]]** — Stripe vs Square routing (both are load-bearing; never mix usage patterns for the same payment type)
+- **[[payments]]** — Stripe vs Square routing (both are load-bearing; never mix usage patterns for the same payment type)
 - **[[autonomous-engineering]]** — adding a new load-bearing vendor is `review-recommended`; removing one is `approval-required`
 - **[[drift-detection]]** — raw SDK calls scattered outside the service module = drift; consolidate in-turn
