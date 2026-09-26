@@ -126,7 +126,7 @@ Build anti-AI-slop premium interfaces: dark-first OKLCH color, fluid `clamp()` t
 - **Buttons** — Primary gradient #060610 text, 600 weight, 8px radius, hover 0.9, active scale(0.98), focus 3px cyan. Secondary: transparent, border, hover cyan
 - **Nav** — sticky, `rgba(6,6,16,0.85)`, `blur(16px)`
 - **Forms** — bg-secondary, border-subtle, 8px, focus cyan + glow
-- **PrimeNG** — standalone (not NgModule), OnPush on all, lazy-load heavy (DataTable, Editor, Chart), design tokens for theming
+- **Spartan UI** — copied-in components (not a black-box dep), OnPush everywhere, lazy-load heavy views (tables, editors, charts), Tailwind + design-token theming. Per `rules/spartan-ui-design-system.md`.
 
 ## Interaction (every interactive element)
 

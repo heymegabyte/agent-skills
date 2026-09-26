@@ -41,7 +41,7 @@ One-line prompt → satisfy all 100 build-breaking rules across 10 categories be
 11. React 19 + Vite + Tailwind v4 + TanStack Router (default)
 12. Astro 5 + React islands for marketing-static-heavy
 13. Next.js 15 App Router only when SSR/ISR adds real value
-14. Angular 21 + Ionic + PrimeNG only when user says "Angular" or signal-heavy enterprise
+14. Angular 21 + Ionic + Spartan UI only when user says "Angular" or signal-heavy enterprise
 15. View Transitions API (`@view-transition { navigation: auto; }`) for SPA page swaps
 16. Selective hydration per island (Astro) or RSC boundaries (Next)
 17. Prefetch on link hover via TanStack Router or Astro `prefetch="hover"`

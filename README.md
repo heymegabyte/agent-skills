@@ -286,7 +286,7 @@ Every deploy must clear all gates. No exceptions. No overrides.
 |-------|------------|
 | Hosting | Cloudflare Workers |
 | Backend | Hono RPC + `@hono/zod-validator` |
-| Frontend | Angular 21 + Ionic 8 + PrimeNG 21 (or vanilla) |
+| Frontend | Angular 21 + Ionic 8 + Spartan UI (or vanilla) |
 | Database | D1 (edge) / Neon (Postgres) |
 | ORM | Drizzle v1 + Zod |
 | Cache | KV / Upstash Redis |

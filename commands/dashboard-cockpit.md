@@ -11,13 +11,13 @@ Upgrade an Angular admin dashboard into a polished compact **black-and-cyan dev-
 **Purpose** — turn a working Angular admin into a dense, gorgeous, fully-i18n, PWA-packaged developer cockpit with zero full page reloads.
 **When to use** — any Angular dashboard that needs polish, feature-module structure, i18n, PWA, or SPA-navigation hardening; rerun each pass.
 **Inputs** — `$ARGUMENTS` (dashboard path or feature); the live project; installed Angular version + package manager + build target.
-**Outputs** — feature-module routes + PrimeNG cockpit UI + cyan theme tokens + ngx-translate + PWA kit + docs + destructive Playwright E2E.
+**Outputs** — feature-module routes + Spartan UI cockpit + cyan theme tokens + ngx-translate + PWA kit + docs + destructive Playwright E2E.
 **Verification** — project's real gates (`lint`/`typecheck`/`test`/`build`/`e2e`) green; full-reload detection passes; deploy + prod-E2E per [[verification-loop]].
 **Can update ~/.agentskills or ~/.claude?** NO — project work only; global config only via `/self-improve`.
 
 ## Mission
 
-- Angular 22 feature-module architecture · lazy-loaded features · **PrimeNG primary UI** · **ngx-translate** full i18n · **PWA** packaging.
+- Angular 21 feature-module architecture · lazy-loaded features · **Spartan UI (shadcn-for-Angular) primary UI** · **ngx-translate** full i18n · **PWA** packaging.
 - Ionic/Capacitor ONLY where they genuinely help (mobile drawer ergonomics / native shells already in repo).
 - Compact black/cyan dev-cockpit styling · strong a11y + perf · destructive Playwright E2E.
 
@@ -35,7 +35,7 @@ Upgrade an Angular admin dashboard into a polished compact **black-and-cyan dev-
 ```
 src/app/
 ├── core/            # singletons: auth, session, theme, lang, http interceptors, guards
-├── shared/          # design-system primitives, PrimeNG wrappers, pipes, a11y
+├── shared/          # design-system primitives, Spartan UI wrappers, pipes, a11y
 └── dashboard/
     ├── dashboard-shell.component.ts   # persistent sidebar+topbar+palette
     ├── dashboard.routes.ts
@@ -49,18 +49,18 @@ export const dashboardRoutes: Routes = [
     component: DashboardShellComponent, // mounts ONCE, never destroyed on child nav
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'overview' },
-      { path: 'overview', loadComponent: () => import('./features/overview/overview.component').then(m => m.OverviewComponent), data: { titleKey: 'nav.overview', icon: 'pi-gauge' } },
-      { path: 'users', loadChildren: () => import('./features/users/users.routes').then(m => m.USERS_ROUTES), data: { titleKey: 'nav.users', icon: 'pi-users' } },
-      { path: 'audit', loadChildren: () => import('./features/audit/audit.routes').then(m => m.AUDIT_ROUTES), data: { titleKey: 'nav.audit', icon: 'pi-list' } },
+      { path: 'overview', loadComponent: () => import('./features/overview/overview.component').then(m => m.OverviewComponent), data: { titleKey: 'nav.overview', icon: 'gauge' } },
+      { path: 'users', loadChildren: () => import('./features/users/users.routes').then(m => m.USERS_ROUTES), data: { titleKey: 'nav.users', icon: 'users' } },
+      { path: 'audit', loadChildren: () => import('./features/audit/audit.routes').then(m => m.AUDIT_ROUTES), data: { titleKey: 'nav.audit', icon: 'list' } },
       { path: '**', loadComponent: () => import('./features/not-found/not-found.component').then(m => m.NotFoundComponent) }, // deep-link + refresh safe
     ],
   },
 ];
 ```
 
-## PrimeNG — primary UI, never default-demo look
+## Spartan UI — primary UI, never default-demo look
 
-Menubar · Sidebar · Toolbar · Breadcrumb · Tabs · Panel · Card · DataTable · Tree · Splitter · Dialog · Toast · ConfirmDialog · Tooltip · Tag · Badge · Dropdown · MultiSelect · AutoComplete · DatePicker · InputSwitch · ProgressBar · Skeleton · ContextMenu · OverlayPanel — all heavily themed to the cockpit tokens below.
+Menubar · Sheet (sidebar) · Toolbar · Breadcrumb · Tabs · Card · Table · Accordion · Resizable · Dialog · Sonner (toast) · AlertDialog · Tooltip · Badge · Select · Combobox · Command · Calendar · Switch · Progress · Skeleton · ContextMenu · Popover — Spartan (brain + helm) primitives, all heavily themed to the cockpit tokens below. NO PrimeNG (per `rules/spartan-ui-only.md`).
 
 ## Black/cyan dev-cockpit theme
 
@@ -133,7 +133,7 @@ Create: `docs/dashboard-architecture.md` · `docs/dashboard-routing.md` · `docs
 | Shell persists across child routes | | |
 | Feature routes lazy-loaded | | |
 | ngx-translate integrated | | |
-| PrimeNG consistent | | |
+| Spartan UI consistent | | |
 | Black/cyan UI implemented | | |
 | PWA implemented | | |
 | Ionic/Capacitor decision documented | | |

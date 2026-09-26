@@ -61,7 +61,7 @@ Dark theme FIRST. Purple for cosmic/space only.
 ## Stack
 
 - **Hosting** — CF Workers + Hono v4.12.12+ (security pin)
-- **Frontend** — Angular 21 + Ionic 8 + PrimeNG 21
+- **Frontend** — Angular 21 + Ionic 8 + Spartan UI
 - **Mobile** — Capacitor 8
 - **Database** — D1 / Neon
 - **ORM** — Drizzle v1
