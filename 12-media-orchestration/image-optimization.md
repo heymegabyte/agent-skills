@@ -218,7 +218,6 @@ max_retries = 3
 - **AVIF** — quality 70 (same perceptual quality, 30-50% smaller than WebP)
 - Never upscale
 - Skip variants wider than original
-- **Max single image after optimization** — <200KB
-- **Total page images** — <500KB
+- **Asset budgets** — single image ≤200KB · total page images ≤500KB · hero ≤150KB (canonical: `_kernel/standards.md#budget`)
 - **Hero** — eager + preload
 - **Everything else** — lazy, `decoding=async`

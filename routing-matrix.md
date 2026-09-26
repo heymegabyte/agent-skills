@@ -24,7 +24,7 @@ Classify every reusable lesson before writing it anywhere. This is the single de
 - Should affect nearly every Claude Code session
 - Is a hard constraint (never/always)
 - Is a safety rule (never delete without asking)
-- Is a stack default (always use React 19 + Vite)
+- Is a stack default (e.g., Angular 21 preferred for apps; React 19 + Vite for marketing/bolt)
 
 ### Goes to AGENTSKILLS.md when:
 
