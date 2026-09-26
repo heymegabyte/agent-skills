@@ -101,6 +101,15 @@
 - **THE FIX (provider-aware, per Brian):** make `DEFAULT_BUDGET_TOKENS` env-aware — DeepSeek (`ANTHROPIC_BASE_URL`/`ANTHROPIC_MODEL` contains `deepseek`) → ~35K (lean ≈ priority:1 core + top matches); Claude → generous (~200K, keeps current behavior). Reuses the existing priority-drop; ~8 lines.
 - ⛔ **NEEDS AUTH:** `bin/skill-router.py` is config-protected → apply via `/improve-lint` or `CLAUDE_CONFIG_CHANGE_AUTHORIZED=1`. Patch is ready to ship on authorization.
 
+## Domain-pack consolidation (task: "smallest file set w/o sacrificing responsiveness" — in progress)
+
+Pattern (per pack, verified): merge members → `rules/<pack>.md` (union frontmatter, headings demoted, content preserved) → rewrite inbound `[[links]]` + `_packs`/router/reference refs → `git rm` old → **`rm ~/.claude/data/skills.db && skill-router.py sync-metadata`** (NOT rebuild-index — needs OpenAI key) → `markdownlint-cli2 --fix` → verify routing per member trigger → commit (24-gate).
+
+- ✅ compliance 2→1 (`7376079`) · ✅ payments 2→1 (`b619b1a`). **160→158 rules.**
+- NEXT (small prose domain packs): testing, design, content, angular, frontend, infra, security, ecommerce, media (skip code-heavy `image-optimization`); then the 11 no-pack orphans → thematic homes.
+- CAREFUL: research — `competitor-research` is big + cross-linked → leave standalone; merge only fetch-defaults + crawling-supervisor. Packs with skill members (payments had `13-observability`) → keep the skill in the pack yaml, merge only rule members.
+- SKIP (stay granular): **core (57) / backend (19) / ai (18)** — mega-files hurt readability + don't reduce tokens (core always-loads regardless); the token cut is the router-budget fix (needs `/improve-lint`). Projected end state ≈ **130 files**.
+
 ## Operating rules for this loop
 
 - **Verify before edit** — read the actual file; recon summaries can be wrong (fonts proved it).
