@@ -922,7 +922,7 @@ New default transport (spec 2025-03-26), replaces deprecated HTTP+SSE.
 
 ### Min cacheable
 
-- Opus 4.7 / 4.6 / 4.5 — 4096 tokens
+- Opus 4.8 / 4.7 / 4.6 — 4096 tokens
 - Sonnet 4.6 — 2048 tokens
 
 ### Other

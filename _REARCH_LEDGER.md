@@ -63,9 +63,7 @@
 
 ## Fire-6 drift sweep (2026-09-25 — 9 findings, ~5% drift, mostly doc-sync not architectural)
 
-- **Bun** — `CLAUDE.md` "1.2+" vs `CONVENTIONS.md` "1.3" → converge to 1.3. clean-fix.
-- **Opus prompt-cache min** — `CONVENTIONS.md` still lists "Opus 4.7/4.6/4.5" → 4.8 primary (per fire-2 `#model`). clean-fix.
-- **Hono pin** — `CONVENTIONS.md` "v4.12.12+" vs `rules/hono-api.md` "v4.12.x" → unify "v4.12.12+". clean-fix.
+- ✅ **RESOLVED (fire 9):** Bun `CLAUDE.md` 1.2+→1.3+; Opus prompt-cache min `CONVENTIONS.md` 4.7/4.6/4.5→4.8/4.7/4.6; Hono `rules/hono-api.md` v4.12.x→v4.12.12+ (matches CONVENTIONS security pin).
 - **Dead/forbidden tech still shown as live** — Resend (README examples), Postiz (CONVENTIONS MCP list :293/:308), Supabase (cf-hyperdrive/cf-rag examples), Twilio (shared-api-pool, no SMS qualifier). Reframe as removed/legacy or qualify (WS-10). SCOPE-CHECK: Resend MCP *as a customer feature* is KEPT (per project CLAUDE.md) — only the send-rail is removed; Twilio voice/WhatsApp OK, SMS/phone-OTP forbidden.
 - **Brand purple** — skill 10 `#8B5CF6` vs kernel `#7C3AED` → verify skill 10 intent, then align. clean-fix (pending verify).
 - **Inngest vs CF Workflows v2** — `CLAUDE.md` "Inngest / Workflows v2" vs `CONVENTIONS.md` "Inngest v4" vs CF-native doctrine (projectsites REMOVED Inngest) → **Brian-decision** (in the question set).

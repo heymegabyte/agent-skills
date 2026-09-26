@@ -40,7 +40,7 @@ Define Hono-on-Workers API patterns including RPC mode, WorkerEntrypoint binding
 
 - `createFactory()` for reusable middleware chains with shared context
 - Method chaining: `app.use(cors()).get('/api/items', handler).post('/api/items', handler)`
-- Pin Hono **v4.12.x** (Apr 2026, ~14KB). For cold-start-sensitive Workers use the **`hono/tiny` preset** (SmartRouter, ~6KB) — trades slightly slower routing for smaller bundle.
+- Pin Hono **v4.12.12+** (Apr 2026, ~14KB). For cold-start-sensitive Workers use the **`hono/tiny` preset** (SmartRouter, ~6KB) — trades slightly slower routing for smaller bundle.
 
 ## D1 patterns
 

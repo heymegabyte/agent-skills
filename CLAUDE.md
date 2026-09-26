@@ -111,7 +111,7 @@ Scope:
   - Full: `rules/payments-routing.md`
 - **Jobs** — Inngest / Workflows v2
 - **Email** — Amazon SES (sole transactional rail) + Listmonk (bulk); SendGrid break-glass
-- **Runtime** — Node 22 native TS / Bun 1.2+
+- **Runtime** — Node 22 native TS / Bun 1.3+
 - **TypeScript** — 5.9+
 - **Lint** — oxlint + ESLint 9 + Prettier (NEVER Biome)
 - **Hooks** — lefthook (NOT husky)
