@@ -46,7 +46,8 @@
 | 1  | ✅ done | `bin/collapse-forged-commands.mjs` removed 4,154 pages. Files 4,720→566 (−88%), lines 406,259→92,228 (−77%). Reversible via re-forge. |
 | 2  | 🔄 wip | Fires 2/4: `CONVENTIONS.md` brand→`#brand`; `image-optimization.md` budgets→`#budget` cite; CWV→`#cwv` (perf-profiler). `wcag-2-2-2026.md` KEPT (adds axe-testability mapping — value-add, not dup). Next: incidental brand/budget restatements in non-subject files. |
 | 3  | ✅ done | Fires 3/4/5: Capacitor 6→8; Playwright v1.59+; React/Angular reframed as context-split (routing-matrix + CLAUDE.md); **PrimeNG→Spartan (Brian ruled, 41 files)**; i18n→`@angular/localize` (dashboard-cockpit aligned + claim corrected). Contradiction cluster RESOLVED. Pending (outside plugin repo): global `~/.claude/CLAUDE.md` (React-default, Capacitor 6, i18n). |
-| 4–14 | ◐ optional | Core re-arch DONE (files −88%; all major contradictions resolved fires 1–5). Remaining are lower-value/risky: routing already works (don't rip up, WS-4); mirrors need a real generator (WS-14, large); prose already list-based (WS-5); crosslinks validator green (WS-11 no debt). Loop near TERMINAL per loop-termination doctrine — consider CronDelete when satisfied. |
+| 14 | ✅ V1 | Mirror single-source generator `bin/sync-mirrors.mjs` (fire 6) — stack-line synced across 31 targets + `--check`. Next: extend to full shared block; wire `--check` into lefthook (needs `/improve-lint` auth). |
+| 4–13 | 🔄 active | Brian (fire 6) chose KEEP loop running + invest in token-efficiency · capability · usability · FOSS; compression MODERATE. Next per that: capability-gap skills, usability entrypoint (llms.txt/INDEX), finish safe dedups. |
 
 ## Contradiction candidates (UNVERIFIED — verify before acting; recon can be wrong)
 
@@ -82,6 +83,15 @@
 - **Capacitor** (fire 3, 2026-09-25) — current stable **8.5.1** per npm `@capacitor/core` (8.x is the active major line). Choice: **Capacitor 8**. Confidence **0.8** (npm-verified current; no intentional-"6"-pin note anywhere; CONVENTIONS.md already at 8). Source: npmjs.com/package/@capacitor/core.
 - **Playwright** (fire 3) — current stable **1.62.1** (1.63 landing) per npm + Wikipedia. Choice: keep **v1.59+** (the `+` admits current — no churn across 9 mirror files). Confidence **0.9**. Source: npmjs.com/package/@playwright/test.
 - **Angular i18n** (fire 5) — `@angular/localize` is **compile-time only**: no in-app no-reload language switch (each locale = separate build/URL); runtime switch needs ngx-translate/Transloco (both rule-banned). Choice: honor the rule → `@angular/localize` everywhere; corrected dashboard-cockpit's impossible "no-reload switch" claim. Confidence **0.8**. Source: angular.dev i18n guide + angular/angular#56318.
+
+## User direction (fire 6 — via AskUserQuestion)
+
+- **Keep the 15-min loop running** — improving/compressing/enhancing/expanding, NOT winding down.
+- **Invest in:** token/cost efficiency · capability coverage (new skills) · human+AI usability · **leverage FOSS**. (Did NOT pick a dedicated evals/quality track.)
+- **Compression:** MODERATE — keep kernel+packs+trigger/fingerprint routing; no risky stub+on-demand.
+- **Mirrors:** single-source generator (chosen) → `bin/sync-mirrors.mjs` shipped V1 (31 targets, `--check`).
+- **FOSS mirror tools** (leverage-FOSS, for a fuller build): `lunetics/agent_sync` (13 tools) · `PanisHandsome/ai-rules-sync` (zero-dep + git hook). Neither covers all ~30 niche targets here AND both overwrite dirs — adopt only if the target set is trimmed to a covered subset. ⚠️ Windsurf caps rule files at 6K chars / 12K total; Codex 32KiB — guard when syncing multi-line blocks.
+- **Enforcement gap:** wiring `sync-mirrors --check` into `lefthook.yml` was blocked by `config-protection` — needs `/improve-lint` or `CLAUDE_CONFIG_CHANGE_AUTHORIZED=1`. Until then, run `node bin/sync-mirrors.mjs` manually.
 
 ## Operating rules for this loop
 
