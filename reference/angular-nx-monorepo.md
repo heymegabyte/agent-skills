@@ -1,6 +1,6 @@
 # Angular + Nx Monorepo — implementation reference
 
-Sourced on demand by rules/angular-nx-monorepo.md.
+Sourced on demand by rules/angular.md.
 
 ---
 

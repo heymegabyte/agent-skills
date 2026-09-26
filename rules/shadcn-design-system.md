@@ -17,7 +17,7 @@ paths:
 
 # shadcn/ui Design System
 
-shadcn/ui (Radix primitives) is THE design-system foundation for every React surface — the React-path counterpart to `[[spartan-ui-design-system]]` (Angular). OSS, owns-the-code (components copied in via CLI, not a black-box dependency), Tailwind v4-composed. No MUI / Chakra / Ant / Mantine / other kits. Per `[[frontend-stack]]` + `[[stack-selector]]`.
+shadcn/ui (Radix primitives) is THE design-system foundation for every React surface — the React-path counterpart to `[[angular]]` (Angular). OSS, owns-the-code (components copied in via CLI, not a black-box dependency), Tailwind v4-composed. No MUI / Chakra / Ant / Mantine / other kits. Per `[[frontend-stack]]` + `[[stack-selector]]`.
 Cross-links: `[[frontend-stack]]` `[[cinematic-ui-patterns]]` `[[gorgeous-by-default]]` `[[10-experience-and-design-system]]` `[[text-contrast]]`
 
 ## Standing rule
@@ -55,6 +55,6 @@ Cross-links: `[[frontend-stack]]` `[[cinematic-ui-patterns]]` `[[gorgeous-by-def
 
 ## See
 
-- `[[spartan-ui-design-system]]` — the Angular-stack counterpart (when Angular is chosen)
+- `[[angular]]` — the Angular-stack counterpart (when Angular is chosen)
 - `[[frontend-stack]]` — React 19 + Vite + TanStack + Tailwind v4 defaults
 - `[[website-build-manifest]]` — where this slots into the one-prompt site gates

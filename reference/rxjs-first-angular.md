@@ -1,6 +1,6 @@
 # RxJS-First Angular — implementation reference
 
-Sourced on demand by rules/rxjs-first-angular.md.
+Sourced on demand by rules/angular.md.
 
 ---
 

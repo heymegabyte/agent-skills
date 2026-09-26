@@ -6,7 +6,7 @@ argument-hint: [dashboard path or feature]
 <!-- <SUBAGENT-STOP>: skip this skill when running inside a subagent. Meta-skills must not leak into spawned subagent contexts. Source: obra/superpowers `using-superpowers` skill. -->
 <SUBAGENT-STOP/>
 
-Upgrade an Angular admin dashboard into a polished compact **black-and-cyan dev-cockpit PWA**. Repeatable — rerun to push density + polish one step further. Doctrine via cross-link, never duplicated: [[angular-nx-monorepo]] · [[rxjs-first-angular]] · [[frontend-stack]] · [[cinematic-ui-patterns]] · [[text-contrast]] · [[agent-selection]] · [[e2e-tdd-organization]] · [[verification-loop]].
+Upgrade an Angular admin dashboard into a polished compact **black-and-cyan dev-cockpit PWA**. Repeatable — rerun to push density + polish one step further. Doctrine via cross-link, never duplicated: [[angular]] · [[angular]] · [[frontend-stack]] · [[cinematic-ui-patterns]] · [[text-contrast]] · [[agent-selection]] · [[e2e-tdd-organization]] · [[verification-loop]].
 
 **Purpose** — turn a working Angular admin into a dense, gorgeous, fully-i18n, PWA-packaged developer cockpit with zero full page reloads.
 **When to use** — any Angular dashboard that needs polish, feature-module structure, i18n, PWA, or SPA-navigation hardening; rerun each pass.
@@ -30,7 +30,7 @@ Upgrade an Angular admin dashboard into a polished compact **black-and-cyan dev-
 ## Architecture — inspect first
 
 - Detect installed Angular version + package manager (`pnpm`/`npm`) + build (esbuild/Vite) before writing.
-- Standalone components · feature-module boundary per domain · one lazy route file per feature · strict TS · signals + RxJS per [[rxjs-first-angular]] · typed reactive forms · functional interceptors/guards · `@defer` · modern control flow (`@if`/`@for`/`@switch`) · SSR/hydration-safe.
+- Standalone components · feature-module boundary per domain · one lazy route file per feature · strict TS · signals + RxJS per [[angular]] · typed reactive forms · functional interceptors/guards · `@defer` · modern control flow (`@if`/`@for`/`@switch`) · SSR/hydration-safe.
 
 ```
 src/app/
@@ -60,7 +60,7 @@ export const dashboardRoutes: Routes = [
 
 ## Spartan UI — primary UI, never default-demo look
 
-Menubar · Sheet (sidebar) · Toolbar · Breadcrumb · Tabs · Card · Table · Accordion · Resizable · Dialog · Sonner (toast) · AlertDialog · Tooltip · Badge · Select · Combobox · Command · Calendar · Switch · Progress · Skeleton · ContextMenu · Popover — Spartan (brain + helm) primitives, all heavily themed to the cockpit tokens below. NO PrimeNG (per `rules/spartan-ui-only.md`).
+Menubar · Sheet (sidebar) · Toolbar · Breadcrumb · Tabs · Card · Table · Accordion · Resizable · Dialog · Sonner (toast) · AlertDialog · Tooltip · Badge · Select · Combobox · Command · Calendar · Switch · Progress · Skeleton · ContextMenu · Popover — Spartan (brain + helm) primitives, all heavily themed to the cockpit tokens below. NO PrimeNG (per `rules/angular.md`).
 
 ## Black/cyan dev-cockpit theme
 
@@ -86,7 +86,7 @@ Compact dense panels · terminal/devtools inspiration · sharp borders · subtle
 }
 ```
 
-## @angular/localize — zero hardcoded user-facing strings (per `rules/angular-nx-monorepo.md`)
+## @angular/localize — zero hardcoded user-facing strings (per `rules/angular.md`)
 
 - Mark every user-facing string with `i18n` (templates) / `$localize` (TS): route labels · sidebar · buttons · table headings · forms · validation · empty/error/toast.
 - Extract to `messages.<locale>.xlf`; build ONE bundle per locale. Language switch = navigate to the locale build (`/en/`, `/es/`) — compile-time i18n has no in-app no-reload toggle (accepted tradeoff: build-time key safety + per-locale SEO URLs). Within a locale the cockpit stays no-reload SPA.

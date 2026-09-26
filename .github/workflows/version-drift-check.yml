@@ -78,7 +78,7 @@ jobs:
             echo "pinned=$PINNED"
             echo "drift=$DRIFT"
             echo "threshold=2"
-            echo "fix-loc=rules/code-style.md + rules/angular-nx-monorepo.md"
+            echo "fix-loc=rules/code-style.md + rules/angular.md"
           } >> "$GITHUB_OUTPUT"
 
       - name: Summarize + open issues per probe

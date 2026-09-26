@@ -33,7 +33,7 @@ Closes the self-improvement loop on the project's lint output. Captures patterns
 1. Read the proposal
 2. Paste the Claude-ready prompt into a new conversation (or invoke `claude` inline)
 3. AI drafts the semgrep YAML at `~/.agentskills/templates/lint-stack/semgrep-custom/<topic>.yml`
-4. Cross-link from owning domain rule (`code-style.md`, `rxjs-first-angular.md`, etc.)
+4. Cross-link from owning domain rule (`code-style.md`, `angular.md`, etc.)
 5. Append a row to `rules/lint-doctrine.md` § "Codified incidents"
 6. Commit + push agentskills (auto per `main-only-branch` + `brian-preferences` git policy)
 7. Distribute: next `install-lint-stack.sh` pulls the new rule into every project

@@ -21,7 +21,7 @@ Never write hand-rolled HTML files for any user-facing surface.
 ## Mandate
 
 - Every user-facing surface (marketing, web apps, dashboards, admin, generated sites, landing, microsites, blogs) MUST use ONE of two stacks:
-  - **Angular 21+ + Nx 20 + Spartan UI + Ionic 8 + Capacitor 8 + SSR (`@angular/ssr` on Cloudflare Workers) + Tailwind v4 + Angular CDK** (PREFERRED for applications; ProjectSites.dev pinned here). RxJS-first per `rxjs-first-angular.md`.
+  - **Angular 21+ + Nx 20 + Spartan UI + Ionic 8 + Capacitor 8 + SSR (`@angular/ssr` on Cloudflare Workers) + Tailwind v4 + Angular CDK** (PREFERRED for applications; ProjectSites.dev pinned here). RxJS-first per `rules/angular.md`.
   - **React 19 + Vite + SSR/SSG + TanStack Router + Tailwind v4** (the bolt.diy stack — use when appropriate)
 - Hand-rolling `public/index.html` + `public/pricing.html` + `public/about.html` etc. = build fail.
 - No "just one static HTML file" exceptions. Even 1-page site uses the Vite or Angular scaffold.
@@ -67,7 +67,7 @@ Never write hand-rolled HTML files for any user-facing surface.
 ### Core
 
 - **Angular 21** standalone + signals + **zoneless** (`provideZonelessChangeDetection()`, default in 21, drop Zone.js)
-- **`httpResource()`** (Angular 21 stable) — declarative HTTP→signal for read-only endpoints; pair with RxJS for mutations + WS + SSE per `rxjs-first-angular.md`
+- **`httpResource()`** (Angular 21 stable) — declarative HTTP→signal for read-only endpoints; pair with RxJS for mutations + WS + SSE per `rules/angular.md`
 - **Incremental hydration** — `provideClientHydration(withIncrementalHydration())` — viewport/interaction only
 - **Nx 20+** + `@nx/angular` + Angular CLI MCP wired
 - **Ionic 8+** UI (cross-platform: web, iOS, Android)
@@ -76,7 +76,7 @@ Never write hand-rolled HTML files for any user-facing surface.
 - **`@angular/ssr` on Cloudflare Workers** — SSR at edge, same origin as API
 - **Spartan UI** (shadcn-for-Angular) — ONE primary kit for ALL Angular surfaces (admin + marketing). NO PrimeNG / Material / Taiga / NG-ZORRO / Kendo.
 - **Tailwind v4** + **Angular CDK** + **Floating UI**
-- **RxJS-first** at every backend edge per `rxjs-first-angular.md` — observables for HTTP/WS/SSE, `toSignal()` only at template
+- **RxJS-first** at every backend edge per `rules/angular.md` — observables for HTTP/WS/SSE, `toSignal()` only at template
 - **TypeScript 5.9+** w/ `"strict": true`, `"noUncheckedIndexedAccess": true`, `"exactOptionalPropertyTypes": true`
 - **Vitest** runner (replaces Karma) via `@analogjs/vitest-angular`
 - **Angular built-in i18n** (`@angular/localize`) — only strategy

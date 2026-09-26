@@ -111,7 +111,7 @@ The `validate-*.mjs` build-gates a rule names (and their `build_validators.ts` o
 
 <!-- grow-ok --> The pack exceeds budget, so not every member co-loads. This is the complete recoverable index — pull any of these when its concern is in scope:
 
-- **Stack foundation**: `[[spartan-ui-design-system]]` (Angular, preferred) OR `[[shadcn-design-system]]` (React path) · `[[frontend-stack]]`
+- **Stack foundation**: `[[angular]]` (Angular, preferred) OR `[[shadcn-design-system]]` (React path) · `[[frontend-stack]]`
 - **Cinematic + design**: `[[cinematic-ui-patterns]]` (RollingCounter/Reveal, React+Angular) · `[[gorgeous-by-default]]` · `[[text-contrast]]` · `[[logo-contrast]]` · `[[image-quality]]`
 - **Content + brand**: `[[copy-writing]]` · `[[citations]]` · `[[timeline-authenticity]]` · `[[i18n-by-demographics]]` · `[[thin-source-amplification]]` · `[[brand-asset-pipeline]]` (logo/wordmark/OG generation + trim + alpha gate)
 - **Forms + comms**: `[[email-deliverability]]` (every-form gate)

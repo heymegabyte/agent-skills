@@ -97,7 +97,7 @@ Scope:
 - **Edge** — CF Workers + Hono
 - **Frontend** — ONLY TWO STACKS (see `rules/frontend-stack.md`):
   - **React 19 + Vite + SSR/SSG + TanStack Router + Tailwind v4 + shadcn/ui** — marketing, generated business sites, bolt.diy editor
-  - **Angular 21 + Nx 20+ + Angular CLI MCP + standalone + signals + zoneless + `httpResource()` + incremental hydration + Tailwind v4 + Angular CDK + Spartan UI (admin + marketing) + Vitest + Storybook 8 + MSW + `@angular/localize`** (preferred for apps/admin/SaaS; native iOS/Android via Capacitor 8, desktop via Tauri 2, signal-heavy enterprise). Ionic 8 / `@angular/ssr`-on-Workers when needed. NO NgModules, NO Angular Material. RxJS-first at every backend edge per `rules/rxjs-first-angular.md`. Full: `rules/angular-nx-monorepo.md`.
+  - **Angular 21 + Nx 20+ + Angular CLI MCP + standalone + signals + zoneless + `httpResource()` + incremental hydration + Tailwind v4 + Angular CDK + Spartan UI (admin + marketing) + Vitest + Storybook 8 + MSW + `@angular/localize`** (preferred for apps/admin/SaaS; native iOS/Android via Capacitor 8, desktop via Tauri 2, signal-heavy enterprise). Ionic 8 / `@angular/ssr`-on-Workers when needed. NO NgModules, NO Angular Material. RxJS-first at every backend edge per `rules/angular.md`. Full: `rules/angular.md`.
 - **NEVER** hand-roll `public/{page}.html` for any user-facing content.
 - **Marketing-static** — same React+Vite or Angular+Ionic. No Astro / Next.js / Remix / SvelteKit defaults.
 - **DB** — D1 (read-replicas, Sessions API) / Neon
