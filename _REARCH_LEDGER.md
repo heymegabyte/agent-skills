@@ -112,6 +112,24 @@ Pattern (per pack, verified): merge members → `rules/<pack>.md` (union frontma
 - CAREFUL: research — `competitor-research` big + cross-linked → leave standalone. Packs with skill members → keep the skill in the pack yaml, merge only rule members. Bounded end-state ≈ 140-145 (not 130 — shared members are more prevalent than first estimated).
 - SKIP (stay granular): **core (57) / backend (19) / ai (18)** — mega-files hurt readability + don't reduce tokens (core always-loads regardless); the token cut is the router-budget fix (needs `/improve-lint`). Projected end state ≈ **130 files**.
 
+## CONVERGENCE (fire 19, 2026-09-26) — autonomous work is DONE
+
+Verified (not assumed) that the clean, autonomous re-architecture work is complete:
+
+- **Contradictions:** 8 clusters resolved (brand/fonts · model IDs→4.8 · Capacitor 8 · Playwright · React/Angular context-split · PrimeNG→Spartan · i18n→@angular/localize · CWV). No verified contradictions remain in-repo.
+- **Consolidation:** compliance · payments · angular · e2e-testing (160→153); clean cohesive-exclusive merges exhausted (rest share members = responsiveness).
+- **Kernel-dedup:** CONVENTIONS · image-optimization · perf-profiler · quality-metrics done.
+- **WS-10 dead-tech = NON-ISSUE (verified fire 19):** Resend (documented removal + kept-MCP + webhook-source), Postiz (live AGPL-isolated service per `compliance.md`), Supabase (correctly banned-by-default + Hyperdrive connection-example), Twilio (computer-use/2FA/webhook only, no SMS reco). The fire-6 sweep OVER-FLAGGED these — verification found nothing to prune.
+- **Also shipped:** WS-1 (−88% forged files) · `llms.txt` entrypoint (WS-12) · `sync-mirrors.mjs` (WS-14 V1).
+
+**Remaining value requires Brian's action — do NOT keep firing marginal loops:**
+
+1. **Router-budget fix** (the real DeepSeek token/preamble cut — biggest lever) + wire mirror `--check` gate → both need `/improve-lint` or `CLAUDE_CONFIG_CHANGE_AUTHORIZED=1` (config-protected `bin/skill-router.py` / `lefthook.yml`).
+2. **Out-of-repo:** global `~/.claude/CLAUDE.md` "Default: React" / Capacitor 6 — possibly intentional global-scope; needs a decision.
+3. Marginal-only otherwise (email rule+impl → reference/ per compression-playbook; a few orphan groupings) — trades little for little.
+
+**Recommendation:** authorize the budget fix (real win) OR `CronDelete` the loop (per no-infinite-polish). Further unguided fires yield ~nothing.
+
 ## Operating rules for this loop
 
 - **Verify before edit** — read the actual file; recon summaries can be wrong (fonts proved it).
