@@ -1,6 +1,6 @@
 # Right to Deletion — Implementation Reference
 
-Sourced on demand by `rules/right-to-deletion.md`.
+Sourced on demand by `rules/compliance.md`.
 
 ---
 

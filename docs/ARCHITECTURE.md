@@ -124,7 +124,7 @@ A one-read orientation guide for new agents and contributors.
 
 ### Pack: compliance
 
-- `right-to-deletion`
+- `compliance`
 
 ### Pack: content
 

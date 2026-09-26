@@ -111,7 +111,7 @@ See `reference/pii-handling-discipline.md` for the cron SQL.
 
 ## Cross-links
 
-- `[[right-to-deletion]]` — deletion cascade; audit tables survive because they use hashes
+- `[[compliance]]` — deletion cascade; audit tables survive because they use hashes
 - `[[email-deliverability-implementation]]` — email in transit (Amazon SES API calls); never persisted
 - `[[secret-provisioning]]` — `POSTHOG_PERSONAL_API_KEY`, `AWS_SES_*` env setup
 - `[[data-residency-by-default]]` — D1 read-replica placement for EU compliance

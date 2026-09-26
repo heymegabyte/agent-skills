@@ -1,10 +1,13 @@
 ---
-last_reviewed: 2026-06-29
-superseded_by: null
-name: "right-to-deletion"
+name: "compliance"
 priority: 2
 pack: "compliance"
 triggers:
+  - "agpl"
+  - "copyleft license"
+  - "strong copyleft"
+  - "license isolation"
+  - "vendor license boundary"
   - "gdpr"
   - "ccpa"
   - "lgpd"
@@ -14,19 +17,54 @@ triggers:
   - "rtbf"
 paths:
   - "concern:d1-database"
+last_reviewed: 2026-09-26
+superseded_by: null
 ---
 
-# Right to Deletion — GDPR Art. 17 + CCPA + LGPD Cascade
+# Compliance — License Isolation + Data-Subject Deletion
+
+Two compliance concerns for any regulated build: keep strong-copyleft licenses from propagating into proprietary code, and automate data-subject deletion. (Consolidated 2026-09-26 from `agpl-isolation-via-http-boundary` + `right-to-deletion`.)
+
+## AGPL Isolation via HTTP Boundary
+
+When integrating an AGPL (or any strong-copyleft) service into a non-open codebase, isolate it behind a network boundary so copyleft never propagates to your application. The HTTP boundary is the license firewall.
+
+### The rules
+
+- Run the AGPL service as its **own process/container** — never inside your main app process.
+- Communicate over **HTTP/RPC ONLY**. No `import`, no shared libraries.
+- **No shared types** — types are code; copying them is importing the library. Re-declare all request/response shapes locally.
+- **No shared DB tables or ORM schemas** — schema sharing is implicit coupling.
+- **No AGPL packages in `package.json`**, including `devDependencies`.
+- **Reading the source to learn patterns is safe** — copyleft triggers on INCLUSION of the code (modified or not) in your distributed work, not on reading it.
+- Keep the integration surface **minimal** — fewer call sites = a cleaner firewall.
+
+### Pattern
+
+- Vendor service runs as a container on its own subdomain (e.g. `social.projectsites.dev`).
+- A thin client (`src/services/<vendor>.ts`) calls it via `fetch` with a bearer token; every request/response shape is declared locally, not imported.
+- Worker env carries only HTTP coordinates (`{VENDOR}_URL`, `{VENDOR}_API_KEY`, `{VENDOR}_SECRET`), never the vendor's SDK.
+
+### Reference incident
+
+projectsites.dev Postiz (AGPL social scheduler) at `social.projectsites.dev` — HTTP-only client (`src/services/postiz.ts`), no `@gitroom/*` packages, no shared types/schema. Patterns studied from source; zero code included. See `docs/SERVICES-AND-SOCIAL.md` § Postiz.
+
+### See
+
+- `vendor-risk-tiering` — load-bearing vs replaceable classification
+- `package-preference-registry` — OSS license gate at install time
+
+## Right to Deletion — GDPR Art. 17 + CCPA + LGPD Cascade
 
 Every project storing PII MUST implement automated deletion via CF Workflows v2. Manual deletion is a compliance liability.
 
-## When this fires
+### When this fires
 
 - Any project with a D1 `users` table AND at least one of: Stripe/Square records, R2 uploads, Vectorize embeddings, listmonk/PostHog/Sentry user records.
 - Before first deployment of any user-account feature.
 - GDPR applies to EU residents' data regardless of server location.
 
-## Legal SLA
+### Legal SLA
 
 | Regulation | Deadline | Exception |
 |---|---|---|
@@ -36,9 +74,9 @@ Every project storing PII MUST implement automated deletion via CF Workflows v2.
 
 - **Target: complete cascade within 24 hours of intake.** 30-day SLA is for extreme edge cases only.
 
-## Intake channels (all three REQUIRED)
+### Intake channels (all three REQUIRED)
 
-### 1. Web form (self-serve)
+#### 1. Web form (self-serve)
 
 - Hono route `POST /account/delete` with `DeletionRequestSchema` (`email`, optional `reason`, `turnstileToken`).
 - Verify Turnstile before touching any user data — prevents abuse.
@@ -47,19 +85,19 @@ Every project storing PII MUST implement automated deletion via CF Workflows v2.
 
 See `reference/right-to-deletion.md` for the full implementation.
 
-### 2. Email intake (DSR@yourdomain.com)
+#### 2. Email intake (DSR@yourdomain.com)
 
 - Wire CF Email Workers (or Amazon SES inbound) to `POST /internal/deletion-email`.
 - Parse subject for "delete my account" / "right to erasure" / "RTBF"; auto-queue the Workflow.
 - Reply with confirmation email within **5 minutes**.
 - Parse body with Workers AI (`@cf/meta/llama-3-8b-instruct`) to extract requester email and intent.
 
-### 3. Admin dashboard
+#### 3. Admin dashboard
 
 - `/admin/deletion-requests` — lists `deletion_audit` rows, shows status (`pending|running|complete|failed`), allows manual trigger.
 - Use `[[feature-flags]]` with key `deletion_dashboard`, `stage='beta'` at launch.
 
-## Cascade entities (ordered by dependency)
+### Cascade entities (ordered by dependency)
 
 ```
 1. Clerk session invalidation → revoke all sessions for email
@@ -77,7 +115,7 @@ See `reference/right-to-deletion.md` for the full implementation.
 
 Every step in the CF Workflow uses `retries: { limit: 3 }`. See `reference/right-to-deletion.md` for the full `DeletionCascade` WorkflowEntrypoint.
 
-## Receipt email (Amazon SES)
+### Receipt email (Amazon SES)
 
 - Send from `privacy@yourdomain.com`; subject: `"Your data has been deleted — [date]"`.
 - Body MUST state: (1) request received date, (2) completion date, (3) what was deleted, (4) what was retained and why, (5) contact for disputes.
@@ -85,7 +123,7 @@ Every step in the CF Workflow uses `retries: { limit: 3 }`. See `reference/right
 
 See `reference/right-to-deletion.md` for the `sendDeletionReceipt` implementation.
 
-## Audit log — what MUST survive
+### Audit log — what MUST survive
 
 - GDPR Art. 17(3)(b) + Art. 5(2) require proof of deletion. Store email hash (SHA-256), never plaintext.
 - Retain audit rows for **3 years** (statute of limitations for most EU privacy claims).
@@ -93,7 +131,7 @@ See `reference/right-to-deletion.md` for the `sendDeletionReceipt` implementatio
 - **Must NOT persist:** name, phone, address, device IDs, IP address, plaintext email, any behavioral data.
 - Add DDL to a migration file; `DO NOT` add an `email` column. See `reference/right-to-deletion.md` for the full `deletion_audit` DDL.
 
-## wrangler.jsonc binding
+### wrangler.jsonc binding
 
 ```jsonc
 // wrangler.jsonc — add to existing bindings
@@ -109,13 +147,13 @@ See `reference/right-to-deletion.md` for the `sendDeletionReceipt` implementatio
 }
 ```
 
-## Drift detection
+### Drift detection
 
 - `grep -rn 'users.*INSERT\|users.*UPDATE' src/worker/` — every new user-data write needs a deletion step added to the Workflow.
 - Monthly: query `deletion_audit` for `status='failed'` rows; investigate and rerun.
 - Annually: verify all third-party deletion APIs still work (Stripe, Square, listmonk, PostHog, Sentry endpoints change).
 
-## See
+### See
 
 - `[[hono-api]]` — Workflows v2 step-do patterns + retry semantics
 - `[[feature-flags]]` — `deletion_dashboard` flag lifecycle
@@ -123,3 +161,5 @@ See `reference/right-to-deletion.md` for the `sendDeletionReceipt` implementatio
 - `[[secret-provisioning]]` — STRIPE_SECRET_KEY + AWS_SES_* + LISTMONK_USER/PASS + POSTHOG_PERSONAL_API_KEY env setup
 - `[[email-deliverability]]` + `[[email-deliverability-implementation]]` — receipt email send path
 - `[[drift-detection]]` — new data writes that skip cascade registration = drift
+
+```
