@@ -20,9 +20,7 @@ triggers:
 
 ## Performance
 
-- LCP ≤ 2.5s (4-phase: TTFB → load delay → load time → render delay)
-- CLS ≤ 0.1
-- **INP ≤ 200ms** (3-phase: input delay → processing → presentation delay); strict ≤100ms cinematic target
+- **Core Web Vitals — house cinematic targets per `_kernel/standards.md#cwv`** (LCP ≤2.0s · CLS ≤0.05 · INP ≤100ms; INP >200ms = fail). Phase-debug: LCP 4-phase (TTFB→load-delay→load-time→render-delay), INP 3-phase (input-delay→processing→presentation).
 - Worker CPU ≤ 50ms p99 (free tier 10ms CPU cap; paid 30s wall + 50ms CPU default, configurable to 5min)
 - Debug INP via **Long Animation Frames API** (`PerformanceObserver` type:`long-animation-frame`, web-vitals v4+ `longAnimationFrameEntries`)
 - SPA per-route CWV: **Soft Navigations API** (`softNavs:true` in web-vitals v4+)
@@ -47,7 +45,7 @@ triggers:
 - Contrast ≥ 4.5:1
 - Target size ≥ 24px (WCAG 2.2 2.5.8 — the one criterion axe auto-tests)
 - Focus Not Obscured (2.4.11, AA) — focused element never hidden behind sticky headers/footers
-- **Manual review REQUIRED** (axe can't detect): 2.4.11 Focus Not Obscured (AA), 2.4.13 Focus Appearance (AAA), 2.5.7 Dragging (AA), 3.2.6 Consistent Help, 3.3.7 Redundant Entry, 3.3.8 Accessible Auth (AA). Run this checklist every a11y pass.
+- **Manual review REQUIRED** — the 8 WCAG 2.2 criteria axe can't auto-test (per `_kernel/standards.md#wcag22`). Run that checklist every a11y pass.
 
 ## Code
 
@@ -87,8 +85,7 @@ triggers:
 - Title 50-60 chars HARD
 - Meta desc 120-156 chars HARD
 - Keyphrase 0.5-3%
-- JSON-LD per page only when accurate; never pad. WebPage is the floor; add Organization/BreadcrumbList/FAQPage/Person/Product/Service ONLY when they describe real entities on the page
-- FAQPage only when real Q&A exists on the page — never fabricate Q&A to add the schema
+- JSON-LD per page per `_kernel/standards.md#jsonld` (WebPage floor; add Organization/BreadcrumbList/FAQPage/Person/Product/Service only for real on-page entities; FAQPage only for real Q&A — never pad)
 - Exactly 1 H1 in HTML shell (prerender, NOT script-injected)
 - Every internal asset ref resolves to real file in build output
 - `sitemap.xml` every `<url>` has `<lastmod>`
