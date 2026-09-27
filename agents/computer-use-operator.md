@@ -8,8 +8,8 @@ model: "opus"
 permissionMode: bypassPermissions
 maxTurns: 30
 effort: high
-fallback_model: "sonnet"
-fallback_effort: high
+model_fallback: "sonnet"
+effort_fallback: high
 fallback_reason: cost_optimization
 context: fork
 skills: ["01-operating-system"]

@@ -8,8 +8,8 @@ permissionMode: default
 maxTurns: 25
 memory: project
 effort: low
-fallback_model: "haiku"
-fallback_effort: low
+model_fallback: "haiku"
+effort_fallback: low
 fallback_reason: cost_optimization
 context: fork
 skills: ["06-build-and-slice-loop"]

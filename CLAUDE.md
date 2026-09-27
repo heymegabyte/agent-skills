@@ -119,7 +119,7 @@ Scope:
 - **Test** — Playwright v1.56+ agents (v1.59+ MCP) + Vitest 5
 - **Observability** — tiered:
   - Solo SaaS / nonprofit / local / portfolio → **PostHog + Workers Tracing OTLP** (2 vendors max)
-  - Enterprise / regulated / multi-team → **PostHog + Sentry `@sentry/cloudflare` v9 + GA4/GTM + Workers Tracing + Axiom**
+  - Enterprise / regulated / multi-team → **PostHog + Sentry `@sentry/cloudflare` v10 + GA4/GTM + Workers Tracing + Axiom**
   - LLM-heavy (>10k calls/mo) → add **AI Gateway** to either tier
 
 ## Brand

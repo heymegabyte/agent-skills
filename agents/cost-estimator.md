@@ -8,8 +8,8 @@ model: "haiku"
 permissionMode: plan
 maxTurns: 15
 effort: low
-fallback_model: "haiku"
-fallback_effort: low
+model_fallback: "haiku"
+effort_fallback: low
 fallback_reason: cost_optimization
 context: fork
 skills: ["08-deploy-and-runtime-verification"]

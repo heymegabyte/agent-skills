@@ -5,8 +5,8 @@ tools: Grep, Glob, Read, Edit
 permissionMode: default
 model: "haiku"
 effort: low
-fallback_model: "haiku"
-fallback_effort: low
+model_fallback: "haiku"
+effort_fallback: low
 fallback_reason: cost_optimization
 context: fork
 maxTurns: 10

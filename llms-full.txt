@@ -146,7 +146,7 @@ Dark theme FIRST. Purple for cosmic/space only.
 - **ORM** — Drizzle v1
 - **Validation** — Zod 4
 - **Auth** — Clerk Core 3 (SaaS) / Authentik (self-hosted)
-- **Payments** — Stripe (versioned releases: `2026-03-25.dahlia`)
+- **Payments** — Stripe (versioned releases: `2026-08-26.dahlia`)
 - **Email** — Amazon SES (sole rail; SendGrid break-glass)
 - **Jobs** — Inngest v4
 - **Runtime** — Bun 1.4

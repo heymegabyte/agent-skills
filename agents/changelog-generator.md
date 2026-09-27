@@ -7,8 +7,8 @@ model: "haiku"
 permissionMode: default
 maxTurns: 10
 effort: low
-fallback_model: "haiku"
-fallback_effort: low
+model_fallback: "haiku"
+effort_fallback: low
 fallback_reason: cost_optimization
 context: fork
 skills: ["13-observability-and-growth"]

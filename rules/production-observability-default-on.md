@@ -79,7 +79,7 @@ See `reference/production-observability-default-on.md` for the `withSentry` wrap
 Per `CLAUDE.md` § Observability:
 
 - **Solo SaaS / nonprofit / portfolio** — PostHog + Workers Tracing OTLP (2 vendors max)
-- **Enterprise / regulated / multi-team** — add `@sentry/cloudflare` v9 + GA4/GTM + Axiom
+- **Enterprise / regulated / multi-team** — add `@sentry/cloudflare` v10 + GA4/GTM + Axiom
 - **LLM-heavy (>10k AI calls/month)** — add AI Gateway to either tier
 
 Do NOT add all four tiers to a solo project. Vendor proliferation is its own observability problem.

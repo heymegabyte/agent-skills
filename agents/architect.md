@@ -8,8 +8,7 @@ model: "opus"
 permissionMode: plan
 maxTurns: 30
 effort: xhigh
-fallback_model: "sonnet"
-fallback_effort: high
+model_fallback: "sonnet"
 fallback_reason: cost_optimization
 context: fork
 effort_fallback: high

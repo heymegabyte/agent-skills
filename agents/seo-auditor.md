@@ -8,8 +8,8 @@ model: "sonnet"
 permissionMode: plan
 maxTurns: 20
 effort: medium
-fallback_model: "haiku"
-fallback_effort: medium
+model_fallback: "haiku"
+effort_fallback: medium
 fallback_reason: cost_optimization
 context: fork
 skills: ["09-brand-and-content-system", "07-quality-and-verification"]

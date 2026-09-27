@@ -44,13 +44,13 @@ Same OTLP pattern — change URL + auth headers.
 
 ## Pillar Roles (avoid duplication)
 
-- **Sentry** (`@sentry/cloudflare` v9) — **exceptions** only. Use `withSentry` wrapper. Drop the manual breadcrumb scaffolding for I/O; Workers Tracing covers that.
+- **Sentry** (`@sentry/cloudflare` v10) — **exceptions** only. Use `withSentry` wrapper. Drop the manual breadcrumb scaffolding for I/O; Workers Tracing covers that.
 - **Workers Tracing (OTLP)** — **spans** for every I/O, perf timing, "where did time go" debugging.
 - **PostHog** — product analytics + session replay + feature flags + frontend error tracking (one platform). New projects can go PostHog-only for frontend, Sentry-only for backend.
 - **GA4 / GTM** — marketing + acquisition + conversion funnels.
 - **AI Gateway** — every LLM call. Logging + caching + rate-limit + fallback in one binding.
 
-## Sentry v9 + Cloudflare Pattern
+## Sentry v10 + Cloudflare Pattern
 
 ```ts
 import { withSentry } from '@sentry/cloudflare';

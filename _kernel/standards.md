@@ -87,7 +87,7 @@ WebPage floor. Add Organization · BreadcrumbList · FAQPage · Person · Produc
 ## #integrations — Auto-provision tiers
 
 Tier 1 (solo): PostHog + Workers Tracing
-Tier 2 (enterprise): + Sentry `@sentry/cloudflare` v9 + GA4/GTM + Axiom
+Tier 2 (enterprise): + Sentry `@sentry/cloudflare` v10 + GA4/GTM + Axiom
 Tier 3 (AI-heavy >10k LLM/mo): + AI Gateway
 
 ## #model — Model routing

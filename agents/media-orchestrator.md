@@ -7,8 +7,8 @@ model: "sonnet"
 permissionMode: default
 maxTurns: 20
 effort: medium
-fallback_model: "haiku"
-fallback_effort: medium
+model_fallback: "haiku"
+effort_fallback: medium
 fallback_reason: cost_optimization
 context: fork
 skills: ["12-media-orchestration"]

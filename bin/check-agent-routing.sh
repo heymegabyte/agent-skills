@@ -14,6 +14,13 @@
 
 set -uo pipefail
 
+# Needs bash >=4 for associative arrays; macOS default bash is 3.2. Skip gracefully
+# rather than erroring (CI + lefthook run under bash >=4, where this fully executes).
+if ((BASH_VERSINFO[0] < 4)); then
+  printf '⚠ check-agent-routing: needs bash >=4 (assoc arrays); found %s — skipping (run under brew bash for the full check).\n' "$BASH_VERSION" >&2
+  exit 0
+fi
+
 JSON=0
 for arg in "$@"; do
   case "$arg" in
