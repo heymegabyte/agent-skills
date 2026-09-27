@@ -68,7 +68,7 @@ Config must reference model **tier aliases** (`opus` / `sonnet` / `haiku`), NEVE
 
 Rules (enforce in agent frontmatter + settings):
 
-- Agent frontmatter `model:` / `fallback_model:` use **aliases only**. A full ID (`claude-opus-4-8[1m]`) is provider-locked — invalid on native Anthropic (the `[1m]` suffix) and a wrong ID 404s → breaks the spawn.
+- Agent **and slash-command** frontmatter `model:` / `fallback_model:` use **aliases only**. A full ID (`claude-opus-4-8[1m]`) is provider-locked — invalid on native Anthropic (the `[1m]` suffix) and a wrong ID 404s → breaks the spawn. (Eval/judge model pins that call a model client directly may use the evergreen `claude-haiku-4-5` form — portable via DeepSeek's `claude-*` prefix-map — never a dated `-20251001` snapshot.)
 - Never hardcode a provider's model IDs in `settings.json` (the base, provider-agnostic layer — set `"model": "opus"`). Put provider specifics in `settings.local.json` (the DeepSeek override) or the shell env, so switching providers = swapping only that layer.
 - Secrets via `apiKeyHelper` (→ `get-secret DEEPSEEK_API_KEY`), never a hardcoded `ANTHROPIC_AUTH_TOKEN` on disk.
 - Current DeepSeek IDs (per DeepSeek's official Claude Code docs, Sep 2026): `deepseek-flash` / `deepseek-flash[1m]`. `deepseek-v4-flash` is undocumented — prefer `deepseek-flash`.
