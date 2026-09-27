@@ -10,3 +10,4 @@ members:
   - rules/text-contrast
   - rules/copy-writing
   - rules/shadcn-design-system
+  - rules/buttons-accommodate-largest-text
