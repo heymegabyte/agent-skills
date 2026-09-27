@@ -20,11 +20,11 @@ Set a realistic browser User-Agent on every raw fetch/curl/WebFetch call to avoi
 - Raw fetch/curl/WebFetch/Node fetch/Bun fetch/Python requests = realistic browser UA mandatory.
 - Default UA strings get blocked by Cloudflare Bot Management, CF Protect, AWS WAF, Akamai, Imperva, PerimeterX.
 
-## Canonical UA (rotate quarterly, mirror current Chrome stable)
+## Canonical UA (mirror current Chrome stable — rotate ~monthly; Chrome ships every 2 weeks since Sep 2026)
 
-- Desktop: `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36`
-- iOS (mobile-only sites): `Mozilla/5.0 (iPhone; CPU iPhone OS 18_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.2 Mobile/15E148 Safari/604.1`
-- Verified Chrome stable via `https://chromiumdash.appspot.com/fetch_releases?channel=Stable` (2026-06-08 → 149.0.7827.55)
+- Desktop: `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36`
+- iOS (mobile-only sites): `Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.0 Mobile/15E148 Safari/604.1` — Apple FROZE the OS token at `18_6` since iOS 26 (fingerprint defense); only `Version/` tracks the real iOS (27). Bump `Version/` on iOS majors, NEVER the `OS` token.
+- Verified Chrome stable via `https://chromiumdash.appspot.com/fetch_releases?channel=Stable` (2026-09-27 → Chrome 153.0.8010.x)
 - **Implementation lives at `15-site-generation/_real-ua.mjs`** (exports `REAL_UA_DESKTOP`, `REAL_UA_IOS`, `REAL_HEADERS`). Every site-generation script imports from there — no inline hardcoded UAs. Update both the rule's UA line AND the constant in one commit.
 - **Drift gate**: `.github/workflows/version-drift-check.yml` (weekly Mondays 09:17 UTC) auto-opens a deduped issue when Chrome stable drifts ≥5 majors from the pinned constant.
 

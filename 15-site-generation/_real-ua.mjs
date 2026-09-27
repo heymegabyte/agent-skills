@@ -3,16 +3,17 @@
  * Per rules/fetch-defaults.md — must mirror current Chrome stable to avoid
  * CF Bot Management / Akamai / Imperva fingerprinting outdated UAs as bots.
  *
- * Verify quarterly via:
+ * Verify ~monthly (Chrome ships every 2 weeks since Sep 2026) via:
  *   curl -s 'https://chromiumdash.appspot.com/fetch_releases?channel=Stable&platform=Mac&num=1' | jq -r '.[0].version'
  *
- * Last updated: 2026-06-08 → Chrome 149.0.7827.55
+ * Last updated: 2026-09-27 → Chrome 153.0.8010.x. iOS UA: Apple froze the OS token at
+ * 18_6 since iOS 26 (fingerprint defense) — only Version/ tracks the real iOS (=27).
  */
 export const REAL_UA_DESKTOP =
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36';
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36';
 
 export const REAL_UA_IOS =
-  'Mozilla/5.0 (iPhone; CPU iPhone OS 18_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.2 Mobile/15E148 Safari/604.1';
+  'Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.0 Mobile/15E148 Safari/604.1';
 
 /** Companion headers — pair with UA per fetch-defaults.md */
 export const REAL_HEADERS = {
