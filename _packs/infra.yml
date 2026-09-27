@@ -13,3 +13,4 @@ members:
   - rules/email-deliverability
   - rules/email-deliverability-implementation
   - rules/cloudflare-native-provisioning
+  - rules/terminal-styling

@@ -116,8 +116,7 @@ Enforce TS 5.9+ strict mode, Google TS Style, ESM-only imports, and Cloudflare W
 ## Bash
 
 - camelCase fns, UPPER_CASE vars. ShellCheck + shfmt. shdoc format. Cross-platform. Idempotent.
-- Output: `source ~/.claude/hooks/style.sh` then `emdash_*` functions — NEVER raw echo.
-- Tools: gum (style/log/spin/confirm), glow (markdown render), freeze (code → PNG), vhs (record terminal), mods (AI in CLI).
+- Output: `source ~/.claude/hooks/style.sh` + `emdash_*` (gum-backed, CI-safe fallback) — NEVER raw echo. Full standard (charm ecosystem + CLI integration + enforcement hook): `terminal-styling.md`.
 
 ## Python
 
