@@ -4,11 +4,11 @@ description: Sentry-triggered incident response agent. Reads error events, trace
 tools: Read, Bash, Glob, Grep, Write, Edit, mcp__sentry__*, mcp__github-mcp__*
 allowed-tools: Read Glob Grep Write Edit Bash(git:*) Bash(gh:*) mcp__sentry__* mcp__github-mcp__*
 disallowedTools: mcp__*_stripe__*
-model: "claude-opus-4-8[1m]"
+model: "opus"
 permissionMode: default
 maxTurns: 25
 effort: high
-fallback_model: "claude-sonnet-4-6"
+fallback_model: "sonnet"
 fallback_effort: high
 fallback_reason: cost_optimization
 context: fork

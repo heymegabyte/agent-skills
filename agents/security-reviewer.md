@@ -4,11 +4,11 @@ description: OWASP Top 10 security auditor. Reviews for injection flaws, secrets
 tools: Read, Grep, Glob, Bash
 allowed-tools: Read Grep Glob Bash(git:*) Bash(grep:*) Bash(rg:*) Bash(find:*) Bash(npm:audit) Bash(npm:ls) Bash(pnpm:audit)
 disallowedTools: Write, Edit, Agent
-model: "claude-opus-4-8[1m]"
+model: "opus"
 permissionMode: plan
 maxTurns: 25
 effort: xhigh
-fallback_model: "claude-sonnet-4-6"
+fallback_model: "sonnet"
 fallback_effort: high
 fallback_reason: cost_optimization
 context: fork

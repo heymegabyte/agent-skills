@@ -3,9 +3,9 @@ name: renamer
 description: Semantic rename across codebase. Greps all references, updates imports and usages, renames file or symbol. Safe rename with verification.
 tools: Grep, Glob, Read, Edit
 permissionMode: default
-model: "claude-haiku-4-5"
+model: "haiku"
 effort: low
-fallback_model: "claude-haiku-4-5"
+fallback_model: "haiku"
 fallback_effort: low
 fallback_reason: cost_optimization
 context: fork

@@ -3,11 +3,11 @@ name: changelog-generator
 description: Auto-generates changelogs from conventional commits. Parses git log since last tag, groups by type, writes user-outcome-focused CHANGELOG.md entries.
 tools: Read, Bash, Grep, Write, Edit
 allowed-tools: Read Grep Write Edit Bash(git:*)
-model: "claude-haiku-4-5"
+model: "haiku"
 permissionMode: default
 maxTurns: 10
 effort: low
-fallback_model: "claude-haiku-4-5"
+fallback_model: "haiku"
 fallback_effort: low
 fallback_reason: cost_optimization
 context: fork

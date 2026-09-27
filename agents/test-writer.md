@@ -4,11 +4,11 @@ description: TDD-first test engineer. Writes failing Playwright E2E tests emulat
 tools: Read, Write, Edit, Grep, Glob, Bash
 allowed-tools: Read Write Edit Grep Glob Bash(npx:*) Bash(pnpm:*) Bash(npm:*) Bash(git:*)
 disallowedTools: 
-model: "claude-sonnet-4-6"
+model: "sonnet"
 permissionMode: default
 maxTurns: 25
 effort: medium
-fallback_model: "claude-haiku-4-5"
+fallback_model: "haiku"
 fallback_effort: medium
 fallback_reason: cost_optimization
 context: fork

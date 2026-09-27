@@ -59,6 +59,20 @@ Select the correct Claude model tier by task complexity and cost; never use Opus
 - 200K context, 64K output.
 - Prefer evergreen alias `claude-haiku-4-5` over the dated `…-20251001` snapshot.
 
+## Provider portability (Anthropic ↔ DeepSeek)
+
+Config must reference model **tier aliases** (`opus` / `sonnet` / `haiku`), NEVER full provider-specific IDs (`claude-opus-4-8[1m]`, `deepseek-v4-flash`). Claude Code hardcodes the three aliases and resolves them per-provider:
+
+- **Anthropic** — aliases map to the current Claude tier (`opus`→Opus 4.8, `sonnet`→Sonnet 4.6, `haiku`→Haiku 4.5).
+- **DeepSeek** (`ANTHROPIC_BASE_URL=https://api.deepseek.com/anthropic`) — `ANTHROPIC_DEFAULT_{OPUS,SONNET,HAIKU}_MODEL` + `CLAUDE_CODE_SUBAGENT_MODEL` remap the aliases to DeepSeek IDs; the endpoint also prefix-maps `claude-opus*`→`deepseek-v4-pro`, `claude-{sonnet,haiku}*`→`deepseek-flash`.
+
+Rules (enforce in agent frontmatter + settings):
+
+- Agent frontmatter `model:` / `fallback_model:` use **aliases only**. A full ID (`claude-opus-4-8[1m]`) is provider-locked — invalid on native Anthropic (the `[1m]` suffix) and a wrong ID 404s → breaks the spawn.
+- Never hardcode a provider's model IDs in `settings.json` (the base, provider-agnostic layer — set `"model": "opus"`). Put provider specifics in `settings.local.json` (the DeepSeek override) or the shell env, so switching providers = swapping only that layer.
+- Secrets via `apiKeyHelper` (→ `get-secret DEEPSEEK_API_KEY`), never a hardcoded `ANTHROPIC_AUTH_TOKEN` on disk.
+- Current DeepSeek IDs (per DeepSeek's official Claude Code docs, Sep 2026): `deepseek-flash` / `deepseek-flash[1m]`. `deepseek-v4-flash` is undocumented — prefer `deepseek-flash`.
+
 ## Retired models (requests error)
 
 - `claude-3-opus`

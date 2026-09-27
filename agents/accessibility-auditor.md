@@ -4,11 +4,11 @@ description: Dedicated axe-core + Playwright accessibility agent. Navigates page
 tools: Bash, Read, Glob, Grep, mcp__playwright__*
 allowed-tools: Read Glob Grep Bash(npx:*) Bash(node:*) mcp__playwright__*
 disallowedTools: Write, Edit
-model: "claude-sonnet-4-6"
+model: "sonnet"
 permissionMode: plan
 maxTurns: 20
 effort: medium
-fallback_model: "claude-haiku-4-5"
+fallback_model: "haiku"
 fallback_effort: medium
 fallback_reason: cost_optimization
 context: fork

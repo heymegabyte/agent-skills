@@ -4,11 +4,11 @@ description: Visual quality assurance agent. Screenshots pages at all breakpoint
 tools: Read, Bash, mcp__playwright__*
 allowed-tools: Read Bash(npx:*) mcp__playwright__*
 disallowedTools: Write, Edit
-model: "claude-opus-4-8[1m]"
+model: "opus"
 permissionMode: plan
 maxTurns: 25
 effort: xhigh
-fallback_model: "claude-sonnet-4-6"
+fallback_model: "sonnet"
 fallback_effort: high
 fallback_reason: cost_optimization
 context: fork

@@ -4,11 +4,11 @@ description: CSS animation and motion designer. Implements View Transitions API,
 tools: Read, Write, Edit, Bash, Glob, Grep
 allowed-tools: Read Write Edit Bash Glob Grep
 disallowedTools: 
-model: "claude-sonnet-4-6"
+model: "sonnet"
 permissionMode: default
 maxTurns: 18
 effort: medium
-fallback_model: "claude-haiku-4-5"
+fallback_model: "haiku"
 fallback_effort: medium
 fallback_reason: cost_optimization
 context: fork

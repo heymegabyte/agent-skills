@@ -4,11 +4,11 @@ description: Drizzle schema migration agent. Generates migrations from schema di
 tools: Read, Bash, Glob, Grep, Write, Edit
 allowed-tools: Read Glob Grep Write Edit Bash(npx:*) Bash(wrangler:*) Bash(pnpm:*) Bash(sqlite3:*)
 disallowedTools: 
-model: "claude-sonnet-4-6"
+model: "sonnet"
 permissionMode: default
 maxTurns: 25
 effort: medium
-fallback_model: "claude-haiku-4-5"
+fallback_model: "haiku"
 fallback_effort: medium
 fallback_reason: cost_optimization
 context: fork

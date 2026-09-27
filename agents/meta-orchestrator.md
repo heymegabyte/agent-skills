@@ -4,11 +4,11 @@ description: Master agent coordinating all tools, MCPs, agents, and skills. Plan
 tools: Read, Bash, Glob, Grep, Agent, mcp__*
 allowed-tools: Read Glob Grep Write Edit Bash(git:*) Bash(curl:*) Bash(npx:*) Bash(wrangler:*) Agent mcp__*
 disallowedTools: mcp__stripe__*
-model: "claude-opus-4-8[1m]"
+model: "opus"
 permissionMode: bypassPermissions
 maxTurns: 100
 effort: xhigh
-fallback_model: "claude-sonnet-4-6"
+fallback_model: "sonnet"
 fallback_effort: high
 fallback_reason: cost_optimization
 context: fork

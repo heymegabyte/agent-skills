@@ -3,12 +3,12 @@ name: code-simplifier
 description: Simplifies code for clarity, consistency, and maintainability. Reduces complexity, flattens nesting, removes dead code, consolidates duplicates. Focuses on recently modified files.
 tools: Read, Write, Edit, Grep, Glob, Bash
 allowed-tools: Read Write Edit Grep Glob Bash(git:*) Bash(npx:*) Bash(npm:*) Bash(pnpm:*)
-model: "claude-haiku-4-5"
+model: "haiku"
 permissionMode: default
 maxTurns: 25
 memory: project
 effort: low
-fallback_model: "claude-haiku-4-5"
+fallback_model: "haiku"
 fallback_effort: low
 fallback_reason: cost_optimization
 context: fork

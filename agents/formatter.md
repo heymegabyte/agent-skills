@@ -3,9 +3,9 @@ name: formatter
 description: Runs prettier + oxlint --fix on modified files. Ensures consistent formatting and lint compliance with zero human intervention.
 tools: Bash, Read
 permissionMode: default
-model: "claude-haiku-4-5"
+model: "haiku"
 effort: low
-fallback_model: "claude-haiku-4-5"
+fallback_model: "haiku"
 fallback_effort: low
 fallback_reason: cost_optimization
 context: fork

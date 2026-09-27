@@ -3,9 +3,9 @@ name: dead-code-remover
 description: Finds unreachable exports, unused imports, orphaned functions, and dead variables. Greps project to confirm no references, then removes safely.
 tools: Grep, Glob, Read, Edit
 permissionMode: default
-model: "claude-haiku-4-5"
+model: "haiku"
 effort: low
-fallback_model: "claude-haiku-4-5"
+fallback_model: "haiku"
 fallback_effort: low
 fallback_reason: cost_optimization
 context: fork

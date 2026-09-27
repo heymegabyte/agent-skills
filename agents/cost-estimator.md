@@ -4,11 +4,11 @@ description: Estimates Cloudflare Workers costs before deploying. Reads wrangler
 tools: Read, Bash, Grep, Glob
 allowed-tools: Read Grep Glob Bash(cat:*) Bash(wc:*) Bash(find:*) Bash(wrangler:*)
 disallowedTools: Write, Edit
-model: "claude-haiku-4-5"
+model: "haiku"
 permissionMode: plan
 maxTurns: 15
 effort: low
-fallback_model: "claude-haiku-4-5"
+fallback_model: "haiku"
 fallback_effort: low
 fallback_reason: cost_optimization
 context: fork

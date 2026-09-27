@@ -3,11 +3,11 @@ name: media-orchestrator
 description: Creates, optimizes, and orchestrates media assets — images (ResGrid, AVIF/WebP), video (clips, GIFs, Veo), audio (TTS, podcast), and 3D. Coordinates Cloudflare Images, R2, and AI pipeline.
 tools: Read, Write, Edit, Bash, Glob, Grep
 allowed-tools: Read Write Edit Bash Glob Grep
-model: "claude-sonnet-4-6"
+model: "sonnet"
 permissionMode: default
 maxTurns: 20
 effort: medium
-fallback_model: "claude-haiku-4-5"
+fallback_model: "haiku"
 fallback_effort: medium
 fallback_reason: cost_optimization
 context: fork

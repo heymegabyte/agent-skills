@@ -4,12 +4,12 @@ description: Post-deploy smoke test agent. Verifies live URL, checks console err
 tools: Read, Bash, Glob, Grep, mcp__playwright__*
 allowed-tools: Read Glob Grep Bash(curl:*) Bash(npx:*) Bash(wrangler:*) mcp__playwright__*
 disallowedTools: Write, Edit
-model: "claude-sonnet-4-6"
+model: "sonnet"
 permissionMode: bypassPermissions
 isolation: worktree
 maxTurns: 20
 effort: medium
-fallback_model: "claude-haiku-4-5"
+fallback_model: "haiku"
 fallback_effort: medium
 fallback_reason: cost_optimization
 context: fork

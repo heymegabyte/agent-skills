@@ -4,11 +4,11 @@ description: Audits pages for SEO compliance — title, meta, H1, JSON-LD, OG ta
 tools: Read, Bash, Grep, Glob, mcp__playwright__*, mcp__firecrawl__*
 allowed-tools: Read Grep Glob Bash(curl:*) Bash(npx:*) mcp__playwright__* mcp__firecrawl__*
 disallowedTools: Write, Edit
-model: "claude-sonnet-4-6"
+model: "sonnet"
 permissionMode: plan
 maxTurns: 20
 effort: medium
-fallback_model: "claude-haiku-4-5"
+fallback_model: "haiku"
 fallback_effort: medium
 fallback_reason: cost_optimization
 context: fork

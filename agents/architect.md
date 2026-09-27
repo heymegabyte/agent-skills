@@ -4,11 +4,11 @@ description: Pre-implementation architecture agent. Analyzes project structure, 
 tools: Read, Glob, Grep, Bash
 allowed-tools: Read Glob Grep Bash(git:*) Bash(find:*) Bash(ls:*) Bash(cat:*) Bash(wc:*)
 disallowedTools: Write, Edit
-model: "claude-opus-4-8[1m]"
+model: "opus"
 permissionMode: plan
 maxTurns: 30
 effort: xhigh
-fallback_model: "claude-sonnet-4-6"
+fallback_model: "sonnet"
 fallback_effort: high
 fallback_reason: cost_optimization
 context: fork

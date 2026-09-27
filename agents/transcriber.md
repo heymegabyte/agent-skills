@@ -3,9 +3,9 @@ name: transcriber
 description: Transcribes a plan step into code, one file at a time. Reads the spec, generates the implementation, writes clean production code with no oversight.
 tools: Read, Write, Grep
 permissionMode: default
-model: "claude-haiku-4-5"
+model: "haiku"
 effort: low
-fallback_model: "claude-haiku-4-5"
+fallback_model: "haiku"
 fallback_effort: low
 fallback_reason: cost_optimization
 context: fork

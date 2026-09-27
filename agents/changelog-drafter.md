@@ -3,9 +3,9 @@ name: changelog-drafter
 description: Reads git log since last tag, drafts CHANGELOG entry. Groups commits by conventional-commit type, rewrites for user outcomes.
 tools: Bash, Read
 permissionMode: default
-model: "claude-haiku-4-5"
+model: "haiku"
 effort: low
-fallback_model: "claude-haiku-4-5"
+fallback_model: "haiku"
 fallback_effort: low
 fallback_reason: cost_optimization
 context: fork

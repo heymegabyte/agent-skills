@@ -4,11 +4,11 @@ description: Desktop automation specialist. Controls native macOS apps via Compu
 tools: Read, Bash, mcp__desktop-control__*
 allowed-tools: Read Bash(ls:*) Bash(find:*) mcp__desktop-control__*
 disallowedTools: Write, Edit
-model: "claude-opus-4-8[1m]"
+model: "opus"
 permissionMode: bypassPermissions
 maxTurns: 30
 effort: high
-fallback_model: "claude-sonnet-4-6"
+fallback_model: "sonnet"
 fallback_effort: high
 fallback_reason: cost_optimization
 context: fork
