@@ -36,16 +36,17 @@ DRIFT_ENTRIES=()
 
 for f in agents/*.md; do
   # Parse frontmatter via awk to stop at the closing ---
-  has_opus=$(awk '/^---$/{c++; if(c==2) exit} /^model: opus$/' "$f")
+  has_opus=$(awk '/^---$/{c++; if(c==2) exit} /^model: *"?opus"?$/' "$f")
   [ -z "$has_opus" ] && continue
 
   name=$(basename "$f" .md)
   missing=""
-  for field in model_fallback effort effort_fallback; do
-    if ! awk '/^---$/{c++; if(c==2) exit} {print}' "$f" | grep -qE "^${field}:"; then
-      missing+="${field} "
-    fi
-  done
+  fm=$(awk '/^---$/{c++; if(c==2) exit} {print}' "$f")
+  grep -qE "^effort:" <<<"$fm" || missing+="effort "
+  # Accept either naming convention: canonical model_fallback/effort_fallback OR the
+  # agents' fallback_model/fallback_effort (tolerated pending canonicalization).
+  grep -qE "^(model_fallback|fallback_model):" <<<"$fm" || missing+="model_fallback "
+  grep -qE "^(effort_fallback|fallback_effort):" <<<"$fm" || missing+="effort_fallback "
 
   if [ -z "$missing" ]; then
     PASS=$((PASS + 1))

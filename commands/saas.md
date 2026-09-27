@@ -2,7 +2,7 @@
 description: One-line SaaS — from a description, scaffold a complete CF-native multi-tenant SaaS (Hono + D1 + Drizzle + Better Auth + Stripe + shadcn) deployed to a real URL
 argument-hint: <one-line-description-of-the-saas>
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Agent, WebFetch, mcp__playwright__*
-model: claude-opus-4-7
+model: opus
 ---
 
 ULTRATHINK before responding. The user wants a complete SaaS: $ARGUMENTS

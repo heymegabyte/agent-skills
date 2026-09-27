@@ -17,7 +17,7 @@ Run the full eval suite per [[evals]] + [[contract-first-ai]]. Every AI-heavy fe
 - `--ci` — exit code 1 on any FAIL or composite regression > 0.5; suppress interactive output
 - `--slug <slug>` — run only cases matching this slug
 - `--tag <tag>` — run only cases with this tag in their `tags[]` array
-- `--judge-model <model>` — override judge model (default: `claude-haiku-4-5-20251001`)
+- `--judge-model <model>` — override judge model (default: `claude-haiku-4-5`)
 
 ---
 
@@ -50,7 +50,7 @@ Run only if the case has `expected.reference_answer` field. Use `@cf/baai/bge-ba
 **Tier 3 — LLM-as-judge (Haiku ~$0.002/call)**
 Run the G-eval pattern from `07-quality-and-verification/llm-evals.md`: judge generates evaluation steps from `scoring_rubric`, then scores 0-5 per dimension. Composite = mean of dimension scores. Compare against `thresholds.composite_min` and `thresholds.per_dimension_min`.
 
-Override judge model via `--judge-model` arg. Default: `claude-haiku-4-5-20251001`. Never use Opus for judging — cost is 25× higher than Haiku for no measurable calibration gain.
+Override judge model via `--judge-model` arg. Default: `claude-haiku-4-5`. Never use Opus for judging — cost is 25× higher than Haiku for no measurable calibration gain.
 
 Run all cases in parallel via `Promise.all` — never serial.
 

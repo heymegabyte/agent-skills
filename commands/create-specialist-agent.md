@@ -14,7 +14,7 @@ Scaffold a new specialist agent per [[agent-selection]] (anti-inflation: only wh
 Steps:
 
 - Confirm recurrence first — if it's one-off, STOP and surface as a Rec instead.
-- Write `~/.claude/agents/<name>.md` with frontmatter: `name`, `description`, `tools`, `model`, `effort` (+ `model_fallback`/`effort_fallback` if Opus-pinned per [[opus-quota-fallback]]).
+- Write `~/.claude/agents/<name>.md` with frontmatter: `name`, `description`, `tools`, `model`, `effort` (+ `model_fallback`/`effort_fallback` if Opus-pinned per [[opus-quota-fallback]]). **`model`/`model_fallback` MUST be tier aliases (`opus`/`sonnet`/`haiku`), NEVER full IDs like `claude-opus-4-8` — per [[model-routing]] § Provider portability, so the agent works under both Anthropic and DeepSeek.**
 - Body = system prompt + labeled sections: Purpose · Triggers · Non-goals · Inputs · Outputs (≤200-word summary contract) · Verification.
 - Register the agent in the [[agent-selection]] taxonomy (routing table + when-to-use row).
 - Cross-link `[[agent-selection]]` and any sibling agents.
