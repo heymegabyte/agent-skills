@@ -82,7 +82,7 @@ WebPage floor. Add Organization · BreadcrumbList · FAQPage · Person · Produc
 - Hooks: lefthook (NOT husky)
 - Test: Playwright v1.59+ + Vitest 5
 - Observability tiers — solo: PostHog + Workers Tracing; enterprise: + Sentry + GA4 + Axiom; LLM-heavy: + AI Gateway
-- Versions current as of 2026-09 (bump on major release): Angular 22 (GA Jun'26) · Node 24 Active-LTS (22→maintenance, EOL Apr'27) · TS 7.0 Go-compiler (GA Jul'26) · Bun 1.4 · Vitest 5 · Nx 22 · Playwright 1.63 · Tailwind v4.3 · Capacitor 8 (9=alpha)
+- Versions current as of 2026-09-27 (bump on major release): Angular 22 (GA Jun'26) · Node 24 Active-LTS (22→maint EOL Apr'27; **Node 26 → Active-LTS Oct 28'26**, when Node shifts to 1-major/year all-LTS) · TS 7.0 Go-compiler (GA Jul'26) · Bun 1.4.2 · Vitest 5 · Nx 22 · Playwright 1.63 · Tailwind v4.3 · Capacitor 8 (9=alpha)
 
 ## #integrations — Auto-provision tiers
 
