@@ -160,7 +160,7 @@ TS 7.0 (GA Jul 8 2026): native Go compiler, ~8–12× faster type-check/build �
 ### Other
 
 - **Vectorize** — 10M vectors/index, topK 50
-- **Workflows** — 25K step limit (was 1024), `pause()` / `resume()` in local dev
+- **Workflows** — 10K steps default / 25K max (configurable in wrangler; was 1024), `pause()` / `resume()` in local dev
 
 ## CF Containers (GA Apr 13 2026)
 
