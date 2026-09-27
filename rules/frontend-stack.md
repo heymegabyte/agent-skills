@@ -30,7 +30,7 @@ Never write hand-rolled HTML files for any user-facing surface.
 
 ### Core
 
-- **Vite 6+** w/ React plugin
+- **Vite 8** (Rolldown/Rust unified bundler, 10–30× faster builds) w/ React plugin
 - **React 19** (with Server Components when warranted)
 - **TanStack Router** for type-safe client routing
 - **TanStack Start** OR **vite-plugin-ssr / vike** OR **Vite SSG (`vite-ssg`)** for SSR/SSG

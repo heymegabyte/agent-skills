@@ -1,12 +1,12 @@
 ---
 name: "Drizzle ORM and Migrations"
-description: "Drizzle ORM v1.0 (beta.2) as the database abstraction layer for D1 (SQLite) and Neon (PostgreSQL). RQBv2, 10x faster introspection, schema-first design with auto-generated migrations, type-safe queries, and the Drizzle → D1/Neon setup pattern. Covers schema conventions, relation patterns, migration workflow, and seed data."
+description: "Drizzle ORM v1.0 (pre-release — v1.0.0-rc.1 as of Apr 2026; stable line is still 0.45.x — pin the rc explicitly) as the database abstraction layer for D1 (SQLite) and Neon (PostgreSQL). RQBv2, 10x faster introspection, schema-first design with auto-generated migrations, type-safe queries, and the Drizzle → D1/Neon setup pattern. Covers schema conventions, relation patterns, migration workflow, and seed data."
 updated: "2026-04-23"
 ---
 
 # Drizzle ORM and Migrations
 
-## Why Drizzle (v1.0.0-beta.2, passed Prisma in downloads)
+## Why Drizzle (v1.0.0-rc.1 — pre-release; stable line still 0.45.x; passed Prisma in downloads)
 
 - Type-safe queries, 5KB bundle (vs Prisma 40KB+), zero-overhead SQL
 - RQBv2 — 363 commits, 9K+ tests, relational query builder rewrite

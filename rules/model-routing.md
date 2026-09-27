@@ -19,6 +19,12 @@ paths:
 
 Select the correct Claude model tier by task complexity and cost; never use Opus for tasks Haiku can handle.
 
+## Fable 5 (`claude-fable-5`) — frontier (newest, runtime-confirmed)
+
+- Newest Claude tier per the runtime env; sits above Opus 4.8 for the hardest reasoning Opus can't close.
+- Context / pricing / effort params NOT pinned here — verify at `docs.anthropic.com/en/docs/about-claude/models/overview` before routing production or batch work to it (cost unknown).
+- Default routing stays Opus 4.8 / Sonnet 4.6 / Haiku 4.5. Web claims that "Opus 5 / Sonnet 5" supersede the 4.x line are UNVERIFIED against the runtime (which reports Opus 4.8 + Fable 5 as current) — do NOT swap the 4.x IDs on that basis; a wrong model ID breaks every spawn.
+
 ## Opus 4.8 (`claude-opus-4-8`) — flagship
 
 - **Use for** — same surfaces as Opus 4.7; zero-cost upgrade (same $5/$25 per MTok pricing).
@@ -60,7 +66,7 @@ Select the correct Claude model tier by task complexity and cost; never use Opus
 - `claude-sonnet-3-7`
 - `claude-haiku-3-5`
 - **Retired Apr 19 2026** — `claude-haiku-3`
-- **Retiring Jun 15 2026** — `claude-sonnet-4` (alias `claude-sonnet-4-0` → `…-20250514`), `claude-opus-4` (alias `claude-opus-4-0` → `…-20250514`)
+- **Retired Jun 15 2026** — `claude-sonnet-4` (alias `claude-sonnet-4-0` → `…-20250514`), `claude-opus-4` (alias `claude-opus-4-0` → `…-20250514`)
 
 ## Never
 

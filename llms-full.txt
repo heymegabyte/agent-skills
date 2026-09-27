@@ -144,7 +144,7 @@ Dark theme FIRST. Purple for cosmic/space only.
 - **Mobile** — Capacitor 8
 - **Database** — D1 / Neon
 - **ORM** — Drizzle v1
-- **Validation** — Zod
+- **Validation** — Zod 4
 - **Auth** — Clerk Core 3 (SaaS) / Authentik (self-hosted)
 - **Payments** — Stripe (versioned releases: `2026-03-25.dahlia`)
 - **Email** — Amazon SES (sole rail; SendGrid break-glass)

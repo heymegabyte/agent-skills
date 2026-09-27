@@ -37,7 +37,7 @@ Build inside an **Nx monorepo running Angular 22** with **Angular CLI MCP**. Sta
 - **Ionic 8 + Capacitor 8** for MOBILE NATIVE SHELLS ONLY. **Tauri 2** for desktop.
 - **Angular built-in i18n** (`@angular/localize`) — NOT ngx-translate, NOT Transloco.
 - **ESLint 9 + Prettier + @angular-eslint + eslint-plugin-rxjs**, `strict` + `noUncheckedIndexedAccess` + `exactOptionalPropertyTypes`.
-- **Vitest** via `@analogjs/vitest-angular` (Karma deprecated since 17). **Playwright** TDD-RED first per `e2e-tdd-organization`. **MSW** for API mocks (dev + Storybook + Playwright). **Storybook 8** for the component library.
+- **Vitest** via `@analogjs/vitest-angular` (Karma deprecated since 17). **Playwright** TDD-RED first per `e2e-tdd-organization`. **MSW** for API mocks (dev + Storybook + Playwright). **Storybook 10** for the component library.
 
 ### Workspace creation
 
