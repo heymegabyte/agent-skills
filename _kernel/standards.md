@@ -78,7 +78,7 @@ WebPage floor. Add Organization · BreadcrumbList · FAQPage · Person · Produc
 - Email: Amazon SES (sole rail) + Listmonk (bulk); SendGrid break-glass
 - Runtime: Node 24 native TS / Bun 1.4+
 - TS: 7.0 native-Go compiler, strict (alias TS 6.x for typescript-eslint/ts-morph until 7.1 ships the stable programmatic API)
-- Lint: oxlint + ESLint 9 + Prettier (NEVER Biome)
+- Lint: oxlint + ESLint 10 + Prettier (NEVER Biome)
 - Hooks: lefthook (NOT husky)
 - Test: Playwright v1.59+ + Vitest 5
 - Observability tiers — solo: PostHog + Workers Tracing; enterprise: + Sentry + GA4 + Axiom; LLM-heavy: + AI Gateway

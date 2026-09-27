@@ -113,7 +113,7 @@ Scope:
 - **Email** — Amazon SES (sole transactional rail) + Listmonk (bulk); SendGrid break-glass
 - **Runtime** — Node 24 native TS / Bun 1.4+
 - **TypeScript** — 7.0 (native Go compiler; alias TS 6.x for typescript-eslint/ts-morph until 7.1)
-- **Lint** — oxlint + ESLint 9 + Prettier (NEVER Biome)
+- **Lint** — oxlint + ESLint 10 + Prettier (NEVER Biome)
 - **Hooks** — lefthook (NOT husky)
 - **Test** — Playwright v1.56+ agents (v1.59+ MCP) + Vitest 5
 - **Observability** — tiered:

@@ -42,7 +42,7 @@ Every emdash project ships an **industry-leading lint+autofix stack** wired into
 ### TS / JS / JSON / MD / CSS / YAML
 
 - **oxlint** — first-pass speed (50-100× ESLint, no formatting).
-- **ESLint 9 flat config** — `eslint@9` + `@eslint/js` + `typescript-eslint@8` + `eslint-plugin-perfectionist` + `eslint-plugin-security` + `eslint-plugin-unicorn` + `eslint-plugin-promise` + `eslint-plugin-n` + `eslint-plugin-sonarjs` + `eslint-plugin-import` + `eslint-config-prettier` (last).
+- **ESLint 10 flat config** (flat-config only; eslintrc removed) — `eslint@10` + `@eslint/js` + `typescript-eslint@8` (≥8.56 for ESLint 10) + `eslint-plugin-perfectionist` + `eslint-plugin-security` + `eslint-plugin-unicorn` + `eslint-plugin-promise` + `eslint-plugin-n` + `eslint-plugin-sonarjs` + `eslint-plugin-import` (wrap via `@eslint/compat` `fixupPluginRules` — its context APIs were removed in v10) + `eslint-config-prettier` (last).
 - **Prettier 3** — `prettier@3` + `prettier-plugin-packagejson` + `prettier-plugin-organize-imports`.
 - **Stylelint 16** — `stylelint-config-standard` + `stylelint-config-recommended` + `stylelint-config-clean-order`.
 - **markdownlint-cli2** — MD013/MD025/MD033/MD036/MD040/MD041/MD045/MD060 off; MD024 siblings_only.

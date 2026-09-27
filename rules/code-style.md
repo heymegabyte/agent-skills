@@ -29,13 +29,13 @@ Enforce TS 7.0 strict mode, Google TS Style, ESM-only imports, and Cloudflare Wo
 
 ### Lint
 
-- ESLint 9 flat config (`eslint.config.ts`) + typescript-eslint v8 + angular-eslint + eslint-plugin-perfectionist + eslint-plugin-security + `--fix` on save.
+- ESLint 10 flat config (`eslint.config.ts`) + typescript-eslint ≥8.56 + angular-eslint + eslint-plugin-perfectionist + eslint-plugin-security + `--fix` on save.
 - **oxlint** pre-commit speed pass (50-100× ESLint, no formatting).
 - **knip** dead code/unused deps (CI weekly). **jscpd** duplicate detection (≤1%). **dependency-cruiser** architecture rules.
 - Prettier formats (`.prettierrc`). Pre-commit: `oxlint && eslint --fix && prettier --write`.
 - NEVER Biome — no plugin system; breaks angular-eslint + security + drizzle plugins.
 - Git hooks via **lefthook** (10× husky, parallel, Go binary).
-- Track ESLint v10 migration before Aug 2026 (v9 EOL).
+- ESLint 10: flat-config only (eslintrc + `ESLINT_USE_FLAT_CONFIG` removed; config lookup is per-file); v9 EOL'd 2026-08-06 — needs typescript-eslint ≥8.56 + Node ≥20.19.
 
 ## Angular
 

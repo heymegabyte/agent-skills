@@ -9,7 +9,7 @@ Authored by Brian Zalewski for every emdash project. Source of truth lives at
 | Concern | Tool | Config | Stage |
 |--|--|--|--|
 | TS/JS speed | oxlint | `eslint.config.ts` | pre-commit |
-| TS/JS depth | ESLint 9 + `@megabyte/eslint-config` | `eslint.config.ts` | pre-commit |
+| TS/JS depth | ESLint 10 + `@megabyte/eslint-config` | `eslint.config.ts` | pre-commit |
 | Format | Prettier + `prettier-config-sexy-mode` + `prettier-plugin-package-perfection` | `.prettierrc` | pre-commit |
 | CSS | Stylelint + `stylelint-config-so-pretty` | `.stylelintrc` | pre-commit |
 | Markdown | markdownlint-cli2 (Brian-voice relaxed) | `.markdownlint.jsonc` | pre-commit |
