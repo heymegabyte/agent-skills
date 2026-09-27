@@ -140,7 +140,7 @@ Dark theme FIRST. Purple for cosmic/space only.
 ## Stack
 
 - **Hosting** — CF Workers + Hono v4.12.12+ (security pin)
-- **Frontend** — Angular 21 + Ionic 8 + Spartan UI
+- **Frontend** — Angular 22 + Ionic 8 + Spartan UI
 - **Mobile** — Capacitor 8
 - **Database** — D1 / Neon
 - **ORM** — Drizzle v1
@@ -149,16 +149,22 @@ Dark theme FIRST. Purple for cosmic/space only.
 - **Payments** — Stripe (versioned releases: `2026-03-25.dahlia`)
 - **Email** — Amazon SES (sole rail; SendGrid break-glass)
 - **Jobs** — Inngest v4
-- **Runtime** — Bun 1.3
-- **Language** — TS 5.9
+- **Runtime** — Bun 1.4
+- **Language** — TS 7.0
 - **E2E** — Playwright v1.59+
-- **Unit** — Vitest
+- **Unit** — Vitest 5
 - **Lint** — ESLint + Prettier
 - **Analytics** — PostHog
 - **Errors** — Sentry
 - **Tracking** — GA4 / GTM
 
-## Angular 21 Key Changes
+## Angular Version Changes
+
+### Angular 22 (Jun 2026)
+
+- Signal Forms stable (was experimental in 21)
+- Angular ARIA stable — accessible headless components (was dev preview in 21)
+- Legacy structural directives (`*ngIf` / `*ngFor` / `*ngSwitch`) removed — built-in `@if` / `@for` / `@switch` only
 
 ### Angular 21 (Nov 2025)
 
@@ -189,7 +195,7 @@ Dark theme FIRST. Purple for cosmic/space only.
 - 10–20% build perf gains
 - Conditional type narrowing improvements
 
-TS 7.0 (mid-2026): Go-based compiler rewrite — track for breaking changes.
+TS 7.0 (GA Jul 8 2026): native Go compiler, ~8–12× faster type-check/build — now the default for typecheck/build. Caveat: the stable programmatic API lands in 7.1, so typescript-eslint / ts-morph / custom transformers still need TS 6.x aliased until then. Breaking tsconfig defaults: `rootDir`→`./`, `types`→`[]`, `es5`/`baseUrl` removed.
 
 ## Drizzle v1 Patterns
 
@@ -635,7 +641,7 @@ JSON-LD boosts LLM accuracy 16% → 54% (AI search visibility for ChatGPT / Perp
 - ADA Title II: April 24, 2026 (state/local gov 50K+ pop — EFFECTIVE NOW) / April 2028 (small/special districts). WCAG 2.2 AA mandatory
 - Chrome LNA (v142+): public sites accessing local network need `Access-Control-Allow-Private-Network` header
 
-## Bun 1.3 Native Clients
+## Bun Native Clients (1.3+)
 
 - **`Bun.sql`** — unified tagged template API: ``sql`SELECT * FROM users WHERE id = ${id}` ``. Supports PostgreSQL, MySQL/MariaDB, SQLite. Zero deps, auto SQL injection prevention. Replaces `pg` / `mysql2` / `better-sqlite3`.
 - **`Bun.redis`** — 7.9x faster than ioredis. 66 commands. Auto-reconnect, command timeouts, message queuing. Replaces `ioredis` / `redis` npm packages.

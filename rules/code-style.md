@@ -11,11 +11,11 @@ superseded_by: null
 
 # Code Style
 
-Enforce TS 5.9+ strict mode, Google TS Style, ESM-only imports, and Cloudflare Workers-compatible patterns across all TypeScript and Angular code.
+Enforce TS 7.0 strict mode, Google TS Style, ESM-only imports, and Cloudflare Workers-compatible patterns across all TypeScript and Angular code.
 
 ## TypeScript (Google TS Style)
 
-- **TS 5.9+** — `strictInference: true`, `isolatedDeclarations: true`, `erasableSyntaxOnly` for Node 22 native TS.
+- **TS 7.0** (native Go compiler, ~8–12× faster; alias TS 6.x for typescript-eslint/ts-morph/transformers until 7.1) — `strictInference: true`, `isolatedDeclarations: true`, `erasableSyntaxOnly` for Node 24 native TS.
 - camelCase vars/fns · PascalCase types · CONSTANT_CASE consts.
 - `interface` over `type`. Relative imports. Never `any` — use `unknown`. Never `@ts-ignore`.
 - `readonly` when not reassigned. `undefined` over `null`.
@@ -23,8 +23,8 @@ Enforce TS 5.9+ strict mode, Google TS Style, ESM-only imports, and Cloudflare W
 
 ### Runtime
 
-- **Node 22 LTS native TS strip-types** — no ts-node/tsx/nodemon; use `node --watch` + `node --run`.
-- **Bun 1.2+** for build-tool workloads (~125k req/s, 8ms cold start).
+- **Node 24 LTS native TS strip-types** — no ts-node/tsx/nodemon; use `node --watch` + `node --run`.
+- **Bun 1.4+** for build-tool workloads (~125k req/s, 8ms cold start).
 - `wrangler types` against compatibility_date + bindings (not just `@cloudflare/workers-types`).
 
 ### Lint
@@ -39,7 +39,7 @@ Enforce TS 5.9+ strict mode, Google TS Style, ESM-only imports, and Cloudflare W
 
 ## Angular
 
-- Standalone only (Angular 21). Signals stable: signal/computed/effect/linkedSignal/resource.
+- Standalone only (Angular 22). Signals stable: signal/computed/effect/linkedSignal/resource.
 - HttpResource for data fetching. Zoneless stable: `provideZonelessChangeDetection`.
 - Control flow: `@if`/`@for`/`@switch`/`@defer` — `ngIf`/`ngFor` deprecated v20, removed v22.
 - kebab-case files. One component/file. Prefix `app-`/`lib-`. Inline template if <3 lines. `providedIn:'root'`.
@@ -56,7 +56,7 @@ Enforce TS 5.9+ strict mode, Google TS Style, ESM-only imports, and Cloudflare W
 - Split routes: `app.route('/path',subApp)`. KV rate-limit. Turnstile all forms. `GET /health`.
 - `createFactory()` for reusable middleware chains. Method chaining: `app.use().get().post()`.
 
-## Testing (Playwright v1.56+ agents, v1.59+ MCP interop, Vitest 3)
+## Testing (Playwright v1.56+ agents, v1.59+ MCP interop, Vitest 5)
 
 - TDD: failing test FIRST → implement → pass.
 - Every test starts at homepage, navigates via clicks (never `page.goto()` after initial load).
@@ -70,7 +70,7 @@ Enforce TS 5.9+ strict mode, Google TS Style, ESM-only imports, and Cloudflare W
 
 - Planner → Markdown plan · Generator → test code · Healer → auto-fix selectors.
 - Init: `npx playwright init-agents --loop=claude`. v1.59+: `browser.bind()` MCP interop + `page.screencast`.
-- MCP a11y tree > screenshot-based. Vitest 3: Rust sharding, browser mode default, 40% faster on 5k+ tests.
+- MCP a11y tree > screenshot-based. Vitest 5: browser mode default, static test discovery, Playwright-trace links in the UI.
 
 ### E2E accumulation
 

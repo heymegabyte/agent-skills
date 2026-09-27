@@ -14,7 +14,7 @@ description: |                      # REQUIRED. Max 1024 chars.
   What it does. When to invoke it.  # Lead with trigger condition for agent discovery.
   Include specific keywords.
 license: MIT                        # OPTIONAL. License name or bundled file reference.
-compatibility: Requires Node 22+    # OPTIONAL. Max 500 chars. Env constraints (wrangler, CF, Python).
+compatibility: Requires Node 24+    # OPTIONAL. Max 500 chars. Env constraints (wrangler, CF, Python).
 metadata:                           # OPTIONAL. Arbitrary KV map.
   internal: true                    # Hides from /menu picker + skills find. See rules/internal-skill-discovery.md.
   version: "1.0"

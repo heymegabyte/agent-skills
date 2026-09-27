@@ -57,7 +57,7 @@ Run the 5-level verification pyramid (static→unit→E2E→AI visual→post-dep
 ## 5-level pyramid (bottom to top)
 
 1. **Static** — TS strict + ESLint + oxlint + Prettier + knip (dead code)
-2. **Unit** — Vitest 3 (40% faster on 5k+ tests, Rust sharding, browser mode default)
+2. **Unit** — Vitest 5 (browser mode default, static test discovery, Playwright-trace links)
 3. **Playwright E2E** — homepage-first, 6 viewports × 3 browsers, hermetic, parallel
 4. **AI visual** — vision rubric ≥9/10 per route, 6bp screenshots
 5. **Post-deploy** — `wrangler tail` clean + console-error-free + axe-clean + Lighthouse green

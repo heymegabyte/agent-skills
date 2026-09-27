@@ -97,7 +97,7 @@ Scope:
 - **Edge** — CF Workers + Hono
 - **Frontend** — ONLY TWO STACKS (see `rules/frontend-stack.md`):
   - **React 19 + Vite + SSR/SSG + TanStack Router + Tailwind v4 + shadcn/ui** — marketing, generated business sites, bolt.diy editor
-  - **Angular 21 + Nx 20+ + Angular CLI MCP + standalone + signals + zoneless + `httpResource()` + incremental hydration + Tailwind v4 + Angular CDK + Spartan UI (admin + marketing) + Vitest + Storybook 8 + MSW + `@angular/localize`** (preferred for apps/admin/SaaS; native iOS/Android via Capacitor 8, desktop via Tauri 2, signal-heavy enterprise). Ionic 8 / `@angular/ssr`-on-Workers when needed. NO NgModules, NO Angular Material. RxJS-first at every backend edge per `rules/angular.md`. Full: `rules/angular.md`.
+  - **Angular 22 + Nx 22 + Angular CLI MCP + standalone + signals + zoneless + `httpResource()` + incremental hydration + Tailwind v4 + Angular CDK + Spartan UI (admin + marketing) + Vitest + Storybook 8 + MSW + `@angular/localize`** (preferred for apps/admin/SaaS; native iOS/Android via Capacitor 8, desktop via Tauri 2, signal-heavy enterprise). Ionic 8 / `@angular/ssr`-on-Workers when needed. NO NgModules, NO Angular Material. RxJS-first at every backend edge per `rules/angular.md`. Full: `rules/angular.md`.
 - **NEVER** hand-roll `public/{page}.html` for any user-facing content.
 - **Marketing-static** — same React+Vite or Angular+Ionic. No Astro / Next.js / Remix / SvelteKit defaults.
 - **DB** — D1 (read-replicas, Sessions API) / Neon
@@ -111,11 +111,11 @@ Scope:
   - Full: `rules/payments.md`
 - **Jobs** — Inngest / Workflows v2
 - **Email** — Amazon SES (sole transactional rail) + Listmonk (bulk); SendGrid break-glass
-- **Runtime** — Node 22 native TS / Bun 1.3+
-- **TypeScript** — 5.9+
+- **Runtime** — Node 24 native TS / Bun 1.4+
+- **TypeScript** — 7.0 (native Go compiler; alias TS 6.x for typescript-eslint/ts-morph until 7.1)
 - **Lint** — oxlint + ESLint 9 + Prettier (NEVER Biome)
 - **Hooks** — lefthook (NOT husky)
-- **Test** — Playwright v1.56+ agents (v1.59+ MCP) + Vitest 3
+- **Test** — Playwright v1.56+ agents (v1.59+ MCP) + Vitest 5
 - **Observability** — tiered:
   - Solo SaaS / nonprofit / local / portfolio → **PostHog + Workers Tracing OTLP** (2 vendors max)
   - Enterprise / regulated / multi-team → **PostHog + Sentry `@sentry/cloudflare` v9 + GA4/GTM + Workers Tracing + Axiom**

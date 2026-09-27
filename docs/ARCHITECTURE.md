@@ -2,7 +2,7 @@
 
 # Plugin Architecture Map
 
-Generated: 2026-06-19
+Generated: 2026-09-27
 
 A one-read orientation guide for new agents and contributors.
 
@@ -10,43 +10,42 @@ A one-read orientation guide for new agents and contributors.
 
 ## Packs
 
-19 packs defined in `_packs/`.
+18 packs defined in `_packs/`.
 
 | Pack | Description | Members |
 |---|---|---|
-| `ai` | AI features — contract-first, evals, agents, sandbox | 22 |
-| `angular` | Angular 21 + Nx + Spartan UI + RxJS-first | 6 |
-| `backend` | CF Workers + Hono + D1 + Drizzle + Zod backend | 23 |
+| `ai` | AI features — contract-first, evals, agents, sandbox | 18 |
+| `angular` | Angular 22 + Nx + Spartan UI + RxJS-first | 1 |
+| `backend` | CF Workers + Hono + D1 + Drizzle + Zod backend | 25 |
 | `compliance` | Data-subject rights + regulatory compliance (GDPR/CCPA) | 1 |
-| `content` | Copy + brand voice + citations + anti-slop | 6 |
-| `core` | Always-loaded essentials | 69 |
-| `design` | Cinematic visual + motion + WCAG 2 | 8 |
-| `documents` | Document processing — parse, extract, generate (PDF/DOCX/XLSX) | 1 |
+| `content` | Copy + brand voice + citations + anti-slop | 7 |
+| `core` | Always-loaded essentials | 73 |
+| `design` | Cinematic visual + motion + WCAG 2 | 10 |
 | `ecommerce` | Medusa | 3 |
-| `frontend` | React 19 + Vite OR Angular 21 + Nx frontend | 8 |
-| `infra` | Secrets + auth + deploy infrastructure | 6 |
-| `media` | Image/video/audio generation + optimization | 5 |
-| `payments` | Stripe + Square + webhook discipline | 3 |
+| `frontend` | React 19 + Vite OR Angular 22 + Nx frontend | 10 |
+| `infra` | Secrets + auth + deploy infrastructure | 13 |
+| `media` | Image/video/audio generation + optimization | 6 |
+| `payments` | Stripe + Square + webhook discipline | 2 |
 | `polish` | 100-ideas audit + supreme polish + extra-mile | 6 |
-| `research` | Deep web research + crawling + competitor scanning | 4 |
-| `security` | Browser + app security hardening — CSP, Trusted Types, headers | 1 |
+| `reference` | Incident + finding archives — loaded on cross-reference, never always-on | 1 |
+| `research` | Deep web research + crawling + competitor scanning | 3 |
+| `security` | Browser + app security hardening — CSP, Trusted Types, headers | 2 |
 | `testing` | Playwright E2E + Vitest + AI vision QA | 7 |
-| `website-build` | One-line "build/rebuild X | 19 |
+| `website-build` | One-line "build/rebuild X | 23 |
 
 ---
 
 ## Skills
 
-19 numbered skill directories.
+23 numbered skill directories.
 
 | # | Directory | Name | Ref Docs |
 |---|---|---|---|
 | 01 | `01-operating-system/` | operating-system | 6 |
 | 02 | `02-goal-and-brief/` | goal-and-brief | 0 |
-| 03 | `03-planning-and-research/` | planning-and-research | 2 |
 | 04 | `04-preference-and-memory/` | preference-and-memory | 3 |
 | 05 | `05-architecture-and-stack/` | architecture-and-stack | 25 |
-| 06 | `06-build-and-slice-loop/` | build-and-slice-loop | 27 |
+| 06 | `06-build-and-slice-loop/` | build-and-slice-loop | 26 |
 | 07 | `07-quality-and-verification/` | quality-and-verification | 27 |
 | 08 | `08-deploy-and-runtime-verification/` | deploy-and-runtime-verification | 11 |
 | 09 | `09-brand-and-content-system/` | brand-and-content-system | 8 |
@@ -57,14 +56,20 @@ A one-read orientation guide for new agents and contributors.
 | 14 | `14-independent-idea-engine/` | independent-idea-engine | 0 |
 | 15 | `15-site-generation/` | site-generation | 16 |
 | 16 | `16-cinematic-website-prime-directive/` | cinematic-website-prime-directive | 0 |
-| 18 | `18-document-processing/` | document-processing | 4 |
-| 19 | `19-mcp-authoring/` | mcp-authoring | 3 |
+| 21 | `21-app-foundation/` | app-foundation | 0 |
+| 22 | `22-visual-experience/` | visual-experience | 0 |
+| 23 | `23-content-seo/` | content-seo | 0 |
+| 24 | `24-functional/` | functional | 0 |
+| 25 | `25-quality-performance/` | quality-performance | 0 |
+| 26 | `26-platform-delivery/` | platform-delivery | 0 |
+| 27 | `27-trust-compliance/` | trust-compliance | 0 |
+| 28 | `28-cf-integrations-reference/` | cf-integrations-reference | 0 |
 
 ---
 
 ## Rules
 
-147 rules in `rules/`.
+155 rules in `rules/`.
 
 ### Pack: ai
 
@@ -83,21 +88,13 @@ A one-read orientation guide for new agents and contributors.
 - `bash-matcher-guardrails`
 - `loop-driven-development`
 - `mcp-server-hardening`
-- `mcp-namespace-discipline`
 - `prompt-cache-strategy`
 - `eval-mock-mode-discipline`
-- `mcp-error-semantics`
-- `skill-forge-from-api`
-- `portable-audit-discipline`
+- `agent-selection`
 
 ### Pack: angular
 
-- `angular-nx-monorepo`
-- `rxjs-first-angular`
-- `angular-large-app-supervisor`
-- `spartan-ui-only`
-- `spartan-ui-design-system`
-- `frontend-stack`
+- `angular`
 
 ### Pack: backend
 
@@ -113,7 +110,7 @@ A one-read orientation guide for new agents and contributors.
 - `observability-ops-supervisor`
 - `secret-provisioning`
 - `secret-auto-provisioning`
-- `payments-routing`
+- `payments`
 - `feature-module-architecture`
 - `collaboration-sync-supervisor`
 - `hardware-aware-programming`
@@ -121,6 +118,8 @@ A one-read orientation guide for new agents and contributors.
 - `inverted-abstraction-pyramid`
 - `webhook-as-skill-pattern`
 - `webhook-receiver-architecture`
+- `package-preference-registry`
+- `supervisor-skills-index`
 
 ### Pack: compliance
 
@@ -149,8 +148,6 @@ A one-read orientation guide for new agents and contributors.
 - `code-style`
 - `instruction-compression-playbook`
 - `error-recovery`
-- `auto-meta-work`
-- `agent-selection`
 - `parallel-subagent-economy`
 - `feature-flags`
 - `drift-detection`
@@ -162,9 +159,8 @@ A one-read orientation guide for new agents and contributors.
 - `delegate-when-saturated`
 - `god-tier-engineering`
 - `naming-no-transient-prefixes`
-- `package-preference-registry`
+- `style-guide-driven-decisions`
 - `solo-rituals-eliminated`
-- `supervisor-skills-index`
 - `todos-are-roadmap`
 - `lint-doctrine`
 - `uniform-json-output`
@@ -179,7 +175,6 @@ A one-read orientation guide for new agents and contributors.
 - `error-budget`
 - `fail-fast-build-fail-soft-prod`
 - `one-way-two-way-doors`
-- `principles-incident-log`
 - `production-observability-default-on`
 - `router-drift-auto-reconciliation`
 - `state-is-the-enemy`
@@ -195,13 +190,16 @@ A one-read orientation guide for new agents and contributors.
 - `oauth2-provider-discipline`
 - `principle-stability-monitoring`
 - `root-cause-validator-findings`
-- `template-utility-conventions`
 - `uuid-version-discipline`
 - `working-backwards`
 - `internal-skill-discovery`
-- `multi-harness-portability`
-- `skill-authoring-contract`
+- `vendored-skill-compression`
+- `micro-test-instruction-wording`
 - `projectsites-cloudflare-first`
+- `projectsites-recommended-stack`
+- `emdash-fleet`
+- `supremacy-wars`
+- `CHANGELOG`
 
 ### Pack: design
 
@@ -211,11 +209,12 @@ A one-read orientation guide for new agents and contributors.
 - `gorgeous-by-default`
 - `motion-interaction-supervisor`
 - `visualization-maps-diagrams-supervisor`
+- `embarrassingly-easy-to-use`
 
 ### Pack: ecommerce
 
 - `ecommerce-stack`
-- `payments-routing`
+- `payments`
 
 ### Pack: frontend
 
@@ -225,26 +224,33 @@ A one-read orientation guide for new agents and contributors.
 - `gorgeous-by-default`
 - `text-contrast`
 - `copy-writing`
+- `shadcn-design-system`
+- `buttons-accommodate-largest-text`
 
 ### Pack: infra
 
 - `secret-provisioning`
 - `secret-auto-provisioning`
 - `computer-use-safety`
+- `browser-automation-routing`
+- `docker-slim-all-containers`
+- `neon-database-conservation`
 - `email-deliverability`
 - `email-deliverability-implementation`
+- `cloudflare-native-provisioning`
+- `terminal-styling`
 
 ### Pack: media
 
 - `image-quality`
+- `image-optimization`
 - `timeline-authenticity`
 - `media-file-document-supervisor`
 - `suno-song-generation`
 
 ### Pack: payments
 
-- `payments-routing`
-- `refund-automation`
+- `payments`
 
 ### Pack: polish
 
@@ -253,6 +259,10 @@ A one-read orientation guide for new agents and contributors.
 - `extra-mile`
 - `auto-integrate-recs`
 - `context-spillover`
+
+### Pack: reference
+
+- `principles-incident-log`
 
 ### Pack: research
 
@@ -266,12 +276,11 @@ A one-read orientation guide for new agents and contributors.
 
 ### Pack: testing
 
-- `e2e-tdd-organization`
-- `e2e-visual-inspection`
+- `e2e-testing`
 - `verification-loop`
 - `quality-metrics`
 - `forge-with-test-scaffold-pattern`
-- `validator-precision-discipline`
+- `verify-against-source-of-truth`
 
 ### Pack: website-build
 
@@ -280,66 +289,48 @@ A one-read orientation guide for new agents and contributors.
 - `source-site-enhancement`
 - `thin-source-amplification`
 - `i18n-by-demographics`
-- `citations`
-- `copy-writing`
 - `timeline-authenticity`
-- `image-quality`
-- `logo-contrast`
-- `supreme-polish`
+- `website-build-manifest`
+- `text-contrast`
+- `gorgeous-by-default`
+- `shadcn-design-system`
+- `legal-and-error-surfaces`
+- `website-page-and-site-gates`
+- `website-completeness-checklist`
+- `build-validators-manifest`
+- `brand-asset-pipeline`
 
 ---
 
 ## Commands
 
-49 slash commands in `commands/`.
+27 slash commands in `commands/`.
 
-- `/agent-audit` — Audit agents spawned in the current/last run against the agent-selection taxonomy
 - `/agent-diversity-review` — Run the Agent Diversity Review gate and emit the result table
-- `/audit-cron-arc` — Meta-analyze the effectiveness of a /loop arc — per-iteration metrics, LOC delta trend, saturation detection, and a keep/lengthen/delete recommendation.
-- `/audit-doctrine` — Audit the rules/ directory for missing foundational principles; output gap list with priority and justification
-- `/audit-hook-wiring` — Validate ~/.claude/settings.json hooks block — event names, file existence, executability, matcher syntax; --fix repairs common issues
-- `/audit-mcp-error-semantics` — Catch Resend-class bug (isError: false on HTTP 4xx/5xx) across all MCP server tool handlers
-- `/audit-mcp-fleet` — Healthcheck + drift detect + rotation-reminder across all MCP servers in ~/.claude/mcp-registry.json
-- `/audit-mcp-mock-drift` — Catch mock/live divergence in MCP eval golden tests (anti-pattern #2 from eval-mock-mode-discipline)
-- `/audit-prune-completeness` — Catch the github-mcp class of bug — CallTools handlers that exist but are invisible to Claude because ListTools never advertises them (orphaned), or ListTools entries that have no handler (zombies)
-- `/audit-router` — Validate _router.md — check every referenced skill file exists; surface stale entries + orphan files; --fix prunes or stubs
-- `/audit-tool-surface` — List every active tool across all MCP servers and flag cross-MCP duplicates and semantic overlaps
 - `/create-specialist-agent` — Scaffold a new spawnable specialist agent def and register it in the agent taxonomy
 - `/customer-changelog-check` — Audit whether user-visible changes in the current session have matching CHANGELOG.md entries; report MISSING with suggested lines; --fix auto-appends
 - `/dashboard-cockpit` — Repeatable pass upgrading an Angular admin dashboard into a compact black-and-cyan developer-cockpit PWA
-- `/deploy-forged-mcp` — Deploy an MCP server generated by forge-from-openapi --target=mcp-server; detect transport, deploy, smoke-test, print .claude.json snippet
 - `/drift-check` — Run the drift-detection checklist (incl. agent-drift signals); report + fix in-turn
-- `/execute-prp` — Execute a PRP — TodoWrite breakdown, parallel implementation, validate every gate, deploy, prove on prod
 - `/final-review` — Orchestrate the final review fan-out (integration + diversity + risk + release readiness)
-- `/forge-from-openapi` — Auto-generate a Claude Code skill (commands + types + client) from any OpenAPI 3.x spec URL or file path
-- `/forge-graphql-skill` — Scaffold a complete Claude Code skill (commands + types + client) from a GraphQL endpoint or local schema file
-- `/forge-oauth-callback` — Scaffold a complete OAuth2 callback + init Hono route pair (code exchange, PKCE, KV token storage) for a named provider
-- `/forge-press-release` — Scaffold an Amazon-style working-backwards press release for any feature, in Brian's voice. Outputs to docs/decisions/PR-{slug}.md and prints to stdout.
-- `/forge-stack-pack` — Batch-forge Brian's entire stack as skills + MCP servers in one prompt; skips already-forged entries; applies automatic pruning when tool count >100
-- `/forge-webhook-handler` — Scaffold a complete webhook handler (Hono route + sig verification + D1 idempotency + R2 dead-letter) for a named vendor
-- `/forge-webhook-skill` — Scaffold a complete webhook receiver for any provider from an AsyncAPI YAML spec or a JSON event-type list
-- `/generate-prp` — Generate a Project Requirements Plan (PRP) — research-driven, ULTRATHINK-gated, confidence-scored implementation blueprint
 - `/improve-lint` — Run the AI-augmented lint self-improvement loop on the current project. Scans `.lint-history/` for recurring violation patterns (≥3 hits in 30d window), drafts a Claude-ready prompt to author a new semgrep rule for the top candidate, and surfaces the proposal under `.lint-history/proposals/<ts>.md`. Non-blocking analysis. See rules/lint-doctrine.md § Self-improving.
 - `/install-lint-stack` — Bootstrap industry-leading lint+autofix+commit-hygiene stack on the current project. Drops in lefthook, oxlint, ESLint, Prettier, Stylelint, markdownlint, ruff, shellcheck, shfmt, yamllint, hadolint, actionlint, jscpd, knip, semgrep, gitleaks, commitizen + git-cz-emoji (emoji-mandatory commits), and semantic-release. Idempotent — re-runs upgrade safely. See rules/lint-doctrine.md.
 - `/list-arcs` — Surface all retrospective documents with key shape metrics; compare arcs deliberately.
-- `/migrate-all-to-hardened` — Batch-migrate every hardened MCP server in mcp-servers/ from its original source to its hardened counterpart in one sweep
-- `/migrate-skill` — Generic skill-version migration — works for hardened/v2/experimental→stable promotions across MCP servers, skills, hooks, commands. Mirrors /migrate-to-hardened with broader detection.
-- `/migrate-to-hardened` — Automate the unhardened → hardened MCP server cutover — build, smoke-test, register, and archive in one shot
 - `/multimedia-enrich` — Progressive multimedia enrichment pass — add high-value audio/video/image/interactive to a site, run again and again
 - `/plan-execute-verify-repair` — Run the autonomous-engineering operating loop on a task (plan→implement→verify→repair→report)
 - `/post-arc-retrospective` — Capture the cumulative output of a /loop arc into a single auditable retrospective document; scans the heymegabyte-claude-skills plugin for modified files, categorizes by directory, counts LOC delta, extracts tool counts from MCP servers, and writes a timestamped report to retrospectives/
 - `/prepare-multi-file-brief` — Turn a comma-separated list of file paths into a fully structured Pattern A agent brief — ordered writes, per-file schemas, and a verification step baked in.
 - `/prepare-skeleton-brief` — Turn Pattern B from agent-resilience-discipline into a one-keystroke agent brief for a single-file deliverable < 300 lines.
-- `/prune-mcp-tools`
-- `/register-forged-mcps` — Scan ~/.claude/plugins/heymegabyte-claude-skills/mcp-servers/*/ and emit .claude.json registration JSON for each forged MCP server. Default is dry-run; use --apply to write to ~/.claude.json.
+- `/process` — Chain the full Superpowers process flow — brainstorm → plan → worktree → build → review → finish — on one slash command
+- `/retro`
 - `/review-global-prompts` — Review ~/.claude/CLAUDE.md + rules for contradictions, stale guidance, duplication; consolidate
-- `/rollback-all-to-original` — Panic-rollback button — reverses /migrate-all-to-hardened by restoring every MCP server from its archived original. Sequential to avoid ~/.claude.json collisions.
 - `/run-evals` — Batch-run all LLM eval cases in tools/evals/cases/*.json; aggregate pass/fail, cost, regression vs last run; exit nonzero in CI mode
-- `/run-mcp-evals` — Run golden-test eval suites against one or all MCP servers in mcp-servers/; compares actual tool responses to expected via exact-match + regex + min-count tiers; supports mock-mode so CI runs without API keys
 - `/saas` — One-line SaaS — from a description, scaffold a complete CF-native multi-tenant SaaS (Hono + D1 + Drizzle + Better Auth + Stripe + shadcn) deployed to a real URL
 - `/security-supply-chain` — Unified supply-chain audit. Checks GitHub Actions SHA-pinning (`sha-pin:check`), package.json git+https deps (per `no-gitlab-megabytelabs-deps` semgrep), gitleaks scan, and trufflehog verified-only sweep. Surfaces any tag-mutable, git-URL, or secret-exposed surface. Per rules/ai-agent-security.md § Supply chain.
 - `/self-improve` — Run a learning pass after a major run; fold reusable lessons into global config
 - `/session-recap` — Summarize recent CHANGELOG.md entries for context restoration. Parses the canonical heading shape `## YYYY-MM-DD — pass-N — summary`. Filters: last N (default 10), YYYY-MM date prefix, or "today". Supports --json for machine-readable output.
+- `/ship`
+- `/skill-health` — Run quality-scores + token-budget + dep-graph, interpret results, flag missing budgets, orphans, and oversize skills
+- `/skip-questions` — Suppress 5-question enforcement for rapid sessions
 - `/update-agentskills` — Apply a reusable lesson to ~/.agentskills (rules/skills/templates/commands), backup + commit + push
 - `/vendor-rotation-calendar` — Generate a quarterly vendor secret-rotation calendar for all load-bearing vendors; emit .ics + ROTATIONS-DUE-NEXT-30-DAYS table; optionally create Google Calendar events
 
@@ -347,40 +338,56 @@ A one-read orientation guide for new agents and contributors.
 
 ## Agents
 
-18 specialist agents in `agents/`.
+26 specialist agents in `agents/`.
 
 - `accessibility-auditor` — Dedicated axe-core + Playwright accessibility agent
 - `architect` — Pre-implementation architecture agent
+- `changelog-drafter` — Reads git log since last tag, drafts CHANGELOG entry
 - `changelog-generator` — Auto-generates changelogs from conventional commits
 - `code-simplifier` — Simplifies code for clarity, consistency, and maintainability
 - `completeness-checker` — Post-implementation verification agent
 - `computer-use-operator` — Desktop automation specialist
 - `content-writer` — Marketing copy, blog posts, and SEO content writer using Emdash brand voice
 - `cost-estimator` — Estimates Cloudflare Workers costs before deploying
+- `dead-code-remover` — Finds unreachable exports, unused imports, orphaned functions, and dead variables
 - `dependency-auditor` — Scans packages for outdated deps, security advisories, license violations, and unused imports
 - `deploy-verifier` — Post-deploy smoke test agent
+- `formatter` — Runs prettier + oxlint --fix on modified files
 - `incident-responder` — Sentry-triggered incident response agent
+- `media-orchestrator` — Creates, optimizes, and orchestrates media assets — images (ResGrid, AVIF/WebP), video (clips, GIFs, Veo), audio (TTS, podcast), and 3D
 - `meta-orchestrator` — Master agent coordinating all tools, MCPs, agents, and skills
 - `migration-agent` — Drizzle schema migration agent
+- `model-router` — Use when dispatching work and unsure which model tier to use — returns a recommended model and effort level based on task characteristics
+- `motion-choreographer` — CSS animation and motion designer
 - `performance-profiler` — Runs Lighthouse audits, analyzes Core Web Vitals, suggests specific fixes with file:line references
+- `renamer` — Semantic rename across codebase
 - `security-reviewer` — OWASP Top 10 security auditor
 - `seo-auditor` — Audits pages for SEO compliance — title, meta, H1, JSON-LD, OG tags, internal links, sitemap, robots
 - `test-writer` — TDD-first test engineer
+- `transcriber` — Transcribes a plan step into code, one file at a time
 - `visual-qa` — Visual quality assurance agent
 
 ---
 
 ## Validators
 
-65 scripts in `bin/` (validators + build tools).
+99 scripts in `bin/` (validators + build tools).
 
+- `bin/agent-mcp-map.mjs` — (no description)
+- `bin/agent-profile.mjs` — Reads a project's fingerprint (package.json, wrangler.toml, angular.json, etc.)
+- `bin/agent-quality-tracker.mjs` — Reads agent run log entries and produces an aggregate quality report:
+- `bin/agent-resume.sh` — Reads /tmp/claude-agent-progress.json and prints the current task
 - `bin/audit-all.mjs` — Runs every advisory audit script in the repo and prints a ONE-LINE summary
+- `bin/audit-always-load-budget.mjs` — The skill-router loads every `priority: 1` rule on EVERY prompt (the only
 - `bin/audit-contradictions.mjs` — Advisory only — no LLM. Heuristic: extract imperative lines from each rule file,
 - `bin/audit-crosslink-graph.mjs` — Builds the \[\[slug\]\] cross-link graph over rules/ (resolving slugs the same
 - `bin/audit-crosslinks.mjs` — Scans every `rules/*.md`, `commands/*.md`, and numbered-skill SKILL.md files
+- `bin/audit-dead-paths.mjs` — The skill-router (~/.claude/bin/skill-router.py, mirrored at bin/skill-router.py)
 - `bin/audit-instruction-files.mjs` — Audits AI-instruction Markdown files under rules/ (sibling of bin/) for three classes
 - `bin/audit-mcp-fleet.mjs` — Four-check audit across all mcp-servers/\*\/ in the agentskills repo
 - `bin/audit-near-duplicates.mjs` — Surfaces near-duplicate rule files — candidates to MERGE
+- `bin/audit-path-scope.mjs` — Advisory (idea: context economy). Never gates
+- `bin/audit-rule-clusters.mjs` — (no description)
 - `bin/audit-rule-metadata.mjs` — Audits rules/*.md and \[0-9\]\[0-9\]-*\/SKILL.md for three advisory issues:
 - `bin/audit-skill-authoring.mjs` — Audits every NN-*\/SKILL.md and rules\/*.md for authoring quality
 - `bin/audit-skill-discoverability.mjs` — Audits rules/*.md and \[0-9\]\[0-9\]-*\/SKILL.md files for weak discoverability:
@@ -390,28 +397,53 @@ A one-read orientation guide for new agents and contributors.
 - `bin/check-ci-status.sh` — Closes the pass-89 blind-spot where I'd been pushing while CI ran red
 - `bin/check-compression-regression.mjs` — Lock in compression gains — fail when a rules/*.md file grows significantly
 - `bin/check-deprecated-models.sh` — Caught pass-71's GPT-4o + DALL-E corpus-wide drift (24 references across
+- `bin/check-description-sdo.mjs` — (no description)
 - `bin/check-doc-counts.sh` — Local mirror of publish.yml's "Check doc counts" step. Pass-89 discovered
 - `bin/check-doc-urls.sh` — Surfaces dead links / 404s / mass redirects so dated docs (e.g. structured-outputs
+- `bin/check-manifest-recovery.mjs` — The router budget (~48K) is maxed on a site prompt: ~33 rules load, ~61 DROP. The
 - `bin/check-pack-frontmatter.sh` — Complements scripts/validate-packs.mjs (which enforces existence + ≥1-pack-
 - `bin/check-pricing.sh` — Per pass-58→61 manual-audit pattern. Mechanizes the pricing-staleness check
+- `bin/check-priority-format.mjs` — THE ROOT CAUSE of the Jun-2026 routing arc: six rules carried `priority: high`
+- `bin/check-rationalization-table.mjs` — (no description)
+- `bin/check-reference-pointers.mjs` — The compression arc moved implementation detail out of ~32 rules into
 - `bin/check-required-keys.sh` — Usage: check-required-keys.sh <mode>
+- `bin/check-route-health.mjs` — Gates 21 (route-phrasing) and 22 (manifest-recovery) are STATIC — they prove triggers
+- `bin/check-route-phrasing.mjs` — The skill-router fires the website-build pack only when a prompt SUBSTRING-matches
+- `bin/check-skill-length.mjs` — (no description)
 - `bin/check-skill-pack-claim.sh` — Per rules/audit-arc-maturity-ladder.md — Steps 1 + 2 (Detect + Surface)
 - `bin/check-skill-required-fields.sh` — Catches the "added a new skill dir but forgot required metadata" class
 - `bin/check-skill-submodules.sh` — Parallels publish.yml's "Check SKILL.md submodule alignment" step but as a
+- `bin/check-version.sh` — Check Claude Code version and available update
+- `bin/claim-task.sh` — Usage: claim-task.sh <task-name> [agent-id]
+- `bin/cleanup-plugin-temp.sh` — Clean stale temp directories in ~/.claude/plugins/cache/
+- `bin/collapse-forged-commands.mjs` — Forged integration skills (skills/<name>/) ship one commands/<method-path>.md
+- `bin/doctor.mjs` — (no description)
 - `bin/forge-skill-from-openapi.mjs` — Auto-generates Claude Code skills from an OpenAPI 3.0/3.1 spec
 - `bin/gc-claude-home.mjs` — Targets the unbounded-growth dirs found during the 2026-06-19 audit:
 - `bin/gen-architecture-map.mjs` — Generates docs/ARCHITECTURE.md — an auto-generated, regenerate-on-demand map
 - `bin/gen-harness-manifests.mjs` — Generates companion harness manifests from the canonical agentskills source of truth
 - `bin/gen-mcp-registry.mjs` — (no description)
+- `bin/hook-health.mjs` — Reads the plugin settings.json (or any Claude Code settings), enumerates
 - `bin/install-hooks.sh` — Per rules/lint-doctrine.md § Codified incidents (pass-52 pipeline-exit-masking entry)
 - `bin/install-lint-stack.sh` — Source of truth: rules/lint-doctrine.md
 - `bin/lint-all.sh` — Per rules/lint-doctrine.md + rules/uniform-json-output.md
 - `bin/lint-auto-improve.sh` — Scans lint output across recent runs, identifies recurring violation classes,
+- `bin/mcp-healthcheck.mjs` — (no description)
+- `bin/memory-manager.mjs` — Usage:
 - `bin/provision-analytics.sh` — Usage: provision-analytics.sh <project_slug> <primary_domain> [worker_name]
+- `bin/purge-disabled-plugin-caches.sh` — Purge cache dirs for disabled Claude plugins
+- `bin/rotate-hook-log.sh` — Rotate ~/.claude/hooks/.hook-execution.log when it exceeds 1MB
+- `bin/score-rule-impact.mjs` — (no description)
 - `bin/security-supply-chain.sh` — Per rules/ai-agent-security.md § Supply chain
 - `bin/seed-validators.mjs` — Each stub logs a structured JSON line + exits 0 (NEVER fails the build)
 - `bin/session-recap.sh` — Usage:
+- `bin/skill-dep-graph.mjs` — Builds a dependency graph from `_packs/*.yml` member lists
 - `bin/skill-health-report.mjs` — Health combines:
+- `bin/skill-quality-scores.mjs` — Scans all SKILL.md files in the plugin and scores each on 6 quality dimensions:
+- `bin/skill-token-budget.mjs` — Scans all SKILL.md files for `<!-- budget: ~N -->` markers, sums by pack,
+- `bin/suggest-pack-membership.mjs` — (no description)
+- `bin/sync-mirrors.mjs` — WHY: those mirrors are hand-maintained duplicates, so they DRIFT — the
+- `bin/validate-agents.mjs` — (no description)
 - `bin/validate-atf-video.mjs` — Rule: ATF hero video Sora-primary+Veo-parallel+stock-fallback
 - `bin/validate-blog-headers.mjs` — Rule: Per-post blog header art generated from post topic
 - `bin/validate-branded-error-pages.mjs` — Rule: Branded 404 + 500 pages with brand palette + mascot
@@ -439,25 +471,36 @@ A one-read orientation guide for new agents and contributors.
 - `bin/validate-template-utils.mjs` — Enforces `rules/template-utility-conventions.md`. Run in CI and pre-commit
 - `bin/validate-tier-badges.mjs` — Rule: Plan / tier badges rendered via Ideogram
 - `bin/validate-ttfr.mjs` — Rule: LCP ≤ 2000ms, FCP ≤ 1200ms on cold-cache throttled 3G
+- `bin/worktree-pool.sh` — Usage:
 
 ---
 
 ## Hooks
 
-14 hooks wired in `~/.claude/hooks/`.
+24 hooks wired in `~/.claude/hooks/`.
 
+- `agentskills-stop-gate.sh` — Reads stdin, checks LEDGER.md. EXITS 0 always (fail-open)
+- `build-gates.sh` — Source gum helpers, display a compact gate-result table
 - `config-protection.py` — Config files that should not be silently mutated by agents
-- `customer-changelog-precommit.py` — Globs EXCLUDED even if they match a user-visible parent
+- `deepseek-apikey-helper.sh` — (no description)
+- `deploy-gate.sh` — Usage: deploy-gate.sh [--force]
 - `destructive-bash-guard.py` — WARN mode (default): stderr warning + exit 0. Flip to True ONLY after confirming
 - `enforce-tdd-e2e.py` — Source globs → expected spec dir prefix
+- `enforce-terminal-styling.py` — (no description)
+- `git-status-fancy.sh` — (no description)
+- `guard-fat-agent.py` — Agent types whose tool surface is `*` / `All tools`. Each one re-loads the whole
+- `guard-oversized-output.py` — Tools whose size is inherent and already chunked — don't warn (noise)
+- `guard-oversized-read.py` — (no description)
 - `opus-quota-check.sh` — Opus quota probe — exit 0 if Opus available, 1 if fallback required
+- `pretooluse-decompose.py` — (no description)
+- `pretooluse-model-cascade.py` — (no description)
 - `pretooluse-router.py` — (no description)
 - `router-reconcile-on-skill-write.py` — Pattern: numbered submodule directory
 - `secret-scan-prewrite.py` — WARN mode (default): stderr warning + exit 0. Flip to True ONLY after confirming
+- `session-start-dashboard.sh` — Session-start dashboard v2 — DeepSeek health, fleet status, budget, pool
 - `session-start-reminders.py` — (no description)
 - `session-start-router.py` — (no description)
-- `skill-security-auditor.py` — Patterns that indicate FAIL-level risk
-- `stop-skill-tracker.py` — (no description)
+- `style.sh` — SOURCE this file, then call emdash_* — NEVER raw echo. Per rules/terminal-styling.md
 - `sync-desktop-skills.py` — (no description)
 - `userpromptsubmit-router.py` — (no description)
 
@@ -465,7 +508,7 @@ A one-read orientation guide for new agents and contributors.
 
 ## MCP Servers
 
-16 MCP servers in `mcp-servers/` (8 base + 8 hardened).
+18 MCP servers in `mcp-servers/` (10 base + 8 hardened).
 
 ### Base servers
 
@@ -473,7 +516,9 @@ A one-read orientation guide for new agents and contributors.
 - `github-mcp/`
 - `openai-mcp/`
 - `posthog-mcp/`
+- `projectsites-mcp/`
 - `resend-mcp/`
+- `skills-gateway-mcp/`
 - `square-mcp/`
 - `stripe-mcp/`
 - `twilio-mcp/`

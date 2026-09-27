@@ -17,7 +17,7 @@ Upgrade an Angular admin dashboard into a polished compact **black-and-cyan dev-
 
 ## Mission
 
-- Angular 21 feature-module architecture · lazy-loaded features · **Spartan UI (shadcn-for-Angular) primary UI** · **`@angular/localize`** full i18n · **PWA** packaging.
+- Angular 22 feature-module architecture · lazy-loaded features · **Spartan UI (shadcn-for-Angular) primary UI** · **`@angular/localize`** full i18n · **PWA** packaging.
 - Ionic/Capacitor ONLY where they genuinely help (mobile drawer ergonomics / native shells already in repo).
 - Compact black/cyan dev-cockpit styling · strong a11y + perf · destructive Playwright E2E.
 

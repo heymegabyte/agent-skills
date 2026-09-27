@@ -2,7 +2,7 @@
 name: "Notification Center"
 version: "3.0.0"
 updated: "2026-09-25"
-description: "Build the notification feature on psnotify (our DO-backed engine): in-app bell + unread badge, notification center (history/filter/mark-read), per-channel/per-category preferences, web-push (permission after value moment), Amazon SES email, digest/batching, and Angular 21 integration. When product has returning users who benefit from updates."
+description: "Build the notification feature on psnotify (our DO-backed engine): in-app bell + unread badge, notification center (history/filter/mark-read), per-channel/per-category preferences, web-push (permission after value moment), Amazon SES email, digest/batching, and Angular 22 integration. When product has returning users who benefit from updates."
 ---
 
 # Notification Center

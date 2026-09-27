@@ -4,7 +4,7 @@ Load CONVENTIONS.md for stack defaults. Load _router.md for skill routing.
 19 categories, 159 reference docs, 26 agents.
 
 ## Stack
-CF Workers + Hono | Angular 21 + Ionic 8 + Spartan UI | D1/Neon | Drizzle v1 | Clerk | Stripe | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
+CF Workers + Hono | Angular 22 + Ionic 8 + Spartan UI | D1/Neon | Drizzle v1 | Clerk | Stripe | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
 
 ## Rules
 - TypeScript strict, never `any`, prefer `interface` over `type`

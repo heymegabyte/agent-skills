@@ -73,7 +73,7 @@ Cross-links: `[[always]]` `[[website-build-doctrine]]` `[[competitor-research]]`
 ## Architecture (CF-first, `[[cloudflare-lock-in-is-leverage]]`)
 
 - **Authoritative infra LAW: `[[projectsites-cloudflare-first]]`** — pull it on every projectsites.dev build. It carries the detail this index can't: allowed-infra law (CF + Neon + Upstash + Fly only), the public-request hot path, Hyperdrive shard-level bindings, the `browser.projectsites.dev` automation abstraction (vs internal Browserbase/Skyvern), the observability gateway, DB-allocation order, and the signed Site Capability Manifest. It's pack:core (not website-build) so it DROPS for budget on site prompts — recover it from here.
-- Angular 21 (preferred), OR the React 19 + Vite SSR/SSG + TanStack Router + Tailwind v4 + shadcn bolt.diy path (`[[frontend-stack]]`).
+- Angular 22 (preferred), OR the React 19 + Vite SSR/SSG + TanStack Router + Tailwind v4 + shadcn bolt.diy path (`[[frontend-stack]]`).
 - CF Workers + Hono + D1 + R2 + KV + DO (`[[hono-api]]`). Deep lock-in is the feature.
 - Every clickable entity linked (email/phone/URL/route) — unlinked email/phone = build fail.
 - Every form: Turnstile + Zod + Amazon SES deliverability gate.

@@ -4,7 +4,7 @@ This repository contains 19 skill categories, 26 agents, and 159 reference docs 
 
 ## Stack
 
-CF Workers + Hono | Angular 21 + Ionic 8 + Spartan UI | D1/Neon | Drizzle v1 | Clerk | Stripe | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
+CF Workers + Hono | Angular 22 + Ionic 8 + Spartan UI | D1/Neon | Drizzle v1 | Clerk | Stripe | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
 
 ## Usage
 

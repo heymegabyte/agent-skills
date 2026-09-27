@@ -42,7 +42,7 @@ const MANAGED = [
     // Matches the stack summary in ANY format/spacing (from "CF Workers" to "Sentry").
     pattern: /CF Workers.*?PostHog\s*\|\s*Sentry/g,
     canonical:
-      'CF Workers + Hono | Angular 21 + Ionic 8 + Spartan UI | D1/Neon | Drizzle v1 | Clerk | Stripe | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry',
+      'CF Workers + Hono | Angular 22 + Ionic 8 + Spartan UI | D1/Neon | Drizzle v1 | Clerk | Stripe | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry',
   },
 ];
 

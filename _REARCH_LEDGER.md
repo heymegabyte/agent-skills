@@ -67,7 +67,7 @@
 - **Dead/forbidden tech still shown as live** — Resend (README examples), Postiz (CONVENTIONS MCP list :293/:308), Supabase (cf-hyperdrive/cf-rag examples), Twilio (shared-api-pool, no SMS qualifier). Reframe as removed/legacy or qualify (WS-10). SCOPE-CHECK: Resend MCP *as a customer feature* is KEPT (per project CLAUDE.md) — only the send-rail is removed; Twilio voice/WhatsApp OK, SMS/phone-OTP forbidden.
 - **Brand purple** — skill 10 `#8B5CF6` vs kernel `#7C3AED` → verify skill 10 intent, then align. clean-fix (pending verify).
 - **Inngest vs CF Workflows v2** — `CLAUDE.md` "Inngest / Workflows v2" vs `CONVENTIONS.md` "Inngest v4" vs CF-native doctrine (projectsites REMOVED Inngest) → **Brian-decision** (in the question set).
-- CLEAN on versions: Angular 21 · Nx 20+ · Node 22 · TS 5.9 · ESLint 9 · Playwright v1.59+ · Tailwind v4 · Clerk Core 3 · Drizzle v1 — all uniform.
+- **Versions were uniform but STALE (each ~one major behind); upgraded 2026-09-26, web-verified across SSOT + 32 mirrors + rules/skills:** Angular 21→22 (GA Jun'26) · Nx 20→22 · Node 22→24 (Active LTS; 22→maintenance) · TS 5.9→7.0 (native Go, ~10×; alias TS 6.x for typescript-eslint/ts-morph until 7.1) · Bun 1.2/1.3→1.4 · Vitest 3→5. Already-current (unchanged): ESLint 9 · Playwright v1.59+ floor (latest 1.63) · Tailwind v4.3 · Clerk Core 3 · Drizzle v1 · Capacitor 8 (9=alpha). Kept as dated provenance: "Angular 21 (Nov 2025)" + "TS 5.9 (Q1 2026)" changelog sections, "httpResource() (Angular 21 stable)".
 
 ## Dedup candidates (→ cite `_kernel/standards.md#anchor`)
 

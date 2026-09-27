@@ -68,7 +68,7 @@ WebPage floor. Add Organization · BreadcrumbList · FAQPage · Person · Produc
 ## #stack — Default stack
 
 - Edge: CF Workers + Hono
-- Frontend: React 19 + Vite + SSR/SSG + TanStack Router + Tailwind v4 + shadcn/ui (default) OR Angular 21 + Nx + Spartan UI (when chosen)
+- Frontend: React 19 + Vite + SSR/SSG + TanStack Router + Tailwind v4 + shadcn/ui (default) OR Angular 22 + Nx + Spartan UI (when chosen)
 - DB: D1 (read-replicas, Sessions API) / Neon (via Hyperdrive)
 - Cache: Upstash / KV
 - ORM: Drizzle v1 RQBv2 + Zod
@@ -76,12 +76,13 @@ WebPage floor. Add Organization · BreadcrumbList · FAQPage · Person · Produc
 - Payments: Square (accept) / Stripe Billing (SaaS recurring) / Stripe Connect (payouts)
 - Jobs: Inngest / Workflows v2
 - Email: Amazon SES (sole rail) + Listmonk (bulk); SendGrid break-glass
-- Runtime: Node 22 native TS / Bun 1.2+
-- TS: 5.9+ strict
+- Runtime: Node 24 native TS / Bun 1.4+
+- TS: 7.0 native-Go compiler, strict (alias TS 6.x for typescript-eslint/ts-morph until 7.1 ships the stable programmatic API)
 - Lint: oxlint + ESLint 9 + Prettier (NEVER Biome)
 - Hooks: lefthook (NOT husky)
-- Test: Playwright v1.59+ + Vitest 3
+- Test: Playwright v1.59+ + Vitest 5
 - Observability tiers — solo: PostHog + Workers Tracing; enterprise: + Sentry + GA4 + Axiom; LLM-heavy: + AI Gateway
+- Versions current as of 2026-09 (bump on major release): Angular 22 (GA Jun'26) · Node 24 Active-LTS (22→maintenance, EOL Apr'27) · TS 7.0 Go-compiler (GA Jul'26) · Bun 1.4 · Vitest 5 · Nx 22 · Playwright 1.63 · Tailwind v4.3 · Capacitor 8 (9=alpha)
 
 ## #integrations — Auto-provision tiers
 

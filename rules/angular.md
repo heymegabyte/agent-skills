@@ -18,18 +18,18 @@ superseded_by: null
 
 # Angular — Nx Monorepo · RxJS-First · Spartan UI · Large-App Architecture
 
-The complete Angular doctrine (fires when `stack-selector`/`frontend-stack` picks Angular). Standalone + signals + zoneless Angular 21 in an Nx monorepo, RxJS at every backend edge, Spartan UI as the sole component kit, built for apps that may exceed 200k LOC. (Consolidated 2026-09-26 from angular-nx-monorepo + rxjs-first-angular + spartan-ui-only + spartan-ui-design-system + angular-large-app-supervisor.)
+The complete Angular doctrine (fires when `stack-selector`/`frontend-stack` picks Angular). Standalone + signals + zoneless Angular 22 in an Nx monorepo, RxJS at every backend edge, Spartan UI as the sole component kit, built for apps that may exceed 200k LOC. (Consolidated 2026-09-26 from angular-nx-monorepo + rxjs-first-angular + spartan-ui-only + spartan-ui-design-system + angular-large-app-supervisor.)
 
 ## Stack + Nx Monorepo
 
-Build inside an **Nx monorepo running Angular 21** with **Angular CLI MCP**. Standalone only. Signals only. No NgModules.
+Build inside an **Nx monorepo running Angular 22** with **Angular CLI MCP**. Standalone only. Signals only. No NgModules.
 
-- **Angular 21** pinned `21.x` in `package.json` + `angular.json`. **Nx 20+** wrapper; `nx.json` at root; apps under `apps/`, libs under `libs/`.
+- **Angular 22** pinned `22.x` in `package.json` + `angular.json`. **Nx 22** wrapper; `nx.json` at root; apps under `apps/`, libs under `libs/`.
 - **Standalone components** ONLY (NgModules banned). `provideRouter` / `provideHttpClient` / `provideAnimationsAsync` in `app.config.ts`.
 - **Signals** (`signal`, `computed`, `effect`, `linkedSignal`, `resource`) for state. NO RxJS subjects for component state.
 - **Typed Reactive Forms** (`FormGroup<T>`, `FormControl<T>`) + **NGX Formly** for schema-driven forms, Zod-backed (`zod-to-json-schema`). No template-driven forms.
 - **Lazy-loaded routes** (`loadComponent` / `loadChildren`, one route file per feature) + **`@defer`** blocks for below-fold / role-conditional.
-- **Zoneless** — `provideZonelessChangeDetection()` (default in 21); drop Zone.js. **Incremental hydration** — `provideClientHydration(withIncrementalHydration())`.
+- **Zoneless** — `provideZonelessChangeDetection()` (default since 21); drop Zone.js. **Incremental hydration** — `provideClientHydration(withIncrementalHydration())`.
 - **`httpResource()`** (Angular 21 stable) for read-only HTTP→signal; RxJS for mutations/compose/polling (see below).
 - **`provideHttpClient(withFetch(), withInterceptors([...]))`** — typed interceptors (auth / tenant / role / error).
 - **Angular CDK** + **Floating UI** for overlays/drag-drop/virtual-scroll/positioning/a11y. **Tailwind v4** (OxIDE) + OKLCH brand tokens.
@@ -51,7 +51,7 @@ Build inside an **Nx monorepo running Angular 21** with **Angular CLI MCP**. Sta
 
 - ❌ NgModules · template-driven forms · RxJS subjects for component state (use signals)
 - ❌ Any UI kit other than Spartan + CDK + Floating UI · ngx-translate / Transloco (use `@angular/localize`)
-- ❌ ts-node / nodemon (Node 22 native TS + Nx executors) · Karma+Jasmine (Vitest) · Protractor (Playwright)
+- ❌ ts-node / nodemon (Node 24 native TS + Nx executors) · Karma+Jasmine (Vitest) · Protractor (Playwright)
 - ❌ `[ngStyle]` / `[ngClass]` for static bindings · `[(ngModel)]` in Reactive-Forms context
 
 ## RxJS-First at Every Backend Edge

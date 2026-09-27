@@ -33,7 +33,7 @@ When any `/forge-*` command scaffolds new source code, it MUST also write:
   a local or PROD URL per `[[e2e-testing]]`.
 - **Unit test** (`tests/<feature>/<name>.test.ts` or `<path>.test.ts` co-located) when
   the output is a typed client, utility module, schema transformer, or pure function.
-  Uses Vitest 3 + `vi.fn()` — no network calls.
+  Uses Vitest 5 + `vi.fn()` — no network calls.
 - **Both** when the output has a pure-function core consumed by an HTTP surface (e.g.
   an OpenAPI client used by a route — emit unit tests for the client AND a Playwright
   E2E for the route that calls it).

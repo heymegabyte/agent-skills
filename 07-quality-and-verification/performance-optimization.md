@@ -68,7 +68,7 @@ always-load: false
 - `dns-prefetch` less-critical
 - `prefetch` next likely nav
 
-### Code Splitting (Angular 21)
+### Code Splitting (Angular 22)
 
 Lazy-load routes with `loadComponent: () => import(...)`.
 

@@ -1,4 +1,4 @@
 name: angular
-description: Angular 21 + Nx + Spartan UI + RxJS-first
+description: Angular 22 + Nx + Spartan UI + RxJS-first
 members:
   - rules/angular
