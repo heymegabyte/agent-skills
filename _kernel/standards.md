@@ -112,3 +112,9 @@ Wired in `~/.claude/settings.json` § hooks.*:
 - `~/.claude/hooks/enforce-tdd-e2e.py` (PostToolUse)
 - `~/.claude/hooks/session-start-reminders.py` (SessionStart)
 - `~/.claude/hooks/sync-desktop-skills.py` (Stop + UserPromptSubmit)
+
+## #predict — Predictive completeness
+
+- Prompt = SEED, not spec. Predict the 80% from the 20%: enumerate the FULL eventual scope (routes · features · every state · gorgeous · AI-native · prod gates) and build it pass-1.
+- Enumerate the space; never react to the visible subset. "Concise" = tight execution, NEVER narrow scope.
+- Gate DONE against the prediction, not the literal ask. A re-prompt on the same surface = a prediction miss → fold the missed item back (`[[predictive-completeness]]` · `[[prompt-as-training-signal]]`).

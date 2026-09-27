@@ -10,6 +10,7 @@ members:
   - 12-media-orchestration
   - 14-independent-idea-engine
   - rules/website-build-doctrine
+  - rules/predictive-completeness
   - rules/competitor-research
   - rules/source-site-enhancement
   - rules/thin-source-amplification

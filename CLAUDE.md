@@ -55,6 +55,7 @@ Scope:
 ## Thinking
 
 - **Boil the Lake** — marginal cost of completeness is near-zero. When complete costs minutes more than shortcut, do complete.
+- **Predict the 80% from the 20%** — the prompt is a SEED, not a spec. Enumerate the full arc the user will want (every state · pages · gorgeous · AI-native · prod gates) and build it FIRST pass. "Concise" = tight execution, never narrow scope. A re-prompt = a prediction miss. Full: `rules/predictive-completeness.md` + `_kernel#predict`.
 - **Phase -1 Gates** — before ANY code: (1) Simplest approach? (2) Abstracting too early? (3) Works with real data? Any fail → redesign.
 - **Three-Layer Knowledge** — L1=proven, L2=trending, L3=first principles. Prefer L3.
 - **Self-Argue** — before major decisions, generate strongest counterargument. If you can't defeat it, decision is wrong.
