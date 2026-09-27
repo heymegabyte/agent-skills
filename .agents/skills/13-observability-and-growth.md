@@ -66,14 +66,14 @@ Per `_kernel/standards.md#integrations`:
 - GA4 + GTM: container snippet (head script + noscript iframe); CSP: `googletagmanager.com` + `google-analytics.com` + `analytics.google.com` + `region1.google-analytics.com`; server-side tagging for EU; custom dimensions over custom events
 - AI Gateway: `env.AI.run()` auto-routes; direct Anthropic: `https://gateway.ai.cloudflare.com/v1/{account}/{gateway}/anthropic/v1/messages`; caching + rate-limit + fallback + per-call logging
 
-## Stripe (SaaS billing only — per `rules/payments-routing.md`)
+## Stripe (SaaS billing only — per `rules/payments.md`)
 
 - Webhook-first w/ idempotent processing (D1 dedupe table `payment_events(event_id, source, processed_at)` UNIQUE)
 - `Stripe-Signature` HMAC + 5-min replay window
 - Mint products + prices via MCP (idempotent via `lookup_key`); subscription state machine in D1
 - `STRIPE_WEBHOOK_SECRET` via `POST /v1/webhook_endpoints`
 
-## Square (accept-money default — per `rules/payments-routing.md`)
+## Square (accept-money default — per `rules/payments.md`)
 
 - Square Web Payments SDK card form + Apple Pay + Google Pay + Cash App Pay
 - `Square-Signature` HMAC-SHA256 w/ 6-hr replay window; `idempotency_key` UUID per request (24-hr dedupe)

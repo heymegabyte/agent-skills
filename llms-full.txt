@@ -1,14 +1,18 @@
-# Emdash Skills System
+# Emdash Skills — AI + Human Entrypoint (start here)
 
-> 14 top-level skills, 94 reference docs, 18 agents, and 12 templates for Emdash’s product-building workflow.
+> Solo-founder product-building OS for Cloudflare Workers: one-line prompts → deployed products. 23 skill categories · 160 doctrinal rules (`rules/`) · 149 reference docs · 26 agents · 36 templates · 27 commands. Load the SMALLEST useful subset per the router below — never the whole mesh.
 
-> For the full unabridged version, see [llms-full.txt](llms-full.txt).
+> Full unabridged index: [llms-full.txt](llms-full.txt) · Human README: [README.md](README.md)
 
-## Supporting Docs
+## Routing spine (how to load the minimal set)
 
-- [Router](_router.md) — route prompts to the smallest useful skill set
-- [Conventions](CONVENTIONS.md) — shared defaults, commands, breakpoints, CSP, integrations
-- [Skill Profiles](SKILL_PROFILES.md) — default bundles by product type
+- [Router](_router.md) — prompt → smallest useful skill set (category map · task routing · file hints)
+- [Skill Packs](_packs/README.md) — grouped bundles (core / frontend / backend / testing / design / …); one pack loads its whole graph
+- [Kernel](_kernel/index.md) — canonical shared definitions (WCAG · OWASP · CWV · brand · stack · model IDs); cite by anchor, never restate
+- [Skill Profiles](SKILL_PROFILES.md) — default bundle by product type (SaaS · marketing · nonprofit · API · …)
+- [Routing Matrix](routing-matrix.md) — where every new lesson is routed
+- [Operating Doctrine](AGENTSKILLS.md) · [Conventions](CONVENTIONS.md) — durable stance + stack defaults/constants
+- **Doctrinal rules** — 160 always-/pack-loaded rules in `rules/` (autonomy · verification · security · feature-flags · payments · …); routed via the Router's “Doctrinal principles” + pack lists
 - [Changelog](CHANGELOG.md) — package history
 
 ## Core Skills
@@ -26,6 +30,16 @@
 - [12 Media Orchestration](12-media-orchestration/SKILL.md) — image generation, OG images, optimization
 - [13 Observability and Growth](13-observability-and-growth/SKILL.md) — analytics, billing, feedback, experiments
 - [14 Independent Idea Engine](14-independent-idea-engine/SKILL.md) — evidence-backed improvement loops
+- [15 Site Generation](15-site-generation/SKILL.md) — AI site-build pipeline (one-line → deployed site)
+- [16 Cinematic Website Prime Directive](16-cinematic-website-prime-directive/SKILL.md) — cinematic build gates
+- [21 App Foundation](21-app-foundation/SKILL.md) — baseline every delivered app must satisfy
+- [22 Visual & Experience](22-visual-experience/SKILL.md) — gorgeous-UI bar for every app
+- [23 Content & SEO](23-content-seo/SKILL.md) — copy + discoverability bar
+- [24 Functional](24-functional/SKILL.md) — what every delivered app must DO
+- [25 Quality & Performance](25-quality-performance/SKILL.md) — perf + quality bars
+- [26 Platform & Delivery](26-platform-delivery/SKILL.md) — how apps ship + stay up
+- [27 Trust, Security & Compliance](27-trust-compliance/SKILL.md) — security + compliance bar
+- [28 CF Integrations Reference](28-cf-integrations-reference/SKILL.md) — world-class edge stack
 
 ## Reference Highlights
 
@@ -69,18 +83,7 @@ Shared constants and patterns. Reference instead of re-deriving.
 
 ## Brand Tokens
 
-### Colors
-
-- **Black** — `#060610`
-- **Cyan** — `#00E5FF`
-- **Blue** — `#50AAE3`
-- **Purple** (cosmic/space only) — `#7C3AED`
-
-### Fonts
-
-- **Heading** — Sora
-- **Body** — Space Grotesk
-- **Mono** — JetBrains Mono
+Brand colors, fonts, tone, and contact are canonical in `_kernel/standards.md#brand` — single source of truth; cite it, never restate (this block previously drifted on font roles: correct mapping is Sora = body, Space Grotesk = headings).
 
 ### Identity
 
@@ -998,7 +1001,7 @@ New default transport (spec 2025-03-26), replaces deprecated HTTP+SSE.
 
 ### Min cacheable
 
-- Opus 4.7 / 4.6 / 4.5 — 4096 tokens
+- Opus 4.8 / 4.7 / 4.6 — 4096 tokens
 - Sonnet 4.6 — 2048 tokens
 
 ### Other

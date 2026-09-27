@@ -87,7 +87,7 @@ Per `rules/copy-writing.md` § Production-review copy gate. Build validator grep
 4. **Accessibility** (axe 0 violations + WCAG 2.2 AA per `_kernel/standards.md#wcag22`)
 5. **6-breakpoint responsive** (per `_kernel/standards.md#breakpoints`)
 6. **Observability** (Sentry breadcrumb + PostHog event + Workers Trace span)
-7. **Tests** (Vitest unit + Playwright E2E from homepage outward per `rules/e2e-tdd-organization.md`)
+7. **Tests** (Vitest unit + Playwright E2E from homepage outward per `rules/e2e-testing.md`)
 8. **Feature flag** where rollout risk exists (`rules/feature-flags.md`)
 9. **Tenant isolation** (`org_id` on every row + every query, 404 on mismatch)
 10. **Docs** (JSDoc on exports + module README)
@@ -148,7 +148,7 @@ e2e/
 
 ## Build loop (per slice)
 
-1. **Write failing test** (Playwright TDD-RED first per `rules/e2e-tdd-organization.md`)
+1. **Write failing test** (Playwright TDD-RED first per `rules/e2e-testing.md`)
 2. **Author migration** (`drizzle/0NNN_<feature>.sql`) + update `db/schema.ts`
 3. **Apply locally** (`npm run db:apply:local`)
 4. **Implement** (route, lib, page, components)
