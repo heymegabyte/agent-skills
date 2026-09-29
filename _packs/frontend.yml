@@ -12,3 +12,4 @@ members:
   - rules/shadcn-design-system
   - rules/buttons-accommodate-largest-text
   - rules/real-time-data-no-manual-refresh
+  - rules/public-front-door
