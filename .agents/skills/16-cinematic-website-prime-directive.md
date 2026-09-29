@@ -41,7 +41,7 @@ One-line prompt → satisfy all 100 build-breaking rules across 10 categories be
 11. React 19 + Vite + Tailwind v4 + TanStack Router (default)
 12. Astro 5 + React islands for marketing-static-heavy
 13. Next.js 15 App Router only when SSR/ISR adds real value
-14. Angular 21 + Ionic + Spartan UI only when user says "Angular" or signal-heavy enterprise
+14. Angular 22 + Ionic + Spartan UI only when user says "Angular" or signal-heavy enterprise
 15. View Transitions API (`@view-transition { navigation: auto; }`) for SPA page swaps
 16. Selective hydration per island (Astro) or RSC boundaries (Next)
 17. Prefetch on link hover via TanStack Router or Astro `prefetch="hover"`
@@ -92,7 +92,7 @@ One-line prompt → satisfy all 100 build-breaking rules across 10 categories be
 
 51. GA4 + GTM snippet (head + noscript fallback)
 52. PostHog snippet w/ `persistence:'memory'` (cookie-free), autocapture on
-53. Sentry `@sentry/cloudflare` v9 + `withSentry` + OIDC DSN
+53. Sentry `@sentry/cloudflare` v10 + `withSentry` + OIDC DSN
 54. Workers Tracing `[observability] enabled = true` + OTLP export to Axiom
 55. AI Gateway binding for every LLM call
 56. Turnstile invisible (`data-appearance="interaction-only"`) on every form — NEVER visible
@@ -131,7 +131,7 @@ One-line prompt → satisfy all 100 build-breaking rules across 10 categories be
 
 81. Playwright E2E 6bp covering homepage → key flow → conversion
 82. Tests start at homepage, navigate by clicking nav (never `page.goto` for internal)
-83. Vitest 3 unit tests for utilities + Zod schemas
+83. Vitest 5 unit tests for utilities + Zod schemas
 84. Lighthouse CI: Perf ≥90, A11y ≥95, BP ≥95, SEO ≥95
 85. AI vision QA ≥9/10 per route (visual-qa agent w/ Opus 4.8)
 86. Percy AI Visual Review for full-page regression
