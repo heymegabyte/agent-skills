@@ -112,7 +112,7 @@ The `validate-*.mjs` build-gates a rule names (and their `build_validators.ts` o
 <!-- grow-ok --> The pack exceeds budget, so not every member co-loads. This is the complete recoverable index — pull any of these when its concern is in scope:
 
 - **Stack foundation**: `[[angular]]` (Angular, preferred) OR `[[shadcn-design-system]]` (React path) · `[[frontend-stack]]`
-- **Cinematic + design**: `[[cinematic-ui-patterns]]` (RollingCounter/Reveal, React+Angular) · `[[gorgeous-by-default]]` · `[[text-contrast]]` · `[[logo-contrast]]` · `[[image-quality]]`
+- **Cinematic + design**: `[[cinematic-ui-patterns]]` (RollingCounter/Reveal, React+Angular) · `[[gorgeous-by-default]]` · `[[text-contrast]]` · `[[logo-contrast]]` · `[[image-quality]]` · `[[google-maps-panels]]`
 - **Content + brand**: `[[copy-writing]]` · `[[citations]]` · `[[timeline-authenticity]]` · `[[i18n-by-demographics]]` · `[[thin-source-amplification]]` · `[[brand-asset-pipeline]]` (logo/wordmark/OG generation + trim + alpha gate)
 - **Forms + comms**: `[[email-deliverability]]` (every-form gate)
 - **Architecture + security**: `[[projectsites-cloudflare-first]]` (CF infra LAW — always) · `[[csp-trusted-types]]` (CSP L3 + nonce + Trusted Types + COOP/COEP/Permissions-Policy — every site) · `[[security-hardening]]` (HSTS/referrer-policy/nosniff) · `[[secret-provisioning]]` + `[[secret-auto-provisioning]]` (auto-generate signing/session/webhook secrets + provider DNS — every build wires integrations) · `[[ai-agent-security]]` (when the Phase-4 AI-native spiral ships chat-as-UI / tool-calls / agents) · `[[feature-flags]]` (every new feature flagged) · `[[production-observability-default-on]]` (analytics)

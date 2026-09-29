@@ -11,3 +11,4 @@ members:
   - rules/copy-writing
   - rules/shadcn-design-system
   - rules/buttons-accommodate-largest-text
+  - rules/real-time-data-no-manual-refresh

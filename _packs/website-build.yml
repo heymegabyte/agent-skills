@@ -25,3 +25,4 @@ members:
   - rules/website-completeness-checklist
   - rules/build-validators-manifest
   - rules/brand-asset-pipeline
+  - rules/google-maps-panels

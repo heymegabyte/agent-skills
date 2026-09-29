@@ -7,3 +7,4 @@ members:
   - rules/auto-integrate-recs
   - rules/context-spillover
   - 14-independent-idea-engine
+  - rules/interconnectedness

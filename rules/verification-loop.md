@@ -170,3 +170,9 @@ For any repo with a deployed surface (Cloudflare Worker, Pages, Vercel, etc.), t
 - Requirements met ≠ tests pass: re-read the plan, build a line-by-line checklist, verify each item, report gaps or completion.
 - Binding before committing, pushing, or opening a PR — these are completion claims and demand the gate first.
 - See `20-superpowers`
+
+## Fresh-hostname DNS gotcha (2026-09-29)
+
+- Verifying a JUST-created hostname (Worker custom domain, brand-new subdomain) after having queried it while unresolved → the LOCAL negative-DNS cache serves ENOTFOUND false-RED while the edge is already live.
+- Cross-check via `dig @1.1.1.1 <host>` + `curl --resolve <host>:443:<ip>` BEFORE declaring the deploy broken; flush macOS cache (`sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder`) so node/browser verifiers resolve again.
+- First seen: megabyte.space Cloudflare OS launch — apex ENOTFOUND locally for minutes while 1.1.1.1 + `--resolve` proved the Access 302 live.
