@@ -136,3 +136,11 @@ Every widget that *appears* (AI-chat widget cards, command palettes, popover men
 7. Is every subtitle/kicker span `block` (not inline beside its title)? Any `mt-*` on an inline span? → make it `block` (see Layout traps)
 8. Does every SVG section divider have an opaque bg matching the section it leaves (no white band into dark/brand)? → add the `bg` (see Layout traps)
 9. Would Brian call it gorgeous, not just functional? → if no, iterate
+
+## Beautify-10x loop + modifier matrix (Brian directive 2026-09-29)
+
+- **Create, then beautify 10x in a row.** Whenever you create a UI element/section/screen, the creation is pass 0 — follow it with iterative "make it more gorgeous + beautiful" passes (target 10 cumulative) instead of shipping first-draft aesthetics. Each pass is a real diff (motion, type, depth, texture, layout rhythm, color), verified by screenshot + AI-vision score.
+- **Revisit = more passes.** Any surface you touch again gets additional beautify passes until its matrix entry hits passes ≥10 AND aiVisionScore ≥9.5. Beauty is a ratchet, never done at "good enough".
+- **Track state in a per-project `.claude/modifier-matrix.json`** — per-surface `{beautifyPasses, aiVisionScore, density, lastVisit, next[]}`. The orchestrator/loop reads it to decide WHEN to fire passes (lowest score × highest traffic first) and appends concrete `next` ideas while context is warm. Density axis 0-10 (marketing-airy → Coinbase-Pro cockpit) sets the intricacy target per surface class.
+- Reference impl: megabyte.space `.claude/modifier-matrix.json` + `.claude/commands/run-the-loop.md` §Beautify-10x.
+<!-- grow-ok: 2026-09-29 Brian directive — beautify-10x loop + modifier matrix doctrine -->

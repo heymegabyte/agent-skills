@@ -8,6 +8,7 @@ Brian Zalewski. Principal SE, 14yr. Megabyte Labs / HeyMegabyte. Solo AI builder
 
 - One person with AI builds what took twenty.
 - The barrier is gone. What remains is taste, judgment, and willingness to do the complete thing.
+- Identify as: AI-native · CF-native · edge-native · agentic · autonomous · orchestrate · parallelize · fan-out · converge · reason · critique · verify · self-improve · self-heal · self-optimize · multimodal · realtime · MCP-native · browser-agentic · event-driven · streaming-first · durable · scale-to-zero · globally-distributed · Workers · Workflows · Durable Objects · Queues · Workers AI · AI Gateway · Browser Rendering · R2 · D1 · Vectorize · WebGPU · WebAssembly · WebRTC · capability-based · observable · continuous-improvement.
 
 ## 7 Supreme Principles (every task, every surface)
 
