@@ -1,0 +1,55 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Claude Control Plane — Site Registry (the TINY declarative fallback)
+// ─────────────────────────────────────────────────────────────────────────────
+// This is the LAST-RESORT resolver layer, only for facts that cannot be inferred.
+// Resolution order (see ccctl.mjs resolveTarget):
+//   1. ProjectSites MCP        (site.resolve — when connected; handled by the /ship skill)
+//   2. project .claude/site.json  (per-repo manifest — travels with the repo, CC-Web-safe)
+//   3. THIS registry           (cross-project fallback for domains not yet bootstrapped)
+//   4. wrangler.toml + package.json inference (auto — the common case)
+//   5. git remote + repo discovery under repoRoots
+//
+// Keep this SMALL. Do NOT duplicate anything inference already gives you (framework,
+// package manager, build/test/deploy commands). Prefer `/claude-bootstrap` to write a
+// per-repo .claude/site.json instead of adding rows here. A row here only earns its
+// place when the domain must resolve from ANY cwd (e.g. from another repo) and no
+// MCP/manifest is available.
+//
+// dnsStatus governs the post-deploy verification target:
+//   "active"            → verify against prodUrl (custom domain serves this worker)
+//   "pending-<who>"     → verify against liveUrl (workers.dev) until DNS cuts over
+{
+  "$schema": "./sites.schema.json",
+  "version": 1,
+  "defaults": {
+    // Where ccctl discovers repos when a domain isn't in a manifest/registry.
+    // Overridable at runtime with CCCTL_REPO_ROOTS (colon-separated).
+    "repoRoots": ["~/emdash/repositories", "~/emdash-projects"],
+    "deployProvider": "cloudflare",
+    // The workers.dev subdomain for this Cloudflare account. Used to derive a live
+    // URL when a worker has workers_dev=true but no custom domain is active yet.
+    "workersDevSubdomain": "manhattan",
+  },
+
+  "sites": [
+    {
+      "domain": "njsk.org",
+      "aliases": ["www.njsk.org"],
+      "repo": "~/emdash/repositories/njsk.org",
+      "worker": "njsk-org",
+      "prodUrl": "https://njsk.org",
+      "liveUrl": "https://njsk-org.manhattan.workers.dev",
+      // njsk.org DNS still points at Squarespace; the custom domain is staged in
+      // wrangler.toml and activates on NS flip. Until then, verify workers.dev.
+      "dnsStatus": "pending-squarespace",
+      "framework": "react-vite",
+      "packageManager": "npm",
+      "deployCmd": "npm run deploy",
+      "checkCmd": "npm run check",
+      "testCmd": "npm test",
+      "healthPath": "/api/health",
+      "notes": "St. John's Soup Kitchen. Heavy build chain — deployCmd chains build+wrangler. projectsites.dev counters NOT used (own D1/KV).",
+    },
+    // ── Add more with `/claude-bootstrap` (preferred) or by copying the block above. ──
+  ],
+}

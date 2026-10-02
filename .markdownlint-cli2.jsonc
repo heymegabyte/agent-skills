@@ -7,6 +7,9 @@
     "**/_archived/**",
     "**/backups/**",
     "**/_competitors/**",
+    // Vendored run-the-loop machinery (synced from projectsites — reference, not plugin-authored)
+    "run-the-loop/_shared/**",
+    "run-the-loop/_templates/**",
     "file-history/**",
     "projects/**",
     "sessions/**",

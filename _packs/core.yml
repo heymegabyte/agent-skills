@@ -12,6 +12,7 @@ members:
   - rules/autonomous-engineering
   - rules/verification-loop
   - rules/monitor-orchestration
+  - rules/split-work-into-ledger
   - rules/prompt-as-training-signal
   - rules/solo-builder-doctrine
   - rules/main-only-branch

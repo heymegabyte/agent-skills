@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "sharedDir": "_shared",
+  "templatesDir": "_templates",
+  "targetDir": ".claude/run-the-loop",
+  "shared": [
+    "CONSTITUTION.md",
+    "OPERATING-PRINCIPLES.md",
+    "RUNNER-AND-CRITICS.md",
+    "GENOME.md",
+    "BROWSER-OPERATING-LAYER.md",
+    "CF-RELEASES.md",
+    "ULTIMATE-REQUIREMENTS.md"
+  ],
+  "templates": ["README.md", "NEXT-SESSION-BOOTSTRAP.md", "ARCHITECTURE.md"],
+  "projectOwned": [
+    "BACKLOG.md",
+    "LEDGER.md",
+    "DISCOVERIES.md",
+    "PROJECT-PROFILE.md",
+    "GOLDEN-PATHS.md",
+    "VISUAL-COVERAGE.md",
+    "WALKTHROUGH-SPEC.md",
+    "CAMPAIGN-cf-native-ai.md"
+  ],
+  "_doc": "shared = force-synced from master _shared/ — NEVER hand-edit these inside a repo; edit the master here + re-run sync. templates = copied into a repo ONLY if absent (seed-once, then project-owned). projectOwned + any other file (logs, *.json leases, progress.md, salvage/, visual/) = NEVER touched by sync. This is the single source of truth for which run-the-loop files are global vs per-project."
+}
