@@ -11,3 +11,4 @@ members:
   - rules/motion-interaction-supervisor
   - rules/visualization-maps-diagrams-supervisor
   - rules/embarrassingly-easy-to-use
+  - rules/nebula-waiting-experience
