@@ -6,6 +6,7 @@ members:
   - 22-visual-experience
   - rules/text-contrast
   - rules/logo-contrast
+  - rules/logo-generation
   - rules/cinematic-ui-patterns
   - rules/gorgeous-by-default
   - rules/motion-interaction-supervisor

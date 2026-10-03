@@ -74,5 +74,6 @@ projectsites.dev template `Header.tsx` — the HTML text-wordmark fallback (`<sp
 
 ## Cross-Links
 
+- [[logo-generation]] — how to CREATE the mark (research → Ideogram → AI-vision select → integrate) before sizing it here
 - [[image-quality]] — logo sizing and format guidance
 - [[text-contrast]] — brand color palette + accessibility guidance
