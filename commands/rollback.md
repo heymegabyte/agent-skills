@@ -9,7 +9,7 @@ Fast recovery. Worker rollback is instant + safe; **D1 schema rollback is approv
 
 1. **List** — `npx wrangler deployments list` → identify the current version + the prior known-good version id.
 2. **Pick prior** — select the deployment immediately before the current one (or a specific id if the user names it).
-3. **Rollback** — `npx wrangler rollback <version-id>`. Confirm the CLI reports the active version flipped.
+3. **Rollback** — `npx wrangler rollback <version-id> --message "<why>"`. `--message` skips the interactive confirm (MANDATORY for unattended runs — a TTY prompt hangs the agent) and writes the audit trail into `deployments list`. Confirm the CLI reports the active version flipped.
 4. **Re-verify** — `node .claude/control-plane/ccctl.mjs resolve` → `ccctl verify <verifyUrl> --status 200`, then load the homepage in a real browser and assert it renders with 0 console errors. Do NOT declare recovered until the live URL is healthy.
 5. **Report** — restored version id, previous (broken) id, and the health verdict with evidence.
 

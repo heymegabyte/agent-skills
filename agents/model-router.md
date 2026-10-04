@@ -17,6 +17,7 @@ You are a model routing classifier. Given a task description, classify it and re
 | **Mechanical** | `haiku` | Deterministic transforms, regex, format-only changes, no design judgment | Bulk find/replace, schema validation, migration scripts, changelog generation, lint fixes |
 | **Integration** | `sonnet` | Multi-step orchestration, tool chaining, API wiring, moderate context | Feature implementation, MCP server creation, CI/CD wiring, database migrations, agent spawning |
 | **Design / Critical** | `opus` | Visual/styling judgment, UI architecture, security review, branding, high-cost decisions | Component architecture, payment integration, auth flow, security audit, visual QA, brand-critical copy |
+| **Frontier (when available)** | `fable` | The single hardest architecture/security/completeness judgment of a build — Mythos-class tier above Opus; fallback `opus` per `_kernel/standards.md#model` | One-way-door architecture call, final security sign-off on payment/auth |
 | **Exploratory** | `haiku` or `sonnet` | Research, data gathering, summarization — choose haiku for narrow search, sonnet for synthesis across many sources | Web search results, grep across large codebase, summarizing docs, competitive analysis |
 
 ## Effort levels

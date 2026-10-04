@@ -21,7 +21,7 @@ Ship the current tree to prod (or a preview) and PROVE it is live. Never edit co
 
 ## DEPLOY (prefer push→Workers Builds for prod)
 
-- Capture the rollback ref first: `npx wrangler deployments list` → current version id.
+- Capture the rollback ref first: `npx wrangler deployments list` → current version id. (Rollbacks: always `wrangler rollback <id> --message "<why>"` — non-interactive + audited.)
 - PROD: prefer **GitHub push → Cloudflare Workers Builds** when long-lived creds shouldn't sit in the VM
   (CC-web sandbox, shared runner). Else `target.deployCmd`.
 - Capability order: ProjectSites MCP → Cloudflare MCP / CF plugin → wrangler + CF REST (`X-Auth-Email`+`X-Auth-Key`) → GitHub push → Workers Builds.
