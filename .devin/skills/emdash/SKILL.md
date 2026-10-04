@@ -1,6 +1,6 @@
 ---
 name: "emdash-skills"
-description: "23-category product-building OS. CF Workers+Hono, React 19+Vite / Angular 22+Spartan, D1, Drizzle, Clerk, Square/Stripe. 159 reference docs, 26 agents."
+description: "23-category product-building OS. CF Workers+Hono, React 19+Vite / Angular 22+Spartan, D1, Drizzle, Clerk, Square/Stripe. 149 reference docs, 28 agents."
 ---
 # Emdash Skills for Devin
 
