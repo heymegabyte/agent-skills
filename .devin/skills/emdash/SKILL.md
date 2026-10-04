@@ -1,14 +1,14 @@
 ---
 name: "emdash-skills"
-description: "14-category product-building OS. CF Workers+Hono, Angular, D1, Drizzle, Clerk, Stripe. 159 reference docs, 26 agents."
+description: "23-category product-building OS. CF Workers+Hono, React 19+Vite / Angular 22+Spartan, D1, Drizzle, Clerk, Square/Stripe. 149 reference docs, 28 agents."
 ---
 # Emdash Skills for Devin
 
 Load CONVENTIONS.md for stack defaults. Load _router.md for skill routing.
-19 categories, 159 reference docs, 26 agents.
+23 categories, 149 reference docs, 28 agents.
 
 ## Stack
-CF Workers + Hono | Angular 22 + Ionic 8 + Spartan UI | D1/Neon | Drizzle v1 | Clerk | Stripe | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
+CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1 | Clerk | Square + Stripe Billing/Connect | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
 
 ## Rules
 - TypeScript strict, never `any`, prefer `interface` over `type`
@@ -17,5 +17,6 @@ CF Workers + Hono | Angular 22 + Ionic 8 + Spartan UI | D1/Neon | Drizzle v1 | C
 - TDD: failing test first, Playwright 6 breakpoints
 - Dark-first design, #060610 bg, #00E5FF accent
 - Deploy to CF Workers, purge CDN after every deploy
+- Lint: oxlint + ESLint + Prettier (never Biome); lefthook, not husky
 
 See CONVENTIONS.md for full patterns.

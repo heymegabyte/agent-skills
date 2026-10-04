@@ -128,7 +128,7 @@ jobs:
           This repository contains 19 skill categories, 26 agents, and 159 reference docs for autonomous product building.
 
           ## Stack
-          CF Workers + Hono | Angular 22 + Ionic 8 + Spartan UI | D1/Neon | Drizzle v1 | Clerk | Stripe | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
+          CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1 | Clerk | Square + Stripe Billing/Connect | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
 
           ## Usage
           Load skills on demand via the skill router (`_router.md`). Each category has a `SKILL.md` with submodules listed in frontmatter.
@@ -162,7 +162,7 @@ jobs:
           23 categories, 149 reference docs, 28 agents.
 
           ## Stack
-          CF Workers + Hono | Angular 22 + Ionic 8 + Spartan UI | D1/Neon | Drizzle v1 | Clerk | Stripe | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
+          CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1 | Clerk | Square + Stripe Billing/Connect | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
 
           ## Rules
           - TypeScript strict, never `any`, prefer `interface` over `type`
@@ -212,7 +212,7 @@ jobs:
           mkdir -p .cursor/rules
           cat > .cursor/rules/emdash-skills.mdc << 'MDCEOF'
           ---
-          description: "Emdash Skills — 14-category product-building OS. CF Workers+Hono, Angular, D1, Drizzle, Clerk, Stripe."
+          description: "Emdash Skills — 23-category product-building OS. CF Workers+Hono, React 19+Vite / Angular 22+Spartan, D1, Drizzle, Clerk, Square/Stripe."
           alwaysApply: true
           globs: "**/*"
           ---
@@ -222,7 +222,7 @@ jobs:
           23 categories, 149 reference docs, 28 agents.
 
           ## Stack
-          CF Workers + Hono | Angular 22 + Ionic 8 + Spartan UI | D1/Neon | Drizzle v1 | Clerk | Stripe | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
+          CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1 | Clerk | Square + Stripe Billing/Connect | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
 
           ## Rules
           - TypeScript strict, never `any`, prefer `interface` over `type`
@@ -239,7 +239,7 @@ jobs:
           cat > .windsurf/rules/emdash-skills.md << 'WSEOF'
           ---
           trigger: always_on
-          description: "Emdash Skills — 14-category product-building OS for Windsurf."
+          description: "Emdash Skills — 23-category product-building OS for Windsurf."
           ---
           # Emdash Skills for Windsurf
 
@@ -247,7 +247,7 @@ jobs:
           23 categories, 149 reference docs, 28 agents.
 
           ## Stack
-          CF Workers + Hono | Angular 22 + Ionic 8 + Spartan UI | D1/Neon | Drizzle v1 | Clerk | Stripe | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
+          CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1 | Clerk | Square + Stripe Billing/Connect | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
 
           ## Rules
           - TypeScript strict, never `any`, prefer `interface` over `type`
@@ -264,7 +264,7 @@ jobs:
           cat > .augment/rules/emdash-skills.md << 'AUGEOF'
           ---
           type: always_apply
-          description: "Emdash Skills — 14-category product-building OS for Augment Code."
+          description: "Emdash Skills — 23-category product-building OS for Augment Code."
           ---
           # Emdash Skills for Augment Code
 
@@ -272,7 +272,7 @@ jobs:
           23 categories, 149 reference docs, 28 agents.
 
           ## Stack
-          CF Workers + Hono | Angular 22 + Ionic 8 + Spartan UI | D1/Neon | Drizzle v1 | Clerk | Stripe | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
+          CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1 | Clerk | Square + Stripe Billing/Connect | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
 
           ## Rules
           - TypeScript strict, never `any`, prefer `interface` over `type`
@@ -296,7 +296,7 @@ jobs:
           23 categories, 149 reference docs, 28 agents.
 
           ## Stack
-          CF Workers + Hono | Angular 22 + Ionic 8 + Spartan UI | D1/Neon | Drizzle v1 | Clerk | Stripe | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
+          CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1 | Clerk | Square + Stripe Billing/Connect | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
 
           ## Rules
           - TypeScript strict, never `any`, prefer `interface` over `type`
@@ -317,7 +317,7 @@ jobs:
           23 categories, 149 reference docs, 28 agents.
 
           ## Stack
-          CF Workers + Hono | Angular 22 + Ionic 8 + Spartan UI | D1/Neon | Drizzle v1 | Clerk | Stripe | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
+          CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1 | Clerk | Square + Stripe Billing/Connect | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
 
           ## Rules
           - TypeScript strict, never `any`, prefer `interface` over `type`
@@ -351,7 +351,7 @@ jobs:
           cat > .devin/skills/emdash/SKILL.md << 'DEVINEOF'
           ---
           name: "emdash-skills"
-          description: "14-category product-building OS. CF Workers+Hono, Angular, D1, Drizzle, Clerk, Stripe. 159 reference docs, 26 agents."
+          description: "23-category product-building OS. CF Workers+Hono, React 19+Vite / Angular 22+Spartan, D1, Drizzle, Clerk, Square/Stripe. 159 reference docs, 26 agents."
           ---
           # Emdash Skills for Devin
 
@@ -359,7 +359,7 @@ jobs:
           23 categories, 149 reference docs, 28 agents.
 
           ## Stack
-          CF Workers + Hono | Angular 22 + Ionic 8 + Spartan UI | D1/Neon | Drizzle v1 | Clerk | Stripe | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
+          CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1 | Clerk | Square + Stripe Billing/Connect | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
 
           ## Rules
           - TypeScript strict, never `any`, prefer `interface` over `type`
@@ -375,14 +375,14 @@ jobs:
           mkdir -p .goose/recipes
           cat > .goose/recipes/emdash-skills.yaml << 'GOOSEEOF'
           name: emdash-skills
-          description: "14-category product-building OS. CF Workers+Hono, Angular, D1, Drizzle, Clerk, Stripe."
+          description: "23-category product-building OS. CF Workers+Hono, React 19+Vite / Angular 22+Spartan, D1, Drizzle, Clerk, Square/Stripe."
           version: "2.0.0"
 
           instructions: |
             Load CONVENTIONS.md for stack defaults. Load _router.md for skill routing.
             23 categories, 149 reference docs, 28 agents.
 
-            Stack: CF Workers + Hono | Angular 22 + Ionic 8 + Spartan UI | D1/Neon | Drizzle v1 | Clerk | Stripe | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
+            Stack: CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1 | Clerk | Square + Stripe Billing/Connect | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
 
             Rules:
             - TypeScript strict, never `any`, prefer `interface` over `type`

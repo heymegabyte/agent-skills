@@ -40,9 +40,11 @@ const MANAGED = [
   {
     name: 'stack-line',
     // Matches the stack summary in ANY format/spacing (from "CF Workers" to "Sentry").
+    // Two-stack doctrine (CONVENTIONS.md § Stack): React 19+Vite sites / Angular 22+Spartan
+    // apps — never Angular-only. Payments trio: Square accept / Stripe Billing / Connect.
     pattern: /CF Workers.*?PostHog\s*\|\s*Sentry/g,
     canonical:
-      'CF Workers + Hono | Angular 22 + Ionic 8 + Spartan UI | D1/Neon | Drizzle v1 | Clerk | Stripe | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry',
+      'CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1 | Clerk | Square + Stripe Billing/Connect | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry',
   },
   {
     name: 'counts-line',
@@ -52,12 +54,40 @@ const MANAGED = [
     pattern: /\d+ categories, \d+ reference docs, \d+ agents\./g,
     canonical: '23 categories, 149 reference docs, 28 agents.',
   },
+  {
+    name: 'desc-category-count',
+    // The "N-category product-building OS" phrase in mirror frontmatter descriptions
+    // (.cursor .mdc / .windsurf / .augment / .goose recipe / publish.yml heredocs).
+    pattern: /\d+-category product-building OS/g,
+    canonical: '23-category product-building OS',
+  },
+  {
+    name: 'desc-stack',
+    // The compact stack descriptor inside those same frontmatter descriptions.
+    // Alternation matches both the legacy Angular/Stripe-only form and the canonical.
+    pattern:
+      /CF Workers\+Hono, (?:Angular|React 19\+Vite \/ Angular 22\+Spartan), D1, Drizzle, Clerk, (?:Stripe|Square\/Stripe)\./g,
+    canonical: 'CF Workers+Hono, React 19+Vite / Angular 22+Spartan, D1, Drizzle, Clerk, Square/Stripe.',
+  },
+  {
+    name: 'lint-line',
+    // The lint/hooks guardrail bullet in every mirror's Rules block. EXACT literal
+    // (no open-ended [^\n]*) so it can never swallow this file's own quotes; the
+    // \+ escapes also keep the pattern's source text from matching itself. Does not
+    // match _kernel/standards.md ("ESLint 10"). To change the doctrine text, update
+    // pattern (add alternation for the old form) AND canonical together.
+    pattern: /- Lint: oxlint \+ ESLint \+ Prettier \(never Biome\); lefthook, not husky/g,
+    canonical: '- Lint: oxlint + ESLint + Prettier (never Biome); lefthook, not husky',
+  },
 ];
 
 const drifted = [];
 function walk(dir) {
   for (const name of readdirSync(dir)) {
-    if (SKIP_DIRS.has(name)) continue;
+    // 'skills' is only the ROOT submodule checkout — nested dirs named skills
+    // (.devin/skills, .agents/skills) are real mirror targets. Unanchored name
+    // matching already bit us twice (.gitignore 'skills/', this SKIP set).
+    if (SKIP_DIRS.has(name) && (name !== 'skills' || dir === ROOT)) continue;
     const p = join(dir, name);
     let st;
     try { st = statSync(p); } catch { continue; }
