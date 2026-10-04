@@ -533,10 +533,8 @@ TOOL_TO_SKILLS = {
     "mcp__github__": ["08-deploy-and-runtime-verification", "rules/main-only-branch"],
     "mcp__github-mcp__": ["08-deploy-and-runtime-verification"],
     # Research
-    "WebFetch": ["03-planning-and-research", "rules/fetch-defaults"],
-    "WebSearch": ["03-planning-and-research"],
-    "mcp__tavily__": ["03-planning-and-research"],
-    "mcp__firecrawl__": ["03-planning-and-research", "rules/fetch-defaults"],
+    "WebFetch": ["rules/fetch-defaults"],
+    "mcp__firecrawl__": ["rules/fetch-defaults"],
     # Bash with specific commands
     "Bash:wrangler": ["05-architecture-and-stack", "08-deploy-and-runtime-verification",
                        "rules/cloudflare-lock-in-is-leverage"],

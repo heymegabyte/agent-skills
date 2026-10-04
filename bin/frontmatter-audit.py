@@ -126,7 +126,6 @@ ROUTING = {
 
     # SKILLs — tier 2-3 based on usage
     "02-goal-and-brief": {"priority": 2, "triggers": ["new project", "project brief", "goals"], "pack": "core", "paths": ["*"]},
-    "03-planning-and-research": {"priority": 2, "triggers": ["research", "plan", "competitor"], "pack": "core", "paths": ["*"]},
     "04-preference-and-memory": {"priority": 2, "triggers": ["remember", "memory", "preference"], "pack": "core", "paths": ["*"]},
     "05-architecture-and-stack": {"priority": 2, "triggers": ["architecture", "stack", "cloudflare", "d1", "workers"], "pack": "backend", "paths": ["concern:cloudflare-workers"]},
     "06-build-and-slice-loop": {"priority": 2, "triggers": ["build feature", "implement", "slice"], "pack": "core", "paths": ["*"]},

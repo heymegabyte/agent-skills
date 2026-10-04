@@ -409,15 +409,7 @@ jobs:
           } > llms-full.txt
 
       - name: Generate Codex .agents/ directory
-        run: |
-          mkdir -p .agents/skills
-          # Symlink each SKILL.md for native Codex discovery
-          for dir in [0-9][0-9]-*/; do
-            DIRNAME=$(basename "$dir")
-            if [ -f "${dir}SKILL.md" ]; then
-              cp "${dir}SKILL.md" ".agents/skills/${DIRNAME}.md"
-            fi
-          done
+        run: node bin/gen-codex-skills.mjs
 
       - name: Normalize generated markdown + JSON/YAML (pass-45/46 — prevents drift on next CI run)
         run: |
