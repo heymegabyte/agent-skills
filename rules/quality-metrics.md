@@ -31,7 +31,7 @@ triggers:
 - CSS ≤ 50KB gz
 - Fonts ≤ 100KB woff2 preload + unicode-range subset
 - Images: use-based, not per-image cap (icons 5–50KB · cards 40–120KB · content 80–250KB · hero 250–500KB · fullscreen 400–900KB when justified). Page budget: <1MB above-fold, <2MB total.
-- Photos → **AVIF primary** (20-30% smaller than WebP, 94% browser support) + WebP fallback + JPEG legacy; SVG for logos/icons. Responsive `srcset` 320/640/960/1280/1920w.
+- Photos → **AVIF primary** (20-30% smaller than WebP, 94% browser support (94.9%, caniuse Mar 2026)) + WebP fallback + JPEG legacy; SVG for logos/icons. Responsive `srcset` 320/640/960/1280/1920w.
 - Drop JPEG XL (10% support)
 - og-image 1200×630 ≤ 100KB BRANDED CARD (not raw photo)
 - apple-touch-icon 180×180 mandatory

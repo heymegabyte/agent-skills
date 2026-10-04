@@ -92,7 +92,7 @@ One-line prompt → satisfy all 100 build-breaking rules across 10 categories be
 
 51. GA4 + GTM snippet (head + noscript fallback)
 52. PostHog snippet w/ `persistence:'memory'` (cookie-free), autocapture on
-53. Sentry `@sentry/cloudflare` v10 + `withSentry` + OIDC DSN
+53. Sentry `@sentry/cloudflare` v11 (stream trace lifecycle default since 11.0) + `withSentry` + OIDC DSN
 54. Workers Tracing `[observability] enabled = true` + OTLP export to Axiom
 55. AI Gateway binding for every LLM call
 56. Turnstile invisible (`data-appearance="interaction-only"`) on every form — NEVER visible

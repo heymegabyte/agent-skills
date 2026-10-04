@@ -42,23 +42,10 @@ Examples: dropping a D1 column (data loss), choosing an auth provider (Clerk →
 
 ## Decision protocol
 
-### Two-way door
-
-```
-Classify → "two-way" → Ship autonomously per [[autonomous-engineering]] tier
-```
-
-No ceremony. Move.
-
-### One-way door
-
-```
-Classify → "one-way" → 5-minute written self-argument → Document → Decide → Ship
-```
-
-**Self-argument template (inline comment or ADR)** — fields: Decision · Type · For · Against · Counterargument-defeated? · Confidence (≥0.7 to proceed) · Proceed. See `reference/one-way-two-way-doors.md` for the fill-in template + a worked example.
-
-Write in the commit message or `docs/decisions/NNN-title.md` for anything larger than a 2-file change.
+- **Two-way** → classify → ship autonomously per `[[autonomous-engineering]]` tier. No ceremony. Move.
+- **One-way** → classify → 5-minute written self-argument → document → decide → ship.
+- **Self-argument template (inline comment or ADR)** — fields: Decision · Type · For · Against · Counterargument-defeated? · Confidence (≥0.7 to proceed) · Proceed. See `reference/one-way-two-way-doors.md` for the fill-in template + a worked example.
+- Write in the commit message or `docs/decisions/NNN-title.md` for anything larger than a 2-file change.
 
 ## Common misclassifications
 
@@ -75,13 +62,10 @@ Write in the commit message or `docs/decisions/NNN-title.md` for anything larger
 
 Confidence below 0.7 on a one-way door → research more before deciding. State confidence explicitly in the self-argument.
 
-## Prod-only amplification
+## Amplifiers
 
-Per `[[no-staging-doctrine]]`: every one-way door mistake is immediately a production incident. The 5-minute pause is proportionate.
-
-## Drift detection
-
-One-way doors made without a self-argument become the hardest drift to unwind. Per `[[drift-detection]]`: encounter an architectural choice with no documented rationale → add one same turn.
+- Per `[[no-staging-doctrine]]`: every one-way door mistake is immediately a production incident — the 5-minute pause is proportionate.
+- Per `[[drift-detection]]`: an architectural choice with no documented rationale → add one the same turn. Undocumented one-way doors are the hardest drift to unwind.
 
 ## Anti-patterns
 

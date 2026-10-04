@@ -15,8 +15,7 @@ Every user prompt is a training signal — and evidence the previous turn under-
 
 ## The principle
 
-- If the user prompts again on the same project/domain/surface, the prior turn was incomplete. The prompt names the dimension.
-- A second prompt is a corrective gradient — capture it, update the model.
+- A repeat prompt on the same project/domain/surface = the prior turn was incomplete; the prompt names the dimension. Capture the corrective gradient, update the model.
 - Cost of capturing: seconds. Cost of relearning next month: hours.
 - **A re-prompt on the same surface = a PREDICTION MISS** — the first pass delivered the literal subset, not the full arc. Root-cause WHY it wasn't predicted, add the missed item to the predictive checklist THE SAME TURN, and the permanent fix is to predict the 80% from the 20% up front rather than iterate to it. Per `[[predictive-completeness]]`.
 

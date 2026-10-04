@@ -54,7 +54,7 @@ Per `_kernel/standards.md#integrations`:
 
 ## Sentry (Tier 2)
 
-- `@sentry/cloudflare` v10 + `withSentry` wrapper; project via `mcp__sentry__create_project` (org:`megabyte-labs`)
+- `@sentry/cloudflare` v11 (stream trace lifecycle default since 11.0) + `withSentry` wrapper; project via `mcp__sentry__create_project` (org:`megabyte-labs`)
 - `SENTRY_DSN` via `wrangler secret put`
 - Pattern: `withSentry(env => ({ dsn, tracesSampleRate: 1.0, sendDefaultPii: false }), worker)`
 - Breadcrumbs before risky ops; capture exception w/ context tags (`worker` | `route` | `userId`)

@@ -24,10 +24,9 @@ merges and loop arcs.
 
 ## Why this exists
 
-`/audit-doctrine` produces a structured JSON baseline at any moment. Without a CI gate
-that *compares* the current surface to a committed baseline, principles can silently
-disappear — a rule file gets deleted, a skill loses a section, a merge squashes a key
-bullet. This rule makes that decay observable and merge-blocking.
+Without a CI gate comparing the current surface to a committed `/audit-doctrine` JSON
+baseline, principles silently disappear — a deleted rule file, a lost section, a squashed
+bullet. This gate makes that decay observable and merge-blocking.
 
 ## PR gate (what every PR runs)
 
@@ -139,8 +138,8 @@ When a LOST or DEGRADED transition fires in CI, create an entry in
 }
 ```
 
-One NDJSON line per incident. Never delete lines — append only. This log is the
-source-of-truth for "how often does doctrine decay" metrics.
+One NDJSON line per incident; append-only, never delete lines — the source-of-truth for
+doctrine-decay metrics.
 
 ## Routing rule — when to touch the baseline
 

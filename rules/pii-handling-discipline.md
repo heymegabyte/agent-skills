@@ -83,8 +83,7 @@ Never store plaintext email in any table that survives a deletion cascade — `d
 
 ## Right-to-Deletion Compatibility
 
-- GDPR Art. 17 requires deletion of personal data.
-- A SHA-256 hash is not personal data under GDPR — it cannot be reverse-engineered once the `users` row is deleted.
+- A SHA-256 hash is not personal data under GDPR Art. 17 — it cannot be reverse-engineered once the `users` row is deleted.
 - Audit rows **may persist** after deletion, satisfying Art. 5(2) accountability while complying with Art. 17.
 - No special deletion step needed for audit tables.
 

@@ -40,31 +40,11 @@ See `reference/oauth2-provider-discipline.md` for the full decision tree and per
 
 ## Provider profiles
 
-### Bitwarden — internal credentials and M2M
-
-- Best for: vault secrets, internal Worker authentication, CLI tools, cron secrets.
-- Anti-pattern: do NOT use for user-facing auth or customer-tenant M2M.
-
-### Auth0 — B2B SaaS and SAML/OIDC federation
-
-- Best for: B2B SaaS multi-tenant, social login aggregation, SAML federation.
-- Pricing: 7k MAU free; M2M tokens limited to 1k/month on free plan.
-
-### Okta — enterprise IT and workforce
-
-- Best for: Okta-shop enterprise clients, SCIM provisioning, HR-integrated lifecycle.
-- Free Developer org supports up to 100 MAU — suitable for prototyping.
-
-### Cognito — AWS-tenant federation
-
-- Best for: AWS Lambda / API Gateway auth, Cognito User Pool federation, Amplify apps.
-- Anti-pattern: avoid for non-AWS stacks — Cognito has AWS-specific JWT claims and SDK assumptions.
-
-### PKCE (user-facing) — browser redirect flow
-
-- Use for ANY flow where the user must consent in a browser tab.
-- Provider-agnostic: pass any provider's authorize + token endpoints.
-- Never store `code_verifier` in a cookie — keep in `sessionStorage` on the client only.
+- **Bitwarden** — vault secrets, internal Worker auth, CLI tools, cron secrets. NOT user-facing auth or customer-tenant M2M.
+- **Auth0** — B2B SaaS multi-tenant, social login aggregation, SAML federation. 7k MAU free; M2M tokens limited to 1k/month on free plan.
+- **Okta** — Okta-shop enterprise clients, SCIM provisioning, HR-integrated lifecycle. Free Developer org: up to 100 MAU (prototyping).
+- **Cognito** — AWS Lambda / API Gateway auth, User Pool federation, Amplify apps. Avoid for non-AWS stacks — AWS-specific JWT claims + SDK assumptions.
+- **PKCE (user-facing)** — ANY flow where the user consents in a browser tab; provider-agnostic (pass any authorize + token endpoints). Never store `code_verifier` in a cookie — `sessionStorage` on the client only.
 
 ## Hard rules
 

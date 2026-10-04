@@ -11,7 +11,7 @@ paths:
 
 # No Staging Doctrine
 
-Prod is the only real environment. Staging is calendarized denial — environments diverge, traffic shapes differ, integrations behave differently, and the "staging caught it" stories don't survive honest accounting. The solo + AI shop replaces staging with instant-rollback muscle: every primitive in the stack supports point-in-time recovery, and every deploy carries the receipts to reverse it in seconds.
+Prod is the only real environment. Staging is calendarized denial — environments diverge, traffic shapes differ, and "staging caught it" stories don't survive honest accounting. The solo + AI shop replaces staging with instant-rollback muscle: every stack primitive supports point-in-time recovery; every deploy carries the receipts to reverse it in seconds.
 
 ## The doctrine
 

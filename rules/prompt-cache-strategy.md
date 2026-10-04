@@ -23,8 +23,6 @@ Extends `[[prompt-cache]]` with implementation-grade detail: exact breakpoint pl
 
 Source: Anthropic. (2025). *Prompt caching*. `docs.anthropic.com/en/docs/build-with-claude/prompt-caching`
 
----
-
 ## Token minimums (hard floor — cache silently skips below these)
 
 | Model family | Min cacheable prefix |
@@ -37,8 +35,6 @@ Source: Anthropic. (2025). *Prompt caching*. `docs.anthropic.com/en/docs/build-w
 - Claude Code subagents run `claude-sonnet-4-6` → 1,024-token floor is achievable with even a modest system prompt + rules pack.
 - Opus 4.7/4.8 tokenizer is ~35% heavier than 4.6 for the same UTF-8 input — a 3,000-token 4.6 prefix becomes ~4,050 tokens on 4.7/4.8, which clears the 4,096 floor naturally; factor into pre-warm decisions.
 
----
-
 ## Pricing multipliers
 
 | Operation | Multiplier vs base input price |
@@ -50,8 +46,6 @@ Source: Anthropic. (2025). *Prompt caching*. `docs.anthropic.com/en/docs/build-w
 
 - **Break-even (5 min):** Write costs 1.25× once; reads cost 0.1×. Break-even at read #2. Every subsequent read saves 0.9×/read.
 - **Break-even (1 hr):** Write costs 2.0×. Needs ≥3 reads in the hour for net savings. Use 1 hr TTL only for long-running agents, batch pipelines, or pre-warmed API endpoints with consistent traffic.
-
----
 
 ## The 4-breakpoint ceiling
 
@@ -67,8 +61,6 @@ BP4 → recent conversation  (changes every turn)
 - Unused slots have no cost — skip BP3/BP4 if only 2 breakpoints needed.
 - **1-hr TTL entries MUST appear BEFORE 5-min entries** in the same request. Out-of-order placement silently demotes 1-hr entries to 5-min.
 
----
-
 ## Content stability ordering
 
 - Put the most stable content at the top within each block — the cache key is a prefix; any mutation invalidates everything after it.
@@ -76,8 +68,6 @@ BP4 → recent conversation  (changes every turn)
 - Order within the system block: fixed identity → tool list → skill pack summary → session-volatile info (after breakpoints).
 
 See `reference/prompt-cache-strategy.md` for the full worked API call example and per-agent-type placement patterns.
-
----
 
 ## Cache invalidation triggers
 
@@ -93,8 +83,6 @@ See `reference/prompt-cache-strategy.md` for the full worked API call example an
 
 - **Batch edits:** Editing 5 rule files in one turn = 1 invalidation event. Editing across 5 turns = 5 events. Always batch rule file edits.
 
----
-
 ## Cache pre-warming
 
 - Send a request with `max_tokens: 1` to populate cache before users arrive.
@@ -102,8 +90,6 @@ See `reference/prompt-cache-strategy.md` for the full worked API call example an
 - Not available in: batch mode, streaming, extended thinking, structured outputs paths.
 
 See `reference/prompt-cache-strategy.md` for the pre-warm curl script.
-
----
 
 ## Monitoring cache hit rate
 
@@ -122,8 +108,6 @@ Check `usage.cache_read_input_tokens` in the response body. If consistently 0:
 
 **Target: ≥70% warm hit rate** across a session. Below 70% → investigate with the checklist above.
 
----
-
 ## Cost reduction estimates
 
 | Scenario | Tokens cached | Cache read cost vs uncached | Net saving |
@@ -134,8 +118,6 @@ Check `usage.cache_read_input_tokens` in the response body. If consistently 0:
 
 - Output tokens are never cached — on response-heavy tasks, caching has diminishing returns.
 
----
-
 ## Token-efficient tool use (bonus — Sonnet 4.6 only)
 
 - Add header `anthropic-beta: token-efficient-tools-2025-02-19` on every `messages.create` inside agent / MCP / tool-use loops.
@@ -143,15 +125,11 @@ Check `usage.cache_read_input_tokens` in the response body. If consistently 0:
 - Stack with prompt caching — they are orthogonal optimizations.
 - Default-on for all Claude Code subagents per `[[parallel-subagent-economy]]`.
 
----
-
 ## Integration with `[[model-routing]]`
 
 - **Opus 4.8:** 4,096-token cache floor, same 4-BP ceiling, 2.0× heavier tokenizer than 4.6 — pre-warm decisions must account for this.
 - **Sonnet 4.6:** default subagent model; 1,024-token floor enables caching even lean context packs.
 - **Haiku 4.5:** use for changelog/format/classification; 4,096-token floor means lean system prompts may not cache — pad with ruleset if needed.
-
----
 
 ## See also
 

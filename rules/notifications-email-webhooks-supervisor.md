@@ -16,7 +16,7 @@ paths:
 
 # Notifications + Email + Webhooks Supervisor
 
-**psnotify** — our custom, Durable-Object-backed notification engine — is THE notification layer for every emdash app (current AND future), not a bolt-on and not a single toast call. Wherever a user should be informed of something — a build finished, a deploy failed, a domain went live, a payment succeeded, a teammate invited them, an AI job completed, a quota neared — it flows through psnotify. This is permanent doctrine: every app owns the notification layer in-house (inbox + center + preferences + multi-channel) from the first notification surface, with no external notification vendor and no vendor secret to rotate. Webhooks flow through Svix (managed, signed, tracked). Every notification is tenant-aware, actionable, and enriched.
+**psnotify** — our custom, Durable-Object-backed notification engine — is THE notification layer for every emdash app (current AND future), not a bolt-on and not a single toast call. Wherever a user should be informed of something, it flows through psnotify (event catalog in § Where psnotify fires). This is permanent doctrine: every app owns the notification layer in-house (inbox + center + preferences + multi-channel) from the first notification surface, with no external notification vendor and no vendor secret to rotate. Webhooks flow through Svix (managed, signed, tracked). Every notification is tenant-aware, actionable, and enriched.
 
 **Novu is removed — never reintroduce** (Brian, absolute). No `@novu/*` deps, no `NOVU_SECRET_KEY`, no `api.novu.co` / `socket.novu.co`. psnotify replicates the full Novu feature set, owned and tailored to our tenant/feature model.
 
@@ -58,7 +58,7 @@ Wire a trigger at every meaningful state transition, not just errors:
 - **svix** — productized OUTBOUND webhooks (let customers subscribe to your events): signed payloads, delivery tracking, retries, replay, customer-facing endpoint manager. Verify signatures before parsing.
 - **postal-mime** — inbound email parsing.
 - **web-push** — browser push payloads (push channel).
-- **react-email** (`@react-email/components` + `render()`) — ACCEPTED for React surfaces (the generated React/Vite sites) AND **server-side transactional email templating**: `render(<Email/>)` returns an HTML string in the Worker, framework-agnostic output, never imported into the Angular admin bundle. Use it to author email bodies that the SES/listmonk send path (behind the psnotify email adapter) delivers. Angular admin UI uses MJML/HTML templating — react-email is for email HTML + React sites, not the admin SPA.
+- **react-email** (`@react-email/components` + `render()`) — ACCEPTED for React surfaces (the generated React/Vite sites) AND **server-side transactional email templating**: `render(<Email/>)` returns an HTML string in the Worker, framework-agnostic output, never imported into the Angular admin bundle. Use it to author email bodies that the SES/listmonk send path (behind the psnotify email adapter) delivers. Angular admin UI uses MJML/HTML templating.
 - **Amazon SES** — the SOLE transactional email rail behind the psnotify email adapter per `secret-provisioning` (SendGrid break-glass only, ADR-0019); **listmonk** (self-hosted) for newsletters via SES SMTP relay. Resend removed 2026-06-19.
 
 ## Inbound webhooks

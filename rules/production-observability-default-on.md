@@ -59,8 +59,6 @@ See `reference/production-observability-default-on.md` for the `wrangler.toml` s
 
 See `reference/production-observability-default-on.md` for the `withSentry` wrapper.
 
----
-
 ## Scaffold checklist (every new Worker)
 
 - [ ] `posthog-node` in `package.json`
@@ -72,19 +70,15 @@ See `reference/production-observability-default-on.md` for the `withSentry` wrap
 - [ ] At least one `posthog.capture` in the main request path
 - [ ] `[observability] enabled = true` in `wrangler.toml`
 
----
-
 ## Observability tier routing
 
 Per `CLAUDE.md` § Observability:
 
 - **Solo SaaS / nonprofit / portfolio** — PostHog + Workers Tracing OTLP (2 vendors max)
-- **Enterprise / regulated / multi-team** — add `@sentry/cloudflare` v10 + GA4/GTM + Axiom
+- **Enterprise / regulated / multi-team** — add `@sentry/cloudflare` v11 (stream trace lifecycle default since 11.0) + GA4/GTM + Axiom
 - **LLM-heavy (>10k AI calls/month)** — add AI Gateway to either tier
 
 Do NOT add all four tiers to a solo project. Vendor proliferation is its own observability problem.
-
----
 
 ## Anti-patterns
 
@@ -95,13 +89,9 @@ Do NOT add all four tiers to a solo project. Vendor proliferation is its own obs
 - `head_sampling_rate = 0.1` on a low-traffic Worker — sample at 1.0 until you have data
 - Skipping spans on D1/AI calls — those are the only calls slow enough to matter
 
----
-
 ## Drift detection
 
 If a Worker route file (`src/worker/routes/**`) has no `posthog.capture`, no structured log with `traceId`, or no Sentry wrapper — that is observability drift. Fix in the same turn per `[[drift-detection]]`.
-
----
 
 ## Cross-links
 

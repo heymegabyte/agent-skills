@@ -81,7 +81,7 @@ Classify failures (transient/code/config/deploy/data/auth) and apply the matchin
 
 ## Sentry integration
 
-- `withSentry` wrapper from `@sentry/cloudflare` v10
+- `withSentry` wrapper from `@sentry/cloudflare` v11 (stream trace lifecycle default since 11.0)
 - Breadcrumbs before risky ops
 - Capture exception with context tags (`worker` | `route` | `userId`)
 - Release tracking via `SENTRY_RELEASE` env

@@ -25,8 +25,8 @@ The failure mode this kills: delivering the **literal, visible subset** of a pro
 to the real scope through the user's re-prompts. **The prompt is a SEED, not a spec.** Infer the
 full arc of what the user will want by the time they're satisfied, and build THAT — once. Every
 re-prompt on the same surface is a **prediction miss** the first pass should have anticipated.
-The same under-prediction that dribbles work across turns is why generated apps ship "functional
-but plain" and need iteration — the cure is the same on both: enumerate the arc, build it pass-1.
+The same under-prediction is why generated apps ship "functional but plain" — the cure on
+both: enumerate the arc, build it pass-1.
 
 ## The mechanism — run BEFORE building anything non-trivial
 

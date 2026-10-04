@@ -91,9 +91,7 @@ If ≥2 match → Stripe Billing owns the subscription rail. Square is not force
 - **Square**: `Square-Signature` HMAC-SHA256 with notification-url-keyed secret + 6-hr replay window
 - **Stripe**: `Stripe-Signature` with `t=`+`v1=` + 5-min replay window
 - Each has its own handler: `/webhooks/square` and `/webhooks/stripe-payouts`
-- **Idempotency**:
-  - Square uses `idempotency_key` UUID per request (24-hr dedupe)
-  - Stripe uses `Idempotency-Key` header (24-hr dedupe)
+- **Idempotency**: Square `idempotency_key` UUID per request; Stripe `Idempotency-Key` header (both 24-hr dedupe)
 - D1 dedupe table `payment_events(event_id, source, processed_at)` with UNIQUE constraint = bullet-proof double-charge prevention
 
 ### Donation tier UX

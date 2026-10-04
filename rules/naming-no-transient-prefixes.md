@@ -13,10 +13,9 @@ paths:
 
 # Naming — No Transient Prefixes, No Vibe Names
 
-Names describe WHAT a thing is — never WHEN it was built (transient prefixes) and
-never how the author FELT about it (vibe/hype adjectives). Both rot: "wave28" means
-nothing to the next reader; "brilliant.ts" tells you nothing about what the file does.
-Durable identifiers read like a domain model, not a changelog or a hype deck.
+Names describe WHAT a thing is — never WHEN it was built (transient prefixes) and never
+how the author FELT about it (vibe/hype adjectives). Durable identifiers read like a
+domain model, not a changelog or a hype deck.
 
 ## Banned in durable identifiers (build-fail)
 
@@ -25,7 +24,7 @@ Durable identifiers read like a domain model, not a changelog or a hype deck.
 
 ## Also banned — vibe / hype adjectives (build-fail)
 
-- Subjective quality/hype words as durable identifiers: `brilliant.*`, `big_bets.*`, `awesome.*`, `magic.*`, `amazing.*`, `epic.*`, `ultimate.*`, `killer.*`, `genius.*`, `secret_sauce.*`, `game_changer.*`. They describe a FEELING, not a function — the next reader still has to open the file to learn what it does.
+- Subjective quality/hype words as durable identifiers: `brilliant.*`, `big_bets.*`, `awesome.*`, `magic.*`, `amazing.*`, `epic.*`, `ultimate.*`, `killer.*`, `genius.*`, `secret_sauce.*`, `game_changer.*`. They describe a FEELING, not a function.
 - Same identifier surfaces as the transient ban: file names, exported symbols/classes, module folders, feature-flag keys, route paths, D1 tables, DO classes. Import aliases too (`import * as B from …` is a vibe-alias — name it for the module).
 - **Grab-bag smell**: a file named for a vibe (`brilliant.ts` = "10 brilliant features") is usually ALSO an anti-pattern grab-bag of unrelated features (per `inverted-abstraction-pyramid`). Rename descriptively now; splitting into per-feature modules is the deeper fix.
 - Legit domain terms that LOOK hype are fine: `pro.ts` (the Pro subscription tier), `super_admin.ts` (the super-admin role) — these name a real product concept, not a vibe.
