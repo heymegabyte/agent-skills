@@ -73,7 +73,7 @@ WebPage floor. Add Organization · BreadcrumbList · FAQPage · Person · Produc
 - Cache: Upstash / KV
 - ORM: Drizzle v1 RQBv2 + Zod 4
 - Auth: Clerk (M2M JWT)
-- Payments: Square (accept) / Stripe Billing (SaaS recurring) / Stripe Connect (payouts)
+- Payments: Stripe + Link DEFAULT (accept; IBP 2.6%+30¢) / Stripe Billing (SaaS) / Connect (payouts) / Square on prompt request only
 - Jobs: Inngest / Workflows v2
 - Email: Amazon SES (sole rail) + Listmonk (bulk); SendGrid break-glass
 - Runtime: Node 24 native TS / Bun 1.4+

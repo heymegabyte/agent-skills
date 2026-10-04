@@ -6,7 +6,7 @@ updated: "2026-05-10"
 
 # Square Payments
 
-## When Square is the Default (***FIRST DECISION — EVERY PAYMENT FEATURE***)
+## When Square is the Rail (***ON-REQUEST ONLY — the prompt must name Square; Stripe+Link is the default per `rules/payments.md`***)
 
 ### Square defaults
 

@@ -58,7 +58,7 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 - **RAG / vector search / AI on Workers** → `05/cf-rag-vectorize-pattern`, `05/cf-agents-do-pattern`, `07/llm-evals`
 - **PWA / service worker / manifest** → `06/pwa-kit`, `06/web-manifest-system`, `08/service-worker`
 - **OG images / media pipeline** → `12/og-card-pipeline`, `12/og-image-generation`, `12/image-optimization`
-- **Payments (Square / Stripe)** → `13/square-payments`, `13/stripe-billing`, `06/stripe-first-donations`
+- **Payments (Stripe+Link default / Square on request)** → `rules/payments`, `13/stripe-billing`, `06/stripe-first-donations`, `13/square-payments`
 - **Small business / local SEO** → `15/small-business-mode`, `15/local-seo`, `09/per-route-metadata`
 - **Accessibility / WCAG** → `07/accessibility-gate`, `07/wcag-2-2-2026`, `25`
 - **Programmatic SEO** → `15/pseo-templates`, `09/seo-and-keywords`, `09/ai-search-geo`

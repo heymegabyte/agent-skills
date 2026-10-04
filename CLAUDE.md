@@ -106,10 +106,9 @@ Scope:
 - **Cache** — Upstash
 - **ORM** — Drizzle v1-rc RQBv2 + Zod 4
 - **Auth** — Clerk (M2M JWT)
-- **Payments**:
-  - Donations / POS / e-commerce / one-time / sub-$100 tickets / hybrid in-person+online → **Square** (Web Payments SDK)
-  - Recurring SaaS with ≥2 of: seat-based, usage-metered, Entitlements, net-30, multi-currency → **Stripe Billing**
-  - Payouts to contractors / vendors / volunteers → **Stripe Connect Express**
+- **Payments**: **Stripe DEFAULT for all money flows, Link enabled everywhere** (Payment Element `automatic_payment_methods`; Instant Bank Payments 2.6%+30¢; agentic/ACP-ready)
+  - Recurring SaaS → **Stripe Billing** · Payouts → **Stripe Connect Express** · In-person (no Square ask) → **Stripe Terminal**
+  - **Square ONLY when the prompt requests it** (`emdash.square_requested: true`)
   - Full: `rules/payments.md`
 - **Jobs** — Inngest / Workflows v2
 - **Email** — Amazon SES (sole transactional rail) + Listmonk (bulk); SendGrid break-glass
@@ -118,7 +117,7 @@ Scope:
 - **Lint** — oxlint + ESLint 10 + Prettier (NEVER Biome)
 - **Hooks** — lefthook (NOT husky)
 - **Test** — Playwright v1.56+ agents (v1.59+ MCP) + Vitest 5
-- **Observability** — tiered. **Sentry is estate BASELINE (Brian 2026-10-04 "add Sentry to all my projects" — supersedes the old solo-tier=no-Sentry rule): server-side `@sentry/cloudflare` v11 on EVERY Worker, no browser SDK (retired, ~155KB gz). One project per app in the `megabyte-labs` Sentry org. Recipe + the 3 gotchas: `template.projectsites.dev/docs/SENTRY.md`. New projects ship `web-crawlers`+`legacy-browsers` inbound filters ON — turn them OFF or server-to-server events get blackholed.**
+- **Observability** — tiered. **Sentry is estate BASELINE (Brian 2026-10-04 "add Sentry to all my projects" — supersedes the old solo-tier=no-Sentry rule): server-side `@sentry/cloudflare` v11 on EVERY Worker, no browser SDK (retired, ~155KB gz). One project per app in the `megabyte-labs` Sentry org (slug = repo name, dots→dashes: projectsites.dev→projectsites-dev, deskl.ink→deskl-ink). Recipe + the 3 gotchas: `template.projectsites.dev/docs/SENTRY.md`. New projects ship `web-crawlers`+`legacy-browsers` inbound filters ON — turn them OFF or server-to-server events get blackholed.**
   - Solo SaaS / nonprofit / local / portfolio → **Sentry (server-side) + PostHog + Workers Tracing OTLP**
   - Enterprise / regulated / multi-team → **PostHog + Sentry `@sentry/cloudflare` v11 (stream trace lifecycle default since 11.0) + GA4/GTM + Workers Tracing + Axiom**
   - LLM-heavy (>10k calls/mo) → add **AI Gateway** to either tier

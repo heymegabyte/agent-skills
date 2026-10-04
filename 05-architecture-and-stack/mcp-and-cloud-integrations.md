@@ -62,7 +62,7 @@ claude mcp add google-workspace -- npx -y @taylorwilsdon/google_workspace_mcp
 
 - Cloudflare → `08-deploy`
 - Playwright → `07-quality`
-- Square → `13/square-payments` (donations/SMB default)
+- Square → `13/square-payments` (ON-REQUEST rail only; Stripe+Link is default per `payments`)
 - Stripe → `13/stripe-billing` (SaaS subs/enterprise only)
 - GitHub → `08/ci-cd-pipeline`
 - Coolify → `05/mcp-and-cloud-integrations`
@@ -99,7 +99,7 @@ claude mcp add google-workspace -- npx -y @taylorwilsdon/google_workspace_mcp
 |----------|------|
 | AI | `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `IDEOGRAM_API_KEY` |
 | Cloud | `CLOUDFLARE_API_TOKEN`, `CF_ZONE_ID` |
-| Payments (donations/SMB default) | `SQUARE_ACCESS_TOKEN`, `SQUARE_LOCATION_ID`, `SQUARE_APPLICATION_ID`, `SQUARE_ENVIRONMENT`, `SQUARE_WEBHOOK_SIGNATURE_KEY` |
+| Payments (Square — on-request rail) | `SQUARE_ACCESS_TOKEN`, `SQUARE_LOCATION_ID`, `SQUARE_APPLICATION_ID`, `SQUARE_ENVIRONMENT`, `SQUARE_WEBHOOK_SIGNATURE_KEY` |
 | Payments (SaaS subs / enterprise) | `STRIPE_API_KEY`, `STRIPE_WEBHOOK_SECRET` |
 | Email | `RESEND_API_KEY` |
 | Auth | `CLERK_SECRET_KEY` |
@@ -167,4 +167,4 @@ Hey — I need a [SERVICE] key. Options:
 ## Ownership
 
 - **Owns** — MCP discovery/connection, secrets discovery, cloud API patterns, AI API strategy, notification patterns, automation hooks, projectsites.dev branding
-- **Never owns** — specific implementations (→individual skills), donations + SMB payments (→`13/square-payments`), SaaS subscriptions + enterprise billing (→`13/stripe-billing`), email (→`09/email-templates`), deployment (→`08-deploy`)
+- **Never owns** — specific implementations (→individual skills), payments default Stripe+Link (→`13/stripe-billing`; Square on request →`13/square-payments`), SaaS subscriptions + enterprise billing (→`13/stripe-billing`), email (→`09/email-templates`), deployment (→`08-deploy`)

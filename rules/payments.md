@@ -28,78 +28,50 @@ Two payment concerns that fire together on any money-handling build: which rail 
 
 ## Payments Routing
 
-Route payment integrations by project shape: Square for accepting money, Stripe Billing for SaaS recurring, Stripe Connect for contractor payouts.
+**Stripe is the DEFAULT payment provider for ALL money flows** — accept + send — with **Link enabled by default**. Square is used ONLY when the prompt explicitly requests it. (Brian directive 2026-10-04; supersedes the Square-default tree — Square's rate edge died in the 2026 fee raise, and Link owns the agentic-commerce rail.)
 
-### Core rule — decision tree, not absolutism
+### Core rule
 
-- **Square = default for accepting money.** Stripe = default for sending money (payouts).
-- Pick the rail by matching project shape to the decision tree below — don't pattern-match on vendor preference.
+- **Accept money → Stripe** (Payment Element / Checkout / Payment Links) with **Link ON** everywhere.
+- **Recurring SaaS → Stripe Billing** (seats, usage metering, entitlements, net-30, Stripe Tax, multi-currency).
+- **Send money → Stripe Connect Express** (contractor/vendor payouts, 1099-NEC, marketplace splits, grant disbursement).
+- **In-person (no Square ask) → Stripe Terminal / Tap to Pay** (2.7%+5¢).
+- **Square → ONLY when the prompt names Square** (POS platform affinity, existing Square hardware/ledger). Record the request in `package.json#emdash.square_requested: true`.
 
-#### When Stripe Billing IS the right rail (accept-money exception)
+### Link doctrine (link.com — verified 2026-10-04)
 
-The project is genuinely SaaS-subscription with **≥2 of**:
+- **Enable Link in every integration**: Payment Element with `automatic_payment_methods`; Payment Links carry 1-click Link by default (2026 rollout). Email-first autofill; wallet spans web/iOS/Android; cards + bank + crypto + BNPL on file.
+- **Instant Bank Payments via Link**: 2.6%+30¢ — cheaper than cards (2.9%+30¢), instant confirmation, T+2 settle, Stripe guarantees bank-return risk. Offer it on high-ticket + donation flows. Promo pricing 0.8% through 2027-01-01 (+0.2% after) per stripe.com/payments/link — re-verify at integration time.
+- **Agentic commerce**: Link agent payments (2026-04 + 2026-09) — consumers authorize AI agents to pay WITHOUT exposing credentials; incremental authorization for price drift; next-action guidance on 3DS/declines; purchase protections on eligible agent transactions. Stripe is the ACP (Agentic Commerce Protocol) launch partner. Every generated site that sells SHOULD be agent-purchasable.
+- **Reconciliation**: Link wallet card charges carry `funding_source_group` (`lfsg_`, 2026-08) on the Charge object — use it, don't regex statement descriptors.
 
-- Seat-based billing
-- Usage-based metering
-- Entitlements feature gating
-- Net-30 enterprise invoicing
-- Tax-rate complexity (Stripe Tax across jurisdictions)
-- Multi-currency
+### Mixed scenarios
 
-If ≥2 match → Stripe Billing owns the subscription rail. Square is not forced in.
+- SaaS + donations → both flows stay on Stripe (Billing + Payment Element); one webhook endpoint, typed event router, never cross idempotency keys.
+- Prompt requests Square POS + site sells online → Square owns in-person, Stripe+Link owns online; separate handlers + ledger reconciliation via D1.
 
-#### When Square IS the right rail (every other accept-money path)
+### Square (on-request rail only)
 
-- Donations (one-time + recurring)
-- POS (restaurant, retail, salon, medical, legal)
-- E-commerce
-- One-time charges
-- Sub-$100 average tickets (routing unchanged — Square wins on POS platform + hardware + $0 chargeback fee + hybrid in-person/online ops, NOT rate advantage)
-- Nonprofit recurring giving
-- Hybrid in-person + online unified ledger
-
-Fees (2026): Square online 3.3%+30¢ (raised) vs Stripe 2.9%+30¢; in-person Square 2.6%+15¢ vs Stripe 2.7%+5¢; chargeback $0 vs $15.
-
-#### Mixed scenarios
-
-- SaaS with donations layered on top → both rails, each owns its own webhook + DB tables, never cross idempotency keys
-
-### Square notes (when Square is the chosen rail)
-
-- Nonprofits: NO Square 501(c)(3) discount exists (verified 2026-10) — custom rates only ≥$250K/yr. Cheapest verified-501(c)(3) online rails: PayPal/Braintree 1.99%+49¢. Square nonprofit case = in-person events (2.6%+15¢) + $0 chargeback fee.
-- Built-in: Square Donate button + Square Online Checkout Link + Square Web Payments SDK card form + Apple Pay + Google Pay + Cash App Pay
-- Recurring giving via Square Subscriptions
-
-### Stripe Connect Express (payouts rail)
-
-- Onboarding for paid contractors/vendors/freelancers/temp staff → ACH payout, 1099-NEC issuance automated
-- Marketplace platforms with split payments to multiple recipients
-- Charitable grant distribution from foundation to grantees
-- Volunteer-reimbursement disbursements (mileage, supplies)
+- Fees (2026): online 3.3%+30¢ Free tier (raised) vs Stripe 2.9%+30¢; in-person 2.6%+15¢ vs Terminal 2.7%+5¢; chargeback $0 vs $15. Case: POS platform + hardware + $0 chargebacks — NOT rates.
+- Nonprofits: NO Square 501(c)(3) discount exists (verified 2026-10) — custom rates only ≥$250K/yr. Cheapest verified-501(c)(3) online rails: PayPal/Braintree 1.99%+49¢.
+- Built-in: Donate button + Online Checkout Link + Web Payments SDK + Apple/Google/Cash App Pay; recurring via Square Subscriptions.
 
 ### Nonprofit-specific guardrail
 
-- Stripe Tax adds nothing for verified 501(c)(3) (already tax-exempt) — skip it
-- For straight donations (no SaaS layer), Square is the cleaner rail per the decision tree
-
-### Agentic-commerce exception
-
-- Stripe is the launch partner for ACP (Agentic Commerce Protocol) embedded checkout
-- Use Stripe ONLY when explicitly building an AI-shopping agent flow that requires ACP
-- Otherwise Square
+- Stripe Tax adds nothing for verified 501(c)(3) (already tax-exempt) — skip it.
+- Donations run Stripe + Link by default (offer Instant Bank Payments — bank rail trims fees on large gifts); PayPal Giving Fund layered for fee-free large gifts (0% on PPGF-verified 501c3s, 30-45 day payout) — Stripe for instant operating cash, PPGF for patient money.
 
 ### Webhook architecture
 
-- **Square**: `Square-Signature` HMAC-SHA256 with notification-url-keyed secret + 6-hr replay window
-- **Stripe**: `Stripe-Signature` with `t=`+`v1=` + 5-min replay window
-- Each has its own handler: `/webhooks/square` and `/webhooks/stripe-payouts`
-- **Idempotency**: Square `idempotency_key` UUID per request; Stripe `Idempotency-Key` header (both 24-hr dedupe)
-- D1 dedupe table `payment_events(event_id, source, processed_at)` with UNIQUE constraint = bullet-proof double-charge prevention
+- **Stripe**: `Stripe-Signature` (`t=`+`v1=`, 5-min replay window) → `/webhooks/stripe`; one endpoint, typed event router.
+- **Square (when requested)**: `Square-Signature` HMAC-SHA256, notification-url-keyed secret, 6-hr replay window → `/webhooks/square`.
+- **Idempotency**: Stripe `Idempotency-Key` header; Square `idempotency_key` UUID (both 24-hr dedupe).
+- D1 dedupe table `payment_events(event_id, source, processed_at)` with UNIQUE constraint = bullet-proof double-charge prevention.
 
 ### Donation tier UX
 
 - Preset buttons: $10/$25/$50/$100/$250/$1000 + custom amount
-- "Make this monthly" toggle (Square Subscriptions $/mo)
+- "Make this monthly" toggle (Stripe Billing subscription $/mo)
 - "In honor of" / "in memory of" toggle (memorial wall integration)
 - "Anonymous" toggle (donor wall opt-out)
 - Employer-match search box (Double the Donation API or Benevity API)
@@ -107,32 +79,24 @@ Fees (2026): Square online 3.3%+30¢ (raised) vs Stripe 2.9%+30¢; in-person Squ
 - Tax receipt auto-issued via Amazon SES within 30 sec of webhook fire
 - Cents-off displayed in tier copy ("$8.50 covers one hot meal — round up to $10")
 
-### PayPal Giving Fund
-
-- Layered on top of Square for nonprofit-only sites
-- 0% processing (PayPal absorbs the fee on PPGF-verified 501c3s)
-- 30-45 day payout delay vs Square instant
-- Use both: Square for instant operating cash + PayPal Giving Fund for fee-free large gifts
-- Stripe still NOT involved in either rail
-
 ### Build gate
 
-- Any `package.json` containing `"stripe"` without a matching `"stripe-purpose": "payouts" | "saas-billing" | "acp-checkout"` field in `package.json#emdash` block = build fail
-- Validator `validate-payments-routing.mjs` greps for `stripe.checkout`, `stripe.paymentIntents`, `stripe.subscriptions.create` outside the SaaS-billing path = build fail
+- Any `package.json` containing `"square"` without `package.json#emdash.square_requested: true` (set only when the prompt asked for Square) = build fail.
+- Validator `validate-payments-routing.mjs` (semantics INVERTED 2026-10-04): greps Square SDK usage (`client.paymentsApi`, `square.webhooks`) without the request marker = build fail. Stripe usage needs no marker — it is the default.
+- Every Stripe integration asserts Link enabled: `automatic_payment_methods: {enabled: true}` present (or Payment Links used) = gate pass.
 
-### Migration path (existing projects on Stripe for accept-money)
+### Migration path (existing projects on Square without a standing Square ask)
 
-1. Audit current `stripe.charges` / `stripe.paymentIntents` / Stripe Checkout sessions
-2. Migrate to Square Web Payments SDK with idempotency-keyed `POST /v2/payments`
-3. Preserve customer-facing tier UX
-4. Swap webhook handler `/webhooks/stripe` → `/webhooks/square`
-5. Keep Stripe installed ONLY if vendor payouts already wired through Connect Express
-6. Otherwise full Stripe removal: uninstall package + delete `STRIPE_*` env vars + remove all `import Stripe from 'stripe'` + remove webhook handler + drop `stripe_events` D1 table
+1. Audit `client.paymentsApi` / Web Payments SDK usage + Square Subscriptions.
+2. Migrate checkout to Stripe Payment Element with Link enabled (idempotency-keyed PaymentIntents); subscriptions → Stripe Billing.
+3. Preserve customer-facing tier UX; map Square customer ids → Stripe Customers (email-keyed).
+4. Swap webhook handler `/webhooks/square` → `/webhooks/stripe`; keep the D1 `payment_events` table (source column already disambiguates).
+5. Keep Square ONLY where in-person hardware is live (that is a standing Square ask — record `square_requested: true`).
 
 ### E-commerce surfaces
 
-- E-commerce sites (product catalog + cart + checkout + inventory) route payments through the **Medusa.js** Square or Stripe plugin, NOT directly — Medusa owns the order state machine + idempotency. Full mandate: `ecommerce-stack`.
-- The Square-vs-Stripe decision tree above still applies — Medusa just sits in front of it.
+- E-commerce sites (catalog + cart + checkout + inventory) route payments through the **Medusa.js** Stripe plugin (Square plugin when requested), NOT directly — Medusa owns the order state machine + idempotency. Full mandate: `ecommerce-stack`.
+- Stripe-default applies in front of Medusa; Link rides through Stripe Checkout/Payment Element inside it.
 
 ## Refund + Dispute Automation
 

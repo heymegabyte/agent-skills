@@ -30,7 +30,7 @@ stage: stable
 
 ## Payments (route by model)
 
-- Donations / POS / one-time / sub-$100 / in-person → **Square**.
+- Accept money (all shapes) → **Stripe + Link** (default; IBP on big tickets). **Square only when the prompt asks.**
 - Recurring SaaS (seat · usage · entitlements · net-30 · multi-currency) → **Stripe Billing**.
 - Payouts to contractors / vendors / volunteers → **Stripe Connect Express**.
 

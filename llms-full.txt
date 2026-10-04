@@ -1,6 +1,6 @@
 # Emdash Skills — AI + Human Entrypoint (start here)
 
-> Solo-founder product-building OS for Cloudflare Workers: one-line prompts → deployed products. 23 skill categories · 166 doctrinal rules (`rules/`) · 149 reference docs · 28 agents · 36 templates · 35 commands. Load the SMALLEST useful subset per the router below — never the whole mesh.
+> Solo-founder product-building OS for Cloudflare Workers: one-line prompts → deployed products. 23 skill categories · 167 doctrinal rules (`rules/`) · 149 reference docs · 28 agents · 36 templates · 35 commands. Load the SMALLEST useful subset per the router below — never the whole mesh.
 
 > Full unabridged index: [llms-full.txt](llms-full.txt) · Human README: [README.md](README.md)
 
@@ -12,7 +12,7 @@
 - [Skill Profiles](SKILL_PROFILES.md) — default bundle by product type (SaaS · marketing · nonprofit · API · …)
 - [Routing Matrix](routing-matrix.md) — where every new lesson is routed
 - [Operating Doctrine](AGENTSKILLS.md) · [Conventions](CONVENTIONS.md) — durable stance + stack defaults/constants
-- **Doctrinal rules** — 166 always-/pack-loaded rules in `rules/` (autonomy · verification · security · feature-flags · payments · …); routed via the Router's “Doctrinal principles” + pack lists
+- **Doctrinal rules** — 167 always-/pack-loaded rules in `rules/` (autonomy · verification · security · feature-flags · payments · …); routed via the Router's “Doctrinal principles” + pack lists
 - [Changelog](CHANGELOG.md) — package history
 
 ## Core Skills
@@ -146,7 +146,7 @@ Dark theme FIRST. Purple for cosmic/space only.
 - **ORM** — Drizzle v1
 - **Validation** — Zod 4
 - **Auth** — Clerk Core 3 (SaaS) / Authentik (self-hosted)
-- **Payments** — Square (accept) / Stripe Billing (SaaS; pin `2026-08-26.dahlia`) / Stripe Connect (payouts)
+- **Payments** — Stripe + Link DEFAULT for all money flows (Billing for SaaS, pin `2026-08-26.dahlia`; Connect payouts; IBP 2.6%+30¢) / Square only on prompt request
 - **Email** — Amazon SES (sole transactional rail) + Listmonk (bulk); SendGrid break-glass
 - **Jobs** — Inngest v4 / CF Workflows v2
 - **Runtime** — Node 24 native TS / Bun 1.4+ (1.4 rewrote the runtime in Rust; Bun is now developed under Anthropic)
@@ -154,7 +154,8 @@ Dark theme FIRST. Purple for cosmic/space only.
 - **E2E** — Playwright v1.63+
 - **Unit** — Vitest 5
 - **Lint** — oxlint + ESLint + Prettier (never Biome)
-- **Observability** — PostHog + Workers Tracing (solo); enterprise adds Sentry + GA4/GTM + Axiom
+- **Observability** — Sentry (server-side `@sentry/cloudflare`) on every Worker = estate baseline (Brian 2026-10-04) + PostHog + Workers Tracing (solo); enterprise adds GA4/GTM + Axiom
+  - **Sentry project naming: slug = repo folder name with dots → dashes** (one project per app, org `megabyte-labs`). `deskl.ink` → `deskl-ink`; `projectsites.dev` → `projectsites-dev`; `pdf.megabyte.space` → `pdf-megabyte-space`. Never drop the TLD, never use a custom alias.
 
 ## Angular Version Changes
 
