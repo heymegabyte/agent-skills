@@ -80,7 +80,7 @@ Set `API_KEY` env var to your Stripe secret key. The server passes it as
 ## Re-generate
 
 ```bash
-node ~/.claude/plugins/heymegabyte-claude-skills/bin/forge-skill-from-openapi.mjs \
+node ~/.claude/plugins/heymegabyte-agent-skills/bin/forge-skill-from-openapi.mjs \
   https://raw.githubusercontent.com/stripe/openapi/master/openapi/spec3.json \
   mcp-servers/stripe-hardened-mcp \
   --name stripe-hardened-mcp \

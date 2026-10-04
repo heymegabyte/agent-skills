@@ -44,6 +44,6 @@ keep their precision; only the BRAND and generic prose are neutral. (Brian direc
 
 ## Verifier recipe
 
-- `grep -rin claude rules/ <skill-dirs>` minus the exception patterns above ≈ the brand-drift surface. 2026-10-03 audit: 59 files mentioned claude; only 9 lines across 6 rules were drift (fixed in `heymegabyte/claude-skills@fire-5`); everything else classified adapter.
+- `grep -rin claude rules/ <skill-dirs>` minus the exception patterns above ≈ the brand-drift surface. 2026-10-03 audit: 59 files mentioned claude; only 9 lines across 6 rules were drift (fixed in `heymegabyte/agent-skills@fire-5`); everything else classified adapter.
 
 Cross-links: `[[prompt-as-training-signal]]` · `[[drift-detection]]` · `[[instruction-compression-playbook]]` · `[[model-routing]]`.

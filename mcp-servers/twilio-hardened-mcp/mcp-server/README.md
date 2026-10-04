@@ -97,6 +97,6 @@ Set `API_KEY` (env var for stdio, `wrangler secret` for http) to your upstream A
 ## Re-generate
 
 ```bash
-node ~/.claude/plugins/heymegabyte-claude-skills/bin/forge-skill-from-openapi.mjs \
+node ~/.claude/plugins/heymegabyte-agent-skills/bin/forge-skill-from-openapi.mjs \
   <spec-url> <output-dir> --name twilio-hardened-mcp --target mcp-server --transport stdio
 ```

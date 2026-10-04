@@ -13,7 +13,7 @@ triggers:
   - "which repo"
   - "agent-generated file"
 paths:
-  - "~/.claude/plugins/heymegabyte-claude-skills/**"
+  - "~/.claude/plugins/heymegabyte-agent-skills/**"
   - ".github/workflows/**"
   - "wrangler.toml"
   - "package.json"
@@ -23,7 +23,7 @@ paths:
 
 When an agent or skill generates a file, it must land in the RIGHT repo. Two targets exist:
 
-1. **Plugin repo** — `~/.claude/plugins/heymegabyte-claude-skills/` — skills, rules, shared tooling
+1. **Plugin repo** — `~/.claude/plugins/heymegabyte-agent-skills/` — skills, rules, shared tooling
 2. **Consuming project** — the repo Brian is currently working in — stack config, app code, tests
 
 Shipping a file to the wrong target is silent breakage: CI workflows in the plugin never run;

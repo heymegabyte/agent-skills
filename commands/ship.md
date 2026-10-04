@@ -12,7 +12,7 @@ One shot: UNDERSTAND → IMPROVE → IMPLEMENT → TEST → DEPLOY → INVALIDAT
 
 - Run `node .claude/control-plane/ccctl.mjs plan [domain] "<intent>" --files <a,b>` FIRST.
   Pass the domain only if the user named one (e.g. "on njsk.org"); else omit — ccctl uses cwd.
-- Fallback path if `.claude/control-plane/ccctl.mjs` is absent: `~/.claude/plugins/heymegabyte-claude-skills/control-plane/ccctl.mjs`.
+- Fallback path if `.claude/control-plane/ccctl.mjs` is absent: `~/.claude/plugins/heymegabyte-agent-skills/control-plane/ccctl.mjs`.
 - Read `target` (domain, repo, worker, prodUrl, liveUrl, verifyUrl, dnsStatus, framework, packageManager, buildCmd, checkCmd, testCmd, deployCmd, deployNoBuildCmd, healthPath) and `risk.lane` + `risk.verify`.
 - NEVER ask the user for repo / worker / deploy command / framework / build command — ccctl answers all of it.
 - `verifyUrl` = workers.dev when `dnsStatus` is pending, else the custom domain. Verify against `verifyUrl`.

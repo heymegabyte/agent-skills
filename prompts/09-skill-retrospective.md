@@ -29,7 +29,7 @@ Run a retrospective across all skills. The goal is to audit health, identify gap
 ## Inventory
 
 List every skill:
-- Under `~/.agentskills/skills/` and `~/.claude/plugins/heymegabyte-claude-skills/`
+- Under `~/.agentskills/skills/` and `~/.claude/plugins/heymegabyte-agent-skills/`
 - List their name, trigger phrases, and last-updated date
 
 ## Assessment criteria

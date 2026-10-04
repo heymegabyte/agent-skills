@@ -331,7 +331,7 @@ A one-read orientation guide for new agents and contributors.
 - `/list-arcs` — Surface all retrospective documents with key shape metrics; compare arcs deliberately.
 - `/multimedia-enrich` — Progressive multimedia enrichment pass — add high-value audio/video/image/interactive to a site, run again and again
 - `/plan-execute-verify-repair` — Run the autonomous-engineering operating loop on a task (plan→implement→verify→repair→report)
-- `/post-arc-retrospective` — Capture the cumulative output of a /loop arc into a single auditable retrospective document; scans the heymegabyte-claude-skills plugin for modified files, categorizes by directory, counts LOC delta, extracts tool counts from MCP servers, and writes a timestamped report to retrospectives/
+- `/post-arc-retrospective` — Capture the cumulative output of a /loop arc into a single auditable retrospective document; scans the heymegabyte-agent-skills plugin for modified files, categorizes by directory, counts LOC delta, extracts tool counts from MCP servers, and writes a timestamped report to retrospectives/
 - `/prepare-multi-file-brief` — Turn a comma-separated list of file paths into a fully structured Pattern A agent brief — ordered writes, per-file schemas, and a verification step baked in.
 - `/prepare-skeleton-brief` — Turn Pattern B from agent-resilience-discipline into a one-keystroke agent brief for a single-file deliverable < 300 lines.
 - `/process` — Chain the full Superpowers process flow — brainstorm → plan → worktree → build → review → finish — on one slash command

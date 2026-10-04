@@ -78,7 +78,7 @@ Set `API_KEY` env var to your Square access token. The server passes it as
 ## Re-generate
 
 ```bash
-node ~/.claude/plugins/heymegabyte-claude-skills/bin/forge-skill-from-openapi.mjs \
+node ~/.claude/plugins/heymegabyte-agent-skills/bin/forge-skill-from-openapi.mjs \
   https://raw.githubusercontent.com/square/connect-api-specification/master/api.json \
   mcp-servers/square-hardened-mcp \
   --name square-hardened-mcp \

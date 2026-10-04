@@ -38,7 +38,7 @@ from urllib.request import Request, urlopen
 # -----------------------------------------------------------------------------
 HOME = Path.home()
 CLAUDE_DIR = HOME / ".claude"
-PLUGIN_DIR = CLAUDE_DIR / "plugins" / "heymegabyte-claude-skills"
+PLUGIN_DIR = CLAUDE_DIR / "plugins" / "heymegabyte-agent-skills"
 DATA_DIR = CLAUDE_DIR / "data"
 PROJECTS_DIR = CLAUDE_DIR / "projects"
 PACKS_DIR = PLUGIN_DIR / "_packs"

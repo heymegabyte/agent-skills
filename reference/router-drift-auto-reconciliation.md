@@ -29,7 +29,7 @@ Sourced on demand by `rules/router-drift-auto-reconciliation.md`. The exact Post
 ```bash
 ls -la ~/.claude/hooks/router-reconcile-on-skill-write.py
 jq '.hooks.PostToolUse' ~/.claude/settings.json
-echo "test" > ~/.claude/plugins/heymegabyte-claude-skills/05-architecture-and-stack/_test-reconcile.md
-grep '_test-reconcile' ~/.claude/plugins/heymegabyte-claude-skills/_router.md
-rm ~/.claude/plugins/heymegabyte-claude-skills/05-architecture-and-stack/_test-reconcile.md
+echo "test" > ~/.claude/plugins/heymegabyte-agent-skills/05-architecture-and-stack/_test-reconcile.md
+grep '_test-reconcile' ~/.claude/plugins/heymegabyte-agent-skills/_router.md
+rm ~/.claude/plugins/heymegabyte-agent-skills/05-architecture-and-stack/_test-reconcile.md
 ```

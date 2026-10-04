@@ -117,7 +117,7 @@ Render as markdown in chat, NOT via bash:
 
 **Config:** {list each ~/.agentskills/ and ~/.claude/ file edited + brief summary; "none" if nothing}
 **Repos:** {list each non-current repo modified + brief summary; "none" if nothing}
-**Links:** [Repo]({url}) · [CF]({url}) · [Skills](https://github.com/heymegabyte/claude-skills)
+**Links:** [Repo]({url}) · [CF]({url}) · [Skills](https://github.com/heymegabyte/agent-skills)
 ```
 
 - **`⏱ Time` line is MANDATORY on every report** — start time, finish time, AND elapsed duration. No exceptions.

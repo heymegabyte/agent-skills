@@ -36,6 +36,6 @@ Package the emdash core as a Claude Code marketplace plugin under MIT license.
 
 ## Maintenance
 
-- Update the public subset on each plugin release — private rules stay in `~/.claude/plugins/heymegabyte-claude-skills/`, not in the repo
+- Update the public subset on each plugin release — private rules stay in `~/.claude/plugins/heymegabyte-agent-skills/`, not in the repo
 - `bin/strip-private.mjs` — strips private rules from release build before publish
 - CHANGELOG tracks which public components changed each version

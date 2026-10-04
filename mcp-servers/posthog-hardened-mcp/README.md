@@ -85,7 +85,7 @@ with `POSTHOG_PROJECT_ID` / `POSTHOG_ENVIRONMENT_ID` at runtime (defaults to `21
 ## Re-generate
 
 ```bash
-node ~/.claude/plugins/heymegabyte-claude-skills/bin/forge-skill-from-openapi.mjs \
+node ~/.claude/plugins/heymegabyte-agent-skills/bin/forge-skill-from-openapi.mjs \
   https://us.posthog.com/openapi/ \
   mcp-servers/posthog-hardened-mcp \
   --name posthog-hardened-mcp \

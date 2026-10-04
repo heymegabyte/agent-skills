@@ -57,7 +57,7 @@ npm run build
   "mcpServers": {
     "github-hardened-mcp": {
       "command": "node",
-      "args": ["/Users/Apple/.claude/plugins/heymegabyte-claude-skills/mcp-servers/github-hardened-mcp/mcp-server/dist/index.js"],
+      "args": ["/Users/Apple/.claude/plugins/heymegabyte-agent-skills/mcp-servers/github-hardened-mcp/mcp-server/dist/index.js"],
       "env": {
         "API_KEY": "<your-github-personal-access-token>"
       }
@@ -79,7 +79,7 @@ with minimal repo scope are preferred.
 ## Re-generate
 
 ```bash
-node ~/.claude/plugins/heymegabyte-claude-skills/bin/forge-skill-from-openapi.mjs \
+node ~/.claude/plugins/heymegabyte-agent-skills/bin/forge-skill-from-openapi.mjs \
   "https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.json" \
   mcp-servers/github-hardened-mcp \
   --name github-hardened-mcp \

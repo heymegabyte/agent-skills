@@ -70,7 +70,7 @@ jobs:
               `Run at \`${meta.timestamp || 'unknown'}\` on \`${meta.git_sha || 'unknown'}\``,
               `</details>`,
               ``,
-              `_Per [\`rules/ai-agent-security.md\` § Supply chain](https://github.com/heymegabyte/claude-skills/blob/master/rules/ai-agent-security.md). Re-run via \`bash bin/security-supply-chain.sh --json\`._`,
+              `_Per [\`rules/ai-agent-security.md\` § Supply chain](https://github.com/heymegabyte/agent-skills/blob/master/rules/ai-agent-security.md). Re-run via \`bash bin/security-supply-chain.sh --json\`._`,
             ].join('\n');
             const {data: comments} = await github.rest.issues.listComments({
               owner: context.repo.owner, repo: context.repo.repo,

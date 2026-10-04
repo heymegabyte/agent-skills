@@ -84,7 +84,7 @@ function tierPath(tier) {
     case 'L1': return EPISODIC_DIR;
     case 'L2': return SEMANTIC_DIR;
     case 'L3': return PROCEDURAL_DIR;
-    case 'L4': return join(MEMORY_ROOT, '..', '..', 'plugins', 'heymegabyte-claude-skills');
+    case 'L4': return join(MEMORY_ROOT, '..', '..', 'plugins', 'heymegabyte-agent-skills');
     default: return EPISODIC_DIR;
   }
 }

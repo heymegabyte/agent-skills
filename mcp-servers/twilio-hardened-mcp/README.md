@@ -160,7 +160,7 @@ Base URL: `https://messaging.twilio.com/v1`
 ## Re-generate
 
 ```bash
-node ~/.claude/plugins/heymegabyte-claude-skills/bin/forge-skill-from-openapi.mjs \
+node ~/.claude/plugins/heymegabyte-agent-skills/bin/forge-skill-from-openapi.mjs \
   https://raw.githubusercontent.com/twilio/twilio-oai/main/spec/json/twilio_messaging_v1.json \
   mcp-servers/twilio-hardened-mcp \
   --name twilio-hardened-mcp \

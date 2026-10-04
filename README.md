@@ -1,18 +1,18 @@
 <div align="center">
-  <a href="https://github.com/heymegabyte/claude-skills">
-    <img width="148" alt="Emdash Skills" src="https://raw.githubusercontent.com/heymegabyte/claude-skills/master/logo.png" />
+  <a href="https://github.com/heymegabyte/agent-skills">
+    <img width="148" alt="Emdash Skills" src="https://raw.githubusercontent.com/heymegabyte/agent-skills/master/logo.png" />
   </a>
   <h1>Emdash Skills</h1>
   <p><strong>Complete solo-SaaS-founder platform for 32+ AI coding tools.<br/>One-line prompts → deployed products on Cloudflare Workers.</strong></p>
 </div>
 
 <div align="center">
-  <a href="https://github.com/heymegabyte/claude-skills"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/heymegabyte/claude-skills?logo=github&logoColor=white&style=for-the-badge&color=060610" /></a>
+  <a href="https://github.com/heymegabyte/agent-skills"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/heymegabyte/agent-skills?logo=github&logoColor=white&style=for-the-badge&color=060610" /></a>
   <a href="https://megabyte.space"><img alt="Homepage" src="https://img.shields.io/website?down_color=%23FF4136&down_message=Down&label=Homepage&logo=home-assistant&logoColor=white&up_color=%232ECC40&up_message=Up&url=https%3A%2F%2Fmegabyte.space&style=for-the-badge" /></a>
-  <a href="https://github.com/heymegabyte/claude-skills/blob/master/LICENSE"><img alt="License: Rutgers" src="https://img.shields.io/badge/License-Rutgers-7C3AED?logo=open-source-initiative&logoColor=white&style=for-the-badge" /></a>
-  <a href="https://github.com/heymegabyte/claude-skills/issues"><img alt="Issues" src="https://img.shields.io/github/issues/heymegabyte/claude-skills?logo=github&logoColor=white&style=for-the-badge&color=00E5FF" /></a>
-  <a href="https://www.npmjs.com/package/@heymegabyte/claude-skills"><img alt="npm" src="https://img.shields.io/npm/v/@heymegabyte/claude-skills?logo=npm&logoColor=white&style=for-the-badge&color=50AAE3" /></a>
-  <a href="https://jsr.io/@heymegabyte/claude-skills"><img alt="JSR" src="https://img.shields.io/jsr/v/@heymegabyte/claude-skills?logo=jsr&logoColor=white&style=for-the-badge&color=7C3AED" /></a>
+  <a href="https://github.com/heymegabyte/agent-skills/blob/master/LICENSE"><img alt="License: Rutgers" src="https://img.shields.io/badge/License-Rutgers-7C3AED?logo=open-source-initiative&logoColor=white&style=for-the-badge" /></a>
+  <a href="https://github.com/heymegabyte/agent-skills/issues"><img alt="Issues" src="https://img.shields.io/github/issues/heymegabyte/agent-skills?logo=github&logoColor=white&style=for-the-badge&color=00E5FF" /></a>
+  <a href="https://www.npmjs.com/package/@heymegabyte/agent-skills"><img alt="npm" src="https://img.shields.io/npm/v/@heymegabyte/agent-skills?logo=npm&logoColor=white&style=for-the-badge&color=50AAE3" /></a>
+  <a href="https://jsr.io/@heymegabyte/agent-skills"><img alt="JSR" src="https://img.shields.io/jsr/v/@heymegabyte/agent-skills?logo=jsr&logoColor=white&style=for-the-badge&color=7C3AED" /></a>
 </div>
 
 <br/>
@@ -44,10 +44,10 @@
 
 | Building... | Skills Load | Install |
 |---|---|---|
-| **SaaS product** | 01-OS → 02-Brief → 05-Arch → 06-Build → 07-QA → 08-Deploy + all agents | `claude plugin install heymegabyte/claude-skills` |
-| **API / backend** | 01-OS → 05-Arch → 06-Build → 08-Deploy → 13-Observability | `npm i @heymegabyte/claude-skills` |
-| **Marketing site** | 01-OS → 09-Brand → 10-Design → 11-Motion → 12-Media | `npm i @heymegabyte/claude-skills` |
-| **Features on existing project** | 01-OS → 06-Build → 07-QA (skill router auto-selects from context) | `claude plugin install heymegabyte/claude-skills` |
+| **SaaS product** | 01-OS → 02-Brief → 05-Arch → 06-Build → 07-QA → 08-Deploy + all agents | `claude plugin install heymegabyte/agent-skills` |
+| **API / backend** | 01-OS → 05-Arch → 06-Build → 08-Deploy → 13-Observability | `npm i @heymegabyte/agent-skills` |
+| **Marketing site** | 01-OS → 09-Brand → 10-Design → 11-Motion → 12-Media | `npm i @heymegabyte/agent-skills` |
+| **Features on existing project** | 01-OS → 06-Build → 07-QA (skill router auto-selects from context) | `claude plugin install heymegabyte/agent-skills` |
 | **Just rules for your AI tool** | No skills — use a platform variant file directly | See [32 variants](#cross-platform-support-32-variants) below |
 
 ## How It Works
@@ -97,22 +97,22 @@
 
 ```bash
 # GitHub Skills (recommended)
-gh skill install heymegabyte/claude-skills
+gh skill install heymegabyte/agent-skills
 
 # Claude Code plugin
-claude plugin install heymegabyte/claude-skills
+claude plugin install heymegabyte/agent-skills
 
 # npm (includes all 32+ platform variants)
-npm i @heymegabyte/claude-skills
+npm i @heymegabyte/agent-skills
 
 # JSR
-npx jsr add @heymegabyte/claude-skills
+npx jsr add @heymegabyte/agent-skills
 
 # OpenAI Codex
-git clone https://github.com/heymegabyte/claude-skills ~/.codex/skills
+git clone https://github.com/heymegabyte/agent-skills ~/.codex/skills
 
 # Manual
-git clone https://github.com/heymegabyte/claude-skills ~/.agentskills
+git clone https://github.com/heymegabyte/agent-skills ~/.agentskills
 ```
 
 ## Cross-Platform Support (32 variants)
@@ -459,7 +459,7 @@ ghost.megabyte.space
 
 ## Can You Make This Better?
 
-Seriously — [open an issue](https://github.com/heymegabyte/claude-skills/issues/new?title=Improvement%20suggestion&body=I%20think%20this%20could%20be%20better%20if...) or submit a PR: more categories, sharper agent routing, missing templates, other stacks, better prompting patterns. Built something similar or stolen ideas from here? We want to hear it — the whole point is this gets better every day.
+Seriously — [open an issue](https://github.com/heymegabyte/agent-skills/issues/new?title=Improvement%20suggestion&body=I%20think%20this%20could%20be%20better%20if...) or submit a PR: more categories, sharper agent routing, missing templates, other stacks, better prompting patterns. Built something similar or stolen ideas from here? We want to hear it — the whole point is this gets better every day.
 
 ## License
 

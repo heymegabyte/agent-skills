@@ -12,7 +12,7 @@
 - When global doctrine (CLAUDE.md, rules/) has changed and an existing repo needs updated
 - When adopting a new repo under an established philosophy
 - When the repo has drifted from declared architecture or patterns
-- After modifying any rule in `~/.claude/plugins/heymegabyte-claude-skills/rules/`
+- After modifying any rule in `~/.claude/plugins/heymegabyte-agent-skills/rules/`
 
 ## When not to use
 
@@ -29,7 +29,7 @@ You are performing a repo philosophy sync. Your job is to bring this repository 
 
 1. READ the doctrine files. Identify what changed or what this repo should adopt:
    - ~/.claude/CLAUDE.md (global user instructions)
-   - ~/.claude/plugins/heymegabyte-claude-skills/CLAUDE.md (plugin instructions)
+   - ~/.claude/plugins/heymegabyte-agent-skills/CLAUDE.md (plugin instructions)
    - Any rules/*.md files referenced in either
 
 2. SCAN this repo for gaps against the doctrine:

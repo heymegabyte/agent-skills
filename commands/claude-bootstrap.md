@@ -7,11 +7,11 @@ Idempotent + safe. NEVER clobber existing project config — merge, never overwr
 
 ## Steps
 
-1. **Infer** — run `node .claude/control-plane/ccctl.mjs resolve` (or the desktop `~/.claude/plugins/heymegabyte-claude-skills/control-plane/ccctl.mjs` if not yet vendored). Reads `wrangler.toml`/`.jsonc` + `package.json` to detect `framework`, `worker`, `packageManager`, `buildCmd`, `checkCmd`, `testCmd`, `deployCmd`, `deployNoBuildCmd`, `healthPath`.
+1. **Infer** — run `node .claude/control-plane/ccctl.mjs resolve` (or the desktop `~/.claude/plugins/heymegabyte-agent-skills/control-plane/ccctl.mjs` if not yet vendored). Reads `wrangler.toml`/`.jsonc` + `package.json` to detect `framework`, `worker`, `packageManager`, `buildCmd`, `checkCmd`, `testCmd`, `deployCmd`, `deployNoBuildCmd`, `healthPath`.
 
 2. **Write/merge `.claude/site.json`** — TINY. Only NON-inferable facts: `domain`, `aliases`, `prodUrl`, `liveUrl` (the `*.workers.dev` fallback), `dnsStatus`, `deployProvider`, `healthPath`, `notes`. Deep-merge into any existing file; never drop existing keys. Everything else stays inferred by ccctl at runtime — do NOT duplicate build/test/deploy commands here.
 
-3. **Vendor the control plane** — from the bootstrap source (`git clone --depth 1 https://github.com/heymegabyte/claude-bootstrap` into a temp dir, or copy from `~/.claude/plugins/heymegabyte-claude-skills`):
+3. **Vendor the control plane** — from the bootstrap source (`git clone --depth 1 https://github.com/heymegabyte/claude-bootstrap` into a temp dir, or copy from `~/.claude/plugins/heymegabyte-agent-skills`):
    - `control-plane/ccctl.mjs` → `.claude/control-plane/ccctl.mjs`
    - `commands/ship.md`, `commands/deploy.md`, `commands/bootstrap-status.md` → `.claude/commands/`
    Overwrite only these vendored artifacts (they are ours); leave all other `.claude/commands/*` untouched.

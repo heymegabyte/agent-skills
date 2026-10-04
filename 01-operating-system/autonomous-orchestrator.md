@@ -167,7 +167,7 @@ Custom agents from `~/.agentskills/agents/`: deploy-verifier, security-reviewer,
 
 **Worktree isolation** — each parallel agent gets isolated git worktree (`git worktree add ../worktree-frontend emdash/feat-xxx`). Agents cannot clobber each other's files. Merge after phase completion.
 
-**SubagentStop hook** — `~/.claude/hooks/on-session-end.sh` fires when agent session ends. Auto-commits + pushes skill/memory changes to `heymegabyte/claude-skills`. Checks `~/.claude/audit/sweep-results.jsonl` — if latest sweep <8/10, blocks "done" and re-queues fixes.
+**SubagentStop hook** — `~/.claude/hooks/on-session-end.sh` fires when agent session ends. Auto-commits + pushes skill/memory changes to `heymegabyte/agent-skills`. Checks `~/.claude/audit/sweep-results.jsonl` — if latest sweep <8/10, blocks "done" and re-queues fixes.
 
 ## Anti-Patterns
 

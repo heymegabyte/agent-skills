@@ -29,7 +29,7 @@ Router reconciliation MUST be continuous, not periodic. Every skill submodule wr
 - **File:** `~/.claude/hooks/router-reconcile-on-skill-write.py`
 - **Event:** `PostToolUse`
 - **Matcher:** `Write|Edit|MultiEdit`
-- **Trigger condition:** modified path matches `~/.claude/plugins/heymegabyte-claude-skills/[0-9]+-*/**.md` (excludes `SKILL.md`)
+- **Trigger condition:** modified path matches `~/.claude/plugins/heymegabyte-agent-skills/[0-9]+-*/**.md` (excludes `SKILL.md`)
 
 **Logic:**
 

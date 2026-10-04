@@ -3,7 +3,7 @@
  * gen-architecture-map.mjs
  *
  * Generates docs/ARCHITECTURE.md — an auto-generated, regenerate-on-demand map
- * of the heymegabyte-claude-skills plugin so a new agent groks it in one read.
+ * of the heymegabyte-agent-skills plugin so a new agent groks it in one read.
  *
  * Sections: Packs, Skills, Rules (grouped by pack), Commands, Agents, Validators,
  * Hooks, MCP Servers.

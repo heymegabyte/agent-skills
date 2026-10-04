@@ -1,7 +1,7 @@
 {
   "name": "skills-gateway-mcp",
   "version": "1.0.0",
-  "description": "MCP Gateway that indexes all heymegabyte/claude-skills behind 3 meta-tools — cuts context from ~50K tokens to ~1K",
+  "description": "MCP Gateway that indexes all heymegabyte/agent-skills behind 3 meta-tools — cuts context from ~50K tokens to ~1K",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {

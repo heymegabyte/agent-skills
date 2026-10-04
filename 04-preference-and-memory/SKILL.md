@@ -104,7 +104,7 @@ Below 0.70 → ask `AskUserQuestion` before persisting.
 
 ## Promotion / demotion
 
-- Memory recurring across 3+ projects → promote to rule (`~/.claude/plugins/heymegabyte-claude-skills/rules/`)
+- Memory recurring across 3+ projects → promote to rule (`~/.claude/plugins/heymegabyte-agent-skills/rules/`)
 - Rule contradicted by repeated correction → demote to memory or remove
 - Per `rules/prompt-as-training-signal.md`
 

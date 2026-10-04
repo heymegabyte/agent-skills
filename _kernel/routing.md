@@ -67,7 +67,7 @@ How to load the IDEAL set of skills/rules for each task without overloading the 
 
 ## 8. Skill Stubs + On-Demand WebFetch Expand
 
-- Replace each skill's content w/ 100-word stub + canonical URL (`https://github.com/heymegabyte/claude-skills/blob/main/SKILL.md`)
+- Replace each skill's content w/ 100-word stub + canonical URL (`https://github.com/heymegabyte/agent-skills/blob/main/SKILL.md`)
 - When orchestrator needs full content, fetches via WebFetch (cached 1hr in KV)
 - Cuts ~80% of preamble; adds 1-2s latency on first use
 - **Why** — most skills aren't fully needed in any given prompt; full text is reference material

@@ -4,7 +4,7 @@
   "description": "19-category solo-SaaS-founder platform. Autonomous engineering OS with 18 agents, 117 doctrine rules, 20+ slash commands, production forge script, LLM eval harness, MCP server registry, DO agent scaffolding, RAG pipeline, multi-tenant subdomain provisioning, document processing (DOCX/XLSX/PDF/PPTX), and 32 AI-tool platform variants. One-line prompts to deployed Cloudflare Workers products.",
   "version": "7.2.1",
   "author": "Brian Zalewski",
-  "repository": "https://github.com/heymegabyte/claude-skills",
+  "repository": "https://github.com/heymegabyte/agent-skills",
   "homepage": "https://agentskills.megabyte.space",
   "license": "Rutgers",
   "categories": [
@@ -37,6 +37,6 @@
   },
   "install": {
     "type": "github",
-    "repo": "heymegabyte/claude-skills"
+    "repo": "heymegabyte/agent-skills"
   }
 }

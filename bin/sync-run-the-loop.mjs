@@ -88,7 +88,7 @@ function syncRepo(repo, { apply, init }) {
       syncedFrom: 'claude-skills/run-the-loop/_shared',
       masterSha: masterSha(),
       shared: manifest.shared,
-      note: 'Do NOT hand-edit the shared files in this repo — edit the master in the claude-skills plugin (~/.claude/plugins/heymegabyte-claude-skills/run-the-loop/_shared) + re-run bin/sync-run-the-loop.mjs.',
+      note: 'Do NOT hand-edit the shared files in this repo — edit the master in the claude-skills plugin (~/.claude/plugins/heymegabyte-agent-skills/run-the-loop/_shared) + re-run bin/sync-run-the-loop.mjs.',
     }, null, 2) + '\n');
   }
   return res;

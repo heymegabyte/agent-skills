@@ -1,5 +1,5 @@
 {
-  "name": "@heymegabyte/claude-skills",
+  "name": "@heymegabyte/agent-skills",
   "version": "7.2.1",
   "description": "Agent Skills — the autonomous product-building OS for 32+ AI coding tools. One-line prompts → deployed products on Cloudflare Workers.",
   "author": {
@@ -10,7 +10,7 @@
   "homepage": "https://agentskills.megabyte.space",
   "repository": {
     "type": "git",
-    "url": "https://github.com/heymegabyte/claude-skills.git"
+    "url": "https://github.com/heymegabyte/agent-skills.git"
   },
   "license": "SEE LICENSE IN LICENSE",
   "bin": {

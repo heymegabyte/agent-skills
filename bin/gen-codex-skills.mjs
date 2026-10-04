@@ -64,7 +64,7 @@ function slimFrontmatter(raw, dir) {
     ...(license ? [`license: "${license}"`] : []),
     'compatibility:',
     '  agentskills: ">=1.0.0"',
-    `source: "${dir}/SKILL.md (megabytespace/claude-skills)"`,
+    `source: "${dir}/SKILL.md (heymegabyte/agent-skills)"`,
     '---',
     '',
   ].join('\n');

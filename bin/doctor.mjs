@@ -102,7 +102,7 @@ try {
 }
 
 // 7. Git status
-const pluginDir = resolve(HOME, '.claude/plugins/heymegabyte-claude-skills');
+const pluginDir = resolve(HOME, '.claude/plugins/heymegabyte-agent-skills');
 if (existsSync(pluginDir)) {
   try {
     const status = execSync('git status --porcelain', { cwd: pluginDir, encoding: 'utf8' }).trim();

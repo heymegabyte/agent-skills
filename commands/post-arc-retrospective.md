@@ -1,5 +1,5 @@
 ---
-description: Capture the cumulative output of a /loop arc into a single auditable retrospective document; scans the heymegabyte-claude-skills plugin for modified files, categorizes by directory, counts LOC delta, extracts tool counts from MCP servers, and writes a timestamped report to retrospectives/
+description: Capture the cumulative output of a /loop arc into a single auditable retrospective document; scans the heymegabyte-agent-skills plugin for modified files, categorizes by directory, counts LOC delta, extracts tool counts from MCP servers, and writes a timestamped report to retrospectives/
 argument-hint: [--since=<git-ref>]
 allowed-tools: Bash, Read, Write, Glob
 ---
@@ -7,7 +7,7 @@ allowed-tools: Bash, Read, Write, Glob
 # /post-arc-retrospective
 
 Produce a complete, auditable retrospective for a completed loop arc. Scans
-`~/.claude/plugins/heymegabyte-claude-skills/` for files changed since the given
+`~/.claude/plugins/heymegabyte-agent-skills/` for files changed since the given
 git ref, categorizes output by directory, counts new/modified files and LOC delta,
 extracts MCP tool counts, rule descriptions, and command descriptions from
 frontmatter, then writes a timestamped markdown report.
@@ -17,12 +17,12 @@ frontmatter, then writes a timestamped markdown report.
 Read the raw argument string.
 
 - `--since=<git-ref>` — git ref to diff from. Default: `HEAD~50`.
-- If no `--since` flag, also check `~/.claude/plugins/heymegabyte-claude-skills/retrospectives/.last-arc-start`
+- If no `--since` flag, also check `~/.claude/plugins/heymegabyte-agent-skills/retrospectives/.last-arc-start`
   for a stored start commit written by `CronCreate`; use it if present.
 - Store the resolved ref as `$SINCE_REF`.
 
 ```bash
-PLUGIN_DIR="$HOME/.claude/plugins/heymegabyte-claude-skills"
+PLUGIN_DIR="$HOME/.claude/plugins/heymegabyte-agent-skills"
 SINCE_REF="${ARGS#--since=}"
 [ "$SINCE_REF" = "$ARGS" ] && SINCE_REF=""  # no flag found
 

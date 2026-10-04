@@ -6,7 +6,7 @@ Deterministic mapping based on filename — review-by-eye if needed.
 """
 from pathlib import Path
 
-PLUGIN_DIR = Path.home() / ".claude/plugins/heymegabyte-claude-skills"
+PLUGIN_DIR = Path.home() / ".claude/plugins/heymegabyte-agent-skills"
 
 # Mapping: filename pattern → frontmatter additions
 # priority 1 = always load (~12 files max — tier-1 essentials)

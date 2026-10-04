@@ -9,7 +9,7 @@ Sourced on demand by `rules/uniform-json-output.md`. The rule holds the contract
 ```json
 {
   "meta": {
-    "skills_root": "/Users/.../heymegabyte-claude-skills",
+    "skills_root": "/Users/.../heymegabyte-agent-skills",
     "project": "/Users/.../my-project",
     "timestamp": "2026-06-09T07:03:29Z",
     "git_sha": "e663398"
@@ -26,7 +26,7 @@ Sourced on demand by `rules/uniform-json-output.md`. The rule holds the contract
 ```json
 {
   "meta": {
-    "repo": "/Users/.../heymegabyte-claude-skills",
+    "repo": "/Users/.../heymegabyte-agent-skills",
     "generated_at": "2026-06-09T09:03:38Z",
     "git_sha": "5d3753c",
     "filter": "today"

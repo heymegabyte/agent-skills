@@ -10,7 +10,7 @@ Ship the current tree to prod (or a preview) and PROVE it is live. Never edit co
 ## RESOLVE
 
 - Run `node .claude/control-plane/ccctl.mjs plan [domain] "deploy"` (or `ccctl resolve [domain]`) FIRST.
-  Fallback path: `~/.claude/plugins/heymegabyte-claude-skills/control-plane/ccctl.mjs`.
+  Fallback path: `~/.claude/plugins/heymegabyte-agent-skills/control-plane/ccctl.mjs`.
 - Read `target`: `checkCmd`, `buildCmd`, `deployCmd`, `deployNoBuildCmd`, `verifyUrl`, `dnsStatus`, `healthPath`, `repo`, `worker`.
 - Never ask the user for any of these — ccctl resolves them.
 

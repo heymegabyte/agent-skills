@@ -7,7 +7,7 @@ Sourced on demand by rules/multi-harness-portability.md.
 ## Directory structure
 
 ```
-heymegabyte-claude-skills/           ← source of truth (this repo)
+heymegabyte-agent-skills/           ← source of truth (this repo)
 ├── .claude-plugin/                  ← Claude Code manifest (always present)
 │   ├── plugin.json
 │   └── skills/                     ← symlinks or copies of SKILL.md files
@@ -32,7 +32,7 @@ Rules dir (harness-neutral):
 
 ```json
 {
-  "name": "heymegabyte-claude-skills",
+  "name": "heymegabyte-agent-skills",
   "version": "6.1.0",
   "description": "Emdash OS v6.1 — Brian Zalewski / Megabyte Labs",
   "skills": [

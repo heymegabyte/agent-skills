@@ -77,7 +77,7 @@ Set `API_KEY` env var to your OpenAI API key. The server passes it as
 ## Re-generate
 
 ```bash
-node ~/.claude/plugins/heymegabyte-claude-skills/bin/forge-skill-from-openapi.mjs \
+node ~/.claude/plugins/heymegabyte-agent-skills/bin/forge-skill-from-openapi.mjs \
   "https://github.com/openai/openai-openapi/raw/master/openapi.yaml" \
   mcp-servers/openai-hardened-mcp \
   --name openai-hardened-mcp \

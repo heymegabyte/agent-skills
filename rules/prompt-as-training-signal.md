@@ -73,8 +73,8 @@ For every prompt:
 
 ## Where the artifacts live
 
-- **Universal rules** → `~/.claude/plugins/heymegabyte-claude-skills/rules/<topic>.md`
-- **Universal skills** → `~/.claude/plugins/heymegabyte-claude-skills/<NN-skill-name>/SKILL.md`
+- **Universal rules** → `~/.claude/plugins/heymegabyte-agent-skills/rules/<topic>.md`
+- **Universal skills** → `~/.claude/plugins/heymegabyte-agent-skills/<NN-skill-name>/SKILL.md`
 - **User-level overrides** → `~/.claude/CLAUDE.md` § Local Overrides
 - **Project-level rules** → `<project>/.claude/rules/<topic>.md` (path-scoped)
 - **Project memories** → `~/.claude/projects/<encoded-path>/memory/<name>.md` + index in `MEMORY.md`

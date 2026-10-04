@@ -187,7 +187,7 @@ Do not register both simultaneously — duplicate tool names will cause conflict
 ## Re-generate
 
 ```bash
-node ~/.claude/plugins/heymegabyte-claude-skills/bin/forge-skill-from-openapi.mjs \
+node ~/.claude/plugins/heymegabyte-agent-skills/bin/forge-skill-from-openapi.mjs \
   https://resend.com/openapi.json \
   mcp-servers/resend-hardened-mcp \
   --name resend-hardened-mcp \

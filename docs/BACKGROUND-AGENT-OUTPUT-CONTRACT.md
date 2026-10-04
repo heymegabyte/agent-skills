@@ -10,7 +10,7 @@ Every background agent MUST write its final output as a Markdown file to:
 $CLAUDE_PLUGIN_DATA/agent-output/<agent-name>-<iso-timestamp>.md
 ```
 
-- `$CLAUDE_PLUGIN_DATA` — defaults to `~/.claude/plugins/heymegabyte-claude-skills/data/` if unset.
+- `$CLAUDE_PLUGIN_DATA` — defaults to `~/.claude/plugins/heymegabyte-agent-skills/data/` if unset.
 - `<agent-name>` — the agent's slug (e.g. `deploy-verifier`, `seo-auditor`).
 - `<iso-timestamp>` — ISO 8601 with `T` and `Z`, no spaces, no colons (e.g. `2026-06-28T143022Z`).
 
