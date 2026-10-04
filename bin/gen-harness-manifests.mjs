@@ -121,6 +121,8 @@ const ALWAYS_LOAD_RULES = [
   'rules/no-staging-doctrine.md',
   'rules/zod-everywhere.md',
   'rules/fetch-defaults.md',
+  'rules/model-routing.md',
+  'rules/agent-neutrality.md',
 ];
 
 // ─── main ────────────────────────────────────────────────────────────────────

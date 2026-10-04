@@ -14,6 +14,8 @@
     "rules/no-staging-doctrine.md",
     "rules/zod-everywhere.md",
     "rules/fetch-defaults.md",
+    "rules/model-routing.md",
+    "rules/agent-neutrality.md",
     "01-operating-system/SKILL.md",
     "02-goal-and-brief/SKILL.md",
     "04-preference-and-memory/SKILL.md",
