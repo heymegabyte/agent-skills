@@ -45,7 +45,7 @@ allowed-tools: Read Glob Grep Bash(git:*) Bash(npm:audit) mcp__playwright__*
 - Space-separated, no quotes
 - `Bash(cmd:*)` scopes to commands starting with `cmd`
 - `mcp__server__*` covers all tools from that MCP server
-- Experimental — support varies by Claude Code version
+- Experimental — support varies by agent and version
 
 ---
 

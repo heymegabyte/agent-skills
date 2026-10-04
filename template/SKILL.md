@@ -5,7 +5,7 @@ description: >
   Handles [PRIMARY TASK]. Outputs [DELIVERABLE].
   Keywords: [comma-separated discovery keywords]
 license: MIT
-compatibility: Requires Claude Code >=2.0.0
+compatibility: Requires any Agent Skills-compatible tool (Claude Code >=2.0.0, Codex, Cursor, Gemini CLI, …)
 metadata:
   version: "1.0"
   author: brian@megabyte.space

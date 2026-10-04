@@ -1,7 +1,7 @@
 {
   "name": "@heymegabyte/claude-skills",
   "version": "7.2.1",
-  "description": "14-category autonomous product-building OS for AI coding tools. One-line prompts → deployed products on Cloudflare Workers.",
+  "description": "Agent Skills — the autonomous product-building OS for 32+ AI coding tools. One-line prompts → deployed products on Cloudflare Workers.",
   "author": {
     "name": "Brian Zalewski",
     "url": "https://megabyte.space"

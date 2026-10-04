@@ -1,6 +1,6 @@
 ---
 name: "operating-system"
-description: "Supreme policy layer governing all Claude Code behavior. Autonomy, one-line prompt interpretation, speed standards, emphasis signal processing, cross-skill coordination, done definitions, conflict resolution. Loaded every prompt."
+description: "Supreme policy layer governing all agent behavior. Autonomy, one-line prompt interpretation, speed standards, emphasis signal processing, cross-skill coordination, done definitions, conflict resolution. Loaded every prompt."
 metadata:
   version: "2.1.0"
   updated: "2026-05-03"

@@ -80,7 +80,7 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 - `sw.ts`, `service-worker*` → `08/service-worker`, `06/pwa-kit`
 - `semgrep/**`, `.semgrepignore` → `07/semgrep-codebase-rules`
 - `coolify/**`, `docker-compose*` → `05/coolify-docker-proxmox`
-- `CLAUDE.md`, `.claude/**` → `01`
+- `CLAUDE.md`, `.claude/**`, `AGENTS.md`, `CODEX.md`, `GEMINI.md`, `.cursor/**`, `.windsurf/**` → `01`
 - `package.json`, `tsconfig.json` → `05`
 - `**/container.ts`, `**/site-generation.ts`, `Dockerfile` → `15`, `05`
 - `**/prompts/*.prompt.md` → `15`
