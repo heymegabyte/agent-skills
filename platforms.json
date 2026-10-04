@@ -1,0 +1,58 @@
+{
+  "$comment": "SoT for the platform variant surfaces this repo ships. Every entry's path must exist (gate 14 asserts both the count claims and path existence). Count = variants.length — update 'N platform variants' claims via this file ONLY. Formula: root-level dirs/files that target a specific AI tool's convention format; internal tooling dotfiles are not variants.",
+  "variants": [
+    {
+      "id": "agents-md",
+      "tool": "agentskills.io standard (Codex, Amp, many)",
+      "path": "AGENTS.md"
+    },
+    { "id": "agents-skills-dir", "tool": "OpenAI Codex skills dir", "path": ".agents/" },
+    { "id": "aiassistant", "tool": "JetBrains AI Assistant", "path": ".aiassistant/" },
+    { "id": "aider", "tool": "Aider", "path": ".aider-conventions.md" },
+    { "id": "amazonq", "tool": "Amazon Q", "path": ".amazonq/" },
+    { "id": "amp-md", "tool": "Amp (Sourcegraph)", "path": "AMP.md" },
+    { "id": "augment-dir", "tool": "Augment", "path": ".augment/" },
+    { "id": "augment-guidelines", "tool": "Augment (legacy)", "path": ".augment-guidelines" },
+    { "id": "bolt", "tool": "Bolt.new", "path": ".bolt/" },
+    { "id": "claude-md", "tool": "Claude Code memory file", "path": "CLAUDE.md" },
+    { "id": "claude-plugin", "tool": "Claude Code plugin", "path": ".claude-plugin/" },
+    { "id": "clinerules", "tool": "Cline", "path": ".clinerules" },
+    { "id": "codex-md", "tool": "OpenAI Codex", "path": "CODEX.md" },
+    { "id": "codex-plugin", "tool": "Codex plugin", "path": ".codex-plugin/" },
+    { "id": "continue", "tool": "Continue", "path": ".continue/" },
+    {
+      "id": "copilot-instructions",
+      "tool": "GitHub Copilot (legacy single-file)",
+      "path": ".github/copilot-instructions.md"
+    },
+    {
+      "id": "copilot-instructions-dir",
+      "tool": "GitHub Copilot (applyTo frontmatter)",
+      "path": ".github/instructions/"
+    },
+    { "id": "cursor-dir", "tool": "Cursor (MDC rules + BUGBOT)", "path": ".cursor/" },
+    { "id": "cursorrules", "tool": "Cursor (legacy)", "path": ".cursorrules" },
+    { "id": "devin", "tool": "Devin", "path": ".devin/" },
+    { "id": "gemini-md", "tool": "Gemini CLI", "path": "GEMINI.md" },
+    { "id": "goose", "tool": "Goose", "path": ".goose/" },
+    { "id": "junie", "tool": "JetBrains Junie", "path": ".junie/" },
+    { "id": "kilo", "tool": "Kilo", "path": ".kilo/" },
+    { "id": "kimi-plugin", "tool": "Kimi plugin", "path": ".kimi-plugin/" },
+    { "id": "kiro", "tool": "Kiro (AWS)", "path": ".kiro/" },
+    { "id": "opencode", "tool": "OpenCode", "path": ".opencode/" },
+    { "id": "openhands", "tool": "OpenHands microagents", "path": ".openhands/" },
+    { "id": "qodo-md", "tool": "Qodo", "path": "QODO.MD" },
+    { "id": "replit-md", "tool": "Replit", "path": "replit.md" },
+    { "id": "roo", "tool": "Roo Code", "path": ".roo/" },
+    {
+      "id": "rules-generic",
+      "tool": "Generic .rules consumers (Void, Zed, others)",
+      "path": ".rules"
+    },
+    { "id": "tabnine", "tool": "Tabnine", "path": ".tabnine/" },
+    { "id": "trae", "tool": "Trae", "path": ".trae/" },
+    { "id": "void", "tool": "Void Editor", "path": ".void/" },
+    { "id": "windsurf-dir", "tool": "Windsurf (trigger frontmatter)", "path": ".windsurf/" },
+    { "id": "windsurfrules", "tool": "Windsurf (legacy)", "path": ".windsurfrules" }
+  ]
+}

@@ -101,6 +101,22 @@ done
 SKILLS_CLAIMED=$(grep -oE 'Skills [0-9]+' CLAUDE.md | grep -oE '[0-9]+' | head -1)
 [ -n "$SKILLS_CLAIMED" ] && [ "$SKILLS_CLAIMED" != "$CATS_ACTUAL" ] \
   && appendEntryError "CLAUDE.md" "$SKILLS_CLAIMED" "skills (categories)" "$CATS_ACTUAL"
+
+# Oct-2026 (fire-8): platforms.json is the SoT for "N platform variants" —
+# claims drifted 30/31/32 across files while the real surface count was 37
+# (nobody had ever listed .opencode). Assert (a) every manifest path exists,
+# (b) every "N platform variants" claim in README.md matches the manifest.
+if [ -f platforms.json ]; then
+  PLATFORMS_ACTUAL=$(grep -c '"path":' platforms.json | tr -d ' ')
+  while IFS= read -r p; do
+    [ -e "$p" ] || {
+      ENTRY_ERRORS="${ENTRY_ERRORS}  ✗ platforms.json path missing on disk: ${p}\n"
+    }
+  done <<<"$(grep -oE '"path": "[^"]+"' platforms.json | sed 's/"path": "//; s/"$//')"
+  for n in $(grep -oE '[0-9]+ platform variants' README.md | grep -oE '^[0-9]+'); do
+    [ "$n" = "$PLATFORMS_ACTUAL" ] || appendEntryError "README.md" "$n" "platform variants" "$PLATFORMS_ACTUAL"
+  done
+fi
 ENTRY_ERR_COUNT=$(printf '%b' "$ENTRY_ERRORS" | grep -c '✗' || true)
 
 EXIT=0

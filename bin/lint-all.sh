@@ -236,6 +236,15 @@ logHeader "24. reference-pointers"
 runGate "reference-pointers" "check-reference-pointers --ci" \
   node "$SKILLS_ROOT/bin/check-reference-pointers.mjs" --ci
 
+# Hard gate 25 (fire-8, agent-neutral arc) — .agents/skills is GENERATED from the
+# numbered category SKILL.mds by bin/gen-codex-skills.mjs (adapter-path mapping per
+# rules/agent-neutrality.md). Generated-artifact drift gates skip the soft-info soak
+# per rules/drift-detection.md § Build-artifact drift guards: deterministic, zero
+# false-positive risk. Fails when sources changed without `node bin/gen-codex-skills.mjs`.
+logHeader "25. codex-mirror-sync"
+runGate "codex-mirror-sync" "gen-codex-skills --check" \
+  node "$SKILLS_ROOT/bin/gen-codex-skills.mjs" --check
+
 # Soft INFO gates (pass-63→67) — 4 audit reports.
 # Human mode: with --quiet, buffer output; only emit if any drift. Without --quiet, emit always.
 # JSON mode (pass-69): capture each script's --json envelope into an `info` block alongside `gates`.
