@@ -171,7 +171,11 @@ try {
 /**
  * @type {Array<{file:string, shortName:string, lines:Array<{lineNum:number, text:string, cls:'positive'|'negative'|'neutral', nouns:Set<string>}>}>}
  */
-const ruleData = ruleFiles.map(f => {
+// Records are never rewritten (rules/agent-neutrality.md) — contradictions
+// against a LOG entry are history, not drift. Exclude them from pairing.
+const RECORD_FILES = new Set(['principles-incident-log.md', 'CHANGELOG.md', 'supremacy-wars.md', 'root-cause-validator-findings.md']);
+
+const ruleData = ruleFiles.filter(f => !RECORD_FILES.has(basename(f))).map(f => {
   const raw = safeRead(f);
   const body = stripFrontmatter(raw);
   const imperatives = extractImperativeLines(body);
@@ -184,6 +188,47 @@ const ruleData = ruleFiles.map(f => {
     .filter(l => l.cls !== 'neutral');
   return { file: f, shortName: basename(f), lines };
 }).filter(r => r.lines.length > 0);
+
+// ── v2 scoring (fire-15): HIGH tier + vendor-alternates clash ─────────────────
+// The v1 opposing-class + 2-shared-nouns heuristic yields ~1.7K MEDIUM pairs —
+// untriageable. v2 adds: (a) HIGH tier = ≥3 shared nouns incl. one SPECIFIC
+// token (dash/dot/slash/digit or known vendor) with the noun near both
+// directive keywords; (b) vendor-conflict pass — two POSITIVE lines preferring
+// DIFFERENT members of the same alternates group (the most common real
+// contradiction, invisible to opposing-class logic).
+
+const VENDOR_GROUPS = [
+  ['lefthook', 'husky'],
+  ['biome', 'oxlint'],
+  ['spartan', 'primeng', 'material'],
+  ['resend', 'ses', 'sendgrid'],
+  ['pnpm', 'yarn'],
+  ['vitest', 'jest'],
+  ['tailwind', 'bootstrap'],
+];
+const VENDOR_TOKENS = new Set(VENDOR_GROUPS.flat());
+const DIRECTIVE_RE = /\b(always|never|must(?: not)?|required|mandatory|prefer|use|avoid|ban|forbidden|do not|default to|reach for|only)\b/i;
+
+const isSpecific = (t) => /[-./\d]/.test(t) || VENDOR_TOKENS.has(t);
+
+function nearDirective(text, noun) {
+  const m = DIRECTIVE_RE.exec(text.toLowerCase());
+  if (!m) return false;
+  const ni = text.toLowerCase().indexOf(noun);
+  return ni !== -1 && Math.abs(ni - m.index) <= 90;
+}
+
+function vendorIn(text) {
+  const lower = text.toLowerCase();
+  const hits = [];
+  for (let g = 0; g < VENDOR_GROUPS.length; g++) {
+    for (const v of VENDOR_GROUPS[g]) {
+      // Word-anchored — 'ses' must never match inside "classes"/"surfaces".
+      if (new RegExp(`(?<![a-z0-9])${v}(?![a-z0-9])`).test(lower)) hits.push({ g, v });
+    }
+  }
+  return hits;
+}
 
 // ── find contradiction candidates ─────────────────────────────────────────────
 
@@ -199,14 +244,40 @@ for (let i = 0; i < ruleData.length; i++) {
 
     for (const la of A.lines) {
       for (const lb of B.lines) {
-        // Must be opposing classification
-        if (la.cls === lb.cls) continue;
-
         const shared = [];
         for (const n of la.nouns) {
           if (lb.nouns.has(n)) shared.push(n);
         }
-        if (shared.length < 2) continue;
+
+        // Vendor-conflict pass — class-agnostic (two positives count), but
+        // PRECISE: a line mentioning BOTH members of a group is self-consistent
+        // routing doctrine (e.g. "SES primary; SendGrid break-glass") — skip;
+        // and each side must put a DIRECTIVE on its own vendor, not co-mention.
+        const va = vendorIn(la.text);
+        const vb = vendorIn(lb.text);
+        let vendorClash = null;
+        for (const a of va) {
+          if (va.filter((x) => x.g === a.g).length > 1) continue;
+          for (const b of vb) {
+            if (vb.filter((x) => x.g === b.g).length > 1) continue;
+            if (a.g !== b.g || a.v === b.v) continue;
+            if (nearDirective(la.text, a.v) && nearDirective(lb.text, b.v)) {
+              vendorClash = `${a.v} vs ${b.v}`;
+            }
+          }
+        }
+
+        if (!vendorClash) {
+          // Legacy path: opposing classification + ≥2 shared nouns.
+          if (la.cls === lb.cls) continue;
+          if (shared.length < 2) continue;
+        }
+
+        const specific = shared.find(isSpecific);
+        const high = Boolean(
+          vendorClash ||
+          (shared.length >= 3 && specific && nearDirective(la.text, specific) && nearDirective(lb.text, specific))
+        );
 
         candidates.push({
           fileA: A.shortName,
@@ -216,7 +287,8 @@ for (let i = 0; i < ruleData.length; i++) {
           lineB: lb.lineNum,
           textB: lb.text.slice(0, 120),
           shared,
-          confidence: 'MEDIUM',
+          vendorClash,
+          confidence: high ? 'HIGH' : 'MEDIUM',
         });
       }
     }
@@ -232,8 +304,11 @@ const deduped = candidates.filter(c => {
   return true;
 });
 
-// Sort by shared noun count descending (strongest signal first)
-deduped.sort((a, b) => b.shared.length - a.shared.length);
+// Sort: HIGH tier first, then by shared noun count descending.
+deduped.sort((a, b) =>
+  (a.confidence === b.confidence ? b.shared.length - a.shared.length : a.confidence === 'HIGH' ? -1 : 1)
+);
+const highs = deduped.filter((c) => c.confidence === 'HIGH');
 
 // ── output ────────────────────────────────────────────────────────────────────
 
