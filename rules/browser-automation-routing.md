@@ -21,7 +21,17 @@ paths:
 
 Standing preference for EVERY agent-driven browser task — navigate, click, fill, extract, screenshot, scrape, or verify a deployed page. Default to a **Cloudflare Browser Rendering** instance driven by **Stagehand**; fall back to the **user's own Chrome** when cookies / a logged-in session must persist. Brian directive 2026-09-20.
 
-Cross-links: `[[computer-use-safety]]` `[[fetch-defaults]]` `[[crawling-testing-browser-supervisor]]` `[[stagehand-ai-testing]]` `[[cloudflare-lock-in-is-leverage]]` `[[god-tier-engineering]]`
+Cross-links: `[[computer-use-safety]]` `[[fetch-defaults]]` `[[crawling-testing-browser-supervisor]]` `[[stagehand-ai-testing]]` `[[cloudflare-lock-in-is-leverage]]` `[[god-tier-engineering]]` `[[verification-loop]]`
+
+## HARD RULE — NEVER open a visible Chrome to TEST or MEASURE (headless / Browser Run only). Brian directive 2026-10-03.
+
+- **Testing, measurement, screenshots, CWV/perf traces, E2E, post-deploy verification = HEADLESS or Cloudflare Browser Rendering ("Browser Run") ONLY.** Never pop a visible/GUI Chrome window on the user's machine to run a test or take a measurement — it hijacks the user's desktop + is non-reproducible.
+- **This bans the Chrome DevTools MCP visible-tab path for testing.** `mcp__chrome-devtools__new_page` / `performance_start_trace` / `take_screenshot` open the user's REAL Chrome — do NOT use them to measure CLS/LCP, screenshot a route, or run a check. Use instead: **CF Browser Rendering** (headless, REST `/browser-rendering/*` or `@cloudflare/playwright` — the default "Browser Run"), or **headless Playwright** (`chromium.launch({ headless: true })` + CDP for a perf trace). For a throttled CWV trace, headless Playwright with `Network.emulateNetworkConditions` + `Emulation.setCPUThrottlingRate` + a `largest-contentful-paint`/`layout-shift` PerformanceObserver.
+- **The "user's local Chrome" tier (below) is reserved STRICTLY for genuine cookie / logged-in-session persistence** (the user is mid-flow, SSO state must carry). It is NEVER the way to "just test" or "just measure" a page. If no auth state is needed, it must be headless / Browser Run — full stop.
+
+### Reference incident (2026-10-03) — fire-30 drove CLS traces through visible Chrome
+
+The brickcitylabor loop measured `/book` CLS by opening the chrome-devtools MCP (`new_page` + `performance_start_trace` ×3), which popped visible Chrome tabs on Brian's desktop. Correct path: headless CF Browser Rendering OR headless Playwright + CDP throttle. No auth/cookies were needed — it was a stateless prod measurement, the exact case that MUST be headless.
 
 ## The routing chain (in order)
 
@@ -52,3 +62,4 @@ Cross-links: `[[computer-use-safety]]` `[[fetch-defaults]]` `[[crawling-testing-
 - Defaulting to Playwright-MCP's throwaway Chromium for a task that needs the user's logged-in cookies → use the user's Chrome.
 - Spinning a Browserbase-managed session when a CF Browser Rendering instance is available → prefer CF-native.
 - Driving a cloud/managed browser with raw CDP clicks instead of Stagehand's a11y-tree `act` → brittle; use Stagehand.
+- **Opening a VISIBLE local Chrome (chrome-devtools MCP tabs) to TEST / MEASURE / screenshot / trace a page** → banned (see HARD RULE above). Headless CF Browser Rendering or headless Playwright only; the visible-Chrome tier is auth-state-persistence ONLY.

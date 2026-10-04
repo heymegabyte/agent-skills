@@ -42,7 +42,7 @@ Replacing this vendor requires a **multi-week migration** touching data, auth co
 
 ### Replaceable
 
-Equivalent alternatives exist and migration would take **days**, not weeks. Examples: PostHog (→ Plausible / Amplitude), Sentry (→ Axiom / BugSnag), Upstash (→ CF KV directly), Resend (→ Amazon SES, completed 2026-09-09).
+Equivalent alternatives exist and migration would take **days**, not weeks. Examples: PostHog (→ Plausible / Amplitude), Sentry (→ Axiom / BugSnag), Upstash (→ CF KV directly), Resend (→ Amazon SES, completed 2026-09-09), **GitHub** (→ GitLab / Gitea; free git + Actions CI + Pages + Packages — lean on the free tier by default for client product repackaging, per `[[cloudflare-lock-in-is-leverage]]` § GitHub free git services).
 
 **Overhead for replaceable vendors:**
 

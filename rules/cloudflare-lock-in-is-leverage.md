@@ -45,6 +45,15 @@ This is heretical to every senior architect's training. It is correct for THIS s
 - **Upstash Redis** when CF KV/DO cannot meet a specific need (Redis primitives at scale). Both Hyperdrive and Upstash are CF *partners*; they're not "multi-cloud," they're CF-extending.
 - **Sentry / PostHog / Stripe / Amazon SES / Clerk** — third-party SaaS for problems outside CF's surface. Not lock-in exits; CF is the substrate, these are the integrations.
 
+## GitHub free git services compose WITH CF-native (client product repackaging)
+
+When repackaging / white-labeling a product for a client, lean on GitHub's **free git services** ALONGSIDE the Cloudflare-native runtime — they compose, they don't compete. GitHub is the free source-control + CI + artifact layer; Cloudflare is the free-to-cheap runtime + data substrate. Default to BOTH, free-tier-first; never stand up paid git hosting for a client deliverable. (Brian directive 2026-10-03.)
+
+- **Always available, always free for this scale:** unlimited private + public repos, **Actions** CI (generous free minutes), **Pages** static hosting, **Packages** (npm / container registry), **Releases** + **Issues** — $0 for what a client repackage needs. Reach for it by default.
+- **Division of labor:** GitHub owns the repo + CI/CD pipeline + release artifacts; Cloudflare owns the Workers/Pages/D1/R2/KV runtime + edge. A client product ships as a GitHub repo (source + Actions → `wrangler deploy`) onto a Cloudflare account — the `push → CI → wrangler deploy` path per `[[main-only-branch]]`.
+- **Per repackage:** `gh repo create` (free) for the deliverable, wire Actions → CF deploy, hand the client the repo. No per-seat git SaaS; no self-hosted GitLab unless a hard compliance boundary demands it.
+- This is ADDITIVE to the CF-native substrate above — GitHub-free is the git/CI leverage layered on top, the same "free-tier-first, no premature paid infra" discipline as `[[vendor-risk-tiering]]` (GitHub = free/replaceable tier). Cross-links: `[[projectsites-cloudflare-first]]` (client-site delivery) · `[[main-only-branch]]` (push→CI deploy).
+
 ## What the team-shop wisdom got right (and doesn't apply here)
 
 - "Vendor lock-in" wisdom assumes: (a) you have the headcount to migrate, (b) you'll outgrow the vendor's pricing, (c) the vendor's roadmap may diverge from yours. For a solo SaaS at <$100k/mo on CF Workers, none of those hold. CF stays 10-100× cheaper than AWS-equivalent through the lifetime of the platform.
