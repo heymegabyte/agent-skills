@@ -38,6 +38,7 @@ members:
   - rules/uniform-json-output
   - rules/audit-arc-maturity-ladder
   - rules/agent-resilience-discipline
+  - rules/agent-self-manages-context
   - rules/backwards-compatibility-removal-cadence
   - rules/blast-radius-minimization
   - rules/cost-per-request-accountability

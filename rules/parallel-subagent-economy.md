@@ -37,7 +37,7 @@ Hard preconditions: units independent (distinct files, no shared state, no data 
 - **DEFAULT = fresh.** Brief: system preamble + self-contained 100-300 words (role · scope · exact file paths · non-goals · expected output ≤200 words). Keep `CLAUDE_CODE_FORK_SUBAGENT` UNSET.
 - **Inherit only when parent already built compact, on-topic, directly-needed state AND parent context is small.** Pass curated PACKET, never raw transcript.
 - **Decision test:** "Would competent stranger do better with my conversation, or just a tight brief + files?" Tight brief wins → fresh.
-- **Saturation HARD STOP.** Spawns failing "Prompt is too long" (`subagent_tokens: 0`) → CHECKPOINT to `progress.md` + continue in FRESH session. Do NOT retry.
+- **Saturation = SELF-MANAGE, don't punt.** Spawns failing "Prompt is too long" (`subagent_tokens: 0`) → CHECKPOINT to `progress.md`, let autocompact run, and CONTINUE in-session (keep the lead lean — delegate + conclusions-only). Do NOT retry in place; NEVER tell the user to start a fresh session (`[[agent-self-manages-context]]`).
 
 ## Cost model (why parallel burns tokens)
 

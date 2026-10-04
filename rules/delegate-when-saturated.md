@@ -41,7 +41,7 @@ A subagent loads project `CLAUDE.md` + global rules before your brief. In a CLAU
 
 Therefore:
 
-- **The biggest "fresh context" lever is a fresh MAIN session**, not a subagent. When orchestrator is saturated + work is bounded, surface the exact recipe + scope to user for a new session — OR continue in-session only if the unit is tiny.
+- **The "fresh context" lever is a SUBAGENT, never a fresh MAIN session.** When the orchestrator is heavy + work is bounded, dispatch it to a fresh-context subagent on a tight brief and keep the lead lean — do NOT surface a "start a new session" recipe to the user. The runtime auto-compacts + carries the summary forward, so the lead CONTINUES; the agent self-manages context, never the human (`[[agent-self-manages-context]]`).
 - In CLAUDE.md-heavy repos: agent must read **near-zero** files (give literal line targets + `perl` commands; no exploratory reads); brief <250 words. Even then, have a fallback.
 - Consider leaner agent type (`Explore` for read-only) or trimming project CLAUDE.md if delegation is needed often.
 

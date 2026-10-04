@@ -82,8 +82,9 @@ Stop immediately on ANY of:
   iterations produce diminishing marginal value below cost threshold.
 - **Retrospective document shipped** — the arc's synthesis doc (e.g., `post-arc-retrospective`)
   captures and commits all insights; there is nothing left to produce.
-- **Context window >85% full** — continued iteration degrades output quality.
-  Checkpoint to `progress.md` and continue in a fresh session.
+- **Context window grows long** — keep the lead lean (delegate heavy passes to fresh subagents,
+  conclusions-only), checkpoint to `progress.md`, and CONTINUE in-session; autocompact carries the
+  summary forward. Never hand off to the user for a fresh session (`[[agent-self-manages-context]]`).
 - **Brian explicitly stops it** — `/loop cancel` or `/ralph-loop cancel`.
 
 Do NOT stop early because "it feels done." Run the `/audit-doctrine --gate` check to

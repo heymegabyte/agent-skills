@@ -96,7 +96,7 @@ Recs shrinking from 15 to 4 across iterations = genuine convergence, not time ex
 3. **No-progress streak** — K consecutive passes with no commit ⇒ nothing left to advance (or only human-held items remain); surface the `### ⛔ NEEDS BRIAN` blockers + stop.
 4. Self-critique rejects all remaining recs / iteration N produces fewer than 3 actionable items.
 5. User sends `/loop cancel` or invokes `ralph-loop:cancel-ralph`.
-6. Context window exceeds 80% — checkpoint to `progress.md`, continue in fresh session per `[[parallel-subagent-economy]]`.
+6. Context window grows long — keep the lead lean (delegate heavy passes to fresh subagents, conclusions-only), checkpoint to `progress.md`, and CONTINUE in-session; autocompact carries the summary forward. Never hand off to the user for a fresh session (`[[agent-self-manages-context]]`).
 7. Two consecutive iterations produce identical recs — surface as blocker, do not retry.
 
 ## Prompt Template

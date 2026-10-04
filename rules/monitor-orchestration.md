@@ -124,7 +124,7 @@ See: `always` § Post-work, `verification-loop`, `full-autonomy` § Sub-agent pr
 - **What happened:** the orchestrator read `_LOOP_LEDGER.md` (large, multi-section) plus `SCOPE.md`/`DECISIONS.md` in-thread, then re-derived git state. The harness reported *"Autocompact is thrashing — the context refilled to the limit within 3 turns of the previous compact, 3 times in a row"* — after **0 agents spawned, 0 files edited, 0 deploys attempted**.
 - **Why it's a failure:** reconnaissance is not progress. The orchestrator retains file dumps it will never act on, burning the exact budget the subagents need.
 - **HARD RULE:** the main thread MUST NOT read a tracker/ledger/scope doc (`_LOOP_LEDGER.md`, `SCOPE.md`, `DECISIONS.md`, `progress.md`) or any file it cannot act on directly. Delegate every inventory read to a fresh-context `Explore` agent with a ≤150-line output cap. The main thread holds conclusions only.
-- **HARD STOP trigger:** an `autocompact thrashing` notice, a "Prompt is too long" spawn failure, or `subagent_tokens: 0` → checkpoint to `progress.md`, continue in a FRESH session. Never retry in place.
+- **Saturation handling:** an `autocompact thrashing` notice, a "Prompt is too long" spawn failure, or `subagent_tokens: 0` → checkpoint to `progress.md`, let autocompact run, and CONTINUE in-session (lean lead: delegate + conclusions-only). Never retry in place; NEVER tell the user to start a fresh session — the agent self-manages context (`[[agent-self-manages-context]]`).
 
 ### 2026-09-21 (same session) — the documentary fix above was INSUFFICIENT
 
