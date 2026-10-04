@@ -14,7 +14,7 @@ compatibility:
 
 # 15 — Build-Breaking Site Generation + Rebuild Rules
 
-> **Model migration note (pass-76, 2026-06-09)**: `DALL-E` → **GPT Image 1.5** + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`. Pipeline gates unchanged.
+> **Model migration note (pass-76, 2026-06-09)**: `DALL-E` → **GPT Image 2** (2026-04; 2.5 branded 2026-09 — check current API id at integration) + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`. Pipeline gates unchanged.
 
 Migrated from `~/.claude/rules/always.md` 2026-05-03.
 
@@ -54,7 +54,7 @@ Walk EVERY page for ALL:
 ### Augmentation
 
 - Ship `original_image_count × 1.4` minimum (`× 2.0` typical).
-- Augment via GPT Image 1.5 (primary), Pexels, Pixabay, Google CSE.
+- Augment via GPT Image 2 (primary), Pexels, Pixabay, Google CSE.
 - Feature linked PDFs prominently (e.g. team CVs on `/about`).
 
 ### Post-build vision pass
@@ -113,9 +113,9 @@ Walker MUST capture:
 ### Augmentation
 
 - Pexels Video API + YouTube Data API search by topic.
-- GPT Image 1.5 image generation is PURPOSE-CRAFTED PER SLOT.
+- GPT Image 2 image generation is PURPOSE-CRAFTED PER SLOT.
 
-### Per-slot GPT Image 1.5 prompt mandatory fields
+### Per-slot GPT Image 2 prompt mandatory fields
 
 1. Route+section it lives in
 2. Page topic+intent
@@ -124,7 +124,7 @@ Walker MUST capture:
 5. Subject specificity ("octogenarian volunteer plating soup, soft window light, documentary style" NOT "people helping")
 6. Negative prompt (no text, no watermarks, no AI artifacts, no extra fingers, no logos)
 
-- Generic "create a hero image" prompts = fail; per-slot specificity required. Same prompt template applies to GPT Image 1.5, Ideogram, Stability — reuse the slot-prompt across providers with a fallback chain.
+- Generic "create a hero image" prompts = fail; per-slot specificity required. Same prompt template applies to GPT Image 2, Ideogram, Stability — reuse the slot-prompt across providers with a fallback chain.
 
 ## Every site (deep crawl)
 
@@ -372,7 +372,7 @@ When source site links a PDF (CV, resume, brochure, menu, whitepaper, annual rep
 
 1. Import ALL posts (per "Complete Blog/Content Corpus" rule)
 2. REWRITE each post for quality — fix grammar, sharpen headlines (4-8 words), punch up first paragraphs (Flesch ≥60), add internal links — NEVER alter facts/dates/quotes/sources
-3. Re-extract ALL media from each source post + supplement with GPT Image 1.5 per-slot prompts + Pexels Video for hero sections
+3. Re-extract ALL media from each source post + supplement with GPT Image 2 per-slot prompts + Pexels Video for hero sections
 4. Homepage becomes magazine-style blog index (featured post hero, category filter row, 3-column grid, pagination, sidebar with top tags + search)
 5. Every post gets: unique title/meta/H1, 600+ words, featured image (R2-hosted), FAQPage JSON-LD, author byline, publish date, reading time, ≥3 related-posts links, share buttons, category+tag chips
 
@@ -517,7 +517,7 @@ When source site links a PDF (CV, resume, brochure, menu, whitepaper, annual rep
 - **Quoted text** in `<blockquote>` with opening quote mark.
 - **`<cite>` element** wrapping person name + job title/company (MANDATORY — no anonymous testimonials unless source explicitly omits identity).
 - **Star rating** as accessible SVG stars (1-5) when source has rating data.
-- **Avatar**: source photo if available → GPT Image 1.5 headshot fallback → initials monogram badge final fallback (NEVER no avatar).
+- **Avatar**: source photo if available → GPT Image 2 headshot fallback → initials monogram badge final fallback (NEVER no avatar).
 
 ### Layout
 
@@ -800,7 +800,7 @@ Required content for enriched sub-page:
 4. "Read full article →" outbound link as primary CTA
 5. ≥3 internal links to related publications
 6. JSON-LD — `BlogPosting` OR `ScholarlyArticle` with `citation: CreativeWork[]`
-7. `og:image` derived from publication abstract via GPT Image 1.5 per-slot prompt (NEVER generic stock image)
+7. `og:image` derived from publication abstract via GPT Image 2 per-slot prompt (NEVER generic stock image)
 
 ### Policy (b) 301 REDIRECT
 
@@ -916,7 +916,7 @@ Required content for enriched sub-page:
 9. **Delight-moment voting** — each `delight_moments[]` entry renders thumbs-up button at component level (owner-toggle in dashboard); top-voted moments (>10 votes) auto-promoted to skill 15 reusable templates registry.
 10. **Weekly streak email** via Resend cron — Subject: "Your `<slug>.projectsites.dev` is N days since last rebuild — rebuild to unlock goody #X"; deep-links to `/dashboard?action=rebuild`.
 11. **Build-quality score** — composite `(contrast_pass_pct × 25) + (a11y_score × 25) + (perf_score × 25) + (content_depth_score × 15) + (delight_moments_count × 10)`; 0-100 gauge + drives leaderboard rank.
-12. **Premium tier as status** — `/create` opt-in mints public-visible `data-tier="patron"` on `<html>` → Patron badge in showcase + 3× iteration rate + access to Sora/HeyGen/ElevenLabs voice clone goodies.
+12. **Premium tier as status** — `/create` opt-in mints public-visible `data-tier="patron"` on `<html>` → Patron badge in showcase + 3× iteration rate + access to Veo 3.1/HeyGen/ElevenLabs voice clone goodies.
 
 ### D1 schema
 
@@ -1407,7 +1407,7 @@ data: {"phase": "research|asset|generation|inspection|quality|domain", "step": "
 
 ### Allowed treatments
 
-**(a) Full-screen video** — autoplay+muted+playsinline+loop H.264 MP4 ≤4MB OR HLS stream, `<source type="video/webm">` fallback, 16:9 desktop / 9:16 mobile (sourced from GPT Image 1.5 Video v2 OR Sora OR HeyGen OR original site's video assets OR Pexels free 4K library)
+**(a) Full-screen video** — autoplay+muted+playsinline+loop H.264 MP4 ≤4MB OR HLS stream, `<source type="video/webm">` fallback, 16:9 desktop / 9:16 mobile (sourced from Veo 3.1 OR Kling 3.0 / Runway Gen-4.5 OR HeyGen OR original site's video assets OR Pexels free 4K library)
 
 **(b) WebGL/Canvas particle field** — Three.js OR vanilla WebGL shader at 60fps, `prefers-reduced-motion` → static gradient fallback, GPU memory ≤256MB
 

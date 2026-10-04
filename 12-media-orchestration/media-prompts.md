@@ -1,6 +1,6 @@
 ---
 name: "media-prompts"
-description: "Prompt templates for Ideogram logos, GPT Image hero shots, Sora video, and stock photo curation"
+description: "Prompt templates for Ideogram logos, GPT Image hero shots, Veo 3.1 video, and stock photo curation"
 updated: "2026-04-23"
 ---
 
@@ -78,7 +78,7 @@ No photographs, no busy backgrounds.
 Clean, modern, tech-forward design.
 ```
 
-## Video Prompt Template (Sora)
+## Video Prompt Template (Veo 3.1)
 
 ```
 [Opening shot/setup, 0-2s]: [describe initial frame]

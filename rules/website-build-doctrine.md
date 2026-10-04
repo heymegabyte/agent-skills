@@ -112,7 +112,7 @@ Replace wholesale when ANY: AI vision <8/10 · generic feel · competitor benchm
 ### Video
 
 - Veo narrative — 7-8× 8-sec clips on 60-sec arc, cross-dissolves + AI VO.
-- Animated hero — Sora 8-sec loop, `<picture>` static fallback.
+- Animated hero — Veo 3.1 8-sec loop (Sora retired 2026-09), `<picture>` static fallback.
 - AI testimonial reads — real testimonials by AI voices (consent in `_confirmations.json`).
 
 ### Maps + spatial
@@ -163,7 +163,7 @@ Each candidate through `extra-mile.md` § Self-critique.
 - **Agent-C** seo-auditor → title/meta/JSON-LD/OG
 - **Agent-D** accessibility-auditor → axe 6bp + WCAG 2.2 manual
 - **Agent-E** performance-profiler → Lighthouse + bundle + LoAF INP
-- **Agent-F** media-orchestrator → images (Sharp triplets), video (Veo/Sora), audio (TTS)
+- **Agent-F** media-orchestrator → images (Sharp triplets), video (Veo 3.1), audio (TTS)
 - **Agent-G** motion-choreographer → View Transitions + scroll-driven + `@starting-style`
 
 ## Phase 6 — Continuous "What Else" Loop

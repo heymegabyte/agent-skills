@@ -65,7 +65,7 @@ Search order:
 - Tag the upscaled file's `_credits.json` entry with `upscaled: { tool: "Real-ESRGAN x4plus", from: 600, to: 2400 }`.
 - Never alter historical content via inpainting/outpainting — that crosses into fabrication.
 
-## DALL·E / GPT Image 1.5 / Sora prompt-craft
+## GPT Image 2 / Veo prompt-craft (DALL·E + Sora retired)
 
 1. **Imagine the IDEAL frame.** Close your eyes, picture exactly what would belong in this slot for this audience: subject + composition + light + lens + emotion + era + palette. Write 2–3 sentences of cinematographer's language BEFORE touching the model.
 2. **Lock the medium.** Default: "hyper-realistic editorial photograph, shot on a Leica SL3 with a 50mm Summilux f/1.4 lens, shallow depth of field, ISO 200, 1/250s, golden-hour natural side-lighting from a north-facing window, 35mm full-frame sensor look, color-graded warm midtones / desaturated shadows, fine 35mm-film grain, no motion blur, no posterization, no chromatic aberration, magazine-cover quality." Adjust lens/light for the moment but keep the realism contract intact.

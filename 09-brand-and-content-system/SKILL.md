@@ -34,7 +34,7 @@ paths:
 
 Extract real brand assets and apply the full copy system (anti-slop, SEO, trust surfaces, GEO) to every website build surface.
 
-> **Model migration note (pass-77, 2026-06-09)**: `DALL-E` → **GPT Image 1.5** + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`. Brand extraction protocol unchanged.
+> **Model migration note (pass-77, 2026-06-09)**: `DALL-E` → **GPT Image 2** (2026-04; 2.5 branded 2026-09 — check current API id at integration) + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`. Brand extraction protocol unchanged.
 
 ## Brian's Brand Voice
 
@@ -70,12 +70,12 @@ Extract real brand assets and apply the full copy system (anti-slop, SEO, trust 
 5. **Logo-vs-container contrast (BUILD-BREAKING — every render)** — Every logo render (header, footer, hero, modal, splash, mobile menu, sidebar) MUST contrast container bg by ≥4.5:1 on logo's dominant chroma (not transparent pixels)
    - Forbidden: white-text-logo on white/cream | dark-text-logo on dark/navy | low-saturation-logo on same-hue bg
    - Resolution: header AND footer themes chosen AFTER logo luminance scan. Dual-theme site needing SAME logo → ship TWO files (`brand-mark-light.svg` for dark bg, `brand-mark-dark.svg` for light bg) + CSS `<picture><source media>` swaps
-   - Automate via skill 12 logo-variant-generator (Real-ESRGAN inversion or `magick -channel RGB -negate`; color logos w/ text → GPT Image 1.5 w/ "same logo on transparent bg w/ text inverted to <opposite-luminance>")
+   - Automate via skill 12 logo-variant-generator (Real-ESRGAN inversion or `magick -channel RGB -negate`; color logos w/ text → GPT Image 2 w/ "same logo on transparent bg w/ text inverted to <opposite-luminance>")
    - Validator: `validate-logo-contrast.mjs` — Claude Sonnet 4.6 vision samples logo bbox + container computed bg at 6bp + pixel sampling, fails if <4.5:1
 
 6. **Brand-element extraction (logo is gold mine — extract DNA)** — GPT Image 2 vision returns `{font_family_guess, suggested_heading_font, suggested_body_font, font_weight, letterspacing, has_icon_mark, icon_mark_description, icon_mark_dominant_color, decorative_motif_description, motif_extractable (bool)}`
    - Matched Google Font → `--font-heading` site-wide
-   - `motif_extractable=true` → crop icon-only region (`magick logo.png -alpha extract -trim +repage`), upscale 2-4× via Real-ESRGAN / GPT Image 1.5 variation, save as `assets/brand-splash.png` + `assets/brand-mark.png`
+   - `motif_extractable=true` → crop icon-only region (`magick logo.png -alpha extract -trim +repage`), upscale 2-4× via Real-ESRGAN / GPT Image 2 variation, save as `assets/brand-splash.png` + `assets/brand-mark.png`
 
 7. **Logo singularity (BUILD-BREAKING — exactly ONE logo file per container)** — Every logo container renders EXACTLY ONE logo asset
    - Never composite two logo sources side-by-side; never stack icon-mark + wordmark as separate `<img>` tags; never render `apple-touch-icon.png` next to `logo.svg` in same container

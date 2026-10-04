@@ -14,7 +14,7 @@ compatibility:
 
 # 09 — Build-Breaking Brand + Content Rules
 
-> **Model migration note (pass-79, 2026-06-09)**: `DALL-E` → **GPT Image 1.5** + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`.
+> **Model migration note (pass-79, 2026-06-09)**: `DALL-E` → **GPT Image 2** (2026-04; 2.5 branded 2026-09 — check current API id at integration) + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`.
 
 Migrated from `~/.claude/rules/always.md` 2026-05-03.
 
@@ -185,7 +185,7 @@ Every testimonial MUST include:
 
 1. `<blockquote>` with `cite` attribute (source URL when available).
 2. `<cite>`: person first + last name (MANDATORY), job title/role (MANDATORY), company/org (MANDATORY when business context exists).
-3. **Avatar**: source photo ≥40×40px → GPT Image 1.5 headshot → initials monogram (bg=brand-accent, text=bg-primary).
+3. **Avatar**: source photo ≥40×40px → GPT Image 2 headshot → initials monogram (bg=brand-accent, text=bg-primary).
 4. **Date** (year minimum: "2024") when derivable.
 5. **Star rating** (1-5) when source had one.
 
@@ -409,7 +409,7 @@ Fail any route with cosine <0.78 against its source counterpart.
 
 ## Every site rebuild (***BRAND FIDELITY #7 — HERO IMAGE/VIDEO SOURCE-FIRST PRIORITY — UNIVERSAL — BUILD-BREAKING***)
 
-Rebuild hero MUST attempt source-site reuse FIRST — fall back to Sora/GPT Image 1.5/Pexels only when source is unrecoverable.
+Rebuild hero MUST attempt source-site reuse FIRST — fall back to Veo 3.1/GPT Image 2/Pexels only when source is unrecoverable.
 
 Source hero: R2 self-host → `<picture>`/`<video>` slot. Upgrades quality (upscale, sharpen, recompress) but does NOT replace subject.
 

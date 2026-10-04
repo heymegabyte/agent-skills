@@ -1,6 +1,6 @@
 ---
 name: "12 build-breaking media+orchestration rules"
-description: "Universal media gates: Media Slot Manifest + GPT Image 1.5 primary slot-fill + fail-CLOSED auto-regenerate, NotebookLM artifacts (podcast + infographic + explainer video), page-rendered image topic-relevance ≥8/10, blog featured image mandatory + GPT Image 1.5 fallback, migrated source-site asset R2 self-hosting, page media density (video + multi-source generation), full-width Google Maps Embed widget for physical addresses. 2026-05-11 EXTEND: 14 Ideogram leverage slots (logo triad + favicon set + per-route OG cards + hero typographic poster + chapter plates + editorial blog headers + branded 404/500 + PWA splashes + tier badges + chapter glyphs + pattern tile + stat numerals + share quote cards + iteration stamp), 16-source parallel multimedia fan-out (Pexels+Pixabay+Google CSE Image+Wikimedia+Internet Archive+LoC+NASA+Smithsonian+The Met+Europeana+Flickr Commons+YouTube+Vimeo+Coverr+Mixkit+Pexels Video), Google Custom Search Image API license-filtered, NotebookLM-generated + Podcast Index discovered podcast feeds (Google Podcasts API retired 2024), ATF hero video via Sora + Veo dual cascade with stock fallback, progressive media refresh per iteration, credits/colophon route. Migrated verbatim from rules/always.md 2026-05-03; extended per Brian directive 2026-05-11."
+description: "Universal media gates: Media Slot Manifest + GPT Image 2 primary slot-fill + fail-CLOSED auto-regenerate, NotebookLM artifacts (podcast + infographic + explainer video), page-rendered image topic-relevance ≥8/10, blog featured image mandatory + GPT Image 2 fallback, migrated source-site asset R2 self-hosting, page media density (video + multi-source generation), full-width Google Maps Embed widget for physical addresses. 2026-05-11 EXTEND: 14 Ideogram leverage slots (logo triad + favicon set + per-route OG cards + hero typographic poster + chapter plates + editorial blog headers + branded 404/500 + PWA splashes + tier badges + chapter glyphs + pattern tile + stat numerals + share quote cards + iteration stamp), 16-source parallel multimedia fan-out (Pexels+Pixabay+Google CSE Image+Wikimedia+Internet Archive+LoC+NASA+Smithsonian+The Met+Europeana+Flickr Commons+YouTube+Vimeo+Coverr+Mixkit+Pexels Video), Google Custom Search Image API license-filtered, NotebookLM-generated + Podcast Index discovered podcast feeds (Google Podcasts API retired 2024), ATF hero video via Veo 3.1 + Kling/Runway cascade with stock fallback, progressive media refresh per iteration, credits/colophon route. Migrated verbatim from rules/always.md 2026-05-03; extended per Brian directive 2026-05-11."
 metadata:
   version: "1.0.0"
   updated: "2026-05-03"
@@ -14,7 +14,7 @@ compatibility:
 
 # 12 — Build-Breaking Media + Orchestration Rules
 
-> **Model migration note (pass-75, 2026-06-09)**: References to `DALL-E 3` / `DALL-E` migrated to **GPT Image 1.5** (current OpenAI image-gen flagship); `GPT-4o` vision migrated to **GPT Image 2 vision** (current OpenAI multimodal flagship). Per `platform.openai.com/docs/deprecations`: DALL-E 2/3 removed from API 2026-05-12; GPT-4o retired 2026-02-13. 14-Ideogram leverage slot manifest, 16-source parallel multimedia fan-out, and topic-relevance ≥8/10 gates all unchanged — only API endpoint names updated. Cost ranges in this doc were computed against legacy DALL-E + GPT-4o pricing; re-verify against current GPT Image 1.5 / GPT Image 2 rates.
+> **Model migration note (pass-75, 2026-06-09)**: References to `DALL-E 3` / `DALL-E` migrated to **GPT Image 2** (2026-04; 2.5 branded 2026-09 — check current API id at integration); `GPT-4o` vision migrated to **GPT Image 2 vision** (current OpenAI multimodal flagship). Per `platform.openai.com/docs/deprecations`: DALL-E 2/3 removed from API 2026-05-12; GPT-4o retired 2026-02-13. 14-Ideogram leverage slot manifest, 16-source parallel multimedia fan-out, and topic-relevance ≥8/10 gates all unchanged — only API endpoint names updated. Cost ranges in this doc were computed against legacy DALL-E + GPT-4o pricing; re-verify against current GPT Image 2 rates.
 
 Migrated from `~/.claude/rules/always.md` 2026-05-03.
 
@@ -30,9 +30,9 @@ Migrated from `~/.claude/rules/always.md` 2026-05-03.
  relevance_floor, filled_by, filled_url, filled_score, regen_attempts}
 ```
 
-### Per-slot GPT Image 1.5 prompt — 6 mandatory fields
+### Per-slot GPT Image 2 prompt — 6 mandatory fields
 
-- Drafted in a single batched gpt-4o call (~$0.05/site). MUST encode:
+- Drafted in a single batched GPT Image 2 vision call (~$0.05/site). MUST encode:
   1. Page topic + intent verbatim
   2. Brand palette tokens inline hex
   3. Composition + aspect ratio
@@ -43,13 +43,13 @@ Migrated from `~/.claude/rules/always.md` 2026-05-03.
 ### Source-chain order
 
 1. Real-entity sources (Places/uploads/scrape)
-2. GPT Image 1.5
+2. GPT Image 2
 3. Pexels
 4. Coverr
 5. Flux
 6. Brand-gradient
 
-- GPT Image 1.5 is PRIMARY slot-fill engine after real-entity exhaustion. Stock APIs run as parallel speed-pass fallback (instant return if GPT Image 1.5 hangs >15s) but GPT Image 1.5 output preferred at curation.
+- GPT Image 2 is PRIMARY slot-fill engine after real-entity exhaustion. Stock APIs run as parallel speed-pass fallback (instant return if GPT Image 2 hangs >15s) but GPT Image 2 output preferred at curation.
 
 ### Acceptance
 
@@ -57,7 +57,7 @@ Migrated from `~/.claude/rules/always.md` 2026-05-03.
 
 ### Failure handling
 
-- Failure (Pexels empty, NSFW flag, broken scrape, vision below floor) → REFINED-prompt regen via GPT Image 1.5 (`(original_prompt, vision_critique, relevance_floor)`), max 5 attempts × $0.08/img = $0.40/slot worst case.
+- Failure (Pexels empty, NSFW flag, broken scrape, vision below floor) → REFINED-prompt regen via GPT Image 2 (`(original_prompt, vision_critique, relevance_floor)`), max 5 attempts × $0.08/img = $0.40/slot worst case.
 - After exhaustion: log to `_unfillable_slots.json`, ship brand-gradient floor, mark `published_with_warnings`, surface slot for manual replacement.
 - NEVER silent skip. NEVER substitute brand-gradient unless 5 regen attempts exhausted.
 
@@ -65,8 +65,8 @@ Migrated from `~/.claude/rules/always.md` 2026-05-03.
 
 - `validate-media-slot-manifest.mjs` — every route enumerated, every slot record complete
 - `validate-no-empty-slots.mjs` — no `_unfillable_slots.json` entries on clean build, no slot below relevance_floor, no fallback-gradient unless exhaustion logged
-- `validate-dalle-slot-fill.mjs` — every GPT Image 1.5 prompt has all 6 mandatory fields
-- Daily GPT Image 1.5 spend tracked in `_dalle_daily.json` against `OPENAI_DAILY_BUDGET` (default $50) — exhaustion triggers Flux fallback for remainder of day.
+- `validate-dalle-slot-fill.mjs` — every GPT Image 2 prompt has all 6 mandatory fields
+- Daily GPT Image 2 spend tracked in `_dalle_daily.json` against `OPENAI_DAILY_BUDGET` (default $50) — exhaustion triggers Flux fallback for remainder of day.
 
 ## Every site (***NOTEBOOKLM ARTIFACTS — PODCAST + INFOGRAPHIC + EXPLAINER VIDEO — UNIVERSAL — BUILD-BREAKING — `notebooklm-orchestrator` agent runs Phase 0***)
 
@@ -124,12 +124,12 @@ Pipeline spec: `~/.agentskills/12-media-orchestration/notebooklm-pipeline.md`. A
 1. Original-source-hero IF quality ≥7/10
 2. Pexels-video-loop matching topic
 3. Pexels-image scoring ≥8
-4. GPT Image 1.5 per-slot prompt naming page topic + brand palette + subject specificity
+4. GPT Image 2 per-slot prompt naming page topic + brand palette + subject specificity
 5. Brand-gradient fallback
 
 - Validator (`validate-image-relevance.mjs`): post-build GPT Image 2 vision scores `(page_topic, image_description) → relevance 0-10` for every image on every route; FAIL any score <8.
 
-## Every blog/article post (***FEATURED IMAGE MANDATORY + GPT Image 1.5 FALLBACK — UNIVERSAL — BUILD-BREAKING — extends "Every page-rendered image"***)
+## Every blog/article post (***FEATURED IMAGE MANDATORY + GPT Image 2 FALLBACK — UNIVERSAL — BUILD-BREAKING — extends "Every page-rendered image"***)
 
 - Every blog/news/article/journal/case-study post MUST have a valid featured image (hero + OG card + listing thumbnail).
 
@@ -141,7 +141,7 @@ Pipeline spec: `~/.agentskills/12-media-orchestration/notebooklm-pipeline.md`. A
 4. Source post `twitter:image` meta
 5. Pexels search by post title keywords (≥3 stop-word-filtered nouns)
 6. Pixabay search same keywords
-7. GPT Image 1.5 generation with per-slot prompt naming: (a) post topic + 3 most-relevant nouns from title; (b) brand palette inline hex; (c) 16:9 aspect for hero / 1.91:1 for OG / 4:3 for listing thumbnail; (d) photographic specs (`"editorial photography, soft natural light, shallow DoF, documentary style"`); (e) negative prompt block (no text, no watermarks, no logos, no AI artifacts)
+7. GPT Image 2 generation with per-slot prompt naming: (a) post topic + 3 most-relevant nouns from title; (b) brand palette inline hex; (c) 16:9 aspect for hero / 1.91:1 for OG / 4:3 for listing thumbnail; (d) photographic specs (`"editorial photography, soft natural light, shallow DoF, documentary style"`); (e) negative prompt block (no text, no watermarks, no logos, no AI artifacts)
 
 - When source-post-image is broken (404 / 5xx / mixed-content / blocked CDN), SKIP that source and continue chain — never ship a broken `<img>`.
 - Vision-LLM scores final image ≥8/10 topic relevance before accepting; below 8 → regen with refined prompt up to 3 attempts.
@@ -168,11 +168,11 @@ Pipeline spec: `~/.agentskills/12-media-orchestration/notebooklm-pipeline.md`. A
 Every page receives at minimum:
 
 1. ALL original media from corresponding source URL (images, videos, PDFs preserved)
-2. 1-2 supplemental GPT Image 1.5 / GPT-Image purpose-crafted originals (per-slot prompts per skill 12)
+2. 1-2 supplemental GPT Image 2 / GPT-Image purpose-crafted originals (per-slot prompts per skill 12)
 3. ≥1 Pexels Video API result for hero/module background (`<video autoplay muted loop playsinline poster>`)
 4. Google Image Search top-3 HIGHLY-relevant images filtered by topic match score (vision-LLM ≥8)
 
-- Hero background preference order: original-source-hero-image → Pexels-video-loop → Pexels-image → GPT Image 1.5-generated → solid-brand-gradient. Never ship a hero with no media.
+- Hero background preference order: original-source-hero-image → Pexels-video-loop → Pexels-image → GPT Image 2-generated → solid-brand-gradient. Never ship a hero with no media.
 
 ## Every image (***BUSINESS-TYPE SEMANTIC MISMATCH — FAIL CLOSED — extends topic-relevance gate — BUILD-BREAKING***)
 
@@ -183,7 +183,7 @@ Every page receives at minimum:
 
 ## Every site rebuild with known source domain (***PRIMARY DOMAIN MEDIA EXTRACTION MANDATORY — BEFORE ANY AI GENERATION***)
 
-- Before invoking GPT Image 1.5 or any stock API, crawler MUST fully extract ALL media from the source business domain.
+- Before invoking GPT Image 2 or any stock API, crawler MUST fully extract ALL media from the source business domain.
 
 ### Extraction pipeline
 
@@ -203,7 +203,7 @@ Every page receives at minimum:
 - (b) Consistent style across ALL team members (same background tone, crop framing, shadow/border treatment) — never a mix of office photos + LinkedIn headshots + casual outdoor shots in the same grid.
 - (c) Resolution ≥400×400px source, served at 200×200 minimum rendered size.
 - (d) When source site has real headshots: download, AI-crop to 1:1 (Sharp `gravity: 'face'` or `sharp().resize(600,600,{fit:'cover', position:'face'})`), upload to R2.
-- (e) When source has NO headshot: GPT Image 1.5 generates a professional headshot — prompt: `"Professional headshot of [gender]-presenting person in [industry-appropriate attire], neutral gray background, soft studio lighting, 1:1 square crop, photorealistic, Hasselblad quality, no text, no watermarks"` — NEVER ship a team card without a photo.
+- (e) When source has NO headshot: GPT Image 2 generates a professional headshot — prompt: `"Professional headshot of [gender]-presenting person in [industry-appropriate attire], neutral gray background, soft studio lighting, 1:1 square crop, photorealistic, Hasselblad quality, no text, no watermarks"` — NEVER ship a team card without a photo.
 - (f) Face detection required — if Sharp face-detect returns 0 faces, reject and regenerate.
 - Validator (`validate-team-headshots.mjs`): for every `[data-card-type=person]`, assert `<img>` natural aspect ratio between 0.9 and 1.1 AND rendered bounding-rect is square within 5%.
 
@@ -295,14 +295,14 @@ https://www.google.com/maps/embed/v1/place?key=<MAPS_EMBED_KEY>&q=<urlencoded-ad
 ## Every page (***MULTIMEDIA DENSITY #1 — ≥3 DISTINCT MEDIA TYPES PER ROUTE — UNIVERSAL — BUILD-BREAKING***)
 
 - Every page-rendered route MUST present ≥3 distinct media types — text-only pages are BUILD FAIL.
-- Allowed types: photograph (GPT Image 1.5 OR real-entity); illustration/icon system; video (hero OR embedded clip); audio (podcast OR voiceover OR ambient); data visualization (chart OR infographic OR animated counter); 3D/WebGL (Three.js OR Spline OR particle field); interactive widget (calculator OR quiz OR map OR timeline scrubber); generative SVG (animated brand pattern).
+- Allowed types: photograph (GPT Image 2 OR real-entity); illustration/icon system; video (hero OR embedded clip); audio (podcast OR voiceover OR ambient); data visualization (chart OR infographic OR animated counter); 3D/WebGL (Three.js OR Spline OR particle field); interactive widget (calculator OR quiz OR map OR timeline scrubber); generative SVG (animated brand pattern).
 - Distribution: hero — 1 media; feature section — 1-2 media; final CTA section — 1 media.
 - Validator (`validate-multimedia-density.mjs`): grep dist HTML per route, assert ≥3 distinct types in: `<img>`, `<video>`, `<audio>`, `<svg>` with animation, `<canvas>`, `<iframe data-media-embed>`.
 
 ## Every page (***MULTIMEDIA DENSITY #2 — VIDEO-FIRST IN HERO + 1 PER 1000 WORDS — UNIVERSAL — BUILD-BREAKING***)
 
 - Every site MUST ship ≥1 hero video AND ≥1 additional embedded video per ~1000 words of body content.
-- Source order: source-site original videos (R2 self-hosted) → Sora generation (premium tier) → Coverr royalty-free → Pexels free 4K → AI-generated explainer via HeyGen (founder profile only).
+- Source order: source-site original videos (R2 self-hosted) → Veo 3.1 generation (premium tier) → Coverr royalty-free → Pexels free 4K → AI-generated explainer via HeyGen (founder profile only).
 - All videos MUST be MP4 H.264 OR WebM VP9 ≤4MB, lazy-loaded via `<video preload="metadata">` + `loading="lazy"`, `autoplay+muted+playsinline+loop` ONLY for hero/ambient; embedded body videos require `<video controls>`. HLS permitted for videos >4MB.
 - Validator (`validate-video-density.mjs`): assert hero video present AND ratio of `<video>` elements to word count ≥1:1500.
 
@@ -320,21 +320,21 @@ https://www.google.com/maps/embed/v1/place?key=<MAPS_EMBED_KEY>&q=<urlencoded-ad
 
 ## Every site (***PRE-RENDER MEDIA #1 — MEDIA FETCH PARALLEL WITH RESEARCH — UNIVERSAL — BUILD-BREAKING***)
 
-- Build orchestrator MUST kick off media-fetch tasks (logo extraction, source-site asset crawl, Pexels/Pixabay search, GPT Image 1.5 prompt drafting) in parallel with research phase — NOT sequentially after research completes.
+- Build orchestrator MUST kick off media-fetch tasks (logo extraction, source-site asset crawl, Pexels/Pixabay search, GPT Image 2 prompt drafting) in parallel with research phase — NOT sequentially after research completes.
 - Container spawns 3 worker tasks at boot: `research_task`, `brand_extraction_task`, `media_prefetch_task` — all 3 must complete before `content_synthesis_task` fires.
 - Validator (`validate-parallel-media-fetch.mjs`): parse build trace timestamps, assert `media_prefetch_task.started_at ≤ research_task.started_at + 5s` AND `media_prefetch_task.ended_at ≤ research_task.ended_at + 30s`.
 
-## Every site (***PRE-RENDER MEDIA #2 — GPT Image 1.5 BATCH SUBMISSION — UNIVERSAL — BUILD-BREAKING***)
+## Every site (***PRE-RENDER MEDIA #2 — GPT Image 2 BATCH SUBMISSION — UNIVERSAL — BUILD-BREAKING***)
 
-- GPT Image 1.5 slot fill MUST batch-submit all prompts in a single concurrent burst (`Promise.all([...slots].map(generateDALLE))`) with concurrency limit of 10 (OpenAI rate limit) — NEVER sequential one-at-a-time.
+- GPT Image 2 slot fill MUST batch-submit all prompts in a single concurrent burst (`Promise.all([...slots].map(generateDALLE))`) with concurrency limit of 10 (OpenAI rate limit) — NEVER sequential one-at-a-time.
 - Total time = max(slot generation time) ≈ 12-18s vs sum (5min+) sequential. Per-slot timeout 20s with retry-once on transient failure.
-- Validator (`validate-dalle-batch.mjs`): parse build trace, assert all GPT Image 1.5 API calls have overlapping `started_at` windows + max concurrent ≥5 + total GPT Image 1.5 phase duration ≤30s for ≤20 slots.
+- Validator (`validate-dalle-batch.mjs`): parse build trace, assert all GPT Image 2 API calls have overlapping `started_at` windows + max concurrent ≥5 + total GPT Image 2 phase duration ≤30s for ≤20 slots.
 
 ## Every site (***PRE-RENDER MEDIA #3 — MEDIA SLOT MANIFEST CACHED BY URL HASH — UNIVERSAL — BUILD-BREAKING — iter ≥2 incremental***)
 
-- On rebuild at `iteration_count >= 2`, build orchestrator MUST hash source-site media URL list (`sha256(sorted(source_images[]))`) and compare against `_media_slots.json[previous].source_hash`. If match: skip source-image re-download + reuse prior GPT Image 1.5 generations whose source-data lineage hash matches.
+- On rebuild at `iteration_count >= 2`, build orchestrator MUST hash source-site media URL list (`sha256(sorted(source_images[]))`) and compare against `_media_slots.json[previous].source_hash`. If match: skip source-image re-download + reuse prior GPT Image 2 generations whose source-data lineage hash matches.
 - Only regenerate slots whose source data CHANGED OR whose vision-relevance score was below floor in prior iteration OR whose goody-queue entry mutates them.
-- Validator (`validate-media-cache-reuse.mjs`): when `iteration_count >= 2`, assert `_media_slots.json[current].slots_reused_count > 50%` of total slots AND build's GPT Image 1.5 API call count is ≤ `slots_regenerated_count`.
+- Validator (`validate-media-cache-reuse.mjs`): when `iteration_count >= 2`, assert `_media_slots.json[current].slots_reused_count > 50%` of total slots AND build's GPT Image 2 API call count is ≤ `slots_regenerated_count`.
 
 ## Every build (***IDEOGRAM LEVERAGE — CADENCE + REGISTRY — UNIVERSAL — BUILD-BREAKING***)
 
@@ -376,7 +376,7 @@ https://www.google.com/maps/embed/v1/place?key=<MAPS_EMBED_KEY>&q=<urlencoded-ad
 
 ## Every build (***IDEOGRAM SLOT #6 — EDITORIAL BLOG POST HEADERS — UNIVERSAL — BUILD-BREAKING***)
 
-- Every blog/journal post MUST have an Ideogram-generated editorial header image (1600×900) combining post title typography + relevant visual motif — replaces default GPT Image 1.5 stock-photo header on content-rich routes.
+- Every blog/journal post MUST have an Ideogram-generated editorial header image (1600×900) combining post title typography + relevant visual motif — replaces default GPT Image 2 stock-photo header on content-rich routes.
 - Prompt template: `"editorial article header, title '<post_title>', <subject_motif_from_post_body>, <palette>, <font_family>, magazine-cover composition, 16:9"`.
 - Validator (`validate-blog-headers.mjs`): assert every `_blog.json[].featured_image` derived from Ideogram OR explicitly tagged `source: photographic` with justification.
 
@@ -472,14 +472,14 @@ https://www.googleapis.com/customsearch/v1?key=<GOOGLE_CSE_KEY>&cx=<GOOGLE_CSE_C
 - Validator (`validate-podcast-presence.mjs`): assert `_podcasts.json.generated.length >= 1` per iteration AND `_podcasts.json.discovered.length >= 3` AND `/podcast/feed.xml` validates against PodcastIndex spec.
 - Required keys: `NOTEBOOKLM_API_KEY` (Google Cloud Vertex AI); `YOUTUBE_API_KEY` (`https://console.cloud.google.com/apis/credentials`).
 
-## Every build (***ATF VIDEO BACKGROUND — SORA + VEO + STOCK FALLBACK — UNIVERSAL — BUILD-BREAKING***)
+## Every build (***ATF VIDEO BACKGROUND — VEO 3.1 + KLING/RUNWAY + STOCK FALLBACK — UNIVERSAL — BUILD-BREAKING***)
 
 - Every site's homepage hero AND every long-form route hero MUST ship an above-the-fold video background.
 
 ### Generation cascade (parallel, take-first-success)
 
-- (a) **OpenAI Sora 2** primary — `POST /v1/videos` with `prompt: "<brand_thesis_scene_description>, cinematic, 10s, 16:9, 1080p, no text"` + `duration_seconds: 10` + `aspect_ratio: "16:9"` → poll task → download MP4
-- (b) **Google Veo 3** parallel — Vertex AI `predictLongRunning` with `prompt` + `aspectRatio:"16:9"` + `durationSeconds: 8` + `personGeneration: "allow_adult"` → poll → download
+- (a) **Google Veo 3.1** primary — Vertex AI `predictLongRunning` with `prompt: "<brand_thesis_scene_description>, cinematic, 16:9, 1080p, no text"` + `aspectRatio:"16:9"` + `durationSeconds: 8` + `personGeneration: "allow_adult"` → poll → download MP4
+- (b) **Kling 3.0 / Runway Gen-4.5** parallel fallback — same prompt brief, 16:9, ~8-10s → poll → download
 - (c) **Stock video fallback** (when generation quota/budget exhausted) — Pexels Video API `GET /videos/search?query=<theme>&orientation=landscape&size=large` OR Coverr `/api/v1/videos/search` OR Mixkit free-tier — must be CC0/permissive
 
 - Encode to WebM (VP9) + MP4 (H.264) at 1920×1080 + mobile 854×480, total ≤4MB per video.
@@ -493,12 +493,12 @@ https://www.googleapis.com/customsearch/v1?key=<GOOGLE_CSE_KEY>&cx=<GOOGLE_CSE_C
 
 - Respect `prefers-reduced-motion` — render Ideogram poster instead. Lazy-load secondary route heroes via IntersectionObserver.
 - Validator (`validate-atf-video.mjs`): assert homepage hero has `<video>` with valid src AND fallback poster AND total page weight ≤5MB AND `prefers-reduced-motion` gracefully degrades.
-- Required keys: `OPENAI_API_KEY` (Sora); `GCP_VEO_KEY` or `GOOGLE_APPLICATION_CREDENTIALS` (Veo via Vertex AI); `PEXELS_API_KEY` (stock fallback).
+- Required keys: `GCP_VEO_KEY` or `GOOGLE_APPLICATION_CREDENTIALS` (Veo 3.1 via Vertex AI); `KLING_API_KEY` / `RUNWAY_API_KEY` (optional fallbacks); `PEXELS_API_KEY` (stock fallback).
 
 ## Every progressive build (***PROGRESSIVE MEDIA REFRESH — UNIVERSAL — BUILD-BREAKING***)
 
 - Every iteration ≥2 MUST refresh ≥1 hero video + add ≥2 NEW Ideogram assets + expand `_media_corpus.json` by ≥10 items — never re-serve identical media across iterations.
-- Iteration cadence: iteration 1 — baseline Sora hero; iteration 2 — Veo variant + new chapter plates; iteration 3 — Sora seasonal variant + new pattern tile + new tier badges.
+- Iteration cadence: iteration 1 — baseline Veo 3.1 hero; iteration 2 — Kling/Runway variant + new chapter plates; iteration 3 — Veo 3.1 seasonal variant + new pattern tile + new tier badges.
 - Validator (`validate-progressive-media.mjs`): for iteration ≥2, assert `_media_corpus.json[current].length >= _media_corpus.json[prior].length + 10` AND hero video pHash differs from prior iteration's pHash.
 
 ## Every build (***CREDITS + ATTRIBUTION PAGE — UNIVERSAL — BUILD-BREAKING***)

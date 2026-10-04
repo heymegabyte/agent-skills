@@ -254,7 +254,7 @@ Three-panel minimum mandatory; scale to 6-9 panels for content-heavy sites.
 
 ### Per-panel slot record
 
-Slots into `_notebooklm.json.infographic.panels[]`. Uses identical 6-field prompt structure as GPT Image 1.5 slot manifest (page topic + brand palette + composition + subject specificity + technical specs + negative prompt).
+Slots into `_notebooklm.json.infographic.panels[]`. Uses identical 6-field prompt structure as GPT Image 2 slot manifest (page topic + brand palette + composition + subject specificity + technical specs + negative prompt).
 
 Validator `validate-infographic-on-about.mjs` greps for ≥3 `<svg>` OR `<img>` inside `[data-infographic-gallery]` on `/about`.
 
@@ -288,7 +288,7 @@ Lightbox grouping inherits `data-gallery="infographic"` per always.md "Every mul
 2. **Synthesia API** (`https://api.synthesia.io/v2/videos`) — fallback, ~$0.80-1.20/min; 140+ avatars + 120+ languages
 3. **Tavus API** ($59/mo + per-min credits) — when client has founder photo + voice samples for personalized digital twin; best for high-touch B2B SaaS
 4. **Veo 3.1 Fast** ($0.15/sec, 8 sec/clip) — fallback to CINEMATIC HERO LOOP when talking-head budget exceeded
-5. **Sora 2** ($0.10/sec 720p, 25s hard cap) — deprecates Sept 24, 2026; evaluate replacements (likely Sora 3)
+5. **Kling 3.0 / Runway Gen-4.5** — alternate cinematic-loop fallbacks when Veo quota exhausted (Sora retired — API sunset 2026-09-24)
 
 ### Script generation (Phase 0 step 2c)
 

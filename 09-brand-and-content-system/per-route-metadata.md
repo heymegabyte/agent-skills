@@ -63,7 +63,7 @@ interface RouteMetadata {
 ## Per-Route OG Image (***1200×630 — DESIGNED CARD, NEVER HERO PHOTO***)
 
 - **Generate with Satori preferred** — edge-rendered, deterministic, brand-card layout: title + sitelogo + accent gradient + tagline + brand watermark
-- **Fallback** — gpt-image-1.5 with brand colors + business name + tagline + logo bottom-right
+- **Fallback** — gpt-image-2 with brand colors + business name + tagline + logo bottom-right
 - **NEVER** — reuse homepage hero photo as OG image — must be a designed card
 - **Store at** `r2://sites/<slug>/og/<route-slug>.jpg` (≤100KB, JPEG q=85, 1200×630)
 - Each route gets a unique card

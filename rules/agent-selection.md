@@ -76,7 +76,7 @@ Every parallel fan-out assigns each work unit to the most-specialized agent. Nev
 - **seo-metadata-specialist** — title/meta/JSON-LD/OG · any route · NOT body copy · meta+schema · Rich Results → `seo-auditor`
 - **content-structure-specialist** — IA + FAQ + headings · content page · NOT design · structure · readability → `content-writer`
 - **animation-motion-specialist** — View Transitions + scroll motion · hero/section · NOT logic · motion+reduced-motion gate · AI-vision → `motion-choreographer`
-- **media-orchestration-specialist** — image triplets (AVIF/WebP/JPEG via Sharp) + video (Veo/Sora) + TTS audio · any media surface · NOT layout · optimized assets + srcset + OG/favicons · asset-exists + LCP budget → `media-orchestrator`
+- **media-orchestration-specialist** — image triplets (AVIF/WebP/JPEG via Sharp) + video (Veo 3.1; Sora retired 2026-09) + TTS audio · any media surface · NOT layout · optimized assets + srcset + OG/favicons · asset-exists + LCP budget → `media-orchestrator`
 
 ### AI-development (`general-purpose + brief`, citing pattern rules)
 

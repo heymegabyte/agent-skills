@@ -34,7 +34,7 @@ Drive recurring donations, volunteer sign-ups, and program awareness. Trust + tr
 
 ## Donation rules
 
-- Square Web Payments SDK (NOT Stripe) per payments-routing rule
+- Stripe Payment Element + Link (Instant Bank Payments on large gifts) per `rules/payments.md`; Square only when the prompt names Square
 - Preset tiers: $10/$25/$50/$100/$250/$1000 + custom
 - Toggle: `Make this monthly`
 - Toggle: `In honor of` / `In memory of`

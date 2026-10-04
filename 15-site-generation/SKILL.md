@@ -42,12 +42,12 @@ paths:
 
 Run the end-to-end AI website generation pipeline: research→media→Bolt artifact emission→R2 upload→D1 status for all business types.
 
-> **Model migration note (pass-78, 2026-06-09)**: `DALL-E` → **GPT Image 1.5** + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`. Generation pipeline unchanged.
+> **Model migration note (pass-78, 2026-06-09)**: `DALL-E` → **GPT Image 2** (2026-04; 2.5 branded 2026-09 — check current API id at integration) + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`. Generation pipeline unchanged.
 
 ## Submodules
 
 - **research-pipeline** — API-driven business research, scraping, enrichment
-- **media-acquisition** — image/video/logo sourcing across 17 engines (Flux 1.1 Pro Ultra, Ideogram 4.0, Recraft V3, GPT Image 1.5, Sora) — Pexels-first / AI-fallback, pHash dedup
+- **media-acquisition** — image/video/logo sourcing across 17 engines (Flux 1.1 Pro Ultra, Ideogram 4.0, Recraft V3, GPT Image 2, Veo 3.1) — Pexels-first / AI-fallback, pHash dedup
 - **build-prompts** — master prompt + enhancement phases
 - **quality-gates** — Lighthouse CI v0.15+, axe-core / playwright v4.11+ WCAG 2.2 AA, source-parity diff, 3-tier visual regression, console-error gate, Recommendations Loop
 - **domain-features** — category-specific for 18+ business types
@@ -85,7 +85,7 @@ Model emits ONE `<boltArtifact>` XML envelope with ordered `<boltAction type="fi
 ```
 Phase 0: Pre-Research + Media Acquisition (ALL BUILD MODES)
   → Google Places, scraping, social verification, brand extraction, media discovery
-  → Download ALL images from original; stock via Pexels/Pixabay; AI via GPT Image 1.5 / Stability AI
+  → Download ALL images from original; stock via Pexels/Pixabay; AI via GPT Image 2 / Stability AI
   → YouTube/Pexels video embeds
   → Output: _research.json, _scraped_content.json, _assets/
   → HARD GATE: <10 images = build NOT complete
@@ -124,7 +124,7 @@ CRITICAL — In manual/prompt-based builds (no container), Phase 0 runs INLINE a
 - USE ALL images in `assets/`. Never external URLs (hotlinking blocked).
 - Hero: `assets/hero-*`. Gallery: full-width slider w/ ALL images. No image left unused.
 - Minimum count: `max(30, original_image_count × 1.4, page_count × 6_home_or_4_sub)` — 4-page rebuild ⇒ 30-50 images; 50-page ⇒ 200+; 500-page ⇒ 2000+
-- Per-page floor: home ≥6, every sub-page ≥4. Minimum 5 AI-generated GPT Image 1.5 originals per site.
+- Per-page floor: home ≥6, every sub-page ≥4. Minimum 5 AI-generated GPT Image 2 originals per site.
 - All images through optimization pipeline (skill 12): WebP + AVIF at 320/640/1280/1920w, blur placeholders, dominant color extraction. Use `<ResponsiveImage>`, never raw `<img>` w/ PNG/JPG src.
 - Dedupe via 301 not deletion — md5-hashed twins keep canonical, emit `{deleted-url:canonical}` to Worker redirect map.
 
@@ -136,11 +136,11 @@ CRITICAL — In manual/prompt-based builds (no container), Phase 0 runs INLINE a
 - Augment via Pexels Video API (free) + YouTube Data API search-by-topic for missing background loops
 - Video count gate: every original `<video>` and embed accounted for in `_videos.json`; missing = fail
 
-### GPT Image 1.5 Purpose-Craft (per-slot prompts — never generic)
+### GPT Image 2 Purpose-Craft (per-slot prompts — never generic)
 
 Every AI-generated image brief MUST include: (1) route + section (`/about hero`); (2) page topic + intent; (3) brand palette tokens by hex from `_brand.json`; (4) composition + aspect ratio; (5) subject specificity (named noun + modifiers + lighting + lens metaphor); (6) negative prompt (no text, no watermarks, no AI artifacts, no extra fingers, no logos).
 
-Build `_image_briefs.json` per site BEFORE generation — one brief per slot, reused across fallback chain (GPT Image 1.5 → Ideogram → Recraft). Generic "create a hero image" = fail; discarded + brief regenerated.
+Build `_image_briefs.json` per site BEFORE generation — one brief per slot, reused across fallback chain (GPT Image 2 → Ideogram → Recraft). Generic "create a hero image" = fail; discarded + brief regenerated.
 
 ### Per-Route SEO
 

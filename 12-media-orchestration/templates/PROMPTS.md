@@ -151,7 +151,7 @@ Dimensions: 1200x630 pixels exactly
 
 ---
 
-## 5. Short Hero Video Generation (Sora)
+## 5. Short Hero Video Generation (Veo 3.1)
 
 ### Abstract Tech Background Loop
 

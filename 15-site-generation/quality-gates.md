@@ -10,7 +10,7 @@ updated: "2026-04-24"
 
 ### In-container `inspect.js`
 
-> **Model migration note (pass-76, 2026-06-09)**: `DALL-E` → **GPT Image 1.5** + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`. Quality gates unchanged.
+> **Model migration note (pass-76, 2026-06-09)**: `DALL-E` → **GPT Image 2** (2026-04; 2.5 branded 2026-09 — check current API id at integration) + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`. Quality gates unchanged.
 
 - Sends first 14KB of HTML to vision model
 - Persona: "senior Stripe web designer"
@@ -74,7 +74,7 @@ Validators run in `build_validators.ts` between R2 upload and `published` status
 | `validate-html-entities.mjs` | always.md no-html-entities-in-jsx (njsk.org 2026-05-02) | `entity.literal_in_jsx` / `entity.literal_in_dist_html` |
 | `validate-underline-hover.mjs` | always.md universal-underline-hover (njsk.org 2026-05-02) | `underline.double_render` / `underline.layer_components` / `underline.color_overrides_parent` |
 | `validate-no-empty-slots.mjs` | skill 15 media-acquisition Media-Slot-Manifest + Fail-CLOSED auto-regenerate | `slot.unfilled` / `slot.below_relevance_floor` / `slot.fallback_gradient_used` |
-| `validate-dalle-slot-fill.mjs` | skill 15 media-acquisition GPT Image 1.5-first slot-fill + per-slot prompt mandatory fields | `dalle.prompt_generic` / `dalle.missing_negative_prompt` / `dalle.missing_palette_token` / `dalle.missing_subject_specificity` |
+| `validate-dalle-slot-fill.mjs` | skill 15 media-acquisition GPT Image 2-first slot-fill + per-slot prompt mandatory fields | `dalle.prompt_generic` / `dalle.missing_negative_prompt` / `dalle.missing_palette_token` / `dalle.missing_subject_specificity` |
 | `validate-media-slot-manifest.mjs` | skill 15 media-acquisition Media-Slot-Manifest | `manifest.missing` / `manifest.route_uncovered` / `manifest.slot_record_incomplete` |
 | `validate-podcast-on-about.mjs` | skill 12 notebooklm-pipeline + always.md "Every site (NotebookLM artifacts)" | `podcast.missing` / `podcast.no_jsonld` / `podcast.no_transcript` / `podcast.audio_404` |
 | `validate-infographic-on-about.mjs` | skill 12 notebooklm-pipeline | `infographic.missing` / `infographic.fewer_than_three` / `infographic.caption_missing` |
@@ -162,11 +162,11 @@ Each entry: user-feedback symptom on a specific site → universal rule that pre
 
 ### 2026-05-02 cycle (njsk-light.projectsites.dev — 12 critiques generalized)
 
-- **Pexels stock on hero when source had usable hero of its own** → hero-media preference order ENFORCES original-source-hero IF quality≥7/10 wins over Pexels/GPT Image 1.5 (skill 12 + always.md)
+- **Pexels stock on hero when source had usable hero of its own** → hero-media preference order ENFORCES original-source-hero IF quality≥7/10 wins over Pexels/GPT Image 2 (skill 12 + always.md)
 - **No impact stat-rollup section despite 30+ years / 150K+ meals / 25K volunteers** → "Every site IMPACT/STAT ROLLUP" + `validate-stat-counter-section.mjs` (always.md + this file)
 - **Anchor links lacked underline-on-hover** → universal `.underline-hover` pattern + `validate-underline-hover.mjs` (skill 10 + always.md)
 - **Modules popped into view without entrance animation** → universal in-viewport fadeIn ONCE on entry + `js-reveal-active` class + `validate-reveal-foud.mjs` (skill 11 + always.md)
-- **Single-source GPT Image 1.5 imagery vs available Pexels/YouTube/Google stack** → multi-source media per page + per-page-floor mandate (skill 12 + always.md)
+- **Single-source GPT Image 2 imagery vs available Pexels/YouTube/Google stack** → multi-source media per page + per-page-floor mandate (skill 12 + always.md)
 - **Lightbulb on /volunteer + mixed-gender adults on /women-and-children** → per-page topic-relevance vision scoring ≥8/10 + `validate-image-relevance.mjs` (skill 12)
 - **Broken `/taryn-albania.jpg` 404s** → zero-broken-images rule + post-build crawl gate (always.md + skill 15)
 - **Mega-menu snapped closed mid-diagonal traverse** → hover-bridge + Bostock 2013 triangle-aim + `validate-mega-menu-hover.mjs` (skill 10 + always.md)
@@ -187,7 +187,7 @@ Each entry: user-feedback symptom on a specific site → universal rule that pre
 - **NJSK blog search rendered as 12-char box** → "Every search input MIN VISIBLE WIDTH ≥50ch" desktop + 100% mobile + `validate-search-input-width.mjs`
 - **NYFB hero constrained to 1200px container** → "Every full-width visual section FULL-VIEWPORT BREAKOUT" via `width: 100vw; margin-left: calc(50% - 50vw)` + `validate-full-bleed-sections.mjs`
 - **NYFB social row used legacy bird Twitter icon labeled "Twitter"** → "Every X reference X-NOT-TWITTER + LATEST ICON" + `validate-x-not-twitter.mjs`
-- **NJSK 80% of blog posts shipped without featured image** → "Every blog post FEATURED IMAGE MANDATORY + GPT Image 1.5 FALLBACK" + `validate-blog-featured-images.mjs`
+- **NJSK 80% of blog posts shipped without featured image** → "Every blog post FEATURED IMAGE MANDATORY + GPT Image 2 FALLBACK" + `validate-blog-featured-images.mjs`
 - **NYFB comparison table cramped to 1200px, no mobile scroll** → "Every comparison table / data grid FULL-BLEED LAYOUT" with sticky first column + `validate-comparison-table-fullbleed.mjs`
 - **NJSK rebuild dropped department contact info, Sunday hours, alternate volunteer email** → "Every site rebuild SOURCE-SITE CONTACT INFO PRESERVATION" diff-gate + `validate-contact-preservation.mjs`
 
@@ -324,7 +324,7 @@ JSON-LD LocalBusiness with: `@type`, `name`, `address` (PostalAddress), `telepho
 
 - Every site MUST ship `/og-image.png` (or `.jpg`) at exactly 1200×630, ≤100KB
 - Branded card: dark brand background, primary color accent bar, business name in display font, tagline, logo bottom-right
-- NO scraped or stock photo as og-image — generate via Satori or GPT Image 1.5 with brand colors
+- NO scraped or stock photo as og-image — generate via Satori or GPT Image 2 with brand colors
 - `<meta property="og:image:width" content="1200">` + `og:image:height content="630">` mandatory; Twitter `summary_large_image` mandatory
 
 ### Apple Touch Icon (***BUILD-BREAKING***)
@@ -456,7 +456,7 @@ All 16 local components must be available in template: HeroWithPhoto, ServiceCar
 - "old blog URLs 404 on new site" → "Every site rebuild emits per-URL `_redirects` 301 covering original sitemap intersection" → `validate-cross-site-redirects.mjs`
 - "filter chips do nothing" → "Every interactive feature mutates DOM measurably on click — styled-but-stub UI fails build" → `validate-interactive-functionality.mjs`
 - "only 12 of 120 blog posts imported" → "Every site rebuild imports 100% of source blog/news/articles corpus — never subsample" → `validate-blog-corpus-complete.mjs`
-- "stock hero when source had its own" → "Hero preference order: original-source ≥7/10 > Pexels-video > Pexels-image > GPT Image 1.5 per-slot > brand-gradient" → `validate-image-relevance.mjs`
+- "stock hero when source had its own" → "Hero preference order: original-source ≥7/10 > Pexels-video > Pexels-image > GPT Image 2 per-slot > brand-gradient" → `validate-image-relevance.mjs`
 
 ## Automated Build Gates
 
@@ -499,7 +499,7 @@ node scripts/validate-assets.mjs dist && node scripts/validate-meta.mjs dist && 
 | Internal-link route enumeration | `validate-links.mjs` (njsk.org 2026-05-02) | `KNOWN_ROUTES` auto-generated from `src/app.tsx` AST; every `<Route path>` becomes known; hardcoded slug strings outside template-literal interpolation forbidden | exit 1 |
 | Click ripple only (no ring) | `validate-cursor.mjs` (2026-05-02) | desktop: native cursor visible, `.cursor-ring` DOM forbidden, no `body{cursor:none}`, mousedown spawns `.cursor-ripple` animating+removing within 700ms; mobile: no `.cursor-ripple`; reduced-motion: ripple disabled | exit 1 |
 | Image hover no-layout | `validate-image-hover.mjs` (skill 10) | trigger `:hover` on every `<img>`, FAIL if any dimension shifts >0px; allowlist: `transform`, `filter`, `opacity`, `box-shadow` | exit 1 |
-| Image topic-relevance | `validate-image-relevance.mjs` (njsk-light 2026-05-02) | GPT Image 2 vision scores every `<img>` vs per-page topic; FAIL <8/10. Enforces hero preference order: original-source ≥7/10 wins over Pexels/GPT Image 1.5 | exit 1 |
+| Image topic-relevance | `validate-image-relevance.mjs` (njsk-light 2026-05-02) | GPT Image 2 vision scores every `<img>` vs per-page topic; FAIL <8/10. Enforces hero preference order: original-source ≥7/10 wins over Pexels/GPT Image 2 | exit 1 |
 | Stat rollup section | `validate-stat-counter-section.mjs` (njsk-light 2026-05-02) | when `_research.json.stats[]` resolves ≥3 quantifiable items: assert `<section data-section="stats">` with ≥3 `[data-stat-counter]` children with `data-stat-end` numeric, IntersectionObserver-driven roll-in | exit 1 |
 | Mega-menu hover-bridge | `validate-mega-menu-hover.mjs` (njsk-light 2026-05-02) | desktop: hover trigger → wait 100ms → panel visible → move cursor diagonally through gap → assert panel still visible after 250ms; hover away → assert close within 200ms; touch: tap-to-open + tap-outside-to-close; keyboard: Enter/Space opens, Esc closes | exit 1 |
 | Cross-site redirects | `validate-cross-site-redirects.mjs` (njsk-light 2026-05-02) | when `OLD_SITE_URL` OR `_research.json.source_url` resolves a different host: fetch original sitemap.xml, assert every path in `_redirects` as `<original-path> 301 https://<new-host><new-path>` | exit 1 |

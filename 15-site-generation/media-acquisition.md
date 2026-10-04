@@ -8,7 +8,7 @@ updated: "2026-04-24"
 
 Collect 10x more assets than needed, curate down via AI visual inspection.
 
-> **Model migration note (pass-73, 2026-06-09)**: `DALL-E 3` / `DALL-E` → **GPT Image 1.5**; `GPT-4o` vision → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`: DALL-E 2/3 removed 2026-05-12; GPT-4o retired 2026-02-13. Pipeline structure unchanged. Cost ranges were computed against legacy DALL-E pricing — re-verify against current GPT Image 1.5 / GPT Image 2 rates.
+> **Model migration note (pass-73, 2026-06-09)**: `DALL-E 3` / `DALL-E` → **GPT Image 2** (2026-04; 2.5 branded 2026-09 — check current API id at integration); `GPT-4o` vision → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`: DALL-E 2/3 removed 2026-05-12; GPT-4o retired 2026-02-13. Pipeline structure unchanged. Cost ranges were computed against legacy DALL-E pricing — re-verify against current GPT Image 2 rates.
 
 ### Asset count scales with page count
 
@@ -21,7 +21,7 @@ Collect 10x more assets than needed, curate down via AI visual inspection.
 ***PHASE 0 — BEFORE ANY GENERATION — UNIVERSAL — BUILD-BREAKING***
 
 - Enumerate EVERY image slot on EVERY route into `_media_slots.json` before any agent fans out
-- Each slot has: explicit identity, per-slot GPT Image 1.5 prompt, ordered source-resolution chain, final-fill commitment
+- Each slot has: explicit identity, per-slot GPT Image 2 prompt, ordered source-resolution chain, final-fill commitment
 - `_media_slots.json` with all slots filled = images guaranteed; without manifest = ships missing images
 
 ### Slot record schema (JSON)
@@ -57,7 +57,7 @@ Collect 10x more assets than needed, curate down via AI visual inspection.
 
 Manifest is the SINGLE source of truth — every downstream agent reads `_media_slots.json` and writes back `filled_url` + `filled_score`.
 
-### Per-slot GPT Image 1.5 prompt mandatory fields
+### Per-slot GPT Image 2 prompt mandatory fields
 
 1. Page topic+intent verbatim from `topic_intent`
 2. Brand palette tokens from `_brand.json.colors`
@@ -73,14 +73,14 @@ Generic "create a hero image for /about" prompts FAIL `validate-image-prompts.mj
 ***ZERO MISSING IMAGES — NEVER SHIP BLANK SLOTS — UNIVERSAL — BUILD-BREAKING***
 
 - Every slot MUST end the build with `filled_url != null AND filled_score >= relevance_floor`
-- Auto-regenerate via GPT Image 1.5 with refined prompt when: Pexels returns nothing, NSFW-flagged result, broken scraped image, or GPT Image 2 vision relevance score ≤6/10
+- Auto-regenerate via GPT Image 2 with refined prompt when: Pexels returns nothing, NSFW-flagged result, broken scraped image, or GPT Image 2 vision relevance score ≤6/10
 - NEVER silent skip; NEVER substitute brand-gradient unless 5 regen attempts exhausted
 
 ### Regen loop (per slot, max 5 attempts)
 
-1. **Initial fill** via `source_chain` walk: original → Pexels Video → Coverr → GPT Image 1.5 → Flux → brand-gradient. First source returning a candidate gets vision-scored.
-2. **If `filled_score < relevance_floor`** (default 8/10) OR 0 candidates → regen with GPT Image 1.5: feed `(original_prompt, vision_critique, relevance_floor)` to gpt-4o, get tightened prompt with what to ADD + REMOVE. Increment `regen_attempts`.
-3. **Refined GPT Image 1.5 generation** (gpt-image-1 HD, ~$0.04–0.08) → vision-score → if pass, commit; if fail and `regen_attempts < 5`, GOTO 2.
+1. **Initial fill** via `source_chain` walk: original → Pexels Video → Coverr → GPT Image 2 → Flux → brand-gradient. First source returning a candidate gets vision-scored.
+2. **If `filled_score < relevance_floor`** (default 8/10) OR 0 candidates → regen with GPT Image 2: feed `(original_prompt, vision_critique, relevance_floor)` to GPT Image 2 vision, get tightened prompt with what to ADD + REMOVE. Increment `regen_attempts`.
+3. **Refined GPT Image 2 generation** (`gpt-image-2`, ~$0.04–0.08) → vision-score → if pass, commit; if fail and `regen_attempts < 5`, GOTO 2.
 4. **After 5 attempts**: log to `_unfillable_slots.json`, fall back to brand-gradient. Build completes but post-build report flags slot for manual review.
 
 ### Hard gate
@@ -91,7 +91,7 @@ Generic "create a hero image for /about" prompts FAIL `validate-image-prompts.mj
 ### Cost ceiling
 
 - 5 attempts × $0.08/img = $0.40 worst case per slot
-- ~30 slots/site at 0.3 regen rate average → worst-case GPT Image 1.5 spend ~$3.60/site (typical $0.50–1.50)
+- ~30 slots/site at 0.3 regen rate average → worst-case GPT Image 2 spend ~$3.60/site (typical $0.50–1.50)
 - Tracked per-build in `_dalle_spend.json`; daily rollup in `_dalle_daily.json` against `OPENAI_DAILY_BUDGET` env (default $50)
 - Budget exhaustion triggers fallback to Flux for remainder of day
 
@@ -132,21 +132,21 @@ Walk the source site and extract EVERYTHING before any stock/AI sourcing — ori
 ### 1.4x–2.0x augmentation rule (***NEVER FEWER IMAGES THAN ORIGINAL***)
 
 - New site MUST ship `original_count × 1.4` minimum, `× 2.0` typical, `× 3.0` for thin sources (<10 originals)
-- Augmentation = original + Pexels/Pixabay stock + GPT Image 1.5 originals + Google CSE
+- Augmentation = original + Pexels/Pixabay stock + GPT Image 2 originals + Google CSE
 
 ### Multimedia Agent Integration (***FIRST-CLASS PARALLEL AGENTS — every build runs all 4 in parallel during Phase 0***)
 
-- Spawn Pexels, Google CSE, GPT Image 1.5, and Original-Site Crawler as first action of every build (before template clone)
+- Spawn Pexels, Google CSE, GPT Image 2, and Original-Site Crawler as first action of every build (before template clone)
 - Each writes to `_assets/{agent}/` with metadata; main thread merges + dedupes via md5 + AI-rates via Workers AI Llama Vision (free) + curates final set
 
 **Agent table**:
 
 - **Pexels** — trigger: `PEXELS_API_KEY` | min output: 8 stills + 3 videos/site | 4–6 parallel queries (`{type} interior`, `{type} {city}`, `{service} professional`, `{atmosphere}`) | free commercial license
 - **Google CSE** — trigger: `GOOGLE_CSE_KEY`+`GOOGLE_CSE_CX` | min output: 5 context shots | 3–5 queries (`"{name}" {city}`, `"{name}" team`, `"{name}" exterior`, `{neighborhood} {type}`) | filter `rights=cc_publicdomain,cc_attribute,cc_sharealike`; verify license before download
-- **GPT Image 1.5** — trigger: `OPENAI_API_KEY` | min output: 5 originals/site | 5 parallel generations (1 hero HD 1024×1792 + 3 sections 1024×1024 + 1 OG 1024×1024) | PRIMARY for AI imagery — Brian's stated preference
+- **GPT Image 2** — trigger: `OPENAI_API_KEY` | min output: 5 originals/site | 5 parallel generations (1 hero HD 1024×1792 + 3 sections 1024×1024 + 1 OG 1024×1024) | PRIMARY for AI imagery — Brian's stated preference
 - **Original-Site Crawler** — trigger: source URL provided | min output: every page crawled | Playwright concurrency 6, 1000-page cap | walks img/picture/CSS bg/sliders/lazy/og:image/PDFs
 
-### Two GPT Image 1.5 modes (***use heavily — both modes per site***)
+### Two GPT Image 2 modes (***use heavily — both modes per site***)
 
 **(1) Ultra-real photography mode** — `"Photorealistic [scene], [brand color palette], [logo style adjective], shot on Hasselblad, golden hour, 85mm prime, no text/logos, hyperdetailed, cinematic"` — for hero backgrounds, service illustrations, atmospheric textures.
 
@@ -154,17 +154,17 @@ Walk the source site and extract EVERYTHING before any stock/AI sourcing — ori
 
 Cost: ~$0.04–0.08/image, total $0.30–0.50/site.
 
-### Sora video agent (***when OPENAI_API_KEY present***)
+### Veo 3.1 video agent (***when GCP_VEO_KEY present***)
 
-- Generate 1–2 short narrative video loops per site (5–10s, muted, autoplay) for hero backgrounds; cost ~$0.20–0.40 each
-- Falls back to Pexels Video API loops when Sora unavailable
+- Generate 1–2 short narrative video loops per site (5–10s, muted, autoplay) for hero backgrounds; verify current Veo rates at integration
+- Falls back to Pexels Video API loops when Veo unavailable
 
 ### Image count scales with sitemap (***NEVER cap at 4-page-site numbers***)
 
 - Required count = `max(30, original_image_count × 1.4, page_count × 6_home_or_4_sub)`
 - Source sitemap.xml is ground truth; cap at 1000 pages
 
-### Tier S Agents — beyond Pexels/CSE/GPT Image 1.5
+### Tier S Agents — beyond Pexels/CSE/GPT Image 2
 
 ***ALL first-class, all parallel in Phase 0 when keys present***
 
@@ -185,7 +185,7 @@ Cost: ~$0.04–0.08/image, total $0.30–0.50/site.
 | 13 | **Internet Archive Wayback** | always (no key) | Source site dead/blocked — pull last good snapshot of every URL | PD/fair use | free | every dead-source rebuild |
 | 14 | **ElevenLabs (audio)** | `ELEVENLABS_API_KEY` | AI voice narration — about-us voiceover, podcast intro, accessibility audio | commercial OK | ~$0.02/1K chars | 1 narration/site (about page) |
 | 15 | **MusicGen / Suno / Udio** | `OPENAI_API_KEY` OR Replicate | AI background music for video heroes, brand sonic identity | commercial OK varies | ~$0.05–0.20/track or free | 1–2 brand-themed tracks/site |
-| 16 | **Sora (video)** | `OPENAI_API_KEY` | AI video — short narrative loops extending logo motif | commercial OK | ~$0.20–0.40/clip | 1–2 narrative loops/site |
+| 16 | **Veo 3.1 (video)** | `GCP_VEO_KEY` | AI video — short narrative loops extending logo motif | commercial OK | verify current | 1–2 narrative loops/site |
 | 17 | **Public-domain archives (situational)** | always (no key) | NASA Image API, Smithsonian Open Access, Met Museum, Rijksmuseum, NOAA, USGS, Library of Congress, NYPL Digital Collections, Europeana — match to site narrative when topical | PD | free | when topical match exists |
 
 ### Source-attribution discipline (***license-by-license, render in image alt+JSON-LD***)
@@ -202,14 +202,14 @@ Cost: ~$0.04–0.08/image, total $0.30–0.50/site.
 - Each reads `_research.json` + `_form_data.json`, writes to `_assets/{agent}/`, exits
 - Main thread merges into `_assets.json` + `_image_profiles.json`, runs Cloudinary transform pipeline, AI-rates via Workers AI Llama Vision, curates via score threshold
 - Total wall-clock: ~30–60s (network-bound); cost: $0.50–2.00/site
-- 4-agent baseline (Pexels/CSE/GPT Image 1.5/Crawler) is the floor; 17-agent stack is the ceiling
+- 4-agent baseline (Pexels/CSE/GPT Image 2/Crawler) is the floor; 17-agent stack is the ceiling
 
-### GPT Image 1.5 first for originals (***Brian's stated preference — use it a lot***)
+### GPT Image 2 first for originals (***Brian's stated preference — use it a lot***)
 
 - Generate 3–5 hero variants per major section
 - Prompt template: `"Photorealistic [scene], [brand color palette], [logo style adjective], shot on Hasselblad, golden hour, 85mm, no text, no logos, hyperdetailed, cinematic"`
 - Cost: ~$0.04–0.08/image (HD 1024×1792)
-- Reserve Stability AI for textures/patterns; Sora for short videos
+- Reserve Stability AI for textures/patterns; Veo 3.1 for short videos
 
 ## Document Preservation
 
@@ -242,7 +242,7 @@ When `_pdf_facts.json` contains a CV with ≥3 timeline-eligible entries (positi
 
 - GPT Image 2 vision QA capped at $1 (see completeness-verification)
 - Media generation/acquisition is a SEPARATE budget
-- Ideogram (~$0.05/logo), GPT Image 1.5 (~$0.04/image), Stability (~$0.03/image), stock APIs (free tiers)
+- Ideogram (~$0.05/logo), GPT Image 2 (~$0.04/image), Stability (~$0.03/image), stock APIs (free tiers)
 - Typical media budget: $0.50–2.00/site
 
 ## R2 Self-Hosting Pipeline
@@ -338,8 +338,8 @@ Post-build, grep `dist/` for any URL matching `CDN_HOSTS` regex outside the excl
 1. **Source `featured_image`/`og:image`** if HEAD-200 + bytes >5KB + dimensions ≥800×600
 2. **First inline `<img>` from post body** if HEAD-200 + dimensions ≥800×600
 3. **Pexels search** by post title + tags + categories: top 3 scored by GPT Image 2 vision vs `(post_title, post_excerpt, brand_palette)`, pick highest ≥7/10
-4. **GPT Image 1.5 generation** with per-post prompt encoding all 6 mandatory fields; cost ~$0.04–0.08/post (~$2–4 per 50-post migration)
-5. **Brand-gradient SVG** as hard-floor fallback — only when GPT Image 1.5 spend ceiling tripped
+4. **GPT Image 2 generation** with per-post prompt encoding all 6 mandatory fields; cost ~$0.04–0.08/post (~$2–4 per 50-post migration)
+5. **Brand-gradient SVG** as hard-floor fallback — only when GPT Image 2 spend ceiling tripped
 
 ### Per-post prompt template
 
@@ -350,7 +350,7 @@ Photorealistic editorial-style image illustrating "<post_title>". Subject: <subj
 ### Vision validation
 
 - Each fallback hero gets vision-scored before commit
-- <7/10 triggers regen via GPT Image 1.5 with refined prompt (max 3 attempts per post)
+- <7/10 triggers regen via GPT Image 2 with refined prompt (max 3 attempts per post)
 - Final fallback: brand-gradient SVG; never ship a post with NO image
 
 ### Storage
@@ -364,35 +364,35 @@ For every entry in `_corpus.json.posts[]`: assert `featured_image_url` non-null 
 
 ## API Priority Chain
 
-***GPT Image 1.5 ELEVATED — Brian's stated preference for slot-fill***
+***GPT Image 2 ELEVATED — Brian's stated preference for slot-fill***
 
-Real photos of the actual entity always win when they exist (slots 1–3). Beyond that, GPT Image 1.5 is the PRIMARY originator for every unfilled slot. Stock APIs are supplements + speed-passes, not the workhorse.
+Real photos of the actual entity always win when they exist (slots 1–3). Beyond that, GPT Image 2 is the PRIMARY originator for every unfilled slot. Stock APIs are supplements + speed-passes, not the workhorse.
 
 | Priority | API | Key | Use | Rate | Confidence |
 |----------|-----|-----|-----|------|------------|
 | 1 | Google Places Photos | GOOGLE_PLACES_API_KEY | Actual business photos | 1000/day | 85–95 |
 | 2 | User uploads | (form) | Submitted via /create | — | 95 |
 | 3 | Website scrape | (fetch) | Images from existing site | — | 80–90 |
-| 4 | **GPT Image 1.5 HD / gpt-image-1** | OPENAI_API_KEY | **PRIMARY slot-fill engine** | — | 85 |
+| 4 | **GPT Image 2 (`gpt-image-2`)** | OPENAI_API_KEY | **PRIMARY slot-fill engine** | — | 85 |
 | 5 | Pexels | PEXELS_API_KEY | Stock photos + videos (speed-pass) | 200/hr | 60 |
 | 6 | Pexels Video | PEXELS_API_KEY | Hero video loops | 200/hr | 70 |
 | 7 | Google CSE | GOOGLE_CSE_KEY+CX | Web image search | 100/day | 40–70 |
 | 8 | Pixabay | PIXABAY_API_KEY | Illustrations, vectors | 100/hr | 45 |
 | 10 | Flux 1.1 Pro Ultra | FAL_API_KEY OR REPLICATE_API_TOKEN | Secondary AI (photoreal humans, complex scenes) | — | 85 |
-| 11 | GPT Image 1.5 | OPENAI_API_KEY | Stylized illustrations, sections, OG | — | 80 |
+| 11 | GPT Image 2 | OPENAI_API_KEY | Stylized illustrations, sections, OG | — | 80 |
 | 12 | Ideogram 4.0 | IDEOGRAM_API_KEY | Logo + favicon set + text-heavy | — | 80 |
 | 13 | Recraft V3 | RECRAFT_API_KEY | Editable SVG icon sets | — | 75 |
 | 14 | Foursquare | FOURSQUARE_API_KEY | Venue-specific photos | — | 65–75 |
 | 15 | Yelp Fusion | YELP_API_KEY | Business listing photos | — | 60–70 |
 | 16 | Stability AI SD3 | STABILITY_API_KEY | Backgrounds, patterns, textures | — | 65 |
-| 17 | Sora | OPENAI_API_KEY | 5–10s video loops | — | 70 |
+| 17 | Veo 3.1 | GCP_VEO_KEY | 5–10s video loops | — | 70 |
 | 18 | Cloudinary | CLOUDINARY_* | Transform layer (WebP/AVIF, AI-crop) | 25GB free | — |
 
-### GPT Image 1.5-first slot-fill rule (***UNIVERSAL — for slots 4+ in the chain***)
+### GPT Image 2-first slot-fill rule (***UNIVERSAL — for slots 4+ in the chain***)
 
-- Once real-entity sources (Places/uploads/scrape) are exhausted, invoke GPT Image 1.5 BEFORE generic stock
-- Stock APIs run in parallel as speed-pass fallback (instant if GPT Image 1.5 hangs >15s) but GPT Image 1.5 output is preferred at curation
-- Brian's preference: "GPT Image 1.5 can literally create the ultra-realistic perfect photo for any given photo spot" — encoded as default behavior
+- Once real-entity sources (Places/uploads/scrape) are exhausted, invoke GPT Image 2 BEFORE generic stock
+- Stock APIs run in parallel as speed-pass fallback (instant if GPT Image 2 hangs >15s) but GPT Image 2 output is preferred at curation
+- Brian's preference: "GPT Image 2 can literally create the ultra-realistic perfect photo for any given photo spot" — encoded as default behavior
 
 ### 2026 image-stack pricing reference
 
@@ -403,12 +403,12 @@ Real photos of the actual entity always win when they exist (slots 1–3). Beyon
 | Flickr CC | free | Niche/hyperlocal photography | CC-licensed-only |
 | Ideogram Turbo | $0.03 | OG cards w/ tagline + logo | commercial-OK |
 | Stability AI SD3 | $0.03 | Textures, patterns, abstract bg | commercial-OK |
-| GPT Image 1.5 | $0.034 | Stylized illustrations, section dividers | commercial-OK |
-| GPT Image 1.5 HD | $0.04–0.08 | Fallback for Flux when key absent | commercial-OK |
+| GPT Image 2 | $0.034 | Stylized illustrations, section dividers | commercial-OK |
+| GPT Image 2 HD | $0.04–0.08 | Fallback for Flux when key absent | commercial-OK |
 | Flux 1.1 Pro Ultra | $0.06 | Photoreal hero (humans, complex scenes, 4MP+) | commercial-OK |
 | Recraft V3 | $0.08 | Editable SVG icon sets, brand-style adherence | commercial-OK |
 | Ideogram 4.0 | $0.03–0.10 (Turbo/Default/Quality) | Logo + favicon set + text-heavy graphics | commercial-OK |
-| Sora | $0.20–0.40 | Short narrative video loops | commercial-OK |
+| Veo 3.1 | verify current | Short narrative video loops | commercial-OK |
 | Google Street View | $0.007 | Storefront, signage | commercial-OK |
 
 **Total typical media spend**: $0.50–2.00/site.
@@ -416,12 +416,12 @@ Real photos of the actual entity always win when they exist (slots 1–3). Beyon
 ### Engine selection logic
 
 - **Photoreal hero** → Flux 1.1 Pro Ultra
-- **Stylized** → GPT Image 1.5
+- **Stylized** → GPT Image 2
 - **Logo** → Ideogram 4.0
 - **SVG icons** → Recraft V3
 - **OG card** → Ideogram Turbo
-- **Video** → Pexels first, Sora when premium
-- **Fallback** → GPT Image 1.5 HD when Flux key absent
+- **Video** → Pexels first, Veo 3.1 when premium
+- **Fallback** → GPT Image 2 HD when Flux key absent
 
 ### pHash dedup (***replaces md5 — visually identical but byte-different images dedupe correctly***)
 
@@ -535,7 +535,7 @@ When logo contains a strong graphic element (mountain, wave, leaf, geometric mar
 
 1. GPT Image 2 vision identifies bounding box of icon-only region
 2. ImageMagick crops + alpha-trims (`magick logo.png -alpha extract -trim +repage`)
-3. Upscale 2–4x via Real-ESRGAN or GPT Image 1.5 variation
+3. Upscale 2–4x via Real-ESRGAN or GPT Image 2 variation
 4. Save `assets/brand-splash.png` (full-bleed hero bg) + `assets/brand-mark.png` (favicon-sized)
 
 ### AI logo generation (***LAST RESORT — only when scrape fails OR original quality <7/10***)
@@ -583,13 +583,13 @@ Verify: `ls public/ | grep -E '(favicon|apple-touch|android-chrome|safari-pinned
 
 | Type | API | Use Case | Cost |
 |------|-----|----------|------|
-| Hero backgrounds | GPT Image 1.5 | Abstract brand-colored scenes, atmospheric gradients | ~$0.04 |
-| Service illustrations | GPT Image 1.5 | Custom per-service illustrations | ~$0.04 |
+| Hero backgrounds | GPT Image 2 | Abstract brand-colored scenes, atmospheric gradients | ~$0.04 |
+| Service illustrations | GPT Image 2 | Custom per-service illustrations | ~$0.04 |
 | Section dividers | Stability AI | Geometric patterns, brand-colored abstract art | ~$0.03 |
 | Texture overlays | Stability AI | Noise, grain, mesh gradients for glassmorphism | ~$0.03 |
-| Team/about imagery | GPT Image 1.5 | Workplace scenes matching business type (NOT fake headshots) | ~$0.04 |
+| Team/about imagery | GPT Image 2 | Workplace scenes matching business type (NOT fake headshots) | ~$0.04 |
 | Logo + variants | Ideogram v3 | A=lockup, B=icon, C=wordmark | ~$0.05 |
-| OG preview image | GPT Image 1.5 | 1200×630 social share card with brand + name | ~$0.04 |
+| OG preview image | GPT Image 2 | 1200×630 social share card with brand + name | ~$0.04 |
 | Icon set | Ideogram v3 | Custom service icons matching brand style | ~$0.05 |
 
 ### Generation strategy
@@ -598,7 +598,7 @@ Verify: `ls public/ | grep -E '(favicon|apple-touch|android-chrome|safari-pinned
 - Pick best via GPT Image 2 vision detail:low (single batch call, all candidates in one request)
 - Total generation: ~$0.30–0.50; with logo A/B/C: ~$0.35–0.55
 
-### Prompt patterns for GPT Image 1.5
+### Prompt patterns for GPT Image 2
 
 - **Hero**: `"Cinematic wide shot, {business_type} environment, {brand_primary} and {brand_secondary} color palette, dramatic lighting, professional photography style, no text, no people, 16:9"`
 - **Service**: `"Clean modern illustration of {service_name}, {brand_colors}, minimal style, white/dark background, professional"`
@@ -649,7 +649,7 @@ Store profiles as `_image_profiles.json`.
 
 ## Media for Different Site Types
 
-- **SaaS** — Product screenshots (Playwright on demo), feature illustrations (GPT Image 1.5), integration partner logos, abstract hero, team photos
+- **SaaS** — Product screenshots (Playwright on demo), feature illustrations (GPT Image 2), integration partner logos, abstract hero, team photos
 - **Portfolio** — Project screenshots/photos are THE content. High-res, properly cropped. Before/after comparisons. Process photos. Client headshots for testimonials.
 - **Restaurant** — Food photography is critical. Google Places photos, Yelp photos, menu item images. Interior ambiance shots. Chef/team photos. Prioritize appetizing, well-lit food images.
 - **Non-profit** — Impact photos (people helped, events), team/volunteer photos, partner logos, impact-stat infographics. Warm, dignified — never poverty tourism.
@@ -671,7 +671,7 @@ Store profiles as `_image_profiles.json`.
 - ≥1 logo file in `public/` (`logo.{png,svg,webp}` AND `logo-header.png`) else FAIL
 - Every original-site slider image group preserved with order + group manifest else FAIL
 - Every original-site PDF/DOC linked in body content downloaded to `public/docs/` and surfaced on equivalent new page else FAIL
-- ≥3 GPT Image 1.5-generated originals when OPENAI_API_KEY present else WARN (FAIL if 0 originals)
+- ≥3 GPT Image 2-generated originals when OPENAI_API_KEY present else WARN (FAIL if 0 originals)
 - ≥3 video assets (Pexels stock, YouTube embed, or original-site video) else WARN
 
 ## Performance Budget

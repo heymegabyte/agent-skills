@@ -1,6 +1,6 @@
 ---
 name: "media-orchestration"
-description: "Section-by-section media planning and generation. Image generation (GPT Image 1.5 primary, built-in fallback), logo/icon generation (Ideogram v3 → favicon set), video generation (Sora), social preview images (OG 1200x630 + AI search optimization), stock photo curation (Pexels, Pixabay), critique/remix loops (max 3 rounds), asset compression pipeline, and media performance budgets."
+description: "Section-by-section media planning and generation. Image generation (GPT Image 2 primary, built-in fallback), logo/icon generation (Ideogram v3 → favicon set), video generation (Veo 3.1), social preview images (OG 1200x630 + AI search optimization), stock photo curation (Pexels, Pixabay), critique/remix loops (max 3 rounds), asset compression pipeline, and media performance budgets."
 metadata:
   version: "2.1.0"
   updated: "2026-05-03"
@@ -37,9 +37,11 @@ paths:
 
 # 12 — Media Orchestration
 
-Generate all site media section-by-section: images (GPT Image 1.5), logos (Ideogram v3), video (Sora), OG cards, and compression pipeline.
+Generate all site media section-by-section: images (GPT Image 2), logos (Ideogram v3), video (Veo 3.1), OG cards, and compression pipeline.
 
-> **Model migration note (pass-77, 2026-06-09)**: `DALL-E` → **GPT Image 1.5** + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`.
+> **Model migration note (pass-77, 2026-06-09)**: `DALL-E` → **GPT Image 2** (2026-04; 2.5 branded 2026-09 — API id unconfirmed, check current id at integration) + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`.
+>
+> **Video rail (2026-10-04)**: Sora retired (app 2026-04-26, API 2026-09-24) — **Veo 3.1 is the video rail**. Fallbacks: Kling 3.0 / Runway Gen-4.5.
 
 ## Submodules
 
@@ -54,7 +56,7 @@ Generate all site media section-by-section: images (GPT Image 1.5), logos (Ideog
 
 ## Strategy by Section
 
-Hero → GPT Image 1.5 / Sora · Features → GPT Image 1.5 / SVG · How It Works → GPT Image 1.5 · Testimonials → stock · About → stock/real · Blog → GPT Image 1.5 · Social → Satori OG 1200×630 · Icons → Ideogram v3
+Hero → GPT Image 2 / Veo 3.1 · Features → GPT Image 2 / SVG · How It Works → GPT Image 2 · Testimonials → stock · About → stock/real · Blog → GPT Image 2 · Social → Satori OG 1200×630 · Icons → Ideogram v3
 
 Pre-gen: communication goal · brand style · dimensions · format · budget · stock vs. generated?
 
@@ -69,17 +71,17 @@ Read every image before deploy: blur · artifacts · watermarks · wrong colors 
 
 ## Image Generation
 
-- **GPT Image 1.5** preferred (best quality); **GPT Image 1** for speed; **GPT Image 1-mini** for bulk/drafts
+- **GPT Image 2** (`gpt-image-2`) preferred (best quality); **GPT Image 1** for speed; **GPT Image 1-mini** for bulk/drafts
 - Fallback: `scripts/image_gen.py`; product screenshots: Playwright on live URL
 - Be specific: include colors, specify avoidances
 
-## GPT Image 1.5 First Slot-Fill (CANONICAL — UNIVERSAL)
+## GPT Image 2 First Slot-Fill (CANONICAL — UNIVERSAL)
 
-PRIMARY originator for every slot real-entity sources (Places / uploads / scrape) didn't fill. GPT Image 1.5 invoked BEFORE generic stock; stock APIs run parallel speed-pass fallback (instant return if GPT Image 1.5 hangs >15s). See skill 15 `media-acquisition` + Fail-CLOSED auto-regenerate (5 attempts, $0.40 worst-case ceiling per slot).
+PRIMARY originator for every slot real-entity sources (Places / uploads / scrape) didn't fill. GPT Image 2 invoked BEFORE generic stock; stock APIs run parallel speed-pass fallback (instant return if GPT Image 2 hangs >15s). See skill 15 `media-acquisition` + Fail-CLOSED auto-regenerate (5 attempts, $0.40 worst-case ceiling per slot).
 
 ## Per-Slot Prompt Mandatory Fields (BUILD-BREAKING — `validate-image-prompts.mjs` + `validate-dalle-slot-fill.mjs`)
 
-Every GPT Image 1.5 call MUST encode 6 fields from `_media_slots.json`:
+Every GPT Image 2 call MUST encode 6 fields from `_media_slots.json`:
 
 1. Page topic + intent verbatim from `topic_intent`
 2. Brand palette tokens from `_brand.json.colors` (inline hex)
@@ -98,7 +100,7 @@ Every slot MUST end build w/ `filled_url != null AND filled_score >= relevance_f
 
 - **Logo** — Ideogram v3 (best text rendering); **Icons** — Recraft V3; output: PNG transparent + SVG; bg removal → favicon set (16/32/180/192/512 + maskable); brand mark MUST be vector-clean
   - Ideogram 4.0 (open-weight, Apache 2.0) is current — generates native transparent backgrounds (reduces bg-strip need); v3 endpoint remains valid
-- **Video** — Sora (primary cinematic); Veo (narrative stitching, 7-8 × 8-sec clips → 60-sec arc); HeyGen (explainer/spokesperson); captions VTT + transcript; `prefers-reduced-motion` → static poster fallback
+- **Video** — Veo 3.1 (primary rail: cinematic + narrative stitching, 7-8 × 8-sec clips → 60-sec arc); Kling 3.0 / Runway Gen-4.5 fallbacks; HeyGen (explainer/spokesperson); captions VTT + transcript; `prefers-reduced-motion` → static poster fallback
 - **OG (1200×630)** — Satori edge-rendered, per-route unique, BRANDED CARD never raw photo, ≤100KB, cached KV 7d / R2 forever
 
 ## Stock Photography + Asset Compression + Performance

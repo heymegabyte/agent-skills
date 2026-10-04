@@ -180,7 +180,7 @@ new MutationObserver(muts => muts.flatMap(m=>[...m.addedNodes]).filter(n=>n.node
 ## Every card grid (***UNIFORM IMAGE PRESENCE — UNIVERSAL — BUILD-BREAKING***)
 
 - In any card/tile grid, ALL cards MUST have images or NONE do — never mixed.
-- If ≥50% of items in corpus have images, ALL cards get images (augment missing ones via GPT Image 1.5 per-slot prompt). If <50% have images, render ALL cards without images (use icon/number/initial avatar as uniform accent).
+- If ≥50% of items in corpus have images, ALL cards get images (augment missing ones via GPT Image 2 per-slot prompt). If <50% have images, render ALL cards without images (use icon/number/initial avatar as uniform accent).
 - Validator (`validate-card-image-uniformity.mjs`): for each `[data-card-grid]`, compute `cards_with_img / total_cards` — if `> 0` and `< 1.0` = fail.
 
 ## Every lightbox (***CSS BACKGROUND-IMAGE EXCLUDED — UNIVERSAL — BUILD-BREAKING — extends "Every gallery image"***)
@@ -221,7 +221,7 @@ data-gallery="team-photos" data-gallery-label="Leadership Team"
 
 - Every `<img>` must have `alt` that: (a) is non-empty; (b) does NOT equal `"image"`, `"photo"`, `"picture"`, `"img"`, or the filename; (c) describes SUBJECT matter in 5-15 words.
 - Decorative images (pure CSS decoration conveying no information) use `alt=""` (intentional empty string).
-- Per-slot GPT Image 1.5 prompt must include `alt_text` in the JSON response schema — auto-applied to the generated img tag.
+- Per-slot GPT Image 2 prompt must include `alt_text` in the JSON response schema — auto-applied to the generated img tag.
 - Validator: grep dist/ HTML for `alt=""` on non-decorative images (any img inside `[data-gallery]`, article, `section:not([data-decorative])`) = fail; grep for `alt="image"` or `alt="photo"` = fail.
 
 ## Every comparison table / data grid (***FULL-BLEED LAYOUT WHEN >1100px CONTENT — UNIVERSAL — BUILD-BREAKING — extends "Every full-width visual section"***)

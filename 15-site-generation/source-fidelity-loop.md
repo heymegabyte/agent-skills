@@ -10,7 +10,7 @@ Every rebuild MUST visually mirror the source brand: same logo, colors, typograp
 
 The lonemountainglobal Poppins+Hind regression and njsk.org burgundy-loss both shipped as "passing" because no gate compared rebuild→source. This loop closes that gap.
 
-> **Model migration note (pass-76, 2026-06-09)**: `DALL-E` → **GPT Image 1.5** + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`. Loop structure unchanged.
+> **Model migration note (pass-76, 2026-06-09)**: `DALL-E` → **GPT Image 2** (2026-04; 2.5 branded 2026-09 — check current API id at integration) + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`. Loop structure unchanged.
 
 ## Phase 1: Capture Source Screenshot (`_source_screenshot.png`)
 
@@ -103,7 +103,7 @@ On fail, project agent `source-fidelity-fixer` (declared in `apps/project-sites/
 ### `overall_fidelity<8` with sub-scores all ≥7
 
 - Typically means cumulative drift (each axis "close enough" but gestalt is off)
-- Trigger one full hero re-render with `_source_screenshot.png` passed as few-shot reference image to GPT Image 1.5 (skill 12 image-generation supports image-conditioning)
+- Trigger one full hero re-render with `_source_screenshot.png` passed as few-shot reference image to GPT Image 2 (skill 12 image-generation supports image-conditioning)
 
 After each fix: redeploy staging, recapture `_rebuild_screenshot.png`, re-run `validate-source-fidelity.mjs`. Max 3 iterations. Iteration 4 = escalate to operator with side-by-side diff in `_source_fidelity_report.html`.
 

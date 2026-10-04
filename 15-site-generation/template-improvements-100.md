@@ -53,7 +53,7 @@ Brian (2026-05-11): *"Come up with 100 ideas + recommendations + upgrades on how
 34. **R2 image transforms** — `?w=800&fmt=webp&q=85` via Cloudflare Image Resizing; drops Cloudinary; cuts $/mo 90%.
 35. **`<picture>` with AVIF+WebP+JPEG** — triple `<source>` per `<img>`; AVIF is 25% smaller than WebP.
 36. **Topic-matched Pexels** — per-page topic → Pexels search → top result; fallback when AI image fails relevance gate.
-37. **Sora b-roll for hero-video-loop** — 12s loop from `videoBrief`; AV1 + H.264 dual encode.
+37. **Veo 3.1 b-roll for hero-video-loop** — 12s loop from `videoBrief`; AV1 + H.264 dual encode.
 38. **NotebookLM podcast parallel** — per-site podcast runs alongside image gen, not after; cuts critical path 8min.
 39. **GPT Image 2 vision auto-alt-text** — every image gets vision-generated alt-text; a11y score jump 78 → 98.
 40. **Image-relevance gate ≥8/10** — GPT Image 2 vision judges section-topic match; below threshold auto-regenerates (max 3 rounds).
