@@ -245,6 +245,14 @@ logHeader "25. codex-mirror-sync"
 runGate "codex-mirror-sync" "gen-codex-skills --check" \
   node "$SKILLS_ROOT/bin/gen-codex-skills.mjs" --check
 
+# Hard gate 26 (cross-agent arc fire-1) — the generated harness manifests
+# (.opencode / .codex-plugin / .kimi-plugin) must reference only existing files
+# and track the real category count. Found live-broken: .opencode listed 4
+# retired SKILL.md paths. Generated-artifact class — no soak period.
+logHeader "26. harness-manifests"
+runGate "harness-manifests" "check-harness-manifests" \
+  bash "$SKILLS_ROOT/bin/check-harness-manifests.sh"
+
 # Soft INFO gates (pass-63→67) — 4 audit reports.
 # Human mode: with --quiet, buffer output; only emit if any drift. Without --quiet, emit always.
 # JSON mode (pass-69): capture each script's --json envelope into an `info` block alongside `gates`.

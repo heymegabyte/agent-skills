@@ -20,9 +20,6 @@
       "path": "02-goal-and-brief/SKILL.md"
     },
     {
-      "path": "03-planning-and-research/SKILL.md"
-    },
-    {
       "path": "04-preference-and-memory/SKILL.md"
     },
     {
@@ -62,13 +59,28 @@
       "path": "16-cinematic-website-prime-directive/SKILL.md"
     },
     {
-      "path": "18-document-processing/SKILL.md"
+      "path": "21-app-foundation/SKILL.md"
     },
     {
-      "path": "19-mcp-authoring/SKILL.md"
+      "path": "22-visual-experience/SKILL.md"
     },
     {
-      "path": "20-superpowers/SKILL.md"
+      "path": "23-content-seo/SKILL.md"
+    },
+    {
+      "path": "24-functional/SKILL.md"
+    },
+    {
+      "path": "25-quality-performance/SKILL.md"
+    },
+    {
+      "path": "26-platform-delivery/SKILL.md"
+    },
+    {
+      "path": "27-trust-compliance/SKILL.md"
+    },
+    {
+      "path": "28-cf-integrations-reference/SKILL.md"
     }
   ]
 }

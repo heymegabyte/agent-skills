@@ -14,10 +14,6 @@
       "id": "goal-and-brief"
     },
     {
-      "path": "../03-planning-and-research/SKILL.md",
-      "id": "planning-and-research"
-    },
-    {
       "path": "../04-preference-and-memory/SKILL.md",
       "id": "preference-and-memory"
     },
@@ -70,16 +66,36 @@
       "id": "cinematic-website-prime-directive"
     },
     {
-      "path": "../18-document-processing/SKILL.md",
-      "id": "document-processing"
+      "path": "../21-app-foundation/SKILL.md",
+      "id": "app-foundation"
     },
     {
-      "path": "../19-mcp-authoring/SKILL.md",
-      "id": "mcp-authoring"
+      "path": "../22-visual-experience/SKILL.md",
+      "id": "visual-experience"
     },
     {
-      "path": "../20-superpowers/SKILL.md",
-      "id": "superpowers"
+      "path": "../23-content-seo/SKILL.md",
+      "id": "content-seo"
+    },
+    {
+      "path": "../24-functional/SKILL.md",
+      "id": "functional"
+    },
+    {
+      "path": "../25-quality-performance/SKILL.md",
+      "id": "quality-performance"
+    },
+    {
+      "path": "../26-platform-delivery/SKILL.md",
+      "id": "platform-delivery"
+    },
+    {
+      "path": "../27-trust-compliance/SKILL.md",
+      "id": "trust-compliance"
+    },
+    {
+      "path": "../28-cf-integrations-reference/SKILL.md",
+      "id": "cf-integrations-reference"
     }
   ]
 }
