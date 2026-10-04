@@ -2,7 +2,7 @@
 
 # Plugin Architecture Map
 
-Generated: 2026-09-27
+Generated: 2026-10-04
 
 A one-read orientation guide for new agents and contributors.
 
@@ -14,24 +14,24 @@ A one-read orientation guide for new agents and contributors.
 
 | Pack | Description | Members |
 |---|---|---|
-| `ai` | AI features — contract-first, evals, agents, sandbox | 18 |
+| `ai` | AI features — contract-first, evals, agents, sandbox | 19 |
 | `angular` | Angular 22 + Nx + Spartan UI + RxJS-first | 1 |
 | `backend` | CF Workers + Hono + D1 + Drizzle + Zod backend | 25 |
 | `compliance` | Data-subject rights + regulatory compliance (GDPR/CCPA) | 1 |
 | `content` | Copy + brand voice + citations + anti-slop | 7 |
-| `core` | Always-loaded essentials | 73 |
-| `design` | Cinematic visual + motion + WCAG 2 | 10 |
+| `core` | Always-loaded essentials | 75 |
+| `design` | Cinematic visual + motion + WCAG 2 | 12 |
 | `ecommerce` | Medusa | 3 |
-| `frontend` | React 19 + Vite OR Angular 22 + Nx frontend | 10 |
+| `frontend` | React 19 + Vite OR Angular 22 + Nx frontend | 12 |
 | `infra` | Secrets + auth + deploy infrastructure | 13 |
 | `media` | Image/video/audio generation + optimization | 6 |
 | `payments` | Stripe + Square + webhook discipline | 2 |
-| `polish` | 100-ideas audit + supreme polish + extra-mile | 6 |
+| `polish` | 100-ideas audit + supreme polish + extra-mile | 7 |
 | `reference` | Incident + finding archives — loaded on cross-reference, never always-on | 1 |
 | `research` | Deep web research + crawling + competitor scanning | 3 |
 | `security` | Browser + app security hardening — CSP, Trusted Types, headers | 2 |
 | `testing` | Playwright E2E + Vitest + AI vision QA | 7 |
-| `website-build` | One-line "build/rebuild X | 23 |
+| `website-build` | One-line "build/rebuild X | 25 |
 
 ---
 
@@ -69,7 +69,7 @@ A one-read orientation guide for new agents and contributors.
 
 ## Rules
 
-155 rules in `rules/`.
+165 rules in `rules/`.
 
 ### Pack: ai
 
@@ -91,6 +91,7 @@ A one-read orientation guide for new agents and contributors.
 - `prompt-cache-strategy`
 - `eval-mock-mode-discipline`
 - `agent-selection`
+- `agent-neutrality`
 
 ### Pack: angular
 
@@ -141,6 +142,7 @@ A one-read orientation guide for new agents and contributors.
 - `autonomous-engineering`
 - `verification-loop`
 - `monitor-orchestration`
+- `split-work-into-ledger`
 - `prompt-as-training-signal`
 - `solo-builder-doctrine`
 - `main-only-branch`
@@ -166,6 +168,7 @@ A one-read orientation guide for new agents and contributors.
 - `uniform-json-output`
 - `audit-arc-maturity-ladder`
 - `agent-resilience-discipline`
+- `agent-self-manages-context`
 - `backwards-compatibility-removal-cadence`
 - `blast-radius-minimization`
 - `cost-per-request-accountability`
@@ -205,11 +208,13 @@ A one-read orientation guide for new agents and contributors.
 
 - `text-contrast`
 - `logo-contrast`
+- `logo-generation`
 - `cinematic-ui-patterns`
 - `gorgeous-by-default`
 - `motion-interaction-supervisor`
 - `visualization-maps-diagrams-supervisor`
 - `embarrassingly-easy-to-use`
+- `nebula-waiting-experience`
 
 ### Pack: ecommerce
 
@@ -226,6 +231,8 @@ A one-read orientation guide for new agents and contributors.
 - `copy-writing`
 - `shadcn-design-system`
 - `buttons-accommodate-largest-text`
+- `real-time-data-no-manual-refresh`
+- `public-front-door`
 
 ### Pack: infra
 
@@ -259,6 +266,7 @@ A one-read orientation guide for new agents and contributors.
 - `extra-mile`
 - `auto-integrate-recs`
 - `context-spillover`
+- `interconnectedness`
 
 ### Pack: reference
 
@@ -285,6 +293,7 @@ A one-read orientation guide for new agents and contributors.
 ### Pack: website-build
 
 - `website-build-doctrine`
+- `predictive-completeness`
 - `competitor-research`
 - `source-site-enhancement`
 - `thin-source-amplification`
@@ -299,18 +308,23 @@ A one-read orientation guide for new agents and contributors.
 - `website-completeness-checklist`
 - `build-validators-manifest`
 - `brand-asset-pipeline`
+- `google-maps-panels`
 
 ---
 
 ## Commands
 
-27 slash commands in `commands/`.
+35 slash commands in `commands/`.
 
 - `/agent-diversity-review` — Run the Agent Diversity Review gate and emit the result table
+- `/bootstrap-status` — Report the Claude control-plane environment (auth mode, tooling, connectors, resolved target). Fires when you need to confirm the sandbox can deploy.
+- `/claude-bootstrap` — Bring ANY repo into compliance with the shared Claude control plane so Claude Code on the web can run /ship autonomously.
 - `/create-specialist-agent` — Scaffold a new spawnable specialist agent def and register it in the agent taxonomy
 - `/customer-changelog-check` — Audit whether user-visible changes in the current session have matching CHANGELOG.md entries; report MISSING with suggested lines; --fix auto-appends
 - `/dashboard-cockpit` — Repeatable pass upgrading an Angular admin dashboard into a compact black-and-cyan developer-cockpit PWA
+- `/deploy` — Fires on `/deploy` or "deploy" with NO code change — self-resolves the target via ccctl, runs check→build→deploy, and verifies the live URL before reporting success.
 - `/drift-check` — Run the drift-detection checklist (incl. agent-drift signals); report + fix in-turn
+- `/fast-fix` — Fires on `/fast-fix` for tiny prod changes (favicon, color, copy, spacing) — a FAST-lane alias to /ship that forces minimal checks and one warm browser verify, still against the live URL.
 - `/final-review` — Orchestrate the final review fan-out (integration + diversity + risk + release readiness)
 - `/improve-lint` — Run the AI-augmented lint self-improvement loop on the current project. Scans `.lint-history/` for recurring violation patterns (≥3 hits in 30d window), drafts a Claude-ready prompt to author a new semgrep rule for the top candidate, and surfaces the proposal under `.lint-history/proposals/<ts>.md`. Non-blocking analysis. See rules/lint-doctrine.md § Self-improving.
 - `/install-lint-stack` — Bootstrap industry-leading lint+autofix+commit-hygiene stack on the current project. Drops in lefthook, oxlint, ESLint, Prettier, Stylelint, markdownlint, ruff, shellcheck, shfmt, yamllint, hadolint, actionlint, jscpd, knip, semgrep, gitleaks, commitizen + git-cz-emoji (emoji-mandatory commits), and semantic-release. Idempotent — re-runs upgrade safely. See rules/lint-doctrine.md.
@@ -323,25 +337,30 @@ A one-read orientation guide for new agents and contributors.
 - `/process` — Chain the full Superpowers process flow — brainstorm → plan → worktree → build → review → finish — on one slash command
 - `/retro`
 - `/review-global-prompts` — Review ~/.claude/CLAUDE.md + rules for contradictions, stale guidance, duplication; consolidate
+- `/rollback` — Restore the previous Cloudflare deployment and verify recovery. Fires when a deploy broke prod and you need the last-good version back.
 - `/run-evals` — Batch-run all LLM eval cases in tools/evals/cases/*.json; aggregate pass/fail, cost, regression vs last run; exit nonzero in CI mode
+- `/run-the-loop` — GENERIC, project-independent wrapper for "run the loop". If the current repo ships its OWN .claude/commands/run-the-loop.md, this wrapper LOADS + FOLLOWS that project command verbatim (the project command WINS — this global file never overrides project-specific instructions). Only when NO project command exists does it run a generic convergence loop — orient the canonical home, fan out the 15 named roles + the standing Long-Trail TDD case-owner, converge, adversarially review, verify, ship, reconcile. Fires when the user says "run the loop".
 - `/saas` — One-line SaaS — from a description, scaffold a complete CF-native multi-tenant SaaS (Hono + D1 + Drizzle + Better Auth + Stripe + shadcn) deployed to a real URL
 - `/security-supply-chain` — Unified supply-chain audit. Checks GitHub Actions SHA-pinning (`sha-pin:check`), package.json git+https deps (per `no-gitlab-megabytelabs-deps` semgrep), gitleaks scan, and trufflehog verified-only sweep. Surfaces any tag-mutable, git-URL, or secret-exposed surface. Per rules/ai-agent-security.md § Supply chain.
 - `/self-improve` — Run a learning pass after a major run; fold reusable lessons into global config
 - `/session-recap` — Summarize recent CHANGELOG.md entries for context restoration. Parses the canonical heading shape `## YYYY-MM-DD — pass-N — summary`. Filters: last N (default 10), YYYY-MM date prefix, or "today". Supports --json for machine-readable output.
-- `/ship`
+- `/ship` — Fires on `/ship <intent>`, "ship it", or "deploy to prod" with a clear ask — self-resolves the target (repo/worker/URL/lane) via ccctl and runs the full understand→improve→implement→test→deploy→verify pipeline.
 - `/skill-health` — Run quality-scores + token-budget + dep-graph, interpret results, flag missing budgets, orphans, and oversize skills
 - `/skip-questions` — Suppress 5-question enforcement for rapid sessions
+- `/sync-claude` — Update the vendored control plane + core commands in this repo to the latest heymegabyte/claude-bootstrap. Fires when the shared brain has moved on.
 - `/update-agentskills` — Apply a reusable lesson to ~/.agentskills (rules/skills/templates/commands), backup + commit + push
 - `/vendor-rotation-calendar` — Generate a quarterly vendor secret-rotation calendar for all load-bearing vendors; emit .ics + ROTATIONS-DUE-NEXT-30-DAYS table; optionally create Google Calendar events
+- `/verify-production` — Read-only production verification of the resolved live URL — headers, real-browser smoke, display-vs-store reconcile. Fires after a deploy or on demand.
 
 ---
 
 ## Agents
 
-26 specialist agents in `agents/`.
+28 specialist agents in `agents/`.
 
 - `accessibility-auditor` — Dedicated axe-core + Playwright accessibility agent
 - `architect` — Pre-implementation architecture agent
+- `browser-operator` — Drives a REAL browser to verify deployments + operate the product like a user
 - `changelog-drafter` — Reads git log since last tag, drafts CHANGELOG entry
 - `changelog-generator` — Auto-generates changelogs from conventional commits
 - `code-simplifier` — Simplifies code for clarity, consistency, and maintainability
@@ -361,6 +380,7 @@ A one-read orientation guide for new agents and contributors.
 - `motion-choreographer` — CSS animation and motion designer
 - `performance-profiler` — Runs Lighthouse audits, analyzes Core Web Vitals, suggests specific fixes with file:line references
 - `renamer` — Semantic rename across codebase
+- `resource-broker` — Maintains a normalized registry of legitimately-owned account resources (credits, quotas, free tiers, promos, expiring entitlements) with secret-REFERENCES only, and routes work cost-aware
 - `security-reviewer` — OWASP Top 10 security auditor
 - `seo-auditor` — Audits pages for SEO compliance — title, meta, H1, JSON-LD, OG tags, internal links, sitemap, robots
 - `test-writer` — TDD-first test engineer
@@ -371,7 +391,7 @@ A one-read orientation guide for new agents and contributors.
 
 ## Validators
 
-99 scripts in `bin/` (validators + build tools).
+79 scripts in `bin/` (validators + build tools).
 
 - `bin/agent-mcp-map.mjs` — (no description)
 - `bin/agent-profile.mjs` — Reads a project's fingerprint (package.json, wrangler.toml, angular.json, etc.)
@@ -400,6 +420,7 @@ A one-read orientation guide for new agents and contributors.
 - `bin/check-description-sdo.mjs` — (no description)
 - `bin/check-doc-counts.sh` — Local mirror of publish.yml's "Check doc counts" step. Pass-89 discovered
 - `bin/check-doc-urls.sh` — Surfaces dead links / 404s / mass redirects so dated docs (e.g. structured-outputs
+- `bin/check-harness-manifests.sh` — Why: fire-1 of the cross-agent arc (2026-10-03) found .opencode/config.json
 - `bin/check-manifest-recovery.mjs` — The router budget (~48K) is maxed on a site prompt: ~33 rules load, ~61 DROP. The
 - `bin/check-pack-frontmatter.sh` — Complements scripts/validate-packs.mjs (which enforces existence + ≥1-pack-
 - `bin/check-pricing.sh` — Per pass-58→61 manual-audit pattern. Mechanizes the pricing-staleness check
@@ -421,6 +442,7 @@ A one-read orientation guide for new agents and contributors.
 - `bin/forge-skill-from-openapi.mjs` — Auto-generates Claude Code skills from an OpenAPI 3.0/3.1 spec
 - `bin/gc-claude-home.mjs` — Targets the unbounded-growth dirs found during the 2026-06-19 audit:
 - `bin/gen-architecture-map.mjs` — Generates docs/ARCHITECTURE.md — an auto-generated, regenerate-on-demand map
+- `bin/gen-codex-skills.mjs` — Behavior:
 - `bin/gen-harness-manifests.mjs` — Generates companion harness manifests from the canonical agentskills source of truth
 - `bin/gen-mcp-registry.mjs` — (no description)
 - `bin/hook-health.mjs` — Reads the plugin settings.json (or any Claude Code settings), enumerates
@@ -435,7 +457,6 @@ A one-read orientation guide for new agents and contributors.
 - `bin/rotate-hook-log.sh` — Rotate ~/.claude/hooks/.hook-execution.log when it exceeds 1MB
 - `bin/score-rule-impact.mjs` — (no description)
 - `bin/security-supply-chain.sh` — Per rules/ai-agent-security.md § Supply chain
-- `bin/seed-validators.mjs` — Each stub logs a structured JSON line + exits 0 (NEVER fails the build)
 - `bin/session-recap.sh` — Usage:
 - `bin/skill-dep-graph.mjs` — Builds a dependency graph from `_packs/*.yml` member lists
 - `bin/skill-health-report.mjs` — Health combines:
@@ -443,33 +464,12 @@ A one-read orientation guide for new agents and contributors.
 - `bin/skill-token-budget.mjs` — Scans all SKILL.md files for `<!-- budget: ~N -->` markers, sums by pack,
 - `bin/suggest-pack-membership.mjs` — (no description)
 - `bin/sync-mirrors.mjs` — WHY: those mirrors are hand-maintained duplicates, so they DRIFT — the
+- `bin/sync-run-the-loop.mjs` — (no description)
 - `bin/validate-agents.mjs` — (no description)
-- `bin/validate-atf-video.mjs` — Rule: ATF hero video Sora-primary+Veo-parallel+stock-fallback
-- `bin/validate-blog-headers.mjs` — Rule: Per-post blog header art generated from post topic
-- `bin/validate-branded-error-pages.mjs` — Rule: Branded 404 + 500 pages with brand palette + mascot
-- `bin/validate-chapter-glyphs.mjs` — Rule: Numbered chapter glyphs match section count
-- `bin/validate-chapter-plates.mjs` — Rule: Chapter / section plates (numbered glyphs, pattern tiles)
-- `bin/validate-credits-page.mjs` — Rule: /credits or /colophon with per-asset attribution
 - `bin/validate-data-residency.mjs` — Rule: every D1 database and R2 bucket in wrangler.toml / wrangler.jsonc MUST
-- `bin/validate-delight-moments.mjs` — Rule: Delight moments floor min(iter+1, 6) per build
 - `bin/validate-fail-mode.mjs` — Rule: auth + payment paths MUST throw 401/403, never safeParse. Per
-- `bin/validate-favicon-set.mjs` — Rule: real-favicongenerator 9-file set complete
-- `bin/validate-google-image-corpus.mjs` — Rule: Google CSE image corpus ≥10 license-filtered queries
-- `bin/validate-hero-poster.mjs` — Rule: Hero poster frame: Ideogram cinematic, dims ≥1920×1080
-- `bin/validate-ideogram-cadence.mjs` — Rule: Ideogram slot cadence: ≥4 foundation + ≥2 incremental
-- `bin/validate-iteration-stamp.mjs` — Rule: Iteration stamp watermark in footer (build N badge)
-- `bin/validate-logo-triad.mjs` — Rule: Logo triad: horizontal+square+monogram variants
 - `bin/validate-mcp-tools.mjs` — Parses every mcp-servers/<name>-mcp/mcp-server/src/index.ts WITHOUT executing it
-- `bin/validate-media-density.mjs` — Rule: 17-source multimedia fan-out + ≥3 media per section
-- `bin/validate-og-card-per-route.mjs` — Rule: Per-route OG 1200×630 branded card (≤100KB)
-- `bin/validate-pattern-tile.mjs` — Rule: Tileable brand pattern (≥256×256 seamless)
-- `bin/validate-podcast-presence.mjs` — Rule: NotebookLM podcast + Podcast Index discovery + RSS feed
-- `bin/validate-progressive-media.mjs` — Rule: Progressive rebuild: ≥10 new media per iteration
-- `bin/validate-pwa-splashes.mjs` — Rule: PWA splash screens for 6 device sizes
-- `bin/validate-share-quote-cards.mjs` — Rule: Share-quote cards: ≥3 quote cards across blog posts
-- `bin/validate-stat-numerals.mjs` — Rule: Custom stat numeral art (1-2 hero stats per page)
 - `bin/validate-template-utils.mjs` — Enforces `rules/template-utility-conventions.md`. Run in CI and pre-commit
-- `bin/validate-tier-badges.mjs` — Rule: Plan / tier badges rendered via Ideogram
 - `bin/validate-ttfr.mjs` — Rule: LCP ≤ 2000ms, FCP ≤ 1200ms on cold-cache throttled 3G
 - `bin/worktree-pool.sh` — Usage:
 
@@ -477,9 +477,10 @@ A one-read orientation guide for new agents and contributors.
 
 ## Hooks
 
-24 hooks wired in `~/.claude/hooks/`.
+25 hooks wired in `~/.claude/hooks/`.
 
 - `agentskills-stop-gate.sh` — Reads stdin, checks LEDGER.md. EXITS 0 always (fail-open)
+- `ask-to-megabyte-space.sh` — PreToolUse hook — matcher: AskUserQuestion
 - `build-gates.sh` — Source gum helpers, display a compact gate-result table
 - `config-protection.py` — Config files that should not be silently mutated by agents
 - `deepseek-apikey-helper.sh` — (no description)
