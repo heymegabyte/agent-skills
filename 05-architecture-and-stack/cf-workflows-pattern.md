@@ -44,7 +44,7 @@ export class OrderWorkflow extends WorkflowEntrypoint<Env, { orderId: string }> 
       timeout: '15 minutes',
     }, async () => {
       // Use idempotency key to prevent double-charge on retry
-      return await chargeSquare(order.total, { idempotencyKey: order.id });
+      return await chargeStripe(order.total, { idempotencyKey: order.id });
     });
 
     await step.do('send confirmation', async () => {
@@ -59,7 +59,7 @@ export class OrderWorkflow extends WorkflowEntrypoint<Env, { orderId: string }> 
 }
 ```
 
-**Critical**: steps may re-execute on retry. Use idempotency keys (Square, Stripe both support) or check-then-act for non-idempotent operations.
+**Critical**: steps may re-execute on retry. Use idempotency keys (Stripe, Square both support) or check-then-act for non-idempotent operations.
 
 ## Pattern B: `step.waitForEvent()` — human approval gate
 

@@ -102,7 +102,7 @@ await anthropic.messages.create({
 });
 
 // Workers AI fallback (free, on-net):
-// await c.env.AI.run('@cf/meta/llama-3.3-70b-instruct-fp8-fast', { messages: [...] });
+// await c.env.AI.run('@cf/meta/llama-4-scout-17b-16e-instruct', { messages: [...] });
 ```
 
 Per `[[opus-quota-fallback]]` — fall back to Workers AI Llama if Anthropic quota exhausted.

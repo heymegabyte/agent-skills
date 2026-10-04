@@ -37,7 +37,7 @@ Source: `developers.cloudflare.com/hyperdrive`. See `[[cloudflare-lock-in-is-lev
 | Complex joins, stored procedures | — | ✓ |
 | Global read replicas (Neon, PlanetScale, CockroachDB) | — | ✓ |
 | Zero ops, fully managed | ✓ | — |
-| Cost: pay per query | D1 is cheaper | Hyperdrive adds ~$0.50/1M rows + DB cost |
+| Cost: pay per query | D1 is cheaper | Hyperdrive itself $0 on Workers Paid (free plan: 100K queries/day); the real cost is the origin DB |
 
 **Brian's default**: D1 for new projects. Hyperdrive for hybrid migrations and projects requiring Neon (branching, point-in-time recovery) or Postgres-specific features.
 

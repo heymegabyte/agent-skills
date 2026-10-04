@@ -15,7 +15,7 @@ Pin this alongside the other `05-architecture-and-stack` submodules. Reflects th
 
 - **Read replication GA** via the Sessions API — `db.withSession(bookmark)` for sequentially-consistent reads, no extra cost
 - **Read-only queries auto-retry** (2025-09-11) — remove custom retry wrappers around SELECT/EXPLAIN
-- **Storage cap** — 1 TB per account, 10 GB per database (raised from 250 GB)
+- **Storage cap** — 1 TB per account (raised from 250 GB), 10 GB per database (hard cap)
 - **Jurisdiction pinning** (2025-11-05) — set EU/FedRAMP at create time for compliance
 - **Time Travel** — 30-day PIT recovery via `wrangler d1 time-travel restore`
 - D1 has **no transactions** — use `db.batch([stmt1, stmt2])` for atomic multi-statement execution
@@ -26,6 +26,7 @@ Pin this alongside the other `05-architecture-and-stack` submodules. Reflects th
 - **Infrequent Access storage class** + lifecycle transitions — default lifecycle Standard → IA after 30 days for backups/exports/old uploads
 - **Event notifications → Queues** at 5,000 msg/sec — wire R2 → Queue → consumer Worker for thumbnailing/AV-scan/index instead of polling
 - Cross-region replication available for compliance and latency
+- Production R2 binding requires Workers Paid ($5/mo); Infrequent-Access class gets NO free tier
 
 ## Durable Objects
 
@@ -55,7 +56,7 @@ Pin this alongside the other `05-architecture-and-stack` submodules. Reflects th
 
 ## Hyperdrive
 
-- Now supports **MySQL + Postgres**, free on Workers Free
+- Now supports **MySQL + Postgres**, free on Workers Free (100K queries/day cap; $0 unlimited on Paid)
 - Connection pooling and query caching included at no charge
 - Front any external Postgres/MySQL with Hyperdrive — never direct connection
 

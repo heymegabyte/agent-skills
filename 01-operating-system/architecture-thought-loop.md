@@ -29,7 +29,7 @@ updated: "2026-04-23"
 List ALL constraints before designing:
 
 - **CF Workers** — 10ms CPU, 128MB memory, 25MB bundle
-- **D1** — 5M rows free, no JOINs >3 tables efficiently
+- **D1** — 5M reads + 100K writes/day free (hard-fail past limit since 2026-09, resets 00:00 UTC); 500MB/DB free, 10GB/DB paid (HARD cap); no JOINs >3 tables efficiently
 - **KV** — 100K reads/day free, eventual consistency
 - **R2** — 10GB free, S3-compatible
 - **Budget** — $0/mo target (free tier only initially)
