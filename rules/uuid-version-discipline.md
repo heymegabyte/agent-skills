@@ -36,11 +36,9 @@ Pick the right ID format at schema design time — migrations are painful.
 
 ## UUIDv7 — default for D1 record IDs
 
-- Format: `xxxxxxxx-xxxx-7xxx-yxxx-xxxxxxxxxxxx`
-- First 48 bits = Unix ms timestamp (big-endian); remaining bits random
-- Monotonically increasing within the same millisecond via 12-bit sub-ms counter
-- SQLite/D1 stores as `TEXT(36)` — lexicographic sort equals chronological sort
-- B-tree inserts hit the same hot page (latest entries cluster together), reducing page splits by 10–30% vs. random UUIDv4
+- Format: `xxxxxxxx-xxxx-7xxx-yxxx-xxxxxxxxxxxx` — first 48 bits Unix-ms timestamp (big-endian), rest random; monotonic within one ms via 12-bit counter
+- SQLite/D1 stores as `TEXT(36)` — lexicographic sort = chronological sort
+- Inserts cluster on the hot B-tree page: 10–30% fewer page splits vs. random UUIDv4
 
 ```ts
 // template/utils/idempotency.ts — canonical impl, reference this, don't duplicate
@@ -52,10 +50,8 @@ const sessionId = uuidv4();   // session token
 
 ## UUIDv4 — default for tokens and keys
 
-- Format: `xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx`
-- 122 bits of cryptographic randomness
-- No timestamp embedded — cannot be used to infer creation time
-- Use: `crypto.randomUUID()` in Workers (native, no import needed)
+- 122 bits of cryptographic randomness; no embedded timestamp — creation time cannot be inferred
+- Use `crypto.randomUUID()` in Workers (native, no import)
 
 ```ts
 const sessionToken     = crypto.randomUUID(); // Workers native
@@ -65,10 +61,7 @@ const r2FileName       = `uploads/${crypto.randomUUID()}.jpg`;
 
 ## ULID — skip
 
-- 26-char Crockford base32 (e.g. `01ARZ3NDEKTSV4RRFFQ69G5FAV`)
-- Same timestamp-ordered property as UUIDv7 but shorter in URL form
-- Zero libraries in the current stack emit ULIDs; UUIDv7 closes the same gap with native Node/Workers support
-- Not used; not a planned adoption — document as "evaluated and skipped"
+- Timestamp-ordered like UUIDv7 but 26-char Crockford base32; zero stack libraries emit it and UUIDv7 closes the same gap natively. Evaluated and skipped — not a planned adoption.
 
 ## Code reference
 
@@ -108,6 +101,6 @@ CREATE TABLE payments (
 
 ## See also
 
-- `zod-everywhere` — validate UUIDs at API boundaries with `z.string().uuid()`
+- `zod-everywhere` — validate UUIDs at API boundaries with `z.uuid()` (Zod 4: strict RFC-9562; `z.guid()` = permissive)
 - `data-residency-by-default` — ID format must not encode user region/shard info
 - `drift-detection` — mixed ID schemes in a single table = drift, fix in-turn

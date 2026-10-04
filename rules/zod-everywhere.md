@@ -32,7 +32,7 @@ import { z } from 'zod';
 
 export const CreateSiteSchema = z.object({
   slug: z.string().regex(/^[a-z0-9-]{1,63}$/),
-  orgId: z.string().uuid(),
+  orgId: z.uuid(),
   template: z.enum(['saas', 'nonprofit', 'local', 'portfolio']),
   primaryHostname: z.string().optional(),
 });
@@ -55,6 +55,13 @@ export type CreateSiteInput = z.infer<typeof CreateSiteSchema>; // never hand-wr
 - `as any` / `as SomeType` past a boundary to skip validation
 - Validate client-side only — server re-validates at its own boundary
 - Scatter duplicate schemas — one schema per shape, imported everywhere
+
+## Zod 4 idioms (4.6.x current — GA Jul 2025)
+
+- Format validators are top-level: `z.uuid()` · `z.email()` · `z.url()` · `z.iso.datetime()` — not `z.string().uuid()` chains. `z.uuid()` enforces RFC-9562 version/variant bits strictly; `z.guid()` accepts any 8-4-4-4-12 hex.
+- Errors: read `ZodError.issues` (`.errors` removed); use `z.treeifyError(err)` / `z.flattenError(err)` — `.format()` / `.flatten()` are deprecated.
+- `.default()` applies whenever input is `undefined` — PATCH gotcha: an omitted field gets the default, not "leave unchanged"; keep update schemas `.optional()` without defaults.
+- Incremental migration: `zod/v4` + `zod/v3` subpath imports coexist in one codebase.
 
 ## Front-end + back-end parity (MANDATE — every processed input field)
 

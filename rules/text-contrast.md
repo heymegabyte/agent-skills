@@ -60,8 +60,8 @@ Every text-using accent gets TWO contrast-safe siblings — moderate-lift for bo
 
 ### Token usage
 
-- Body text accents (inline copy, captions, tags, link text) → `--ink-accent` / `--ink-album-accent`
-- HUD digits, badge counters, status pills, numeric overlays where dullness reads broken → `--ink-accent-neon` / `--ink-album-accent-neon` w/ fallback `color: var(--ink-accent-neon, var(--ink-accent, var(--accent)))`
+- Body text accents → `--ink-accent` / `--ink-album-accent`
+- HUD digits / badges / status pills / numeric overlays → `--ink-accent-neon` / `--ink-album-accent-neon` w/ fallback `color: var(--ink-accent-neon, var(--ink-accent, var(--accent)))`
 - Borders, backgrounds, outlines, box-shadows, `accent-color`, `caret-color`, `text-decoration-color` → keep raw `--accent` / `--album-accent`
 
 ## Light-theme mirror

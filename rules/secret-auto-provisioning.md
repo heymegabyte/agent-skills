@@ -19,9 +19,7 @@ Companion to `secret-provisioning.md`. Acquires NEW secrets via generation, API-
 ## Core mandate
 
 - **ALWAYS auto-populate every self-generable secret — never ask, never Rec, never leave a placeholder.** If a value can be produced with `openssl rand` (or `crypto.randomUUID`, `crypto.getRandomValues`, `wrangler secret put` piped from a generator, `head -c … /dev/urandom | base64`, etc.), GENERATE IT AND SET IT in the same turn you discover it's missing — locally (chezmoi/get-secret) AND pushed to the deploy target. This is a standing default, not an infra-only behavior. (Brian directive, 2026-06-19 — re-issued because self-generable secrets were still surfacing as manual Recs.)
-- Producible without human input → produce automatically.
-- Requires human → use highest tier available (API > Computer Use > manual deeplink).
-- Manual recs reserved for Tier 4 only (paid plans, KYC, no public API).
+- Requires human → highest tier available (API > Computer Use > manual deeplink); manual recs are Tier 4 only (paid plans, KYC, no public API). Dispatch per § Anti-friction decision tree.
 
 ### Self-generable secret classes (Tier 1 — auto-generate on sight)
 

@@ -16,7 +16,7 @@ superseded_by: null
 
 # Supreme Polish + 100-Ideas Audit
 
-Trigger a 100-point comprehensive audit and multi-agent polish sweep on the full project; fires on polish phrases or automatically every 5th prompt on mature projects.
+Trigger a 100-point comprehensive audit and multi-agent polish sweep on the full project; fires ONLY on explicit polish phrases or `/supreme-polish` — never auto-re-fired.
 
 ## Trigger
 

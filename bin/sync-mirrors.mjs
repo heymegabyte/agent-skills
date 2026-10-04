@@ -44,7 +44,7 @@ const MANAGED = [
     // apps — never Angular-only. Payments trio: Square accept / Stripe Billing / Connect.
     pattern: /CF Workers.*?PostHog\s*\|\s*Sentry/g,
     canonical:
-      'CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1 | Clerk | Square + Stripe Billing/Connect | Inngest | Amazon SES | Bun | Playwright v1.63+ | PostHog | Sentry',
+      'CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1-rc | Clerk | Square + Stripe Billing/Connect | Inngest | Amazon SES | Bun | Playwright v1.63+ | PostHog | Sentry',
   },
   {
     name: 'counts-line',

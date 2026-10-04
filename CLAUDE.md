@@ -104,7 +104,7 @@ Scope:
 - **Marketing-static** — same React+Vite or Angular+Ionic. No Astro / Next.js / Remix / SvelteKit defaults.
 - **DB** — D1 (read-replicas, Sessions API) / Neon
 - **Cache** — Upstash
-- **ORM** — Drizzle v1 RQBv2 + Zod
+- **ORM** — Drizzle v1-rc RQBv2 + Zod 4
 - **Auth** — Clerk (M2M JWT)
 - **Payments**:
   - Donations / POS / e-commerce / one-time / sub-$100 tickets / hybrid in-person+online → **Square** (Web Payments SDK)

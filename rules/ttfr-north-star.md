@@ -37,11 +37,9 @@ Targets:
 - **INP ≤ 100ms** (cinematic) / ≤ 200ms (absolute hard gate)
 - **CLS ≤ 0.05**
 
-When TTFR is the north star, "we'll optimize later" becomes structurally impossible — because later is after the ship gate.
-
 ## What TTFR forces
 
-This single metric makes the following non-optional. Each item is a build-breaking requirement, not a recommendation:
+Each item is a build-breaking requirement, not a recommendation:
 
 1. **SSR/SSG mandatory** — client-side-only rendering fails the FCP threshold on 3G; `frontend-stack` mandates SSR/SSG for this reason
 2. **Zero client-side data waterfalls** — no `useEffect` → fetch → render chains; data must be pre-loaded in the server handler or static build

@@ -33,7 +33,7 @@ Full protocol: `competitor-research.md`.
 
 ## Phase -0.5 — Predictive Scope-Lock (before Phase 0)
 
-From the one-line prompt, enumerate the COMPLETE build the user will want by satisfaction — full page set (source sitemap 1:N), every feature + every state, the gorgeous dimensions (cinematic motion, brand, bento/asymmetry, refined type), AI-native surfaces, and prod gates — into `_prediction.md`. This is the Phase 6 "what else" loop run UP FRONT, so the first pass IS the complete pass. `completeness-checker` gates DONE against THIS prediction, not the literal prompt. Under-scoping here is why a build ships "functional but plain" and the user must iterate — the exact failure this prevents. Full: `[[predictive-completeness]]` · `#predict`.
+From the one-line prompt, enumerate the COMPLETE build the user will want by satisfaction — full page set (source sitemap 1:N), every feature + every state, the gorgeous dimensions (cinematic motion, brand, bento/asymmetry, refined type), AI-native surfaces, and prod gates — into `_prediction.md`. This is the Phase 6 "what else" loop run UP FRONT, so the first pass IS the complete pass. `completeness-checker` gates DONE against THIS prediction, not the literal prompt. Under-scoping here is why a build ships "functional but plain" and the user must iterate. Full: `[[predictive-completeness]]` · `#predict`.
 
 ## Phase 0 — Context Saturation BEFORE Any Code
 

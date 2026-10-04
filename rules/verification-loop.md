@@ -77,7 +77,7 @@ Code change → `SPEC.md` → failing tests (PROD_URL) → implement slice-by-sl
 ## INP debugging
 
 - `PerformanceObserver` type:`long-animation-frame` (LoAF, Chrome 123+)
-- SPA per-route CWV: web-vitals v4+ with `softNavs:true`
+- SPA per-route CWV: web-vitals v6 (API since v4) with `softNavs:true`
 
 ## Hard rules
 
@@ -159,17 +159,13 @@ For any repo with a deployed surface (Cloudflare Worker, Pages, Vercel, etc.), t
 
 *Vendored discipline from [obra/Superpowers](https://github.com/obra/Superpowers) (MIT, Jesse Vincent). Full skill: `20-superpowers` → verification-before-completion/SKILL.md.*
 
-- Epistemic layer atop the deploy gates: claim ONLY what you verified this turn — evidence before assertions, always.
-- Iron law: no completion claim without FRESH verification evidence. If you didn't run the command in this message, you can't claim it passes.
-- Gate before any success/satisfaction statement: identify the proving command → run it FULL → read full output + exit code → confirm it backs the claim → only then claim, WITH the evidence.
-- Paste/observe the actual command output before any "done/passing/fixed" wording — a prior run or "looks correct" is not evidence.
-- Applies to ALL completion language: exact phrases, paraphrases, synonyms, and any wording that merely IMPLIES success. Spirit over letter.
-- Red-flag rationalizations that mean STOP-and-run, never ship: "it should work", "I'm confident", "the change is trivial / just this once", "I'm tired", "partial check is enough".
-- "Confidence ≠ evidence" and "linter passing ≠ compiler/build passing" — distinct gates, each needs its own command output.
-- Trusting an agent's "success" report is not verification — independently check the VCS diff / artifacts before relaying completion.
-- Requirements met ≠ tests pass: re-read the plan, build a line-by-line checklist, verify each item, report gaps or completion.
-- Binding before committing, pushing, or opening a PR — these are completion claims and demand the gate first.
-- See `20-superpowers`
+- Iron law: no completion claim without FRESH verification evidence — if the proving command didn't run in THIS message, you can't claim it passes.
+- Gate before any success statement: identify the proving command → run it FULL → read output + exit code → claim only WITH the evidence. A prior run or "looks correct" is not evidence.
+- Applies to ALL completion language — paraphrases, synonyms, and any wording that merely IMPLIES success. Spirit over letter.
+- Red-flag rationalizations = STOP-and-run, never ship: "it should work", "I'm confident", "the change is trivial / just this once", "I'm tired", "partial check is enough".
+- Distinct gates need distinct output: confidence ≠ evidence; linter passing ≠ compiler/build passing.
+- An agent's "success" report is not verification — independently check the VCS diff / artifacts before relaying completion. Requirements met ≠ tests pass: checklist the plan line-by-line, verify each item.
+- Binding before committing, pushing, or opening a PR — each is a completion claim demanding the gate first. See `20-superpowers`.
 
 ## Fresh-hostname DNS gotcha (2026-09-29)
 
