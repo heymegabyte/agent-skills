@@ -96,21 +96,31 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 
 `~/.agentskills/agents/`:
 
+- `accessibility-auditor`
 - `architect`
+- `browser-operator`
+- `changelog-drafter`
+- `changelog-generator`
 - `code-simplifier`
 - `completeness-checker`
 - `computer-use-operator`
+- `content-writer`
+- `cost-estimator`
+- `dead-code-remover`
+- `dependency-auditor`
 - `deploy-verifier`
+- `formatter`
+- `incident-responder`
+- `media-orchestrator`
+- `meta-orchestrator`
+- `migration-agent`
+- `model-router`
+- `motion-choreographer`
+- `performance-profiler`
+- `renamer`
+- `resource-broker`
 - `security-reviewer`
 - `seo-auditor`
 - `test-writer`
+- `transcriber`
 - `visual-qa`
-- `dependency-auditor`
-- `meta-orchestrator`
-- `migration-agent`
-- `content-writer`
-- `performance-profiler`
-- `incident-responder`
-- `accessibility-auditor`
-- `cost-estimator`
-- `changelog-generator`

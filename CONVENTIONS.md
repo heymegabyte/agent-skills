@@ -61,23 +61,21 @@ Dark theme FIRST. Purple for cosmic/space only.
 ## Stack
 
 - **Hosting** — CF Workers + Hono v4.12.12+ (security pin)
-- **Frontend** — Angular 22 + Ionic 8 + Spartan UI
+- **Frontend** — React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps; Ionic 8 as needed)
 - **Mobile** — Capacitor 8
 - **Database** — D1 / Neon
 - **ORM** — Drizzle v1
 - **Validation** — Zod 4
 - **Auth** — Clerk Core 3 (SaaS) / Authentik (self-hosted)
-- **Payments** — Stripe (versioned releases: `2026-08-26.dahlia`)
-- **Email** — Amazon SES (sole rail; SendGrid break-glass)
-- **Jobs** — Inngest v4
-- **Runtime** — Bun 1.4
+- **Payments** — Square (accept) / Stripe Billing (SaaS; pin `2026-08-26.dahlia`) / Stripe Connect (payouts)
+- **Email** — Amazon SES (sole transactional rail) + Listmonk (bulk); SendGrid break-glass
+- **Jobs** — Inngest v4 / CF Workflows v2
+- **Runtime** — Node 24 native TS / Bun 1.4+
 - **Language** — TS 7.0
 - **E2E** — Playwright v1.59+
 - **Unit** — Vitest 5
-- **Lint** — ESLint + Prettier
-- **Analytics** — PostHog
-- **Errors** — Sentry
-- **Tracking** — GA4 / GTM
+- **Lint** — oxlint + ESLint + Prettier (never Biome)
+- **Observability** — PostHog + Workers Tracing (solo); enterprise adds Sentry + GA4/GTM + Axiom
 
 ## Angular Version Changes
 
@@ -229,7 +227,6 @@ npx tsc --noEmit && npx eslint . --max-warnings=0 && npx prettier --check .
 ```bash
 get-secret SECRET_NAME  # chezmoi, 185 age-encrypted secrets
 # Shared env: use `CLAUDE_ENV_FILE` when set, otherwise the active project's `.env.local`
-# Config: ~/.config/emdash/ (coolify-token, gcp-service-account.json)
 ```
 
 All MCP secrets: active project env file or `get-secret`. Check env vars first, then chezmoi.
@@ -319,7 +316,7 @@ Full list via Coolify API.
 
 - **Logo** — Ideogram v3 (`IDEOGRAM_API_KEY`)
 - **Images** — GPT Image 1.5 (`OPENAI_API_KEY`)
-- **Video** — Sora 2 (`scripts/sora.py`)
+- **Video** — Sora 2 (`OPENAI_API_KEY`)
 
 ### Targets
 
@@ -332,7 +329,7 @@ Full list via Coolify API.
 
 ## Analytics
 
-- **GA4/GTM** — `~/.config/emdash/gcp-service-account.json`
+- **GA4/GTM** — GCP service account via `get-secret`
 - **PostHog** — `{service}.megabyte.space` pattern
 - **Sentry** — same pattern
 
@@ -970,7 +967,7 @@ New default transport (spec 2025-03-26), replaces deprecated HTTP+SSE.
 
 ## Linting
 
-- **TypeScript / JS** — ESLint flat config (`eslint.config.ts`) + typescript-eslint + angular-eslint + Prettier
+- **TypeScript / JS** — oxlint + ESLint flat config (`eslint.config.ts`) + typescript-eslint + angular-eslint + Prettier
 - **Python** — Ruff + mypy
 - **Bash** — ShellCheck + shfmt
 - **YAML** — yamllint
