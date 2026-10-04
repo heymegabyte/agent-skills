@@ -47,7 +47,7 @@ Run the end-to-end AI website generation pipeline: research→media→Bolt artif
 ## Submodules
 
 - **research-pipeline** — API-driven business research, scraping, enrichment
-- **media-acquisition** — image/video/logo sourcing across 17 engines (Flux 1.1 Pro Ultra, Ideogram 3.0, Recraft V3, GPT Image 1.5, Sora) — Pexels-first / AI-fallback, pHash dedup
+- **media-acquisition** — image/video/logo sourcing across 17 engines (Flux 1.1 Pro Ultra, Ideogram 4.0, Recraft V3, GPT Image 1.5, Sora) — Pexels-first / AI-fallback, pHash dedup
 - **build-prompts** — master prompt + enhancement phases
 - **quality-gates** — Lighthouse CI v0.15+, axe-core / playwright v4.11+ WCAG 2.2 AA, source-parity diff, 3-tier visual regression, console-error gate, Recommendations Loop
 - **domain-features** — category-specific for 18+ business types

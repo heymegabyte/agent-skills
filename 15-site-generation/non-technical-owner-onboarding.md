@@ -6,7 +6,7 @@ updated: "2026-05-10"
 
 # Non-Technical Owner Onboarding
 
-**Product promise**: paste a business name (or domain), choose a starting style, click ONE button. Twenty minutes later, an email arrives with a live URL + admin link.
+**Product promise**: paste a business name (or domain), choose a starting style, click ONE button. Twenty minutes later: live URL + admin link in email.
 
 ## Onboarding Flow (***THREE SCREENS, ZERO JARGON***)
 
@@ -142,5 +142,5 @@ Stripe Checkout (redirect to Stripe-hosted page; no card-field embed). 14-day tr
 
 A friend's parent (60+, has used Gmail and Google Maps but not GitHub) opens projectsites.dev on a phone, completes onboarding without help, gets a working site, and updates hours via email reply within the first week.
 
-- Any step requiring explanation gets simplified or removed
+- Any step requiring explanation → simplify or remove
 - Tested quarterly with rotating non-technical reviewers

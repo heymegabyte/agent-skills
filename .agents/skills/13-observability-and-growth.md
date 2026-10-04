@@ -20,7 +20,7 @@ Tiered PostHog+Sentry+GA4 stacks wired from day one; feature flags, PLG patterns
 Per `_kernel/standards.md#integrations`:
 
 - **Tier 1 (solo)** — PostHog + Workers Tracing OTLP (2 vendors max, cookie-free, free tier covers <10k MAU)
-- **Tier 2 (enterprise)** — + Sentry @sentry/cloudflare v9 + GA4/GTM + Axiom
+- **Tier 2 (enterprise)** — + Sentry `@sentry/cloudflare` v9 + GA4/GTM + Axiom
 - **Tier 3 (LLM-heavy >10k calls/mo)** — + AI Gateway
 
 ## PostHog (Tier 1 cornerstone)

@@ -6,7 +6,7 @@ updated: "2026-04-25"
 
 # Image Profiling (Tiered Vision)
 
-Bridge between visual assets and text-only AI builders. Profile every candidate image BEFORE the build so the builder makes informed placement decisions without seeing images.
+Profile every candidate image BEFORE the build so the builder makes informed placement decisions without seeing images.
 
 ## Architecture (***COST-TIERED***)
 
@@ -64,7 +64,7 @@ Return JSON array matching the profile schema.
 
 ## Integration with Build Pipelines
 
-Pre-container: collect 50-100 candidate images from all APIs → batch profile → select top picks → write `_image_profiles.json` as context file. Builder reads profiles, uses every top-pick in its suggested placement. Alt text pre-written. No guessing, no vision needed in build step.
+Pre-container: collect 50-100 candidate images from all APIs → batch profile → select top picks → write `_image_profiles.json`. Builder reads profiles, uses every top-pick in its suggested placement. Alt text pre-written; no vision needed in build step.
 
 ## Cost Management
 

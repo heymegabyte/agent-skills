@@ -6,9 +6,9 @@ updated: "2026-05-10"
 
 # Source-Fidelity Loop
 
-Every site rebuild MUST visually mirror the source brand: same logo, same colors, same typography, same hero structure. "Improvement" means motion+layout+performance — NEVER substituting the brand identity.
+Every rebuild MUST visually mirror the source brand: same logo, colors, typography, hero structure. "Improvement" means motion+layout+performance — NEVER substituting brand identity.
 
-The lonemountainglobal Poppins+Hind regression and the njsk.org burgundy-loss incident both shipped as "passing" because no gate compared rebuild→source. This loop closes that gap.
+The lonemountainglobal Poppins+Hind regression and njsk.org burgundy-loss both shipped as "passing" because no gate compared rebuild→source. This loop closes that gap.
 
 > **Model migration note (pass-76, 2026-06-09)**: `DALL-E` → **GPT Image 1.5** + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`. Loop structure unchanged.
 
@@ -32,7 +32,7 @@ When `_source_screenshot.png` cannot be captured (no source exists, owner starti
 
 After staging deploy succeeds (Worker URL responds 200), capture rebuilt homepage under identical viewport (1280×800, `full-page=false`).
 
-- Run AFTER all media generation completes — early capture catches placeholder gray boxes and produces false fidelity failures
+- Run AFTER all media generation completes — early capture catches placeholder gray boxes + produces false fidelity failures
 - Use `@cloudflare/puppeteer` against staging worker URL `https://{slug}-staging.{account}.workers.dev/` with REAL_UA
 - Wait for `networkidle` + `prefers-reduced-motion: reduce` to suppress entrance animations
 - Then `page.screenshot({ fullPage: false, type: 'png' })`
@@ -122,7 +122,7 @@ Email to operator via Resend (skill 13 notifications) with subject `Source-fidel
 ## Anti-patterns (***NEVER***)
 
 - **Skipping the loop because "the rebuild looks better than the source"** — Improvement is bonus; fidelity is the contract. Owner agreed to a rebuild of THEIR brand, not your taste. Operator can manually approve a deviation post-fact, but AI never decides unilaterally.
-- **Auto-generating a logo when source logo extraction fails on first try** — Try favicon → about page → header SVG → Wayback header → R2 archive of prior crawls before falling back to Ideogram. Synthetic logos drift from original signature shape and ship as "passing" because GPT Image 2 vision is more forgiving than human owner.
+- **Auto-generating a logo when source logo extraction fails on first try** — Try favicon → about page → header SVG → Wayback header → R2 archive of prior crawls before Ideogram fallback. Synthetic logos drift from original signature shape and ship as "passing" because GPT Image 2 vision is more forgiving than a human owner.
 - **Caching `_rebuild_screenshot.png` across deploys** — Screenshot MUST be re-captured after every deploy or cache lies. Cache `_source_screenshot.png` aggressively (source rarely changes); re-capture rebuild every iteration.
 - **Treating sub-scores ≥7 as "good enough" when overall<8** — If gestalt is off, fix the gestalt — usually hero re-render with image-conditioning, not piecemeal tweaks.
 

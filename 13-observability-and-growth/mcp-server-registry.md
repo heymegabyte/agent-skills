@@ -7,7 +7,7 @@ always-load: false
 
 # MCP Server Registry
 
-Every MCP server is a dependency. Treat it like one: registry, healthchecks, drift detection, rotation schedule. A silently-broken MCP is worse than a missing one — Claude calls the tool and gets garbage instead of an error.
+Every MCP server is a dependency: registry, healthchecks, drift detection, rotation schedule. A silently-broken MCP is worse than a missing one — Claude calls the tool and gets garbage instead of an error.
 
 ## Registry Schema
 
@@ -261,7 +261,7 @@ async function checkServer(server: typeof registry.servers[0], env: Env): Promis
 
 ## Drift Detection
 
-Drift = the set of tools a server advertises today differs from `known_tools` in the registry. New tools may unlock capability; removed tools will break prompts.
+Drift = advertised tools differ from `known_tools` in the registry. New tools may unlock capability; removed tools break prompts.
 
 ```typescript
 // workers/mcp-healthcheck/drift.ts
@@ -416,9 +416,9 @@ crons = ["0 7 * * *", "0 8 * * 1"]  # daily health, weekly drift
 
 ## Updating the Registry
 
-When you add a new MCP server or a server's tool list changes:
+When adding a server or tool list changes:
 
-1. Run `npx @modelcontextprotocol/inspector <server-cmd>` to get the live tool list.
+1. `npx @modelcontextprotocol/inspector <server-cmd>` → get live tool list.
 2. Update `known_tools` in `mcp-registry.json`.
 3. Bump `last_healthy` to today.
 4. Commit — the registry is source-of-truth, not a generated artifact.

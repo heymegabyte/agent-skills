@@ -104,7 +104,7 @@ connect-src 'self' https://us.i.posthog.com https://us-assets.i.posthog.com;
     # accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
 ```
 
-Or use **Workers Builds** (native CF CI, simpler for Worker-only projects, auto-detects framework, preview URL per branch via `wrangler versions upload`).
+Or use **Workers Builds** (native CF CI — auto-detects framework, preview URL per branch via `wrangler versions upload`).
 
 ## Pin versions
 

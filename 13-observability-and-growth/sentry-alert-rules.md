@@ -6,13 +6,13 @@ updated: "2026-04-23"
 
 # Sentry Alert Rules
 
-Every deployed project gets four alert rules automatically at first deploy. Per-project (not global) — each domain gets its own rules. All alerts route to Slack `#emdash-alerts`.
+Four alert rules auto-created at first deploy, per-project (not global). All alerts route to Slack `#emdash-alerts`.
 
 ## Alert Rule Set
 
 ### 1. Error Spike (Critical)
 
-Fires when error rate exceeds 5x the normal baseline within a 5-minute window.
+Fires when error rate exceeds 5x baseline within a 5-minute window.
 
 ```json
 {
@@ -39,7 +39,7 @@ Fires when error rate exceeds 5x the normal baseline within a 5-minute window.
 
 ### 2. New Issue (Low Priority)
 
-First occurrence of any new error. Grouped so repeat triggers don't spam.
+First occurrence of any new error; grouped so repeat triggers don't spam.
 
 ```json
 {
@@ -67,7 +67,7 @@ First occurrence of any new error. Grouped so repeat triggers don't spam.
 
 ### 3. Unhandled Rejection (High Priority)
 
-Any unhandled promise rejection or uncaught exception. Immediate notification.
+Any unhandled promise rejection or uncaught exception.
 
 ```json
 {
@@ -194,7 +194,7 @@ async function configureSentryAlerts(project: string, org: string = 'emdash'): P
 
 ## Deploy Silence Windows
 
-Suppress alerts during deploys to avoid false positives from cold starts and transient errors.
+Suppress alerts during deploys to avoid false positives from cold starts and transient errors:
 
 ```typescript
 async function silenceDuringDeploy(project: string, durationMinutes: number = 10): Promise<string> {
@@ -230,9 +230,9 @@ async function silenceDuringDeploy(project: string, durationMinutes: number = 10
 
 ## Per-Project Isolation
 
-Every project gets its own alert rule set. Never use organization-wide alert rules — they cause noise from unrelated projects.
+Every project gets its own alert rule set. Never use organization-wide rules — they cause noise from unrelated projects.
 
-**Naming convention** — `[{project}] {Alert Name}` — square brackets make filtering easy in Slack.
+**Naming convention** — `[{project}] {Alert Name}` — square brackets enable easy filtering in Slack.
 
 When a project is decommissioned, delete its alert rules:
 
@@ -286,4 +286,4 @@ Minimum version: `@sentry/hono@10.50.0` + `@sentry/bun@10.50.0`. Replaces `touca
 
 ## Integration with 08-deploy Skill
 
-After every first deploy, auto-run `configureSentryAlerts(projectSlug)`. The deploy skill checks if alert rules exist — if not, creates them. Subsequent deploys only trigger silence windows.
+After every first deploy, auto-run `configureSentryAlerts(projectSlug)`. Deploy skill creates rules if missing; subsequent deploys only trigger silence windows.

@@ -226,12 +226,10 @@ export { listmonkWebhook };
 
 ## Double Opt-In Flow
 
-1. User submits email → `POST /api/newsletter/subscribe`
-2. Listmonk creates subscriber (status: `unconfirmed`)
-3. Listmonk sends confirmation email with unique link
-4. User clicks confirmation link → status: `confirmed`
-5. Subscriber receives future campaigns
-6. No confirmation within 72h → auto-cleanup (Listmonk setting)
+1. `POST /api/newsletter/subscribe` → Listmonk creates subscriber (`unconfirmed`)
+2. Listmonk sends confirmation email with unique link
+3. User clicks → `confirmed`; receives future campaigns
+4. No confirmation within 72h → auto-cleanup (Listmonk setting)
 
 ## Footer Newsletter Component
 

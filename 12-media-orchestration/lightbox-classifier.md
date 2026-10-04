@@ -6,7 +6,7 @@ updated: "2026-05-04"
 
 # Lightbox Eligibility Classifier (***NON-NEGOTIABLE — RUNS PER IMAGE***)
 
-An image is lightbox-eligible if AND ONLY IF all three conditions met. Anything else is forbidden — clicking a logo to "zoom in" is a UX failure that cheapens the brand.
+An image is lightbox-eligible only if all three conditions are met. Clicking a logo to "zoom in" is a UX failure that cheapens the brand.
 
 ## Eligibility Rule (`inferLightboxEligibility(profile) → boolean`)
 
@@ -124,7 +124,7 @@ Two distinct layers:
 - **(A)** Build-time profiling above sets `data-gallery`/`data-lightbox` attributes
 - **(B)** Runtime `isEligible()` gate in `lightbox.tsx` fires on every click
 
-Both must agree or images open inconsistently.
+Both must agree — mismatches cause images to open inconsistently.
 
 ### Mandatory attribute contracts
 

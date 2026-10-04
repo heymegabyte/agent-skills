@@ -6,7 +6,7 @@ updated: "2026-04-24"
 
 # Research Pipeline
 
-All research runs on the Worker (not in the container). Results are written as `_` prefixed JSON files into the build directory. Claude Code reads these — never calls APIs for research.
+All research runs on the Worker, not in the container. Results written as `_`-prefixed JSON files into the build directory. Claude Code reads these — never calls APIs for research.
 
 ## Phase 0a: Business Profile (Google Places API)
 
@@ -322,7 +322,7 @@ Briefs are dense — each one is the seed prompt for a parallel jewel-content-au
 
 Persist all three to `_research.json.gaps = { locales: ref, page_set: ref, jewels: ref }` so the build prompt loads the union(source, floor, jewels, locales) automatically.
 
-**Validator** — `validate-rebuild-union.mjs` (skill 15 quality-gates.md) fails build if:
+**Validator** — `validate-rebuild-union.mjs` fails build if:
 
 - Shipped sitemap.xml count < `source_routes.length + missing_routes.length`
 - OR any `secondary_locales[].translation_strategy = "full_route_alt"` lacks `/<locale>/<route>` siblings

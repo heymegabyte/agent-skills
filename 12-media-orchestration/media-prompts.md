@@ -94,6 +94,8 @@ Mood: [match product tone]
 
 ## Ideogram v3 API Call
 
+Ideogram 4.0 (open-weight, Apache 2.0) is current; v3 endpoint remains valid.
+
 ```bash
 curl -X POST "https://api.ideogram.ai/v1/ideogram-v3/generate" \
   -H "Api-Key: $IDEOGRAM_API_KEY" \
@@ -107,4 +109,4 @@ curl -X POST "https://api.ideogram.ai/v1/ideogram-v3/generate" \
 
 - Put desired text in quotation marks within the prompt
 - Upload up to 3 style reference images for consistency
-- **TURBO mode** — ~4s generation at $0.03-0.05 per image
+- **TURBO mode** — ~4s generation at $0.03 per image (Default $0.06, Quality $0.10)

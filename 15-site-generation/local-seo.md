@@ -67,7 +67,7 @@ After build, verify Name+Address+Phone match across: site header, site footer, J
 
 ## Review Generation (***LOCAL RANK SIGNAL #1***)
 
-Review velocity (new reviews/month) is the single biggest Map Pack ranking signal.
+Review velocity (new reviews/month) is the single biggest Map Pack signal.
 
 ### QR-to-Review Flow
 
@@ -144,7 +144,7 @@ If no official badge available, generate clean SVG badge with Ideogram: `{Certif
 - **Google forwarding number** via Google Ads (free with ads account)
 - **CallRail** integration ($45/mo)
 
-Tracks: call duration, caller location, call recording, missed call alerts. Without call tracking: count `tel:` clicks as proxy.
+Tracks: call duration, caller location, call recording, missed call alerts. Without call tracking, count `tel:` clicks as proxy.
 
 ### Local Funnel
 

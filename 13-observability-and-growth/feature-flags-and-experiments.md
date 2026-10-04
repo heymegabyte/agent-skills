@@ -183,7 +183,7 @@ async function updateRollout(flagKey: string, percentage: number, env: Env): Pro
 
 ## Kill Switch Pattern
 
-Critical flags that disable features instantly. Name convention: `kill-{feature}` (inverted logic).
+Disables features instantly. Name convention: `kill-{feature}` (inverted logic).
 
 - `kill-payments` → true = payments **DISABLED**
 - `kill-signups` → true = signups **DISABLED**
@@ -203,7 +203,7 @@ app.post('/api/checkout', async (c) => {
 });
 ```
 
-PostHog: toggle `kill-payments` to true → instant disable. No deploy needed. Rolls back in <1 second.
+PostHog: toggle `kill-payments` to true → instant disable, no deploy, rolls back in <1 second.
 
 ## Experiment Analysis Checklist
 

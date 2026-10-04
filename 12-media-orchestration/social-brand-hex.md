@@ -6,7 +6,7 @@ updated: "2026-05-01"
 
 # Social Media Brand-Hex Map (***NON-NEGOTIABLE — EVERY SOCIAL ICON***)
 
-Every social icon link must hover to ITS brand color — not the generic accent. Generic accent on hover = AI slop. Brand-hex hover = polish. Same map applied in footer, header, contact tiles, share buttons, social proof rows.
+Every social icon link must hover to its brand color — not the generic accent. Generic accent = AI slop. Same map applied in footer, header, contact tiles, share buttons, social proof rows.
 
 ## Canonical Hex Map (`src/data/social-brand-hex.ts`)
 

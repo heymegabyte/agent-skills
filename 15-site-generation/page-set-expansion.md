@@ -8,7 +8,7 @@ updated: "2026-05-21"
 
 Every rebuild/optimization prompt ships the org-type-canonical page set MINIMUM, not the source-page-set floor.
 
-- Source omissions = build opportunities, never excuses
+- Source omissions = build opportunities
 - "Optimized version of X" means X-plus-everything-X-should-have-had, never X-as-is
 - See [[source-site-enhancement]] for trigger conditions
 

@@ -6,7 +6,7 @@ updated: "2026-05-01"
 
 # Grammar Audit (***FINAL COPY PASS — EVERY SITE, EVERY BUILD***)
 
-After all copy is generated (hero, body, blog, FAQ, microcopy, legal), run `grammar-audit.mjs` (GPT Image 2 vision-mini, concurrency 5-8) to fix mechanical errors WITHOUT rewriting. The pass is a corrective filter, not a creative rewrite.
+After all copy is generated (hero, body, blog, FAQ, microcopy, legal), run `grammar-audit.mjs` (GPT Image 2 vision-mini, concurrency 5-8) to fix mechanical errors WITHOUT rewriting — a corrective filter, not a creative rewrite.
 
 ## Mandate (NON-NEGOTIABLE)
 
@@ -88,11 +88,11 @@ Apply edits in-place via `Edit` tool calls. Idempotent — re-running on already
 
 ## Hard Gate
 
-After grammar pass — re-run `gate` script. If grammar pass introduced any error caught by other gates (link 404, citation regex match, banned-word match), revert that specific edit and flag in `audit_logs`. Grammar pass is corrective — it never breaks other gates.
+After grammar pass re-run `gate` script. If it introduced any error caught by other gates (link 404, citation regex match, banned-word match), revert that specific edit and flag in `audit_logs` — grammar pass never breaks other gates.
 
 ## Voice Preservation
 
-Author voice is sacred. Never normalize "ain't" → "is not" if voice is colloquial. Never remove rhetorical fragments. Never add "that" when omitted intentionally ("She knew [that] he'd come."). The audit asks — "Did the author intend this?" → if yes, leave alone.
+Author voice is sacred. Never normalize "ain't" → "is not" for colloquial voice, remove rhetorical fragments, or add "that" when omitted intentionally ("She knew [that] he'd come."). The audit asks — "Did the author intend this?" → if yes, leave alone.
 
 ## Reference Anchors
 

@@ -73,7 +73,7 @@ Generic "create a hero image for /about" prompts FAIL `validate-image-prompts.mj
 ***ZERO MISSING IMAGES — NEVER SHIP BLANK SLOTS — UNIVERSAL — BUILD-BREAKING***
 
 - Every slot MUST end the build with `filled_url != null AND filled_score >= relevance_floor`
-- Failure modes triggering immediate auto-regeneration via GPT Image 1.5 with refined prompt: Pexels returns nothing, NSFW-flagged result, broken scraped image, GPT Image 2 vision relevance score ≤6/10
+- Auto-regenerate via GPT Image 1.5 with refined prompt when: Pexels returns nothing, NSFW-flagged result, broken scraped image, or GPT Image 2 vision relevance score ≤6/10
 - NEVER silent skip; NEVER substitute brand-gradient unless 5 regen attempts exhausted
 
 ### Regen loop (per slot, max 5 attempts)
@@ -216,7 +216,7 @@ Cost: ~$0.04–0.08/image, total $0.30–0.50/site.
 ***RESUMES, BROCHURES, ANNUAL REPORTS — FEATURE PROMINENTLY***
 
 - Download every linked PDF/DOC/PPT/XLS to `public/docs/{slug}.{ext}` and feature on the new site
-- **Team/About pages** — link CVs/resumes inline next to the person: "View {Name}'s Resume →" button
+- **Team/About pages** — link CVs/resumes inline: "View {Name}'s Resume →" button
 - **Generate a preview thumbnail** (first-page render via `pdftoppm` or `pdf2image`) → display as `<a href="...pdf"><img>` so document feels first-class
 - **JSON-LD `DigitalDocument` schema** for each preserved document
 - **Hard gate**: every PDF/DOC linked in the original sitemap MUST resolve 200/301 on the new site on the equivalent page
@@ -380,7 +380,7 @@ Real photos of the actual entity always win when they exist (slots 1–3). Beyon
 | 8 | Pixabay | PIXABAY_API_KEY | Illustrations, vectors | 100/hr | 45 |
 | 10 | Flux 1.1 Pro Ultra | FAL_API_KEY OR REPLICATE_API_TOKEN | Secondary AI (photoreal humans, complex scenes) | — | 85 |
 | 11 | GPT Image 1.5 | OPENAI_API_KEY | Stylized illustrations, sections, OG | — | 80 |
-| 12 | Ideogram 3.0 | IDEOGRAM_API_KEY | Logo + favicon set + text-heavy | — | 80 |
+| 12 | Ideogram 4.0 | IDEOGRAM_API_KEY | Logo + favicon set + text-heavy | — | 80 |
 | 13 | Recraft V3 | RECRAFT_API_KEY | Editable SVG icon sets | — | 75 |
 | 14 | Foursquare | FOURSQUARE_API_KEY | Venue-specific photos | — | 65–75 |
 | 15 | Yelp Fusion | YELP_API_KEY | Business listing photos | — | 60–70 |
@@ -401,13 +401,13 @@ Real photos of the actual entity always win when they exist (slots 1–3). Beyon
 | Pexels | free | Stock photos + videos | commercial-OK |
 | Wikimedia Commons | free | Named landmarks, historic, public figures | CC |
 | Flickr CC | free | Niche/hyperlocal photography | CC-licensed-only |
-| Ideogram Turbo | $0.025 | OG cards w/ tagline + logo | commercial-OK |
+| Ideogram Turbo | $0.03 | OG cards w/ tagline + logo | commercial-OK |
 | Stability AI SD3 | $0.03 | Textures, patterns, abstract bg | commercial-OK |
 | GPT Image 1.5 | $0.034 | Stylized illustrations, section dividers | commercial-OK |
 | GPT Image 1.5 HD | $0.04–0.08 | Fallback for Flux when key absent | commercial-OK |
 | Flux 1.1 Pro Ultra | $0.06 | Photoreal hero (humans, complex scenes, 4MP+) | commercial-OK |
 | Recraft V3 | $0.08 | Editable SVG icon sets, brand-style adherence | commercial-OK |
-| Ideogram 3.0 | $0.09 | Logo + favicon set + text-heavy graphics | commercial-OK |
+| Ideogram 4.0 | $0.03–0.10 (Turbo/Default/Quality) | Logo + favicon set + text-heavy graphics | commercial-OK |
 | Sora | $0.20–0.40 | Short narrative video loops | commercial-OK |
 | Google Street View | $0.007 | Storefront, signage | commercial-OK |
 
@@ -417,7 +417,7 @@ Real photos of the actual entity always win when they exist (slots 1–3). Beyon
 
 - **Photoreal hero** → Flux 1.1 Pro Ultra
 - **Stylized** → GPT Image 1.5
-- **Logo** → Ideogram 3.0
+- **Logo** → Ideogram 4.0
 - **SVG icons** → Recraft V3
 - **OG card** → Ideogram Turbo
 - **Video** → Pexels first, Sora when premium
@@ -465,13 +465,13 @@ Filter for `types: ["interior"]` for ambiance, `types: ["food"]` for restaurants
 
 ### Staff/team photos
 
-- Search Google CSE: `"{business_name} team"` OR `"{business_name} staff"` with `searchType=image`
-- Check business Facebook page cover photos and "About" section
+- Google CSE: `"{business_name} team"` OR `"{business_name} staff"` with `searchType=image`
+- Check Facebook cover photos and "About" section
 - NEVER generate fake headshots — use real photos or skip team section entirely
 
 ## Image Search Queries
 
-Per business: construct 3–5 queries combining business type + city, business name + storefront, business type + interior, specific services + professional.
+Per business: 3–5 queries combining business type + city, business name + storefront, business type + interior, specific services + professional.
 
 **Example for "Vito's Mens Salon, Lake Hiawatha NJ"**:
 

@@ -9,8 +9,8 @@ always-load: false
 
 ## Stack
 
-- **Tag Management** — GTM (Google, not self-hosted)
-- **Web Analytics** — GA4 (Google, not self-hosted)
+- **Tag Management** — GTM (Google)
+- **Web Analytics** — GA4 (Google)
 - **Product Analytics** — PostHog (self-hosted, posthog.megabyte.space)
 - **Feature Flags** — PostHog (self-hosted)
 - **A/B Testing** — PostHog Experiments (self-hosted)
@@ -118,18 +118,11 @@ connect-src: https://www.google-analytics.com https://analytics.google.com https
 
 ### Sentry (Error Tracking + Performance)
 
-Every project gets Sentry from day one. Missing `@sentry/cloudflare` (Workers) or `@sentry/node` → install SDK + wrap entry point + create project via `mcp__sentry__create_project` (org: megabyte-labs, team: megabyte-labs, platform: javascript) → set `SENTRY_DSN` via `wrangler secret put`. Full-stack traces: `tracesSampleRate`, `app.onError()` → `captureException` with route + userId tags, breadcrumbs before risky ops, `SENTRY_RELEASE` for deploy tracking.
+Every project gets Sentry from day one. Missing `@sentry/cloudflare` (Workers) or `@sentry/node` → install SDK + wrap entry point + create project via `mcp__sentry__create_project` (org: megabyte-labs, team: megabyte-labs, platform: javascript) → set `SENTRY_DSN` via `wrangler secret put`. Set `tracesSampleRate`; `app.onError()` → `captureException` with route + userId tags; breadcrumbs before risky ops; `SENTRY_RELEASE` for deploy tracking.
 
 ### PostHog (Product Analytics + Feature Flags + Session Recording)
 
-Every HTML page gets PostHog snippet. Config:
-
-- `persistence:'memory'` (cookie-free, no GDPR banner)
-- `capture_pageview:true`
-- `capture_pageleave:true`
-- `autocapture:true`
-
-CSP: script-src + connect-src for PostHog API host. PostHog project key stored as env var `POSTHOG_KEY` or inline for static HTML. Self-hosted preferred (posthog.megabyte.space) but `us.i.posthog.com` acceptable for cloud.
+Every HTML page gets PostHog snippet: `persistence:'memory'` (cookie-free) · `capture_pageview:true` · `capture_pageleave:true` · `autocapture:true`. CSP: script-src + connect-src for PostHog API host. Key as `POSTHOG_KEY` env var or inline for static HTML. Self-hosted preferred (posthog.megabyte.space); `us.i.posthog.com` acceptable.
 
 Events: `page_viewed`, `cta_clicked`, `form_submitted`, `donate_click`, `newsletter_signup`, `scroll_depth`.
 
@@ -145,7 +138,7 @@ GA4 configured inside GTM (never standalone). Custom dimensions over separate ev
 
 ### Enforcement
 
-Missing ANY of the three → add in same prompt. No page ships without all three firing. Every action: GA4 event + PostHog event + Sentry breadcrumb. CSP must allow all three domains. Verify in browser DevTools Network tab before marking deploy as done.
+Missing ANY of the three → add in same prompt. No page ships without all three firing. Every action: GA4 event + PostHog event + Sentry breadcrumb. CSP must allow all three domains. Verify in DevTools Network tab before marking deploy done.
 
 ## Verification Checklist
 

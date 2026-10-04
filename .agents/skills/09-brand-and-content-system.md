@@ -29,7 +29,7 @@ Extract real brand assets and apply the full copy system (anti-slop, SEO, trust 
 
 ## Brand Extraction (Rebuilds)
 
-1. Screenshot existing (Wayback if down). Extract logo/colors/fonts/tone. Never discard equity.
+1. Screenshot existing (Wayback if down); extract logo/colors/fonts/tone. Never discard equity.
 
 2. **Color extraction (NON-NEGOTIABLE)** — Screenshot with Playwright, GPT Image 2 vision extracts hex (logo priority), cross-ref logo, build palette, validate WCAG AA. NEVER invent, NEVER use Emdash defaults for clients, NEVER infer from category.
 

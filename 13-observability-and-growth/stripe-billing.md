@@ -22,7 +22,7 @@ updated: "2026-05-10"
 stripe.subscriptions.update(subId, { items: [{ id: itemId, quantity: seatCount }] })
 ```
 
-- Auto-adjust on member add/remove via Clerk org webhook; prorate mid-cycle
+- Auto-adjust on member add/remove via Clerk org webhook; prorates mid-cycle
 - Display: `"$12/seat/mo × 8 seats = $96/mo"`
 
 **Stripe Tax** — automatic tax calculation:
@@ -185,9 +185,7 @@ app.get('/api/donation-progress', async (c) => {
 
 ### The Ethical Line
 
-- Real scarcity only (actual limited spots, actual deadline)
-- No confirmshaming (`"No, I don't want to help"` = dark pattern)
-- Easy cancellation — as easy as signup; no hidden fees at checkout
+- Real scarcity only · No confirmshaming (`"No, I don't want to help"` = dark pattern) · Cancellation as easy as signup; no hidden fees at checkout
 
 ## Billing Meter API v2 (GA 2026)
 
@@ -217,7 +215,7 @@ const hasFeature = data.some(e => e.feature.lookup_key === 'advanced_analytics')
 if (!hasFeature) return c.json({ error: 'Upgrade required', code: 'ENTITLEMENT_MISSING' }, 403);
 ```
 
-- Use for plan-tier feature gating; auto-updates when plan changes — no webhook needed for feature access
+- Plan-tier feature gating; auto-updates when plan changes — no webhook needed for feature access
 
 ## Stripe Agentic Commerce (ACP — 2026)
 

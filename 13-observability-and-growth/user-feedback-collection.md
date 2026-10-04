@@ -114,11 +114,11 @@ app.post('/api/testimonial', async (c) => {
 });
 ```
 
-**Moderation** — testimonials are `pending` until manually approved. Display approved ones on the homepage as social proof (skill 09).
+**Moderation** — testimonials are `pending` until approved; display approved on homepage as social proof (skill 09).
 
 ## Admin View (`/admin/feedback`)
 
-Simple table showing all feedback with approve/reject buttons. Protected by auth or basic admin password.
+Table of all feedback with approve/reject buttons. Protected by auth or basic admin password.
 
 ## MCP Tools Available
 

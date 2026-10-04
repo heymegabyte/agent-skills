@@ -21,7 +21,7 @@ Apply meaning-first CSS animations (scroll-driven, View Transitions, `@starting-
 2. **Continuity** — preserve spatial context across state changes (page transition, modal open)
 3. **Delight** — express brand personality (hero parallax, signature reveal)
 
-Anything else = AI slop. Cut it.
+Anything else = AI slop; cut it.
 
 ## 3-Tier Hierarchy
 

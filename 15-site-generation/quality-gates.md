@@ -12,7 +12,7 @@ updated: "2026-04-24"
 
 > **Model migration note (pass-76, 2026-06-09)**: `DALL-E` → **GPT Image 1.5** + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`. Quality gates unchanged.
 
-- Takes HTML file path → sends first 14KB to vision model
+- Sends first 14KB of HTML to vision model
 - Persona: "senior Stripe web designer"
 - **8 scoring categories**: color contrast, typography, layout/spacing, animations, images, mobile responsiveness, brand consistency, visual polish vs generic AI look
 - Scale 1–10
@@ -445,7 +445,7 @@ All 16 local components must be available in template: HeroWithPhoto, ServiceCar
 ## Generalization Principle
 
 - Every site-specific criticism MUST be generalized into a rule for ALL future builds
-- Pattern: site-specific symptom → name the class of failure → universal rule in `~/.claude/rules/always.md` → automated validator row in `## Automated Build Gates` → criticism-registry entry with date+site
+- Pattern: symptom → class of failure → universal rule in `~/.claude/rules/always.md` → automated validator row in `## Automated Build Gates` → criticism-registry entry with date+site
 - Future incidents matching an existing class extend (NOT duplicate) the existing rule
 
 ### Canonical generalization cases (njsk-light 2026-05-02 — 12 critiques → 12 universal rules + validators)
@@ -508,6 +508,8 @@ node scripts/validate-assets.mjs dist && node scripts/validate-meta.mjs dist && 
 | Blog corpus completeness | `validate-blog-corpus-complete.mjs` (njsk-light 2026-05-02) | when source has blog (URL paths matching `/blog\|/news\|/articles\|/journal\|/posts\|/press\|/updates\|/insights\|/stories` OR sitemap ≥10 such URLs): assert `_corpus.json.posts.length >= source_blog_post_count * 1.0`; every post is a route with BlogPosting JSON-LD + author byline + publish date + tags + categories + reading time + ≥3 related-posts + share buttons | exit 1 |
 
 ## Lighthouse CI (***NON-NEGOTIABLE***)
+
+Lighthouse 13.x is current — since 13.3 an experimental Agentic Browsing category scores how AI agents navigate/act on the site (perf weights: TBT 30% / LCP 25% / CLS 25% / FCP 10% / SI 10%); thresholds below unchanged.
 
 `.lighthouserc.json` config:
 

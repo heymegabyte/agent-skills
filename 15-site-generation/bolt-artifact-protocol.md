@@ -70,7 +70,7 @@ First `<boltAction>` MUST be `filePath="PLAN.md"` containing:
 - Validators: validate-assets.mjs, validate-meta.mjs, validate-citations.mjs, validate-h1.mjs
 ```
 
-Forcing plan as a real file (not comment, not chat message) means it's auditable post-build, version-controlled, visible to next iteration.
+Forcing plan as a real file (not comment, not chat message) — auditable post-build, version-controlled, visible to next iteration.
 
 ## Runtime Semantics
 

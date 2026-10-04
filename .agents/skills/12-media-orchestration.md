@@ -13,7 +13,7 @@ source: "12-media-orchestration/SKILL.md (heymegabyte/agent-skills)"
 
 # 12 — Media Orchestration
 
-Plan and generate all site media section-by-section: images (GPT Image 1.5), logos (Ideogram v3), video (Sora), OG cards, and compression pipeline.
+Generate all site media section-by-section: images (GPT Image 1.5), logos (Ideogram v3), video (Sora), OG cards, and compression pipeline.
 
 > **Model migration note (pass-77, 2026-06-09)**: `DALL-E` → **GPT Image 1.5** + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`.
 
@@ -32,11 +32,11 @@ Plan and generate all site media section-by-section: images (GPT Image 1.5), log
 
 Hero → GPT Image 1.5 / Sora · Features → GPT Image 1.5 / SVG · How It Works → GPT Image 1.5 · Testimonials → stock · About → stock/real · Blog → GPT Image 1.5 · Social → Satori OG 1200×630 · Icons → Ideogram v3
 
-Pre-gen checklist: communication goal? Brand style? Dimensions? Format? Budget? Stock or generated?
+Pre-gen: communication goal · brand style · dimensions · format · budget · stock vs. generated?
 
 ## Visual Inspection (MANDATORY)
 
-Read every image before deploy. Check: blur, artifacts, watermarks, wrong colors, AI hallucinations, gibberish text. Fail = regenerate w/ improved prompt. Quality bar: 2× retina, no artifacts, brand palette, consistent style, no uncanny valley.
+Read every image before deploy: blur · artifacts · watermarks · wrong colors · hallucinations · gibberish text. Fail → regenerate with improved prompt. Quality bar: 2× retina, no artifacts, brand palette, consistent style, no uncanny valley.
 
 ## Brian's Style
 
@@ -73,6 +73,7 @@ Every slot MUST end build w/ `filled_url != null AND filled_score >= relevance_f
 ## Logo / Icon / Video / OG
 
 - **Logo** — Ideogram v3 (best text rendering); **Icons** — Recraft V3; output: PNG transparent + SVG; bg removal → favicon set (16/32/180/192/512 + maskable); brand mark MUST be vector-clean
+  - Ideogram 4.0 (open-weight, Apache 2.0) is current — generates native transparent backgrounds (reduces bg-strip need); v3 endpoint remains valid
 - **Video** — Sora (primary cinematic); Veo (narrative stitching, 7-8 × 8-sec clips → 60-sec arc); HeyGen (explainer/spokesperson); captions VTT + transcript; `prefers-reduced-motion` → static poster fallback
 - **OG (1200×630)** — Satori edge-rendered, per-route unique, BRANDED CARD never raw photo, ≤100KB, cached KV 7d / R2 forever
 

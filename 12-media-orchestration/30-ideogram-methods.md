@@ -6,9 +6,7 @@ updated: "2026-05-11"
 
 # 30 Ideogram Methods (***UNIVERSAL CATALOG — EVERY GENERATED SITE***)
 
-Brand-coherent Ideogram v3 assets fan out across the entire site beyond `hero.png`.
-
-Each method has: `slot id` · `dims` · `dpi` · `prompt template` · `negative prompt` · `style preset` · `format` · `output path` · `consumer component` · `fallback chain` · `cache key`
+Brand-coherent Ideogram v3 assets fan out across the entire site beyond `hero.png`. Each method carries: `slot id` · `dims` · `dpi` · `prompt template` · `negative prompt` · `style preset` · `format` · `output path` · `consumer component` · `fallback chain` · `cache key`
 
 Manifest lives at `src/data/ideogram/methods.ts` (typed catalog) + `public/_ideogram/manifest.json` (post-build asset registry).
 
@@ -259,6 +257,8 @@ await writeManifest(manifestPath, existing);
 
 ## API contract (Ideogram v3)
 
+Ideogram 4.0 (open-weight, Apache 2.0) is current; v3 endpoint remains valid.
+
 ```ts
 POST https://api.ideogram.ai/v1/ideogram-v3/generate
 Headers: { 'Api-Key': process.env.IDEOGRAM_API_KEY }
@@ -276,7 +276,7 @@ Returns: { data: [{ url, prompt, resolution, is_image_safe, seed, style_type }] 
 
 ## Cost guardrail
 
-- **QUALITY** — ≈ $0.08/image · **DEFAULT** — ≈ $0.04 · **TURBO** — ≈ $0.02
+- **QUALITY** — $0.10/image · **DEFAULT** — $0.06 · **TURBO** — $0.03 (hosted API tiers)
 - Catalog of 30 methods × 5-15 routes = 150-450 images.
 - Use TURBO for variants (#3 twitter, #21 light/dark mirror, #29 social channel mirrors); QUALITY only for #1 hero, #16 PDF cover, #28 press kit.
 - Budget: ~$10-20 per full site generation. Cache aggressively — same prompt+seed returns cached asset.

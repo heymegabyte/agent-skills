@@ -7,7 +7,7 @@ description: "Keep codebase in sync: README (install.doctor template, shields.io
 
 # Documentation and Codebase Hygiene
 
-Stale docs are bugs. The entire codebase (code, comments, markdown, configs) stays in sync at all times.
+Stale docs are bugs. Code, comments, markdown, and configs stay in sync at all times.
 
 ## README.md (install.doctor Template)
 

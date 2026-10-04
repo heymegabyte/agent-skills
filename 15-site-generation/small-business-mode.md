@@ -80,7 +80,7 @@ Name + Address + Phone must match Google Business Profile EXACTLY across every p
 
 - Build gate `validate-nap-consistency.mjs` greps every dist HTML page for the canonical NAP triplet from `_research.json.business`.
 - Fails on any deviation (truncated address, formatted phone variations like `(555) 123-4567` vs `555-123-4567`, different suite numbers).
-- One inconsistency torpedoes local SEO ranking — Google penalizes inconsistent NAP across listings.
+- One inconsistency torpedoes local SEO — Google penalizes inconsistent NAP across listings.
 
 ### Hyperlinks
 
@@ -129,7 +129,7 @@ Required surfaces in priority order:
 
 ## Copy Voice
 
-Sharp voice from `rules/copy-writing.md` applies but dialed down for local-business — repeat customers + word-of-mouth reputation; edgy copy feels off-brand.
+Sharp voice from `rules/copy-writing.md` applies, dialed down for local-business — repeat customers + word-of-mouth reputation; edgy copy feels off-brand.
 
 - Works: "We've cut hair in this town for 22 years." / "12-minute oil changes. We know you're busy."
 - Banned: "We disrupt traditional plumbing." / "Revolutionary new haircut experience."
@@ -156,11 +156,11 @@ Two paths in priority order:
 1. **Google Business Profile is the CMS** — Hours, photos, services, FAQs, posts edited in Google's UI; build pulls from Places API every 6 hours via Cron Trigger; site re-renders affected pages.
 2. **Markdown files in a private R2-mirrored repo** — about story, blog posts, custom descriptions, team bios. Owner emails/texts changes to `brian@megabyte.space`, AI commits + redeploys (~10s turnaround).
 
-Scaffold `/admin` (Clerk magic-link, TipTap or Editor.js) only when owner asks — most don't, email path covers 80%.
+Scaffold `/admin` (Clerk magic-link, TipTap or Editor.js) only when owner asks — email path covers 80%.
 
 ## Performance Budget (relaxed for local)
 
-Older customer demographics + slower mobile networks — tighten image budgets:
+Older demographics + slower mobile networks — tighten image budgets:
 
 - Largest hero ≤120KB (vs 200KB default)
 - Total page ≤350KB (vs 500KB)

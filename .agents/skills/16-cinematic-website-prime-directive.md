@@ -125,7 +125,7 @@ One-line prompt → satisfy all 100 build-breaking rules across 10 categories be
 81. Playwright E2E 6bp covering homepage → key flow → conversion
 82. Tests start at homepage, navigate by clicking nav (never `page.goto` for internal)
 83. Vitest 5 unit tests for utilities + Zod schemas
-84. Lighthouse CI: Perf ≥90, A11y ≥95, BP ≥95, SEO ≥95
+84. Lighthouse CI: Perf ≥90, A11y ≥95, BP ≥95, SEO ≥95 (Lighthouse 13.x — since 13.3 an experimental Agentic Browsing category scores AI-agent navigation; perf weights TBT 30 / LCP 25 / CLS 25 / FCP 10 / SI 10)
 85. AI vision QA ≥9/10 per route (visual-qa agent w/ Opus 4.8)
 86. Percy AI Visual Review for full-page regression
 87. Yoast GREEN on every content page

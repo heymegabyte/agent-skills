@@ -115,7 +115,7 @@ async function chargeOnce(env: Env, sourceId: string, amountCents: number, email
 }
 ```
 
-Every charge MUST include a unique `idempotency_key` (UUID) — retrying with the same key returns the original payment, never double-charges.
+Every charge requires a unique `idempotency_key` (UUID) — retrying with the same key returns the original payment, never double-charges.
 
 ## Webhook Handler (Cloudflare Worker)
 
@@ -184,7 +184,7 @@ await fetch(`${apiBase}/v2/subscriptions`, {
 });
 ```
 
-For small nonprofits without staff to manage Plans, default to one-time charges + "donate again" CTA in receipt email.
+For small nonprofits without staff to manage Plans: one-time charges + "donate again" CTA in receipt email.
 
 ## Environment Toggle
 
@@ -228,7 +228,7 @@ img-src 'self' https://*.squarecdn.com https://*.squareup.com data:
 
 ## Auto-Detect Square Account
 
-- `GET /v2/locations`: single location → auto-use as `SQUARE_LOCATION_ID`; multi-location → ask which is receiving; no account → prompt signup at `squareup.com/signup`
+- `GET /v2/locations`: single → auto-use as `SQUARE_LOCATION_ID`; multi-location → ask which is receiving; no account → prompt signup at `squareup.com/signup`
 
 ## Square API Coverage
 

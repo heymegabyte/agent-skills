@@ -6,7 +6,7 @@ updated: "2026-05-02"
 
 # NotebookLM Pipeline
 
-Every site ships 3 NotebookLM-style artifacts auto-generated from `_research.json` + `_pdf_facts.json` + `_corpus.json`:
+Every site ships 3 NotebookLM-style artifacts generated from `_research.json` + `_pdf_facts.json` + `_corpus.json`:
 
 1. **Two-host audio podcast** — rendered on `/about` + listed at `/podcast.xml` RSS
 2. **Infographic gallery** (≥3 panels: data chart + branded panel + hero illustration) — rendered on `/about`
@@ -156,9 +156,9 @@ export function PodcastPlayer({ src, transcriptUrl, captionsVtt }: Props) {
 }
 ```
 
-### Transcript on-page (mandatory for SEO + accessibility)
+### Transcript on-page (mandatory — SEO + accessibility)
 
-Render full transcript below the player as `<details><summary>Full transcript</summary>...</details>`. Use `details.open=true` via JS on desktop ≥1280px.
+Render full transcript below the player as `<details><summary>Full transcript</summary>...</details>`. Open via JS on desktop ≥1280px.
 
 ### RSS feed `/podcast.xml` (Hono route)
 
@@ -431,7 +431,7 @@ NEVER block site deploy on NotebookLM artifacts.
 - `AUTOCONTENT_API_KEY` (fallback) — `https://autocontentapi.com/account`
 - `NAPKIN_API_KEY` (panel fallback) — `https://www.napkin.ai/account/api`
 
-All loaded via `get-secret KEY` or sourced from `${CLAUDE_ENV_FILE}` per CLAUDE.md secrets pattern.
+All loaded via `get-secret KEY` or `${CLAUDE_ENV_FILE}`.
 
 ## Quality Gates (cross-ref skill 15 quality-gates.md)
 

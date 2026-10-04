@@ -7,7 +7,7 @@ always-load: false
 
 # Activation Funnel
 
-PLG lives and dies on activation. Define ONE north-star activation metric — the moment a user experiences undeniable value — then instrument everything upstream and downstream of it.
+Define ONE north-star activation metric — the moment a user experiences undeniable value — then instrument everything upstream and downstream of it.
 
 ## Magic-Moment Definition
 
@@ -182,9 +182,7 @@ LIMIT 500
 
 ## Cohort Analysis: Retention by Activation Status
 
-In PostHog UI: Retention → breakdown by `$feature/activated` (custom property set on magic-moment).
-
-Workers-side: set a PostHog person property at magic-moment:
+In PostHog UI: Retention → breakdown by `$feature/activated` (custom property set on magic-moment). Workers-side:
 
 ```typescript
 await posthog.groupIdentify({ groupType: 'company', groupKey: orgId,
@@ -219,7 +217,7 @@ export async function markStep(env: Env, userId: string, step: string) {
 
 ### Empty States as Action Prompts
 
-Every empty state is an activation hook — never "No data yet":
+Every empty state is an activation hook — never "No data yet".
 
 ```tsx
 // ✅

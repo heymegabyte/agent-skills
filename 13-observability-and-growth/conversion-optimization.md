@@ -9,9 +9,7 @@ updated: "2026-04-23"
 
 ## Core Loop
 
-Measure → hypothesis → test → analyze → iterate. Never skip baseline measurement. A/B test ONE variable at a time via PostHog feature flags.
-
-**Statistical significance:** min 1000 visitors/variant, 95% confidence, 2-week minimum duration.
+Measure → hypothesis → test → analyze → iterate. Never skip baseline measurement. A/B test ONE variable at a time via PostHog feature flags. Statistical significance: min 1000 visitors/variant, 95% confidence, 2-week minimum.
 
 ## Key Metrics
 
@@ -82,7 +80,7 @@ Never:
 
 ## Local Business Conversions (***NOT SAAS***)
 
-Local businesses don't have trial-to-paid funnels. Their conversions are physical-world actions.
+Conversions are physical-world actions, not trial-to-paid funnels.
 
 ### Event Taxonomy (PostHog + GA4 + Sentry breadcrumb)
 

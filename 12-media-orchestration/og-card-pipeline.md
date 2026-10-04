@@ -7,7 +7,7 @@ cross-links: [cf-browser-rendering, always, r2-patterns]
 
 # OG Card Pipeline
 
-Advanced companion to `og-image-generation.md`. Focuses on: content-hash URLs for immutable caching, per-entity typed JSX templates, module-scoped font memoization, and R2 as the sole cache layer. Skip this file for simple query-param cards — use the base file. Use this when you need per-route typed cards (blog, product, profile, event) with scraper-proof cache invalidation.
+Advanced companion to `og-image-generation.md`: content-hash URLs for immutable caching, per-entity typed JSX templates, module-scoped font memoization, R2 as sole cache layer. Skip for simple query-param cards — use the base file. Use when you need per-route typed cards (blog, product, profile, event) with scraper-proof cache invalidation.
 
 ## Why OG Cards Matter
 
@@ -58,8 +58,8 @@ wrangler r2 object put og-cards/wasm/resvg.wasm \
   --file ./node_modules/@resvg/resvg-wasm/index_bg.wasm
 ```
 
-- Re-upload fonts when upgrading Satori major versions — glyph subset requirements change
-- Pin `@resvg/resvg-wasm` version in `package.json`; WASM binary must match the JS wrapper exactly
+- Re-upload fonts on Satori major-version upgrades — glyph subset requirements change
+- Pin `@resvg/resvg-wasm` in `package.json`; WASM binary must match the JS wrapper exactly
 
 ## WASM + Font Bootstrap
 
@@ -150,7 +150,7 @@ export async function storePng(
 
 - `immutable` directive tells CDN edges and browsers the bytes will never change at this URL — safe because the URL encodes the content hash
 - Content changes → new hash → new R2 key → scraper fetches fresh — no manual cache purge needed
-- Stale keys accumulate; run a monthly Scheduled Worker to delete R2 objects older than 90 days with `bucket.list()` + `bucket.delete()`
+- Stale keys accumulate — run a monthly Scheduled Worker to delete R2 objects older than 90 days via `bucket.list()` + `bucket.delete()`
 
 ## SVG → PNG Conversion
 

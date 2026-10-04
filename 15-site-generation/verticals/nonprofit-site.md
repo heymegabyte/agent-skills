@@ -8,7 +8,7 @@ when_to_use: When the business is a 501(c)(3), religious institution, NGO, commu
 
 ## Goal
 
-Drive recurring donations, volunteer sign-ups, and program awareness. Trust + transparency are the load-bearing values — every dollar claim must be cited; every photo must be real.
+Drive recurring donations, volunteer sign-ups, and program awareness. Trust + transparency are load-bearing — every dollar claim cited, every photo real.
 
 ## Above the fold (mandatory)
 

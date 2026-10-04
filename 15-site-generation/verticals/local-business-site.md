@@ -8,7 +8,7 @@ when_to_use: When the business has a defined local service area (city/county) an
 
 ## Goal
 
-Convert local searchers into bookings and calls. The site competes against Yelp, Google Maps, and a dozen mediocre competitors — it must rank, answer fast, and make booking a 1-tap action.
+Convert local searchers into bookings and calls. Competes against Yelp, Google Maps, and mediocre competitors — must rank, answer fast, and make booking a 1-tap action.
 
 ## Above the fold (mandatory)
 

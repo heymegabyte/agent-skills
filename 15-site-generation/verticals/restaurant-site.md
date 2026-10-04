@@ -8,7 +8,7 @@ when_to_use: When the business profile is food-service (NAICS 722) — restauran
 
 ## Goal
 
-Deliver a website that drives reservations, online orders, and walk-ins. Visitors should know what's being served, when, where, and how to order — within 5 seconds of landing.
+Drive reservations, online orders, and walk-ins. Visitors must know what's being served, when, where, and how to order — within 5 seconds of landing.
 
 ## Above the fold (mandatory)
 

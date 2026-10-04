@@ -51,27 +51,21 @@ curl -X POST "https://postiz.megabyte.space/api/posts" \
 After posting, verify the post rendered correctly:
 
 1. Get the public share URL from the Postiz API response
-2. Use Playwright to screenshot the share URL
-3. Visual inspection — verify image loaded, text not truncated, link works
+2. Playwright screenshot the share URL
+3. Verify image loaded, text not truncated, link works
 4. If issues found — debug, fix, repost
 
 ## Iterative Improvement
 
-Track which posts get engagement. Over time:
-
-- Which platforms drive the most traffic?
-- Which post formats get the most engagement?
-- What time of day performs best?
-
-Log this in PostHog for analysis.
+Track which posts get engagement: which platforms drive traffic, which formats engage, which times perform best. Log in PostHog.
 
 ## Coolify Access
 
 Postiz runs on Coolify. If the API is down:
 
 1. Check Coolify status — `curl coolify.megabyte.space/api/v1/services`
-2. Restart the service if needed via Coolify API
-3. Log the outage for future reference
+2. Restart via Coolify API if needed
+3. Log the outage
 
 ## MCP Tools Available
 

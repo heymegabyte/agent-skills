@@ -8,7 +8,7 @@ updated: "2026-04-24"
 
 > **Model migration note (pass-77, 2026-06-09)**: `DALL-E` → **GPT Image 1.5** + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`. Build prompt structure unchanged.
 
-The container runs ONE comprehensive Claude Code prompt assembled dynamically from form data + research results. Claude reads pre-written context files (`_research.json`, `_brand.json`, `_assets.json`, etc.) and customizes the pre-installed template.
+The container runs ONE comprehensive Claude Code prompt assembled dynamically from form data + research results. Claude reads pre-written context files and customizes the pre-installed template.
 
 ## njsk.org Quality Bar (***THE FLOOR***)
 
@@ -222,11 +222,10 @@ Every image in assets/ MUST appear on the site. Every fact must come from resear
 - Nav must include ALL pages — never hide pages that exist on the original site. If nav gets crowded, use dropdown menus
 
 ### Page Enrichment Patterns (***AUTO-APPLY ON FIRST BUILD***)
-These patterns must be applied automatically — not as a follow-up. Every page should ship with these features on the first prompt.
 
 **Video Heroes:** Every major page gets a `<video autoPlay muted loop playsInline>` background behind the hero section at 20% opacity with a gradient overlay. Source: download 2-3 Pexels videos (SD 640x360, ~600KB each) matching the business type. Search Pexels for "{business_type}" + "volunteer" + "community meal" etc. Store in `public/videos/`. Fallback: photo hero with gradient if no video available. Use `aria-hidden="true"` on video elements.
 
-**Contact Forms (***WHEREVER EMAIL IS MENTIONED***):** Any page that tells users to "email X" or "call to get started" MUST include an inline contact form pointing to that email via the projectsites.dev contact API or Resend. The form replaces the friction of copy-pasting an email. Fields: name, email, message (minimum). For volunteer pages: add organization and group size fields. For donation inquiries: add amount range. Always include Turnstile invisible widget. Show fallback email/phone below the form.
+**Contact Forms (***WHEREVER EMAIL IS MENTIONED***):** Any page that tells users to "email X" or "call to get started" MUST include an inline contact form pointing to that email via the projectsites.dev contact API or Resend. Fields: name, email, message (minimum). For volunteer pages: add organization and group size fields. For donation inquiries: add amount range. Always include Turnstile invisible widget. Show fallback email/phone below the form.
 
 **Partner/Client Logo Strips:** When the site mentions corporate partners, sponsors, or collaborators by name, download their logos and display a grayscale logo strip with hover-to-color effect (`grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all`). Major corporations (Fortune 500) have logos on logo.wine, Wikimedia Commons, or companieslogo.com. Smaller orgs: extract from their website headers. Store in `public/images/partners/`. Consistent height (h-12 sm:h-16), object-contain, max-w-[160px].
 
@@ -255,8 +254,7 @@ These patterns must be applied automatically — not as a follow-up. Every page 
 - Migrate ALL text from `_scraped_content.json` — rewrite for quality but preserve substance.
 - Every blog post, news article, update → individual page at matching URL path.
 - Team bios, service descriptions, FAQ answers, event archives → all migrated.
-- Discard only: broken markup, "test" pages, truly empty pages, exact duplicates.
-- When combining thin pages: content merges into a richer page, old URLs get 301s.
+- Discard only: broken markup, "test" pages, truly empty pages, exact duplicates. Thin pages that merge get 301s.
 - Word count of new site MUST MATCH OR EXCEED original.
 
 ### URL Slug Hygiene (***ALWAYS CLEAN — NEVER COPY CMS GARBAGE***)
@@ -290,7 +288,7 @@ Parse _scraped_content.json for all original URL paths. Every original URL must 
 
 ### Media Acquisition (***MANDATORY — RUNS IN ALL BUILD MODES***)
 
-- Media enrichment is NOT optional. Read ~/.agentskills/15-site-generation/media-acquisition.md for full strategy.
+- Read ~/.agentskills/15-site-generation/media-acquisition.md for full strategy.
 - **The njsk.org text-only-site incident:** first build shipped zero images — hard gate now applies to ALL builds.
 
 **Manual/prompt build media steps (***FIRST PROMPT — BEFORE ANY CODE | run agents 1-5 IN PARALLEL***):**
@@ -311,7 +309,7 @@ For non-profit/church sites: extract volunteer group photos from blog posts (emo
 **Process:**
 1. **Scrape every page individually:** For each page in _scraped_content.json or original sitemap, WebFetch the page and extract ALL `<img>` src URLs from the page body (not nav/footer chrome)
 2. **Download with page association:** Save images to `public/images/{section}/{slug}-{index}.jpg` (e.g., `public/images/blog/federal-reserve-bank-1.jpg`, `public/images/services/dining-hall-1.jpg`). Maintain a mapping of page→image paths
-3. **Data model integration:** Every page's data structure MUST include an `images: string[]` field with local paths. Blog posts: `blogPosts[].images`. Services: `services[].images`. Team members: `team[].photo`. This is NOT optional metadata — it's a required field
+3. **Data model integration:** Every page's data structure MUST include an `images: string[]` field with local paths. Blog posts: `blogPosts[].images`. Services: `services[].images`. Team members: `team[].photo`.
 4. **Featured image:** First image in the array (`images[0]`) is the featured/hero image — displayed in listing cards, OG tags, and page hero sections
 5. **Gallery rendering:** Pages with 2+ images render a photo grid/gallery below the primary content. Use `grid-cols-1 sm:grid-cols-2` with `object-cover aspect-[4/3]` for consistent presentation
 6. **CMS URL patterns:** Squarespace uses `images.squarespace-cdn.com/content/v1/{site-id}/{hash}/{filename}`. WordPress uses `wp-content/uploads/{year}/{month}/{filename}`. Wix uses `static.wixstatic.com/media/{hash}`. Always download and host locally — never hotlink to CMS CDN (the original site may go offline)
@@ -384,7 +382,7 @@ Web fonts loading from Google Fonts/CDN cause a visible Flash Of Unstyled Text (
 
 ### Full Blog Archive Crawl (***MANDATORY — 100% COVERAGE OR BUILD FAILS***)
 
-- Pagination stops at page 1 = silently dropping 50–90% of the archive. Coverage threshold: 100%, not "most".
+- Coverage threshold: 100%, not "most". Pagination stops at page 1 = silently dropping 50–90% of the archive.
 
 **Squarespace canonical method (***ALWAYS USE THIS FIRST FOR SQUARESPACE — JSON API***):**
 
@@ -742,7 +740,7 @@ Read _domain_features.json and implement ALL listed features for this business c
 
 ### Universal Polish Rules (***BUILD-BREAKING — 13 rules from 2026-05-02 lonemountainglobal+njsk+nyfb cycle***)
 
-These rules cascade out of universal feedback gathered across the May 2026 benchmark batch. Every site must ship ALL of them on the first build — never as a follow-up patch. Each maps to a validator in `quality-gates.md` and a template component in `template-system.md`.
+Every site ships ALL on first build — never as a follow-up patch. Each maps to a validator in `quality-gates.md` and a template component in `template-system.md`.
 
 **1. Logo Transparent Variant (***BUILD-BREAKING — `validate-logo-transparent-variant.mjs`***):**
 

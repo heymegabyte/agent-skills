@@ -6,7 +6,7 @@ updated: "2026-04-25"
 
 # Domain Features
 
-Two layers: universal features (every site gets these) + category-specific features (loaded by business type).
+Two layers: universal (every site) + category-specific (loaded by business type).
 
 ## Universal Features (EVERY GENERATED SITE)
 
@@ -357,4 +357,4 @@ Every site gets: Organization or category-specific subtype, FAQPage, BreadcrumbL
 
 ## Feature Loading
 
-Build prompt checks business category → loads matching feature set → injects into build instructions. Unknown categories default to generic LocalBusiness with: about, services, gallery, testimonials, contact, FAQ + all universal features.
+Build prompt checks business category → loads matching feature set. Unknown categories default to generic LocalBusiness with: about, services, gallery, testimonials, contact, FAQ + all universal features.

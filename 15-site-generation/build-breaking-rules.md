@@ -32,7 +32,7 @@ Walk ALL logo sources in order:
 6. `favicon.ico`
 7. Wayback
 
-- Use original logo+favicon whenever any path above resolves. Brand equity > AI novelty — NEVER replace real logos with AI-generated ones. AI generation is LAST RESORT only.
+- Use original logo+favicon whenever any path above resolves. Brand equity > AI novelty — NEVER replace real logos with AI-generated ones; generation is LAST RESORT.
 
 ### Theme + brand-splash extraction
 
@@ -875,7 +875,7 @@ Required content for enriched sub-page:
 
 ### Doctrine
 
-- Every build pipeline prompt operates under: **build with creativity + love + stars — surprise, delight, wow, amaze, inspire**.
+- Every build pipeline prompt operates under: **creativity + love + stars — surprise, delight, wow, amaze, inspire**.
 
 ### System prompt preamble
 
