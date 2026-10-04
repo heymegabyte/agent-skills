@@ -102,6 +102,7 @@ OpenCode's **Zen** gateway is the unified pay-per-use billing rail (one account 
 ## Agent routing
 
 - **Opus** — architect, completeness-checker, computer-use-operator, incident-responder, meta-orchestrator, performance-profiler, security-reviewer, visual-qa (each has `model_fallback: claude-sonnet-4-6` + `effort_fallback: high` per `opus-quota-fallback`)
+- **Burst capacity until 2026-11-04**: claimed Claude cloud-session credits run OUTSIDE plan limits — route round-sweeps / fan-outs / unattended batches to `claude --cloud` first, per `account-entitlements`.
 - **Sonnet** — accessibility-auditor, browser-operator, content-writer, deploy-verifier, media-orchestrator, migration-agent, motion-choreographer, resource-broker, seo-auditor, test-writer
 - **Haiku** — changelog-drafter, changelog-generator, code-simplifier, cost-estimator, dead-code-remover, dependency-auditor, formatter, model-router, renamer, transcriber
 

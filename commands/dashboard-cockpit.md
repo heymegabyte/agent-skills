@@ -6,7 +6,7 @@ argument-hint: [dashboard path or feature]
 <!-- <SUBAGENT-STOP>: skip this skill when running inside a subagent. Meta-skills must not leak into spawned subagent contexts. Source: obra/superpowers `using-superpowers` skill. -->
 <SUBAGENT-STOP/>
 
-Upgrade an Angular admin dashboard into a polished compact **black-and-cyan dev-cockpit PWA**. Repeatable — rerun to push density + polish one step further. Doctrine via cross-link, never duplicated: [[angular]] · [[angular]] · [[frontend-stack]] · [[cinematic-ui-patterns]] · [[text-contrast]] · [[agent-selection]] · [[e2e-testing]] · [[verification-loop]].
+Upgrade an Angular admin dashboard into a polished compact **black-and-cyan dev-cockpit PWA**. Repeatable — rerun to push density + polish one step further. Doctrine via cross-link, never duplicated: [[angular]] · [[frontend-stack]] · [[cinematic-ui-patterns]] · [[text-contrast]] · [[agent-selection]] · [[e2e-testing]] · [[verification-loop]].
 
 **Purpose** — turn a working Angular admin into a dense, gorgeous, fully-i18n, PWA-packaged developer cockpit with zero full page reloads.
 **When to use** — any Angular dashboard that needs polish, feature-module structure, i18n, PWA, or SPA-navigation hardening; rerun each pass.

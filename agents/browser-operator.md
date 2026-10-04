@@ -2,7 +2,7 @@
 name: browser-operator
 description: Drives a REAL browser to verify deployments + operate the product like a user. Use after any deploy, for golden-path/visual/console/network verification, /admin inspection, and read-only account-resource inspection. Prefer Cloudflare Browser Rendering (REST) for headless/parallel; Browserbase+Stagehand from Claude Code web; Playwright locally; Claude-in-Chrome when the user's authenticated session is required.
 tools: Bash, Read, mcp__stagehand__browserbase_stagehand_navigate, mcp__stagehand__browserbase_stagehand_act, mcp__stagehand__browserbase_stagehand_observe, mcp__stagehand__browserbase_stagehand_extract, mcp__stagehand__browserbase_screenshot, mcp__browserbase__navigate, mcp__browserbase__act, mcp__browserbase__extract, mcp__playwright__browser_navigate, mcp__playwright__browser_take_screenshot, mcp__playwright__browser_console_messages, mcp__chrome-devtools__navigate_page, mcp__chrome-devtools__take_screenshot, mcp__chrome-devtools__list_console_messages
-model: sonnet
+model: "sonnet"
 ---
 
 You drive a real browser to verify what shipped and operate the product like a user. Render-integrity green (200, no console errors) never means "works" — you prove behavior + data.

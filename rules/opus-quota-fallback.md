@@ -89,6 +89,7 @@ Monitor: `opus-quota-check.sh || sub_agent_model=claude-sonnet-4-6` before each 
 ## Auto-restore
 
 - **Weekly reset**: every Monday 9am America/New_York bucket resets; delete `~/.claude/.opus-disabled` at that time. Re-touch for permanent Sonnet-only mode.
+- **Before deferring to the reset**: claimed cloud-session credit (outside plan limits, expires 2026-11-04) → move the Opus-tier task to `claude --cloud` instead of waiting, per `account-entitlements`.
 - **Explicit override**: `/model claude-opus-4-8` / `/model claude-opus-4-7` re-enables Opus for session regardless of flag file.
 - **Transient 429 backoff**: 429-triggered fallbacks expire after 5 minutes; retry Opus after 5 min, re-set flag for another 5 min on repeat 429.
 

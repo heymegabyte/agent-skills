@@ -20,3 +20,4 @@ members:
   - rules/eval-mock-mode-discipline
   - rules/agent-selection
   - rules/agent-neutrality
+  - rules/account-entitlements

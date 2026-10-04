@@ -1,7 +1,7 @@
 ---
 name: model-router
 description: "Use when dispatching work and unsure which model tier to use — returns a recommended model and effort level based on task characteristics"
-model: haiku
+model: "haiku"
 effort: low
 tools: [Read, Grep, Glob]
 maxTurns: 5

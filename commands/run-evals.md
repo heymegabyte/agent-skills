@@ -127,7 +127,7 @@ In `--ci` mode, also verify:
 
 **Verification** — After the run, confirm the NDJSON was written: `ls -la tools/evals/runs/` should show today's file. Confirm case count matches the glob result.
 
-**Cost model** — A 20-case Haiku-judge suite costs ~$0.04. 50 CI runs/day = ~$2/day. Prompt-cache the rubric text (add `cache_control: {type: "ephemeral"}` to the system block) to cut repeat runs by ~90%.
+**Cost model** — Haiku 4.5: $1/MTok input, $5/MTok output. A 20-case judge suite costs ~$0.04; 50 CI runs/day = ~$2/day. Prompt-cache the rubric text (add `cache_control: {type: "ephemeral"}` to the system block) — cache reads are $0.10/MTok, 90% off input. Non-urgent suites through the Batch API cost 50% less ($0.50/$2.50 per MTok).
 
 **See**
 
