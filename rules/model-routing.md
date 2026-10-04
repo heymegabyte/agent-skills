@@ -101,9 +101,9 @@ OpenCode's **Zen** gateway is the unified pay-per-use billing rail (one account 
 
 ## Agent routing
 
-- **Opus** — architect, completeness-checker, security-reviewer, visual-qa, meta-orchestrator (each has `model_fallback: claude-sonnet-4-6` + `effort_fallback: high` per `opus-quota-fallback`)
-- **Sonnet** — code-simplifier, computer-use-operator, deploy-verifier, dependency-auditor, incident-responder, migration-agent, performance-profiler, test-writer, media-orchestrator, motion-choreographer
-- **Haiku** — seo-auditor, content-writer, accessibility-auditor, cost-estimator, changelog-generator
+- **Opus** — architect, completeness-checker, computer-use-operator, incident-responder, meta-orchestrator, performance-profiler, security-reviewer, visual-qa (each has `model_fallback: claude-sonnet-4-6` + `effort_fallback: high` per `opus-quota-fallback`)
+- **Sonnet** — accessibility-auditor, browser-operator, content-writer, deploy-verifier, media-orchestrator, migration-agent, motion-choreographer, resource-broker, seo-auditor, test-writer
+- **Haiku** — changelog-drafter, changelog-generator, code-simplifier, cost-estimator, dead-code-remover, dependency-auditor, formatter, model-router, renamer, transcriber
 
 ## Quota-aware routing
 

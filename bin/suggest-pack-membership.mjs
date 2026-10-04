@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 // suggest-pack-membership.mjs — 3-gram Jaccard similarity between orphan rules
 // and each pack's member texts. Defaults to checking the 2 known orphans:
-// agpl-isolation-via-http-boundary and cloudflare-native-provisioning.
+// compliance and cloudflare-native-provisioning.
 //
 // Usage:
 //   node bin/suggest-pack-membership.mjs
-//   node bin/suggest-pack-membership.mjs --rule agpl-isolation-via-http-boundary
+//   node bin/suggest-pack-membership.mjs --rule compliance
 //   node bin/suggest-pack-membership.mjs --json
 
 import { readFileSync, readdirSync, statSync } from 'node:fs';
@@ -23,7 +23,7 @@ const ruleFlagIdx = args.indexOf('--rule');
 if (ruleFlagIdx !== -1 && args[ruleFlagIdx + 1]) {
   targetRules = [args[ruleFlagIdx + 1]];
 } else {
-  targetRules = ['agpl-isolation-via-http-boundary', 'cloudflare-native-provisioning'];
+  targetRules = ['compliance', 'cloudflare-native-provisioning'];
 }
 
 /** Produce character 3-gram set from text. */
