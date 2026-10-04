@@ -71,7 +71,19 @@ Rules (enforce in agent frontmatter + settings):
 - Agent **and slash-command** frontmatter `model:` / `fallback_model:` use **aliases only**. A full ID (`claude-opus-4-8[1m]`) is provider-locked — invalid on native Anthropic (the `[1m]` suffix) and a wrong ID 404s → breaks the spawn. (Eval/judge model pins that call a model client directly may use the evergreen `claude-haiku-4-5` form — portable via DeepSeek's `claude-*` prefix-map — never a dated `-20251001` snapshot.)
 - Never hardcode a provider's model IDs in `settings.json` (the base, provider-agnostic layer — set `"model": "opus"`). Put provider specifics in `settings.local.json` (the DeepSeek override) or the shell env, so switching providers = swapping only that layer.
 - Secrets via `apiKeyHelper` (→ `get-secret DEEPSEEK_API_KEY`), never a hardcoded `ANTHROPIC_AUTH_TOKEN`/`ANTHROPIC_API_KEY` on disk. **Gotcha:** `apiKeyHelper` has LOWER precedence than those two env vars — a hardcoded token silently disables the helper (it "isn't used"), so REMOVE the token for the helper to take effect. `apiKeyHelper` DOES work with a custom `ANTHROPIC_BASE_URL` (its output is sent as `Authorization: Bearer`, which is what DeepSeek's endpoint expects).
-- Current DeepSeek IDs (per DeepSeek's official Claude Code docs, Sep 2026): `deepseek-flash` / `deepseek-flash[1m]`. `deepseek-v4-flash` is undocumented — prefer `deepseek-flash`.
+- Current DeepSeek IDs (per DeepSeek's official Claude Code docs, Sep 2026): `deepseek-flash` / `deepseek-flash[1m]`. `deepseek-v4-flash` is undocumented ON THIS RAIL — prefer `deepseek-flash`. (The OpenCode/Zen rail below uses a DIFFERENT namespace where `deepseek-v4-*` IS canonical — never copy IDs across rails.)
+
+## OpenCode harness — Zen unified billing (DeepSeek + MiniMax rails)
+
+OpenCode's **Zen** gateway is the unified pay-per-use billing rail (one account key via `/connect` → `opencode.ai/auth`; auto-reload $20 when balance <$5); **Go** is its flat-rate subscription twin — same key, same model IDs. Verified 2026-10-03 against `dev.opencode.ai/docs/zen`.
+
+- **Config**: `opencode.json` references models as `opencode/<model-id>` — never raw provider endpoints while on unified billing. Secrets stay in `get-secret` (`OPENCODE_API_KEY`), never inline.
+- **Tier mapping** (the Reasoning / Balanced / Fast tiers → Zen IDs):
+  - **Reasoning (opus-tier)** → `opencode/deepseek-v4-pro` — $1.74/$3.48 per MTok. Architecture, security review, hard debugging.
+  - **Balanced (sonnet-tier)** → `opencode/minimax-m2.7` or `opencode/minimax-m3` ($0.30/$1.20) — this IS the "MiniMax OpenCode" rail; `opencode/deepseek-v4.1-flash` ($0.30/$1.20) is the DeepSeek-flavored equivalent. Implementation, tests, migration.
+  - **Fast (haiku-tier)** → `opencode/deepseek-v4-flash` — $0.14/$0.28 (a `deepseek-v4-flash-free` variant exists; `-vision-exp` adds image input at the same price). Changelogs, renames, formatting, transcription.
+- **Deprecations**: `minimax-m2.5` deprecated 2026-08-05 and `minimax-m2.1` 2026-03-15 — route MiniMax work to `m2.7`/`m3` only.
+- **Rail discipline**: three distinct ID namespaces now exist — Anthropic (`opus`/`sonnet`/`haiku` aliases), DeepSeek-direct for Claude Code (`deepseek-flash`), and OpenCode/Zen (`opencode/deepseek-v4-*`, `opencode/minimax-*`). Config carries TIER ALIASES; only the per-harness adapter layer resolves to a rail's IDs (per `[[agent-neutrality]]`).
 
 ## Retired models (requests error)
 
