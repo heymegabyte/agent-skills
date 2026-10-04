@@ -2,8 +2,8 @@
 name: "experience-and-design-system"
 description: "Anti-AI-slop design system for distinctive, premium interfaces. Bold typography, dark-first #060610, fluid clamp() type, cascade layers + native nesting + container queries, OKLCH color, @starting-style, View Transitions API, DTCG tokens."
 metadata:
-  version: "2.1.0"
-  updated: "2026-05-03"
+  version: "2.2.0"
+  updated: "2026-10-04"
   effort: "high"
   model: "opus"
 license: "Rutgers"
@@ -47,6 +47,8 @@ Build anti-AI-slop premium interfaces: dark-first OKLCH color, fluid `clamp()` t
 - Body min 16px (prefer 18) · Line-height 1.6 body, 1.1-1.2 headings · Letter-spacing -0.02em >2rem · Max 65ch
 - Never skip levels. Scale: Minor Third 1.2 general, Perfect Fourth 1.333 marketing
 - `text-wrap:balance` headings, `text-wrap:pretty` paragraphs
+- Kinetic gradient type (hero/display only): `background: var(--gradient-primary); background-size: 220% 220%; background-clip: text` (+ `-webkit-` pair), `color: transparent`, slow `background-position` pan 8-12s ease infinite alternate
+- Gate the pan behind `@media (prefers-reduced-motion: no-preference)` — reduced-motion gets the static gradient fill; keep a solid `color` fallback where clip is unsupported
 
 ```css
 :root {
@@ -83,7 +85,9 @@ Build anti-AI-slop premium interfaces: dark-first OKLCH color, fluid `clamp()` t
 - Cyan: primary CTAs · Blue: secondary · Gradients on buttons only · 6% borders · Subtle glow on primary interactive
 - Elevation via lightness not shadows: base → surface 1 → surface 2 → surface 3
 - `color-scheme:light dark` · `data-theme="dark|light"` user override · `localStorage` persistence · `prefers-color-scheme` system default · Always provide toggle
-- OKLCH perceptually uniform · `color-mix()` · Relative `oklch(from var(--brand) l c calc(h + 30))` · `light-dark()` theme-aware
+- OKLCH is the authoring space — perceptually uniform ramps, hue-true shifts · relative color `oklch(from var(--brand) l c calc(h + 30))` for derived accents
+- Derive shades via `color-mix(in oklch, …)`, never hand-picked hex neighbors: hover `color-mix(in oklch, var(--accent-cyan) 85%, white)` · pressed `…80%, black` · wash `…12%, transparent`
+- `light-dark()` for theme-aware one-liners · dark-ONLY surfaces (cockpit, editor) set `color-scheme: dark` — native controls/scrollbars/autofill render dark, no white flash
 - Contrast 4.5:1 normal, 3:1 large/UI (WCAG 2.2 AA) · Target size min 24×24 px (2.5.8) · Focus 2px thick, 3:1 contrast (2.4.13)
 
 ## CSS Architecture (2026)
@@ -92,8 +96,13 @@ Build anti-AI-slop premium interfaces: dark-first OKLCH color, fluid `clamp()` t
 @layer reset, base, tokens, components, utilities, overrides;
 ```
 
-- Native nesting · Container queries (`container-type:inline-size`, `@container`) · `:has()` replaces JS
-- `@scope` bounded styling · Anchor positioning replaces Floating UI · Scroll-state queries `@container scroll-state(stuck: top)` (Baseline 2026)
+- Native nesting (Baseline 2023, `&` syntax) · size container queries `container-type: inline-size` + `@container (min-width: 28rem)` (Baseline 2023) — component-owned breakpoints
+- Style queries `@container style(--variant: featured)` — Chrome 111+ / Safari 18+, Firefox pending (verify at caniuse); enhancement-only, base styles ship first
+- `:has()` parent selection (Baseline 2023) replaces state JS — `form:has(:invalid) [type=submit]`, `.grid:has(.card:hover) .card:not(:hover)` sibling-dim
+- Declare layer order ONCE at bundle top — later layers win (utilities beat components); un-layered styles beat ALL layers, so layer everything
+- `@scope` bounded styling · Scroll-state queries `@container scroll-state(stuck: top)` (Baseline 2026)
+- Anchor positioning (`anchor-name` / `position-anchor` / `position-area`) replaces Floating UI — Chrome/Edge 133+ first, cross-engine newer (verify at caniuse) · @oddbird polyfill v0.7+ for the tail
+- Popover API `popover` + `popovertarget` (Baseline 2024) — top-layer, light-dismiss, focus-managed, zero JS; pair with anchor positioning for menus/tooltips
 - CSS `if()` · Typed `attr()` · `sibling-index()` / `sibling-count()` stagger: `transition-delay: calc((sibling-index() - 1) * 40ms)`
 - `appearance:base-select` native `<select>` (Chrome 135+) · `@supports` for progressive enhancement
 - **Baseline 2026**: `@scope` · Anchor positioning · Scroll-state queries · `@starting-style` · `interpolate-size: allow-keywords` · `field-sizing: content` · `text-wrap: pretty` · `@property`
@@ -119,6 +128,9 @@ Build anti-AI-slop premium interfaces: dark-first OKLCH color, fluid `clamp()` t
 - Sections `clamp(4rem,8vw,8rem)`, border between; grid `auto-fit minmax(280px,1fr)`, 1fr at 768px
 - Patterns: Hero (full-viewport, centered) · Features (3-col icon+heading+desc) · Alternating (zigzag) · Pricing (3-tier highlighted) · FAQ (accordion) · CTA (full-width dark) · Footer (4-col stack)
 - SaaS: Single-CTA 13.5%; Hero / Proof / Features / Demo / Testimonials / Pricing / FAQ / CTA; bento grid for feature showcases
+- Bento: `repeat(auto-fill, minmax(240px, 1fr))` + `grid-auto-flow: dense`; 1-2 anchor cards `grid-column: span 2` (hero metric also `grid-row: span 2`) — never uniform tiles
+- Bento anchors carry an accent wash `linear-gradient(135deg, rgba(0,229,255,.08), transparent 60%)` + border-hover; collapse spans via container query ≤480px, not viewport
+- Asymmetry with order: ONE dominant cell per visual row, constant gap `clamp(0.75rem, 2cqi, 1.5rem)`, internal baselines aligned
 
 ## Components
 
@@ -126,11 +138,16 @@ Build anti-AI-slop premium interfaces: dark-first OKLCH color, fluid `clamp()` t
 - **Buttons** — Primary gradient #060610 text, 600 weight, 8px radius, hover 0.9, active scale(0.98), focus 3px cyan. Secondary: transparent, border, hover cyan
 - **Nav** — sticky, `rgba(6,6,16,0.85)`, `blur(16px)`
 - **Forms** — bg-secondary, border-subtle, 8px, focus cyan + glow
+- **Glass** — `backdrop-filter: blur(16px) saturate(140%)` + `rgba(10,10,26,0.6)` bg + 1px top `--border-subtle`; `@supports` solid fallback; ≤3 blurred surfaces per view (GPU)
+- **Grain** — tiled SVG `feTurbulence` data-URI at 3-5% opacity, `mix-blend-mode: overlay`, `pointer-events:none` — kills gradient banding; never a runtime filter over scrolling areas
 - **Spartan UI** — copied-in components (not a black-box dep), OnPush everywhere, lazy-load heavy views (tables, editors, charts), Tailwind + design-token theming. Per `rules/angular.md`.
 
 ## Interaction (every interactive element)
 
 `cursor:pointer`, hover state, focus-visible (3px cyan, 2px offset), active (scale 0.98), transition (0.2s color, 0.1s transform). WCAG 2.2 — min 24×24px targets, focus not obscured by sticky headers, dragging alternatives required, accessible auth.
+
+- Rings on `:focus-visible` only (keyboard), never bare `:focus` — and via `outline` + `outline-offset`, which survive `overflow:hidden` + `border-radius` where box-shadow clips
+- Focus-Not-Obscured (2.4.11 AA): `html { scroll-padding-top: calc(var(--nav-h) + 1rem) }` (+ `scroll-padding-bottom` for sticky footers) so tab/anchor targets never land under sticky chrome
 
 ### 4-state distinction (NON-NEGOTIABLE)
 

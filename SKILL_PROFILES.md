@@ -24,7 +24,7 @@
 
 ### Process skills — add the flow
 
-For any project type, when the work is **multi-step** (plan→build→review→merge), add pack `20` (the Superpowers process chain) directly after `01`:
+For any project type, when the work is **multi-step** (plan→build→review→merge), add the process chain directly after `01`:
 
 1. brainstorm — before ANY creative work
 2. write the plan — bite-sized verifiable steps
@@ -41,7 +41,6 @@ Not every project needs every step — skip finished-branch on solo-work (`[[no-
 ## Marketing Site
 
 - `02`
-- `03`
 - `06/contact-forms-and-endpoints`
 - `06/custom-error-pages`
 - `06/domain-provisioning`
@@ -53,6 +52,11 @@ Not every project needs every step — skip finished-branch on solo-work (`[[no-
 - `10`
 - `11`
 - `12`
+- `21`
+- `22`
+- `23`
+- `25`
+- `26`
 
 ## SaaS Application
 
@@ -106,6 +110,16 @@ Not every project needs every step — skip finished-branch on solo-work (`[[no-
 - `13/stripe-billing`
 - `13/user-feedback-collection`
 
+### Requirements packs
+
+- `21`
+- `22`
+- `23`
+- `24`
+- `25`
+- `26`
+- `27`
+
 ## Micro-SaaS
 
 Trimmed SaaS.
@@ -141,10 +155,16 @@ Trimmed SaaS.
 - `13/feature-flags-and-experiments`
 - `13/stripe-billing`
 
+### Requirements packs
+
+- `21`
+- `22`
+- `25`
+- `26`
+
 ## Nonprofit
 
 - `02`
-- `03`
 - `06/blog-and-content-engine`
 - `06/contact-forms-and-endpoints`
 - `06/domain-provisioning`
@@ -156,6 +176,11 @@ Trimmed SaaS.
 - `09/social-automation`
 - `13/stripe-billing`
 - `13/user-feedback-collection`
+- `21`
+- `22`
+- `23`
+- `25`
+- `26`
 
 ## API Service
 
@@ -173,7 +198,7 @@ Trimmed SaaS.
 
 ### Planning + Build
 
-- `03`
+- `02`
 - `06/realtime-and-websockets`
 - `06/webhook-system`
 
@@ -196,9 +221,17 @@ Trimmed SaaS.
 - `13/feature-flags-and-experiments`
 - `13/sentry-alert-rules`
 
+### Requirements packs
+
+- `21`
+- `25`
+- `26`
+- `27`
+- `28`
+
 ## Developer Tool
 
-- `03`
+- `02`
 - `05/api-design-and-documentation`
 - `05/mcp-and-cloud-integrations`
 - `07/security-hardening`
@@ -238,3 +271,10 @@ Trimmed SaaS.
 - `08/uptime-and-health`
 - `13/analytics-configuration`
 - `13/feature-flags-and-experiments`
+
+### Requirements packs
+
+- `21`
+- `24`
+- `25`
+- `26`

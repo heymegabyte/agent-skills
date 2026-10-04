@@ -6,7 +6,6 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 
 - **01 — Operating System** — `ai-native-coding`, `architecture-thought-loop`, `autonomous-orchestrator`, `one-line-saas`, `output-compression`, `context-engineering`
 - **02 — Goal and Brief** — —
-- **03 — Planning and Research** — `build-breaking-rules`, `competitive-analysis`
 - **04 — Preference and Memory** — `brian-decision-model`, `brian-voc-data`, `wisdom-and-human-psychology`
 - **05 — Architecture and Stack** — `ai-technology-integration`, `api-design-and-documentation`, `auth-and-session-management`, `auth0-token-vault`, `background-jobs-and-workflows`, `cf-2026-updates`, `cf-agents-do-pattern`, `cf-auto-provision`, `cf-browser-rendering`, `cf-do-rate-limiter`, `cf-hyperdrive`, `cf-rag-vectorize-pattern`, `cf-saas-template-stack`, `cf-websocket-do-pattern`, `cf-workflows-pattern`, `cf-zero-trust-access`, `coolify-docker-proxmox`, `drizzle-orm-and-migrations`, `dynamic-sitemap-from-d1`, `enterprise-multi-tenancy`, `heartbeat-polling`, `mcp-and-cloud-integrations`, `multi-tenant-subdomain-provisioning`, `openapi-generation`, `shared-api-pool`
 - **06 — Build and Slice Loop** — `admin-dashboard`, `ai-chat-widget`, `blog-and-content-engine`, `chat-native-dashboard`, `contact-forms-and-endpoints`, `copilot-and-ai-features`, `custom-error-pages`, `data-tables`, `domain-provisioning`, `easter-eggs`, `empty-states-and-loading`, `file-uploads-and-storage`, `internationalization`, `keyboard-shortcuts-and-command-palette`, `microcopy-library`, `notification-center`, `onboarding-and-first-run`, `pre-digested-builds`, `pwa-kit`, `realtime-and-websockets`, `rich-text-editor`, `site-search`, `stripe-first-donations`, `web-manifest-system`, `webhook-system`
@@ -20,24 +19,30 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 - **14 — Independent Idea Engine** — —
 - **15 — Site Generation** — `bolt-artifact-protocol`, `build-prompts`, `domain-features`, `homepage-block-library`, `local-seo`, `media-acquisition`, `non-technical-owner-onboarding`, `page-set-expansion`, `pseo-templates`, `quality-gates`, `research-pipeline`, `small-business-mode`, `source-fidelity-loop`, `template-improvements-100`, `template-system`
 - **16 — Cinematic Website Prime Directive** — —
-- **18 — Document Processing** — `docx-xlsx`, `pdf-generation`, `pdf-parsing`, `pptx-generation`
-- **20 — Superpowers** — `brainstorming`, `writing-plans`, `subagent-driven-development`, `using-git-worktrees`, `finishing-a-development-branch`, `requesting-code-review`, `receiving-code-review`, `writing-skills` — process discipline vendored from obra/Superpowers (MIT), compressed to house style; TDD/debug/verify/parallel folded into `rules/`
+- **21 — App Foundation** — —
+- **22 — Visual Experience** — —
+- **23 — Content and SEO** — —
+- **24 — Functional** — —
+- **25 — Quality and Performance** — —
+- **26 — Platform and Delivery** — —
+- **27 — Trust and Compliance** — —
+- **28 — CF Integrations Reference** — —
 
 ## Task Routing
 
-- **Doctrinal principles** → `rules/agent-resilience-discipline`, `rules/backwards-compatibility-removal-cadence`, `rules/blast-radius-minimization`, `rules/conditional-ci-gates`, `rules/cost-per-request-accountability`, `rules/customer-facing-changelog`, `rules/data-residency-by-default`, `rules/error-budget`, `rules/fail-fast-build-fail-soft-prod`, `rules/mcp-auth-options`, `rules/mcp-error-semantics`, `rules/one-way-two-way-doors`, `rules/pii-handling-discipline`, `rules/portable-audit-discipline`, `rules/production-observability-default-on`, `rules/root-cause-validator-findings`, `rules/state-is-the-enemy`, `rules/structured-logging`, `rules/supply-chain-integrity`, `rules/sync-ui-async-backing`, `rules/ttfr-north-star`, `rules/uuid-version-discipline`, `rules/validator-precision-discipline`, `rules/vendor-risk-tiering`, `rules/webhook-as-skill-pattern`, `rules/working-backwards`
-- **New project** → `02`, `03`, `05`, `06`, `09`
-- **Build feature** → `05`, `06`, `07`
+- **Doctrinal principles** → `rules/agent-resilience-discipline`, `rules/backwards-compatibility-removal-cadence`, `rules/blast-radius-minimization`, `rules/conditional-ci-gates`, `rules/cost-per-request-accountability`, `rules/customer-facing-changelog`, `rules/data-residency-by-default`, `rules/error-budget`, `rules/fail-fast-build-fail-soft-prod`, `rules/mcp-auth-options`, `rules/mcp-server-hardening`, `rules/one-way-two-way-doors`, `rules/pii-handling-discipline`, `rules/production-observability-default-on`, `rules/root-cause-validator-findings`, `rules/state-is-the-enemy`, `rules/structured-logging`, `rules/supply-chain-integrity`, `rules/sync-ui-async-backing`, `rules/ttfr-north-star`, `rules/uuid-version-discipline`, `rules/vendor-risk-tiering`, `rules/webhook-as-skill-pattern`, `rules/working-backwards`
+- **New project** → `02`, `05`, `06`, `09`, `21`
+- **Build feature** → `05`, `06`, `07`, `24`
 - **Debug / CI failure** → `07`, `08` — especially `gh-fix-ci`, `spec-driven-development`
-- **Deploy / launch** → `08` — add `09` if SEO/content changed
-- **Design / frontend polish** → `09`, `10`, `11`, `12`
-- **SEO / copy** → `09` — add `06/blog-and-content-engine` or `13/analytics-configuration` when relevant
+- **Deploy / launch** → `08`, `26` — add `09` if SEO/content changed
+- **Design / frontend polish** → `09`, `10`, `11`, `12`, `22`
+- **SEO / copy** → `09`, `23` — add `06/blog-and-content-engine` or `13/analytics-configuration` when relevant
 - **Billing / auth** → `05/auth-and-session-management`, `05/enterprise-multi-tenancy`, `06/webhook-system`, `13/stripe-billing`
 - **File uploads / admin / data grids** → `06/file-uploads-and-storage`, `admin-dashboard`, `data-tables`
 - **Realtime / AI features** → `05/ai-technology-integration`, `06/realtime-and-websockets`, `ai-chat-widget`, `copilot-and-ai-features`
 - **Growth / analytics** → `13` — add `09/social-automation` when publishing
-- **Brainstorm / ideas** → `20` brainstorming (process, before ANY creative work), `14`, `03`
-- **Plan / code review / worktree / finish branch (process)** → `20` — `writing-plans`, `subagent-driven-development`, `using-git-worktrees`, `requesting-code-review`, `receiving-code-review`, `finishing-a-development-branch`
+- **Brainstorm / ideas** → `14`, `02`
+- **Plan / code review / worktree / finish branch (process)** → `02`, `rules/agent-selection`, `rules/main-only-branch`, `rules/parallel-subagent-economy`
 - **Motion / animation** → `11`, `10`
 - **Chat / messaging UI** → `06/chat-native-dashboard`, `06/realtime-and-websockets`, `06/notification-center`
 - **Microcopy / UX writing** → `06/microcopy-library`, `09`
@@ -46,17 +51,16 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 - **Infra / self-hosted** → `05/coolify-docker-proxmox`, `05/cf-auto-provision`, `08/uptime-and-health`
 - **Skills / config** → `01`, `04`
 - **Iterative loop arcs / doctrinal extraction** → `rules/loop-driven-development`, `01/autonomous-orchestrator`, `rules/monitor-orchestration`
-- **Security audit** → `07/agentic-security`, `07/security-hardening`, `07/semgrep-codebase-rules`
+- **Security audit** → `07/agentic-security`, `07/security-hardening`, `07/semgrep-codebase-rules`, `27`
 - **AI site generation** → `15` — add `09`, `10`, `12` for brand/design/media
-- **Website rebuild / clone / "optimize {domain}" / "enhanced version of {site}"** → `15` (esp. `page-set-expansion`, `source-fidelity-loop`, `local-seo`), `16` (cinematic prime directive incl. rules 101-110), `09`, `12` — add `03` for deep research. Auto-applies `rules/source-site-enhancement.md` + `rules/i18n-by-demographics.md`.
-- **CF Workers / Durable Objects / edge patterns** → `05/cf-agents-do-pattern`, `05/cf-do-rate-limiter`, `05/cf-websocket-do-pattern`, `05/cf-workflows-pattern`, `05/cf-zero-trust-access`, `05/cf-browser-rendering`, `05/cf-hyperdrive`
+- **Website rebuild / clone / "optimize {domain}" / "enhanced version of {site}"** → `15` (esp. `page-set-expansion`, `source-fidelity-loop`, `local-seo`), `16` (cinematic prime directive incl. rules 101-110), `09`, `12` — add `15/research-pipeline` for deep research. Auto-applies `rules/source-site-enhancement.md` + `rules/i18n-by-demographics.md`.
+- **CF Workers / Durable Objects / edge patterns** → `05/cf-agents-do-pattern`, `05/cf-do-rate-limiter`, `05/cf-websocket-do-pattern`, `05/cf-workflows-pattern`, `05/cf-zero-trust-access`, `05/cf-browser-rendering`, `05/cf-hyperdrive`, `28`
 - **RAG / vector search / AI on Workers** → `05/cf-rag-vectorize-pattern`, `05/cf-agents-do-pattern`, `07/llm-evals`
 - **PWA / service worker / manifest** → `06/pwa-kit`, `06/web-manifest-system`, `08/service-worker`
 - **OG images / media pipeline** → `12/og-card-pipeline`, `12/og-image-generation`, `12/image-optimization`
-- **Document generation (PDF/DOCX/PPTX)** → `18`
 - **Payments (Square / Stripe)** → `13/square-payments`, `13/stripe-billing`, `06/stripe-first-donations`
 - **Small business / local SEO** → `15/small-business-mode`, `15/local-seo`, `09/per-route-metadata`
-- **Accessibility / WCAG** → `07/accessibility-gate`, `07/wcag-2-2-2026`
+- **Accessibility / WCAG** → `07/accessibility-gate`, `07/wcag-2-2-2026`, `25`
 - **Programmatic SEO** → `15/pseo-templates`, `09/seo-and-keywords`, `09/ai-search-geo`
 - **Workers tracing / observability** → `13/workers-tracing-otlp`, `13/analytics-configuration`, `13/sentry-alert-rules`
 
@@ -84,10 +88,9 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 - `package.json`, `tsconfig.json` → `05`
 - `**/container.ts`, `**/site-generation.ts`, `Dockerfile` → `15`, `05`
 - `**/prompts/*.prompt.md` → `15`
-- `**/*.pdf`, `**/*.docx`, `**/*.pptx` → `18`
 - `vectorize/**`, `*embeddings*`, `*rag*` → `05/cf-rag-vectorize-pattern`
 - `sitemap*` → `05/dynamic-sitemap-from-d1`, `09/per-route-metadata`
-- `*mcp*`, `*tool-server*` → `19`
+- `*mcp*`, `*tool-server*` → `05/mcp-and-cloud-integrations`, `13/mcp-server-registry`
 
 ## Agent Library
 
