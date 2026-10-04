@@ -123,6 +123,8 @@ const ALWAYS_LOAD_RULES = [
   'rules/fetch-defaults.md',
   'rules/model-routing.md',
   'rules/agent-neutrality.md',
+  'rules/verification-loop.md',
+  'rules/prompt-as-training-signal.md',
 ];
 
 // ─── main ────────────────────────────────────────────────────────────────────

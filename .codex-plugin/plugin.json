@@ -16,6 +16,8 @@
     "rules/fetch-defaults.md",
     "rules/model-routing.md",
     "rules/agent-neutrality.md",
+    "rules/verification-loop.md",
+    "rules/prompt-as-training-signal.md",
     "01-operating-system/SKILL.md",
     "02-goal-and-brief/SKILL.md",
     "04-preference-and-memory/SKILL.md",

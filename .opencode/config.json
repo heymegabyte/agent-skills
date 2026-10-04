@@ -12,7 +12,9 @@
     "rules/zod-everywhere.md",
     "rules/fetch-defaults.md",
     "rules/model-routing.md",
-    "rules/agent-neutrality.md"
+    "rules/agent-neutrality.md",
+    "rules/verification-loop.md",
+    "rules/prompt-as-training-signal.md"
   ],
   "skills": [
     {

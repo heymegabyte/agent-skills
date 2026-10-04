@@ -42,6 +42,35 @@ function transform(body) {
     .replace(/~\/\.claude\b/g, '<agent-home>');
 }
 
+// Codex/agentskills.io consumers read name + description; the Claude-router
+// keys (priority/pack/stage/triggers/paths, claude-code compat, model/effort
+// metadata) are host-specific noise in this surface. Emit the open-standard
+// minimum and keep the body untouched.
+function slimFrontmatter(raw, dir) {
+  const m = raw.match(/^---\n([\s\S]*?)\n---\n/);
+  if (!m) return raw;
+  const fm = m[1];
+  const grab = (key) => {
+    const r = fm.match(new RegExp(`^${key}: ?"?([^"\n]*)"?$`, 'm'));
+    return r ? r[1].trim() : null;
+  };
+  const name = grab('name') || dir;
+  const desc = grab('description') || '';
+  const license = grab('license');
+  const slim = [
+    '---',
+    `name: "${name}"`,
+    `description: "${desc}"`,
+    ...(license ? [`license: "${license}"`] : []),
+    'compatibility:',
+    '  agentskills: ">=1.0.0"',
+    `source: "${dir}/SKILL.md (megabytespace/claude-skills)"`,
+    '---',
+    '',
+  ].join('\n');
+  return slim + raw.slice(m[0].length);
+}
+
 const dirs = readdirSync(ROOT)
   .filter((n) => /^\d\d-/.test(n) && statSync(join(ROOT, n)).isDirectory())
   .sort();
@@ -51,7 +80,7 @@ for (const dir of dirs) {
   const src = join(ROOT, dir, 'SKILL.md');
   if (!existsSync(src)) continue;
   const raw = readFileSync(src, 'utf8');
-  const body = transform(raw);
+  const body = transform(slimFrontmatter(raw, dir));
   // Assert BEFORE the banner goes in — the banner's legend legitimately names ~/.claude.
   if (/~\/\.claude|\/Users\//.test(body)) {
     console.error(`✗ ${dir}: adapter-path leak survived transform — fix the mapping`);
