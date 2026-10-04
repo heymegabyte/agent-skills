@@ -1,5 +1,5 @@
 ---
-last_reviewed: 2026-06-29
+last_reviewed: 2026-10-04
 superseded_by: null
 name: "hono-api"
 priority: 2
@@ -54,7 +54,7 @@ Define Hono-on-Workers API patterns including RPC mode, WorkerEntrypoint binding
 
 ## Workers patterns
 
-- CPU limit 10ms (free) / 50ms default (paid, configurable to 5min)
+- CPU limit 10ms/request (free) / 30s default (paid, configurable to 5 min); awaits don't accrue CPU (CPU ≠ wall)
 - Wall time 30s (paid)
 - Use `ctx.waitUntil()` for async post-response work
 - `ctx.passThroughOnException()` for graceful degradation

@@ -57,7 +57,7 @@ Two layers: universal (every site) + category-specific (loaded by business type)
 - **Terms of Service page** — AI-generated, covers website usage
 - **Accessibility statement page** — WCAG 2.2 AA commitment, contact info for issues
 - **Cookie consent banner** — lightweight, GDPR-compliant, stores preference
-- **ADA compliance** — meets Title II requirements (effective April 2026)
+- **ADA compliance** — meets Title II (extended: ≥50K pop due 2027-04-26, <50K 2028-04-26; legal floor WCAG 2.1 AA)
 
 ### Performance & Analytics
 

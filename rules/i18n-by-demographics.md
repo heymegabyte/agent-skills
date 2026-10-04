@@ -1,5 +1,5 @@
 ---
-last_reviewed: 2026-06-29
+last_reviewed: 2026-10-04
 superseded_by: null
 name: "i18n-by-demographics"
 priority: 3
@@ -104,4 +104,4 @@ Unlisted geographies: query ACS/equivalent and apply the ≥10% rule fresh.
 
 - English-only site for an entity serving a community where ≥10% speak another language at home = build fail
 - Newark NJ nonprofit serving 36% Hispanic + significant Brazilian-Portuguese population MUST ship `/es/*` AND `/pt/*`
-- English-only = exclusion of one-third the served community = ADA Title II 2027 compliance risk
+- English-only = exclusion of one-third the served community = ADA Title II risk (extended 2026-04: ≥50K pop due 2027-04-26, <50K due 2028-04-26; WCAG 2.1 AA)

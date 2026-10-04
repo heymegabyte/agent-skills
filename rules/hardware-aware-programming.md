@@ -1,5 +1,5 @@
 ---
-last_reviewed: 2026-06-29
+last_reviewed: 2026-10-04
 superseded_by: null
 name: "hardware-aware-programming"
 priority: 2
@@ -67,7 +67,7 @@ See `reference/hardware-aware-programming.md` for all implementations.
 - Isolate initialization to module-level (`const db = drizzle(env.DB)`) — not per-request constructors.
 - Import only what the route needs; large SDK imports add parse time on cold start.
 - Use `wrangler types` bindings — avoid runtime type coercion overhead on every binding access.
-- CPU limit: free tier 10ms, paid default 50ms. A single uncached D1 read is ~8ms. Plan accordingly.
+- CPU: free 10ms/request; paid default 30s (configurable to 5 min). Awaits don't accrue CPU (CPU ≠ wall). An uncached D1 read ~8ms wall, near-zero CPU — free tier dies on parsing, not proxying.
 
 ## See
 

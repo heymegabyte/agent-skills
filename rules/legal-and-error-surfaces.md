@@ -1,5 +1,5 @@
 ---
-last_reviewed: 2026-06-29
+last_reviewed: 2026-10-04
 superseded_by: null
 name: "legal-and-error-surfaces"
 priority: 2
@@ -42,7 +42,7 @@ A site is NOT shippable without its legal + error surfaces. The build doctrine m
 ## Accessibility Statement (ADA Title II / EAA)
 
 - Dedicated `/accessibility` page: conformance target (WCAG 2.2 AA), known limitations, feedback contact, last-assessed date. Footer-linked.
-- Required for gov/edu (ADA Title II, Apr-2026) and EU commerce (EAA, live Jun-28-2025); ship it by default — it is cheap and signals trust.
+- Required for gov/edu (ADA Title II — extended 2026-04: ≥50K pop due 2027-04-26, <50K due 2028-04-26) and EU commerce (EAA, live Jun-28-2025); ship it by default — it is cheap and signals trust.
 
 ## Terms of Service (when accounts / payments / UGC)
 

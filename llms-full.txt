@@ -635,7 +635,7 @@ JSON-LD boosts LLM accuracy 16% → 54% (AI search visibility for ChatGPT / Perp
 - Images <200KB WebP
 - No placeholders
 - No dead forms
-- ADA Title II: April 24, 2026 (state/local gov 50K+ pop — EFFECTIVE NOW) / April 2028 (small/special districts). WCAG 2.2 AA mandatory
+- ADA Title II (extended by DOJ interim rule 2026-04-20): 50K+ pop due 2027-04-26, small/special districts 2028-04-26. Legal floor WCAG 2.1 AA; our house bar stays 2.2 AA
 - Chrome LNA (v142+): public sites accessing local network need `Access-Control-Allow-Private-Network` header
 
 ## Bun Native Clients (1.3+)
