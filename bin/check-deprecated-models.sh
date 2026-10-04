@@ -57,7 +57,12 @@ for entry in "${DENYLIST[@]}"; do
   # Search in docs surface only (skip CHANGELOG since it documents fixes themselves).
   # Also skip lines that explicitly document retirement / deprecation / removal —
   # those are intentional historical references, not recommendations.
-  mapfile -t hits < <(
+  # NB: read-loop, not `mapfile` — mapfile is bash 4+, absent on macOS bash 3.2
+  # where it silently no-ops and the gate vacuously passes (R10 flag, fixed R20).
+  hits=()
+  while IFS= read -r line; do
+    [ -n "$line" ] && hits+=("$line")
+  done < <(
     grep -rnE "$pattern" \
       rules/*.md \
       [0-9][0-9]-*/*.md \

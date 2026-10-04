@@ -38,7 +38,12 @@ URL_CODES=()
 #        (2) RFC 2606 reserved example.com/.org/.net hosts
 #        (3) common doc-placeholder hosts (domain.com, related-site.{com,example})
 #        (4) URLs containing template tokens (YYYY year placeholder, etc.)
-mapfile -t URLS < <(
+# NB: read-loop, not `mapfile` — mapfile is bash 4+, absent on macOS bash 3.2
+# where it silently no-ops → 0 URLs checked, vacuous pass (R20 gate-hardening).
+URLS=()
+while IFS= read -r url; do
+  [ -n "$url" ] && URLS+=("$url")
+done < <(
   grep -hoE 'https?://[A-Za-z0-9./_-]+' \
     rules/*.md \
     [0-9][0-9]-*/SKILL.md \
