@@ -25,6 +25,14 @@ stage: stable
 - Hero: full-screen video or particle / gradient-mesh field — never a flat gradient placeholder.
 - Scroll-driven section transitions + View Transitions on every public surface; `@starting-style` entrances; custom cursor / micro-interactions.
 - Depth: layered surfaces, gradient meshes, glass + subtle grain.
+- Bento asymmetry: 1-2 span-2 anchor cards in an auto-fill `minmax()` grid + an accent wash on the anchors — never a uniform card wall.
+
+## Canvas hero layer (nebula/particle recipe)
+
+- Zero-dep 2D canvas; cap `devicePixelRatio` at 2; scale particle count to viewport area — never a fixed density.
+- `prefers-reduced-motion` → draw ONE rich static frame and stop (no rAF loop) — the gorgeous stays, the motion goes.
+- Pause rAF on BOTH `document.hidden` AND element-offscreen (IntersectionObserver on the canvas) — either alone still burns battery.
+- Reference impl: claude.megabyte.space hero — `heroNebula` fn in `public/index.html` (heymegabyte/claude.megabyte.space).
 
 ## Brand (exact, non-inferable)
 
@@ -35,6 +43,10 @@ stage: stable
 ## Motion
 
 - Purposeful, brand-locked; scroll-driven + View Transitions; always honor `prefers-reduced-motion` with a full non-animated path.
+- Scroll-driven = progressive enhancement: `animation-timeline: view()` / `scroll()` only behind `@supports (animation-timeline: view())`. Firefox: unsupported as of late 2026 — verify at caniuse; never animation-only state.
+- JS fallback auto-disables when CSS support exists: `if (!CSS.supports('animation-timeline: view()')) observe(...)` — IntersectionObserver reveal only fills the gap; never double-drive one element.
+- `@starting-style` first-paint entrances: transition-based, zero JS; pair `transition-behavior: allow-discrete` for display/dialog/popover entry+exit (Baseline mid-2024 — verify at caniuse).
+- Kinetic gradient type: `background-clip: text` + `background-size: 200%+` + slow `background-position` pan — gated on `prefers-reduced-motion: no-preference`.
 
 ## Logo (non-negotiable)
 
@@ -49,3 +61,8 @@ stage: stable
 - Contrast ≥4.5:1 text / ≥3:1 large + UI — verify muted/accent tokens, not just defaults. Target size ≥24×24px. Focus ring 2px, ≥3:1, never obscured by sticky headers.
 - 4-STATE distinction (NON-NEGOTIABLE): `default · hover · focus-visible · active` each visually distinct — never two identical.
 - axe-core 0 violations at 6 breakpoints (375/390/768/1024/1280/1920). Theme toggle + persistence + system default.
+
+## Immutable-asset cache-busting (mandate)
+
+- Every `Cache-Control: immutable` / 1yr asset carries a content-version — hashed filename or `?v=` bumped on EVERY change — including any `_headers` Early-Hints preload of the same URL (CF 103 cache lags a deploy briefly).
+- Reference incident (claude.megabyte.space, 2026-10-04): a stylesheet served `immutable, max-age=1yr` on an UNVERSIONED URL left returning visitors on stale CSS indefinitely.
