@@ -18,7 +18,7 @@
 <br/>
 
 <div align="center">
-  <code>19 categories</code> · <code>117 doctrine rules</code> · <code>26 agents</code> · <code>20+ slash commands</code> · <code>32 platform variants</code><br/>
+  <code>23 categories</code> · <code>159 doctrine rules</code> · <code>28 agents</code> · <code>34 commands</code> · <code>32 platform variants</code><br/>
   <a href="https://claude.megabyte.space"><strong>Showcase Website</strong></a>
 </div>
 
@@ -331,7 +331,7 @@ Every deploy must clear all gates. No exceptions. No overrides.
 
 ## Task Routing
 
-The router loads the smallest useful subset per task — never the full 149 docs. See [`_router.md`](_router.md) for the complete routing table. This plugin ships 149 reference docs across 22 skill categories.
+The router loads the smallest useful subset per task — never the full 149 docs. See [`_router.md`](_router.md) for the complete routing table. This plugin ships 149 reference docs across 23 skill categories.
 
 | When you say... | Skills loaded |
 |-----------------|---------------|
