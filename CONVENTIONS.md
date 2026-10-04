@@ -60,11 +60,11 @@ Dark theme FIRST. Purple for cosmic/space only.
 
 ## Stack
 
-- **Hosting** — CF Workers + Hono v4.12.12+ (security pin)
+- **Hosting** — CF Workers + Hono v4.13.5+ (query-parser CVE floor; 4.13.13 current + QUERY-method/perf)
 - **Frontend** — React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps; Ionic 8 as needed)
 - **Mobile** — Capacitor 8
 - **Database** — D1 / Neon
-- **ORM** — Drizzle v1
+- **ORM** — Drizzle v1-rc (rc.4; NOT GA as of 2026-10 — production-proven, no stable tag/down-migrations yet)
 - **Validation** — Zod 4
 - **Auth** — Clerk Core 3 (SaaS) / Authentik (self-hosted)
 - **Payments** — Stripe + Link DEFAULT for all money flows (Billing for SaaS, pin `2026-08-26.dahlia`; Connect payouts; IBP 2.6%+30¢) / Square only on prompt request

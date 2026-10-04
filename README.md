@@ -194,7 +194,7 @@ Auto-generated on every push to master. Each format uses native frontmatter for 
 | 02 | **Goal & Brief** | — | Product thesis from a domain name, business model inference |
 | 03 | **Planning & Research** | 1 | Competitive analysis, task decomposition, parallel workstreams |
 | 04 | **Preference & Memory** | 3 | Voice of Customer data, user preferences, behavioral psychology |
-| 05 | **Architecture & Stack** | 12 | CF Workers, Hono, Drizzle v1, Coolify, MCP, auth, API design, multi-tenancy |
+| 05 | **Architecture & Stack** | 12 | CF Workers, Hono, Drizzle v1-rc, Coolify, MCP, auth, API design, multi-tenancy |
 | 06 | **Build & Slice Loop** | 26 | Forms, search, blog, i18n, PWA, webhooks, admin, data tables, chat |
 | 07 | **Quality & Verification** | 25 | E2E, a11y, security hardening, perf, visual QA, adversarial, AI testing |
 | 08 | **Deploy & Runtime** | 10 | CI/CD, launch-day sequence, uptime, backup, changelog, GitHub CI fix |
@@ -272,7 +272,7 @@ Every deploy must clear all gates. No exceptions. No overrides.
 ```
   REQUEST FLOW
 
-  Browser ──→ CF Workers ──→ Hono RPC ──→ Drizzle v1 ──→ D1/Neon
+  Browser ──→ CF Workers ──→ Hono RPC ──→ Drizzle v1-rc ──→ D1/Neon
      │              │             │              │
      │         KV/Upstash    Zod valid.     Migrations
      │              │             │
