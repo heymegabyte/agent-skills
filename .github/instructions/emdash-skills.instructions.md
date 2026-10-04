@@ -18,6 +18,5 @@ CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan U
 - TDD: failing test first, Playwright 6 breakpoints
 - Dark-first design, #060610 bg, #00E5FF accent
 - Deploy to CF Workers, purge CDN after every deploy
-- Lint: oxlint + ESLint + Prettier (never Biome); lefthook, not husky
 
 See CONVENTIONS.md for full patterns.

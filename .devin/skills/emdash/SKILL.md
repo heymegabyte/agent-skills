@@ -1,6 +1,6 @@
 ---
 name: "emdash-skills"
-description: "23-category product-building OS. CF Workers+Hono, React 19+Vite / Angular 22+Spartan, D1, Drizzle, Clerk, Square/Stripe. 149 reference docs, 28 agents."
+description: "23-category product-building OS. CF Workers+Hono, React 19+Vite / Angular 22+Spartan, D1, Drizzle, Clerk, Square/Stripe. 159 reference docs, 26 agents."
 ---
 # Emdash Skills for Devin
 
@@ -17,6 +17,5 @@ CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan U
 - TDD: failing test first, Playwright 6 breakpoints
 - Dark-first design, #060610 bg, #00E5FF accent
 - Deploy to CF Workers, purge CDN after every deploy
-- Lint: oxlint + ESLint + Prettier (never Biome); lefthook, not husky
 
 See CONVENTIONS.md for full patterns.
