@@ -58,33 +58,27 @@ Never use Computer Use when a faster tool exists — it is the last resort for w
 
 ### Finder (File Management)
 
-- **Purpose:** Move, rename, organize files when visual verification is needed
-- **Access:** Full tier
 - `open_application "Finder"` → `left_click` sidebar items to navigate → `right_click` for context menu → `Space` for Quick Look → `Enter` to rename
 - Prefer Bash for simple file ops; use Finder only when visual verification is needed
 
 ### System Settings (macOS Configuration)
 
 - **Purpose:** Change system preferences, network settings, display configs
-- **Access:** Full tier
 - `open_application "System Settings"` → `left_click` sidebar categories → `left_click` toggles → `triple_click` text fields to replace
 
 ### Preview (PDF/Image Inspection)
 
 - **Purpose:** View PDFs, inspect images, visual verification of generated assets
-- **Access:** Full tier
 - `open_application "Preview"` with file path → zoom `cmd+=`/`cmd+-` → pages `cmd+right`/`cmd+left` → annotations `cmd+shift+a`
 
 ### Notes (Quick Documentation)
 
 - **Purpose:** Read/write Apple Notes for personal context
-- **Access:** Full tier
 - `open_application "Notes"` → new note `cmd+n` → search `cmd+f` → bold `cmd+b` / italic `cmd+i`
 
 ### Maps (Location Verification)
 
 - **Purpose:** Verify addresses, check distances, screenshot maps for content
-- **Access:** Full tier
 - `open_application "Maps"` → click search bar, type address → screenshot for content embedding
 
 ### Keynote / Pages

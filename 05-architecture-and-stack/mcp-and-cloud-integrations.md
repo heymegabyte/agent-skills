@@ -50,13 +50,13 @@ claude mcp add google-workspace -- npx -y @taylorwilsdon/google_workspace_mcp
 - **Built-In (Claude AI OAuth)** — Cloudflare, Stripe, Gmail, Google Calendar, Google Drive, Slack, Canva, IFTTT
 - **Self-Hosted** — Coolify, Firecrawl, Postiz, WordPress, Home Assistant, DeepSeek, n8n, Notion, Supermemory, Plane, Omi
 - **Developer Tools** — Playwright, GitHub, Sequential Thinking, Computer Use, PostHog, Sentry
-- **Resend MCP (Apr 7, 2026)** — official MCP server published at `github.com/resend/resend-mcp`. Self-hosted: run locally (`http://127.0.0.1:3000/mcp` is the streamable-HTTP endpoint), authenticate per-client with your Resend API key as a Bearer header. Wire into Claude Code with `claude mcp add resend --transport http http://127.0.0.1:3000/mcp --header "Authorization: Bearer re_xxxxxxxxx"`. Tool coverage spans 10 groups: emails, contacts, broadcasts, domains, webhooks, segments, topics, contact properties, API keys, received emails — full Resend API surface. Use for transactional email automation, contact management, domain verification — all from Claude Code.
+- **Resend MCP (Apr 7, 2026)** — official server at `github.com/resend/resend-mcp`; run locally (streamable-HTTP endpoint `http://127.0.0.1:3000/mcp`), Resend API key as Bearer header. Wire: `claude mcp add resend --transport http http://127.0.0.1:3000/mcp --header "Authorization: Bearer re_xxxxxxxxx"`. 10 tool groups (emails, contacts, broadcasts, domains, webhooks, segments, topics, contact properties, API keys, received emails) — full Resend API surface.
 
 ### Agent Interop Protocols
 
-- **MCP (Model Context Protocol)** — tool access for AI agents. 97M+ monthly SDK downloads. Donated to Linux Foundation AAIF (Dec 2025). Standard for connecting AI models to external tools/data.
-- **A2A (Agent-to-Agent, Google)** — agent discovery and coordination across org boundaries. Donated to Linux Foundation. Enables agents to find, authenticate, and delegate tasks to other agents. ACP (Cisco/LangChain agent commerce) merged into A2A (Aug 2025).
-- **Enterprise stack** — MCP (tool access) + A2A (agent coordination) = complete agent interop. MCP for connecting to services, A2A for multi-agent orchestration across teams/orgs.
+- **MCP (Model Context Protocol)** — tool access for AI agents. 97M+ monthly SDK downloads; donated to Linux Foundation AAIF (Dec 2025).
+- **A2A (Agent-to-Agent, Google)** — agent discovery, authentication, and task delegation across org boundaries; Linux Foundation. ACP (Cisco/LangChain agent commerce) merged into A2A (Aug 2025).
+- **Enterprise stack** — MCP for tool access + A2A for multi-agent orchestration across teams/orgs.
 
 ### MCP → Skill Mapping
 

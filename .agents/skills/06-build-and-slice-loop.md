@@ -70,6 +70,8 @@ src/worker/
 
 ### Frontend (React + Vite)
 
+Vite 8 (stable Mar 2026) builds on the unified Rolldown bundler — replaces esbuild+Rollup, 10–30× faster prod builds.
+
 ```
 src/web/
 ├── main.tsx              # entry — router, providers

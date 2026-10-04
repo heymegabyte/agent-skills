@@ -7,7 +7,7 @@ description: "JIT retrieval, structured note-taking, tool result clearing, hybri
 
 # Context Engineering
 
-Replaced "prompt engineering" as the discipline. **Context > prompting** — what the model sees matters more than how you ask.
+**Context > prompting** — what the model sees matters more than how you ask.
 
 ## 5 Techniques (Anthropic Engineering)
 

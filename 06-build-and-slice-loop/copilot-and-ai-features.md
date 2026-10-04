@@ -9,7 +9,6 @@ description: "CopilotKit for AI-powered UX with useCopilotReadable, useCopilotAc
 
 ## CopilotKit Setup (Angular/React-compatible)
 
-- CopilotKit provides React hooks
 - For Angular — use the REST API + custom service, or embed CopilotKit React components via Angular elements wrapper
 
 ```typescript

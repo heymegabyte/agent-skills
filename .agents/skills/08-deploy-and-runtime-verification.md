@@ -35,6 +35,11 @@ Enforce the mandatory typecheck→deploy→CDN-purge→prod-E2E→visual-verify 
 - Both stale: prompt `! npx wrangler login`, resume deploy once fresh
 - NEVER silently skip deploy because creds missing — surface as blocker
 
+## Cloudflare `cf` CLI transition (beta — doctrine stays wrangler-first)
+
+- `cf` CLI open beta since 2026-09-28: ~3,000 generated API commands (vs wrangler's ~280). Wrangler gets ONE final major redirecting to cf, then 18-month maintenance; config format moves `wrangler.jsonc` → `cloudflare.config.ts` with typed bindings. Wrangler now requires Node ≥22.
+- Keep every deploy command wrangler-based while cf is beta; re-evaluate at cf GA.
+
 ## Workers Builds (native CI/CD)
 
 - Configure in `wrangler.jsonc` `build` block

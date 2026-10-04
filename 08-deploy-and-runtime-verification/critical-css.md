@@ -74,12 +74,7 @@ await processHtmlFiles('dist/browser');
 
 ## How critters Works
 
-1. Parses HTML, finds all `<link rel="stylesheet">` references
-2. Loads referenced CSS files from disk
-3. Renders page layout using a minimal DOM parser (no headless browser)
-4. Identifies CSS rules that affect above-fold elements (viewport height heuristic)
-5. Inlines critical rules into `<style>` in `<head>`
-6. Converts remaining `<link>` to `<link rel="preload" as="style" onload="this.rel='stylesheet'">` with `<noscript>` fallback
+Parses HTML for `<link rel="stylesheet">` refs → loads the CSS → renders layout with a minimal DOM parser (no headless browser) → inlines above-fold rules (viewport-height heuristic) into `<style>` in `<head>` → converts remaining `<link>` to `<link rel="preload" as="style" onload="this.rel='stylesheet'">` with `<noscript>` fallback.
 
 ## Hono SSR Manual Critical CSS
 

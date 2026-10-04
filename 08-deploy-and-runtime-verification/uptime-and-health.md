@@ -50,8 +50,6 @@ app.get('/health/deep', async (c) => {
 
 ### UptimeRobot (Free — 50 monitors)
 
-Set up via their dashboard or API:
-
 - Monitor — `https://domain.com/health`
 - Interval — 5 minutes
 - Alert — email to brian@megabyte.space

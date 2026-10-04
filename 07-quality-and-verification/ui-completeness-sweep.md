@@ -11,7 +11,7 @@ related: visual-inspection-loop.md (3-round per-page vision), completeness-verif
 
 ## Why This Exists
 
-AI builds 90% of a feature then declares done. The last 10% — empty states, error handling, loading skeletons, disabled buttons, placeholder text — is what users actually see. This sweep catches everything the AI skipped.
+AI builds 90% of a feature then declares done; the skipped last 10% (empty states, error handling, skeletons, disabled buttons, placeholder text) is what users actually see. This sweep catches it.
 
 ## The Sweep (Playwright + GPT Image 2 vision)
 

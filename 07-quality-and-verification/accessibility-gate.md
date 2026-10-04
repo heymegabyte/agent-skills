@@ -1,8 +1,8 @@
 ---
 name: "Accessibility Gate"
-version: "2.0.0"
-updated: "2026-04-23"
-description: "WCAG 2.2 AA via axe-core v4.11.3 + Playwright. 9 new SC: focus-not-obscured, target-size 24px, accessible-auth, consistent-help, redundant-entry, dragging-movements, focus-appearance. ADA Title II: 2027 (large) / 2028 (small). WCAG 3.0 awareness (174 requirements, 2028-2030)."
+version: "2.0.1"
+updated: "2026-10-04"
+description: "WCAG 2.2 AA via axe-core v4.13 + Playwright. 9 new SC: focus-not-obscured, target-size 24px, accessible-auth, consistent-help, redundant-entry, dragging-movements, focus-appearance. ADA Title II: 2027 (large) / 2028 (small). WCAG 3.0 awareness (174 requirements, 2028-2030)."
 ---
 
 # Accessibility Gate
@@ -11,11 +11,7 @@ WCAG 2.2 AA minimum on every project.
 
 ### Why it matters
 
-- 1 in 4 US adults has a disability
-- 71% leave inaccessible sites
-- 5,000+ ADA lawsuits in 2025 (+37% YoY)
-- Accessible sites rank higher (semantic HTML, alt text)
-- Brian's ethos: sites must be usable by everyone
+1 in 4 US adults has a disability; 71% leave inaccessible sites; 5,000+ ADA lawsuits in 2025 (+37% YoY); accessible sites rank higher. Brian's ethos: usable by everyone.
 
 ## Automated Audit (EVERY deploy)
 
@@ -156,6 +152,6 @@ Verify:
 - **ADA Title II** — Large entities (50K+ pop) April 2027, smaller April 2028 (extended from 2026/2027). Standard: WCAG 2.2 AA.
 - **Private companies** — No formal deadline, but 5,000+ lawsuits in 2025 (+37%). Gov contractors contractually required.
 - **WCAG 3.0** — Working draft March 2026, 174 requirements (up from 78 SC), no A/AA/AAA levels, assertions + scoring. Est. W3C Rec 2028-2030, legal adoption 2030+.
-- **axe-core v4.11.3** — Covers WCAG 2.0/2.1/2.2 at A/AA/AAA, Section 508, EN 301 549, RGAA, ADA. ~57% automated detection.
+- **axe-core v4.13.0** (Aug 2026) — Covers WCAG 2.0/2.1/2.2 at A/AA/AAA, Section 508, EN 301 549, RGAA, ADA. ~57% automated detection. 4.13's web-standards alignment shifts issue numbers (re-baseline a11y snapshots) + adds Element Internals support.
 - AI agents interact with interfaces — semantic HTML + ARIA + structured data serve BOTH humans and agents.
 - `font-display: swap`, subset fonts, min 16px body, test at 200% zoom, `prefers-contrast: more` support.

@@ -9,12 +9,7 @@ description: "Workers Builds (native, preferred) + GitHub Actions fallback. Auto
 
 ## Note on Usage
 
-Brian deploys live from CLI (`npx wrangler deploy`). This pipeline exists for:
-
-- Future contributors who use PRs
-- Safety net — auto-test on push
-- Branch previews for review
-- Lighthouse tracking over time
+Brian deploys live from CLI (`npx wrangler deploy`). This pipeline exists for: contributor PRs, auto-test-on-push safety net, branch previews, Lighthouse tracking over time.
 
 ## GitHub Actions Workflow
 

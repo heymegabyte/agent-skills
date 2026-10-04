@@ -229,6 +229,5 @@ For every architecture decision:
 
 ## Fractal Property
 
-- Each of the 30 points can spawn sub-analysis.
+- Each of the 30 points can spawn sub-analysis, each terminating at a clear decision.
 - Pre-mortem → competitive research. Cost model → CF pricing analysis. STRIDE → security-reviewer agent.
-- The thought loop IS the fractal — every facet generates new facets, each terminating at a clear decision.

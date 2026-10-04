@@ -1,6 +1,6 @@
 # Cloudflare 2026 Platform Updates — Quick Reference
 
-Pin this alongside the other `05-architecture-and-stack` submodules. Reflects the platform state as of May 2026.
+Pin this alongside the other `05-architecture-and-stack` submodules. Reflects the platform state as of Oct 2026.
 
 ## Workers Runtime
 
@@ -74,6 +74,7 @@ Pin this alongside the other `05-architecture-and-stack` submodules. Reflects th
 
 ## Wrangler / Config
 
+- **`cf` CLI open beta (2026-09-28)** — ~3,000 generated API commands vs wrangler's ~280; wrangler gets ONE final major redirecting to cf then 18-month maintenance; config moving `wrangler.jsonc` → `cloudflare.config.ts` (typed bindings); wrangler now requires Node ≥22. **Doctrine: wrangler-first while cf is beta — re-evaluate at cf GA.**
 - **`wrangler.jsonc`** — new default (not `.toml`). New features ship JSON-only.
 - **`secrets.required`** — config property declares required secrets. Validated at `wrangler dev`/`deploy`/`vite dev`. Feeds `wrangler types`.
 - **`wrangler types`** — supported way to get typed bindings (over `@cloudflare/workers-types`)

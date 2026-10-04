@@ -18,17 +18,8 @@ interface ItemResponse<T> { data: T; }
 
 ### HTTP Status Codes
 
-- **200** — success GET/PUT/PATCH
-- **201** — created POST
-- **204** — deleted
-- **400** — validation (`VALIDATION_ERROR`)
-- **401** — no auth (`UNAUTHORIZED`)
-- **403** — insufficient perms (`FORBIDDEN`)
-- **404** — not found (`NOT_FOUND`)
-- **409** — conflict (`CONFLICT`)
-- **422** — business logic (`UNPROCESSABLE`)
-- **429** — rate limit (`RATE_LIMITED`)
-- **500** — server error (`INTERNAL_ERROR`)
+- **2xx** — 200 success GET/PUT/PATCH · 201 created POST · 204 deleted
+- **Errors** — 400 validation (`VALIDATION_ERROR`) · 401 no auth (`UNAUTHORIZED`) · 403 insufficient perms (`FORBIDDEN`) · 404 not found (`NOT_FOUND`) · 409 conflict (`CONFLICT`) · 422 business logic (`UNPROCESSABLE`) · 429 rate limit (`RATE_LIMITED`) · 500 server error (`INTERNAL_ERROR`)
 
 ### Middleware Order
 
