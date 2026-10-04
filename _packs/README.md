@@ -24,9 +24,12 @@ router loads all members deterministically.
 - **research** — Web research + competitor scan
 - **payments** — Stripe + Square
 - **ecommerce** — Medusa.js
+- **compliance** — Data-subject rights + regulatory compliance (GDPR/CCPA)
+- **security** — Browser + app security hardening (CSP, Trusted Types, headers)
 - **polish** — 100-ideas audit + supreme polish
 - **infra** — Secrets + deploy
 - **website-build** — One-line site build doctrine
+- **reference** — Incident + finding archives; loaded on cross-reference, never always-on
 
 ## How packs are resolved
 

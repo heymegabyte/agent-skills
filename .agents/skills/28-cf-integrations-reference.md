@@ -43,7 +43,7 @@ source: "28-cf-integrations-reference/SKILL.md (heymegabyte/agent-skills)"
 
 ## Payments (route by model — see app-foundation)
 
-- **Stripe Billing** (recurring SaaS: seat/usage/entitlements) · **Stripe Connect** (payouts) · **Square** (donations / POS / one-time / in-person). Never roll your own cart/checkout/inventory (Medusa.js headless when e-commerce).
+- **Stripe Billing** (recurring SaaS: seat/usage/entitlements) · **Stripe Connect** (payouts) · **Square** (donations / POS / one-time / in-person). Never roll your own cart/checkout/inventory (Medusa.js 2.x — MIT, active 2026 — headless when e-commerce).
 
 ## Site-generation pipeline
 

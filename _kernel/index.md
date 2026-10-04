@@ -5,7 +5,7 @@ Shared definitions for the rule + skill mesh. Reference by anchor (`#anchor-id`)
 ## Files
 
 - `standards.md` — WCAG, ADA, OWASP, CWV, breakpoints, asset budget, brand, anti-slop word list, AI crawlers, JSON-LD policy, default stack, observability tiers, model routing, Cmd+K mandate, determinism order
-- `routing.md` — skill load triggers + routing taxonomy
+- `routing.md` — 10 skill-routing improvement ideas + priority table (5 + 7 shipped)
 
 ## Citation convention
 

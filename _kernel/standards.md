@@ -93,9 +93,9 @@ Tier 3 (AI-heavy >10k LLM/mo): + AI Gateway
 ## #model — Model routing
 
 - Opus 4.8 (`claude-opus-4-8`) — architecture, security review, planning, visual QA, completeness, multi-file refactor. 1M ctx, 128K out. Adaptive thinking only. (4.7/4.6 = fallback chain.)
+- Fable 5 (`claude-fable-5`) — Mythos-class tier above Opus (same model as Mythos 5; Fable adds dual-use safeguards): route the single hardest architecture/security/completeness judgment when available; fallback Opus 4.8.
 - Sonnet 4.6 (`claude-sonnet-4-6`) — implementation, feature, debug, test, simplify, deploy. 1M ctx, 64K out.
 - Haiku 4.5 (`claude-haiku-4-5`) — format, lint, changelog, content, simple review, hook eval, cost estimate. 200K ctx, 64K out.
-- Fable 5 (`claude-fable-5`) — newest frontier tier (runtime-confirmed); reserve for the hardest reasoning beyond Opus 4.8. Specs/pricing not pinned here — verify before broad use. (Ignore web claims that "Opus 5/Sonnet 5" supersede the 4.x line: unverified vs the runtime env, which reports Opus 4.8 + Fable 5 as current — do NOT swap the 4.x IDs on that basis.)
 - Subagent default: `CLAUDE_CODE_SUBAGENT_MODEL=claude-sonnet-4-6`
 - Full tiers · quota-fallback · effort params · DeepSeek/Workers-AI provider routing → `rules/model-routing.md`
 

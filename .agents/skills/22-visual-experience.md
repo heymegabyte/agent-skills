@@ -41,7 +41,7 @@ source: "22-visual-experience/SKILL.md (heymegabyte/agent-skills)"
 ## Motion
 
 - Purposeful, brand-locked; scroll-driven + View Transitions; always honor `prefers-reduced-motion` with a full non-animated path.
-- Scroll-driven = progressive enhancement: `animation-timeline: view()` / `scroll()` only behind `@supports (animation-timeline: view())`. Firefox: unsupported as of late 2026 — verify at caniuse; never animation-only state.
+- Scroll-driven = progressive enhancement: `animation-timeline: view()` / `scroll()` only behind `@supports (animation-timeline: view())`. Firefox: flag-gated in stable as of 2026-10 (`layout.css.scroll-driven-animations.enabled`; Nightly-default since 136; caniuse marks `scroll()` at Firefox 158; Interop 2026 priority); never animation-only state.
 - JS fallback auto-disables when CSS support exists: `if (!CSS.supports('animation-timeline: view()')) observe(...)` — IntersectionObserver reveal only fills the gap; never double-drive one element.
 - `@starting-style` first-paint entrances: transition-based, zero JS; pair `transition-behavior: allow-discrete` for display/dialog/popover entry+exit (Baseline mid-2024 — verify at caniuse).
 - Kinetic gradient type: `background-clip: text` + `background-size: 200%+` + slow `background-position` pan — gated on `prefers-reduced-motion: no-preference`.

@@ -48,6 +48,7 @@ How to load the IDEAL set of skills/rules for each task without overloading the 
 - Tier-5 pack-summary is always available; full member content only on pack activation
 - **Why** — a website build needs 5-6 skills together; loading them individually misses cross-references
 - **Implementation** — `_packs/website-build.yml` lists members; skill resolver expands at load time
+- **Status** — SHIPPED 2026-06-08: `_packs/` holds 18 packs; `~/.claude/bin/skill-router.py` expands members
 
 ## 6. Per-Tool Skill Activation
 
@@ -57,13 +58,13 @@ How to load the IDEAL set of skills/rules for each task without overloading the 
 - **Why** — most session segments use ~3 tools; skills relevant to other 17 are dead weight
 - **Implementation** — `~/.claude/hooks/PreToolUse` triggers conditional skill load
 
-## 7. Shared Kernel Reference Layer (this just shipped)
+## 7. Shared Kernel Reference Layer
 
 - Common standards (WCAG, OWASP, CWV, breakpoints, asset budgets, brand tokens, banned-word list) live ONCE in `_kernel/standards.md`
 - Other files cite by anchor: `per _kernel/standards.md#wcag22`
 - Eliminates 40+ duplicate definitions across mesh
 - **Why** — same WCAG criteria were defined in 6 files; one canonical source = -3k tokens
-- **Status** — shipped this turn; need to migrate remaining files to citations
+- **Status** — SHIPPED 2026-06-08: `_kernel/` live; 21 files cite kernel anchors as of 2026-10-04
 
 ## 8. Skill Stubs + On-Demand WebFetch Expand
 
@@ -100,12 +101,12 @@ How to load the IDEAL set of skills/rules for each task without overloading the 
 | Idea | Cost (hrs) | Token saving | Risk | Order |
 |---|---|---|---|---|
 | 2. Project-fingerprint | 2 | 30-50% on non-website projects | Low | **DO FIRST** |
-| 7. Shared kernel | 1 (mostly done) | 5-10% | Zero | **DO 2ND** |
+| 7. Shared kernel | 1 | 5-10% | Zero | **SHIPPED 2026-06-08** |
 | 3. Phrase-trigger | 3 | 40-60% | Low | **DO 3RD** |
 | 1. Embedding routing | 6 | 50-70% | Medium | DO 4th |
 | 4. Tiered priority | 4 | 30-40% | Low | DO 5th |
 | 9. Session caching | 4 | 40-60% over session | Medium | DO 6th |
-| 5. Skill packs | 3 | 10-20% | Low | DO 7th |
+| 5. Skill packs | 3 | 10-20% | Low | **SHIPPED 2026-06-08** |
 | 6. Per-tool activation | 5 | 20-30% | Medium | DO 8th |
 | 8. WebFetch stubs | 6 | 80% but +latency | High | LATER |
 | 10. Embedding storage | 20+ | 75% but complex | Very high | RESEARCH |
