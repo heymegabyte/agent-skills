@@ -46,3 +46,8 @@ Cloudflare-native products are provisionable by API with the global key — do N
 ## SES email auth caveat
 
 - SES domain identity (DKIM/SPF/DMARC) lives on the SENDING domain's zone. Check `BRAND.email` first — if the site domain ≠ sending domain (e.g. njsk.org site sends from @njsoupkitchen.org), the records belong on the sending domain's zone, which may differ from the site zone. Surface the mismatch to the user before staging DKIM.
+
+## Workers assets: `binding = "ASSETS"` is NOT implicit + CF Fonts needs `font-src 'self'` (claude.megabyte.space, 2026-10-03)
+
+- A `[assets]` block WITHOUT `binding = "ASSETS"` deploys the asset layer but exposes NO `env.ASSETS` — any worker code calling `c.env.ASSETS.fetch(...)` (typically `app.notFound`) throws → every unknown path 500s. The deploy "Success" output lists bindings — if `env.ASSETS — Assets` is absent, the fetch WILL crash. Static (non-SPA) sites with a `404.html` should also set `not_found_handling = "404-page"` (styled 404 + real 404 status), never `single-page-application`.
+- Zone-level **Cloudflare Fonts** rewrites Google Fonts to FIRST-PARTY `/cf-fonts/*.woff2` — a CSP of `font-src https://fonts.gstatic.com` (no `'self'`) blocks every font with console CSP violations that curl can never see. Pair `font-src 'self' https://fonts.gstatic.com`; CF Web Analytics beacon additionally needs `script-src https://static.cloudflareinsights.com` + `connect-src https://cloudflareinsights.com`. Keep `_headers` AND the worker secureHeaders CSP in sync — the asset layer serves `/` from `_headers`, the worker serves its own routes. Hardcoded `fonts.gstatic.com/s/...` preload URLs rot (Google rotates paths) and are useless under CF Fonts — delete them.
