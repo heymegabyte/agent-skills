@@ -18,7 +18,7 @@
 <br/>
 
 <div align="center">
-  <code>23 categories</code> · <code>159 doctrine rules</code> · <code>28 agents</code> · <code>34 commands</code> · <code>32 platform variants</code><br/>
+  <code>23 categories</code> · <code>160 doctrine rules</code> · <code>28 agents</code> · <code>34 commands</code> · <code>32 platform variants</code><br/>
   <a href="https://claude.megabyte.space"><strong>Showcase Website</strong></a>
 </div>
 

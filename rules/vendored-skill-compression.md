@@ -25,7 +25,7 @@ Cross-links: `[[instruction-compression-playbook]]` ``skill-authoring-contract``
 ## The law
 
 1. **Compress on the way in.** A vendored file gets the same compression pass an owned file gets — before the commit, not "later".
-2. **Keep the non-obvious; cut the inferable.** Keep judgment calls, thresholds, the author's hard-won insight. Cut anything Claude already knows or can infer.
+2. **Keep the non-obvious; cut the inferable.** Keep judgment calls, thresholds, the author's hard-won insight. Cut anything the model already knows or can infer.
 3. **Reference, don't restate, anything public.** If the content lives at a stable URL (vendor docs, Cialdini, RFCs) or a local reference file, link it and keep only the delta that matters here.
 4. **Fold overlaps into the canonical owned file.** A vendored technique that duplicates an existing rule is folded there (attributed), not duplicated as a new skill — per `[[repo-folder-hygiene]]`.
 

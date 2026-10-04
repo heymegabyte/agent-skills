@@ -21,7 +21,7 @@ Cross-links: `[[logo-contrast]]` · `[[image-quality]]` · `[[gorgeous-by-defaul
    vectorish art + legible lettering better than generic diffusion. Generate **≥4–6 candidates**
    following the logo-design guide below. Produce the **ICON mark** as a SQUARE (`ASPECT_1_1`), and
    a horizontal wordmark only when a lockup image is wanted (`ASPECT_3_1`, per `[[logo-contrast]]`).
-3. **SELECT the best with Claude-Code AI vision.** Read every candidate PNG, score each against the
+3. **SELECT the best with AI vision.** Read every candidate PNG, score each against the
    rubric below, pick the winner, and WRITE DOWN why (one line). Prefer the one that reads at 16px
    and in one color — not the most detailed.
 4. **PROCESS the winner.** Background-strip to transparent, `trim()` margins (per `[[logo-contrast]]`

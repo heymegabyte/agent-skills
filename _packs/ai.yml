@@ -19,3 +19,4 @@ members:
   - rules/prompt-cache-strategy
   - rules/eval-mock-mode-discipline
   - rules/agent-selection
+  - rules/agent-neutrality

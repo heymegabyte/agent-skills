@@ -26,7 +26,7 @@ Run these concurrently where possible — kick off the cookie ask FIRST, then do
 1. **Ensure the Suno cookie is loaded** (`/tmp/suno-cookie.txt` with BOTH `__session` AND `__client`). If missing/expired, acquire it the EASIEST way — give the user this exact one-shot instruction and continue steps 2+3 while they fetch it:
    > On suno.com (logged in) → DevTools (⌥⌘I) → **Application** → **Cookies** → `https://suno.com`. Copy the **Value** of two rows and paste them here: **`__session`** and **`__client`**. (Both are needed; `__client` is HttpOnly so it's missing from any console/"copy as cookie" paste — only the Application panel shows it.)
    Don't block on the cookie — synthesize lyrics/styles meanwhile so the moment it lands, generation fires.
-2. **Create lyrics + Suno style prompt** grounded in the MOST POPULAR songs at music.megabyte.space (the Pipeline below: rank → mine DNA → synthesize). Claude writes both the lyrics and the style string.
+2. **Create lyrics + Suno style prompt** grounded in the MOST POPULAR songs at music.megabyte.space (the Pipeline below: rank → mine DNA → synthesize). The agent writes both the lyrics and the style string.
 3. **Generate, then auto-download the 2nd clip.** Each Suno generation yields 2 clips; **download the SECOND one** automatically once it finishes rendering (Suno's 2nd take is the user's preferred default). See § Auto-download.
 
 ### HARD RULE — lyrics must always reflect professionally on Brian + everyone he represents
@@ -44,7 +44,7 @@ party at a pitch, a church, or a client meeting does NOT ship.
 2. **Mine the DNA** — for each top track:
    - Style: `src/suno-meta.ts` → `SUNO_META['<id>'].sunoStyle` (the exact Suno prompt that made it).
    - Lyrics: `public/lyrics/<id>.json` → `lines[].text`.
-3. **Synthesize** — Claude writes NEW songs that recombine the winning THEMES + STYLES,
+3. **Synthesize** — the agent writes NEW songs that recombine the winning THEMES + STYLES,
    never copying. Then write a Suno style prompt per song.
 4. **Create on Suno** — see § Suno auth reality (the hard part).
 

@@ -16,7 +16,7 @@ paths:
 
 # Router Drift Auto-Reconciliation
 
-`_router.md` is the live map Claude uses to resolve which skill handles a task. Orphan skills (on disk, absent from router) are invisible — they accumulate silently with no error, just degraded coverage.
+`_router.md` is the live map the agent uses to resolve which skill handles a task. Orphan skills (on disk, absent from router) are invisible — they accumulate silently with no error, just degraded coverage.
 
 Router reconciliation MUST be continuous, not periodic. Every skill submodule write triggers an immediate registration check. Manual `/audit-router --fix` is a fallback, not the baseline.
 

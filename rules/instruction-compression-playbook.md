@@ -26,12 +26,12 @@ Cross-links: `[[brian-preferences]]` `[[always]]` `[[drift-detection]]` `[[repo-
 
 ## The governing priority (Brian, 2026-06-21)
 
-- **Business requirements > inferable knowledge.** It matters more that the AI clearly knows every business requirement it CANNOT infer (brand values, vendor/version choices, thresholds, named files, hard rules) than that a file restates general engineering Claude already knows. Spend tokens on the former; cut the latter to near-zero.
+- **Business requirements > inferable knowledge.** It matters more that the AI clearly knows every business requirement it CANNOT infer (brand values, vendor/version choices, thresholds, named files, hard rules) than that a file restates general engineering the model already knows. Spend tokens on the former; cut the latter to near-zero.
 - **All rules stay available; each costs far fewer tokens.** Compress content — do NOT drop rules. Total per-prompt load must shrink, not the rule count.
 
 ## The compression test
 
-- Compression is **lossless when it removes tokens Claude already infers** (definitions of known concepts, filler, hedging, restated context, rationale/"why this matters"). Cut these freely.
+- Compression is **lossless when it removes tokens the model already infers** (definitions of known concepts, filler, hedging, restated context, rationale/"why this matters"). Cut these freely.
 - Compression is **lossy when it removes a constraint that would change a specific action** (a business requirement). Keep these verbatim.
 - Before deleting a line ask: *"Would removing this cause a specific wrong action?"* No → delete. Yes → keep, tighten wording.
 
@@ -50,7 +50,7 @@ Cross-links: `[[brian-preferences]]` `[[always]]` `[[drift-detection]]` `[[repo-
 5. **Delete filler** — strip near-zero-information tokens: "please", "make sure", "be careful", "remember to", "try to", "ideally", "as appropriate", "in order to". <!-- validator-ignore: filler -->
 6. **One canonical per concept** — no parallel truths. Duplicate rule across files → keep one, others cross-link. Conflicting rules are the #1 instruction-failure mode.
 7. **Consistent vocabulary** — one term per concept globally (pick `handler` OR `route`, never both). Consistency removes disambiguation tokens.
-8. **Cut what Claude knows** — never explain what a PDF/HMAC/webhook *is*. Omitting known context is free compression.
+8. **Cut what the model knows** — never explain what a PDF/HMAC/webhook *is*. Omitting known context is free compression.
 
 ## Differential budget (SHOULD)
 

@@ -17,7 +17,7 @@ paths:
 
 # Model Routing
 
-Select the correct Claude model tier by task complexity and cost; never use Opus for tasks Haiku can handle.
+Select the correct model tier by task complexity and cost — Claude tiers plus approved alternates; never use a deep-reasoning model for tasks a fast one can handle.
 
 ## Fable 5 (`claude-fable-5`) — frontier (newest, runtime-confirmed)
 

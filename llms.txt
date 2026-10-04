@@ -1,6 +1,6 @@
 # Emdash Skills — AI + Human Entrypoint (start here)
 
-> Solo-founder product-building OS for Cloudflare Workers: one-line prompts → deployed products. 23 skill categories · 159 doctrinal rules (`rules/`) · 149 reference docs · 28 agents · 36 templates · 34 commands. Load the SMALLEST useful subset per the router below — never the whole mesh.
+> Solo-founder product-building OS for Cloudflare Workers: one-line prompts → deployed products. 23 skill categories · 160 doctrinal rules (`rules/`) · 149 reference docs · 28 agents · 36 templates · 34 commands. Load the SMALLEST useful subset per the router below — never the whole mesh.
 
 > Full unabridged index: [llms-full.txt](llms-full.txt) · Human README: [README.md](README.md)
 
