@@ -22,10 +22,6 @@ paths:
 ---
 <!-- grow-ok: added the "Every loop MUST terminate — no infinite polish" mandate (DONE gate + 3 stops + self-cancel) per Brian 2026-06-26; offset by scoping paths off ["*"] so net every-prompt load DROPPED. -->
 
-## Why this grew
-
-Added the **Every loop MUST terminate — no infinite polish** mandate (terminal DONE gate as a command + three stops + self-cancel) after Brian's 2026-06-26 directive to kill perpetual convergence loops. Net every-prompt cost still fell: `paths` was scoped off `["*"]`, removing the whole file (~2031 tok) from the always-load set — it now loads via its loop/convergence triggers instead.
-
 # Loop-Driven Development
 
 Structured pattern for compounding AI work across recurring iterations on a single surface.

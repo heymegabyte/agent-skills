@@ -44,7 +44,7 @@ See `reference/fail-fast-build-fail-soft-prod.md` for full examples.
 
 ## Production: fail soft
 
-A 500 is the worst outcome — invisible to the user, breaks the experience, provides no recovery signal.
+A 500 is the worst outcome — no recovery signal for the user.
 
 - **`zod.safeParse()` in prod handlers** — return a structured `400` with `parsed.error.flatten()`; never throw.
 - **Non-critical service failure** — use `Promise.allSettled`, serve the page with the failed section as `null`, and set `X-Degraded: 1` on the response; log the failure.

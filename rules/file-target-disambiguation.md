@@ -29,8 +29,6 @@ When an agent or skill generates a file, it must land in the RIGHT repo. Two tar
 Shipping a file to the wrong target is silent breakage: CI workflows in the plugin never run;
 project-specific config in the plugin pollutes every project.
 
----
-
 ## Files that belong in the PLUGIN repo
 
 These are useful across EVERY Brian project. Ship them here once; all projects inherit.
@@ -43,8 +41,6 @@ These are useful across EVERY Brian project. Ship them here once; all projects i
 - `template/` — reusable starter templates (copied INTO projects, never run in-place)
 - `.claude-plugin/` — plugin manifest and metadata
 - `bin/` scripts that are **plugin-shipped tools** (forge, audit, sync) — tools that operate ON the plugin or skills system itself
-
----
 
 ## Files that belong in the CONSUMING PROJECT
 
@@ -60,8 +56,6 @@ These are specific to a single project's stack or runtime. Ship them to the proj
 - `.env.example` — env var template for project contributors
 - `public/` — static assets served by that project
 
----
-
 ## Explicitly ambiguous (decide case-by-case)
 
 | File class | Rule |
@@ -72,13 +66,9 @@ These are specific to a single project's stack or runtime. Ship them to the proj
 | `README.md` | Plugin root README describes the plugin. Project README describes the project. |
 | `tsconfig.json` | Project-specific. Never in plugin unless it IS the plugin's own build config. |
 
----
-
 ## Decision rule (one sentence)
 
 > **If this file would be useful in EVERY Brian project, ship to the plugin. If it is specific to a single project's stack, config, or runtime URL, ship to that project.**
-
----
 
 ## Anti-patterns
 
@@ -87,16 +77,12 @@ These are specific to a single project's stack or runtime. Ship them to the proj
 - **Shipping project `src/` components to the plugin** — app components have no meaning outside their project.
 - **Shipping plugin `rules/` to a project's `.claude/rules/`** — rules should live in the plugin and be inherited globally; duplicating them in project-level `.claude/` creates drift.
 
----
-
 ## Verification (before writing a generated file)
 
 1. Ask: "Does this file reference a specific domain, Worker name, D1 database ID, or repo URL?" → project.
 2. Ask: "Would removing this file break a project's build or deploy?" → project.
 3. Ask: "Is this a principle, doctrine, command, or skill?" → plugin.
 4. Ask: "Does this file run ON the plugin machinery (forge, sync, audit)?" → plugin `bin/`.
-
----
 
 ## See
 

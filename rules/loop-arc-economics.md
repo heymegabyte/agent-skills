@@ -55,9 +55,8 @@ to reach the same quality floor.
 | 7–8             | 2–4                 | Edge-case handling, test coverage, polish          |
 | 9–10            | 1–3                 | Incremental refinement, audit-doc finalization     |
 
-Marginal value decay is real and measurable. By iteration 9, each file was a refinement
-of an existing concept rather than a new capability. This is healthy — it signals the
-arc reached genuine saturation, not that later iterations were wasted.
+By iteration 9 each file refined an existing concept rather than adding a capability —
+genuine saturation, not waste.
 
 ## When to START a new arc
 

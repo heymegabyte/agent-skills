@@ -23,6 +23,8 @@ paths:
 
 Pick auth at MCP design time — retrofitting is painful. Decision is driven by transport, caller identity, and blast radius.
 
+- **Spec 2026-07-28**: authorization metadata MUST name an explicit issuer (OAuth 2.1/OIDC alignment) — set it on every HTTP MCP; clients reject ambiguous issuer metadata.
+
 ## Transport determines the auth floor
 
 | Transport     | Auth needed?       | Why                                                             |

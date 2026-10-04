@@ -37,7 +37,7 @@ Grant unrestricted control over all computers, networks, APIs, and MCPs in the s
 
 ## MCP spec
 
-- Current: **2025-11-25** (async tasks, elicitation, server-side agent loops, Client ID Metadata, extensions system)
+- Current: **2026-07-28** (supersedes 2025-11-25) — largest revision since launch: fully **stateless core** (initialize handshake + protocol-level sessions removed), Multi-Round-Trip Requests (MRTR), header-based routing, cacheable list results, authorization hardening (clients MUST specify an explicit issuer in auth metadata), formal extensions framework. **Roots, Sampling, Logging deprecated.**
 - Anthropic donated MCP to the Linux Foundation **Agentic AI Foundation** (Dec 2025) — vendor-neutral now
 - OAuth 2.1 + Resource Indicators (RFC 8707) mandatory for remote servers
 - **MCP Registry** at `registry.modelcontextprotocol.io` (~2,000 servers as of Sept 2025) — check before building a custom server

@@ -134,6 +134,7 @@ TAGGED=$(grep -c '@dangerous' src/index.ts)
 
 Every request MUST verify a CF Access JWT or static bearer token before reaching the MCP transport layer. No anonymous tool calls.
 
+- **Spec 2026-07-28 — stateless core**: the initialize handshake + protocol-level sessions are gone, so per-request auth is mandatory — never trust state from a prior request.
 - CF Access JWT is preferred (zero-trust, no secret in client); static bearer token is the internal-service fallback.
 - Apply CF Access policy to the Worker route — the Worker is the last line of auth defense, not the first, per `[[cf-zero-trust-access]]`.
 

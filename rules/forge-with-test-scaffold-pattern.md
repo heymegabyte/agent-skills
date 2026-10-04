@@ -70,18 +70,14 @@ See `reference/forge-with-test-scaffold-pattern.md` for full annotated code scaf
 
 ## Anti-patterns
 
-- **Source-only forge** — a forge command that only emits `.ts` source files with no
-  paired test. The engineer is left to write tests later. History shows: they don't.
-  Any forge command shipped without test emission is a build-fail per `[[06-build-and-slice-loop]]`.
-- **Passing vacuous tests** — a test that imports the module, calls nothing, and
-  `expect(true).toBe(true)` is not a test scaffold; it is noise that hides the missing
-  assertion. The RED→GREEN flow requires an assertion that can actually fail.
-- **Deferring to Recs** — listing "add tests" in a Recommendations section instead of
-  emitting them inline. Per `[[auto-integrate-recs]]`, <2h work ships inline. A test
-  scaffold takes 5–15 minutes. It always ships inline.
-- **Integration-only tests without unit coverage** — forging a complex client library
-  with only an E2E that calls a live API. Network flakiness makes this unreliable. Always
-  pair: unit tests mock the network, E2E confirms the real endpoint.
+- **Source-only forge** — emitting `.ts` source with no paired test is a build-fail per
+  `[[06-build-and-slice-loop]]`.
+- **Passing vacuous tests** — `expect(true).toBe(true)` noise hides the missing
+  assertion; RED→GREEN requires an assertion that can actually fail.
+- **Deferring to Recs** — per `[[auto-integrate-recs]]`, a 5–15 minute test scaffold
+  always ships inline, never as a Recommendations line.
+- **Integration-only tests without unit coverage** — an E2E against a live API alone is
+  flaky; always pair unit tests (mocked network) with the E2E (real endpoint).
 
 ## New forge commands — checklist before shipping
 
