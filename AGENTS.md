@@ -28,6 +28,5 @@ Legacy formats: `.cursorrules` | `.windsurfrules` | `.clinerules` | `.rules` | `
 Named formats: `AGENTS.md` | `GEMINI.md` | `AMP.md` | `CODEX.md` | `QODO.MD` | `replit.md`
 Directory formats: `.amazonq/rules/` | `.junie/` | `.trae/rules/` | `.tabnine/guidelines/` | `.kilo/rules/` | `.roo/rules/` | `.continue/rules/` | `.agents/skills/` | `.bolt/` | `.cursor/BUGBOT.md` | `.devin/` | `.goose/` | `.kimi-plugin/` | `.codex-plugin/`
 
-Install: `claude plugin install heymegabyte/claude-skills`
+Install: `gh skill install heymegabyte/claude-skills` — or your tool's plugin command (e.g. `claude plugin install heymegabyte/claude-skills`)
 Codex: Clone into `~/.codex/skills/` or `.agents/skills/`
-npm: `npm i @heymegabyte/claude-skills`
