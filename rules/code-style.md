@@ -15,7 +15,7 @@ Enforce TS 7.0 strict mode, Google TS Style, ESM-only imports, and Cloudflare Wo
 
 ## TypeScript (Google TS Style)
 
-- **TS 7.0** (native Go compiler, ~8–12× faster; alias TS 6.x for typescript-eslint/ts-morph/transformers until 7.1) — `strictInference: true`, `isolatedDeclarations: true`, `erasableSyntaxOnly` for Node 24 native TS.
+- **TS 7.0** (native Go compiler, ~8–12× faster; alias TS 6.x for typescript-eslint/ts-morph/transformers until 7.1, stable ~2026-11-24, beta 10/6) — `strictInference: true`, `isolatedDeclarations: true`, `erasableSyntaxOnly` for Node 24 native TS.
 - camelCase vars/fns · PascalCase types · CONSTANT_CASE consts.
 - `interface` over `type`. Relative imports. Never `any` — use `unknown`. Never `@ts-ignore`.
 - `readonly` when not reassigned. `undefined` over `null`.

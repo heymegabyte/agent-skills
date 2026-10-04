@@ -72,7 +72,7 @@ Dark theme FIRST. Purple for cosmic/space only.
 - **Jobs** — Inngest v4 / CF Workflows v2
 - **Runtime** — Node 24 native TS / Bun 1.4+
 - **Language** — TS 7.0
-- **E2E** — Playwright v1.59+
+- **E2E** — Playwright v1.63+
 - **Unit** — Vitest 5
 - **Lint** — oxlint + ESLint + Prettier (never Biome)
 - **Observability** — PostHog + Workers Tracing (solo); enterprise adds Sentry + GA4/GTM + Axiom
@@ -114,7 +114,7 @@ Dark theme FIRST. Purple for cosmic/space only.
 - 10–20% build perf gains
 - Conditional type narrowing improvements
 
-TS 7.0 (GA Jul 8 2026): native Go compiler, ~8–12× faster type-check/build — now the default for typecheck/build. Caveat: the stable programmatic API lands in 7.1, so typescript-eslint / ts-morph / custom transformers still need TS 6.x aliased until then. Breaking tsconfig defaults: `rootDir`→`./`, `types`→`[]`, `es5`/`baseUrl` removed.
+TS 7.0 (GA Jul 8 2026): native Go compiler, ~8–12× faster type-check/build — now the default for typecheck/build. Caveat: the stable programmatic API lands in 7.1 (stable ~2026-11-24, beta 10/6), so typescript-eslint / ts-morph / custom transformers still need TS 6.x aliased until then. Breaking tsconfig defaults: `rootDir`→`./`, `types`→`[]`, `es5`/`baseUrl` removed.
 
 ## Drizzle v1 Patterns
 
@@ -619,7 +619,7 @@ Semiannual named releases ("Acacia" → "Dahlia") + monthly additive updates. Pi
 
 CF Workers native, arbitrary identifiers (orgId/tenantId) for per-tenant rate limiting.
 
-## Playwright (v1.59+)
+## Playwright (v1.63+)
 
 ### Defaults
 

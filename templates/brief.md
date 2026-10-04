@@ -52,7 +52,7 @@
 
 ## Competitive Landscape
 
-<!-- From 03/competitive-analysis research -->
+<!-- From rules/competitor-research.md research -->
 
 | Competitor | Price | Strength | Weakness We Exploit |
 |-----------|-------|----------|-------------------|

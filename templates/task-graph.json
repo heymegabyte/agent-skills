@@ -131,7 +131,7 @@
       "assigned_agent": null,
       "dependencies": ["design-001", "api-001"],
       "outputs": ["src/components/loading/", "src/pages/404.ts", "src/pages/500.ts"],
-      "acceptance": "GPT-4o visual critique finds zero issues"
+      "acceptance": "AI vision critique finds zero issues"
     },
     {
       "id": "launch-001",

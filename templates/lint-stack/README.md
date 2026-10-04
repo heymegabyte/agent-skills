@@ -8,10 +8,10 @@ Authored by Brian Zalewski for every emdash project. Source of truth lives at
 
 | Concern | Tool | Config | Stage |
 |--|--|--|--|
-| TS/JS speed | oxlint | `eslint.config.ts` | pre-commit |
-| TS/JS depth | ESLint 10 + `@megabyte/eslint-config` | `eslint.config.ts` | pre-commit |
-| Format | Prettier + `prettier-config-sexy-mode` + `prettier-plugin-package-perfection` | `.prettierrc` | pre-commit |
-| CSS | Stylelint + `stylelint-config-so-pretty` | `.stylelintrc` | pre-commit |
+| TS/JS speed | oxlint | n/a (zero-config) | pre-commit |
+| TS/JS depth | ESLint 10 flat config (self-contained, `@megabyte/eslint-config`-inspired) | `eslint.config.mjs` | pre-commit |
+| Format | Prettier 3 (self-contained, `prettier-config-sexy-mode`-inspired) | `.prettierrc.cjs` | pre-commit |
+| CSS | Stylelint 16 (self-contained, `stylelint-config-so-pretty`-inspired) | `.stylelintrc.cjs` | pre-commit |
 | Markdown | markdownlint-cli2 (Brian-voice relaxed) | `.markdownlint.jsonc` | pre-commit |
 | YAML | yamllint relaxed | `.yamllint.yml` | pre-commit |
 | GH Actions | actionlint | n/a | pre-commit |
@@ -21,10 +21,10 @@ Authored by Brian Zalewski for every emdash project. Source of truth lives at
 | Python | ruff (replaces flake8 + black + isort) | `pyproject.toml` | pre-commit |
 | Secrets | gitleaks (pre-commit) + trufflehog `--only-verified` (pre-push) | n/a | both |
 | Duplicates | jscpd ≤1% | `jscpd.json` | pre-push |
-| Dead code | knip | `knip.config.ts` | pre-push (warn) |
+| Dead code | knip | n/a (zero-config) | pre-push (warn) |
 | Code intel | semgrep `auto` + custom Brian rules | `.semgrep/baseline.yml` | pre-push |
-| Commits | commitizen + `git-cz-emoji` (emoji-mandatory) | `.czrc` + `commitlint.config.cjs` | commit-msg |
-| Release | semantic-release + `@megabytelabs/semantic-release-config` + `@HeyMegabyte/semantic-release-gh` | `release.config.cjs` | CI |
+| Commits | commitizen + `cz-emoji` (emoji-mandatory) | `.czrc` + `commitlint.config.cjs` | commit-msg |
+| Release | semantic-release + `semantic-release-gitmoji` | `release.config.cjs` | CI |
 
 ## Mandate
 

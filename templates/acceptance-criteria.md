@@ -19,7 +19,7 @@
 
 ## Visual & Responsive (P0 — Must Pass)
 
-<!-- GPT-4o visual inspection at all 6 breakpoints -->
+<!-- AI vision inspection at all 6 breakpoints -->
 
 - [ ] **375px (iPhone SE)** — No horizontal overflow, touch targets >= 44px, readable text
 - [ ] **390px (iPhone 14)** — Layout correct, images sized properly

@@ -1,5 +1,7 @@
 #!/bin/bash
 # Visual TDD Loop: Screenshot → GPT-4o Vision Analysis → Fix → Redeploy → Repeat
+# NOTE: the hardcoded "model": "gpt-4o" was retired 2026-02-13 — update the model field
+# (see scripts/gpt4o-vision-analyze.sh header) before relying on this loop.
 # Usage: ./visual-tdd-loop.sh <URL> [max_iterations]
 
 set -euo pipefail

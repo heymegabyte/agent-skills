@@ -6,8 +6,29 @@ is an under-delivery: the brand's first impression deserves a designed mark. Thi
 logo is created; `[[logo-contrast]]` owns how it's SIZED + made legible in the navbar. (Brian
 directive 2026-10-03, after ask.megabyte.space shipped a `◆ ask` text wordmark with no real icon.)
 
+<!-- grow-ok -->
+<!-- growth 2026-10-04: CF-native generation path + recursive loop + auto-fire + the directives below (Brian) -->
+
+**2026-10-04 directives (Brian):** (1) the LOGO INCLUDES TEXT — ship the icon + wordmark TOGETHER as
+the navbar lockup (icon LEFT, high-weight brand text RIGHT); when the generator renders legible text
+(Ideogram), the wordmark MAY be baked into the generated lockup, else render crisp font text beside the
+generated icon. (2) The FAVICON must JUST WORK from the same mark — favicon + apple-touch + PWA icons are
+**TRANSPARENT** (never a flattened black/box background — a dark-tile favicon reads as an ugly black
+square in a browser tab). Produce the full set like realfavicongenerator (favicon 16/32/48, apple-touch
+180, maskable 192/512, webmanifest). (3) Use **Ideogram almost strictly for the logo** when a valid
+Ideogram `Api-Key` is available (store via `get-secret` + add it to the CF AI Gateway as the provider
+key); **CF Workers AI (flux) is the FALLBACK** so a missing key never wastes the generated work.
+
 Cross-links: `[[logo-contrast]]` · `[[image-quality]]` · `[[gorgeous-by-default]]` ·
-`[[website-build-doctrine]]` · `[[cloudflare-native-provisioning]]` (keyless/Ideogram) · `[[extra-mile]]`.
+`[[website-build-doctrine]]` · `[[cloudflare-native-provisioning]]` (CF Workers AI image gen) · `[[extra-mile]]`.
+
+## Auto-fire — generate whenever a logo is MISSING
+
+This rule fires automatically, same turn, whenever a brand surface lacks a real logo: a bare
+glyph/emoji/text wordmark, a placeholder, a missing/empty favicon, or a generic default. Never ship a
+surface without a real mark — if none exists, run the pipeline below and generate one. **Cloudflare
+Workers AI image generation is always available** (no third-party key), so "no key / no credit" is
+NEVER an excuse to defer the logo.
 
 ## The pipeline (every brand, in order)
 
@@ -16,11 +37,15 @@ Cross-links: `[[logo-contrast]]` · `[[image-quality]]` · `[[gorgeous-by-defaul
    image, Wayback, Clearbit/Brandfetch, the parent/umbrella brand's logo, press kits. A found real
    mark is ENHANCED (vectorize, clean, recolor to brand, transparent-bg, trim) + reused — never
    discarded for a generated one. Record what you found (or "none exists") in the build notes.
-2. **GENERATE candidates when none exists.** Use **Ideogram** (v3; via the Ideogram API or the
-   Replicate model `ideogram-ai/ideogram-v3-turbo` / `-v3`) — Ideogram renders crisp logo-grade
-   vectorish art + legible lettering better than generic diffusion. Generate **≥4–6 candidates**
-   following the logo-design guide below. Produce the **ICON mark** as a SQUARE (`ASPECT_1_1`), and
-   a horizontal wordmark only when a lockup image is wanted (`ASPECT_3_1`, per `[[logo-contrast]]`).
+2. **GENERATE candidates when none exists — CF-native FIRST (it always works).** Primary generator:
+   **Cloudflare Workers AI image models** — `@cf/black-forest-labs/flux-1-schnell` (fast) / `flux-2-dev`
+   (best) / `@cf/leonardo/lucid-origin` — via `POST /accounts/{acct}/ai/run/{model}` with the global
+   key. CF-native, billed through Cloudflare, needs NO third-party key. Ideogram is nice for crisp
+   lettering BUT its CF AI-Gateway route (`/{acct}/{gw}/ideogram/v1/ideogram-v3/generate`) still needs
+   a valid Ideogram **`Api-Key`** (BYO) — CF **Unified Billing does NOT cover Ideogram** (only
+   OpenAI/Anthropic/Google/xAI/Groq as of 2026-10); with no Ideogram key, use Workers AI. Generate
+   **≥4–6 candidates** per round as a SQUARE, TEXTLESS ICON. Reference impl: `scripts/gen-logo.mjs`
+   (batch-generates + stitches ONE horizontal CONTACT SHEET so the whole batch is one AI-vision read).
 3. **SELECT the best with AI vision.** Read every candidate PNG, score each against the
    rubric below, pick the winner, and WRITE DOWN why (one line). Prefer the one that reads at 16px
    and in one color — not the most detailed.
@@ -51,18 +76,27 @@ Cross-links: `[[logo-contrast]]` · `[[image-quality]]` · `[[gorgeous-by-defaul
   tiny favicon AND a large hero. Build on a grid / optical balance (golden-ratio or 8px grid).
 - **Timeless over trendy.** No year-stamped fads. A mark should survive a decade.
 
-## Ideogram prompt template (fill the brackets)
+## Prompt + the RECURSIVE refinement loop (improve until it plateaus)
 
-> "A minimalist, iconic logo MARK for [brand] — [one clever concept, e.g. 'a speech bubble whose tail
-> forms a question mark']. Flat vector, geometric, bold, simple, high-contrast, memorable, centered,
-> on a solid [#bg] background, [#accent] accent. No text, no wordmark, no photorealism, no gradient
-> mesh, fills the frame. Professional tech-brand logo, works at small sizes." + `ASPECT_1_1`, a
-> magic-prompt-off deterministic style, 4–6 images.
+Iterate, never one-shot — the first batch is a starting point, not the answer:
 
-- Generate the ICON textless (lettering generators muddy a small mark); render the wordmark as REAL
-  FONT TEXT in the navbar (crisp, themeable) rather than baking it into the raster.
-- If the best raster still looks soft at navbar size, trace it to a crisp **SVG** rendition of the
-  chosen concept — an Ideogram concept + a hand-cleaned SVG is the strongest navbar result.
+1. **Round 1** — 4–6 candidates from DISTINCT concepts (bubble+?, monogram, negative-space reveal, the
+   product's object). Prompt template:
+   > "A minimalist iconic logo MARK for [brand] — [one clever concept]. Flat vector, geometric, bold,
+   > simple, high-contrast, [#accent1]-to-[#accent2] gradient on a solid near-black background, soft
+   > glow, centered, fills the frame. No text, no letters, no words, no photorealism."
+
+   Repeat "no text, no letters, no words" — diffusion models WILL bake in garbled lettering otherwise.
+2. **Review the contact sheet with AI vision** — score each 0–10 on simple / scalable / distinctive /
+   on-brand / gorgeous; pick the best AND write the critique (what to push next: richer gradient? a
+   tail for "chat"? a clever dot (the brand mark as the "?" dot)? drop a cliché?).
+3. **Round 2+** — rewrite the prompts toward the winner's direction + the critique; regenerate. Repeat
+   until the top score PLATEAUS (no new round beats the last) — bounded **2–3 rounds** (loops must
+   terminate per `[[loop-driven-development]]`; a strong ≥9/10 mark is done). Record each round's pick.
+4. **PROCESS the winner** — `scripts/process-logo.mjs` does luminance-keyed alpha (a near-black bg + a
+   dark knockout "?" both go transparent, so the mark FLOATS on the dark navbar) + trim + derives
+   favicon/apple-touch/PWA from the one source. Render the wordmark as REAL FONT TEXT beside the icon
+   (never baked into the raster). If a raster still looks soft at 44px, trace the concept to a crisp SVG.
 
 ## Anti-patterns (fix on sight)
 
@@ -84,3 +118,14 @@ bubble + the navbar ◆ into one mark), locked up with an `ask` wordmark in Spac
 `apps/ask/scripts/gen-icons.mjs` derives favicon + apple-touch + PWA icons from the one SVG (no drift).
 Lesson: **CHECK generator creds first** (`get-secret IDEOGRAM_API_KEY` validity + Replicate balance);
 when blocked, the SVG-trace fallback ships a real mark the SAME turn — never defer the logo to "later".
+
+## Reference incident (ask.megabyte.space, 2026-10-04) — generated via CF Workers AI
+
+The hand-drawn SVG from 2026-10-03 was "okay" but not gorgeous. Ideogram-direct was still key-dead and
+CF Unified Billing doesn't cover Ideogram — so generation ran on **Cloudflare Workers AI** image models
+(`flux-1-schnell`), CF-native + CF-billed, no third-party key. **Two recursive rounds** (6 then 5
+candidates, each reviewed as a contact sheet via AI vision) converged on a rich cyan→violet→magenta
+gradient rounded-diamond speech-bubble mark with a tail + knockout "?" — a clear step up, ~9/10.
+`scripts/gen-logo.mjs` + `scripts/process-logo.mjs` are the reusable pipeline; `AskMark` renders the
+transparent `logo-mark.png`. Lesson: **CF Workers AI image gen is the always-available CF-native
+generator** — reach for it first; Ideogram only when a valid `Api-Key` exists.

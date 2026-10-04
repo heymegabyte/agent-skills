@@ -27,7 +27,7 @@ business_model: ""
 # Example: "Track volunteer hours for small nonprofits without spreadsheet chaos"
 primary_value_proposition: ""
 
-# Direct competitors found via web search (03/competitive-analysis)
+# Direct competitors found via web search (rules/competitor-research.md)
 # Each entry: { name, url, pricing, weakness_we_exploit }
 competitors:
   # - name: "Competitor A"

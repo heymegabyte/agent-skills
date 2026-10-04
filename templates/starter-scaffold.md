@@ -169,13 +169,13 @@ export const subscriptions = sqliteTable('subscriptions', {
 ```json
 {
   "dependencies": {
-    "hono": "^4",
+    "hono": "^4.12.12",
     "@hono/zod-validator": "^0.4",
     "drizzle-orm": "^1.0",
-    "zod": "^3.24",
+    "zod": "^4",
     "@clerk/backend": "^2",
     "stripe": "^18",
-    "inngest": "^3",
+    "inngest": "^4",
     "resend": "^4"
   },
   "devDependencies": {
@@ -183,11 +183,13 @@ export const subscriptions = sqliteTable('subscriptions', {
     "drizzle-kit": "^1.0",
     "eslint": "^9",
     "prettier": "^3",
-    "@playwright/test": "^1.59",
-    "typescript": "^5.7"
+    "@playwright/test": "^1.63",
+    "typescript": "^7.0"
   }
 }
 ```
+
+> TS 7.1 (stable ~2026-11-24) ships the native API — alias TS 6.x only where typescript-eslint/ts-morph still require it.
 
 ## First Deploy Sequence
 

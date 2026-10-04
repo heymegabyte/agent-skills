@@ -1,5 +1,5 @@
 /**
- * ESLint 9 flat config — mainstream canonical chain (inspired by GitLab
+ * ESLint 10 flat config — mainstream canonical chain (inspired by GitLab
  * @megabyte/eslint-config; rewritten to latest stable plugins).
  * Per rules/lint-doctrine.md.
  */

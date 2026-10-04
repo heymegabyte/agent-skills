@@ -962,7 +962,7 @@ function renderMcpPackageJson(name, transport) {
       ...(transport === 'http' ? { hono: '^4.7.0' } : {}),
     },
     devDependencies: {
-      typescript: '^5.9.0',
+      typescript: '^7.0',
       '@types/node': '^22.0.0',
       ...(transport === 'stdio' ? { tsx: '^4.19.0' } : { wrangler: '^4.0.0' }),
     },

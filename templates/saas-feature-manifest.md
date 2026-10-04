@@ -321,7 +321,7 @@ Check each item as acceptance criteria. Each unchecked item = a failing test = n
 - [ ] Stagehand observe() runs AFTER Playwright tests: autonomous QA discovery (finds bugs not explicitly tested)
 - [ ] Each test file ~1 minute, runs against PROD_URL
 - [ ] 6 breakpoints: 375, 390, 768, 1024, 1280, 1920
-- [ ] Screenshots at every breakpoint → GPT-4o vision critique
+- [ ] Screenshots at every breakpoint → AI vision critique
 - [ ] axe-core accessibility audit in every test run
 - [ ] Console error assertion (zero tolerance)
 - [ ] Network request monitoring (no 4xx/5xx on page load)
@@ -331,7 +331,7 @@ Check each item as acceptance criteria. Each unchecked item = a failing test = n
 ## 29. Pre-Build Research Phase
 
 - [ ] Domain name → infer product type, target users, business model
-- [ ] Web search: 3-5 competitors identified and scraped (skill 03 + Firecrawl)
+- [ ] Web search: 3-5 competitors identified and scraped (rules/competitor-research.md + Firecrawl)
 - [ ] Keyphrase research: holy-grail keyword + 2 longtail per page
 - [ ] Design inspiration: screenshot 2-3 best competitor landing pages
 - [ ] Feature matrix: what competitors have → what we need → what differentiates us
@@ -347,9 +347,9 @@ Check each item as acceptance criteria. Each unchecked item = a failing test = n
 - [ ] After completeness: run idea engine (skill 14) for improvements
 - [ ] Implement all HIGH-confidence recommendations automatically
 - [ ] Present MEDIUM-confidence recommendations for approval
-- [ ] Final GPT-4o critique at all breakpoints
-- [ ] DONE: all ACs pass + completeness-checker approves + GPT-4o zero issues + zero recommendations
+- [ ] Final AI vision critique at all breakpoints
+- [ ] DONE: all ACs pass + completeness-checker approves + AI vision zero issues + zero recommendations
 
 **Total: 30 categories, ~250 acceptance criteria.**
 Each unchecked item = a Playwright test that must pass on production.
-DONE = all checked + GPT-4o zero issues + zero recommendations + completeness-checker approves.
+DONE = all checked + AI vision zero issues + zero recommendations + completeness-checker approves.

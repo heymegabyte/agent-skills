@@ -8,7 +8,7 @@
  * Source of truth: NN-*\/SKILL.md (frontmatter) + rules/*.md + .claude-plugin/plugin.json
  * Never edit the output files directly — re-run this script instead.
  *
- * @see rules/multi-harness-portability.md
+ * @see reference/multi-harness-portability.md
  *
  * @example
  * node bin/gen-harness-manifests.mjs
@@ -149,7 +149,7 @@ const domainFiles = skills
  * OpenAI Codex harness manifest.
  * Codex does not support hooks or dynamic routing — exports harness-neutral rules only.
  *
- * @see rules/multi-harness-portability.md § "OpenAI Codex"
+ * @see reference/multi-harness-portability.md § "OpenAI Codex"
  */
 const codexManifest = {
   _generated_by: 'bin/gen-harness-manifests.mjs — do not edit directly',
@@ -165,7 +165,7 @@ writeJson(join(ROOT, '.codex-plugin', 'plugin.json'), codexManifest);
 /**
  * opencode harness config (open source CLI).
  *
- * @see rules/multi-harness-portability.md § "opencode"
+ * @see reference/multi-harness-portability.md § "opencode"
  */
 const opencodeConfig = {
   _generated_by: 'bin/gen-harness-manifests.mjs — do not edit directly',
@@ -180,7 +180,7 @@ writeJson(join(ROOT, '.opencode', 'config.json'), opencodeConfig);
  * Kimi harness manifest (China market).
  * Mirrors Claude Code format with locale additions.
  *
- * @see rules/multi-harness-portability.md § "Kimi"
+ * @see reference/multi-harness-portability.md § "Kimi"
  */
 const kimiManifest = {
   _generated_by: 'bin/gen-harness-manifests.mjs — do not edit directly',

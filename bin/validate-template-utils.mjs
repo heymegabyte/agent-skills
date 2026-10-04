@@ -2,7 +2,7 @@
 /**
  * validate-template-utils.mjs — Production validator for template/utils/ conventions.
  *
- * Enforces `rules/template-utility-conventions.md`. Run in CI and pre-commit.
+ * Enforces `reference/template-utility-conventions.md`. Run in CI and pre-commit.
  *
  * Usage:
  *   node bin/validate-template-utils.mjs          # print violations, exit 0

@@ -99,7 +99,7 @@
 - [ ] Configure PostHog funnels for primary conversion path
 - [ ] Set up A/B test for hero CTA (if traffic warrants)
 - [ ] Newsletter signup working and connected to Listmonk
-- [ ] AI chat widget (07/spec-driven-development) trained on site content
+- [ ] AI chat widget (06/ai-chat-widget) trained on site content
 
 ## Documentation (P2)
 
