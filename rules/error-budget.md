@@ -27,8 +27,7 @@ paths:
 
 SRE-style error budgets for solo builders. Every Worker route declares a per-SLO availability
 target. When the 30-day burn rate exceeds the budget, feature shipping **stops** — only
-error-reduction work merges to main. Being solo doesn't excuse skipping this; it means you
-are both the SRE and the developer.
+error-reduction work merges to main.
 
 ## SLO selection table
 
@@ -72,10 +71,8 @@ Call `enforceShipStop` in CI pre-deploy step. If true, exit 1 and surface the sh
 
 ## Automatic killswitch via feature flags
 
-When a feature's error rate spikes post-launch, auto-kill it without a redeploy by checking
-the killswitch-promoted flag at request time. This is `[[feature-flags]]` § killswitch in
-practice — error budget exhaustion automatically promotes the most risky in-flight flag to
-killswitch stage.
+When a feature's error rate spikes post-launch, auto-kill it without a redeploy via the killswitch-promoted
+flag at request time — `[[feature-flags]]` § killswitch in practice; budget exhaustion auto-promotes the riskiest in-flight flag to killswitch stage.
 
 ## Anti-patterns
 
@@ -87,8 +84,7 @@ killswitch stage.
 
 ## Reference
 
-Google SRE Workbook ch. 2: "Error Budgets". Practical SRE, Treynor Sloss et al. (2018).
-Core insight: "The error budget is the permissible rate of unreliability."
+Google SRE Workbook ch. 2: "Error Budgets"; Treynor Sloss et al. (2018) — "the error budget is the permissible rate of unreliability."
 
 ## Cross-links
 

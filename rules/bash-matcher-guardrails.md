@@ -60,10 +60,7 @@ Claude Code hooks intercept tool calls via event name + optional matcher. Wrong 
 
 ## Glob syntax reference
 
-- `Bash(git commit*)` — any `git commit ...` invocation
-- `Bash(rm -rf*)` — `rm -rf /path`, `rm -rf .`
-- `Bash(npm publish*)` — `npm publish`, `npm publish --access public`
-- `Bash(wrangler deploy*)` — `wrangler deploy`, `wrangler deploy --env production`
+- `Bash(git commit*)` — any `git commit ...` invocation (same shape: `Bash(rm -rf*)`, `Bash(npm publish*)`, `Bash(wrangler deploy*)`)
 - `Bash(git push --force*)` — force pushes (narrower than `git push*`)
 - `Write|Edit|MultiEdit` — pipe-separated, no spaces; matches any of the three write tools
 - `Bash|WebFetch|WebSearch|mcp__.*` — pipe-separated + regex; `mcp__.*` matches ALL MCP tools
@@ -124,13 +121,7 @@ Spaces break the parser. Correct: `Write|Edit|MultiEdit`.
 
 ## Planned future matchers (not yet wired)
 
-| Matcher | Hook purpose |
-|---|---|
-| `Bash(wrangler deploy*)` | Verify deploy environment, log deploy events |
-| `Bash(rm -rf*)` | Confirm destructive recursive deletes |
-| `Bash(git push --force*)` | Block force pushes to main |
-| `Bash(npm publish*)` | Pre-publish checklist: version bump, changelog, tests green |
-| `Bash(git reset --hard*)` | Warn on destructive resets |
+- `Bash(wrangler deploy*)` deploy-env verify+log · `Bash(rm -rf*)` confirm destructive deletes · `Bash(git push --force*)` block force-push to main · `Bash(npm publish*)` pre-publish checklist · `Bash(git reset --hard*)` warn on destructive resets
 
 ## Incident reference
 

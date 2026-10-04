@@ -161,5 +161,3 @@ See `reference/right-to-deletion.md` for the `sendDeletionReceipt` implementatio
 - `[[secret-provisioning]]` — STRIPE_SECRET_KEY + AWS_SES_* + LISTMONK_USER/PASS + POSTHOG_PERSONAL_API_KEY env setup
 - `[[email-deliverability]]` + `[[email-deliverability-implementation]]` — receipt email send path
 - `[[drift-detection]]` — new data writes that skip cascade registration = drift
-
-```

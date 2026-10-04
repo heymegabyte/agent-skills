@@ -35,15 +35,10 @@ Write sharp, punchy, Flesch ≥60 copy with action-verb CTAs, servant framing, a
 
 ## Human voice (anti-slop)
 
-For instructional/technical prose (skills, rules, docs) — not marketing copy, but the same slop-removal discipline applies. From ``skill-authoring-contract``:
+Instructional/technical prose (skills, rules, docs) gets the same slop-removal discipline. Canonical: ``skill-authoring-contract`` § Human voice; `[[micro-test-instruction-wording]]` proves wording binds.
 
-- Sound like one sharp engineer wrote it. No throat-clearing, no "it's worth noting."
-- Fragments beat full sentences when they read clean.
-- Cut every word that survives its own deletion.
-- No emoji-as-decoration, no hype adjectives, no restating the heading in the first bullet.
-- No "in today's fast-paced world" / "unlock the power of" / "seamlessly integrate" — these are the copy equivalent of `sleep(300)` in a test. Delete them.
-
-See ``skill-authoring-contract`` § Human voice for the canonical version; `[[micro-test-instruction-wording]]` for proving guidance wording actually binds.
+- One sharp engineer's voice. No throat-clearing, no "it's worth noting". Fragments beat full sentences when they read clean. Cut every word that survives its own deletion.
+- No emoji-as-decoration, no hype adjectives, no restating the heading in the first bullet, no "in today's fast-paced world" / "unlock the power of" / "seamlessly integrate".
 
 ## Banned words (grep before ship, replace with concrete)
 
@@ -57,6 +52,7 @@ plethora, supercharge, unleash, boundless
 ```
 
 - `transform | unlock | empower | redefine | reimagine | elevate | transcend` — allowed only when literally accurate; banned as filler hype.
+- Replace with specific, concrete language: "Our innovative platform" → "Ship SaaS in 4 weeks."
 
 ## Banned unsourced authority signals
 
@@ -89,12 +85,6 @@ typically, generally
 - JSON-LD facts MUST also appear as visible HTML body text (ChatGPT/Claude don't fetch JSON-LD on direct read).
 - Lead paragraphs answer query directly in <40 words.
 - **EEAT signals** — author bio + `Person` schema w/ `sameAs` + dated revision + ownership statement outweigh keyword density.
-
-## Anti-slop
-
-- Grep for banned words before finalizing.
-- Replace with specific, concrete language.
-- "Our innovative platform" → "Ship SaaS in 4 weeks."
 
 ## Sourced facts (tiered by surface)
 

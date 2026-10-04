@@ -11,8 +11,6 @@ superseded_by: null
 
 # Always
 
-Standing cross-cutting rules that apply unconditionally to every prompt, surface, and project.
-
 > **Website per-page / per-site / per-entity gates** (SEO head · webmanifest/robots/sitemap/security.txt · lightbox · Google Maps · clickable-entity linking · forms · timeline · Cmd+K) live in `[[website-page-and-site-gates]]` — extracted so WEBSITE-specific detail loads only on site prompts (via the `website-build` pack) instead of taxing every prompt's token budget.
 
 ## Autonomy — drive to done, NEVER ask permission to continue

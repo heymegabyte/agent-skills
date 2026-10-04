@@ -57,8 +57,6 @@ Run `validate-email-auth.mjs` as a build gate; it checks SPF, DKIM selectors, an
 
 ## BIMI — Brand Indicators for Message Identification
 
-BIMI displays your logo in Gmail/Yahoo/Apple Mail next to authenticated messages.
-
 **Prerequisites (all required before adding the DNS record):**
 
 - DMARC `p=reject` stable for ≥2 weeks.

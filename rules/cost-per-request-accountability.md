@@ -24,9 +24,7 @@ paths:
 
 # Cost-Per-Request Accountability
 
-Every feature carries an explicit cost estimate before it ships. No feature goes live without someone having done the napkin math inline.
-
-CF free tier is generous but not infinite — a naive cron that queries D1 on every activation can exhaust the free tier in hours. A solo builder has no FinOps team to catch runaway spend.
+Every feature carries an explicit cost estimate before it ships — napkin math inline. A naive cron querying D1 on every activation can exhaust the free tier in hours; no FinOps team catches runaway spend.
 
 ## The rule
 
@@ -35,7 +33,7 @@ CF free tier is generous but not infinite — a naive cron that queries D1 on ev
 - Ceilings: **≤$0.001/request** for free-tier features; document the ceiling for paid features
 - When a feature crosses $5/month, flag it in the commit message for review
 
-## CF free tier reference (2026)
+## CF free tier reference (verified 2026-10-04)
 
 | Primitive | Free allowance | Cost beyond |
 |-----------|----------------|-------------|
@@ -50,6 +48,8 @@ CF free tier is generous but not infinite — a naive cron that queries D1 on ev
 | R2 storage | 10GB/month | $0.015/GB/month |
 | Queues | 1M ops/month | $0.40/million |
 | Durable Objects | 1M requests + 400K GB-s | pay-as-you-go |
+
+- Workers bundle size: single **64 MiB uncompressed** limit on Free AND Paid (Sep 2026 — replaced the old 3 MB-gz free / 10 MB-gz paid compressed caps).
 
 Inngest/Workflows: $0/step up to 50K steps/month, then $1/100K steps.
 

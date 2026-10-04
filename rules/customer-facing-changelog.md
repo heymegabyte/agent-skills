@@ -23,9 +23,7 @@ paths:
 
 # Customer-Facing Changelog Discipline
 
-Every change **visible to a user** — new feature, behavior change, deprecation, pricing update — gets one line in a customer-readable changelog. Publish on ship, not on sprint close.
-
-This is NOT the git commit log. It is written for the person using the product.
+Every change **visible to a user** — new feature, behavior change, deprecation, pricing update — gets one line in a customer-readable changelog. Publish on ship, not on sprint close. NOT the git commit log — written for the person using the product.
 
 ## Format
 
@@ -86,10 +84,6 @@ if (newStage === 'stable' && newRollout === 100) {
 ```
 
 Per `feature-flags`, every flag row carries a `description` written in user-outcome language — that description IS the changelog entry.
-
-## Solo builder advantage
-
-No committee review. Write it as you ship it. A changelog entry takes 90 seconds. The absence of one costs trust every time a user notices a change they weren't told about.
 
 ## `CHANGELOG.md` maintenance rules
 

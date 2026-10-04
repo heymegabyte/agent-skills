@@ -74,7 +74,7 @@ Every emdash project ships an **industry-leading lint+autofix stack** wired into
 
 ### Pinned versions (verified 2026-06-08)
 
-- `eslint` 9.x · `typescript-eslint` 8.61.0 · `eslint-plugin-perfectionist` 5.9.0 · `eslint-plugin-unicorn` 65.0.1
+- `eslint` 10.x (v9 EOL 2026-08-06) · `typescript-eslint` 8.61.0 · `eslint-plugin-perfectionist` 5.9.0 · `eslint-plugin-unicorn` 65.0.1
 - `prettier` 3.x · `prettier-plugin-packagejson` 3.0.2 · `prettier-plugin-organize-imports` 4.3.0
 - `stylelint-config-clean-order` 10.0.0 · `cz-emoji` 1.3.1 · `conventional-changelog-gitmoji-config` 1.5.2 · `semantic-release-gitmoji` 1.6.9
 

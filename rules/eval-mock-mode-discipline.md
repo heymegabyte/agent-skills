@@ -22,8 +22,6 @@ Governs `[[run-mcp-evals]]`, `[[forge-from-openapi]]`, and every MCP server gene
 - **Live-mode** proves the API contract hasn't drifted.
 - Neither replaces the other.
 
----
-
 ## When to use mock vs. live
 
 ### CI (push / PR / scheduled)
@@ -42,8 +40,6 @@ Governs `[[run-mcp-evals]]`, `[[forge-from-openapi]]`, and every MCP server gene
 
 - Run `--mock-only` first (fast gate), then `--live-only` (contract gate).
 - Both must pass before publishing to the registry.
-
----
 
 ## Env-var hook: every forged MCP server MUST implement it
 
@@ -78,8 +74,6 @@ async function httpFetch(url: string, init?: RequestInit): Promise<Response> {
 
 - All outgoing HTTP calls MUST route through `httpFetch`, never bare `fetch`.
 - This is the only server-side requirement for Option A mock-mode.
-
----
 
 ## Anti-patterns (build-fail)
 
@@ -127,8 +121,6 @@ grep -r "^\s*fetch(" src/ --include="*.ts" | grep -v httpFetch | grep -v "// byp
 - `/tmp/mcp-mock-intercept.mjs` is ephemeral — never track in git.
 - Option B is a fallback for legacy servers; new servers always implement Option A.
 
----
-
 ## Adding mock coverage to existing tests
 
 When `--ci` output shows `skip` entries:
@@ -138,8 +130,6 @@ When `--ci` output shows `skip` entries:
 3. Paste as `mock_response.body`; set `mock_response.status` to the HTTP status.
 4. Add `"_source": "observed from live run <date>"`.
 5. Re-run `--mock-only` — test must now pass.
-
----
 
 ## Forge requirements
 
@@ -155,8 +145,6 @@ When `--ci` output shows `skip` entries:
 - Detect bare `fetch` calls and replace with `httpFetch`.
 - Emit a migration note when adding the hook.
 
----
-
 ## CI gate policy
 
 ```yaml
@@ -168,8 +156,6 @@ When `--ci` output shows `skip` entries:
 
 - Never add live-mode steps to CI without injecting the API key via a repository secret.
 - Gate live-mode on `workflow_dispatch` or `release/**` — not on every push.
-
----
 
 ## See also
 

@@ -13,7 +13,7 @@ paths:
 
 # Evals
 
-AI is foundational to many product surfaces — and like every other foundational layer, it gets first-class quality tracking. AI-heavy behavior MUST have eval cases, structured rubrics, schema-validated results, and regression tracking. Code tests prove the plumbing works; evals prove the AI layer's quality holds across model + prompt + context changes. Evals are to AI what unit tests are to logic + Lighthouse is to perf — standard quality discipline applied to a load-bearing layer.
+AI is foundational — and like every other foundational layer, it gets first-class quality tracking. AI-heavy behavior MUST have eval cases, structured rubrics, schema-validated results, and regression tracking. Code tests prove the plumbing; evals prove the AI layer's quality holds across model + prompt + context changes.
 
 This rule fires whenever a feature's value depends on model output: site generation, copy synthesis, classification, summarization, prompt-following, design generation. It complements skill 07 (quality-and-verification) + AI-vision QA — evals score the AI's *generation quality*, E2E scores *runtime behavior*.
 

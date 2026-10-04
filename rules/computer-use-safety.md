@@ -89,10 +89,4 @@ When ≥2 of these apply, switch to **paste-collaboration**: generate a tight bu
 
 ## Creative use
 
-- Automate repetitive GUI tasks
-- Fill forms
-- Configure app settings
-- Manage windows
-- Trigger builds
-- Cross-app workflows
-- Anything that advances the goal
+- Automate repetitive GUI tasks · fill forms · configure app settings · manage windows · trigger builds · cross-app workflows — anything that advances the goal

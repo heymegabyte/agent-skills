@@ -26,9 +26,8 @@ paths:
 
 # Blast Radius Minimization
 
-Every change is scoped to the minimum surface that can possibly fail. A broken commit that
-affects 1% of users for 5 minutes is a normal Tuesday. A broken commit that takes down every
-user for 30 minutes is an incident. The difference is almost always containment — not code quality.
+Every change is scoped to the minimum surface that can possibly fail. 1% of users for 5 minutes
+is a normal Tuesday; every user for 30 minutes is an incident — the difference is containment, not code quality.
 
 ## The "5-minute thought experiment"
 
