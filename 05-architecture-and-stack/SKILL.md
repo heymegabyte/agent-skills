@@ -49,7 +49,7 @@ Default stack: `_kernel/standards.md#stack`. Override conditions below.
 
 **Async**: Queues (best-effort, 5000 msg/sec, R2 event notifications) · Workflows v2 (deterministic, 50K concurrent, 300 creates/sec, 2M queued/workflow, `step.do` + `step.sleep` + `step.waitForEvent`) · Inngest (event-driven, better DX/observability)
 
-**AI**: Workers AI (Llama 3.3 70B FP8 free, Llama 3.1 8B FP8, Llama 4 Scout 17B vision) · AI Gateway (caching + rate-limit + fallback + logging for every LLM call) · Vectorize (embeddings + ANN search)
+**AI**: Workers AI (Llama 4 Scout 17B default — multimodal, free tier; GLM-4.7-flash tool-calling; 3.3 70B legacy) · AI Gateway (caching + rate-limit + fallback + logging for every LLM call) · Vectorize (embeddings + ANN search)
 
 ## Override conditions (when CF isn't enough)
 
@@ -97,7 +97,7 @@ database_name = "myapp"
 
 - Workers free tier: 100k req/day; Workers Paid: $5/mo (10M req + 30M CPU-ms) + $0.30/M extra req + $0.02/M extra CPU-ms
 - D1 on Workers Paid: 5GB + 25B rows-read + 50M rows-written/mo; then $0.75/GB-mo + $0.001/M rows-read + $1/M rows-written; no egress; read replication included (verified 2026-09-24 against developers.cloudflare.com — Workers/D1/R2 rates all unchanged)
-- R2: 10GB free, $0.015/GB-mo, $0/egress · Workers AI Llama 3.3 70B FP8 FREE · AI Gateway free
+- R2: 10GB free, $0.015/GB-mo, $0/egress · Workers AI Llama 4 Scout FREE · AI Gateway free
 - Solo SaaS <$100k/mo MRR stays 10-100× cheaper than AWS-equivalent on CF
 
 ## Default config (`wrangler.jsonc`)

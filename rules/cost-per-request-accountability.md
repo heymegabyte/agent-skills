@@ -75,7 +75,7 @@ export async function dailyDigest(env: Env) {
 ```ts
 // worker/routes/ai-search.ts
 
-// Cost: Workers AI Llama 3.3 70B FP8 = $0.00/request (free tier 10K neurons/day)
+// Cost: Workers AI Llama 4 Scout = $0.00/request (free tier 10K neurons/day)
 //       Fallback to Claude Haiku: ~600 tokens × $0.00025/1K = $0.00015/request
 //       At 1K req/day → $0.15/day = ~$4.50/month — acceptable, flag if volume grows
 export async function aiSearch(c: Context) { ... }

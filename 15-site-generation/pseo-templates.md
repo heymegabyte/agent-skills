@@ -274,7 +274,7 @@ CREATE INDEX pseo_pages_published ON pseo_pages(published, type);
 
 ## Generation Pipeline
 
-- Fetch variable rows from D1 → interpolate template → Workers AI Llama 3.3 70B FP8 (free tier) for unique sentences → validate word count ≥ floor → compare `content_hash`
+- Fetch variable rows from D1 → interpolate template → Workers AI Llama 4 Scout (free tier) for unique sentences → validate word count ≥ floor → compare `content_hash`
 - Skip regeneration if hash unchanged
 - On hash change: upsert D1 row → write to KV (`pseo:{slug}`) with 1h TTL → ping sitemap index endpoint
 - Gate all pSEO routes behind feature flag `pseo_enabled` (`enabled=0, rollout=0, stage='experimental'`); promote to stable after manual QA on ≥10 representative pages

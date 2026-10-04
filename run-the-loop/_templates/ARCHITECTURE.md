@@ -63,7 +63,7 @@ CF DNS / custom hostname
   `APP_RUNTIME`, `PsNotifyDO` (psnotify notification layer — NOT a D1 `notifications` table).
 - **WfP** — per-site dispatch namespace (Workers for Platforms); a Worker can't statically bind
   thousands of per-site D1s, so serving + data go through the dispatch/REST plane.
-- **AI** — Cloudflare Workers AI (Llama 3.3 70B + 3.1 8B, FP8) via AI Gateway (mandatory on every
+- **AI** — Cloudflare Workers AI (Llama 4 Scout default; GLM-4.7-flash tool-calling) via AI Gateway (mandatory on every
   model call). Build agent: DeepSeek-primary, Anthropic fallback.
 
 ## Invariants + key ADRs

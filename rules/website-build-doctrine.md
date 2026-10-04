@@ -10,7 +10,7 @@ triggers:
   - "make site"
 paths:
   - "org:website_build"
-last_reviewed: 2026-06-29
+last_reviewed: 2026-10-04
 superseded_by: null
 ---
 
@@ -41,8 +41,9 @@ NO code/clone/scaffold until every public source is loaded. Fan out via parallel
 
 - **Owned** — official site (deep crawl per `source-site-enhancement.md` § Phase 1), subdomains, X/IG/FB/LinkedIn/TikTok/YouTube, app stores, podcasts, RSS.
 - **Search** — Google + Bing top-50 for `{name}`, `{name}+{city}`, `+reviews`, `+complaints`, `+founder`, `+history`, `+lawsuit`, `+press release`.
-- **Archives** — Wayback (3+ snapshots), archive.today, archive.ph, Google `cache:`.
+- **Archives** — Wayback (3+ snapshots), archive.today, archive.ph.
 - **Registries** — Sec of State, BBB, Charity Navigator + Form 990, GuideStar/Candid, FCC + SEC EDGAR, Google Places + Yelp + Foursquare, Apple Maps + OSM.
+  - Places API (New): per-SKU free tier (Essentials 10K/mo; $200 credit retired 2025-03) — field-mask to IDs-only/Essentials SKUs; one Pro field upgrades the whole call.
 - **Press** — Google News, local newspaper archives (Newspapers.com, NewsBank, Chronicling America pre-1963), trade pubs, podcast appearances.
 - **People** — founder LinkedIn + Twitter + GitHub + personal blog + podcast guesting + court records + Chamber of Commerce.
 - **Reviews** — Google + Yelp + Trustpilot + Reddit + HN + Indeed + Glassdoor; sentiment-score top 100 via Workers AI.
@@ -182,7 +183,7 @@ Each candidate through `extra-mile.md` § Self-critique.
 
 - Skill load order deterministic per `prompt-cache.md` — never reorder mid-session.
 - Subagent prompts 100-300 words MAX.
-- First-pass content → Workers AI Llama 3.3 70B FP8 (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`, free, 2-3× faster).
+- First-pass content → Workers AI Llama 4 Scout (`@cf/meta/llama-4-scout-17b-16e-instruct`, on free tier, multimodal, $0.27/$0.85 per MTok).
 - Opus 4.8 ONLY for: architecture, top-10 conversion-route polish, AI vision QA, completeness.
 - Sonnet 4.6 for build; Haiku 4.5 for changelog/format/simple review per `model-routing.md`.
 - Build cost: ~$0.50-$2.00 per Claude Code prompt, ~$5-$15 per full build. No speculative builds.

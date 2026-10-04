@@ -25,7 +25,7 @@ All research runs on the Worker, not in the container. Results written as `_`-pr
 1. **Yelp Fusion API** (`YELP_API_KEY`) — business match by name+location, returns reviews/photos/hours/categories (confidence 60-80)
 2. **Facebook Graph API** — page search by business name, returns about/hours/phone/address (confidence 55-70)
 3. **BBB API/scrape** — search by business name, returns rating/accreditation/complaints (confidence 70-85, trust signal)
-4. **Workers AI (Llama 3.3 70b) research prompt** — synthesize from web search results (confidence 50-70, LAST RESORT)
+4. **Workers AI (Llama 4 Scout) research prompt** — synthesize from web search results (confidence 50-70, LAST RESORT)
 
 ### Competitor analysis (auto, no extra API cost)
 

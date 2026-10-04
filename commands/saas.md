@@ -37,7 +37,7 @@ Per `[[cloudflare-lock-in-is-leverage]]`:
 - **DB**: D1 with Drizzle v1 RQBv2 + Zod schemas (per `[[zod-everywhere]]`)
 - **Auth**: Better Auth (D1 adapter) or Clerk (M2M JWT)
 - **Payments**: Square (accept) + Stripe Connect (payouts) per `[[payments]]`
-- **AI**: Workers AI (Llama 3.3 70B FP8 free first-pass) + Anthropic via AI Gateway for polish per `[[model-routing]]`
+- **AI**: Workers AI (Llama 4 Scout free first-pass) + Anthropic via AI Gateway for polish per `[[model-routing]]`
 - **State**: Durable Objects per tenant (sql\`\`-backed), KV for hot config, R2 for files
 - **Workflows**: CF Workflows for durable multi-step (NOT Inngest unless explicit)
 - **Vector**: Vectorize for RAG when AI search needed

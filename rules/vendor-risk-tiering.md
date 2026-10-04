@@ -1,5 +1,5 @@
 ---
-last_reviewed: 2026-06-29
+last_reviewed: 2026-10-04
 superseded_by: null
 name: "vendor-risk-tiering"
 priority: 2
@@ -31,7 +31,7 @@ Every third-party service used in a project is classified at integration time. T
 
 ### Load-bearing
 
-Replacing this vendor requires a **multi-week migration** touching data, auth contracts, or core infrastructure. Examples: Cloudflare (Workers, D1, R2, Durable Objects), Clerk (auth), Stripe (billing/payouts), Square (POS payments), Amazon SES (transactional email — sole rail; SendGrid break-glass only).
+Replacing this vendor requires a **multi-week migration** touching data, auth contracts, or core infrastructure. Examples: Cloudflare (Workers, D1, R2, Durable Objects), Clerk (auth), Stripe (default accept rail + billing/payouts per `payments`), Square (POS — on-request rail only), Amazon SES (transactional email — sole rail; SendGrid break-glass only).
 
 **Overhead for load-bearing vendors:**
 
@@ -103,6 +103,6 @@ See `reference/vendor-risk-tiering.md` for the calendar entry format.
 
 - **[[cloudflare-lock-in-is-leverage]]** — CF lock-in as a deliberate architectural choice
 - **[[secret-provisioning]]** — rotation cadence by vendor tier
-- **[[payments]]** — Stripe vs Square routing (both are load-bearing; never mix usage patterns for the same payment type)
+- **[[payments]]** — Stripe+Link default accept rail, Square on-request (POS); both load-bearing when present; never mix usage patterns for the same payment type
 - **[[autonomous-engineering]]** — adding a new load-bearing vendor is `review-recommended`; removing one is `approval-required`
 - **[[drift-detection]]** — raw SDK calls scattered outside the service module = drift; consolidate in-turn

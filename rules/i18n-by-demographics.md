@@ -76,7 +76,7 @@ Unlisted geographies: query ACS/equivalent and apply the ≥10% rule fresh.
 
 ## TRANSLATION_QUALITY
 
-- Workers AI Llama 3.3 70B is FIRST PASS only
+- Workers AI Llama 4 Scout is FIRST PASS only
 - Every translated string runs through tone-check ("does this sound like a native speaker would write it on a nonprofit page?")
 - Top-10 conversion-critical routes get Claude Opus 4.8 second pass with explicit "no calque, no literal-translate-from-English, use locale-natural phrasing" prompt: `/`, `/about`, `/donate`, `/contact`, `/services`, `/faq`, `/team`, `/volunteer`, `/ways-to-give`, `/planned-giving`
 - Reference: `donate now` → ES native is `Dona ya` NOT `Donar ahora` (calque); PT-BR native is `Doe agora` NOT `Doar agora`

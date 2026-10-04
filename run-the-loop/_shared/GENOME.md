@@ -89,7 +89,7 @@
 
 ## 6 · AI
 
-- **Workers AI** (Llama 3.3 70B + 3.1 8B, FP8) through **AI Gateway — mandatory on every model
+- **Workers AI** (Llama 4 Scout default; GLM-4.7-flash tool-calling) through **AI Gateway — mandatory on every model
   call**. Build agent LLM: DeepSeek-primary via `ANTHROPIC_BASE_URL` override, Anthropic passive
   fallback (`BUILD_LLM_PROVIDER=anthropic` forces). Owner: `apps/project-sites/CLAUDE.md`.
 - **Site-gen pipeline:** 6 phases / 25-30 focused prompts. Durable Workflow

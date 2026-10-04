@@ -66,7 +66,7 @@ Drive recurring donations, volunteer sign-ups, and program awareness. Trust + tr
 - Pull ACS B16001 against the service area
 - Every language ≥10% community share gets a full `/{locale}/*` mirror
 - Newark NJ → en+es+pt (36% Hispanic + 4th-largest Brazilian-American pop)
-- Translation: Workers AI Llama 3.3 70B first pass + Claude Opus 4.7 polish on top-10 routes
+- Translation: Workers AI Llama 4 Scout first pass + Claude Opus 4.8 polish on top-10 routes
 
 ## Anti-patterns
 

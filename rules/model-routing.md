@@ -1,5 +1,5 @@
 ---
-last_reviewed: 2026-06-29
+last_reviewed: 2026-10-04
 superseded_by: null
 name: "model-routing"
 priority: 2
@@ -132,9 +132,9 @@ OpenCode's **Zen** gateway is the unified pay-per-use billing rail (one account 
 ## Cloudflare Workers AI (`env.AI.run`)
 
 - **Always reach for the FP8 variants** — full-precision aliases are deprecated on most accounts and return 400 at runtime.
-- **Llama 3.3 70B** → `@cf/meta/llama-3.3-70b-instruct-fp8-fast` (2-3× faster + free on Workers AI)
+- **Llama 3.3 70B (legacy)** → `@cf/meta/llama-3.3-70b-instruct-fp8-fast` (free; superseded by Llama 4 Scout as production default)
 - **Llama 3.1 8B** → `@cf/meta/llama-3.1-8b-instruct-fp8`
-- **Llama 4 Scout 17B** → `@cf/meta/llama-4-scout-17b-16e-instruct` (vision-capable, multimodal)
+- **Llama 4 Scout 17B (production default)** → `@cf/meta/llama-4-scout-17b-16e-instruct` ($0.27/$0.85 per MTok, multimodal, on free tier)
 - **Never use** — `@cf/meta/llama-3.3-70b-instruct`, `@cf/meta/llama-3.1-8b-instruct`, `@cf/meta/llama-3.1-70b-instruct` (retired)
 - Verify availability via REST: `GET /accounts/{id}/ai/models/search?search=<term>` before shipping a model name in code.
 - Reference incident (2026-05-24, projectsites.dev): AI chat returned "service is unavailable" 100% — 18 files referenced retired aliases; patched to `…-fp8-fast` + `…-fp8` in one sed pass.

@@ -1,5 +1,5 @@
 ---
-last_reviewed: 2026-06-29
+last_reviewed: 2026-10-04
 superseded_by: null
 name: "source-site-enhancement"
 priority: 3
@@ -118,7 +118,7 @@ Decompose within 30s into independent + dependent passes. Fan out parallel `Agen
 4. **Agent-D `media-walker`** → `_assets/` + `_videos.json` + `_image_briefs.json`
 5. **Agent-E `brand-extractor`** → `_brand.json` palette+fonts+tone via GPT Image 2 vision on homepage
 6. **Agent-F..K `jewel-content-authors`** (one per jewel batch) → typed-block JSON
-7. **Agent-L..N `i18n-translators`** (one per locale beyond English) → Workers AI Llama 3.3 70B first pass + Claude Opus 4.8 polish on top-10 conversion routes per `i18n-by-demographics.md`
+7. **Agent-L..N `i18n-translators`** (one per locale beyond English) → Workers AI Llama 4 Scout first pass (`@cf/meta/llama-4-scout-17b-16e-instruct`) + Claude Opus 4.8 polish on top-10 conversion routes per `i18n-by-demographics.md`
 8. **Agent-O `IA-normalizer`** → `_redirects` 301 manifest + slug rename map + service nesting from `_url_inventory.json`+`_org_type.json`
 9. **Agent-P `squarespace-dedup`** → augment `_redirects` for CMS-specific dupes
 
