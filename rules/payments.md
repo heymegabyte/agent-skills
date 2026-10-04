@@ -18,7 +18,7 @@ triggers:
 paths:
   - "concern:stripe-billing"
   - "concern:square-payments"
-last_reviewed: 2026-09-26
+last_reviewed: 2026-10-04
 superseded_by: null
 ---
 
@@ -54,9 +54,11 @@ If ≥2 match → Stripe Billing owns the subscription rail. Square is not force
 - POS (restaurant, retail, salon, medical, legal)
 - E-commerce
 - One-time charges
-- Sub-$100 average tickets (Square beats Stripe's $0.30 fixed by 30-60%)
+- Sub-$100 average tickets (routing unchanged — Square wins on POS platform + hardware + $0 chargeback fee + hybrid in-person/online ops, NOT rate advantage)
 - Nonprofit recurring giving
 - Hybrid in-person + online unified ledger
+
+Fees (2026): Square online 3.3%+30¢ (raised) vs Stripe 2.9%+30¢; in-person Square 2.6%+15¢ vs Stripe 2.7%+5¢; chargeback $0 vs $15.
 
 #### Mixed scenarios
 
@@ -64,7 +66,7 @@ If ≥2 match → Stripe Billing owns the subscription rail. Square is not force
 
 ### Square notes (when Square is the chosen rail)
 
-- Nonprofits: verified-501(c)(3) discount (2.6%+10¢ vs 3.5%+15¢ default)
+- Nonprofits: NO Square 501(c)(3) discount exists (verified 2026-10) — custom rates only ≥$250K/yr. Cheapest verified-501(c)(3) online rails: PayPal/Braintree 1.99%+49¢. Square nonprofit case = in-person events (2.6%+15¢) + $0 chargeback fee.
 - Built-in: Square Donate button + Square Online Checkout Link + Square Web Payments SDK card form + Apple Pay + Google Pay + Cash App Pay
 - Recurring giving via Square Subscriptions
 

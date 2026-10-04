@@ -1,5 +1,5 @@
 ---
-last_reviewed: 2026-06-29
+last_reviewed: 2026-10-04
 superseded_by: null
 name: "quality-metrics"
 priority: 2
@@ -21,7 +21,7 @@ triggers:
 ## Performance
 
 - **Core Web Vitals — house cinematic targets per `_kernel/standards.md#cwv`** (LCP ≤2.0s · CLS ≤0.05 · INP ≤100ms; INP >200ms = fail). Phase-debug: LCP 4-phase (TTFB→load-delay→load-time→render-delay), INP 3-phase (input-delay→processing→presentation).
-- Worker CPU ≤ 50ms p99 (free tier 10ms CPU cap; paid 30s wall + 50ms CPU default, configurable to 5min)
+- Worker CPU ≤ 50ms p99 as OUR budget (plan limits: free 10ms CPU; paid default 30s CPU, config to 5 min; wall unlimited while connected)
 - Debug INP via **Long Animation Frames API** (`PerformanceObserver` type:`long-animation-frame`, web-vitals v6 — `longAnimationFrameEntries` since v4)
 - SPA per-route CWV: **Soft Navigations API** (`softNavs:true`, web-vitals v6 — since v4)
 

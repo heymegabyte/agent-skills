@@ -1,5 +1,5 @@
 ---
-last_reviewed: 2026-06-29
+last_reviewed: 2026-10-04
 superseded_by: null
 priority: 2
 pack: core
@@ -41,7 +41,7 @@ See `reference/oauth2-provider-discipline.md` for the full decision tree and per
 ## Provider profiles
 
 - **Bitwarden** — vault secrets, internal Worker auth, CLI tools, cron secrets. NOT user-facing auth or customer-tenant M2M.
-- **Auth0** — B2B SaaS multi-tenant, social login aggregation, SAML federation. 7k MAU free; M2M tokens limited to 1k/month on free plan.
+- **Auth0** — B2B SaaS multi-tenant, social login aggregation, SAML federation. 25K MAU free (2026); M2M tokens limited to 1k/month on free plan.
 - **Okta** — Okta-shop enterprise clients, SCIM provisioning, HR-integrated lifecycle. Free Developer org: up to 100 MAU (prototyping).
 - **Cognito** — AWS Lambda / API Gateway auth, User Pool federation, Amplify apps. Avoid for non-AWS stacks — AWS-specific JWT claims + SDK assumptions.
 - **PKCE (user-facing)** — ANY flow where the user consents in a browser tab; provider-agnostic (pass any authorize + token endpoints). Never store `code_verifier` in a cookie — `sessionStorage` on the client only.
@@ -69,7 +69,7 @@ See `reference/oauth2-provider-discipline.md` for the full decision tree and per
 
 | Scale         | Notes                                                                 |
 |---------------|-----------------------------------------------------------------------|
-| Solo / small  | Bitwarden for internal; Auth0 free tier for B2B (up to 7k MAU free)  |
+| Solo / small  | Bitwarden for internal; Auth0 free tier for B2B (25K MAU free, 2026; auto-upgrades after 3 months over-limit — watch the trap) |
 | Enterprise    | Okta preferred for workforce (SCIM + HR sync); Auth0 for B2C/B2B     |
 | AWS-locked    | Cognito only when team already owns AWS IAM / Lambda surface          |
 
