@@ -44,6 +44,14 @@ const MANAGED = [
     canonical:
       'CF Workers + Hono | Angular 22 + Ionic 8 + Spartan UI | D1/Neon | Drizzle v1 | Clerk | Stripe | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry',
   },
+  {
+    name: 'counts-line',
+    // The "N categories, N reference docs, N agents." claim in the thin platform
+    // stubs (CODEX.md / GEMINI.md / AMP.md / QODO.MD / replit.md). Keep in step
+    // with bin/check-doc-counts.sh derived actuals (gate 14 asserts these files).
+    pattern: /\d+ categories, \d+ reference docs, \d+ agents\./g,
+    canonical: '23 categories, 149 reference docs, 28 agents.',
+  },
 ];
 
 const drifted = [];

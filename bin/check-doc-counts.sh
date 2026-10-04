@@ -91,9 +91,16 @@ checkEntryClaims() {
     [ "$n" = "$CMDS_ACTUAL" ] || appendEntryError "$ENTRY_FILE" "$n" "commands" "$CMDS_ACTUAL"
   done
 }
-for entry_file in AGENTS.md llms.txt README.md; do
+for entry_file in AGENTS.md llms.txt README.md CODEX.md GEMINI.md AMP.md QODO.MD replit.md; do
   checkEntryClaims "$entry_file"
 done
+
+# CLAUDE.md § Routing also states "Skills N" — assert against the category count
+# (same class as the "Agents N" check above; drifted 19 vs 23 after the Sep-2026
+# re-architecture retired 03/17-20 and added 21-28).
+SKILLS_CLAIMED=$(grep -oE 'Skills [0-9]+' CLAUDE.md | grep -oE '[0-9]+' | head -1)
+[ -n "$SKILLS_CLAIMED" ] && [ "$SKILLS_CLAIMED" != "$CATS_ACTUAL" ] \
+  && appendEntryError "CLAUDE.md" "$SKILLS_CLAIMED" "skills (categories)" "$CATS_ACTUAL"
 ENTRY_ERR_COUNT=$(printf '%b' "$ENTRY_ERRORS" | grep -c '✗' || true)
 
 EXIT=0
