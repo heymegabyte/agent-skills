@@ -17,14 +17,14 @@ source: "28-cf-integrations-reference/SKILL.md (heymegabyte/agent-skills)"
 ## Cloudflare platform + data
 
 - Data: **D1** (Sessions API + read replicas; dynamic sitemap from D1) · **R2** · **KV** (60s host/config cache) · **Hyperdrive** (accelerate Neon/Postgres when a CF primitive can't) · **Drizzle ORM** + migrations at the boundary.
-- Compute + coordination: **Durable Objects** patterns — rate-limiter · WebSocket/realtime + presence · agent-DO; **Workflows** (durable multi-step) · **Queues** (fallback to Workflows when unbound) · **Browser Rendering** (headless jobs + E2E journeys).
+- Compute + coordination: **Durable Objects** patterns — rate-limiter · WebSocket/realtime + presence · agent-DO; **Workflows** (durable multi-step) · **Queues** (fallback to Workflows when unbound) · **Browser Rendering** (headless jobs + E2E journeys) · **Containers + Sandboxes** (GA 2026-04: Firecracker microVMs, active-CPU billing $0.000020/vCPU-s, 375 vCPU-min + 25 GiB-h incl. in Workers Paid; bursty jobs — the memory meter punishes always-on; Sandboxes = agents' persistent isolated envs).
 - API: **Hono** RPC-mode + **OpenAPI generation** from Hono. Zod at every boundary.
 - Auth + tenancy: **Clerk** (M2M JWT) · Zero Trust Access · enterprise multi-tenancy · multi-tenant subdomain provisioning (`{slug}.projectsites.dev`).
 - Provisioning: CF-native products are API-provisionable with the global key (Turnstile/DNS/custom-domains) — never hand-create in the dashboard.
 
 ## AI / edge intelligence
 
-- **Workers AI** (Llama + embeddings, FP8) via **AI Gateway** (cache · observability · fallback · rate-limit). **Vectorize** = the vector DB for RAG (RAG = Vectorize + Workers AI).
+- **Workers AI** (Llama 4 Scout default + embeddings) via **AI Gateway — unified control plane since 2026-08** (unified AI binding auto-creates a gateway: instant logging/token/cost attribution; semantic cache · dynamic routing by latency/cost/availability · BYOK via Secret Store · spend limits · guardrails/DLP). **Vectorize** = the vector DB for RAG (RAG = Vectorize + Workers AI).
 - Every app is AI-native (per app-foundation): generative / chat-as-UI / voice / multimodal where they add value.
 
 ## Media pipeline

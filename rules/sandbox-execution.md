@@ -13,7 +13,7 @@ paths:
 
 # Sandbox Execution
 
-AI is foundational to how code is authored on this platform. That's exactly why AI-authored builds get the same standard CI/CD discipline every other build artifact gets: built, tested, previewed, validated in an isolated sandbox BEFORE promotion to the real app runtime. This is normal pipeline hygiene — not skepticism — applied to a high-volume artifact source.
+AI is foundational to how code is authored on this platform. That's exactly why AI-authored builds get the same standard CI/CD discipline every other build artifact gets: built, tested, previewed, validated in an isolated sandbox BEFORE promotion to the real app runtime. This is normal pipeline hygiene — not skepticism — applied to a high-volume artifact source. Vehicle: **Cloudflare Sandboxes (GA 2026-04)** — persistent isolated envs with credential injection, PTY, snapshot recovery, active-CPU pricing.
 
 ## The mandate
 
