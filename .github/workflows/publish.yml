@@ -125,7 +125,7 @@ jobs:
           cat > AGENTS.md << 'AGENTSEOF'
           # Emdash Skills — Agent Instructions
 
-          This repository contains 19 skill categories, 26 agents, and 159 reference docs for autonomous product building.
+          This repository contains 23 skill categories, 28 agents, and 149 reference docs for autonomous product building.
 
           ## Stack
           CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1 | Clerk | Square + Stripe Billing/Connect | Inngest | Amazon SES | Bun | Playwright v1.59+ | PostHog | Sentry
@@ -351,7 +351,7 @@ jobs:
           cat > .devin/skills/emdash/SKILL.md << 'DEVINEOF'
           ---
           name: "emdash-skills"
-          description: "23-category product-building OS. CF Workers+Hono, React 19+Vite / Angular 22+Spartan, D1, Drizzle, Clerk, Square/Stripe. 159 reference docs, 26 agents."
+          description: "23-category product-building OS. CF Workers+Hono, React 19+Vite / Angular 22+Spartan, D1, Drizzle, Clerk, Square/Stripe. 149 reference docs, 28 agents."
           ---
           # Emdash Skills for Devin
 
