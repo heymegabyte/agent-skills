@@ -72,6 +72,15 @@ for (const [name, content] of expected) {
 }
 
 if (CHECK) {
+  // Also fail on mirror files git doesn't track — an unanchored .gitignore
+  // 'skills/' once swallowed 8 of 23 (disk-synced, never shipped to consumers).
+  const { execSync } = await import('node:child_process');
+  const tracked = execSync("git ls-files -- '.agents/skills/*.md'", { cwd: ROOT })
+    .toString().trim().split('\n').filter(Boolean).length;
+  if (tracked !== expected.size) {
+    console.error(`✗ gen-codex-skills: ${expected.size} mirror files on disk but only ${tracked} git-tracked — check .gitignore anchoring`);
+    process.exit(1);
+  }
   if (drifted.length) {
     console.error(`✗ gen-codex-skills: ${drifted.length} mirror file(s) drifted — run \`node bin/gen-codex-skills.mjs\`:`);
     for (const d of drifted) console.error(`  · ${d}`);
