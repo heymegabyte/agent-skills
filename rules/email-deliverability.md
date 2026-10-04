@@ -1,5 +1,5 @@
 ---
-last_reviewed: 2026-06-29
+last_reviewed: 2026-10-04
 superseded_by: null
 name: "email-deliverability"
 priority: 3
@@ -18,7 +18,7 @@ paths:
 
 # Email Deliverability
 
-Email that bounces is a feature that silently doesn't work. Since Feb 2024 (Google + Yahoo) and May 2025 (Microsoft), any domain sending bulk mail to Gmail/Yahoo/Outlook MUST authenticate and offer one-click unsubscribe or messages get **rejected at SMTP** — not spam-foldered, bounced. A broken signup confirmation, receipt, or digest is invisible until a user reports it. This gate is non-negotiable on every project that sends mail (Resend / Listmonk / SendGrid).
+Email that bounces is a feature that silently doesn't work. Since Feb 2024 (Google + Yahoo) and May 2025 (Microsoft), any domain sending bulk mail to Gmail/Yahoo/Outlook MUST authenticate and offer one-click unsubscribe or messages get **rejected at SMTP** — not spam-foldered, bounced. Gmail's permanent 550 rejections fully enforced since Nov 2025; Microsoft hard-rejects since Apr 2026, fully active May 2026. A broken signup confirmation, receipt, or digest is invisible until a user reports it. This gate is non-negotiable on every project that sends mail (Resend / Listmonk / SendGrid).
 
 ## When this fires
 
@@ -28,11 +28,12 @@ Email that bounces is a feature that silently doesn't work. Since Feb 2024 (Goog
 ## The bulk-sender bar (≥5,000 msgs/day to a provider)
 
 - Gmail classifies a domain a **bulk sender permanently at ≥5,000/day** — it never un-classifies even if volume drops. Build to the bar from day one.
+- The 5,000/day threshold counts **per provider family** — 5K to Outlook alone triggers it; 3K + 3K split across providers does not.
 - Microsoft enforces the same three pillars since May 2025; Google + Yahoo since Feb 2024.
 
 ## Pillar 1 — Authentication (SPF + DKIM + DMARC)
 
-- **All three required.** DMARC minimum policy `p=none` is accepted; `p=quarantine`/`p=reject` is stronger.
+- **All three required.** DMARC minimum policy `p=none` is accepted; `p=quarantine`/`p=reject` is stronger. Microsoft now penalizes domains that linger at `p=none` (inbox placement) — plan the move to `p=quarantine` → `p=reject`; stricter PTR checks in 2026.
 - **Alignment** — the `From:` domain must align with SPF OR DKIM. Set up both; align at least one. Google has signaled full SPF+DKIM alignment will become required — align both now.
 - **Yahoo** additionally requires **DKIM key ≥1024 bits**.
 - Auto-provision sending-domain DNS via the provider API → push records to CF zone API per `secret-provisioning` (Resend `POST /domains` returns the records).

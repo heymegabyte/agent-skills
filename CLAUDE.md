@@ -118,8 +118,8 @@ Scope:
 - **Lint** — oxlint + ESLint 10 + Prettier (NEVER Biome)
 - **Hooks** — lefthook (NOT husky)
 - **Test** — Playwright v1.56+ agents (v1.59+ MCP) + Vitest 5
-- **Observability** — tiered:
-  - Solo SaaS / nonprofit / local / portfolio → **PostHog + Workers Tracing OTLP** (2 vendors max)
+- **Observability** — tiered. **Sentry is estate BASELINE (Brian 2026-10-04 "add Sentry to all my projects" — supersedes the old solo-tier=no-Sentry rule): server-side `@sentry/cloudflare` v11 on EVERY Worker, no browser SDK (retired, ~155KB gz). One project per app in the `megabyte-labs` Sentry org. Recipe + the 3 gotchas: `template.projectsites.dev/docs/SENTRY.md`. New projects ship `web-crawlers`+`legacy-browsers` inbound filters ON — turn them OFF or server-to-server events get blackholed.**
+  - Solo SaaS / nonprofit / local / portfolio → **Sentry (server-side) + PostHog + Workers Tracing OTLP**
   - Enterprise / regulated / multi-team → **PostHog + Sentry `@sentry/cloudflare` v11 (stream trace lifecycle default since 11.0) + GA4/GTM + Workers Tracing + Axiom**
   - LLM-heavy (>10k calls/mo) → add **AI Gateway** to either tier
 

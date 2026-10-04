@@ -65,7 +65,7 @@ Adapters live in `libs/core/ports/`. Product code imports port, never vendor SDK
 
 ## Auth (default Clerk M2M JWT)
 
-- **Clerk** — M2M JWT (free, networkless verification), passkeys, OAuth, magic links; **Better Auth** when Clerk pricing doesn't fit (rare)
+- **Clerk** — M2M JWT (free, networkless verification), passkeys, OAuth, magic links; **Better Auth** when Clerk pricing doesn't fit (rare) (free tier: 50K MRU since 2026-02)
 - Hash API keys at rest. Audit log every sensitive action.
 - Tenant isolation: every table carries `org_id`, every query filters by it (404 on mismatch, never 403)
 

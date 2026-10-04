@@ -189,7 +189,7 @@ Design for today, document the escape hatch:
 
 - **D1 → Neon** — when >3 table JOINs or >500MB
 - **KV → Upstash Redis** — when need atomic ops or pub/sub
-- **Clerk → self-hosted Authentik** — when >50K MAU or need SSO
+- **Clerk → self-hosted Authentik** — when ≫50K MRU (Clerk free covers 50K retained since 2026-02) or SSO-cost pressure
 - **Stripe → LemonSqueezy** — when need MoR for international tax
 
 ### 27. Integration Point Mapping
