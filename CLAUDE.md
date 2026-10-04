@@ -163,7 +163,6 @@ Scope:
 
 - Auto-create GitHub repos for new skills/tools.
 - Integrate into every ecosystem: npm, PyPI, GitHub Marketplace, Claude plugins, MCP servers.
-- Distribution > technology.
 
 ## Compaction
 

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://claude.megabyte.space/schemas/marketplace.schema.json",
+  "$id": "https://agentskills.megabyte.space/schemas/marketplace.schema.json",
   "title": "Claude Code Marketplace Manifest",
   "description": "Validates .claude-plugin/marketplace.json. Pattern from secondsky/claude-skills.",
   "type": "object",

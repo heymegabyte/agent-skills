@@ -36,7 +36,7 @@ For any project type, when the work is **multi-step** (plan→build→review→m
 
 See `commands/process.md` — `/process` runs the full chain in one keystroke.
 
-Not every project needs every step — skip finished-branch on solo-work (`[[no-staging-doctrine]]` auto-push), skip worktrees when already isolated. But the chain's order is inviolable: brainstorm → plan → isolate → build → review → finish.
+Skip steps that don't apply (finish-branch on solo auto-push work; worktrees when already isolated) — but the order is inviolable.
 
 ## Marketing Site
 

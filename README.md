@@ -19,22 +19,22 @@
 
 <div align="center">
   <code>23 categories</code> · <code>165 doctrine rules</code> · <code>28 agents</code> · <code>35 commands</code> · <code>37 platform variants</code><br/>
-  <a href="https://claude.megabyte.space"><strong>Showcase Website</strong></a>
+  <a href="https://agentskills.megabyte.space"><strong>Showcase Website</strong></a>
 </div>
 
 ## What's New
 
 **Skills 18–19 + integration arc (2026-06)**
 
-- **Skill 18 — Document Processing** — DOCX/XLSX read-write, PDF generation + parsing, PPTX generation. Full pipeline, no manual exports.
-- **Skill 19 — MCP Authoring** — forge HTTP MCP servers on Workers, stdio MCP templates, OpenAPI→MCP forger. Publish to the registry in one command.
+- **Skill 18 — Document Processing** — DOCX/XLSX read-write, PDF generation + parsing, PPTX generation.
+- **Skill 19 — MCP Authoring** — forge HTTP MCP servers on Workers, stdio MCP templates, OpenAPI→MCP forger, one-command registry publish.
 - **20+ slash commands** — `/saas`, `/forge-from-openapi`, `/forge-webhook-handler`, `/generate-prp`, `/execute-prp`, `/run-evals`, `/audit-doctrine`, `/audit-mcp-fleet`, `/dashboard-cockpit`, `/drift-check`, and more.
 - **Production forge script** — `bin/forge-skill-from-openapi.mjs` generates a full SKILL.md + command scaffold from any OpenAPI spec.
-- **LLM eval harness** — `/run-evals` + structured rubrics + schema-validated results + regression tracking. AI-heavy behavior now has a repeatable quality gate.
+- **LLM eval harness** — `/run-evals` + structured rubrics + schema-validated results + regression tracking.
 - **15 new doctrinal principles** — `state-is-the-enemy`, `fail-fast-build-fail-soft-prod`, `ttfr-north-star`, `sync-ui-async-backing`, `cost-per-request-accountability`, `inverted-abstraction-pyramid`, `one-way-two-way-doors`, `vendor-risk-tiering`, `data-residency-by-default`, `right-to-deletion`, `refund-automation`, `documentation-as-code`, `production-observability-default-on`, `hardware-aware-programming`, `webhook-receiver-architecture`.
 - **DO agent scaffolding** — Durable Objects as stateful AI agents via skill 19, wired to the MCP registry.
-- **RAG pipeline** — vectorize + D1 hybrid search documented in skill 05 architecture submodules.
-- **Multi-tenant subdomain provisioning** — Cloudflare custom hostnames + per-tenant D1 namespacing, baked into skill 05.
+- **RAG pipeline** — Vectorize + D1 hybrid search, skill 05.
+- **Multi-tenant subdomain provisioning** — Cloudflare custom hostnames + per-tenant D1 namespacing, skill 05.
 - **5 new PreToolUse hooks** — permission-discipline enforcement before destructive tool calls.
 - **MCP server registry** — `/audit-mcp-fleet` catalogs, health-checks, and version-pins every MCP in your harness.
 
@@ -282,22 +282,7 @@ Every deploy must clear all gates. No exceptions. No overrides.
      └── GA4/GTM (tracking)  Inngest (jobs)
 ```
 
-| Layer | Technology |
-|-------|------------|
-| Hosting | Cloudflare Workers |
-| Backend | Hono RPC + `@hono/zod-validator` |
-| Frontend | Angular 22 + Ionic 8 + Spartan UI (or vanilla) |
-| Database | D1 (edge) / Neon (Postgres) |
-| ORM | Drizzle v1 + Zod |
-| Cache | KV / Upstash Redis |
-| Auth | Clerk |
-| Payments | Stripe |
-| Email | Resend + Listmonk |
-| Jobs | Inngest |
-| Testing | Playwright v1.59+ + Vitest |
-| Lint | ESLint + Prettier |
-| Runtime | Bun |
-| Monitoring | PostHog + Sentry + GA4/GTM |
+Canonical stack table + version pins: [CONVENTIONS.md](CONVENTIONS.md) § Stack.
 
 ## Templates
 
@@ -346,7 +331,7 @@ The router loads the smallest useful subset per task — never the full 149 docs
 
 ## Ideal Prompts
 
-Copy-paste these as-is. Each one routes through the skill graph and produces a deployed, gate-cleared product. The shorter the prompt, the more the skill engine infers — domain name alone is enough.
+Copy-paste as-is — each routes through the skill graph to a deployed, gate-cleared product. Shorter prompt = more inference; a domain name alone is enough.
 
 ### Build a SaaS from a domain
 
@@ -474,15 +459,7 @@ ghost.megabyte.space
 
 ## Can You Make This Better?
 
-Seriously — [open an issue](https://github.com/heymegabyte/claude-skills/issues/new?title=Improvement%20suggestion&body=I%20think%20this%20could%20be%20better%20if...) or submit a PR. Some things we're thinking about:
-
-- **More skill categories?** Is 15 the right number or are we missing something?
-- **Better agent routing?** Should model assignments shift as Claude evolves?
-- **Templates you wish existed?** What boilerplate do you write over and over?
-- **Skills for other stacks?** This is CF Workers + Angular today. What else?
-- **Prompting patterns** that consistently produce better results?
-
-If you've built something similar, stolen ideas from here, or just have opinions — we want to hear it. The whole point is that this gets better every day.
+Seriously — [open an issue](https://github.com/heymegabyte/claude-skills/issues/new?title=Improvement%20suggestion&body=I%20think%20this%20could%20be%20better%20if...) or submit a PR: more categories, sharper agent routing, missing templates, other stacks, better prompting patterns. Built something similar or stolen ideas from here? We want to hear it — the whole point is this gets better every day.
 
 ## License
 

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://claude.megabyte.space/schemas/plugin.schema.json",
+  "$id": "https://agentskills.megabyte.space/schemas/plugin.schema.json",
   "title": "Claude Code Plugin Manifest",
   "description": "Validates .claude-plugin/plugin.json. Pattern from secondsky/claude-skills.",
   "type": "object",

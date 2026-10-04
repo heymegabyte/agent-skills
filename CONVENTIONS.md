@@ -4,7 +4,7 @@ Shared constants and patterns. Reference instead of re-deriving.
 
 ## Brand Tokens
 
-Brand colors, fonts, tone, and contact are canonical in `_kernel/standards.md#brand` — single source of truth; cite it, never restate (this block previously drifted on font roles: correct mapping is Sora = body, Space Grotesk = headings).
+Canonical: `_kernel/standards.md#brand` — cite, never restate. Font roles: Sora = body, Space Grotesk = headings (past drift point).
 
 ### Identity
 
@@ -189,8 +189,6 @@ Full Linux containers co-located with Workers.
 
 ## Workers Builds (Native CI/CD)
 
-Workers Builds = native CI/CD replacing GitHub Actions deploy steps.
-
 - Connects to GitHub repo, auto-deploys on push, supports preview URLs per branch
 - Enable in CF dashboard → Workers → project → Settings → Git
 - `wrangler deploy` still preferred for Brian's direct deploys
@@ -260,7 +258,7 @@ All MCP secrets: active project env file or `get-secret`. Check env vars first, 
 
 ## Self-Hosted (70+ on Coolify)
 
-70+ services on Coolify follow `{service}.megabyte.space` pattern behind CF Tunnels + Authentik SSO.
+`{service}.megabyte.space` pattern, behind CF Tunnels + Authentik SSO.
 
 ### Key services
 
