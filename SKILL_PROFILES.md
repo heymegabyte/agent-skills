@@ -1,6 +1,6 @@
 # Skill Profiles
 
-`01-operating-system` is always the base. Pull the smallest profile matching repo/prompt. Never preload every reference doc.
+`01-operating-system` is always the base. Pull the smallest profile matching repo/prompt. Never preload every reference doc. Burst / unattended fan-outs: spend credit-backed capacity first per `rules/account-entitlements`.
 
 ## Domain → Profile
 

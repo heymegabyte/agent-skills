@@ -63,6 +63,7 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 - **Accessibility / WCAG** → `07/accessibility-gate`, `07/wcag-2-2-2026`, `25`
 - **Programmatic SEO** → `15/pseo-templates`, `09/seo-and-keywords`, `09/ai-search-geo`
 - **Workers tracing / observability** → `13/workers-tracing-otlp`, `13/analytics-configuration`, `13/sentry-alert-rules`
+- **Cost / quota / promo credits / cloud sessions** → `rules/account-entitlements`, `rules/model-routing`, `rules/opus-quota-fallback`
 
 ## File Hints
 

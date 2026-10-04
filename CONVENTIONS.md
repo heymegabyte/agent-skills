@@ -70,7 +70,7 @@ Dark theme FIRST. Purple for cosmic/space only.
 - **Payments** — Square (accept) / Stripe Billing (SaaS; pin `2026-08-26.dahlia`) / Stripe Connect (payouts)
 - **Email** — Amazon SES (sole transactional rail) + Listmonk (bulk); SendGrid break-glass
 - **Jobs** — Inngest v4 / CF Workflows v2
-- **Runtime** — Node 24 native TS / Bun 1.4+
+- **Runtime** — Node 24 native TS / Bun 1.4+ (1.4 rewrote the runtime in Rust; Bun is now developed under Anthropic)
 - **Language** — TS 7.0
 - **E2E** — Playwright v1.63+
 - **Unit** — Vitest 5
@@ -220,6 +220,8 @@ PROD_URL=https://domain.com npx playwright test
 npx tsc --noEmit && npx eslint . --max-warnings=0 && npx prettier --check .
 ```
 
+Vitest 5: requires Node ≥22.12 + Vite ≥6.4; clearMocks now defaults true (mock history no longer leaks across tests); 4.1 line gets security backports.
+
 ## Secrets
 
 ```bash
@@ -312,7 +314,7 @@ Full list via Coolify API.
 
 ### Tools
 
-- **Logo** — Ideogram v3 (`IDEOGRAM_API_KEY`)
+- **Logo** — Ideogram 4.0 (open-weight, Apache 2.0; v3 endpoint remains valid; `IDEOGRAM_API_KEY`)
 - **Images** — GPT Image 1.5 (`OPENAI_API_KEY`)
 - **Video** — Sora 2 (`OPENAI_API_KEY`)
 
@@ -965,7 +967,7 @@ New default transport (spec 2025-03-26), replaces deprecated HTTP+SSE.
 
 ## Linting
 
-- **TypeScript / JS** — oxlint + ESLint flat config (`eslint.config.ts`) + typescript-eslint + angular-eslint + Prettier
+- **TypeScript / JS** — oxlint + ESLint flat config (`eslint.config.ts`) + typescript-eslint + angular-eslint + Prettier; type-aware linting stable since 1.75 — most ESLint rule coverage now runs in oxlint first
 - **Python** — Ruff + mypy
 - **Bash** — ShellCheck + shfmt
 - **YAML** — yamllint
