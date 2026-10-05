@@ -55,6 +55,7 @@ done < <(
     README.md \
     llms.txt \
     agents/*.md \
+    commands/*.md \
     2>/dev/null \
     | sed 's/[.,;)]*$//' \
     | awk -F/ '$3 ~ /\./ { print }' \

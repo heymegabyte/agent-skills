@@ -67,6 +67,7 @@ for entry in "${DENYLIST[@]}"; do
       rules/*.md \
       [0-9][0-9]-*/*.md \
       agents/*.md \
+      commands/*.md \
       CONVENTIONS.md \
       SKILL_PROFILES.md \
       README.md \
