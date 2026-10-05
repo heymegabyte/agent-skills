@@ -8,7 +8,7 @@ Pin this alongside the other `05-architecture-and-stack` submodules. Reflects th
 - **Smart Placement** — no longer co-locates with D1 (D1 has global replicas now). Drop any guidance saying "enable Smart Placement when bound to D1."
 - **Workers Builds** — recommended CI for new projects (native, GitHub/GitLab integration, PR checks, rollbacks, pnpm 10 support)
 - **Gradual deployments** + Version Metadata binding — 1% → 10% → 100% traffic splits with `version_id`/`version_tag` access inside the Worker. mTLS bindings compatible.
-- **Workers Automatic Tracing (OTLP)** open beta — `[observability] enabled = true` in `wrangler.jsonc`; free until Mar 1 2026 then billed
+- **Workers Automatic Tracing (OTLP)** — `[observability] enabled = true` in `wrangler.jsonc`. BILLED since 2026-10-01 (Paid: 10M trace+log events/mo incl, $0.05/M extra; `persist:false` to skip dashboard-storage double-charge). NEW unified Observability model from **2026-12-01**: ingestion-based ($0.25/GB ingested + $0.10/GB-mo stored; Paid 50GB + 10GB-mo incl) supersedes per-event.
 - **WebSocket payload up to 32 MiB** — both Workers and Durable Objects (2025-10-25)
 
 ## D1
@@ -75,7 +75,7 @@ Pin this alongside the other `05-architecture-and-stack` submodules. Reflects th
 
 ## Wrangler / Config
 
-- **`cf` CLI open beta (2026-09-28)** — ~3,000 generated API commands vs wrangler's ~280; wrangler gets ONE final major redirecting to cf then 18-month maintenance; config moving `wrangler.jsonc` → `cloudflare.config.ts` (typed bindings); wrangler now requires Node ≥22. **Doctrine: wrangler-first while cf is beta — re-evaluate at cf GA.**
+- **`cf` CLI open beta (still beta 2026-10; v1.0.0-beta.10, no GA date)** — ~3,000 generated API commands vs wrangler's ~280; defaults to JSON output + `cf cli search` NL discovery; Vite-by-default (drops esbuild); `cf migrate` converts Workers; wrangler gets ONE final major redirecting to cf then 18-month maintenance (clock starts at beta-END, not yet counting); config moving `wrangler.jsonc` → `cloudflare.config.ts` (typed bindings); wrangler now requires Node ≥22. **Beta gaps still need wrangler: no live-log streaming (`wrangler tail`), no single-secret set (`wrangler secret put`), + esbuild/Rust/Python Workers run wrangler under cf. Doctrine: wrangler-first while cf is beta — re-evaluate at cf GA (watch for a non-beta npm dist-tag).**
 - **`wrangler.jsonc`** — new default (not `.toml`). New features ship JSON-only.
 - **`secrets.required`** — config property declares required secrets. Validated at `wrangler dev`/`deploy`/`vite dev`. Feeds `wrangler types`.
 - **`wrangler types`** — supported way to get typed bindings (over `@cloudflare/workers-types`)

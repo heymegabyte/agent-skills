@@ -60,7 +60,7 @@ Enforce the mandatory typecheck→deploy→CDN-purge→prod-E2E→visual-verify 
 ## Cloudflare `cf` CLI transition (beta — doctrine stays wrangler-first)
 
 - `cf` CLI open beta since 2026-09-28: ~3,000 generated API commands (vs wrangler's ~280). Wrangler gets ONE final major redirecting to cf, then 18-month maintenance; config format moves `wrangler.jsonc` → `cloudflare.config.ts` with typed bindings. Wrangler now requires Node ≥22.
-- Keep every deploy command wrangler-based while cf is beta; re-evaluate at cf GA.
+- Keep every deploy command wrangler-based while cf is beta (still beta 2026-10, no GA date); re-evaluate at cf GA (signal: non-beta npm dist-tag). Even post-GA, cf shells out to wrangler for esbuild/Rust/Python Workers + can't yet stream live logs (`wrangler tail`) or set single secrets (`wrangler secret put`).
 
 ## Workers Builds (native CI/CD)
 
