@@ -204,7 +204,7 @@ Auto-generated on every push to master. Each format uses native frontmatter for 
 | 12 | **Media Orchestration** | 10 | Image/video generation, AI prompts, compression, OG previews, diagramming |
 | 13 | **Growth & Observability** | 7 | Stripe billing, analytics, Sentry alerts, email, experiments, CRO |
 | 14 | **Idea Engine** | — | Autonomous research, evidence-backed improvement proposals |
-| 15 | **Site Generation** | 9 | Full-corpus rebuild, slot-first GPT Image 1.5 media, NotebookLM podcast/infographic/video, citations |
+| 15 | **Site Generation** | 9 | Full-corpus rebuild, slot-first GPT Image 2 media, NotebookLM podcast/infographic/video, citations |
 | 16 | **Cinematic Website** | — | 100-rule prime directive: cinematic UX, PWA, JSON-LD, CWV, a11y, integrations, TDD, deploy |
 | 18 | **Document Processing** | 4 | DOCX/XLSX read-write, PDF parse + generate, PPTX generation — zero manual exports |
 | 19 | **MCP Authoring** | 3 | HTTP MCP on Workers, stdio server templates, OpenAPI→MCP forger, registry publish |

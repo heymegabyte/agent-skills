@@ -29,7 +29,7 @@ Each runs independently with profile as input.
 ### Phase 3: Media (~60s, 5 parallel)
 
 - Discover images (5 APIs — Pexels, Pixabay, Google CSE, Foursquare, Yelp)
-- Generate logo (GPT Image 1.5 if none found)
+- Generate logo (GPT Image 2 if none found)
 - Generate section images
 - Discover videos (YouTube, Pexels)
 - Move user uploads

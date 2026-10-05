@@ -181,7 +181,7 @@ Response includes details of the enqueued job including job status and the name 
 
 - `resumeFineTuningJob` — Resume a fine-tune job.
 
-- `createImageEdit` — Creates an edited or extended image given one or more source images and a prompt. This endpoint supports GPT Image models (`gpt-image-1.5`, `gpt-image-1`, `gpt-image-1-mini`, and `chatgpt-image-latest`) and `dall-e-2`.
+- `createImageEdit` — Creates an edited or extended image given one or more source images and a prompt. This endpoint supports GPT Image models (`gpt-image-2`, `gpt-image-1`, `gpt-image-1-mini`, and `chatgpt-image-latest`) and `dall-e-2`.
 - `createImage` — Creates an image given a prompt. [Learn more](/docs/guides/images).
 
 - `createImageVariation` — Creates a variation of a given image. This endpoint only supports `dall-e-2`.

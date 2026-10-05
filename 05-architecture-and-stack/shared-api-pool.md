@@ -35,7 +35,7 @@ Active project `.env.local` (check `$CLAUDE_ENV_FILE` when set)
 
 ### AI/ML (11 keys)
 
-- `OPENAI_API_KEY` — GPT Image 1.5/Whisper (DALL-E deprecated May 2026)
+- `OPENAI_API_KEY` — GPT Image 2/Whisper (DALL-E deprecated May 2026)
 - `ANTHROPIC_API_KEY` — Claude
 - `GEMINI_API_KEY` — Gemini
 - `DEEPSEEK_API_KEY` — DeepSeek V3/R1

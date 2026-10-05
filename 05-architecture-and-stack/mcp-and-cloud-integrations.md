@@ -137,9 +137,9 @@ async function notifySlack(env: Env, message: string) {
 
 | Asset | API | Cost |
 |-------|-----|------|
-| Hero image | GPT Image 1.5 | ~$0.04 |
+| Hero image | GPT Image 2 | ~$0.04 |
 | Logo | Ideogram v3 | ~$0.03 |
-| OG images | GPT Image 1.5 | ~$0.04/page |
+| OG images | GPT Image 2 | ~$0.04/page |
 | Hero video (4s) | Sora 2 | ~$0.10 |
 | Alt text, translations, meta, blog, embeddings | Workers AI | $0 (free) |
 | Keyword research | Google Autocomplete | $0 |

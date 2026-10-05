@@ -14,7 +14,7 @@ compatibility:
 
 # 07 — Build-Breaking Verification Rules
 
-> **Model migration note (pass-79, 2026-06-09)**: `DALL-E` → **GPT Image 1.5** + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`.
+> **Model migration note (pass-79, 2026-06-09)**: `DALL-E` → GPT Image 2 → **GPT Image 2** (current, Apr-2026) + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`.
 
 Every rule is a HARD build-gate. Failure blocks deploy.
 
@@ -229,7 +229,7 @@ Assert final `_recommendations.json` is `[]` OR `iteration_count >= MAX_ITER` AN
 ## Every build (***CONVERGENCE LOOP #2 — DELTA-DRIVEN ITERATION — UNIVERSAL — BUILD-BREAKING***)
 
 - Every iteration ≥2 MUST apply delta to prior dist — NEVER rebuild from scratch
-- Iteration ≥2 cost SHOULD be ≤15% of iteration 1 cost (LLM tokens + R2 PUTs + GPT Image 1.5 calls + CDN purges)
+- Iteration ≥2 cost SHOULD be ≤15% of iteration 1 cost (LLM tokens + R2 PUTs + GPT Image 2 calls + CDN purges)
 - `_diff.json` = (prior_dist, this_iteration_recommendations[]); only changed files regenerated + uploaded to R2; D1 `sites.iteration_count++`
 
 ### Validator (`validate-delta-iteration.mjs`)

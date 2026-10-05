@@ -53,7 +53,7 @@ After build, before R2 upload, run `node scripts/generate-pwa-screenshots.mjs ht
 
 - **Desktop wide 1920×1080** → `/screenshots/desktop-1920x1080.jpg` (Playwright Chromium, viewport 1920×1080, full-page=false, JPEG q=85)
 - **Mobile narrow 390×844** → `/screenshots/mobile-390x844.jpg` (Playwright iPhone 14 Pro emulation)
-- **Cover 1280×720** → optional `gpt-image-1.5` illustrative cover (brand colors + business name + tagline + abstract motif) for stores that prefer artistic covers
+- **Cover 1280×720** → optional `gpt-image-2` illustrative cover (brand colors + business name + tagline + abstract motif) for stores that prefer artistic covers
 
 Each ≤200KB JPEG. **Gate** — `ls dist/screenshots/*.jpg` returns ≥2 files OR build fails.
 

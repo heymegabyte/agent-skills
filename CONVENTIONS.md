@@ -144,7 +144,7 @@ TS 7.0 (GA Jul 8 2026): native Go compiler, ~8–12× faster type-check/build �
 ### Resources
 
 - **Memory** — 128MB/isolate
-- **Worker size** — 3MB free / 10MB paid
+- **Worker size** — 64 MiB uncompressed (Free + Paid; Sep 2026 — replaced the old 3MB-gz/10MB-gz caps)
 - **Subrequests** — 50 free / 10K paid
 - **Static assets** — 20K free / 100K paid
 - **WebSocket msg** — 32MiB
@@ -316,7 +316,7 @@ Full list via Coolify API.
 ### Tools
 
 - **Logo** — Ideogram 4.0 (open-weight, Apache 2.0; v3 endpoint remains valid; `IDEOGRAM_API_KEY`)
-- **Images** — GPT Image 1.5 (`OPENAI_API_KEY`)
+- **Images** — GPT Image 2 (`OPENAI_API_KEY`)
 - **Video** — Sora 2 (`OPENAI_API_KEY`)
 
 ### Targets

@@ -77,7 +77,7 @@ updated: "2026-04-23"
 
 | Use Case | API | Cost |
 |----------|-----|------|
-| Image gen | GPT Image 1.5 | ~$0.04 |
+| Image gen | GPT Image 2 | ~$0.04 |
 | Logo | Ideogram v3 | ~$0.03 |
 | Video | Sora 2 | ~$0.10 |
 | Alt text, translations, meta, keywords, a11y | Workers AI / Claude | $0 |

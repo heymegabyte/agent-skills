@@ -7,7 +7,7 @@ allowed-tools: "Bash, Read, Write, Edit, mcp__playwright__*"
 
 # AI Technology Integration
 
-> **Model migration note (pass-78, 2026-06-09)**: `DALL-E` → **GPT Image 1.5** + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`. Visual TDD loop + cost tiers structurally unchanged; verify against current rates.
+> **Model migration note (pass-78, 2026-06-09)**: `DALL-E` → GPT Image 2 → **GPT Image 2** (current, Apr-2026) + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`. Visual TDD loop + cost tiers structurally unchanged; verify against current rates.
 
 ## Visual TDD Loop (MANDATORY every deploy — ***COST-TIERED***)
 
@@ -59,7 +59,7 @@ Prefer the free Cloudflare option whenever it makes no material difference to re
 | Visual QA (homepage) | GPT Image 2 vision detail:low | ~$0.02/call | 2-5s |
 | Code gen | Claude Opus 4.6 | Included | - |
 | Logo | Ideogram v3 | ~$0.03 | 5-10s |
-| Hero/scene image | gpt-image-1.5 | ~$0.04 | 10-20s |
+| Hero/scene image | gpt-image-2 | ~$0.04 | 10-20s |
 | Hero video (4s) | Sora | ~$0.10 | 30-60s |
 | Alt text | Workers AI (llama-3.2-11b-vision) | Free | <1s |
 | Embeddings | Workers AI (bge-base-en-v1.5) | Free | <100ms |
@@ -130,7 +130,7 @@ response_format: { type: 'json_schema', json_schema: { name: 'visual_qa', schema
 ## Image Generation
 
 - **Logo (Ideogram)** — `"Minimalist logo for [BRAND], cyan (#00E5FF) on black (#060610), clean geometric, no text, vector style"` — V_3, 1:1, DESIGN style
-- **Hero (GPT Image)** — `"Dark atmospheric hero, abstract geometric, cyan light on deep black, premium tech, 21:9"` — gpt-image-1.5, 1536x1024, high
+- **Hero (GPT Image)** — `"Dark atmospheric hero, abstract geometric, cyan light on deep black, premium tech, 21:9"` — gpt-image-2, 1536x1024, high
 - **OG (1200x630)** — Generate 1536x1024 then resize with CF Image Resizing
 - **Critique Loop** — Generate → GPT Image 2 vision rate 1-10 → if <8 remix with improved prompt → max 3 iterations
 
