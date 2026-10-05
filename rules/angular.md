@@ -24,7 +24,7 @@ The complete Angular doctrine (fires when `stack-selector`/`frontend-stack` pick
 
 Build inside an **Nx monorepo running Angular 22** with **Angular CLI MCP**. Standalone only. Signals only. No NgModules.
 
-- **Angular 22** pinned `22.x` in `package.json` + `angular.json`. **Nx 22** wrapper; `nx.json` at root; apps under `apps/`, libs under `libs/`.
+- **Angular 22** pinned `22.x` in `package.json` + `angular.json`. **Nx 23** wrapper (Angular-22 support landed Nx 23.1; Nx 22 can't build Ng22); `nx.json` at root; apps under `apps/`, libs under `libs/`.
 - **Standalone components** ONLY (NgModules banned). `provideRouter` / `provideHttpClient` / `provideAnimationsAsync` in `app.config.ts`.
 - **Signals** (`signal`, `computed`, `effect`, `linkedSignal`, `resource`) for state. NO RxJS subjects for component state.
 - **Typed Reactive Forms** (`FormGroup<T>`, `FormControl<T>`) + **NGX Formly** for schema-driven forms, Zod-backed (`zod-to-json-schema`). No template-driven forms.
