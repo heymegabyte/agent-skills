@@ -52,14 +52,14 @@ Two payment concerns that fire together on any money-handling build: which rail 
 
 ### Square (on-request rail only)
 
-- Fees (2026): online 3.3%+30¢ Free tier (raised) vs Stripe 2.9%+30¢; in-person 2.6%+15¢ vs Terminal 2.7%+5¢; chargeback $0 vs $15. Case: POS platform + hardware + $0 chargebacks — NOT rates.
-- Nonprofits: NO Square 501(c)(3) discount exists (verified 2026-10) — custom rates only ≥$250K/yr. Cheapest verified-501(c)(3) online rails: PayPal/Braintree 1.99%+49¢.
+- Fees (verified 2026-10-04): online 3.3%+30¢ Free tier (raised) vs Stripe 2.9%+30¢; in-person 2.6%+15¢ vs Terminal 2.7%+5¢; chargeback $0 vs $15. Case: POS platform + hardware + $0 chargebacks — NOT rates.
+- Nonprofits: NO Square 501(c)(3) discount exists (verified 2026-10-04) — custom rates only ≥$250K/yr. Cheapest verified-501(c)(3) online rails: PayPal/Braintree 1.99%+49¢.
 - Built-in: Donate button + Online Checkout Link + Web Payments SDK + Apple/Google/Cash App Pay; recurring via Square Subscriptions.
 
 ### Nonprofit-specific guardrail
 
 - Stripe Tax adds nothing for verified 501(c)(3) (already tax-exempt) — skip it.
-- Donations run Stripe + Link by default (offer Instant Bank Payments — bank rail trims fees on large gifts); PayPal Giving Fund layered for fee-free large gifts (0% — PPGF charges nothing + covers txn fees on PayPal's own app/site; payout 15-45 days once enrolled, up to 90 if not, monthly batch ~25th) — Stripe for instant operating cash, PPGF for patient money. (Distinct from PayPal's standard donate button: 1.99%+49¢ confirmed-501c3 rate.)
+- Donations run Stripe + Link by default (offer Instant Bank Payments — bank rail trims fees on large gifts); PayPal Giving Fund layered for fee-free large gifts (0% — PPGF charges nothing + covers txn fees on PayPal's own app/site; payout 15-45 days once enrolled, up to 90 if not, monthly batch ~25th) — Stripe for instant operating cash, PPGF for patient money. (Distinct from PayPal's standard donate button: 1.99%+49¢ confirmed-501c3 rate. PPGF terms verified 2026-10-04.)
 
 ### Webhook architecture
 
