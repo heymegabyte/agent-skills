@@ -28,7 +28,7 @@ You are the media orchestrator for Emdash/projectsites.dev website builds. You p
 ## Video (when the AI-native spiral calls for it)
 
 - **Veo narrative** — 7–8× 8-sec clips stitched on a 60-sec arc, cross-dissolves + AI VO; `<picture>`/poster static fallback.
-- **Sora hero loop** — 8-sec ambient loop, muted/autoplay/playsinline, static poster for `prefers-reduced-motion` + slow links.
+- **Veo 3.1 hero loop** — 8-sec ambient loop, muted/autoplay/playsinline, static poster for `prefers-reduced-motion` + slow links.
 - Always ship a non-video fallback; never block LCP on video.
 
 ## Audio (AI-native)
@@ -39,7 +39,7 @@ You are the media orchestrator for Emdash/projectsites.dev website builds. You p
 ## Pipeline
 
 1. Inventory needed assets per route (hero, gallery, team, OG, favicons).
-2. Generate/transcode via Sharp (`bin/` scripts) + media MCPs (Replicate for Veo/Sora) — load via ToolSearch when present.
+2. Generate/transcode via Sharp (`bin/` scripts) + media MCPs (Replicate for Veo 3.1 / Kling / Runway — Sora retired 2026-09) — load via ToolSearch when present.
 3. Emit `<picture>`/`<img srcset>` markup + verify every ref resolves.
 4. Report: asset manifest (path · format · bytes) + any source-quality gaps.
 
