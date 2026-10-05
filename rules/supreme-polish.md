@@ -61,7 +61,7 @@ Trigger a 100-point comprehensive audit and multi-agent polish sweep on the full
 6. AI search / GEO (quotable answer, EEAT, llms.txt, citation arrays).
 7. Third-party integrations (Sentry, PostHog, GA4, Workers Tracing, AI Gateway, Square+Stripe per `payments-routing.md`).
 8. PWA (manifest screenshots + shortcuts + share_target + file_handlers, kill-switch SW, A2HS, push).
-9. Forms + trust (Turnstile invisible, Zod, error microcopy, success microcopy, server validation, idempotency).
+9. Forms + trust (Turnstile `interaction-only` appearance + Managed widget-mode, Zod, error microcopy, success microcopy, server validation, idempotency).
 10. Security (CSP Level 3 strict-dynamic + nonce, Trusted Types, security.txt, OWASP 2025, per `secret-provisioning.md`).
 11. Observability (Sentry + PostHog + GA4 + Workers Tracing + AI Gateway all firing, structured logs, requestId, Sentry release tracking).
 12. Content polish (anti-slop per `copy-writing.md`, citations per `citations.md`, real-photo audit per `image-quality.md` + `timeline-authenticity.md`).
