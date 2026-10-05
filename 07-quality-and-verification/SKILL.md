@@ -1,6 +1,6 @@
 ---
 name: "quality-and-verification"
-description: "5-level verification pyramid: static→unit→Playwright E2E (homepage-first, 6bp)→AI visual→post-deploy. 8-check quality gate. Multi-agent testing (functional/security/a11y/performance). Playwright v1.59+ AI agents (Planner/Generator/Healer). WCAG 2.2 AA via axe-core v4.13. Percy+Chromatic visual regression. ADA Title II 2027/2028 deadlines."
+description: "5-level verification pyramid: static→unit→Playwright E2E (homepage-first, 6bp)→AI visual→post-deploy. 8-check quality gate. Multi-agent testing (functional/security/a11y/performance). Playwright v1.56+ AI agents (Planner/Generator/Healer, v1.63 current). WCAG 2.2 AA via axe-core v4.13. Percy+Chromatic visual regression. ADA Title II 2027/2028 deadlines."
 metadata:
   version: "2.1.0"
   updated: "2026-10-04"
@@ -75,7 +75,7 @@ Run the 5-level verification pyramid (static→unit→E2E→AI visual→post-dep
 
 Any fail = blocker. Fix-forward per `rules/verification-loop.md`.
 
-## Playwright Test Agents (v1.59+)
+## Playwright Test Agents (agents since v1.56; v1.63 current)
 
 - `npx playwright init-agents --loop=claude` once per repo
 - **Planner** — Markdown plan; **Generator** — test code; **Healer** — auto-fix broken selectors (run before manual rewrite)
