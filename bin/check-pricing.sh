@@ -8,6 +8,11 @@
 # $N.NN/M variants. Each must have a "verified YYYY-MM-DD" annotation
 # within N (default 3) lines for the audit to consider it CURRENT.
 #
+# R30: a second ADVISORY-ONLY pass surfaces processing fees (N.N% + N¢)
+# and SaaS tiers ($N/mo) — the vendor-repricing class — with an allowlist
+# that drops illustrative amounts (presets, e.g./example, ~approx). These
+# never fail the build; they flag volatile claims worth a dated annotation.
+#
 # Usage:
 #   bash ~/.agentskills/bin/check-pricing.sh [--json] [--max-age-days N]
 #
@@ -101,6 +106,29 @@ for hit in "${HITS[@]}"; do
   fi
 done
 
+# --- Fee/tier advisory pass (R30) ---------------------------------------
+# Processing fees (N.N% + N¢) and SaaS tiers ($N/mo) are the vendor-repricing
+# class pass-2 kept finding stale (Inngest/Square/Auth0/Clerk). They are
+# ADVISORY-ONLY (never fail the build) — surfaced so volatile claims can be
+# dated deliberately. The allowlist suppresses illustrative amounts (donation
+# preset arrays, e.g./example/~approx lines) so the list stays signal.
+FEE_TIER=0
+FEE_TIER_LOCS=()
+while IFS= read -r _hit; do
+  [ -z "$_hit" ] && continue
+  FEE_TIER=$((FEE_TIER + 1))
+  FEE_TIER_LOCS+=("${_hit%%:*}:$(printf '%s' "${_hit#*:}" | cut -d: -f1)")
+done < <(
+  grep -rnE '([0-9]+\.[0-9]+%[ ]?\+[ ]?(\$?[0-9]+(\.[0-9]+)?|[0-9]+¢)|\$[0-9]+/(mo|month)\b)' \
+    rules/*.md \
+    [0-9][0-9]-*/*.md \
+    CONVENTIONS.md \
+    agents/*.md \
+    commands/*.md \
+    2>/dev/null \
+    | grep -viE '(preset|e\.g\.|example|illustrative|round up|~\$|(\$[0-9]+/){2,})'
+)
+
 TOTAL=${#REFS[@]}
 EXIT=0
 [ "$STALE" -gt 0 ] && EXIT=1
@@ -114,6 +142,10 @@ if [ "$JSON" = "0" ]; then
     printf '⊝ %d pricing reference(s) lack "verified YYYY-MM-DD" annotation — add one within ±3 lines\n' "$UNANNOTATED" >&2
   else
     printf '✓ all pricing references current\n' >&2
+  fi
+  if [ "$FEE_TIER" -gt 0 ]; then
+    printf 'ℹ %d fee/tier ref(s) (N%%+N¢ / $N/mo) — advisory, date volatile vendor claims:\n' "$FEE_TIER" >&2
+    for l in "${FEE_TIER_LOCS[@]}"; do printf '    · %s\n' "$l" >&2; done
   fi
 fi
 
@@ -130,8 +162,8 @@ if [ "$JSON" = "1" ]; then
       "${AGES[$i]}" \
       "$(json_escape "${REFS[$i]}")"
   done
-  printf '],"summary":{"total":%d,"current":%d,"stale":%d,"unannotated":%d,"max_age_days":%d,"exit":%d}}\n' \
-    "$TOTAL" "$CURRENT" "$STALE" "$UNANNOTATED" "$MAX_AGE_DAYS" "$EXIT"
+  printf '],"summary":{"total":%d,"current":%d,"stale":%d,"unannotated":%d,"fee_tier_advisory":%d,"max_age_days":%d,"exit":%d}}\n' \
+    "$TOTAL" "$CURRENT" "$STALE" "$UNANNOTATED" "$FEE_TIER" "$MAX_AGE_DAYS" "$EXIT"
 fi
 
 exit "$EXIT"

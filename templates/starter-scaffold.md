@@ -169,9 +169,9 @@ export const subscriptions = sqliteTable('subscriptions', {
 ```json
 {
   "dependencies": {
-    "hono": "^4.12.12",
+    "hono": "^4.13.5",
     "@hono/zod-validator": "^0.4",
-    "drizzle-orm": "^1.0",
+    "drizzle-orm": "1.0.0-rc.4",
     "zod": "^4",
     "@clerk/backend": "^2",
     "stripe": "^18",
@@ -190,6 +190,7 @@ export const subscriptions = sqliteTable('subscriptions', {
 ```
 
 > TS 7.1 (stable ~2026-11-24) ships the native API — alias TS 6.x only where typescript-eslint/ts-morph still require it.
+> `drizzle-orm` pinned EXACT to `1.0.0-rc.4` — v1 is prerelease-only (`@latest`=0.45.x stable, `@rc`=1.0.0-rc.4); `^1.0` installs NOTHING (npm excludes prereleases) and a range risks grabbing hash-suffixed canaries. Bump via `npm i drizzle-orm@rc` when a newer rc/GA lands. `hono` floor `^4.13.5` = the query-parser CVE fix.
 
 ## First Deploy Sequence
 
