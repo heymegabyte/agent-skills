@@ -16,6 +16,23 @@ metadata:
 
 Cloudflare-native products are provisionable by API with the global key — do NOT ask the user for a key/secret that CF itself issues, and do NOT hand-create in the dashboard. Auth header pair: `X-Auth-Email: $CLOUDFLARE_EMAIL` + `X-Auth-Key: $CLOUDFLARE_API_KEY` (global key from `get-secret CLOUDFLARE_API_KEY`; email `blzalewski@gmail.com`). Account id: `GET /accounts`.
 
+<!-- grow-ok -->
+<!-- growth 2026-10-04: AI Gateway domain-naming convention + BYOK provisioning (Brian directive) -->
+
+## Naming convention — derive EVERY per-project CF resource name from the project DOMAIN
+
+**Dots → hyphens.** A project's AI Gateway (and its other per-project CF resources, by default) is named after its domain: `megabyte.space` → `megabyte-space`, `projectsites.dev` → `projectsites-dev`, `ask.megabyte.space` → `ask-megabyte-space`. Never invent ad-hoc names (`megabyte-os`, `cloudflare-megabyte-space`, `bridge`) — the domain IS the name, so the resource is self-describing and collisions are impossible. Inherited an off-convention name? Rename it (recreate under the domain-derived name → migrate BYOK secrets + code refs → delete the old) AND update the project repo's gateway ref (`AI_GATEWAY_NAME`, `aiGateway.name`) the same turn.
+
+## AI Gateway BYOK (bring-your-own provider key) via REST API
+
+All THREE are required — missing any one fails as a misleading `Authentication Fails (governor)` / 401:
+
+1. **Secrets-Store secret** named `{gateway_id}_{provider_slug}_{alias}` (e.g. `megabyte-space_deepseek_default`), **scope `ai_gateway`** (NOT `workers`, NOT `ai-gateway`): `POST /accounts/{acct}/secrets_store/stores/{store}/secrets` body `[{name,value,scopes:["ai_gateway"]}]`. Provider slug = the gateway path segment (`deepseek`,`ideogram`,`openai`…). The NAME is the link — no separate provider-config call.
+2. **Gateway `authentication:true` AND `store_id` set** to the Secrets-Store id — set via **`PUT`** the gateway (PATCH silently ignores `store_id`; an empty `store_id` means the gateway can't find its BYOK keys). The dashboard sets it automatically; the API does not.
+3. **An "AI Gateway Run" token** in `cf-aig-authorization: Bearer` on each request (create via `POST /accounts/{acct}/tokens` with that permission group). Then `POST gateway.ai.cloudflare.com/v1/{acct}/{gw}/{provider}/…` with NO provider key — the gateway injects the stored one. Allow ~1–5 min Secrets-Store propagation before the first success.
+
+**Unified Billing covers only OpenAI/Anthropic/Google/xAI/Groq** — DeepSeek, Ideogram, etc. are routeable but BYO-key (see `[[logo-generation]]`). Reference: ask.megabyte.space session, 2026-10-04 (`projectsites-dev` + `megabyte-space`).
+
 ## Turnstile (CAPTCHA) — keys are CF-minted, retrieve via API (njsk.org, 2026-06-27)
 
 - **Create a widget** → returns the **sitekey** (public, → build var e.g. `VITE_TURNSTILE_SITEKEY`) AND the **secret** (→ `wrangler secret put TURNSTILE_SECRET_KEY`):
