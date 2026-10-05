@@ -24,7 +24,7 @@ Set a realistic browser User-Agent on every raw fetch/curl/WebFetch call to avoi
 
 - Desktop: `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36`
 - iOS (mobile-only sites): `Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.0 Mobile/15E148 Safari/604.1` — Apple FROZE the OS token at `18_6` since iOS 26 (fingerprint defense); only `Version/` tracks the real iOS (27). Bump `Version/` on iOS majors, NEVER the `OS` token.
-- Verified Chrome stable via `https://chromiumdash.appspot.com/fetch_releases?channel=Stable` (2026-10-04 → Chrome 154.0.8037.x; 155 lands Oct 6 — Chrome is on a 2-week stable cycle now)
+- Verified Chrome stable via `https://chromiumdash.appspot.com/fetch_releases?channel=Stable` (2026-10-05 → Chrome 154.0.8037.98 confirmed current; 155 imminent ~Oct 6 — single-major drift is cosmetic, `version-drift-check.yml` auto-opens an issue only at ≥5-major drift; 2-week stable cycle)
 - **Implementation lives at `15-site-generation/_real-ua.mjs`** (exports `REAL_UA_DESKTOP`, `REAL_UA_IOS`, `REAL_HEADERS`). Every site-generation script imports from there — no inline hardcoded UAs. Update both the rule's UA line AND the constant in one commit.
 - **Drift gate**: `.github/workflows/version-drift-check.yml` (weekly Mondays 09:17 UTC) auto-opens a deduped issue when Chrome stable drifts ≥5 majors from the pinned constant.
 
