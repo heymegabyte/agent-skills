@@ -81,7 +81,7 @@ Every site ships THREE auto-generated NotebookLM-style artifacts before deploy:
 ### Provider chains
 
 - **Podcast** — ElevenLabs Studio Create Podcast (`POST /v1/studio/podcasts` with `mode: conversation` + two voice IDs) → AutoContent API → `teng-lin/notebooklm-py` headless wrapper (only when client demands NotebookLM-format proof) → skip-with-warning
-- **Video** — HeyGen API ($1/min standard, $4/min Avatar IV 1080p, 60-90s talking-head) → Synthesia → Tavus → Veo 3.1 Fast 8s hero loop ($1.20) → skip-with-warning
+- **Video** — HeyGen API (USD wallet since Feb-2026; Avatar IV ~$3/min Photo / ~$4/min Digital-Twin 1080p, Video Agent ~$2/min; 60-90s ≈ $3-6) → Synthesia → Tavus → Veo 3.1 Fast 8s hero loop → skip-with-warning
 - **Infographic** — Vega-Lite (free deterministic) + Recraft v3 ($0.04/SVG) + GPT Image 2 ($0.06/img); fallback to Napkin AI ($39/mo) when Recraft + GPT-Image saturated
 
 ### Budgets

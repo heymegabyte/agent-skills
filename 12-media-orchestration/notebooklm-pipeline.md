@@ -284,7 +284,7 @@ Lightbox grouping inherits `data-gallery="infographic"` per always.md "Every mul
 
 ### Provider order
 
-1. **HeyGen API** (`https://api.heygen.com/v2/video/generate`) — production winner for talking-head. ~$1/min standard, $4/min Avatar IV 1080p. 60-90s target ($1.50-$6/site). Docs: `https://docs.heygen.com`
+1. **HeyGen API** (`https://api.heygen.com/v2/video/generate`) — production winner for talking-head. USD prepaid wallet since Feb-2026 ($5 min deposit, NO free API credits): Avatar IV ~$3/min Photo / ~$4/min Digital-Twin 1080p (~$0.05/sec), Video Agent ~$2/min. 60-90s ≈ $3-6/site. (verified 2026-10-05) Docs: `https://docs.heygen.com`
 2. **Synthesia API** (`https://api.synthesia.io/v2/videos`) — fallback, ~$0.80-1.20/min; 140+ avatars + 120+ languages
 3. **Tavus API** ($59/mo + per-min credits) — when client has founder photo + voice samples for personalized digital twin; best for high-touch B2B SaaS
 4. **Veo 3.1 Fast** ($0.15/sec, 8 sec/clip) — fallback to CINEMATIC HERO LOOP when talking-head budget exceeded
