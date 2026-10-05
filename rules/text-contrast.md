@@ -52,7 +52,8 @@ Every text-using accent gets TWO contrast-safe siblings — moderate-lift for bo
      preserving input hue. Even a dull #1e3a8a navy lifts to vivid neon-blue.
      For HUD digits, badge counters, status pills, small numeric overlays
      where dullness reads broken. Requires `oklch(from ...)` — Chrome 119+,
-     Safari 16.4+, Firefox 113+ (baseline); ship w/ fallback chain. */
+     Safari 16.4+, Firefox 128+ (NOT 113 — FF 113 added oklch() color but
+     relative color syntax landed FF 128, Jul 2024; Baseline since). @supports fallback. */
   --ink-accent-neon: oklch(from var(--accent) max(l, 0.78) max(c, 0.22) h);
   --ink-album-accent-neon: oklch(from var(--album-accent, var(--accent)) max(l, 0.78) max(c, 0.22) h);
 }
