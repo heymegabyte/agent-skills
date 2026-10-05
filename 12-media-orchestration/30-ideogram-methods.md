@@ -248,21 +248,21 @@ for (const slot of IDEOGRAM_METHODS) {
   const resolved = resolveTokens(slot, brand);
   const key = hashSlot(resolved);
   if (existing[slot.id]?.cacheKey === key) continue; // skip cached
-  const asset = await callIdeogramV3(resolved); // POST /api/v1/ideogram-v3/generate
+  const asset = await callIdeogram(resolved); // POST /v1/generate, model: ideogram-4.0
   await saveAsset(asset, slot.outputPath);
   existing[slot.id] = { ...slot, cacheKey: key, generatedAt: new Date().toISOString() };
 }
 await writeManifest(manifestPath, existing);
 ```
 
-## API contract (Ideogram v3)
+## API contract (Ideogram 4.0)
 
-Ideogram 4.0 (open-weight, Apache 2.0) is current; v3 endpoint remains valid.
+Ideogram 4.0 (open-weight, Apache 2.0) is current — unified `/v1/generate` + `model` param (verified 2026-10-05; legacy version-path `/v1/ideogram-v3/generate` still answers but superseded).
 
 ```ts
-POST https://api.ideogram.ai/v1/ideogram-v3/generate
+POST https://api.ideogram.ai/v1/generate
 Headers: { 'Api-Key': process.env.IDEOGRAM_API_KEY }
-Body: { prompt, negative_prompt?, aspect_ratio, rendering_speed: 'QUALITY', style_type, magic_prompt: 'ON', num_images: 1, seed? }
+Body: { prompt, model: 'ideogram-4.0', negative_prompt?, aspect_ratio, rendering_speed: 'QUALITY', style_type, magic_prompt: 'ON', num_images: 1, seed? }
 Returns: { data: [{ url, prompt, resolution, is_image_safe, seed, style_type }] }
 ```
 

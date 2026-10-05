@@ -92,16 +92,17 @@ Color: [brand-consistent palette]
 Mood: [match product tone]
 ```
 
-## Ideogram v3 API Call
+## Ideogram 4.0 API Call
 
-Ideogram 4.0 (open-weight, Apache 2.0) is current; v3 endpoint remains valid.
+Ideogram 4.0 (open-weight, Apache 2.0) is current — unified `/v1/generate` endpoint + `model` param (verified 2026-10-05; the legacy version-path `/v1/ideogram-v3/generate` still answers but is superseded).
 
 ```bash
-curl -X POST "https://api.ideogram.ai/v1/ideogram-v3/generate" \
+curl -X POST "https://api.ideogram.ai/v1/generate" \
   -H "Api-Key: $IDEOGRAM_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "prompt": "a minimalist tech logo with the text \"BrandName\" in cyan #00E5FF, dark background, sans-serif",
+    "model": "ideogram-4.0",
     "aspect_ratio": "ASPECT_16_9",
     "rendering_speed": "DEFAULT"
   }'
