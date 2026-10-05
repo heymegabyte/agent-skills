@@ -241,7 +241,7 @@ export const IDEOGRAM_METHODS: IdeogramSlot[] = [
 ```js
 // scripts/generate-ideogram-assets.mjs — pseudo-skeleton
 import { IDEOGRAM_METHODS } from '../src/data/ideogram/methods.js';
-import { resolveTokens, callIdeogramV3, writeManifest, hashSlot } from './_ideogram-lib.js';
+import { resolveTokens, callIdeogram, writeManifest, hashSlot } from './_ideogram-lib.js';
 const manifestPath = 'public/_ideogram/manifest.json';
 const existing = await readManifest(manifestPath);
 for (const slot of IDEOGRAM_METHODS) {

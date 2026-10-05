@@ -41,7 +41,7 @@ NEVER an excuse to defer the logo.
    **Cloudflare Workers AI image models** — `@cf/black-forest-labs/flux-1-schnell` (fast) / `flux-2-dev`
    (best) / `@cf/leonardo/lucid-origin` — via `POST /accounts/{acct}/ai/run/{model}` with the global
    key. CF-native, billed through Cloudflare, needs NO third-party key. Ideogram is nice for crisp
-   lettering BUT its CF AI-Gateway route (`/{acct}/{gw}/ideogram/v1/ideogram-v3/generate`) still needs
+   lettering BUT its CF AI-Gateway route (`/{acct}/{gw}/ideogram/v1/generate` + `model: ideogram-4.0`) still needs
    a valid Ideogram **`Api-Key`** (BYO) — CF **Unified Billing does NOT cover Ideogram** (only
    OpenAI/Anthropic/Google/xAI/Groq as of 2026-10); with no Ideogram key, use Workers AI. Generate
    **≥4–6 candidates** per round as a SQUARE, TEXTLESS ICON. Reference impl: `scripts/gen-logo.mjs`
