@@ -21,7 +21,7 @@ Never write hand-rolled HTML files for any user-facing surface.
 ## Mandate
 
 - Every user-facing surface (marketing, web apps, dashboards, admin, generated sites, landing, microsites, blogs) MUST use ONE of two stacks:
-  - **Angular 22 + Nx 22 + Spartan UI + Ionic 8 + Capacitor 8 + SSR (`@angular/ssr` on Cloudflare Workers) + Tailwind v4 + Angular CDK** (PREFERRED for applications; ProjectSites.dev pinned here). RxJS-first per `rules/angular.md`.
+  - **Angular 22 + Nx 23 + Spartan UI + Ionic 8 + Capacitor 8 + SSR (`@angular/ssr` on Cloudflare Workers) + Tailwind v4 + Angular CDK** (PREFERRED for applications; ProjectSites.dev pinned here). RxJS-first per `rules/angular.md`.
   - **React 19 + Vite + SSR/SSG + TanStack Router + Tailwind v4** (the bolt.diy stack — use when appropriate)
 - Hand-rolling `public/index.html` + `public/pricing.html` + `public/about.html` etc. = build fail.
 - No "just one static HTML file" exceptions. Even 1-page site uses the Vite or Angular scaffold.
@@ -69,7 +69,7 @@ Never write hand-rolled HTML files for any user-facing surface.
 - **Angular 22** standalone + signals + **zoneless** (`provideZonelessChangeDetection()`, default since 21, drop Zone.js)
 - **`httpResource()`** (Angular 21 stable) — declarative HTTP→signal for read-only endpoints; pair with RxJS for mutations + WS + SSE per `rules/angular.md`
 - **Incremental hydration** — `provideClientHydration(withIncrementalHydration())` — viewport/interaction only
-- **Nx 22** + `@nx/angular` + Angular CLI MCP wired
+- **Nx 23** (Angular-22 support landed Nx 23.1; Nx 22 can't build Ng22) + `@nx/angular` + Angular CLI MCP wired
 - **Ionic 8+** UI (cross-platform: web, iOS, Android)
 - **Capacitor 8+** for native iOS / Android; **Tauri 2** for macOS/Windows/Linux desktop
 - **Cordova plugins** for native APIs not covered by Capacitor
