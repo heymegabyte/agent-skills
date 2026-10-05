@@ -59,7 +59,7 @@ Two payment concerns that fire together on any money-handling build: which rail 
 ### Nonprofit-specific guardrail
 
 - Stripe Tax adds nothing for verified 501(c)(3) (already tax-exempt) — skip it.
-- Donations run Stripe + Link by default (offer Instant Bank Payments — bank rail trims fees on large gifts); PayPal Giving Fund layered for fee-free large gifts (0% on PPGF-verified 501c3s, 30-45 day payout) — Stripe for instant operating cash, PPGF for patient money.
+- Donations run Stripe + Link by default (offer Instant Bank Payments — bank rail trims fees on large gifts); PayPal Giving Fund layered for fee-free large gifts (0% — PPGF charges nothing + covers txn fees on PayPal's own app/site; payout 15-45 days once enrolled, up to 90 if not, monthly batch ~25th) — Stripe for instant operating cash, PPGF for patient money. (Distinct from PayPal's standard donate button: 1.99%+49¢ confirmed-501c3 rate.)
 
 ### Webhook architecture
 
