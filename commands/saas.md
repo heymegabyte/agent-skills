@@ -22,7 +22,7 @@ Per `[[monitor-orchestration]]` + `[[source-site-enhancement]]` § Parallel-agen
 |---|---|
 | `architect` | Project structure, file inventory, DO/D1/KV/R2/Vectorize decisions per `[[05-architecture-and-stack]]` |
 | `auth-implementer` | Better Auth or Clerk wiring with D1 schema, social providers, magic links, session storage |
-| `payments-implementer` | Square (default for accept) or Stripe (SaaS billing) per `[[payments]]`, webhook handlers, idempotency |
+| `payments-implementer` | Stripe + Link (DEFAULT, all money flows; Billing for SaaS) / Square only on prompt request, per `[[payments]]`, webhook handlers, idempotency |
 | `feature-builder` (×3) | Per-domain features — one agent per domain (auth, billing, core feature) |
 | `frontend-builder` | React 19 + Vite + TanStack Router + Tailwind v4 + shadcn/ui; SSR via vite-ssg or TanStack Start |
 | `content-writer` | Marketing copy (Flesch≥60, active voice, anti-slop) per `[[copy-writing]]` |
