@@ -11,10 +11,10 @@ always-load: false
 
 - **Tag Management** — GTM (Google)
 - **Web Analytics** — GA4 (Google)
-- **Product Analytics** — PostHog (self-hosted, posthog.megabyte.space)
-- **Feature Flags** — PostHog (self-hosted)
-- **A/B Testing** — PostHog Experiments (self-hosted)
-- **Session Recording** — PostHog with masked inputs (self-hosted)
+- **Product Analytics** — PostHog Cloud (`us.i.posthog.com`)
+- **Feature Flags** — PostHog Cloud
+- **A/B Testing** — PostHog Experiments (Cloud)
+- **Session Recording** — PostHog Cloud with masked inputs
 - **Error Tracking** — Sentry (***AUTO-PROVISION***, sentry.megabyte.space)
 
 ## Event Naming
@@ -37,7 +37,7 @@ always-load: false
 
 1. GTM is ONLY script loader (except Sentry early init)
 2. Never hardcode GA4/PostHog in HTML — load via GTM
-3. Self-hosted PostHog preferred (no cookies, no GDPR banner)
+3. PostHog Cloud with `persistence:'memory'` (cookie-free → no GDPR banner; the cookie-free win is memory-persistence, NOT self-hosting)
 4. Every action: GA4 event + PostHog event + Sentry breadcrumb
 5. Feature flags BEFORE building feature. Ship behind flag. Remove after 100% rollout.
 6. A/B tests require hypothesis + min sample size + defined success metric
@@ -57,7 +57,7 @@ always-load: false
 
 ```typescript
 posthog.init('phc_PROJECT_KEY', {
-  api_host: 'https://posthog.megabyte.space',
+  api_host: 'https://us.i.posthog.com',
   capture_pageview: true, capture_pageleave: true, autocapture: true,
   session_recording: { maskAllInputs: true, maskTextSelector: '.sensitive' },
   persistence: 'memory', // No cookies
@@ -122,7 +122,7 @@ Every project gets Sentry from day one. Missing `@sentry/cloudflare` (Workers) o
 
 ### PostHog (Product Analytics + Feature Flags + Session Recording)
 
-Every HTML page gets PostHog snippet: `persistence:'memory'` (cookie-free) · `capture_pageview:true` · `capture_pageleave:true` · `autocapture:true`. CSP: script-src + connect-src for PostHog API host. Key as `POSTHOG_KEY` env var or inline for static HTML. Self-hosted preferred (posthog.megabyte.space); `us.i.posthog.com` acceptable.
+Every HTML page gets PostHog snippet: `persistence:'memory'` (cookie-free) · `capture_pageview:true` · `capture_pageleave:true` · `autocapture:true`. CSP: script-src + connect-src for PostHog API host. Key as `POSTHOG_KEY` env var or inline for static HTML. PostHog Cloud is the rail (`us.i.posthog.com` / `eu.i.posthog.com`) — self-hosting is DEPRECATED for production (hobby-only ≤300k events/mo, unsupported, no new K8s, cloud-only features) per PostHog + our `never self-host` doctrine (skill 28).
 
 Events: `page_viewed`, `cta_clicked`, `form_submitted`, `donate_click`, `newsletter_signup`, `scroll_depth`.
 
@@ -152,7 +152,7 @@ Missing ANY of the three → add in same prompt. No page ships without all three
 - No duplicate events
 - CSP allows all domains
 - Scroll depth fires at milestones
-- No cookies set (self-hosted PostHog)
+- No cookies set (`persistence:'memory'`)
 
 ## Ownership
 

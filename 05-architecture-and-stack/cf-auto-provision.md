@@ -170,7 +170,7 @@ Store `STRIPE_API_KEY` and `STRIPE_WEBHOOK_SECRET` as wrangler secrets.
 
 ```bash
 # Via PostHog API
-curl -X POST https://posthog.megabyte.space/api/projects/ \
+curl -X POST https://us.posthog.com/api/projects/ \
   -H "Authorization: Bearer $POSTHOG_PERSONAL_API_KEY" \
   -d '{"name": "{project}", "timezone": "America/New_York"}'
 ```
@@ -180,7 +180,7 @@ Extract project API key. Add to wrangler vars (not secret — it's public):
 ```toml
 [vars]
 POSTHOG_API_KEY = "{key}"
-POSTHOG_HOST = "https://posthog.megabyte.space"
+POSTHOG_HOST = "https://us.i.posthog.com"
 ```
 
 ### Sentry

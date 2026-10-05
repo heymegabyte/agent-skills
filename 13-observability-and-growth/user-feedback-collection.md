@@ -72,7 +72,7 @@ CREATE TABLE feedback (
 ```javascript
 // Trigger via PostHog surveys feature
 posthog.init('PROJECT_KEY', {
-  api_host: 'https://posthog.megabyte.space',
+  api_host: 'https://us.i.posthog.com',
   surveys: true, // Enable surveys
 });
 ```

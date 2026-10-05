@@ -14,7 +14,7 @@ import { PostHog } from 'posthog-node';
 import type { Context, Next } from 'hono';
 
 function createPostHog(env: Env): PostHog {
-  return new PostHog(env.POSTHOG_API_KEY, { host: 'https://posthog.megabyte.space', flushAt: 1, flushInterval: 0 });
+  return new PostHog(env.POSTHOG_API_KEY, { host: 'https://us.i.posthog.com', flushAt: 1, flushInterval: 0 });
 }
 
 // Middleware: evaluate flags for authenticated user
@@ -167,7 +167,7 @@ PostHog Dashboard: **Feature Flags → New Flag**
 
 ```typescript
 async function updateRollout(flagKey: string, percentage: number, env: Env): Promise<void> {
-  await fetch(`https://posthog.megabyte.space/api/projects/${env.POSTHOG_PROJECT_ID}/feature_flags`, {
+  await fetch(`https://us.posthog.com/api/projects/${env.POSTHOG_PROJECT_ID}/feature_flags`, {
     method: 'PATCH',
     headers: {
       Authorization: `Bearer ${env.POSTHOG_PERSONAL_API_KEY}`,
