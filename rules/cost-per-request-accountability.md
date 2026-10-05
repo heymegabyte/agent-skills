@@ -51,7 +51,7 @@ Every feature carries an explicit cost estimate before it ships — napkin math 
 
 - Workers bundle size: single **64 MiB uncompressed** limit on Free AND Paid (Sep 2026 — replaced the old 3 MB-gz free / 10 MB-gz paid compressed caps).
 
-Inngest Free: 50K executions/mo (each step execution counts) + 500K events, 5 concurrent; Pro from $99/mo (1M execs). CF Workflows when unbound.
+Inngest Free: 50K executions/mo (each step execution counts) + 500K events, 5 concurrent; Pro from $99/mo (1M execs). CF Workflows when unbound. (Pricing verified 2026-10-04.)
 
 AI Gateway: proxied tokens billed at model rate; no Gateway surcharge.
 

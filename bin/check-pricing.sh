@@ -113,11 +113,23 @@ done
 # dated deliberately. The allowlist suppresses illustrative amounts (donation
 # preset arrays, e.g./example/~approx lines) so the list stays signal.
 FEE_TIER=0
+FEE_TIER_DATED=0
 FEE_TIER_LOCS=()
 while IFS= read -r _hit; do
   [ -z "$_hit" ] && continue
   FEE_TIER=$((FEE_TIER + 1))
-  FEE_TIER_LOCS+=("${_hit%%:*}:$(printf '%s' "${_hit#*:}" | cut -d: -f1)")
+  _ft_file="${_hit%%:*}"
+  _ft_line="$(printf '%s' "${_hit#*:}" | cut -d: -f1)"
+  # Dated-vs-undated (±3 lines) so deliberate annotation shows as progress.
+  # Still ADVISORY — neither count fails the build.
+  _ft_s=$((_ft_line > 3 ? _ft_line - 3 : 1))
+  _ft_e=$((_ft_line + 3))
+  if awk -v s="$_ft_s" -v e="$_ft_e" 'NR>=s && NR<=e' "$_ft_file" 2>/dev/null \
+    | grep -qiE 'verified [0-9]{4}-[0-9]{2}-[0-9]{2}'; then
+    FEE_TIER_DATED=$((FEE_TIER_DATED + 1))
+  else
+    FEE_TIER_LOCS+=("${_ft_file}:${_ft_line}")
+  fi
 done < <(
   grep -rnE '([0-9]+\.[0-9]+%[ ]?\+[ ]?(\$?[0-9]+(\.[0-9]+)?|[0-9]+¢)|\$[0-9]+/(mo|month)\b)' \
     rules/*.md \
@@ -144,8 +156,9 @@ if [ "$JSON" = "0" ]; then
     printf '✓ all pricing references current\n' >&2
   fi
   if [ "$FEE_TIER" -gt 0 ]; then
-    printf 'ℹ %d fee/tier ref(s) (N%%+N¢ / $N/mo) — advisory, date volatile vendor claims:\n' "$FEE_TIER" >&2
-    for l in "${FEE_TIER_LOCS[@]}"; do printf '    · %s\n' "$l" >&2; done
+    printf 'ℹ %d fee/tier ref(s) (N%%+N¢ / $N/mo) — advisory · %d dated / %d undated:\n' \
+      "$FEE_TIER" "$FEE_TIER_DATED" $((FEE_TIER - FEE_TIER_DATED)) >&2
+    for l in "${FEE_TIER_LOCS[@]}"; do printf '    · %s (date if a vendor claim)\n' "$l" >&2; done
   fi
 fi
 
@@ -162,8 +175,8 @@ if [ "$JSON" = "1" ]; then
       "${AGES[$i]}" \
       "$(json_escape "${REFS[$i]}")"
   done
-  printf '],"summary":{"total":%d,"current":%d,"stale":%d,"unannotated":%d,"fee_tier_advisory":%d,"max_age_days":%d,"exit":%d}}\n' \
-    "$TOTAL" "$CURRENT" "$STALE" "$UNANNOTATED" "$FEE_TIER" "$MAX_AGE_DAYS" "$EXIT"
+  printf '],"summary":{"total":%d,"current":%d,"stale":%d,"unannotated":%d,"fee_tier_advisory":%d,"fee_tier_dated":%d,"max_age_days":%d,"exit":%d}}\n' \
+    "$TOTAL" "$CURRENT" "$STALE" "$UNANNOTATED" "$FEE_TIER" "$FEE_TIER_DATED" "$MAX_AGE_DAYS" "$EXIT"
 fi
 
 exit "$EXIT"
