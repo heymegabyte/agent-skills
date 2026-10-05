@@ -105,4 +105,4 @@ Do not register both simultaneously — duplicate tool names will cause conflict
 ## Generated
 
 2026-06-18 by forge-skill-from-openapi --harden.
-Spec: Stripe API v2026-05-27.dahlia (587 total paths, pruned to 37).
+Spec: Stripe API v2026-05-27.dahlia snapshot (587 total paths, pruned to 37) — regen against current `2026-09-30.endive` (stripe-node 23.0.0) on next rebuild.

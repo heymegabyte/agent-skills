@@ -67,7 +67,7 @@ Dark theme FIRST. Purple for cosmic/space only.
 - **ORM** — Drizzle v1-rc (rc.4; NOT GA as of 2026-10 — production-proven, no stable tag/down-migrations yet)
 - **Validation** — Zod 4
 - **Auth** — Clerk Core 3 (SaaS) / Authentik (self-hosted)
-- **Payments** — Stripe + Link DEFAULT for all money flows (Billing for SaaS, pin `2026-08-26.dahlia`; Connect payouts; IBP 2.6%+30¢) / Square only on prompt request
+- **Payments** — Stripe + Link DEFAULT for all money flows (Billing for SaaS, pin `2026-09-30.endive` — stripe-node 23.0.0, verified 2026-10-05; endive = new breaking major after dahlia; Connect payouts; IBP 2.6%+30¢) / Square only on prompt request
 - **Email** — Amazon SES (sole transactional rail) + Listmonk (bulk); SendGrid break-glass
 - **Jobs** — Inngest v4 / CF Workflows v2
 - **Runtime** — Node 24 native TS / Bun 1.4+ (1.4 rewrote the runtime in Rust; Bun is now developed under Anthropic)
