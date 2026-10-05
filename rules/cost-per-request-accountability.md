@@ -63,8 +63,10 @@ AI Gateway: proxied tokens billed at model rate; no Gateway surcharge.
 export async function dailyDigest(env: Env) {
   // Cost: ~10 D1 reads/user × 500 users = 5K reads/run
   //       × 1 run/day = 5K reads/day → well within 5M free tier
-  //       AI summary: ~800 tokens input + ~300 output × Haiku $0.00025/1K = ~$0.000275/user
-  //       Total at 500 users: ~$0.14/day = ~$4/month — document in feature-flags description
+  //       AI summary: ~800 in + ~300 out on Haiku 4.5 ($1/$5 per MTok, verified 2026-10)
+  //       = 800×$1/M + 300×$5/M = ~$0.0023/user
+  //       Total at 500 users: ~$1.15/day ≈ ~$35/month → CROSSES the $20/mo
+  //       review-recommended tier (see below) — flag in the commit + feature-flags description
   const users = await env.DB.prepare('SELECT id, email FROM users WHERE digest_enabled = 1').all()
   for (const user of users.results) {
     await sendDigest(env, user)
@@ -76,8 +78,8 @@ export async function dailyDigest(env: Env) {
 // worker/routes/ai-search.ts
 
 // Cost: Workers AI Llama 4 Scout = $0.00/request (free tier 10K neurons/day)
-//       Fallback to Claude Haiku: ~600 tokens × $0.00025/1K = $0.00015/request
-//       At 1K req/day → $0.15/day = ~$4.50/month — acceptable, flag if volume grows
+//       Fallback to Claude Haiku 4.5: ~450 in + ~150 out ($1/$5 per MTok) = ~$0.0012/request
+//       At 1K req/day → ~$1.20/day ≈ ~$36/month → crosses $20/mo review tier, flag it
 export async function aiSearch(c: Context) { ... }
 ```
 
