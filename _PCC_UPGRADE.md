@@ -76,3 +76,30 @@ dramatically better at building production web apps") → fixtures §112/§113.
   originating session transcript.
 - **Phase 2 Reconcile** — confirmed `_REARCH_LEDGER` is done-cleanup; this is additive greenfield.
 - **First increment** — the Requirement Ledger (`f7c30f0`).
+
+## Design-Contract subsystem (5th subsystem — from the Design-First Resolution Addendum, 55 §)
+Plugs into #2 (Requirement Graph) + #4 (Golden-Path Grower): **design is an executable contract**, not a
+disposable screenshot. Contract graph: `intent → requirements → Figma design → prototype flow → design
+tokens → Storybook state → source component → Playwright test → production golden path`. Build as
+skills + deterministic tooling (the projectsites monorepo carries the PRINCIPLES in
+`.claude/run-the-loop/ENGINEERING-PRINCIPLES.md § Design-first`; THIS is the runnable layer):
+- **`ask-only-what-matters`** — Intelligence Question Gate: inspect all context, ask 0-5 high-info
+  questions, else infer → design → SHOW → let the user REACT (not interrogate). + **two-stage visual
+  approval** (A: 2-3 materially-different directions → B: expand the chosen).
+- **DTCG token authority** (`bin/tokens-*.mjs`) — one token package → CSS vars / app theme / component
+  lib / Figma variables / Storybook; single source, drift-detect + sync (Figma ↔ repo).
+- **Figma integration** (MCP) — auto-create the project file; editable frames/components/variables/
+  prototype flows (never flattened screenshots); **Code Connect** (Figma component ↔ real `packages/ui`
+  component so agents reuse, not rebuild).
+- **Storybook + MSW state lab** — generate stories from the contract (all states, not just happy); MSW
+  handlers defined once, reused dev/Storybook/tests/Playwright; **typed API contracts precede API impl**.
+- **Design Contract Graph** (`design-contract.jsonl`) — binds `revision↔requirementIds↔figmaFrame/flowIds↔
+  tokenRevision↔storyIds↔componentPaths↔e2eTestIds↔goldenPathIds↔approval(draft→…→approved→changed→
+  implemented)`; per-artifact approval deltas; APPROVED→CHANGED + **targeted invalidation**; Figma review
+  comments = high-relevance context; prototype flow IDs (`FLOW-*`) → Playwright → golden path.
+- **Visual + semantic regression** — ONE canonical env (Browser Run), ARIA snapshots + pixel baselines,
+  three-tier vision evidence (T0 deterministic / T1 AI triage / T2 independent OpenAI+Anthropic → Claude).
+- **Three-truths reconciliation** — REQUIREMENT ↔ DESIGN ↔ RUNTIME (quality = where they agree); Figma↔code
+  is bidirectional (code can improve the design → update Figma + the contract).
+Sequence: build after roadmap #2 (Golden-Path Grower) — prototype flows seed golden paths, and the
+contract reuses the `req.mjs` ledger's forward links (`golden_paths[]`, `routes[]`).
