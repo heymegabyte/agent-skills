@@ -4,6 +4,12 @@
 # Modes: saas | portfolio | local-business | non-profit | other
 # Output: JSON {ok, mode, missing[], present[], hint}
 # Logs:   ~/.claude/debug/api-key-gate.log
+#
+# Provider policy SSOT: rules/agent-provider-policy.md
+#   Internal dev-agent orchestration uses SUBSCRIPTION CLIs (claude/codex) +
+#   DeepSeek-via-OpenCode — NOT OpenAI/Anthropic API keys. DeepSeek API is the
+#   allowed throughput tier (get-secret DEEPSEEK_API_KEY). ANTHROPIC_API_KEY /
+#   OPENAI_API_KEY are product-runtime Worker secrets only, never internal auth.
 set -uo pipefail
 
 MODE="${1:-other}"
@@ -13,9 +19,16 @@ HOSTNAME_SHORT=$(hostname -s 2>/dev/null || echo unknown)
 CHEZMOI_DIR="$HOME/.local/share/chezmoi/home/.chezmoitemplates/secrets-${HOSTNAME_SHORT}"
 MASTER_ENV="$HOME/emdash-projects/worktrees/rare-chefs-film-8op/.env.local"
 
-# Required keys per mode
-BASELINE=(CLOUDFLARE_API_KEY CLOUDFLARE_EMAIL CLOUDFLARE_ACCOUNT_ID ANTHROPIC_API_KEY OPENAI_API_KEY GITHUB_TOKEN RESEND_API_KEY IDEOGRAM_API_KEY)
+# Required keys per mode (see rules/agent-provider-policy.md).
+# DEEPSEEK_API_KEY = allowed throughput tier for internal dev agents (DeepSeek-via-OpenCode).
+# ANTHROPIC_API_KEY / OPENAI_API_KEY are NOT required here — internal orchestration uses
+# subscription CLIs (claude/codex); those keys are product-runtime Worker secrets only
+# (see WARN_ONLY below + the env-presence caution).
+BASELINE=(CLOUDFLARE_API_KEY CLOUDFLARE_EMAIL CLOUDFLARE_ACCOUNT_ID DEEPSEEK_API_KEY GITHUB_TOKEN RESEND_API_KEY IDEOGRAM_API_KEY)
 OBSERVABILITY=(SENTRY_DSN SENTRY_AUTH_TOKEN POSTHOG_API_KEY POSTHOG_HOST GTM_CONTAINER_ID)
+# Product-runtime only, not internal-orchestration: presence in the dev SHELL env is a
+# WARNING (can override subscription auth + cause API billing), never a readiness signal.
+WARN_ONLY=(ANTHROPIC_API_KEY OPENAI_API_KEY)
 
 case "$MODE" in
   saas) EXTRA=(CLERK_SECRET_KEY CLERK_PUBLISHABLE_KEY STRIPE_SECRET_KEY STRIPE_PUBLISHABLE_KEY STRIPE_WEBHOOK_SECRET INNGEST_EVENT_KEY INNGEST_SIGNING_KEY NEON_DATABASE_URL) ;;
@@ -73,6 +86,17 @@ PRESENT=()
 for key in "${REQUIRED[@]}"; do
   src=$(resolveKey "$key")
   if [ -n "$src" ]; then PRESENT+=("\"${key}:${src}\""); else MISSING+=("\"${key}\""); fi
+done
+
+# Env-presence caution (rules/agent-provider-policy.md). Warn — never gate — when a
+# product-runtime provider key is set in the dev SHELL env: it can override subscription
+# auth (claude/codex) and cause API billing for INTERNAL orchestration. Unset it for
+# internal dev agents; keep it ONLY as a product-runtime Worker secret. To stderr so the
+# stdout JSON stays clean.
+for key in "${WARN_ONLY[@]}"; do
+  if [ -n "${!key:-}" ]; then
+    echo "WARN: ${key} is set in the dev shell env — product-runtime only, not internal-orchestration auth. It can override subscription CLIs (claude/codex) and incur API billing; unset it for internal dev agents (see rules/agent-provider-policy.md)." >&2
+  fi
 done
 
 OK=true

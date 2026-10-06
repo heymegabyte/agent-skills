@@ -19,6 +19,12 @@ paths:
 
 Select the correct model tier by task complexity and cost — Claude tiers plus approved alternates; never use a deep-reasoning model for tasks a fast one can handle.
 
+> **Internal agent-orchestration provider policy → [[agent-provider-policy]] (canonical SSOT).**
+> Internal dev / research / agent work uses SUBSCRIPTION CLIs (`claude` / `codex`) +
+> DeepSeek-via-OpenCode — NEVER `OPENAI_API_KEY` / `ANTHROPIC_API_KEY`. The tiers below pick
+> which *model* runs a phase; the SSOT governs which *auth rail* is allowed for internal work
+> vs. preserved product runtime. Launch internal CLIs via `bin/with-subscription-cli.sh`.
+
 ## Fable 5 (`claude-fable-5`) — frontier (newest, runtime-confirmed)
 
 - Newest Claude tier per the runtime env; sits above Opus 4.8 for the hardest reasoning Opus can't close.
@@ -143,8 +149,8 @@ OpenCode's **Zen** gateway is the unified pay-per-use billing rail (one account 
 
 Standing routing policy for APPLICATION LLM calls + agent build pipelines — a DIFFERENT axis from the Claude-altitude orchestration tiers (which picks which *Claude* model runs a loop phase; this picks which *vendor* serves an app/build call). Brian's directive 2026-06-17.
 
-- **Premium — Anthropic (Claude) / OpenAI (ChatGPT).** Higher-order research, architecture + planning, security/payment/auth decisions, and ALL vision (DeepSeek has none). Reserve for judgment, not volume.
-- **Mid-grade — DeepSeek** (`deepseek-chat`; `deepseek-reasoner` for higher-order). The DEFAULT for most generation/implementation/build work, AND the primary provider for headless **Claude Code build agents** via DeepSeek's Anthropic-compatible endpoint: `ANTHROPIC_BASE_URL=https://api.deepseek.com/anthropic` + `ANTHROPIC_AUTH_TOKEN=$DEEPSEEK_API_KEY` + `ANTHROPIC_MODEL=deepseek-chat` (keep `ANTHROPIC_API_KEY` as passive fallback; `BUILD_LLM_PROVIDER=anthropic` forces Claude). API base `https://api.deepseek.com`; key `DEEPSEEK_API_KEY` is ALWAYS a `wrangler secret` / get-secret entry — never committed.
+- **Premium — Anthropic (Claude) / OpenAI (ChatGPT).** ⚠️ **Axis split per [[agent-provider-policy]]:** for INTERNAL dev/research/agent orchestration, premium judgment runs on the SUBSCRIPTION CLIs (`claude`/`codex`), NEVER `ANTHROPIC_API_KEY`/`OPENAI_API_KEY`. For PRODUCT application LLM calls (customer features) Anthropic/OpenAI via the AI Gateway is preserved. Higher-order research, architecture + planning, security/payment/auth decisions, and ALL vision (DeepSeek has none). Reserve for judgment, not volume.
+- **Mid-grade — DeepSeek** (`deepseek-chat`; `deepseek-reasoner` for higher-order). The DEFAULT for most generation/implementation/build work, AND the primary provider for headless **Claude Code build agents** via DeepSeek's Anthropic-compatible endpoint: `ANTHROPIC_BASE_URL=https://api.deepseek.com/anthropic` + `ANTHROPIC_AUTH_TOKEN=$DEEPSEEK_API_KEY` + `ANTHROPIC_MODEL=deepseek-chat` (internal/build agents fall back to **Workers-AI**, NOT an `ANTHROPIC_API_KEY` — that bills Anthropic for internal work, forbidden per [[agent-provider-policy]]; `BUILD_LLM_PROVIDER=anthropic` is product-runtime-only, never an internal default). API base `https://api.deepseek.com`; key `DEEPSEEK_API_KEY` is ALWAYS a `wrangler secret` / get-secret entry — never committed.
 - **Instant — Cloudflare Workers AI** (`env.AI.run` `@cf/meta/llama-*`, free, edge). Pre-routing, classification, moderation, embeddings — sub-ms latency default for reflex-speed work.
 - **End state:** collapse everything toward Workers AI as it catches up. Until then — premium for judgment, DeepSeek for volume, Workers AI for reflexes.
 - Reference impl: projectsites.dev `external_llm.chooseProviderForTier(env, 'premium'|'standard'|'instant')` + `ai_gateway` deepseek slug + container `_deepseekKey`/`_anthropicBaseUrl` injection. Cloudflare AI Gateway supports a `deepseek` provider slug — route through it for caching/observability. **Unified Billing** (open beta 2025-11, extended to Workers AI 2026-08): one prepaid credits wallet across OpenAI/Anthropic/Workers-AI/20+ providers, 5% fee, opt-in ZDR, elevated Workers-AI rate limits — an alternative to per-provider keys; weigh against direct keys per `account-entitlements` spend order.
