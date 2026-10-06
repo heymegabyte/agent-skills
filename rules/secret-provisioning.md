@@ -80,8 +80,9 @@ cd "$(chezmoi source-path)/home/.chezmoitemplates/secrets" \
 ## Canonical secret list (try every one on every CF/Vercel/Fly deploy — silently skip missing)
 
 - `AWS_SES_ACCESS_KEY_ID` + `AWS_SES_SECRET_ACCESS_KEY` + `AWS_SES_REGION` + `SES_FROM_EMAIL` (Amazon SES — replaced Resend 2026-06-19)
-- `ANTHROPIC_API_KEY`
-- `OPENAI_API_KEY`
+- `ANTHROPIC_API_KEY` — ⚠️ **PRODUCT-runtime ONLY** (a Worker serving customer-facing Anthropic features), NOT internal orchestration. Internal dev/research/agents use the `claude` subscription CLI, never this key. SSOT: `rules/agent-provider-policy.md`.
+- `OPENAI_API_KEY` — ⚠️ **PRODUCT-runtime ONLY** (customer-facing OpenAI features), NOT internal orchestration. Internal agents use the `codex` subscription CLI + `DEEPSEEK_API_KEY` via OpenCode, never this key. SSOT: `rules/agent-provider-policy.md`.
+- `DEEPSEEK_API_KEY` (internal-orchestration throughput provider, via OpenCode — `rules/agent-provider-policy.md`)
 - `GOOGLE_API_KEY`
 - `TURNSTILE_SITE_KEY`
 - `TURNSTILE_SECRET_KEY`

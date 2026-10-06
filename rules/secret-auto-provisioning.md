@@ -83,11 +83,11 @@ Generates and age-encrypts via chezmoi → `~/.local/share/chezmoi/home/.chezmoi
 - Meters first: `POST /v1/billing/meters`; prices reference `recurring[meter]=mtr_*`.
 - NEVER auto-mint `STRIPE_CONNECT_CLIENT_ID` → Tier 3.
 
-**Anthropic Admin API** (parent: `ANTHROPIC_ADMIN_KEY`):
+**Anthropic Admin API** (parent: `ANTHROPIC_ADMIN_KEY`) — ⚠️ mints a **PRODUCT-runtime** `ANTHROPIC_API_KEY` ONLY (for a Worker serving customer-facing Anthropic features). NEVER mint a key for internal dev/research/agent orchestration — those use the `claude` subscription CLI. SSOT: `rules/agent-provider-policy.md`.
 
 - `POST https://api.anthropic.com/v1/organizations/api_keys` → project-scoped `ANTHROPIC_API_KEY` w/ workspace + role + budget.
 
-**OpenAI Admin API** (parent: org-admin key):
+**OpenAI Admin API** (parent: org-admin key) — ⚠️ mints a **PRODUCT-runtime** `OPENAI_API_KEY` ONLY (customer-facing OpenAI features). NEVER mint a key for internal orchestration — those use the `codex` subscription CLI + `DEEPSEEK_API_KEY` via OpenCode. SSOT: `rules/agent-provider-policy.md`.
 
 - `POST https://api.openai.com/v1/organization/projects/{project_id}/api_keys` → `OPENAI_API_KEY`.
 

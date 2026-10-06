@@ -6,6 +6,10 @@ This repository contains 23 skill categories, 28 agents, and 149 reference docs 
 
 CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1-rc | Clerk | Stripe + Link (default) · Square on request | Inngest | Amazon SES | Bun | Playwright v1.63+ | PostHog | Sentry
 
+## Internal Agent Providers (HARD RULE)
+
+Internal dev/research/agent-orchestration runs on **subscription CLIs** (`claude` + `codex`) for frontier judgment and **DeepSeek-via-OpenCode** (`bin/opencode-deepseek.sh`) for throughput — NEVER the `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` paid APIs to make a model research/plan/review/write code when a CLI can do it. Launch every internal CLI via `bin/with-subscription-cli.sh` (a child `claude` must not inherit `ANTHROPIC_API_KEY`; a child `codex` must not inherit `OPENAI_API_KEY` — either overrides the subscription and bills). Customer-facing OpenAI/Anthropic PRODUCT features are a separate, preserved, platform-billed axis. SSOT: `rules/agent-provider-policy.md`.
+
 ## Usage
 
 Load skills on demand via the skill router (`_router.md`). Each category has a `SKILL.md` with submodules listed in frontmatter.

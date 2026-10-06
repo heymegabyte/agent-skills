@@ -121,6 +121,7 @@ Scope:
   - Solo SaaS / nonprofit / local / portfolio → **Sentry (server-side) + PostHog + Workers Tracing OTLP**
   - Enterprise / regulated / multi-team → **PostHog + Sentry `@sentry/cloudflare` v11 (stream trace lifecycle default since 11.0) + GA4/GTM + Workers Tracing + Axiom**
   - LLM-heavy (>10k calls/mo) → add **AI Gateway** to either tier
+- **Internal agent providers (HARD — SSOT `rules/agent-provider-policy.md`)** — internal dev/research/orchestration = subscription CLIs (`claude` + `codex`) for frontier judgment + **DeepSeek-via-OpenCode** for throughput. NEVER `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` to make a model work when a CLI can. Launch every internal CLI via `bin/with-subscription-cli.sh` so a child `claude` never inherits `ANTHROPIC_API_KEY` (and child `codex` never inherits `OPENAI_API_KEY` — both override the subscription + bill). Customer-facing OpenAI/Anthropic PRODUCT features are a SEPARATE, preserved axis (platform-billed) — never conflate.
 
 ## Brand
 
