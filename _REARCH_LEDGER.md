@@ -140,3 +140,23 @@ Verified (not assumed) that the clean, autonomous re-architecture work is comple
 - **Coverage guarantee (WS-13)** — every directive removed/merged must survive somewhere; log the mapping.
 - **Don't clobber** — a fire re-running a done workstream must no-op. Update this table when a WS completes.
 - **`skills/` is gitignored** — its edits won't show in `git status`; that's expected.
+
+## Studio transformation (creative/media/3D/audio/eval expansion) — 2026-10-06
+
+**Directive:** deep multidisciplinary studio transformation — creative-direction, art-direction, typography, composition, materiality, full post-production + 3D/shader/XR + audio + eval machinery.
+
+**Phase-Zero audit (6 parallel read-only auditors) — verified findings:**
+
+- Repo is MATURE (34 skills · 170 rules · 28 agents · 43 refs). Work = reconcile/strengthen/fill, NOT greenfield.
+- **Prompt premises partly outdated vs this ledger:** 2 of 4 named "contradictions" already reconciled (black/cyan scope-gated by `09`; `0.333s` = Tier-1 *inside* `11`'s hierarchy). The "duplicate clusters" (email/secrets/image/logo…) were already adjudicated (fire 19) as many-to-many pack members = routing reuse → NOT merged (would sacrifice responsiveness). **Consolidation + contradiction work = DONE; NOT redone this fire.**
+- **Genuinely net-new gaps (untouched by prior loops):** CREATIVE depth (art-direction · typography-depth · materiality · composition · narrative-pacing · creative-thesis brain) · MEDIA post-production (storyboard · cinematography · video-edit · VFX/compositing · color · retouch · Remotion · WebCodecs · AudioWorklet) · 3D/shader/WebGPU/XR (entire) · AUDIO (sound-design · engineering · music · voice · spatial) · eval machinery (champion-challenger · counterfactual · hidden-holdouts · live Project-Mind log · routing decision trail) · 4 creative agents (creative-director · art-director · technical-artist · multimedia-a11y-reviewer).
+
+**Shipped this fire (verified, committed):**
+
+- `reference/aesthetic-quality-lexicon.md` (NEW) — canonical vocabulary → OBSERVABLE properties, operational defs (cinematic/premium/sophisticated/immersive/future-forward with explicit "is NOT"), anti-lexicon (slop tells → critique not auto-restyle), restraint discipline. Keystone cited by 09/10/11/12/16/22.
+- `16` item 7: "signature motion" → "signature *moment* (motion / composition / type); medium follows concept; canvas nebula = reference impl, not mandate" + lexicon ref.
+- `gorgeous-by-default` beautify-10x: added directed-execution (observe→critique→highest-value-fix→re-observe) + stop-at-plateau + revert-on-regression (reconciles the 2026-09-29 ratchet with the studio directive).
+
+**Queued net-new slices (craft-core-first; one verified slice each):** creative-foundation (creative-direction · art-direction · typography · composition · materiality) → multimedia-studio (`12` expansion) → technical-art (3D · shader/WebGPU fallback ladder · XR · generative) → audio → modern-web-interaction + frontier-scout → evolution-machinery → creative agents + routing/triggers → creative golden-paths + aesthetic-regression + creative evals → dogfood + final gap audit.
+
+**Deliberately NOT done:** consolidation/archival (done/rejected per fire 19 — merging shared pack members breaks routing responsiveness) · router-budget fix (config-protected `bin/skill-router.py`, needs `/improve-lint`) · router DB `sync-metadata` for the new reference (local-state; doc reached via `[[links]]` + future creative-skill citations).

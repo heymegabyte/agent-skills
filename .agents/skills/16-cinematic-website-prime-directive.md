@@ -24,7 +24,7 @@ One-line prompt → satisfy all 100 build-breaking rules across 10 categories be
 4. Layered surfaces: opaque base + semi-transparent panels + glassmorph cards via `backdrop-filter`
 5. OKLCH palette w/ `color-mix(in oklch, ...)` derived shades — no static rgb tints
 6. `text-wrap: balance` headings, `text-wrap: pretty` body — no orphans
-7. One signature motion per page (scroll-driven parallax, view-transition swap, popover anchor)
+7. One signature *moment* per page — motion (scroll-driven parallax, view-transition swap, popover anchor), a bespoke composition, or a typographic hero. Medium follows concept; "cinematic" is not one visual recipe. The canvas nebula (#114) is a reference impl, never a mandate. See `reference/aesthetic-quality-lexicon.md`.
 8. Hero MUST use AI-generated brand-aligned image, never stock placeholder
 9. Asymmetric hero grids, never centered-stack default
 10. Every section pair has visual rhythm: dense → breath → dense
