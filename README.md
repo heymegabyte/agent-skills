@@ -18,8 +18,8 @@
 <br/>
 
 <div align="center">
-  <code>23 categories</code> · <code>167 doctrine rules</code> · <code>28 agents</code> · <code>35 commands</code> · <code>37 platform variants</code><br/>
-  <a href="https://agentskills.megabyte.space"><strong>Showcase Website</strong></a>
+  <code>23 categories</code> · <code>170 doctrine rules</code> · <code>28 agents</code> · <code>35 commands</code> · <code>37 platform variants</code><br/>
+  <a href="https://agent.megabyte.space"><strong>Showcase Website</strong></a>
 </div>
 
 ## What's New

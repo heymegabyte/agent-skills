@@ -26,3 +26,4 @@ members:
   - rules/build-validators-manifest
   - rules/brand-asset-pipeline
   - rules/google-maps-panels
+  - rules/first-time-excellence

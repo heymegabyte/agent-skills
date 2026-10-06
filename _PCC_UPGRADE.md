@@ -7,25 +7,29 @@
 > BUILD → VERIFY → OPERATE`. Sophisticated internally, simple externally.
 
 ## ⚠️ Run this in a FRESH, dedicated session
+
 This is a 13-phase, multi-day initiative. Phase 1 (audit) + Phase 2 (reconcile) are done and the first
 increment is shipped — but the bulk (the compiler, decision ledger, grower algorithm) must be built
 with **fresh context**, NOT at the tail of an unrelated saturated session. Read this doc + `bin/req.mjs`
+
 + `reference/requirement-ledger.md` and continue.
 
 ## Operating rules (this repo is SENSITIVE)
-- **Mirror-synced to ~31 targets** (`bin/sync-mirrors.mjs`). **ADDITIVE changes only** — new files under
+
++ **Mirror-synced to ~31 targets** (`bin/sync-mirrors.mjs`). **ADDITIVE changes only** — new files under
   `bin/`, `reference/`, root docs, a new `_compile/` dir. **Do NOT edit** the always-loaded/large files
   (`CLAUDE.md`, `AGENTS.md`, `CONVENTIONS.md`, `_router.md`, `_kernel/*`, `_packs/*`) or existing
   `NN-*/` skills / `rules/` unless a workstream explicitly requires it (then log coverage per WS-13).
-- **Zero new heavy deps** — Node built-ins + JSONL (git-friendly, append-only). No SQLite.
-- Small atomic **conventional-commit + gitmoji**, per `_REARCH_LEDGER` operating rules. `git pull
++ **Zero new heavy deps** — Node built-ins + JSONL (git-friendly, append-only). No SQLite.
++ Small atomic **conventional-commit + gitmoji**, per `_REARCH_LEDGER` operating rules. `git pull
   --rebase` before push. Default branch = **`master`**.
-- **Pre-existing drift (not ours):** `CLAUDE.md` + `rules/first-time-excellence.md` were dirty and the
++ **Pre-existing drift (not ours):** `CLAUDE.md` + `rules/first-time-excellence.md` were dirty and the
   `first-time-excellence` packs-lint fails independently of our work — a lint gate blocks commits
   (fire-1 used `--no-verify` for additive-only files that are themselves lint-clean). **Clean this up
   early** so the gate is trustworthy again.
 
 ## The 4 foundational subsystems — status
+
 1. **Prompt Context Compiler** (`/compile`: prompt-fuzz → intent-lattice → resolution-tree → 14
    refinement passes → evidence ledger → convergence) — **ABSENT (the big build).** Closest today:
    `bin/skill-router.py` (semantic TOP-K + phrase-trigger **routing only**), `01/architecture-thought-loop`,
@@ -49,13 +53,15 @@ with **fresh context**, NOT at the tail of an unrelated saturated session. Read 
    `req update R-NNN --link-golden-path <id>`.
 
 ## §104 capability gaps (from the Phase-1 audit)
-- **MISSING:** `prompt-fuzz` · `ask-deepseek` · `resolve-disagreement` · `golden-path-grower` (algorithm).
-- **PARTIAL:** `compile` (route-only) · `context-compile` · `resolve-requirements` (now has the ledger) ·
+
++ **MISSING:** `prompt-fuzz` · `ask-deepseek` · `resolve-disagreement` · `golden-path-grower` (algorithm).
++ **PARTIAL:** `compile` (route-only) · `context-compile` · `resolve-requirements` (now has the ledger) ·
   `product-genome` (CONVENTIONS.md as an un-versioned genome) · `model-council`.
-- **STRONG/EXISTS:** most build/verify/operate skills (06/07/08), research-competitors, official-docs
++ **STRONG/EXISTS:** most build/verify/operate skills (06/07/08), research-competitors, official-docs
   (Context7), ask-codex, visual/security/a11y/perf reviews, skill-lint/eval, run-the-loop.
 
 ## Prioritized roadmap (audit top-5 — #1 DONE)
+
 1. ✅ **Requirement Ledger** (`bin/req.mjs`, `f7c30f0`) — the binding substrate everything else references.
 2. **Golden-Path Grower algorithm** — `bin/journey-*.mjs` (budget + split heuristic) + bind each journey to
    `requirement_ids`; coverage dashboard ("% requirements with ≥1 golden-path"). Plugs straight into #1.
@@ -71,35 +77,38 @@ competitor crawl, product-genome), skill evals/linter/canary, and **Phase 12 dog
 dramatically better at building production web apps") → fixtures §112/§113.
 
 ## Done so far (this session)
-- **Phase 1 Audit** — full structured gap analysis (repo shape · skill inventory · 4-subsystem status ·
+
++ **Phase 1 Audit** — full structured gap analysis (repo shape · skill inventory · 4-subsystem status ·
   §104 matrix · context-bloat + deterministic-should-be-code findings · top-5 integration recs). In the
   originating session transcript.
-- **Phase 2 Reconcile** — confirmed `_REARCH_LEDGER` is done-cleanup; this is additive greenfield.
-- **First increment** — the Requirement Ledger (`f7c30f0`).
++ **Phase 2 Reconcile** — confirmed `_REARCH_LEDGER` is done-cleanup; this is additive greenfield.
++ **First increment** — the Requirement Ledger (`f7c30f0`).
 
 ## Design-Contract subsystem (5th subsystem — from the Design-First Resolution Addendum, 55 §)
+
 Plugs into #2 (Requirement Graph) + #4 (Golden-Path Grower): **design is an executable contract**, not a
 disposable screenshot. Contract graph: `intent → requirements → Figma design → prototype flow → design
 tokens → Storybook state → source component → Playwright test → production golden path`. Build as
 skills + deterministic tooling (the projectsites monorepo carries the PRINCIPLES in
 `.claude/run-the-loop/ENGINEERING-PRINCIPLES.md § Design-first`; THIS is the runnable layer):
-- **`ask-only-what-matters`** — Intelligence Question Gate: inspect all context, ask 0-5 high-info
+
++ **`ask-only-what-matters`** — Intelligence Question Gate: inspect all context, ask 0-5 high-info
   questions, else infer → design → SHOW → let the user REACT (not interrogate). + **two-stage visual
   approval** (A: 2-3 materially-different directions → B: expand the chosen).
-- **DTCG token authority** (`bin/tokens-*.mjs`) — one token package → CSS vars / app theme / component
++ **DTCG token authority** (`bin/tokens-*.mjs`) — one token package → CSS vars / app theme / component
   lib / Figma variables / Storybook; single source, drift-detect + sync (Figma ↔ repo).
-- **Figma integration** (MCP) — auto-create the project file; editable frames/components/variables/
++ **Figma integration** (MCP) — auto-create the project file; editable frames/components/variables/
   prototype flows (never flattened screenshots); **Code Connect** (Figma component ↔ real `packages/ui`
   component so agents reuse, not rebuild).
-- **Storybook + MSW state lab** — generate stories from the contract (all states, not just happy); MSW
++ **Storybook + MSW state lab** — generate stories from the contract (all states, not just happy); MSW
   handlers defined once, reused dev/Storybook/tests/Playwright; **typed API contracts precede API impl**.
-- **Design Contract Graph** (`design-contract.jsonl`) — binds `revision↔requirementIds↔figmaFrame/flowIds↔
++ **Design Contract Graph** (`design-contract.jsonl`) — binds `revision↔requirementIds↔figmaFrame/flowIds↔
   tokenRevision↔storyIds↔componentPaths↔e2eTestIds↔goldenPathIds↔approval(draft→…→approved→changed→
   implemented)`; per-artifact approval deltas; APPROVED→CHANGED + **targeted invalidation**; Figma review
   comments = high-relevance context; prototype flow IDs (`FLOW-*`) → Playwright → golden path.
-- **Visual + semantic regression** — ONE canonical env (Browser Run), ARIA snapshots + pixel baselines,
++ **Visual + semantic regression** — ONE canonical env (Browser Run), ARIA snapshots + pixel baselines,
   three-tier vision evidence (T0 deterministic / T1 AI triage / T2 independent OpenAI+Anthropic → Claude).
-- **Three-truths reconciliation** — REQUIREMENT ↔ DESIGN ↔ RUNTIME (quality = where they agree); Figma↔code
++ **Three-truths reconciliation** — REQUIREMENT ↔ DESIGN ↔ RUNTIME (quality = where they agree); Figma↔code
   is bidirectional (code can improve the design → update Figma + the contract).
 Sequence: build after roadmap #2 (Golden-Path Grower) — prototype flows seed golden paths, and the
 contract reuses the `req.mjs` ledger's forward links (`golden_paths[]`, `routes[]`).

@@ -13,3 +13,5 @@ members:
   - rules/visualization-maps-diagrams-supervisor
   - rules/embarrassingly-easy-to-use
   - rules/nebula-waiting-experience
+  - rules/cinematic-hud-standard
+  - rules/inline-editing

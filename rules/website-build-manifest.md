@@ -126,7 +126,7 @@ The `validate-*.mjs` build-gates a rule names (and their `build_validators.ts` o
   - _SaaS / app_: `[[onboarding-and-first-run]]` · `[[notification-center]]` · `[[data-tables]]` · `[[rich-text-editor]]` · `[[file-uploads-and-storage]]` · `[[admin-dashboard]]` · `[[realtime-and-websockets]]` · `[[webhook-system]]` · `[[copilot-and-ai-features]]` · `[[chat-native-dashboard]]`
   - _Donation / commerce_: `[[payments]]` (FIRST — Stripe+Link default accept rail; Square on-request for POS/in-person only) · `[[stripe-first-donations]]` · `[[domain-provisioning]]`
 - **Completeness gate**: `[[website-completeness-checklist]]` (the flat 62-point "is it actually finished?" list — run before declaring done) · `[[build-validators-manifest]]` (the machine validators that mechanically enforce those 62 points — scaffold ALL into build_validators.ts)
-- **Final pass**: `[[supreme-polish]]`
+- **Final pass**: `[[supreme-polish]]` · `[[first-time-excellence]]` (first render = "it" factor; beat the incumbent the app replaces)
 
 ## See
 
