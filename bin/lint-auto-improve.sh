@@ -16,9 +16,15 @@
 #      .lint-history/ dir (auto-created on each pre-commit run)
 #   2. Cluster by rule-id + message pattern
 #   3. For any cluster with ≥3 hits in the window, propose a custom rule
-#   4. Use Claude API (or claude CLI if present) to draft the rule + the
-#      cross-link narrative; never auto-merge without Brian's nod
+#   4. With --auto-draft, hand the top candidate to the OpenCode + DeepSeek
+#      throughput tier to draft the rule; never auto-merge without Brian's nod
 #   5. Surface the proposal in .lint-history/proposals/<timestamp>.md
+#
+# Provider policy: this is INTERNAL dev tooling, so per rules/agent-provider-policy.md
+# (SSOT) + ADR-0057 it must NOT use the Anthropic API or an Anthropic dev key. The
+# --auto-draft rail drafts via OpenCode + DeepSeek (bin/opencode-deepseek.sh, which
+# resolves DEEPSEEK_API_KEY internally via get-secret) — a lint-fix draft is routine
+# throughput work. No Anthropic key is ever read, set, or required here.
 #
 # Per rules/lint-doctrine.md § Self-improving + rules/prompt-as-training-signal.md §6.
 
@@ -113,34 +119,34 @@ DRAFT_EMITTED=0
 DRAFT_VALIDATED=0
 DRAFT_PATH=""
 
-# --- 3.5. Auto-draft via Claude API (opt-in) -------------------------------
+# --- 3.5. Auto-draft via OpenCode + DeepSeek throughput tier (opt-in) ------
+# Per rules/agent-provider-policy.md (SSOT) + ADR-0057: this internal dev tool
+# must NOT use the Anthropic API. A lint-fix draft is routine throughput work, so
+# it runs on the DeepSeek tier via bin/opencode-deepseek.sh (which resolves
+# DEEPSEEK_API_KEY internally via get-secret — no key is handled here). The rail
+# prints plain text to stdout (run --pure), so there is no JSON response to parse.
 if [ "$AUTO_DRAFT" = "1" ]; then
-  emdashSection "Auto-drafting semgrep rule via Claude API"
-  if [ -z "${ANTHROPIC_API_KEY:-}" ]; then
-    emdashLog "!" "ANTHROPIC_API_KEY not set — skipping auto-draft"
-  elif ! command -v curl >/dev/null 2>&1; then
-    emdashLog "!" "curl not available — skipping auto-draft"
+  emdashSection "Auto-drafting semgrep rule via OpenCode + DeepSeek"
+  DEEPSEEK_RAIL="$SKILLS_ROOT/bin/opencode-deepseek.sh"
+  MODEL="deepseek/deepseek-chat"
+  # Graceful degradation: if the rail launcher is missing, or opencode itself is
+  # not installed (the launcher exits 127), skip cleanly — never hard-fail the run.
+  if [ ! -x "$DEEPSEEK_RAIL" ]; then
+    emdashLog "!" "auto-draft unavailable — install the OpenCode DeepSeek tier (bin/opencode-deepseek.sh missing)"
+  elif ! command -v opencode >/dev/null 2>&1; then
+    emdashLog "!" "auto-draft unavailable — install the OpenCode DeepSeek tier (opencode not on PATH)"
   else
-    # Pick model per opus-quota-fallback.md — Opus default, Sonnet fallback on quota
-    MODEL="claude-opus-4-7"
-    if [ -f "$HOME/.claude/.opus-disabled" ] || [ "${CLAUDE_OPUS_DISABLED:-}" = "true" ]; then
-      MODEL="claude-sonnet-4-6"
-      emdashLog "i" "Opus quota signal active → falling back to $MODEL"
-    fi
-
     TOP_RULE=$(echo "$CLUSTERED" | awk 'NR==1{print $NF}')
     DRAFT_FILE="$PROPOSAL_DIR/draft-$TS.yml"
     PROMPT="Draft a semgrep YAML rule that catches '$TOP_RULE' violations. Use languages: [generic] for cross-file patterns or specific language otherwise. Include a 'paths.include' filter and a clear 'message' citing the owning rule in ~/.agentskills/rules/. Output ONLY the YAML, no preamble."
-    # shellcheck disable=SC2016
-    BODY=$(printf '{"model":"%s","max_tokens":1024,"messages":[{"role":"user","content":"%s"}]}' \
-      "$MODEL" "$(echo "$PROMPT" | sed 's/"/\\"/g')")
-    RESPONSE=$(curl -sf https://api.anthropic.com/v1/messages \
-      -H "x-api-key: $ANTHROPIC_API_KEY" \
-      -H "anthropic-version: 2023-06-01" \
-      -H "content-type: application/json" \
-      -d "$BODY" 2>&1 || echo "ERROR")
-    if [ "$RESPONSE" = "ERROR" ] || ! echo "$RESPONSE" | grep -q '"content"'; then
-      emdashLog "!" "Claude API call failed — leaving proposal for manual completion"
+    # run --pure prints the model's answer as plain text to stdout (no JSON envelope).
+    # Guard with `set +e` so a non-zero rail exit degrades gracefully under `set -e`.
+    set +e
+    RESPONSE=$("$DEEPSEEK_RAIL" run --pure -m "$MODEL" "$PROMPT" 2>/dev/null)
+    RAIL_RC=$?
+    set -e
+    if [ "$RAIL_RC" != "0" ] || [ -z "$RESPONSE" ]; then
+      emdashLog "!" "DeepSeek draft call failed (rc=$RAIL_RC) — leaving proposal for manual completion"
     else
       # Write frontmatter header documenting model/timestamp/pattern for trend tracking
       {
@@ -151,8 +157,8 @@ if [ "$AUTO_DRAFT" = "1" ]; then
         printf '# project: %s\n' "$PROJECT"
         printf '# review-before-merge: true\n'
         printf '\n'
-        echo "$RESPONSE" | python3 -c "import sys,json; print(json.load(sys.stdin)['content'][0]['text'])"
-      } >"$DRAFT_FILE" 2>/dev/null
+        printf '%s\n' "$RESPONSE"
+      } >"$DRAFT_FILE"
       if [ -s "$DRAFT_FILE" ]; then
         emdashLog "✓" "Draft written ($MODEL): $DRAFT_FILE"
         DRAFT_EMITTED=1
@@ -172,7 +178,7 @@ if [ "$AUTO_DRAFT" = "1" ]; then
         fi
         emdashLog "i" "Review + move to: $SEMGREP_CUSTOM_DIR/<topic>.yml"
       else
-        emdashLog "!" "Empty draft — Claude response parse failed"
+        emdashLog "!" "Empty draft — DeepSeek returned no content"
       fi
     fi
   fi
@@ -182,7 +188,7 @@ fi
 emdashSection "Done"
 emdashLog "i" "Review: $PROPOSAL_FILE"
 if [ "$AUTO_DRAFT" = "0" ]; then
-  emdashLog "i" "Auto-draft: add --auto-draft flag w/ ANTHROPIC_API_KEY set"
+  emdashLog "i" "Auto-draft: add --auto-draft flag (drafts via OpenCode + DeepSeek)"
 fi
 emdashLog "i" "Codify a rule: copy proposal to AI prompt, generate YAML, drop into:"
 emdashLog "  " "$SEMGREP_CUSTOM_DIR/<topic>.yml"
