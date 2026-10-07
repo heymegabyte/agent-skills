@@ -1,12 +1,23 @@
 ---
 name: "MCP and Cloud Integrations"
 description: "Connect all available MCP servers, cloud APIs, and SaaS integrations. Auto-discover secrets from shared pool, Coolify, and local configs. Integrate Slack, Discord, Twilio, Zapier, Cal.com, and all de-facto standard services. Promote aggressive use of AI APIs (OpenAI, Workers AI, Ideogram) and multimedia APIs for rich product experiences."
-updated: "2026-04-23"
+updated: "2026-10-06"
 ---
 
 # MCP and Cloud Integrations
 
 ## MCP Server Discovery
+
+### Cloudflare control-plane default
+
+- Install official `cloudflare/skills` for Claude Code/Codex/OpenCode.
+- Connect `https://mcp.cloudflare.com/mcp` directly.
+- Run `node bin/audit-cloudflare-mcp-fleet.mjs` to inventory project/global MCP configs without printing secret values.
+- Remote HTTP MCPs used across projects are candidates for Cloudflare MCP Server Portal; local stdio/localhost tools stay local unless deliberately re-hosted.
+- Keep the Cloudflare API Code Mode MCP direct to avoid nested Code Mode.
+- Large portal: Code Mode `default_on`; small predictable server: direct tools are fine.
+- See `[[cloudflare-agent-fabric]]`.
+
 
 ### Scan Locations
 
@@ -33,7 +44,7 @@ updated: "2026-04-23"
 | 11 | Google (Gmail, Cal, Drive) | Email, scheduling, files | Ask first | Free |
 | 12 | Composio | 300+ connectors | Ask first | Free tier |
 
-**Key insight** — Cloudflare MCP uses 2 tools + <1K tokens for 2,500+ endpoints (Code Mode).
+**Key insight** — Cloudflare API MCP uses two Code Mode tools with progressive discovery across 2,500+ operations instead of loading the whole schema.
 
 ### MCP Config Commands
 
@@ -76,6 +87,17 @@ claude mcp add google-workspace -- npx -y @taylorwilsdon/google_workspace_mcp
 - PostHog → `13-observability`
 - Computer Use → `07-quality`
 - Plane → `03-planning`
+
+## Cloudflare MCP Server Portal policy
+
+Use a portal when remote MCPs benefit from one Access front door, OAuth centralization, tool allowlists, tool-call analytics, namespacing, Gateway routing/DLP, server toggles, or Code Mode compression.
+
+Do not portal-wrap:
+- stdio/local MCPs unless intentionally re-hosted as authenticated Streamable HTTP;
+- the direct Cloudflare API Code Mode server;
+- an upstream forced into Code Mode when the portal would also force Code Mode.
+
+Autonomous M2M agents use service-token/Access policy only when the server's authorization model permits it. Per-user OAuth remains per-user.
 
 ## Secret Hygiene
 
