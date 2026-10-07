@@ -1,69 +1,58 @@
 ---
-last_reviewed: 2026-06-29
+last_reviewed: 2026-10-06
 superseded_by: null
 name: "sandbox-execution"
 priority: 3
 pack: "ai"
 triggers:
   - "sandbox"
+  - "runner"
   - "untrusted code"
+  - "ubuntu desktop"
 paths:
   - "concern:ai-features"
 ---
 
-# Sandbox Execution
+# Isolated Execution / Runner Selection
 
-AI is foundational to how code is authored on this platform. That's exactly why AI-authored builds get the same standard CI/CD discipline every other build artifact gets: built, tested, previewed, validated in an isolated sandbox BEFORE promotion to the real app runtime. This is normal pipeline hygiene — not skepticism — applied to a high-volume artifact source. Vehicle: **Cloudflare Sandboxes (GA 2026-04)** — persistent isolated envs with credential injection, PTY, snapshot recovery, active-CPU pricing.
+Isolation is build hygiene, but Cloudflare Sandbox is **not** the default coding-agent runtime.
 
-## The mandate
+## Runtime order
 
-- AI-authored code follows the same build → test → preview → promote pipeline as any other build artifact
-- The main app runtime + publish pipeline only ever receive PROMOTED, validated artifacts (true for every build, AI-authored or otherwise)
-- Promotion is one-directional: sandbox → validate → promote. Never the reverse.
-- Skipping the sandbox = shipping an unvalidated build to prod = build fail (same rule as any other CI/CD bypass)
+1. Local worktree — normal edits, lint, tests, small builds.
+2. `@cloudflare/computer` — lightweight Cloudflare-hosted agent filesystem/file-editing/Git/shell work where its abstraction fits. It is not a GUI desktop.
+3. Daytona — preferred ephemeral full-Linux coding workspace.
+4. Coolify MCP-managed runner — persistent/self-hosted Linux and Docker-heavy integration work.
+5. GitHub runner on the Ubuntu Desktop VM on Proxmox — CI/scheduled/native/desktop-adjacent work.
+6. Another explicitly configured runner only when the above cannot satisfy the task.
 
-## Sandbox capabilities
+Do not route ordinary coding-agent jobs to Cloudflare Sandbox merely because Cloudflare offers it.
 
-- Create / resume an isolated session
-- Read / write files
-- Apply patches (diff-based edits)
-- Run arbitrary commands (build, install, lint)
-- Start a preview server
-- Stream logs + file-change events back to the caller
-- Run tests (unit + E2E)
-- Produce artifacts (build output, screenshots, test reports)
-- Promote ONLY validated artifacts to the real runtime / publish pipeline
+## Release flow
 
-## Provider interface
-
-```ts
-export interface WebsiteWorkspaceProvider {
-  readFile(path: string): Promise<string>;
-  writeFile(path: string, contents: string): Promise<void>;
-  listFiles(dir?: string): Promise<string[]>;
-  applyPatch(patch: string): Promise<void>;
-  runCommand?(cmd: string, args?: string[]): Promise<{ exitCode: number; stdout: string; stderr: string }>;
-  startPreview?(): Promise<{ url: string; stop: () => Promise<void> }>;
-}
+```
+edit → build/test in worktree/runner → deploy production → Browser Run production verification
 ```
 
-- `standard-editor-workspace.provider.ts` — in-app editor surface; human-saved edits go straight to the working tree; `runCommand`/`startPreview` may be no-ops
-- `sandbox-workspace.provider.ts` — isolated container; ALL methods implemented; the ONLY provider that runs untested build code (AI-authored OR human-authored) before promotion
+No Worker Preview and no per-PR preview environment.
 
-## Cloudflare-native fit
+## Remote runner requirements
 
-- **Isolation** — Containers / Durable Objects (one DO per sandbox session, hard process boundary)
-- **Artifacts** — R2 (build output, screenshots, reports keyed by session + build id)
-- **Session + build state** — D1 (durable rows) or the session DO's SQLite
-- Apply `god-tier-engineering` pattern #8 to the sandbox DO: auto-restart ≤3/min + idle-hibernate 30m + 1000-line ring-buffer logs
-- Reference: projectsites.dev uses a container build orchestrator as the sandbox; the worker never runs generated code directly
+- isolated workspace/worktree;
+- reproducible checkout;
+- scoped credentials only;
+- build/test/Playwright support;
+- logs + artifacts;
+- cleanup/reset;
+- deterministic commit/artifact handoff;
+- no customer prod data copied in unless explicitly required and scoped.
 
-## Promotion gate
+## Desktop boundary
 
-- Build green + tests green + preview renders clean → artifact is eligible
-- Promotion copies the validated R2 artifact to the live path; the generated SOURCE never executes outside the sandbox
-- A failed build / red test / dirty preview blocks promotion — fix-forward inside the sandbox, re-validate
+Real Ubuntu GUI/browser-login/native desktop work goes to the Ubuntu Desktop VM on Proxmox via its approved runner/control path. Never pretend `@cloudflare/computer` is a GUI desktop.
 
-## Reframe
+## @cloudflare/computer
 
-Earlier draft framed sandboxes as a guard against "untrusted AI code." Reframed: AI is permanent + foundational; sandboxes are how every build artifact gets validated before promotion — the discipline applies to all build outputs, AI-authored is just the dominant one. Mechanics unchanged.
+Use as a Cloudflare-hosted agent workspace abstraction for files, Git and execution near Workers. Adapter-isolate because it is preview technology. Heavy native workloads and desktop interaction stay on the external runner fleet.
+
+Reference: https://developers.cloudflare.com/changelog/post/2026-08-03-cloudflare-computer/
