@@ -1,5 +1,5 @@
 ---
-last_reviewed: 2026-06-29
+last_reviewed: 2026-10-06
 superseded_by: null
 name: "ai-agent-supervisor"
 priority: 3
@@ -31,13 +31,17 @@ AI is foundational to the platform per `ai-permanence` — never a bolt-on, neve
 - **Ollama** / **vLLM** — local / self-hosted inference (prefer where practical)
 - **transformers.js** — browser/JS-native ML where practical
 - **LangChain.js** / **LlamaIndex.js** — ONLY where they reduce complexity (not by default)
-- **Cloudflare AI Gateway** / **Vectorize** / **Sandbox SDK** — behind adapters (`AiPort`/`VectorPort`) per `cloudflare-hostable-supervisor`
+- **Cloudflare AI Gateway Dynamic Routes** — product-runtime provider/model policy behind `AiPort`
+- **Cloudflare AI Search** — managed retrieval for durable unstructured project/skill/research knowledge per `[[ai-search-knowledge-fabric]]`
+- **Vectorize** — lower-level vector primitive when direct vector/index control is required
+- **Code Mode + MCP Portal** — progressive discovery/composition for large tool catalogs per `[[cloudflare-agent-fabric]]`
+- **@cloudflare/computer** — lightweight hosted agent filesystem/shell/Git workspace where appropriate; heavy execution uses the approved external runner fleet
 
 ## Rules
 
 - **Validate every AI output with Zod** per `contract-first-ai` — structured output / tool call, parse-then-type, repair-or-reject, never raw-through
 - **Every AI feature has a deterministic fallback** — model down/slow/refusing → the workflow still completes (cached result, manual path, or graceful empty state)
-- **Every AI action is logged + traced** — `ai_trace_id` flows to `observability-ops-supervisor`; prompt template version + model config logged safely (no secrets)
+- **Every AI action is logged + traced** — `ai_trace_id` flows to `observability-ops-supervisor`; prompt template version + Dynamic Route name/version + model config logged safely (no secrets). Long-running Worker surfaces are Tail-Worker-friendly.
 - **Prefer local/self-hostable** AI where practical (Ollama/vLLM/transformers.js) per cost + privacy
 - **Tenant-scoped + permission-aware + flag-gated** — every AI feature behind a server flag + killswitch + budget/timeout/truncation per `feature-flags`
 - **Evals** for AI-heavy behavior per `evals` — generation quality is tracked like any load-bearing layer
