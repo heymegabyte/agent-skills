@@ -178,6 +178,7 @@ def run(repository, output=None, message=None, timeout=3600):
 Global run ID: {run_id}. Work ONLY in {work}. This is an isolated worktree based on main.
 Read {ROOT}/control-plane/FLEET.md and the machine profile. GitHub is the scheduler and ledger.
 Inspect git state, prior GitHub Actions history, existing task/context files, tests and commits before deciding work.
+Inspect git worktree list and prior failed receipts under {AI}/logs for this project. Recover verified work retained by earlier failures from the actual files/commits when appropriate; do not duplicate or discard it. Do not treat a prior success report as evidence of publication unless main contains its commit.
 Execute exactly one /run-the-loop iteration. If .claude/commands/run-the-loop.md exists, follow it; otherwise read {ROOT}/commands/run-the-loop.md.
 Follow repo-local requirements. Main is normal: commit verified changes; leave publication to the outer runner, which fast-forwards main. Do not force-push, reset unrelated state or publish the fleet control website.
 Use cr for official Claude/Codex subscription compute; use {ROOT}/bin/opencode-deepseek.sh for direct DeepSeek throughput when its key is available. Never use local Cloudflare AI Gateway or paid OpenAI/Anthropic API fallbacks. No Browser Harness.
