@@ -29,17 +29,17 @@
 | Node / npm | v24.21.0 / 11.19.0 through Volta |
 | Codex | Installed at ~/.volta/bin/codex; official login status reports ChatGPT authentication |
 | GitHub connector | Authenticated as ProfessorManhattan; heymegabyte repository access confirmed |
-| gh | Installed user-locally (v2.102.0); local OAuth login pending |
+| gh | Installed user-locally (v2.102.0); OAuth authenticated as ProfessorManhattan |
 | Claude Code | Official native CLI v2.1.292; three isolated profiles prepared, login pending |
 | OpenClaw | Official v2026.9.8; primary authenticated loopback Gateway running |
 | OpenCode | v1.18.35; direct DeepSeek configured, key missing and execution unverified |
 | Claw Router | dennisonbertram/claw-router; existing official Codex profile registered in place, usage-aware policy |
 | get-secret | Protected local fallback installed; existing encrypted broker was not present |
 | Project checkouts | Persistent checkouts for projectsites.dev, megabyte.space, deskl.ink; gitl.ink needs local GitHub login |
-| Runner service state | Three independent official runner directories prepared; registration awaits local GitHub OAuth |
+| Runner service state | Three independently registered systemd runner services; online in GitHub |
 | Local network | Verified GitHub/npm access after full-access relaunch |
 | Secret environment | GH_TOKEN, GITHUB_TOKEN, DEEPSEEK_API_KEY and Cloudflare credentials absent |
-| Shared skills default branch | main (fleet implementation branch; default-branch migration awaits gh OAuth) |
+| Shared skills default branch | main (fleet implementation branch; fleet implementation branch) |
 
 Do not confuse requested capabilities with installed capabilities. Gateway health and OpenClaw → Claw Router → official Codex execution passed (reply OK). Runner registration, Claude login, account headroom, DeepSeek execution and deployments are not yet verified.
 
@@ -51,7 +51,7 @@ Do not confuse requested capabilities with installed capabilities. Gateway healt
 - heymegabyte/deskl.ink (main)
 - bricklabor.com: unresolved in accessible repository discovery; do not guess an owner.
 
-No project scheduling has yet been enabled. OpenClaw and authenticated local fleet UI run as persistent user services; user linger is enabled.
+Project Run the Loop workflows are active in GitHub. OpenClaw and authenticated local fleet UI run as persistent user services; user linger is enabled.
 
 ## Persistent layout and operations
 
@@ -106,3 +106,7 @@ Five integration checks passed: safe main publication, owner checkout preservati
 - `ubuntu-machine-backup.timer`: active hourly, commits changed allowlisted non-secret snapshots. Remote push remains disabled until private GitHub registration. Credentials/browser data/project files excluded.
 - Cloudflare provisioner verifies a concrete owner-email Access allow policy before Tunnel/DNS publication. Three tests passed for ordering, fail-closed policy handling and DNS preservation. No Cloudflare resources were created without authentication.
 - Finish interactive account access with `python3 ~/ai/repos/ubuntu.megabyte.space/scripts/finish-setup.py`.
+
+## Runner registration verified (2026-10-07)
+
+Three organization runners are online: ubuntu-proxmox-primary-01, -02 and -03. Independently persistent user services provide three simultaneous job slots. The runner group is restricted to approved project repositories. Jobs may run while the owner uses the desktop. Actions jobs and Gateway-spawned native CLI processes share a six-CPU budget, MemoryHigh=8G and MemoryMax=10G; Gateway children use lower scheduling priority. Desktop processes and interactive Codex remain outside that fleet budget. Cloudflare desktop exposure is deferred; deskl.ink will be configured separately later.

@@ -52,7 +52,12 @@ else:
     raise RuntimeError('Official release did not provide a runner archive digest; verify archive before registration')
 units = HOME / '.config/systemd/user'
 units.mkdir(parents=True, exist_ok=True)
-(units / 'agent-fleet.slice').write_text('[Unit]\nDescription=Persistent AI fleet resource budget\n\n[Slice]\nCPUWeight=75\nMemoryHigh=12G\nMemoryMax=13G\n')
+(units / 'agent-fleet.slice').write_text('[Unit]\nDescription=Persistent AI fleet resource budget\n\n[Slice]\nCPUWeight=50\nCPUQuota=600%\nMemoryHigh=8G\nMemoryMax=10G\n')
+# Gateway-spawned native CLI work must share the budget with Actions jobs.
+if (units / 'openclaw-gateway.service').exists():
+    override = units / 'openclaw-gateway.service.d'
+    override.mkdir(exist_ok=True)
+    (override / 'fleet-resources.conf').write_text('[Service]\nSlice=agent-fleet.slice\nCPUWeight=50\nNice=5\n')
 labels = ','.join(l for l in configuration['runnerLabels'] if l not in ('self-hosted', 'linux'))
 environment = os.environ.copy()
 environment['PATH'] = ':'.join([str(HOME / '.local/bin'), str(AI / 'tools/bin'), str(HOME / '.volta/bin'), '/usr/local/bin', '/usr/bin', '/bin'])
