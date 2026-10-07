@@ -23,6 +23,7 @@ triggers:
 - **Core Web Vitals — house cinematic targets per `_kernel/standards.md#cwv`** (LCP ≤2.0s · CLS ≤0.05 · INP ≤100ms; INP >200ms = fail). Phase-debug: LCP 4-phase (TTFB→load-delay→load-time→render-delay), INP 3-phase (input-delay→processing→presentation).
 - Worker CPU ≤ 50ms p99 as OUR budget (plan limits: free 10ms CPU; paid default 30s CPU, config to 5 min; wall unlimited while connected)
 - Debug INP via **Long Animation Frames API** (`PerformanceObserver` type:`long-animation-frame`, web-vitals v6 — `longAnimationFrameEntries` since v4)
+- **In CI E2E, guard CLS (deterministic) but NOT LCP/INP (timing-dependent → flaky); measure LCP/INP out-of-band.** CLS is layout-stability (not network/CPU-dependent), so a `CLS < 0.05` assertion is stable across runners + catches the real regressions (an `<img>` without width/height, late above-the-fold content, a font swap that reflows). An `LCP < 2s` / `INP` assertion flakes on a slow runner — measure those in a one-off perf script. Measure CLS via `new PerformanceObserver({type:'layout-shift', buffered:true})` set up in `addInitScript` BEFORE navigation, then SCROLL the full page to trigger reveals (`getEntriesByType('largest-contentful-paint'|'layout-shift')` queried late misses buffered entries → returns null/0). Ref: agent.megabyte.space 2026-10-07 — prod LCP 648ms (hero H1), CLS 0.003; shipped a CLS-only CI guard, measured LCP/INP out-of-band.
 - SPA per-route CWV: **Soft Navigations API** (`softNavs:true`, web-vitals v6 — since v4)
 
 ## Budgets
