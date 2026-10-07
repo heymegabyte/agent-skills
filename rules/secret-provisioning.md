@@ -1,5 +1,5 @@
 ---
-last_reviewed: 2026-06-29
+last_reviewed: 2026-10-06
 superseded_by: null
 name: "secret-provisioning"
 priority: 2
@@ -21,10 +21,27 @@ paths:
 
 Auto-fetch every required secret from `get-secret` and push it to the destination platform before running any deploy; never prompt the user to do it manually.
 
+## 2026-10-06 Cloudflare Secrets Store override — highest precedence
+
+For Cloudflare Workers, older instructions below that push a broad/common secret set directly with `wrangler secret put` are superseded.
+
+1. Centralize actual project secrets in account Secrets Store programmatically. Values still originate from the source-exhaustion flow (`get-secret` first).
+2. Bind the **minimum necessary subset** to each Worker. Determine requirements from Worker config, typed `Env`, and actual `env.KEY` source references. Never spray a COMMON_SECRETS list into every Worker.
+3. Non-secret config stays normal config: IDs, public URLs, feature flags, regions and other public values remain vars unless a product specifically requires secrecy.
+4. Never bind control-plane credentials into application Workers: Cloudflare account tokens/global keys, deploy/admin tokens, runner-admin credentials, etc.
+5. Scope Secrets Store entries only to services that require them (`workers`, `ai_gateway`, etc.).
+6. `get-secret` remains the encrypted recovery/source mirror; Secrets Store is the Cloudflare distribution layer.
+7. Cloudflare secret values are write-only: compare names/metadata/scopes, not values.
+8. Production Secrets Store values are not an implicit local-dev secret source; use the existing local secret flow for development.
+
+Preferred Worker config uses Secrets Store bindings. Read the binding only at point of use.
+
+Reference: https://developers.cloudflare.com/secrets-store/integrations/workers/
+
 ## Core mandate
 
 - Every deploy that depends on a secret MUST auto-fetch from `/Users/Apple/.local/bin/get-secret` and push to the destination BEFORE running the deploy command
-- Destinations: CF Pages `npx wrangler pages secret put` | CF Workers `npx wrangler secret put` | Vercel `vercel env add` | Fly `flyctl secrets set` | Render dashboard API | etc.
+- Destinations: CF Workers → **Secrets Store + least-privilege bindings**; other platforms use their native secret manager. Direct `wrangler secret put` is a fallback/legacy path.
 - NEVER recommend the user run `wrangler pages secret put` themselves — that is friction for zero gain when the secret is right there in get-secret
 
 ## Source-exhaustion order — NEVER ask the human until ALL of these are dry (Brian, 2026-06-27)
@@ -77,7 +94,7 @@ cd "$(chezmoi source-path)/home/.chezmoitemplates/secrets" \
 - Reference incident (2026-05-26, projectsites.dev): claimed `HUBSPOT_CLIENT_ID/SECRET` and `MAILCHIMP_CLIENT_ID/SECRET` were missing — actually live as `_OAUTH_*` variants. HubSpot code reads both; Mailchimp code reads only the bare name and missed its own live OAuth-prefixed secret (separate code-bug surfaced by the audit, not a provisioning gap)
 - When code reads only the bare name but the live secret is `_OAUTH_*`-prefixed, that's a CODE BUG (add the fallback chain), NOT a missing secret. Surface as a one-line code fix, not as a Computer Use task
 
-## Canonical secret list (try every one on every CF/Vercel/Fly deploy — silently skip missing)
+## Known secret inventory (discovery catalog ONLY — never bind all of these to every Worker)
 
 - `AWS_SES_ACCESS_KEY_ID` + `AWS_SES_SECRET_ACCESS_KEY` + `AWS_SES_REGION` + `SES_FROM_EMAIL` (Amazon SES — replaced Resend 2026-06-19)
 - `ANTHROPIC_API_KEY` — ⚠️ **PRODUCT-runtime ONLY** (a Worker serving customer-facing Anthropic features), NOT internal orchestration. Internal dev/research/agents use the `claude` subscription CLI, never this key. SSOT: `rules/agent-provider-policy.md`.
@@ -116,6 +133,17 @@ cd "$(chezmoi source-path)/home/.chezmoitemplates/secrets" \
 3. Both stale → ask user to `! npx wrangler login` per `verification-loop` auth fallback chain
 
 NEVER silently skip the deploy step because creds were missing — surface it as a blocker the same turn.
+
+## Per-Worker least-privilege binding algorithm
+
+For each Worker:
+1. parse `wrangler.*`, typed `Env`, and `env.KEY` source references;
+2. classify secret vs ordinary config;
+3. resolve aliases to one canonical secret name;
+4. ensure the canonical secret exists in Secrets Store with only required service scopes;
+5. bind only those names to that Worker;
+6. fail CI if code reads an undeclared secret;
+7. fail CI if the Worker binds a management credential or unused secret.
 
 ## Reusable helper pattern (every project)
 
