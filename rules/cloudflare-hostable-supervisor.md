@@ -1,5 +1,5 @@
 ---
-last_reviewed: 2026-06-29
+last_reviewed: 2026-10-06
 superseded_by: null
 name: "cloudflare-hostable-supervisor"
 priority: 2
@@ -12,28 +12,30 @@ paths:
 
 # Cloudflare-Hostable Supervisor
 
-Prefer systems that run on Cloudflare (Workers/Pages/D1/R2/KV/DO/Queues/Workflows/Vectorize/AI Gateway/Sandbox) without painting the product into a corner. Cloudflare-first is the default; every non-Cloudflare dependency hides behind an adapter so local dev stays reproducible and a swap never rewrites product code.
+Prefer Cloudflare primitives for product runtime, data, AI edge, browser automation and agent capability fabric. Do not force Cloudflare into heavy engineering-compute jobs better handled by Daytona/Coolify/GitHub runners.
 
-## When this fires
+## Doctrine
 
-- Every architecture decision on a large app per `stack-selector`
-- Every new external dependency from `package-preference-registry`
-- Every "where does this run" question
+- Cloudflare-first product runtime: Workers, D1, R2, KV, DO, Queues, Hyperdrive, Vectorize, AI Gateway, AI Search, Browser Run, Workers for Platforms and Cloudflare One.
+- Cloudflare Agents SDK for product agents that benefit from durable identity/state/connections. It is a runtime/framework, not Claude Code/Codex.
+- Official knowledge/control: `cloudflare/skills` upstream + direct Cloudflare API MCP (`https://mcp.cloudflare.com/mcp`).
+- `@cloudflare/computer` for lightweight Cloudflare-hosted agent filesystem/shell/Git work; adapter-isolate because it is preview.
+- Heavy compute: Daytona → Coolify MCP runner → GitHub runner on Ubuntu Desktop VM/Proxmox. Cloudflare Sandbox is not the coding-agent default.
+- Bindings before REST inside Workers.
+- AI Gateway Dynamic Routes own product-runtime model policy.
+- AI Search owns durable unstructured knowledge retrieval.
+- MCP Server Portal centralizes appropriate remote MCP fleets.
+- Browser Run owns Cloudflare-native headless/CDP production verification.
+- Tail Workers are the preferred sidecar observability shape for long-running/multi-step Worker execution.
+- No Worker Previews; verify the production link.
 
-## The doctrine
-
-- **Cloudflare-first** — reach for the CF primitive before a third party per `cloudflare-lock-in-is-leverage`
-- **Agents on CF** — build stateful AI agents / chat / MCP servers on the **Cloudflare Agents SDK** (`agents`, [cloudflare/agents](https://github.com/cloudflare/agents)); start new agent apps from **[cloudflare/agents-starter](https://github.com/cloudflare/agents-starter)**. Preferred per `package-preference-registry` § AI / agents.
-- **Containerized apps on CF** — run real containers (existing servers, non-JS runtimes, heavy deps, sandboxes) on **Cloudflare Containers** (`@cloudflare/containers`, [cloudflare/containers](https://github.com/cloudflare/containers)) via the DO-backed `Container` class — before any external container host.
-- **Adapter-isolated** — Neon/Upstash/Stripe/etc. live behind a typed port; product code imports the port, never the vendor SDK directly
-- **Reproducible local** — every adapter has a local/dev impl (Miniflare, local SQLite, in-memory) so `nx serve` works offline
-- **Documented portability** — each adapter's README states: portable vs CF-specific, swap cost, local impl
-
-## Adapter ports (canonical)
+## Adapter ports
 
 - `StoragePort` — R2 | S3 | local-fs
 - `KvPort` — Workers KV | Upstash | in-memory
-- `SqlPort` — D1 | Neon (via Hyperdrive) | local SQLite
+- `SqlPort` — D1 | Neon via Hyperdrive | local SQLite
 - `QueuePort` — CF Queues | Upstash QStash | in-memory
-- `AiPort` — Workers AI | AI Gateway → any provider | local Ollama
-- `VectorPort` — Vectorize | pgvector (Neon) | in-memory
+- `AiPort` — AI Gateway/Workers AI | provider | local model
+- `VectorPort` — AI Search/Vectorize where appropriate | pgvector | in-memory
+- `ComputerPort` — `@cloudflare/computer` | Daytona/Coolify/runner adapter
+- `BrowserPort` — Browser Run/CDP | Browserbase/Stagehand | Playwright
