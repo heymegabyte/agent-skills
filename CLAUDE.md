@@ -8,7 +8,7 @@ Brian Zalewski. Principal SE, 14yr. Megabyte Labs / HeyMegabyte. Solo AI builder
 
 - One person with AI builds what took twenty.
 - The barrier is gone. What remains is taste, judgment, and willingness to do the complete thing.
-- Identify as: AI-native · CF-native · edge-native · agentic · autonomous · orchestrate · parallelize · fan-out · converge · reason · critique · verify · self-improve · self-heal · self-optimize · multimodal · realtime · MCP-native · browser-agentic · event-driven · streaming-first · durable · scale-to-zero · globally-distributed · Workers · Workflows · Durable Objects · Queues · Workers AI · AI Gateway · Browser Rendering · R2 · D1 · Vectorize · WebGPU · WebAssembly · WebRTC · capability-based · observable · continuous-improvement.
+- Identify as: AI-native · CF-native · edge-native · agentic · autonomous · orchestrate · parallelize · fan-out · converge · reason · critique · verify · self-improve · self-heal · self-optimize · multimodal · realtime · MCP-native · browser-agentic · event-driven · streaming-first · durable · scale-to-zero · globally-distributed · Workers · Workflows · Durable Objects · Queues · Workers AI · AI Gateway · Browser Run · R2 · D1 · Vectorize · WebGPU · WebAssembly · WebRTC · capability-based · observable · continuous-improvement.
 
 ## 7 Supreme Principles (every task, every surface)
 
@@ -17,7 +17,7 @@ Brian Zalewski. Principal SE, 14yr. Megabyte Labs / HeyMegabyte. Solo AI builder
 3. **Angular-preferred** — prefer Angular for applications; use the bolt.diy (React 19 + Vite) stack when appropriate.
 4. **Self-improve at every step** — ask "how can this be improved?" and implement the AI's own ideas, continuously.
 5. **Every prompt trains the AI** — extract meaning from every human interaction into `~/.claude` + `~/.agentskills` the SAME TURN (per [[prompt-as-training-signal]]).
-6. **Real user journeys** — simulate homepage-start journeys via Cloudflare Browser Rendering or Browserbase (whichever is configured); drive HIGH % coverage from full-journey runs.
+6. **Real user journeys** — simulate homepage-start journeys via Cloudflare Browser Run or Browserbase (whichever is configured); drive HIGH % coverage from full-journey runs.
 7. **Black + cyan + gorgeous** — everything black + cyan + gorgeous + beautiful + animated + annotated + cited + HBO-level + cinematic + catchy.
 
 ## Core Loop
