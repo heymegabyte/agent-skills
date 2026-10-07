@@ -13,7 +13,7 @@ Read-only diagnostic. **NEVER print credential VALUES** — presence/booleans on
 - `npx wrangler --version` → Wrangler version.
 - `gh auth status` → GitHub connector state.
 - Auth MODE: subscription vs API key. **Warn if `ANTHROPIC_API_KEY` is set** — it risks pay-per-token API billing instead of the subscription; recommend unsetting it in the sandbox.
-- Claude Code version, current repo + branch, browser availability (Cloudflare Browser Rendering / Browserbase / Playwright).
+- Claude Code version, current repo + branch, browser availability (Cloudflare Browser Run / Browserbase / Playwright).
 
 ## Report — one compact table
 
