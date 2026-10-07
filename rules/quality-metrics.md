@@ -63,6 +63,7 @@ triggers:
 
 - HSTS
 - CSP Level 3 (strict-dynamic + per-response random nonce, never reused)
+  - **Static/mostly-static site served by a Worker — drop `script-src 'unsafe-inline'` WITHOUT per-request nonces** (nonces mean rewriting HTML every request, and `strict-dynamic` *ignores* host-source allowlists — which breaks host-based third-party scripts like the CF Web Analytics beacon). Instead: (1) **externalize** the one executable inline `<script>` to a `'self'` file (end-of-body, self-contained scripts move cleanly); (2) **JSON-LD** (`type="application/ld+json"`) blocks are DATA — exempt from `script-src`, no nonce/hash; (3) the **speculation-rules** block (`type="speculationrules"`) is allowed by the **`'inline-speculation-rules'`** keyword; (4) keep host-sources (CF beacon etc.) by NOT adding `strict-dynamic`. Result: `script-src 'self' 'inline-speculation-rules' <hosts>` — no `unsafe-inline`, no per-request work. Verify in a REAL browser: 0 CSP violations AND the externalized script's features actually run AND JSON-LD/speculation-rules/beacon all still present (don't trust the header alone — `[[verify-against-source-of-truth]]`). `style-src 'unsafe-inline'` is separate + harder (inline `<style>` + `style=` attrs + Trusted Types need refactoring `innerHTML`). Ref: agent.megabyte.space 2026-10-07.
 - Trusted Types (DOM-XSS prevention)
 - X-Content-Type-Options
 - X-Frame-Options
