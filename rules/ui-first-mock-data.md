@@ -43,6 +43,14 @@ paths:
   inline data.
 - **Demo-complete before wire-complete**: a reviewer navigates the whole surface and sees it look
   finished, on mock data, before the endpoint exists.
+- **Fixture the single-entity read, not just the list.** A list surface (`GET /:resource`) fixtured
+  alone leaves detail/sub pages firing `GET /:resource/:id` → unmatched passthrough → real 404. Add
+  the `:id` fixture (reuse the list's canonical row) the same pass — one registry line heals every
+  sibling detail route (detail / children / settings / …) at once.
+- **Close-smoke sweeps CONSOLE 4xx, not just toasts.** Detail reads often run with `{silent:true}`
+  (no toast on error), so a toast-only demo sweep reads green while the console logs a 404. A proper
+  mock-out close walks every surface headless and asserts ZERO `/api/**` 4xx + ZERO console errors +
+  the DEMO badge present — a silent passthrough 404 is the find a toast gate misses.
 - Pairs with [[first-time-excellence]] + [[gorgeous-by-default]] + the embarrassingly-easy mandate:
   mock data is how you reach "would Linear/Stripe ship this unchanged?" before the API lands.
 
