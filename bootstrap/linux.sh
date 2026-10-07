@@ -37,8 +37,12 @@ if ! git config user.email >/dev/null; then
   git config --global user.email "$(gh api user --jq '"\(.id)+\(.login)@users.noreply.github.com"')"
 fi
 shared="$HOME/ai/repos/agent-skills"
-if ! test -d "$shared/.git"; then gh repo clone heymegabyte/agent-skills "$shared"; fi
-if test -z "$(git -C "$shared" status --porcelain)"; then git -C "$shared" pull --ff-only; fi
+if ! test -d "$shared/.git"; then gh repo clone heymegabyte/agent-skills "$shared" -- --branch main; fi
+if test -z "$(git -C "$shared" status --porcelain)"; then
+  git -C "$shared" fetch origin main
+  git -C "$shared" checkout main
+  git -C "$shared" merge --ff-only origin/main
+fi
 if ! command -v codex >/dev/null; then npm install -g @openai/codex@latest; fi
 if ! codex login status >/dev/null 2>&1; then codex login; fi
 if ! command -v claude >/dev/null; then
