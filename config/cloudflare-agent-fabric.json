@@ -1,0 +1,72 @@
+{
+  "$schemaVersion": 1,
+  "gateways": [
+    {
+      "id": "megabyte-space",
+      "routes": ["fast", "standard", "premium", "vision", "bulk"]
+    },
+    {
+      "id": "projectsites-dev",
+      "routes": ["fast", "standard", "premium", "vision", "bulk"]
+    }
+  ],
+  "routeModels": {
+    "fast": {
+      "primary": { "providerEnv": "CF_ROUTE_FAST_PROVIDER", "modelEnv": "CF_ROUTE_FAST_MODEL" },
+      "fallback": { "providerEnv": "CF_ROUTE_FAST_FALLBACK_PROVIDER", "modelEnv": "CF_ROUTE_FAST_FALLBACK_MODEL" },
+      "timeoutMs": 20000,
+      "retries": 1
+    },
+    "standard": {
+      "primary": { "providerEnv": "CF_ROUTE_STANDARD_PROVIDER", "modelEnv": "CF_ROUTE_STANDARD_MODEL" },
+      "fallback": { "providerEnv": "CF_ROUTE_STANDARD_FALLBACK_PROVIDER", "modelEnv": "CF_ROUTE_STANDARD_FALLBACK_MODEL" },
+      "timeoutMs": 60000,
+      "retries": 2
+    },
+    "premium": {
+      "primary": { "providerEnv": "CF_ROUTE_PREMIUM_PROVIDER", "modelEnv": "CF_ROUTE_PREMIUM_MODEL" },
+      "fallback": { "providerEnv": "CF_ROUTE_PREMIUM_FALLBACK_PROVIDER", "modelEnv": "CF_ROUTE_PREMIUM_FALLBACK_MODEL" },
+      "timeoutMs": 120000,
+      "retries": 1
+    },
+    "vision": {
+      "primary": { "providerEnv": "CF_ROUTE_VISION_PROVIDER", "modelEnv": "CF_ROUTE_VISION_MODEL" },
+      "fallback": { "providerEnv": "CF_ROUTE_VISION_FALLBACK_PROVIDER", "modelEnv": "CF_ROUTE_VISION_FALLBACK_MODEL" },
+      "timeoutMs": 120000,
+      "retries": 1
+    },
+    "bulk": {
+      "primary": { "providerEnv": "CF_ROUTE_BULK_PROVIDER", "modelEnv": "CF_ROUTE_BULK_MODEL" },
+      "fallback": { "providerEnv": "CF_ROUTE_BULK_FALLBACK_PROVIDER", "modelEnv": "CF_ROUTE_BULK_FALLBACK_MODEL" },
+      "timeoutMs": 90000,
+      "retries": 2
+    }
+  },
+  "aiSearch": {
+    "namespace": "default",
+    "instances": [
+      "agent-skills",
+      "requirements",
+      "project-knowledge",
+      "research-corpus",
+      "deploy-evidence",
+      "incident-memory",
+      "competitive-intel",
+      "accepted-learning"
+    ],
+    "customMetadata": [
+      { "field_name": "tenant", "data_type": "text" },
+      { "field_name": "project", "data_type": "text" },
+      { "field_name": "kind", "data_type": "text" },
+      { "field_name": "version", "data_type": "text" },
+      { "field_name": "status", "data_type": "text" }
+    ]
+  },
+  "mcpPortal": {
+    "hostnameEnv": "CF_MCP_PORTAL_HOSTNAME",
+    "idEnv": "CF_MCP_PORTAL_ID",
+    "name": "Megabyte Agent MCP",
+    "codeMode": "default_on",
+    "secureWebGateway": true
+  }
+}
