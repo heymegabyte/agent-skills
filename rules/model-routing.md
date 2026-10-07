@@ -164,3 +164,27 @@ Standing routing policy for APPLICATION LLM calls + agent build pipelines — a 
 Hierarchical compounds gains over flat fanout. Sub-agent prompts 100–300 words — beyond that you're cloning context, not specializing.
 
 Spawned specialists for batch test/feature work run on the standing `CLAUDE_CODE_SUBAGENT_MODEL=claude-sonnet-4-6` default per `parallel-subagent-economy` — Opus orchestrates, Sonnet builds. Opus-pinned reviewers (architect/security/visual-qa/meta-orchestrator) override that default with an explicit `model: opus` on the spawn; the call-level model param takes precedence over the env default.
+
+
+## Cloudflare AI Gateway Dynamic Routes (product runtime)
+
+Applies to customer/product API traffic, not internal subscription-CLI orchestration.
+
+Keep route intent aligned across `megabyte-space` and `projectsites-dev`:
+- `dynamic/fast`
+- `dynamic/standard`
+- `dynamic/premium`
+- `dynamic/vision`
+- `dynamic/bulk`
+
+The application sends routing metadata; the Dynamic Route owns provider/model choice, conditions, percentage rollout, rate/budget limits, per-model timeouts/retries and fallback edges.
+
+Suggested metadata: `task_type`, `importance`, `tenant_or_project`, `budget_class`, `capability`.
+
+Prefer a versioned route change over an application redeploy when only model policy changes. Log route name/version and routing reason with the AI trace.
+
+Protocol constraint: Dynamic Routes currently accept OpenAI Chat Completions-shaped requests. Anthropic Messages-format traffic needs a compatible adapter/path instead.
+
+Claude Code/Codex/OpenCode subscription-authenticated internal work remains governed by `[[agent-provider-policy]]`, not product API routing.
+
+Reference: https://developers.cloudflare.com/ai-gateway/features/dynamic-routing/
