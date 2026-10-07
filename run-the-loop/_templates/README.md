@@ -94,14 +94,7 @@
 
 ## Standing invariants
 
-- **Cadence: THIS Claude Code session's harness cron (interim, Brian 2026-10-01 pm).**
-  Job `589089ab` @ `4,19,34,49` fires `/run-the-loop` INTO the open interactive session when
-  idle — visible, zero local daemon, zero new auth. NO launchd/plist/cron on the Mac (removed:
-  it fired invisibly + locally, both rejected). Limitation accepted: only while this session is
-  open + the Mac awake. **DOGFOOD PLAN: migrate to ProjectSites' OWN agent runner once the
-  Browser Operating Layer / autonomous-operations rail ships** (`./BROWSER-OPERATING-LAYER.md`) —
-  "we'll dogfood our own service once it's ready." Cloud interim (GHA `run-the-loop.yml` OR a
-  CF Cron-Triggered container) stays dark until `CLAUDE_CODE_OAUTH_TOKEN` is minted.
+- **Cadence: GitHub per-repository workflows on the primary persistent Ubuntu VM.** `2,17,32,47 * * * *` requests one loop for each enabled repo. A small local workflow calls the SHA-pinned reusable implementation in `heymegabyte/agent-skills`. OpenClaw orchestrates through Claw Router and official subscription CLIs. See `control-plane/FLEET.md` in the shared source. The old Mac session-cron/cloud-container proposal is superseded.
 - **Fire budget ~3M subagent tokens (heavy roster)** — Brian 2026-10-01. Evaluator sweep +
   builders + champion/challenger + multi-critic vision allowed every fire; report spend in
   the LEDGER entry.

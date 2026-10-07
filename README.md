@@ -22,6 +22,10 @@
   <a href="https://agent.megabyte.space"><strong>Showcase Website</strong></a>
 </div>
 
+## Persistent AI fleet
+
+GitHub schedules project loops on the persistent Ubuntu host. OpenClaw routes official Codex/Claude profiles through Claw Router; OpenCode uses DeepSeek directly. [Fleet operation](control-plane/FLEET.md), [primary machine profile](machines/ubuntu-proxmox-primary.md), [Linux bootstrap](bootstrap/linux.sh) and [workflow pin propagation](control-plane/update-callers.py) are canonical. The control UI lives in `heymegabyte/agent.megabyte.space`; website publishing is currently excluded.
+
 ## What's New
 
 **Skills 18–19 + integration arc (2026-06)**

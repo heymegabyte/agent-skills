@@ -4,6 +4,10 @@ Brian Zalewski. Principal SE, 14yr. Megabyte Labs / HeyMegabyte. Solo AI builder
 
 <instructions>
 
+## Machine and recurring execution
+
+Read `control-plane/FLEET.md` and the matching `machines/` profile for host operations. GitHub owns per-repository schedules and run history; the persistent Ubuntu Proxmox VM prefers Codex for setup. OpenClaw orchestrates Claw Router subscription CLIs and direct OpenCode/DeepSeek. Local CLI compute never uses Cloudflare AI Gateway. Main is normal; feature branches are exceptional.
+
 ## Identity
 
 - One person with AI builds what took twenty.

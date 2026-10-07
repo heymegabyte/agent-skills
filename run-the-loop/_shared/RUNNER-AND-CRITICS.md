@@ -1,98 +1,10 @@
-# RUNNER-AND-CRITICS — cloud loop runner + cheap vision critics (fire-59 research, 2026-10-01)
+# RUNNER-AND-CRITICS — persistent fleet and product vision critics
 
-> Answers Brian's two questions: (1) cloud-hosted `/run-the-loop` runner off the Mac,
-> (2) cheaper independent vision critics + whether CF Unified Billing credit can pay OpenAI.
-> All claims web-verified 2026-10-01; sources at bottom. Companion BACKLOG items live in
-> `./BACKLOG.md` § FRONTIER 0 (`discovered_by: fire-59-research`).
+## Runner policy (supersedes the 2026-10-01 cloud/session-cron proposal)
 
----
+Canonical policy: [control-plane/FLEET.md](../../control-plane/FLEET.md). GitHub schedules each enabled project at `2,17,32,47 * * * *`, using its local caller workflow and an immutable shared workflow revision. The persistent Ubuntu Proxmox VM executes through independent self-hosted runner processes → OpenClaw → the real Claw Router → official Claude/Codex subscription CLIs. Routine compute uses direct OpenCode/DeepSeek. No ephemeral GitHub execution hosts, copied OAuth tokens, local AI Gateway, session harness cron, Cloudflare execution containers or execution-state queue are part of this fleet. GitHub and git/files are authoritative history and memory.
 
-## § Runner options
-
-### The economics gate first (why auth choice decides everything)
-
-- Loop load: **1.8–3M subagent tokens/fire × 72 fires/day (20-min cadence) = 130–216M tokens/day**.
-- Sonnet 4.6 API pricing: **$3/M input · $15/M output · $0.30/M cache-read · $3.75/M 5-min cache-write**.
-- Blended $/M at realistic agentic mixes (≈90% input-side):
-  - No caching (90/10 in/out): ~$4.20/M → **$545–907/day ≈ $16K–27K/mo**
-  - Good caching (70% cache-read / 20% fresh+write / 10% out): ~$2.46/M → **$319–531/day ≈ $9.6K–16K/mo**
-  - Heroic caching (85% cache-read): ~$1.94/M → **$252–419/day ≈ $7.6K–12.6K/mo**
-- vs Max 20× subscription: **$200/mo flat**. API-key billing is **38–135× the subscription cost**.
-- **VERDICT: API-billed 20-min heavy fires are NOT sane.** Subscription OAuth (`CLAUDE_CODE_OAUTH_TOKEN`)
-  is the only economical rail. It draws the SAME Max 20× pool the Mac loop uses today
-  (5-h rolling window + weekly caps ≈ 240–480 Sonnet h/wk + 24–40 Opus h/wk) — the cloud move is
-  **quota-neutral**: it replaces the laptop's consumption, doesn't add to it.
-
-### Option A — GitHub Actions + anthropics/claude-code-action (RECOMMENDED SLICE 1, effort S)
-
-- **Subscription auth is officially supported**: run `claude setup-token` locally (long-lived token;
-  Pro/Max/Team/Enterprise) → repo secret `CLAUDE_CODE_OAUTH_TOKEN` → pass `claude_code_oauth_token:`
-  to `anthropics/claude-code-action@v1`. Docs explicitly bless swapping `anthropic_api_key` for it.
-  (Older raw-OAuth tokens expired in ~1 day — issue #727; `setup-token` is the fix.)
-- **Cron**: `on: schedule` min interval 5 min (`*/20` fine). Caveats: UTC-only; runs ONLY from the
-  default branch (we're main-only — fine); delays of 15–60 min under GH load (cadence jitter);
-  public-repo schedules auto-disable after 60 days of repo inactivity (our daily commits make this moot).
-- **Limits**: 6 h max per hosted job (ours: `timeout-minutes: 25`); workflow run max 35 days.
-- **Lease for free**: `concurrency: { group: run-the-loop, cancel-in-progress: false }` queues/coalesces
-  overlapping fires — GH-native replacement for the fire-lease mutex in CI.
-- **Arbitrary updates**: prompt step = read `.claude/commands/run-the-loop.md` + constitution from the
-  checkout — the loop definition already lives in-repo, so every fire self-updates. Zero harness state.
-- **Minutes cost**: 72 × ≤20 min ≈ ≤43.2K min/mo. Public repo: $0. Private repo: ~(43,200−3,000 included)
-  × ~$0.006/min (post Jan-2026 rate cut) ≈ **~$240/mo** — mitigate with a self-hosted runner
-  (GH never bills self-hosted; the planned $0.002/min self-hosted charge was cancelled Dec 2025) or
-  shorter average fires (billing is actual minutes, rounded up per job).
-
-### Option B — Cloudflare-native: Cron Trigger → Container running headless Claude Code (SLICE 2, effort M)
-
-- **Feasible**: Workers Cron Triggers (1-min granularity, 250/account on Paid) → `scheduled()` handler
-  starts a Container via its DO binding. The 15-min scheduled-Worker wall cap applies to the TRIGGER
-  worker only; the container runs under its own lifecycle (billed while awake, sleeps after the fire).
-  Image: node + `@anthropic-ai/claude-code` + git; runs `claude -p "$(cat .claude/commands/run-the-loop.md)"`.
-- **Auth needed**: `CLAUDE_CODE_OAUTH_TOKEN` (same setup-token), GitHub deploy key/PAT (clone + push main),
-  `CLOUDFLARE_API_KEY`+email (deploys), existing loop secrets via get-secret export. Logs → R2.
-- **Compute cost**: standard-1/2 instance (4–6 GiB), ~24 active h/day:
-  memory ~$0.9–1.3/day + vCPU ~$0.4–0.9/day + disk ~$0.05–0.07/day ≈ **$1.4–2.2/day ≈ $40–70/mo**
-  (+$5 Workers Paid). Cheaper than private-repo GH minutes; fully CF-native; no 60-day disable; exact cadence.
-- **Model tokens**: same OAuth subscription rail as Option A — the container is just where the CLI runs.
-- Why slice 2 not 1: Dockerfile + DO container class + secret plumbing + log shipping ≈ a day of work vs
-  one workflow file; Option A proves laptop-independence TODAY, B is the lock-in-leveraged end-state.
-
-### Option C — API-key billing anywhere — REJECTED by the cost math above ($9.6K–27K/mo vs $200/mo).
-
-### RECOMMENDATION
-
-1. **Build Option A first (effort S, ~90 min)**: one workflow (`.github/workflows/run-the-loop.yml`) +
-   `claude setup-token` secret + concurrency lease + `--max-turns`/timeout governors + artifact upload of
-   the fire transcript. Honors Max economics, 20-min cadence, in-repo loop definition, laptop independence.
-2. **Then Option B (effort M)** as the CF-native runner, reusing the identical in-repo prompt; keep the
-   Mac harness cron as dormant fallback. Quota governor in both: on Anthropic limit/429 responses the fire
-   no-ops cleanly and the next cron retries (same behavior the Mac loop has when the window exhausts).
-
----
-
-## § FOSS lessons (prior art → transferable)
-
-1. **Ralph (ghuntley / anthropics `ralph-wiggum` plugin)** — the repo IS the memory: prompt file + plan +
-   git history carry ALL state between iterations. Our loop already does this (command + constitution +
-   BACKLOG/LEDGER in-repo) — keep ZERO state in the harness so any runner host is swappable.
-2. **Ralph plugin stop-hook** — gate exit on an explicit completion promise + max-iterations cap; never
-   open-ended. Wire `--max-turns` + `timeout-minutes` into every cloud fire.
-3. **OpenHands resolver (GitHub-Action-native agent)** — budget caps as REPO VARIABLES
-   (`max_iterations: ${{ vars.OPENHANDS_MAX_ITER || 50 }}`), retries cap, accumulated-cost cutoff —
-   "don't ship a headless agent without all three". Expose our caps as repo vars → tune without commits.
-4. **OpenHands failure mode** — a hard iteration ceiling the model never SEES ends fires as ERROR instead
-   of wrap-up. Inject remaining-budget/turns into the prompt so fires close out gracefully (checkpoint + ledger).
-5. **SWE-agent** — per-instance cost limit ($1–3) + turn limit; every stop condition produces
-   degraded-success AUTOSUBMIT (commit what's green) rather than hard failure. Matches our salvage doctrine.
-6. **SWE-agent/OpenHands trajectories** — persist the full run transcript as an artifact per fire
-   (Actions artifact / R2) for post-hoc audit — the cloud analog of our LEDGER + `.output` files.
-7. **Aider in CI** — headless `--message --yes-always` applies ONE pass with no verification and ships
-   compile-broken "green" unless `--auto-test --test-cmd` closes the loop. A runner must carry its own
-   verify gates (ours: typecheck/Jest/prod-E2E) — never trust single-pass green.
-8. **GH-native coalescing** — `concurrency.group` with `cancel-in-progress: false` is the
-   battle-tested lease for scheduled agent workflows; custom mutexes only needed outside CI.
-
----
+The vision-critic notes below apply to Cloudflare-hosted product features, not local CLI orchestration. Verify current prices/models before product integration.
 
 ## § Vision critic ladder
 

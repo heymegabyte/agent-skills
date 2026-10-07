@@ -12,6 +12,8 @@
 
 ## Tiers
 
+For host-specific routing and scheduling, [the fleet policy](../control-plane/FLEET.md) and `../machines/` profiles are authoritative. On the primary persistent Ubuntu VM, Codex is preferred for system/setup work, OpenClaw orchestrates, and Claw Router routes official subscription profiles. Local DeepSeek uses `DEEPSEEK_API_KEY` directly through OpenCode; local CLI development traffic never goes through Cloudflare AI Gateway or a hosted OpenCode billing gateway.
+
 ### Frontier — architecture · research · judgment (subscription CLIs ONLY)
 - **Claude Code** (`claude` CLI, user's Claude subscription) — primary architect, integrator,
   final implementation judge, hard debugging, requirements reconciliation, deep architectural

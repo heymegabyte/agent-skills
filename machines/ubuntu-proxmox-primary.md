@@ -29,14 +29,19 @@
 | Node / npm | v24.21.0 / 11.19.0 through Volta |
 | Codex | Installed at ~/.volta/bin/codex; official login status reports ChatGPT authentication |
 | GitHub connector | Authenticated as ProfessorManhattan; heymegabyte repository access confirmed |
-| gh / Claude / OpenClaw / OpenCode / get-secret | Not found on the inspected PATH |
-| Project checkouts | None found in accessible home paths |
-| Runner service state | Unknown: session cannot access systemd buses |
-| Local network | Session cannot resolve api.github.com or registry.npmjs.org |
+| gh | Installed user-locally (v2.102.0); local OAuth login pending |
+| Claude Code | Official native CLI v2.1.292; three isolated profiles prepared, login pending |
+| OpenClaw | Official v2026.9.8; primary authenticated loopback Gateway running |
+| OpenCode | v1.18.35; direct DeepSeek configured, key missing and execution unverified |
+| Claw Router | dennisonbertram/claw-router; existing official Codex profile registered in place, usage-aware policy |
+| get-secret | Protected local fallback installed; existing encrypted broker was not present |
+| Project checkouts | Persistent checkouts for projectsites.dev, megabyte.space, deskl.ink; gitl.ink needs local GitHub login |
+| Runner service state | Three independent official runner directories prepared; registration awaits local GitHub OAuth |
+| Local network | Verified GitHub/npm access after full-access relaunch |
 | Secret environment | GH_TOKEN, GITHUB_TOKEN, DEEPSEEK_API_KEY and Cloudflare credentials absent |
-| Shared skills default branch | master (observed; not migrated) |
+| Shared skills default branch | main (fleet implementation branch; default-branch migration awaits gh OAuth) |
 
-Do not confuse requested capabilities with installed capabilities. No runner labels, active gateways, router registrations, account headroom, DeepSeek execution or deployments have been verified.
+Do not confuse requested capabilities with installed capabilities. Gateway health and OpenClaw → Claw Router → official Codex execution passed (reply OK). Runner registration, Claude login, account headroom, DeepSeek execution and deployments are not yet verified.
 
 ## Confirmed project identities
 
@@ -46,11 +51,11 @@ Do not confuse requested capabilities with installed capabilities. No runner lab
 - heymegabyte/deskl.ink (main)
 - bricklabor.com: unresolved in accessible repository discovery; do not guess an owner.
 
-No new automation has been enabled by this inventory.
+No project scheduling has yet been enabled. OpenClaw and authenticated local fleet UI run as persistent user services; user linger is enabled.
 
 ## Persistent layout and operations
 
-Proposed paths, to create during installation:
+Persistent paths:
 
 - ~/ai/repos/<repository>: persistent canonical checkout/cache.
 - ~/ai/worktrees/<repository>/<run-id>: isolated concurrent run workspace.
@@ -74,6 +79,19 @@ Failures recover from actual git state, Actions history, commits, checks and rep
 
 Claw Router documents isolated Claude profiles, Linux support, provider-specific routing and JSON account status. Codex authentication is delegated to the official CLI; do not copy or parse OAuth credentials to register it. Verify current installation/configuration documentation and runtime compatibility before installation. Router identity is distinct from hosted gateways with similar names.
 
-## Outstanding prerequisite
+## Current services and remaining prerequisites
 
-The current execution session restricts local network and systemd access. Installation, cloning, runner registration, service startup and live provider tests require a host-capable session. GitHub connector access is available but does not confer local CLI authentication or host-service control. Never mark this machine operational from this inventory alone.
+- Primary OpenClaw: `openclaw-gateway.service`, http://127.0.0.1:18789, authenticated and loopback-only.
+- Local control UI: `agent-fleet-ui.service`, http://127.0.0.1:18888; open using `fleet-ui-open` without printing its credential. Publishing remains excluded.
+- User linger is enabled for persistent services across logout/reboot.
+- Authenticated UI passed desktop/mobile Playwright journeys and API authentication/origin/repository-allowlist checks.
+- Derived SQLite FTS index: `~/ai/state/search.sqlite`; git/files/GitHub remain canonical.
+- Local GitHub OAuth is required for runner registration, private checkouts and local git publication. Connected GitHub app access is available separately.
+- Claude logins: `fleet-account-login claude-1`, then `claude-2` and `claude-3`.
+- DeepSeek key absent from inspected environment/project secret sources. Import through the existing broker, or `fleet-secret-import DEEPSEEK_API_KEY` for this VM's protected local fallback, then run the direct provider smoke test.
+
+Canonical operation, security implications, workflow pin propagation and installation details: [control-plane/FLEET.md](../control-plane/FLEET.md). Do not mark runners or missing provider accounts operational until their live checks pass.
+
+## Verification evidence
+
+Five integration checks passed: safe main publication, owner checkout preservation, failure recovery, same-repository serialization, cross-repository concurrency and secret/allowlist handling. Three dashboard Playwright journeys passed. The reusable workflow passed Actionlint. Gateway → Router → official Codex native filesystem writes and structured reporting passed.

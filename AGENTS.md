@@ -12,6 +12,8 @@ Internal dev/research/agent-orchestration runs on **subscription CLIs** (`claude
 
 ## Usage
 
+For recurring development and local host operations, read [control-plane/FLEET.md](control-plane/FLEET.md) and the matching profile under `machines/`. GitHub owns the per-project schedule; the persistent Ubuntu Proxmox VM is the primary host and prefers Codex for setup. OpenClaw orchestrates official subscription CLIs through Claw Router and direct OpenCode/DeepSeek. Main is normal; feature branches are exceptional. Do not schedule this skills repository.
+
 Load skills on demand via the skill router (`_router.md`). Each category has a `SKILL.md` with submodules listed in frontmatter.
 
 ## Key Files

@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "machine": "ubuntu-proxmox-primary",
+  "schedule": "2,17,32,47 * * * *",
+  "runnerInstances": 3,
+  "runnerLabels": ["self-hosted", "linux", "ubuntu", "persistent", "proxmox-vm", "agent", "codex", "claude", "opencode"],
+  "projects": [
+    {"repository": "heymegabyte/projectsites.dev", "agent": "projectsites", "enabled": true, "url": "https://projectsites.dev"},
+    {"repository": "heymegabyte/megabyte.space", "agent": "megabyte", "enabled": true, "url": "https://megabyte.space"},
+    {"repository": "heymegabyte/gitl.ink", "agent": "gitlink", "enabled": true, "url": "https://gitl.ink"},
+    {"repository": "heymegabyte/deskl.ink", "agent": "desklink", "enabled": true, "url": "https://deskl.ink"}
+  ],
+  "unresolvedProjects": ["bricklabor.com"]
+}

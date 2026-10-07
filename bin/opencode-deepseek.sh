@@ -41,15 +41,15 @@ if ! OPENCODE_BIN="$(command -v opencode 2>/dev/null)"; then
   exit 127
 fi
 
-# Resolve get-secret (the sanctioned secret broker).
-if ! command -v get-secret >/dev/null 2>&1; then
+# Use the existing child environment directly; consult the broker only if absent.
+if [ -z "${DEEPSEEK_API_KEY:-}" ] && ! command -v get-secret >/dev/null 2>&1; then
   printf 'opencode-deepseek.sh: error: get-secret not found on PATH\n' >&2
   exit 3
 fi
 
 # Fetch the DeepSeek key into a local variable. It is read into memory only and
 # handed to the child via `env`; it is never printed and never leaves this shell.
-DEEPSEEK_API_KEY="$(get-secret DEEPSEEK_API_KEY 2>/dev/null || true)"
+DEEPSEEK_API_KEY="${DEEPSEEK_API_KEY:-$(get-secret DEEPSEEK_API_KEY 2>/dev/null || true)}"
 if [ -z "${DEEPSEEK_API_KEY}" ]; then
   printf 'opencode-deepseek.sh: error: DEEPSEEK_API_KEY unavailable from get-secret\n' >&2
   exit 4

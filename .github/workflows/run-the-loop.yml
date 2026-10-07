@@ -1,0 +1,91 @@
+name: Persistent Run the Loop
+
+on:
+  workflow_call:
+    inputs:
+      project:
+        type: string
+        required: true
+      shared-revision:
+        type: string
+        required: true
+      runner-labels:
+        type: string
+        default: '["self-hosted","linux","persistent","proxmox-vm","agent","codex"]'
+      objective:
+        type: string
+        default: ''
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  loop:
+    name: '${{ inputs.project }} · persistent loop'
+    runs-on: ${{ fromJSON(inputs.runner-labels) }}
+    timeout-minutes: 75
+    env:
+      FLEET_PROJECT: ${{ inputs.project }}
+      FLEET_REVISION: ${{ inputs.shared-revision }}
+      FLEET_OBJECTIVE: ${{ inputs.objective }}
+      FLEET_OUTPUT: '${{ github.workspace }}/fleet-report-${{ github.run_id }}-${{ github.run_attempt }}'
+    steps:
+      - name: Validate repository identity and pinned implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$FLEET_PROJECT" = "$GITHUB_REPOSITORY"
+          test "$FLEET_PROJECT" != 'heymegabyte/agent-skills'
+          [[ "$FLEET_REVISION" =~ ^[0-9a-f]{40}$ ]]
+          mkdir -p "$FLEET_OUTPUT"
+          date -u +%FT%TZ > "$FLEET_OUTPUT/started-at"
+      - name: Fetch immutable shared implementation
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: heymegabyte/agent-skills
+          ref: ${{ inputs.shared-revision }}
+          path: shared-fleet
+          persist-credentials: false
+      - name: Execute repository-owned loop through OpenClaw
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.local/bin:$HOME/ai/tools/bin:$HOME/.volta/bin:$PATH"
+          # Existing official host authentication owns git and CLI access.
+          # No ephemeral checkout contains subscription OAuth credentials.
+          python3 shared-fleet/control-plane/fleet.py run \
+            --repository "$FLEET_PROJECT" \
+            --output "$FLEET_OUTPUT" \
+            --message "$FLEET_OBJECTIVE"
+      - name: Ensure every run has a summary and structured record
+        if: always()
+        shell: bash
+        env:
+          JOB_RESULT: ${{ job.status }}
+        run: |
+          export PATH="$HOME/.local/bin:$HOME/ai/tools/bin:$HOME/.volta/bin:$PATH"
+          if test -f shared-fleet/control-plane/finalize.py; then
+            python3 shared-fleet/control-plane/finalize.py
+          else
+            mkdir -p "$FLEET_OUTPUT"
+            python3 - <<'PY'
+            import json, os, pathlib
+            output = pathlib.Path(os.environ['FLEET_OUTPUT'])
+            record = {'schema': 1, 'project': os.environ['FLEET_PROJECT'], 'status': os.environ['JOB_RESULT'], 'runId': os.environ['GITHUB_RUN_ID'], 'failures': ['Shared implementation checkout or preflight failed; no agent execution verified.']}
+            (output / 'run.json').write_text(json.dumps(record, indent=2))
+            summary = '# 🔴 Fleet preflight failed\n\nNo agent execution was verified. Inspect the job logs and structured artifact.\n'
+            (output / 'summary.md').write_text(summary)
+            with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as file: file.write(summary)
+            PY
+          fi
+      - name: Upload canonical GitHub run record
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: 'fleet-run-${{ github.run_id }}-${{ github.run_attempt }}'
+          path: |
+            ${{ env.FLEET_OUTPUT }}/run.json
+            ${{ env.FLEET_OUTPUT }}/summary.md
+          retention-days: 90
+          if-no-files-found: error
