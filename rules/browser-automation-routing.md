@@ -19,23 +19,23 @@ paths:
 
 # Browser Automation Routing
 
-Standing preference for EVERY agent-driven browser task — navigate, click, fill, extract, screenshot, scrape, or verify a deployed page. Default to a **Cloudflare Browser Rendering** instance driven by **Stagehand**; fall back to the **user's own Chrome** when cookies / a logged-in session must persist. Brian directive 2026-09-20.
+Standing preference for EVERY agent-driven browser task — navigate, click, fill, extract, screenshot, scrape, or verify a deployed page. Default to a **Cloudflare Browser Run** instance driven by **Stagehand**; fall back to the **user's own Chrome** when cookies / a logged-in session must persist. Brian directive 2026-09-20.
 
 Cross-links: `[[computer-use-safety]]` `[[fetch-defaults]]` `[[crawling-testing-browser-supervisor]]` `[[stagehand-ai-testing]]` `[[cloudflare-lock-in-is-leverage]]` `[[god-tier-engineering]]` `[[verification-loop]]`
 
 ## HARD RULE — NEVER open a visible Chrome to TEST or MEASURE (headless / Browser Run only). Brian directive 2026-10-03.
 
-- **Testing, measurement, screenshots, CWV/perf traces, E2E, post-deploy verification = HEADLESS or Cloudflare Browser Rendering ("Browser Run") ONLY.** Never pop a visible/GUI Chrome window on the user's machine to run a test or take a measurement — it hijacks the user's desktop + is non-reproducible.
-- **This bans the Chrome DevTools MCP visible-tab path for testing.** `mcp__chrome-devtools__new_page` / `performance_start_trace` / `take_screenshot` open the user's REAL Chrome — do NOT use them to measure CLS/LCP, screenshot a route, or run a check. Use instead: **CF Browser Rendering** (headless, REST `/browser-rendering/*` or `@cloudflare/playwright` — the default "Browser Run"), or **headless Playwright** (`chromium.launch({ headless: true })` + CDP for a perf trace). For a throttled CWV trace, headless Playwright with `Network.emulateNetworkConditions` + `Emulation.setCPUThrottlingRate` + a `largest-contentful-paint`/`layout-shift` PerformanceObserver.
+- **Testing, measurement, screenshots, CWV/perf traces, E2E, post-deploy verification = HEADLESS or Cloudflare Browser Run ("Browser Run") ONLY.** Never pop a visible/GUI Chrome window on the user's machine to run a test or take a measurement — it hijacks the user's desktop + is non-reproducible.
+- **This bans the Chrome DevTools MCP visible-tab path for testing.** `mcp__chrome-devtools__new_page` / `performance_start_trace` / `take_screenshot` open the user's REAL Chrome — do NOT use them to measure CLS/LCP, screenshot a route, or run a check. Use instead: **CF Browser Run** (headless, REST `/browser-rendering/*` or `@cloudflare/playwright` — the default "Browser Run"), or **headless Playwright** (`chromium.launch({ headless: true })` + CDP for a perf trace). For a throttled CWV trace, headless Playwright with `Network.emulateNetworkConditions` + `Emulation.setCPUThrottlingRate` + a `largest-contentful-paint`/`layout-shift` PerformanceObserver.
 - **The "user's local Chrome" tier (below) is reserved STRICTLY for genuine cookie / logged-in-session persistence** (the user is mid-flow, SSO state must carry). It is NEVER the way to "just test" or "just measure" a page. If no auth state is needed, it must be headless / Browser Run — full stop.
 
 ### Reference incident (2026-10-03) — fire-30 drove CLS traces through visible Chrome
 
-The brickcitylabor loop measured `/book` CLS by opening the chrome-devtools MCP (`new_page` + `performance_start_trace` ×3), which popped visible Chrome tabs on Brian's desktop. Correct path: headless CF Browser Rendering OR headless Playwright + CDP throttle. No auth/cookies were needed — it was a stateless prod measurement, the exact case that MUST be headless.
+The brickcitylabor loop measured `/book` CLS by opening the chrome-devtools MCP (`new_page` + `performance_start_trace` ×3), which popped visible Chrome tabs on Brian's desktop. Correct path: headless CF Browser Run OR headless Playwright + CDP throttle. No auth/cookies were needed — it was a stateless prod measurement, the exact case that MUST be headless.
 
 ## The routing chain (in order)
 
-1. **DEFAULT — Cloudflare Browser Rendering + Stagehand.** Launch a headless browser on CF Browser Rendering (Workers Browser binding + `@cloudflare/playwright`, or the REST API for one-shots) and drive it with Stagehand's AI `act`/`observe`/`extract`/`agent` on the a11y tree. CF-native (per `cloudflare-lock-in-is-leverage`), zero local resource cost, reproducible. Point Stagehand at the CF session's CDP endpoint instead of spinning a Browserbase-managed session whenever CF Browser is available.
+1. **DEFAULT — Cloudflare Browser Run + Stagehand.** Launch a headless browser on CF Browser Run (Workers Browser binding + `@cloudflare/playwright`, or the REST API for one-shots) and drive it with Stagehand's AI `act`/`observe`/`extract`/`agent` on the a11y tree. CF-native (per `cloudflare-lock-in-is-leverage`), zero local resource cost, reproducible. Point Stagehand at the CF session's CDP endpoint instead of spinning a Browserbase-managed session whenever CF Browser is available.
 2. **FALLBACK — the user's provided/local Chrome instance.** Drive the real local Chrome (the user's profile) via Chrome DevTools MCP (`mcp__chrome-devtools__*`) or Playwright `connectOverCDP` to a `--remote-debugging-port` Chrome. Use when **cookies / an existing logged-in session / the user's real profile must persist**, when CF Browser + Stagehand is unavailable, or when a human is mid-flow and state must carry across steps.
 
 ## When each is right (routing is by state, not just availability)
@@ -46,7 +46,7 @@ The brickcitylabor loop measured `/book` CLS by opening the chrome-devtools MCP 
 
 ## Tool mapping
 
-- **CF Browser Rendering** — Workers Browser binding (`env.BROWSER`) + `@cloudflare/playwright` `launch()/connect()`; REST `/accounts/{id}/browser-rendering/{screenshot,content,snapshot,scrape,pdf,links,json}` for one-shots (per `god-tier-engineering` #9: REST > binding for single ops).
+- **CF Browser Run** — Workers Browser binding (`env.BROWSER`) + `@cloudflare/playwright` `launch()/connect()`; REST `/accounts/{id}/browser-rendering/{screenshot,content,snapshot,scrape,pdf,links,json}` for one-shots (per `god-tier-engineering` #9: REST > binding for single ops).
 - **Stagehand** — `mcp__stagehand__*` (`browserbase_stagehand_act/observe/extract/navigate/agent`); the REQUIRED interface for AI interaction — never drive a managed/cloud session with raw CDP clicks.
 - **User Chrome** — `mcp__chrome-devtools__*` (attaches to the running Chrome) OR Playwright `connectOverCDP('http://localhost:9222')`. The ONLY tier where the user's cookies persist.
 - **Playwright MCP (`mcp__playwright__*`)** — its own bundled Chromium; acceptable for a quick stateless check, but NOT the default here (no CF-native benefit, no cookie persistence). Prefer CF Browser for cloud, user Chrome for stateful.
@@ -55,11 +55,11 @@ The brickcitylabor loop measured `/book` CLS by opening the chrome-devtools MCP 
 
 - Session-bound / auth / payment flows still require explicit user confirmation per `computer-use-safety`.
 - Never submit real payment cards from an agent-driven session — test cards live in the E2E suite only.
-- Playwright TEST SUITES (`e2e-tdd-organization`, `verification-loop`) keep their own runner + PROD target; this rule governs AGENT-DRIVEN interaction. Those suites MAY use CF Browser Rendering as the launch backend.
+- Playwright TEST SUITES (`e2e-tdd-organization`, `verification-loop`) keep their own runner + PROD target; this rule governs AGENT-DRIVEN interaction. Those suites MAY use CF Browser Run as the launch backend.
 
 ## Anti-patterns
 
 - Defaulting to Playwright-MCP's throwaway Chromium for a task that needs the user's logged-in cookies → use the user's Chrome.
-- Spinning a Browserbase-managed session when a CF Browser Rendering instance is available → prefer CF-native.
+- Spinning a Browserbase-managed session when a CF Browser Run instance is available → prefer CF-native.
 - Driving a cloud/managed browser with raw CDP clicks instead of Stagehand's a11y-tree `act` → brittle; use Stagehand.
-- **Opening a VISIBLE local Chrome (chrome-devtools MCP tabs) to TEST / MEASURE / screenshot / trace a page** → banned (see HARD RULE above). Headless CF Browser Rendering or headless Playwright only; the visible-Chrome tier is auth-state-persistence ONLY.
+- **Opening a VISIBLE local Chrome (chrome-devtools MCP tabs) to TEST / MEASURE / screenshot / trace a page** → banned (see HARD RULE above). Headless CF Browser Run or headless Playwright only; the visible-Chrome tier is auth-state-persistence ONLY.
