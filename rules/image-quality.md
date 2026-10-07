@@ -85,6 +85,12 @@ Hero/section photos are sourced per § above; OG cards are a DIFFERENT element �
 - **Wire into `prebuild`** alongside favicon generation; regenerate when title/brand changes. Output is gitignored (regenerated artifact per `repo-folder-hygiene`).
 - **Verify:** `validate-og-cards.mjs` (below) — every route's `og:image` resolves, is 1200×630, and is unique per route.
 
+## Favicon set completeness (declaring an SVG favicon ≠ done)
+
+- Browsers AUTO-PROBE `/favicon.ico` and iOS auto-probes `/apple-touch-icon.png` REGARDLESS of your `<link>`s — so both must actually SERVE (verify, don't assume a modern SVG favicon covers it; otherwise silent 404s on every visit + no legacy/RSS/iOS fallback). Complete cross-platform set: inline/`.svg` (modern), `favicon.ico` (legacy + the universal probe), `apple-touch-icon.png` 180×180 (iOS — already "mandatory" per `quality-metrics`), manifest `icon-192/512` (Android).
+- **Build a valid `.ico` with NO ImageMagick** (`sips` can't output ICO): wrap a 32×32 PNG in a 22-byte header in node — `ICONDIR` (6 bytes: `00 00 01 00 01 00`) + `ICONDIRENTRY` (16 bytes: w=32, h=32, 0, 0, planes=1, bpp=32, `dwBytesInRes`=png.length LE, `dwImageOffset`=22 LE) + the PNG bytes. `file` should report "MS Windows icon resource … with PNG image data". PNG-in-ICO works in every browser since Vista.
+- **Guard:** an E2E asserting `/favicon.ico` + `/apple-touch-icon.png` + manifest icons + `og.png` all serve **200 with an `image/` content-type** (+ the HTML declares apple-touch + `.ico`). Ref: agent.megabyte.space 2026-10-07 — both probe paths 404'd silently behind a declared SVG favicon.
+
 ## Brand-consistency
 
 - Every AI image in a single project shares one lens, palette, and grading reference.
