@@ -31,7 +31,7 @@ Ship the current tree to prod (or a preview) and PROVE it is live. Never edit co
 
 - `ccctl verify <target.verifyUrl> --status 200 --asset <healthPath>` (real Chrome UA, exit 1 on fail).
   `verifyUrl` = workers.dev when `dnsStatus` pending, else the custom domain.
-- Remote browser smoke (CF Browser Rendering REST → Browserbase/Stagehand → Playwright):
+- Remote browser smoke (CF Browser Run REST → Browserbase/Stagehand → Playwright):
   load `verifyUrl`, assert 0 console errors, 0 failed network requests, expected content present.
 - Never report success until the deployed URL was ACTUALLY checked in a browser.
 
