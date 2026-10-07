@@ -88,3 +88,11 @@ Installation and adapter contracts were checked against official/current-project
 Runtime versions, machine preferences and outstanding auth prerequisites belong in `machines/ubuntu-proxmox-primary.md`. Add separate profiles for macOS or additional Linux/VM hosts rather than copying this machine's identity or credentials.
 
 Shared skills synchronize through `agent-skills-sync.timer` every fifteen minutes. Dirty owner edits defer synchronization; updates require a fast-forward. This timer refreshes skills/search only and never schedules project loops.
+
+## Desktop machine repositories and remote access
+
+Each persistent desktop should have its own private GitHub repository named for its remote-access hostname, separate from product repositories and the shared skill source. The primary Ubuntu desktop uses `heymegabyte/ubuntu.megabyte.space`, with its checkout at `~/ai/repos/ubuntu.megabyte.space`. Machine repositories are excluded from product `/run-the-loop` scheduling. Machine identity records the repository and remote-desktop URL so other agents can discover them.
+
+Back up an explicit allowlist of non-secret recovery configuration and service definitions to git, committing only changes and pushing after GitHub registration. Never mirror the whole home directory or commit OAuth state, private keys, passwords, browser profiles, tunnel/API tokens, raw transcripts or unrelated project files. Full disks/personal data belong in appropriate Proxmox/encrypted backups; project source belongs in its own repository.
+
+Ubuntu remote access uses GNOME VNC on loopback, a persistent Cloudflare Tunnel, and browser rendering behind an explicit owner-only Cloudflare Access policy at `ubuntu.megabyte.space`. Verify Access before publishing the Tunnel/DNS route. No bypass policy or unauthenticated hostname. This shares the existing active GNOME session; pre-login or locked-screen recovery remains available through Proxmox. Other desktops should get distinct identities, repositories and hostname-specific policies, with their OS-native remote-desktop support. This remote-access traffic is separate from local AI compute and never changes the no-AI-Gateway rule.

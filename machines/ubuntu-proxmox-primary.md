@@ -95,3 +95,14 @@ Canonical operation, security implications, workflow pin propagation and install
 ## Verification evidence
 
 Five integration checks passed: safe main publication, owner checkout preservation, failure recovery, same-repository serialization, cross-repository concurrency and secret/allowlist handling. Three dashboard Playwright journeys passed. The reusable workflow passed Actionlint. Gateway → Router → official Codex native filesystem writes and structured reporting passed.
+
+## Desktop access and machine recovery repository
+
+- Desired private machine repository: `heymegabyte/ubuntu.megabyte.space`; local main checkout at `~/ai/repos/ubuntu.megabyte.space`, committed. Remote repository creation/push awaits local GitHub OAuth.
+- Desired browser desktop: https://ubuntu.megabyte.space. Cloudflare Tunnel and Access creation await Cloudflare account/API authentication; the hostname is not yet configured by this setup.
+- GNOME 50.1 official source built user-locally with its VNC backend and an IPv4-loopback socket patch. Ubuntu system packages preserved. Runtime at `~/ai/tools/gnome-vnc`; build dependencies at `~/ai/tools/grd-build/sysroot`.
+- `ubuntu-vnc.service`: active, password-authenticated, origin `127.0.0.1:5900`; live VNC authentication/framebuffer test passed at 1920×1080. Shares the current desktop, requires an active/unlocked GNOME session; Proxmox remains the recovery console.
+- VNC credential in the GNOME keyring and protected `~/.config/ubuntu-desktop/vnc-password`. `ubuntu-vnc-password` displays it locally; never commit it.
+- `ubuntu-machine-backup.timer`: active hourly, commits changed allowlisted non-secret snapshots. Remote push remains disabled until private GitHub registration. Credentials/browser data/project files excluded.
+- Cloudflare provisioner verifies a concrete owner-email Access allow policy before Tunnel/DNS publication. Three tests passed for ordering, fail-closed policy handling and DNS preservation. No Cloudflare resources were created without authentication.
+- Finish interactive account access with `python3 ~/ai/repos/ubuntu.megabyte.space/scripts/finish-setup.py`.
