@@ -9,7 +9,7 @@ Read-only. Makes NO changes. Proves the site actually WORKS, not just that a dep
 
 1. **Resolve** — `node .claude/control-plane/ccctl.mjs resolve [domain]` → take `verifyUrl` (the live, DNS-aware URL; falls back to `liveUrl` `*.workers.dev` when DNS isn't cut over).
 2. **HTTP + headers** — `node .claude/control-plane/ccctl.mjs verify <verifyUrl> --status 200 --asset <hashed-asset> --contains "<expected-string>"`. Assert 200, security headers present (HSTS / CSP / X-Content-Type-Options), the asset 200s, and expected content is in the HTML. Exit 1 halts on failure.
-3. **Real-browser smoke** — drive an actual browser (Cloudflare Browser Rendering → Browserbase/Stagehand → Playwright, whichever is available):
+3. **Real-browser smoke** — drive an actual browser (Cloudflare Browser Run → Browserbase/Stagehand → Playwright, whichever is available):
    - Load `verifyUrl`; assert **0 console errors** + no 4xx/5xx sub-requests.
    - Assert the CHANGED content is visibly present (grep the rendered DOM, not the shell).
    - Screenshot at **6 breakpoints**: 375 / 390 / 768 / 1024 / 1280 / 1920.
