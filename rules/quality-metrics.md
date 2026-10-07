@@ -47,6 +47,10 @@ triggers:
 - Focus Not Obscured (2.4.11, AA) — focused element never hidden behind sticky headers/footers
 - **Manual review REQUIRED** — the 8 WCAG 2.2 criteria axe can't auto-test (per `_kernel/standards.md#wcag22`). Run that checklist every a11y pass.
 
+## Best Practices (Lighthouse)
+
+- **A sudden BP drop (e.g. 100→81) with a single `deprecations` failure is usually NOT your code — it's the CDN's injected bot script.** Cloudflare Bot Fight Mode / JS Detections injects `cdn-cgi/challenge-platform/scripts/jsd/main.js`, which uses deprecated APIs (`StorageType.persistent`, Protected Audience). Always check the failed audit's source URL before touching your code. For **agent-facing** sites (built to be read by AI agents/crawlers), disable Bot Fight Mode / JS Detections regardless — bot-challenge tooling contradicts the agent-welcoming goal AND its deprecated-API script tanks BP. Ref: agent.megabyte.space 2026-10-06. Cross-links `[[verify-against-source-of-truth]]`.
+
 ## Code
 
 - Functions ≤ 50 lines
