@@ -1,5 +1,5 @@
 ---
-last_reviewed: 2026-06-29
+last_reviewed: 2026-10-06
 superseded_by: null
 name: "no-staging-doctrine"
 priority: 1
@@ -15,8 +15,8 @@ Prod is the only real environment. Staging is calendarized denial — environmen
 
 ## The doctrine
 
-- **One environment: production.** No staging cluster, no preview environment beyond the per-PR sandbox per `sandbox-execution`, no "QA env" with a separate DB.
-- **Per-PR previews are sandboxes**, not staging. They render the change; they don't claim representative traffic.
+- **One environment: production.** No staging cluster, no Worker Preview, no per-PR preview environment, no "QA env" with a separate DB.
+- **Verification targets production.** Build/test in the local worktree or approved external runner, deploy once, then verify the real production URL with Browser Run/CDP.
 - **Friday afternoon deploys are normal.** A deploy that can't tolerate Friday at 5pm is the bug — fix the deploy, don't add a freeze.
 - **No code freezes**, ever. No release branches. No mobile-team-cutting-a-release-branch ceremony.
 - **No QA team, no QA tickets.** Playwright @ 6bp × 3 browsers per `e2e-tdd-organization` + axe-core per `verification-loop` + visual-qa + completeness-checker + AI vision rubric per `e2e-visual-inspection` IS the QA layer, running on every commit at higher throughput than humans could match.
@@ -34,4 +34,4 @@ Prod is the only real environment. Staging is calendarized denial — environmen
 
 - **`verification-loop` deploy + prod-E2E mandate** still fires — the discipline is unchanged, the staging step never existed to begin with.
 - **`autonomous-engineering` approval-required gates** still apply to destructive prod changes (DB drops, bulk customer mutation, billing). The doctrine kills RITUAL gates (staging promotion, freeze windows), not SAFETY gates (destructive-action approval).
-- **`sandbox-execution`** still owns the build → preview → promote pipeline. Sandboxes are CI artifacts, not a staging environment.
+- **`sandbox-execution`** still owns isolated build/test execution where needed, but there is no preview promotion stage: build/test → production deploy → production verification.
