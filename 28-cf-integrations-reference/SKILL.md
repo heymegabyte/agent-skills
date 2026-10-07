@@ -21,14 +21,17 @@ stage: stable
 ## Cloudflare platform + data
 
 - Data: **D1** (Sessions API + read replicas; dynamic sitemap from D1) · **R2** · **KV** (60s host/config cache) · **Hyperdrive** (accelerate Neon/Postgres when a CF primitive can't) · **Drizzle ORM** + migrations at the boundary.
-- Compute + coordination: **Durable Objects** patterns — rate-limiter · WebSocket/realtime + presence · agent-DO; **Workflows** (durable multi-step) · **Queues** (fallback to Workflows when unbound) · **Browser Rendering** (headless jobs + E2E journeys) · **Containers + Sandboxes** (GA 2026-04: Firecracker microVMs, active-CPU billing $0.000020/vCPU-s, 375 vCPU-min + 25 GiB-h incl. in Workers Paid; bursty jobs — the memory meter punishes always-on; Sandboxes = agents' persistent isolated envs).
+- Compute + coordination: **Durable Objects** patterns — rate-limiter · WebSocket/realtime + presence · agent-DO; **Queues** for async delivery · **Browser Run/CDP** for headless jobs + production E2E · **@cloudflare/computer** (preview) for lightweight agent filesystem/shell/Git work. Heavy coding/desktop execution defaults to Daytona → Coolify MCP runner → GitHub runner on Ubuntu Desktop VM/Proxmox; do not default to Cloudflare Sandbox.
 - API: **Hono** RPC-mode + **OpenAPI generation** from Hono. Zod at every boundary.
 - Auth + tenancy: **Clerk** (M2M JWT) · Zero Trust Access · enterprise multi-tenancy · multi-tenant subdomain provisioning (`{slug}.projectsites.dev`).
 - Provisioning: CF-native products are API-provisionable with the global key (Turnstile/DNS/custom-domains) — never hand-create in the dashboard.
 
 ## AI / edge intelligence
 
-- **Workers AI** (Llama 4 Scout default + embeddings) via **AI Gateway — unified control plane since 2026-08** (unified AI binding auto-creates a gateway: instant logging/token/cost attribution; semantic cache · dynamic routing by latency/cost/availability · BYOK via Secret Store · spend limits · guardrails/DLP). **Vectorize** = the vector DB for RAG (RAG = Vectorize + Workers AI).
+- Agent capability fabric: official `cloudflare/skills` upstream + direct Cloudflare API Code Mode MCP (`https://mcp.cloudflare.com/mcp`) + MCP Server Portal for appropriate remote MCP fleets. Code Mode for large/variable catalogs; direct tools for small predictable calls. See `[[cloudflare-agent-fabric]]` + `[[ai-search-knowledge-fabric]]`.
+
+
+- **Workers AI** + **AI Gateway** as runtime control plane. Use **Dynamic Routes** for versioned model policy (conditions, budgets/rate limits, rollout, timeouts/retries, fallbacks) on compatible product calls. AI Gateway cache is exact-request caching unless current docs say otherwise — do not claim semantic caching. BYOK secrets belong in Secrets Store. **AI Search** is the managed retrieval/indexing layer for the knowledge fabric; **Vectorize** remains the lower-level vector primitive where direct vector control is needed.
 - Every app is AI-native (per app-foundation): generative / chat-as-UI / voice / multimodal where they add value.
 
 ## Media pipeline
