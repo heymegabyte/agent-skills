@@ -70,14 +70,14 @@ jobs:
           else
             mkdir -p "$FLEET_OUTPUT"
             python3 - <<'PY'
-            import json, os, pathlib
-            output = pathlib.Path(os.environ['FLEET_OUTPUT'])
-            record = {'schema': 1, 'project': os.environ['FLEET_PROJECT'], 'status': os.environ['JOB_RESULT'], 'runId': os.environ['GITHUB_RUN_ID'], 'failures': ['Shared implementation checkout or preflight failed; no agent execution verified.']}
-            (output / 'run.json').write_text(json.dumps(record, indent=2))
-            summary = '# 🔴 Fleet preflight failed\n\nNo agent execution was verified. Inspect the job logs and structured artifact.\n'
-            (output / 'summary.md').write_text(summary)
-            with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as file: file.write(summary)
-            PY
+          import json, os, pathlib
+          output = pathlib.Path(os.environ['FLEET_OUTPUT'])
+          record = {'schema': 1, 'project': os.environ['FLEET_PROJECT'], 'status': os.environ['JOB_RESULT'], 'runId': os.environ['GITHUB_RUN_ID'], 'failures': ['Shared implementation checkout or preflight failed; no agent execution verified.']}
+          (output / 'run.json').write_text(json.dumps(record, indent=2))
+          summary = '# 🔴 Fleet preflight failed\n\nNo agent execution was verified. Inspect the job logs and structured artifact.\n'
+          (output / 'summary.md').write_text(summary)
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as file: file.write(summary)
+          PY
           fi
       - name: Upload canonical GitHub run record
         if: always()
