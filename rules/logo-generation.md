@@ -37,15 +37,17 @@ NEVER an excuse to defer the logo.
    image, Wayback, Clearbit/Brandfetch, the parent/umbrella brand's logo, press kits. A found real
    mark is ENHANCED (vectorize, clean, recolor to brand, transparent-bg, trim) + reused — never
    discarded for a generated one. Record what you found (or "none exists") in the build notes.
-2. **GENERATE candidates when none exists — CF-native FIRST (it always works).** Primary generator:
-   **Cloudflare Workers AI image models** — `@cf/black-forest-labs/flux-1-schnell` (fast) / `flux-2-dev`
-   (best) / `@cf/leonardo/lucid-origin` — via `POST /accounts/{acct}/ai/run/{model}` with the global
-   key. CF-native, billed through Cloudflare, needs NO third-party key. Ideogram is nice for crisp
-   lettering BUT its CF AI-Gateway route (`/{acct}/{gw}/ideogram/v1/generate` + `model: ideogram-4.0`) still needs
-   a valid Ideogram **`Api-Key`** (BYO) — CF **Unified Billing does NOT cover Ideogram** (only
-   OpenAI/Anthropic/Google/xAI/Groq as of 2026-10); with no Ideogram key, use Workers AI. Generate
-   **≥4–6 candidates** per round as a SQUARE, TEXTLESS ICON. Reference impl: `scripts/gen-logo.mjs`
-   (batch-generates + stitches ONE horizontal CONTACT SHEET so the whole batch is one AI-vision read).
+2. **GENERATE candidates when none exists.** **Primary: Ideogram V3** when a FUNDED `IDEOGRAM_API_KEY`
+   exists (its lettering is crisp enough to BAKE the wordmark) — `POST https://api.ideogram.ai/v1/ideogram-v3/generate`,
+   **multipart/form-data**, header `Api-Key: <key>` (NOT the AI-Gateway route), fields `prompt` ·
+   `aspect_ratio` ("1x1" icon / "3x1" lockup) · `rendering_speed` QUALITY · `style_type` DESIGN ·
+   `magic_prompt` OFF → download `data[0].url`. **Fallback: Cloudflare Workers AI** flux
+   (`@cf/black-forest-labs/flux-1-schnell` / `flux-2-dev`, `POST /accounts/{acct}/ai/run/{model}`, global
+   key, no third-party key — ALWAYS available). CF **Unified Billing does NOT cover Ideogram** (BYO key,
+   must be FUNDED — a valid-but-unfunded key 402s *"insufficient balance"*; only OpenAI/Anthropic/Google/
+   xAI/Groq are UB). Generate **≥4–6** SQUARE TEXTLESS ICON candidates; for a baked lockup also do 2–3
+   **3x1** candidates WITH the wordmark. `scripts/gen-logo.mjs` is provider-aware (Ideogram when
+   `IDEOGRAM_API_KEY` set, else flux) + stitches ONE horizontal CONTACT SHEET (one AI-vision read).
 3. **SELECT the best with AI vision.** Read every candidate PNG, score each against the
    rubric below, pick the winner, and WRITE DOWN why (one line). Prefer the one that reads at 16px
    and in one color — not the most detailed.
@@ -90,20 +92,29 @@ Iterate, never one-shot — the first batch is a starting point, not the answer:
 2. **Review the contact sheet with AI vision** — score each 0–10 on simple / scalable / distinctive /
    on-brand / gorgeous; pick the best AND write the critique (what to push next: richer gradient? a
    tail for "chat"? a clever dot (the brand mark as the "?" dot)? drop a cliché?).
+2.5. **Verify baked LOCKUP text letter-by-letter.** Diffusion lettering misspells short words (Ideogram
+   rendered "ask" as **"assk"** + a triangular-'a' "Δsk" on round 1). Read the wordmark in the sheet; if
+   ANY glyph is wrong, re-prompt with explicit spelling ("exactly the three lowercase letters a s k,
+   spelled a-s-k, nothing else") — a hardened round-2 fixed it. Wrong after 2 rounds → composite the
+   wordmark in the brand font. NEVER ship misspelled baked text.
 3. **Round 2+** — rewrite the prompts toward the winner's direction + the critique; regenerate. Repeat
    until the top score PLATEAUS (no new round beats the last) — bounded **2–3 rounds** (loops must
    terminate per `[[loop-driven-development]]`; a strong ≥9/10 mark is done). Record each round's pick.
-4. **PROCESS the winner** — `scripts/process-logo.mjs` does luminance-keyed alpha (a near-black bg + a
-   dark knockout "?" both go transparent, so the mark FLOATS on the dark navbar) + trim + derives
-   favicon/apple-touch/PWA from the one source. Render the wordmark as REAL FONT TEXT beside the icon
-   (never baked into the raster). If a raster still looks soft at 44px, trace the concept to a crisp SVG.
+4. **PROCESS the winner — TWO assets, one pipeline.** `scripts/process-logo.mjs` does luminance-keyed
+   alpha (near-black bg + the dark knockout "?" go transparent so the mark FLOATS on the dark navbar) +
+   trim. From the SQUARE ICON → `logo-mark.png` + favicon/apple-touch/PWA (the favicon MUST stay the
+   square icon — a wide lockup can't be a favicon). From the 3x1 Ideogram LOCKUP (icon + baked wordmark,
+   white/bright text survives the key) → `logo-lockup.png` (aspect preserved) for the navbar. Baking the
+   wordmark is fine WITH Ideogram once spelling is VERIFIED (see loop step 2.5); with flux or soft/wrong
+   text, render the wordmark as REAL FONT TEXT beside the icon instead, or trace to a crisp SVG.
 
 ## Anti-patterns (fix on sight)
 
 - Shipping a bare text wordmark or a single Unicode glyph (`◆`, `●`, an emoji) as "the logo."
 - Generating before researching whether a real brand mark already exists.
 - Picking the most detailed/ornate candidate — it dies at favicon size.
-- Baking wordmark text into the raster icon (blurry, un-themeable) instead of high-weight font text.
+- Baking wordmark text into the SQUARE icon (that's the favicon source) — bake it only into a SEPARATE
+  wide `logo-lockup.png`, and only when the generator spelled it correctly (verify — never ship "assk").
 - A tiny timid mark in the navbar — the logo must be big + confident per `[[logo-contrast]]`.
 - A raster favicon/OG derived from a different source than the navbar icon (drift).
 
@@ -129,3 +140,15 @@ gradient rounded-diamond speech-bubble mark with a tail + knockout "?" — a cle
 `scripts/gen-logo.mjs` + `scripts/process-logo.mjs` are the reusable pipeline; `AskMark` renders the
 transparent `logo-mark.png`. Lesson: **CF Workers AI image gen is the always-available CF-native
 generator** — reach for it first; Ideogram only when a valid `Api-Key` exists.
+
+## Reference incident (questionl.ink, 2026-10-07) — Ideogram V3 FUNDED → baked lockup
+
+Once the Ideogram account was FUNDED, the direct **V3** API (multipart, header `Api-Key`, DESIGN/QUALITY)
+became the primary generator — markedly crisper than flux. `scripts/gen-logo.mjs` was made provider-aware
+(Ideogram when `IDEOGRAM_API_KEY` set, flux fallback). Round 1: 4 clean icons + 3 lockups, but the baked
+wordmark misspelled ("assk" / triangular-'a' "Δsk"); a hardened round-2 ("exactly three lowercase letters
+a s k") rendered a correct bold white "ask". Shipped the **two-asset** pattern — `logo-mark.png` (square
+icon → favicon/PWA) + `logo-lockup.png` (icon + baked "ask", navbar sm+ / icon-only on mobile) + a branded
+1200×630 `og.png`. Deployed + Playwright-verified at 1280 (lockup) & 390 (icon), 0 console errors. Lesson:
+**fund Ideogram → V3 direct is primary; BAKE the wordmark but VERIFY spelling + re-prompt; flux stays the
+always-available fallback.**
