@@ -117,6 +117,7 @@ opencode.write_text(json.dumps(settings, indent=2) + '\n')
 local_bin = home / '.local/bin'
 local_bin.mkdir(parents=True, exist_ok=True)
 for name, source in [('fleet-account-login', root / 'bin/fleet-account-login.sh'),
+                     ('fleet-infisical-setup', root / 'bin/fleet-infisical-setup.py'),
                      ('fleet-secret-import', root / 'bin/fleet-secret-import.py')]:
     source.chmod(0o755)
     link = local_bin / name
