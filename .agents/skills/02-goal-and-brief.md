@@ -19,6 +19,8 @@ Establish the project thesis and maintain `PROJECT_BRIEF.md` as the source of tr
 
 Before code, write `PROJECT_BRIEF.md`. The brief drives every downstream decision (skill 05 stack, skill 06 build, skill 09 brand, skill 16 site mode).
 
+Before (or alongside) the brief, run the **research expansion**: decompose the prompt into research sessions routed to `claude` (deep/judgment) + `codex` (independent 2nd angle, when provided) + `opencode`/DeepSeek (throughput breadth), driven + `gum`-logged by `bin/research-orchestrator.sh` (announce steps · before/after + summary per session · run/skip + why · USED/NOT-USED + why · final table). It feeds the Thesis + Decision log below. Full flow: [[research-expansion-orchestration]] (SSOT [[agent-provider-policy]]).
+
 > **One-line website prompt? Hand off after the brief**: `16-cinematic-website-prime-directive` is the prime directive (trumps generic 06-build); `website-build-manifest` is the acceptance index of every gate; `website-build-doctrine` is the Phase -1→8 sequence. Brief → manifest → doctrine → build.
 
 ## Org-type inference (drives everything)

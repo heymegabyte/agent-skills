@@ -84,6 +84,7 @@ Hero/section photos are sourced per § above; OG cards are a DIFFERENT element �
 - **Output:** `public/og/<route>.png` (or `/og/home.png`), exactly 1200×630, < 200KB. Referenced in that route's server-rendered head: `<meta property="og:image">` + `twitter:image` + `og:image:width/height`.
 - **Wire into `prebuild`** alongside favicon generation; regenerate when title/brand changes. Output is gitignored (regenerated artifact per `repo-folder-hygiene`).
 - **Verify:** `validate-og-cards.mjs` (below) — every route's `og:image` resolves, is 1200×630, and is unique per route.
+- **A value baked into a generated IMAGE (og-card domain/stats, a screenshot, a diagram) is a RASTER — it evades `grep`/`sed`, so a text-based rebrand or stat-bump SILENTLY misses it.** After renaming a domain or changing a count, the HTML/config all update via find-replace but the og.png's baked-in footer domain / stat line stays stale — and sharing the site then shows the OLD brand in every social preview. You can't grep the raster, so GUARD THE GENERATOR'S SOURCE string: cross-check `gen-images.mjs`'s `SITE`/`STATS` against the canonical source (the `<link rel=canonical>` domain, the hero stat bar) at build time — a mismatch means the card is stale → `node scripts/gen-images.mjs`. Ref: agent.megabyte.space→skillsl.ink rebrand 2026-10-08 — a comprehensive `sed` cleaned every text file but the og.png kept "megabyte.space" until a build guard caught `SITE ≠ canonical`. Cross-links `[[verify-against-source-of-truth]]`.
 
 ## Favicon set completeness (declaring an SVG favicon ≠ done)
 

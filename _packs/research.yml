@@ -1,6 +1,7 @@
 name: research
 description: Deep web research + crawling + competitor scanning
 members:
+  - rules/research-expansion-orchestration
   - rules/competitor-research
   - rules/fetch-defaults
   - rules/crawling-testing-browser-supervisor

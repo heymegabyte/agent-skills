@@ -1,6 +1,6 @@
 # Emdash Skills — AI + Human Entrypoint (start here)
 
-> Solo-founder product-building OS for Cloudflare Workers: one-line prompts → deployed products. 23 skill categories · 175 doctrinal rules (`rules/`) · 149 reference docs · 28 agents · 36 templates · 36 commands. Load the SMALLEST useful subset per the router below — never the whole mesh.
+> Solo-founder product-building OS for Cloudflare Workers: one-line prompts → deployed products. 23 skill categories · 176 doctrinal rules (`rules/`) · 149 reference docs · 28 agents · 36 templates · 36 commands. Load the SMALLEST useful subset per the router below — never the whole mesh.
 
 > Full unabridged index: [llms-full.txt](llms-full.txt) · Human README: [README.md](README.md)
 
@@ -12,7 +12,7 @@
 - [Skill Profiles](SKILL_PROFILES.md) — default bundle by product type (SaaS · marketing · nonprofit · API · …)
 - [Routing Matrix](routing-matrix.md) — where every new lesson is routed
 - [Operating Doctrine](AGENTSKILLS.md) · [Conventions](CONVENTIONS.md) — durable stance + stack defaults/constants
-- **Doctrinal rules** — 175 always-/pack-loaded rules in `rules/` (autonomy · verification · security · feature-flags · payments · …); routed via the Router's “Doctrinal principles” + pack lists
+- **Doctrinal rules** — 176 always-/pack-loaded rules in `rules/` (autonomy · verification · security · feature-flags · payments · …); routed via the Router's “Doctrinal principles” + pack lists
 - [Changelog](CHANGELOG.md) — package history
 
 ## Core Skills

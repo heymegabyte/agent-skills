@@ -39,6 +39,8 @@ From the one-line prompt, enumerate the COMPLETE build the user will want by sat
 
 NO code/clone/scaffold until every public source is loaded. Fan out via parallel `Agent` spawns per `monitor-orchestration.md`. Skipping = build fail per `thin-source-amplification.md`.
 
+- **Route this saturation through [[research-expansion-orchestration]]** — `bin/research-orchestrator.sh` decomposes it into sessions handled by `claude` (deep/judgment) + `codex` (independent 2nd angle, when provided) + `opencode`/DeepSeek (throughput breadth across the source lists below), `gum`-logging each session's before/after + summary box, run/skip(+why), and a USED/NOT-USED(+why) verdict + a final table so the whole breakdown is visible. NEVER the OpenAI/Anthropic API for this ([[agent-provider-policy]]).
+
 - **Owned** — official site (deep crawl per `source-site-enhancement.md` § Phase 1), subdomains, X/IG/FB/LinkedIn/TikTok/YouTube, app stores, podcasts, RSS.
 - **Search** — Google + Bing top-50 for `{name}`, `{name}+{city}`, `+reviews`, `+complaints`, `+founder`, `+history`, `+lawsuit`, `+press release`.
 - **Archives** — Wayback (3+ snapshots), archive.today, archive.ph.

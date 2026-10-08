@@ -18,7 +18,7 @@
 <br/>
 
 <div align="center">
-  <code>23 categories</code> · <code>175 doctrine rules</code> · <code>28 agents</code> · <code>36 commands</code> · <code>37 platform variants</code><br/>
+  <code>23 categories</code> · <code>176 doctrine rules</code> · <code>28 agents</code> · <code>36 commands</code> · <code>37 platform variants</code><br/>
   <a href="https://agent.megabyte.space"><strong>Showcase Website</strong></a>
 </div>
 

@@ -32,6 +32,15 @@
   frontier session implementing serially.
 - Claude stays architect / integrator / final judge; Codex stays independent review.
 
+### Research expansion (beginning-of-build research) → [[research-expansion-orchestration]]
+- The Phase 0 / prompt-expansion research that used to reach for the OpenAI/Anthropic **APIs** now
+  runs on the CLIs: **claude** (deep/judgment + synthesis — replaces Anthropic-API research) +
+  **codex** (independent 2nd angle — replaces OpenAI-API research, when provided) +
+  **opencode/DeepSeek** (throughput breadth — always leveraged). Codex unavailable → claude extra pass.
+- Drive it through `bin/research-orchestrator.sh` so every expansion is `gum`-logged: announce each
+  major step, a before/after + summary box per session, run/skip(+why), and a USED/NOT-USED(+why)
+  verdict per session + a final table. Full flow + honesty gate: [[research-expansion-orchestration]].
+
 ## HARD provider rules
 
 ### OpenAI (internal orchestration)
