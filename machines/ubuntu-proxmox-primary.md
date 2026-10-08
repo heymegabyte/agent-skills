@@ -110,3 +110,7 @@ Five integration checks passed: safe main publication, owner checkout preservati
 ## Runner registration verified (2026-10-07)
 
 Three organization runners are online: ubuntu-proxmox-primary-01, -02 and -03. Independently persistent user services provide three simultaneous job slots. The runner group is restricted to approved project repositories. Jobs may run while the owner uses the desktop. Actions jobs and Gateway-spawned native CLI processes share a six-CPU budget, MemoryHigh=8G and MemoryMax=10G; Gateway children use lower scheduling priority. Desktop processes and interactive Codex remain outside that fleet budget. Cloudflare desktop exposure is deferred; deskl.ink will be configured separately later.
+
+## Cua installed (2026-10-08)
+
+Official trycua/cua local CLI 0.4.1 and Cua Driver 0.34.0 installed under ~/.local/bin. agent-fleet-cua.service starts at graphical login with native Wayland enabled. Local MCP/skill integrations configured for Codex, Claude (including three isolated profiles), OpenClaw and OpenCode; official authentication preserved. GNOME WinRects v8 installed/enabled, needs one logout/login to load. Live accessibility calculator test returned 42 from 6 × 7; screenshot verification awaits helper activation. No cloud login needed for local Driver, no public exposure, telemetry disabled. Setup/recovery instructions and scripts live in the private machine README. Keep one controller per desktop input workflow; normal repository jobs remain concurrent.
