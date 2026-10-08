@@ -53,7 +53,7 @@ How to load the IDEAL set of skills/rules for each task without overloading the 
 ## 6. Per-Tool Skill Activation
 
 - When prompt triggers Playwright tool use → load testing-specific skills (`e2e-tdd-organization`, `e2e-visual-inspection`, `07-quality-and-verification`)
-- When triggers WebFetch → load research skills (`03-planning-and-research`, `competitor-research`)
+- When triggers WebFetch → load research skills (`02-goal-and-brief`, `competitor-research`)
 - When triggers Bash on `wrangler` → load CF skills (`05-architecture-and-stack`, `cloudflare-hostable-supervisor`)
 - **Why** — most session segments use ~3 tools; skills relevant to other 17 are dead weight
 - **Implementation** — `~/.claude/hooks/PreToolUse` triggers conditional skill load

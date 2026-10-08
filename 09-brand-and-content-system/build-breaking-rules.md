@@ -313,7 +313,7 @@ For every non-exempt route: assert ≥3 entries in `src/data/citations/<slug>.ts
 
 **Reference incident**: njsk.org first audit (2026-05-11) — 14 pages with unsourced quantitative claims ("97 cents on the dollar", "23.4% poverty rate", "1 in 4 children").
 
-**Companion**: `rules/citations.md` + skill 03-planning-and-research.
+**Companion**: `rules/citations.md` + skill 02-goal-and-brief.
 
 ## Every site with analytics (***COOKIE CONSENT BANNER — UNIVERSAL — BUILD-BREAKING — GDPR + CCPA***)
 

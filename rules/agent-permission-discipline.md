@@ -96,7 +96,7 @@ permission: {edit: false, write: false}
 
 Then a "judge" agent reviews all three deliberations and picks the strongest argument. Per `[[ai-seniority]]` — multi-agent diversity review IS code review.
 
-## Apply to Brian's existing 18 agents
+## Apply to Brian's agents (core set below; extend to all 28 as they gain bash needs)
 
 | Agent | temperature | permission.bash highlights |
 |---|---|---|
@@ -121,7 +121,7 @@ Then a "judge" agent reviews all three deliberations and picks the strongest arg
 
 ## Migration discipline
 
-Don't bulk-rewrite all 18 agents at once. Order:
+Don't bulk-rewrite all agents at once. Order:
 
 1. **First**: security-reviewer + completeness-checker + deploy-verifier (verification agents — highest leverage)
 2. **Second**: dependency-auditor + accessibility-auditor + cost-estimator (read-only audit agents)

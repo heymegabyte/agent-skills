@@ -12,7 +12,7 @@ model_fallback: "sonnet"
 fallback_reason: cost_optimization
 context: fork
 effort_fallback: high
-skills: ["05-architecture-and-stack", "03-planning-and-research"]
+skills: ["05-architecture-and-stack", "02-goal-and-brief"]
 memory: project
 color: purple
 ---

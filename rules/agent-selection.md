@@ -41,7 +41,7 @@ Every parallel fan-out assigns each work unit to the most-specialized agent. Nev
 ### Architecture (map to `architect` / `meta-orchestrator` + CF/Angular/Hono/Zod brief)
 
 - **cloudflare-architect** — CF-primitive selection (Workers/D1/R2/KV/DO/Queues) · new edge surface · NOT impl · ADR+binding plan · drift-detection → `architect`+CF
-- **angular-ssr-architect** — Angular21+Nx+SSR-on-Workers · new app/feature shell · NOT styling · route+hydration plan · typecheck → `architect`+Angular
+- **angular-ssr-architect** — Angular 22+Nx 23+SSR-on-Workers · new app/feature shell · NOT styling · route+hydration plan · typecheck → `architect`+Angular
 - **saas-platform-architect** — tenancy/entitlements/flags topology · new SaaS area · NOT UI · platform ADR · drift-detection → `architect`
 - **multi-tenant-systems-architect** — isolation + RBAC boundaries · cross-tenant data · NOT auth-impl · isolation plan → `meta-orchestrator`
 - **api-contract-architect** — Hono+Zod+OpenAPI contracts · new endpoint family · NOT handlers · typed contract · zod-validate → `architect`+Hono/Zod (`contract-first-ai.md`)

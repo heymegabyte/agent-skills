@@ -87,7 +87,7 @@ Every backend interaction is an **RxJS observable stream**, never a one-shot pro
 **Spartan UI** (the shadcn-for-Angular port) is THE Angular UI component library — admin AND marketing, one kit. **NO PrimeNG / Material / Taiga / NG-ZORRO / Kendo / Syncfusion / Ionic-as-UI. Mixing kits = build fail.** (Reversed 2026-05-29 from the prior "PrimeNG for admin" split — two design systems doubled bundle + upgrade + theme surface.) OSS, owns-the-code (copied into `libs/ui/`, not black-boxed), Tailwind-composed, Angular CDK + Floating UI underneath. React-stack counterpart: `[[shadcn-design-system]]`.
 
 - Pair with **Angular CDK** (overlays, drag-drop, virtual-scroll, a11y) + **Floating UI** (tooltip/popover positioning); **Tippy.js** only where it beats Floating UI ergonomics.
-- **When Spartan lacks a primitive**, compose from CDK + Floating UI + Tailwind tokens FIRST. Allowed heavy fallbacks (each gets a `package-decision-matrix.md` row): **AG Grid Community** (100k+ row grids only; TanStack Table+Virtual for normal lists) · **FullCalendar** · **Embla Carousel** · **PhotoSwipe** · **Apache ECharts / Unovis / @visx**.
+- **When Spartan lacks a primitive**, compose from CDK + Floating UI + Tailwind tokens FIRST. Allowed heavy fallbacks (each gets a `package-preference-registry.md` row): **AG Grid Community** (100k+ row grids only; TanStack Table+Virtual for normal lists) · **FullCalendar** · **Embla Carousel** · **PhotoSwipe** · **Apache ECharts / Unovis / @visx**.
 
 ### Design direction (ProjectSites cockpit)
 

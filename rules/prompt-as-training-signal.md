@@ -58,7 +58,7 @@ Every user prompt is a training signal — and evidence the previous turn under-
 ### 7. `"Why didn't ___?"` / `"How come ___?"` / venting
 
 - **Means:** a behavior violated a prior preference or the user's implicit model.
-- **Write to:** `feedback_<topic>.md` memory with the prohibited behavior + reason given. Surface conflict in `rules/conflict-resolution.md` if applicable.
+- **Write to:** `feedback_<topic>.md` memory with the prohibited behavior + reason given. Surface conflict under `~/.claude/CLAUDE.md` § Conflict Resolution if applicable.
 
 ## Extraction protocol
 

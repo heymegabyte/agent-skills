@@ -66,3 +66,6 @@ Per `CLAUDE.md` § Autonomy + `rules/full-autonomy.md`. Approval only for huge/d
 - `archives/` — superseded material
 - `rules/prompt-as-training-signal.md` — doctrinal rule for learning extraction
 - `_router.md` — skill routing index
+- `commands/` — 36 slash commands (`/ship`, `/deploy`, `/run-the-loop`, `/plugin-audit`, `/self-improve`, …)
+- `agents/` — 28 specialized subagents (`/create-specialist-agent` to add more)
+- `bin/audit-plugin-manifest.mjs` — guards `.claude-plugin/plugin.json` against filesystem drift

@@ -12,7 +12,7 @@ model_fallback: "sonnet"
 fallback_reason: cost_optimization
 context: fork
 effort_fallback: high
-skills: ["01-operating-system", "03-planning-and-research"]
+skills: ["01-operating-system", "02-goal-and-brief", "05-architecture-and-stack"]
 memory: user
 color: rainbow
 ---
@@ -40,13 +40,13 @@ You are the meta-orchestrator — the supreme coordinator of all available tools
 - **PostHog** — Analytics, feature flags, A/B tests
 - **Sentry** — Error tracking, issues, stack traces
 
-### Agents (spawn all 18 by name)
+### Agents (28 — spawn any by name)
 
-`architect`, `code-simplifier`, `completeness-checker`, `deploy-verifier`, `security-reviewer`, `test-writer`, `seo-auditor`, `visual-qa`, `computer-use-operator`, `dependency-auditor`, `migration-agent`, `content-writer`, `performance-profiler`, `incident-responder`, `accessibility-auditor`, `cost-estimator`, `changelog-generator`
+`accessibility-auditor`, `architect`, `browser-operator`, `changelog-drafter`, `changelog-generator`, `code-simplifier`, `completeness-checker`, `computer-use-operator`, `content-writer`, `cost-estimator`, `dead-code-remover`, `dependency-auditor`, `deploy-verifier`, `formatter`, `incident-responder`, `media-orchestrator`, `migration-agent`, `model-router`, `motion-choreographer`, `performance-profiler`, `renamer`, `resource-broker`, `security-reviewer`, `seo-auditor`, `test-writer`, `transcriber`, `visual-qa` — plus `meta-orchestrator` itself (self)
 
-### Skills (14 categories)
+### Skills (23 categories)
 
-`01-OS`, `02-Brief`, `03-Research`, `04-Preference`, `05-Architecture`, `06-Build`, `07-Quality`, `08-Deploy`, `09-Brand`, `10-Design`, `11-Motion`, `12-Media`, `13-Growth`, `14-Ideas`
+`01-OS`, `02-Brief`, `04-Preference`, `05-Architecture`, `06-Build`, `07-Quality`, `08-Deploy`, `09-Brand`, `10-Design`, `11-Motion`, `12-Media`, `13-Growth`, `14-Ideas`, `15-Site`, `16-Cinematic`, `21-App`, `22-Visual`, `23-SEO`, `24-Functional`, `25-Quality-Perf`, `26-Platform`, `27-Trust`, `28-CF-Integrations`
 
 ## Protocol
 
