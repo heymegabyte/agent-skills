@@ -1,5 +1,5 @@
 ---
-last_reviewed: 2026-06-29
+last_reviewed: 2026-10-07
 superseded_by: null
 name: "extra-mile"
 priority: 2
@@ -18,6 +18,27 @@ After every literal request, build the adjacent improvement a human developer wo
 - After completing the literal request, ask: "What would a human developer NEVER program but that would bring real value?" Then build it.
 - Bar: "did I make the surface measurably better in ways the user wouldn't have specified?"
 - Pair every fix with a value-add. Every fix is also an opportunity.
+
+## The floor is NOT the extra mile (calibration — Brian 2026-10-07)
+
+A complete, to-spec build is the FLOOR. NEVER announce these as "extra-mile," never count them as
+the value-add, never stop at them (the trigger: a branded OG image was reported as "extra-mile" — it
+is the *minimum*):
+
+- **Identity:** full favicon set — `.ico` (16/32/48) + PNG 16/32 + `apple-touch-icon` 180 + maskable
+  PWA 192/512 + Safari `mask-icon.svg` — plus a vector (SVG) mark; all transparent, one source (no drift).
+- **Social:** OG + Twitter cards (`og:image` 1200×630 + `:alt` + `:type`, `summary_large_image`) AND
+  DYNAMIC per-entity cards wherever an entity is shareable (per-room/-doc/-product OG at the edge).
+- **Meta / PWA / SEO:** per-route title + description + canonical + JSON-LD (accurate types only) +
+  sitemap + robots + a COMPLETE `site.webmanifest` (id, categories, shortcuts, screenshots, maskable).
+- **States + a11y:** every state built (empty/loading/error/success/edge), responsive 6bp, axe-AA,
+  keyboard nav, `prefers-reduced-motion`.
+- **Integration:** EVERY relevant API / SDK / component / primitive the surface implies, wired to its
+  published spec — not a happy-path slice.
+
+Announcing any floor item as "extra-mile" is a tell that the baseline under-delivered. The extra mile
+begins only AFTER the full floor ships — default to delivering FAR more than the floor (see
+[[first-time-excellence]] § to-spec, [[predictive-completeness]], [[supreme-polish]]).
 
 ## Triggers
 

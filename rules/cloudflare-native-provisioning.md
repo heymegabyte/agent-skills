@@ -48,6 +48,25 @@ All THREE are required — missing any one fails as a misleading `Authentication
 - **HTTP-verify the LIVE URL after ANY routing/wrangler.toml change** — not just the deploy "Success" line or an API check. `curl -s -o /dev/null -w '%{http_code}' https://<worker>.workers.dev/` MUST be 200. A deploy that succeeds can still 404 the whole site (incident: njsk.org ran dark across ~3 deploys because only the CF-API custom-domain attach was verified, never an HTTP GET of workers.dev).
 - Recovery: add `workers_dev = true` → `wrangler deploy` → site 200 in seconds (`wrangler rollback` also works).
 
+## ⚠️ Workers Static Assets: `run_worker_first` gates whether the Worker even SEES a path (questionl.ink, 2026-10-07)
+
+With `[assets]` + a Worker, the ASSETS layer serves requests FIRST by default — and when
+`run_worker_first` is a PATH LIST (e.g. `["/api/*"]`), ONLY those paths hit the Worker. Any Worker
+route — or HTMLRewriter meta-injection — on a path NOT in the list silently never runs: with
+`not_found_handling: "single-page-application"` the asset layer returns `index.html` instead.
+**Symptom: your new route 200s but with `content-type: text/html` (the SPA shell), not your output.**
+
+- Dynamic routes at ARBITRARY top-level paths (per-entity OG cards at `/og/:slug` via
+  **workers-og** satori/resvg; per-page OG/meta injection on `/:slug` via **HTMLRewriter**) can't be
+  globbed → set **`run_worker_first: true`** (Worker runs first for EVERY request). The Worker's
+  `notFound` must then serve every static asset via `env.ASSETS.fetch(c.req.raw)`, and the dynamic
+  branch MUST guard against asset paths (skip anything containing a `.` or `/`) so `/assets/x.js`,
+  `/favicon.ico` fall straight through. Correctness then holds for every path.
+- Use a negative-glob list (`["/*","!/assets/*","!*.png",…]`) only to keep static assets edge-served
+  without the Worker hop; `true` is simpler and the notFound fallback makes it correct regardless.
+- **HTTP-verify the content-TYPE, not just the status** — a route that returns `200 text/html` when
+  you expected `image/png` means the Worker never ran (it was the asset layer's SPA fallback).
+
 ## DNS zones + records + Worker custom domains — all API
 
 - Create zone: `POST /zones {"name":"njsk.org","account":{"id":"{acct}"},"type":"full"}` → returns `name_servers` (give those to the user for the registrar). Zone is **pending** until NS flip — records + custom domains can be PRE-STAGED on a pending zone and activate automatically when it goes active.

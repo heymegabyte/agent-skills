@@ -19,7 +19,7 @@ triggers:
   - "wow factor"
   - "excellent"
   - "gorgeous"
-last_reviewed: 2026-10-05
+last_reviewed: 2026-10-07
 superseded_by: null
 ---
 
@@ -54,8 +54,14 @@ superseded_by: null
    *finish*. One or two complete, delightful things beat many half-built ones.
 6. **Minimum LOVABLE, never a skeleton.** Zero placeholders / stubs / TODOs / "polish
    later." A rough version tests burnt pizza, not pizza. Design the intended emotion.
-7. **De-risk before "done":** value, usability, feasibility, viability.
-8. **Taste gate (§D) before shipping.**
+7. **Integrate to spec — everything relevant, nothing stubbed.** Wire EVERY API, SDK, component,
+   primitive, and platform capability the surface implies, each to its PUBLISHED spec (auth,
+   pagination, webhooks, errors, edges) — not a happy-path slice. The identity/social/meta/PWA floor
+   (full favicon + SVG mark + OG/Twitter + dynamic per-entity cards + complete manifest + JSON-LD) is
+   BASELINE, never "extra-mile" (see [[extra-mile]] § floor-is-not-the-extra-mile). "Complete" is
+   measured against the full spec of what the surface makes possible, not a minimal viable slice.
+8. **De-risk before "done":** value, usability, feasibility, viability.
+9. **Taste gate (§D) before shipping.**
 
 ## B) The "It" Factor — first 5 seconds (apply to EVERY build)
 
