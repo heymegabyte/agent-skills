@@ -802,5 +802,13 @@
       "fact": "Metadata/link inventory is not proof of model-side eligibility or successful execution.",
       "origin": "Live skills listing and native CLI Gateway probes validate separate contracts"
     }
-  ]
+  ],
+  "validation": {
+    "testsPassed": 36,
+    "liveChecks": "live-validation.json",
+    "currentImplementationPin": "1b470770b58a8dcafbb7a46b802e85bef914590d",
+    "allFiveWorkflows": "active",
+    "accountRotation": "Required for exposed provider credentials",
+    "deepseekKey": "Missing in configured Infisical folder"
+  }
 }

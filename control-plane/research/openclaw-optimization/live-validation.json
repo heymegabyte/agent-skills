@@ -1,0 +1,64 @@
+{
+  "observedAt": "2026-10-09",
+  "readOnlyVerification": true,
+  "checks": [
+    {
+      "repo": "projectsites.dev",
+      "conclusion": "success",
+      "status": "completed",
+      "url": "https://github.com/heymegabyte/projectsites.dev/actions/runs/38003657648",
+      "unmaskedSensitiveEnvHeaders": 0,
+      "artifactStatus": "success",
+      "requestedRuntime": "codex",
+      "contextBytes": 1661,
+      "unchangedCommit": true,
+      "wrapperRevision": "f218843987ac5a74e7e802db92a511c23cb1b351",
+      "adapterRevisions": [
+        null
+      ]
+    },
+    {
+      "repo": "megabyte.space",
+      "conclusion": "success",
+      "status": "completed",
+      "url": "https://github.com/heymegabyte/megabyte.space/actions/runs/38003663261",
+      "unmaskedSensitiveEnvHeaders": 0,
+      "artifactStatus": "success",
+      "requestedRuntime": "claude",
+      "contextBytes": 1953,
+      "unchangedCommit": true,
+      "wrapperRevision": "f218843987ac5a74e7e802db92a511c23cb1b351",
+      "adapterRevisions": [
+        null
+      ]
+    },
+    {
+      "repo": "bricklabor.com",
+      "conclusion": "success",
+      "status": "completed",
+      "url": "https://github.com/heymegabyte/bricklabor.com/actions/runs/38003666317",
+      "unmaskedSensitiveEnvHeaders": 0,
+      "artifactStatus": "success",
+      "requestedRuntime": "codex",
+      "contextBytes": 952,
+      "unchangedCommit": true,
+      "wrapperRevision": "f218843987ac5a74e7e802db92a511c23cb1b351",
+      "adapterRevisions": [
+        null
+      ]
+    },
+    {
+      "repo": "runner-ops",
+      "conclusion": "success",
+      "status": "completed",
+      "url": "https://github.com/heymegabyte/runner-ops/actions/runs/38003668735",
+      "unmaskedSensitiveEnvHeaders": 0
+    }
+  ],
+  "finalCapturedAdapterSha256": "0f907d8ca883150eefc0a8b59ab16968f6f1169a6cddbcaaf335ad81530048ba",
+  "finalCapturedAdapterProbe": "PACKAGED_ADAPTER_OK; native tools; exact hash matched after idle Gateway restart",
+  "currentImplementationPin": "1b470770b58a8dcafbb7a46b802e85bef914590d",
+  "allFiveWorkflows": "active",
+  "testsPassed": 36,
+  "deepseek": "Configured direct; key absent from current Infisical folder; no live provider-success claim"
+}
