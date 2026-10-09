@@ -223,6 +223,8 @@ Write a non-secret JSON report to {result_file} with majorActions (string array)
                     raise RuntimeError('Agent exceeded turn deadline; retained worktree for next-state recovery')
             report['runtimeExitCode'] = code
             event(f'OpenClaw turn finished with exit {code}')
+            for trace in logdir.glob('compute-*.json'):
+                report['compute'].append(safe_json(json.loads(trace.read_text())))
             if result_file.exists():
                 if result_file.stat().st_size > 200000:
                     raise ValueError('Completion evidence exceeds size limit')
@@ -232,8 +234,6 @@ Write a non-secret JSON report to {result_file} with majorActions (string array)
                         report[key] = safe_json(agent_report[key])
             else:
                 report['warnings'].append('Agent did not produce the required structured completion report.')
-            for trace in logdir.glob('compute-*.json'):
-                report['compute'].append(safe_json(json.loads(trace.read_text())))
             report['resultCommit'] = command(['git', 'rev-parse', 'HEAD'], work)
             report['files'] = command(['git', 'diff', '--name-only', base, 'HEAD'], work).splitlines()
             dirty = command(['git', 'status', '--porcelain'], work)
@@ -243,7 +243,7 @@ Write a non-secret JSON report to {result_file} with majorActions (string array)
                 raise RuntimeError('Missing agent completion evidence; execution is incomplete')
             if dirty:
                 raise RuntimeError('Agent left uncommitted changes; retained worktree, no automatic git add/reset')
-            if any(t.get('status','').lower() in ('failed','failure','error') for t in report['tests']):
+            if any(t.get('status','').lower() in ('fail','failed','failure','error','timed_out','cancelled') for t in report['tests']):
                 raise RuntimeError('Completion evidence reports failing checks; no publication')
             if report['resultCommit'] != base:
                 if subprocess.run(['git','merge-base','--is-ancestor',base,'HEAD'],cwd=work,capture_output=True).returncode:

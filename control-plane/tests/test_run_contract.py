@@ -8,6 +8,7 @@ class ContractTests(unittest.TestCase):
   for d in ({'tests':'pass'},{'deployment':[]},{'majorActions':[{}]},{'tests':[{'status':[]}]}):
    with self.assertRaises(ValueError):validate_report(d)
   self.assertEqual(validate_report({})['tests'],[])
+  self.assertEqual(validate_report({'deployment':{'status':'not attempted','url':None}})['deployment']['url'],'')
   with self.assertRaises(ValueError):validate_report({'deployment':{'url':'javascript:alert(1)'}})
  def test_actions_control_files_are_not_native_capabilities(self):
   self.assertEqual(child_environment({'GITHUB_ENV':'secretpath','GITHUB_TOKEN':'s','AI_RUN_ID':'run','PATH':'bin'}),{'AI_RUN_ID':'run','PATH':'bin'})

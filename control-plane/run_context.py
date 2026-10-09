@@ -23,10 +23,10 @@ def validate_report(data):
         if not isinstance(test,dict) or any(not isinstance(test.get(k,''),str) for k in ('command','status','evidence')):raise ValueError('Invalid test evidence')
         result['tests'].append({k:test.get(k,'')[:4000] for k in ('command','status','evidence')})
     deployment=data.get('deployment',{})
-    if not isinstance(deployment,dict) or any(not isinstance(deployment.get(k,''),str) for k in ('status','url')):raise ValueError('Invalid deployment evidence')
-    url=deployment.get('url','')
+    if not isinstance(deployment,dict) or any(deployment.get(k) is not None and not isinstance(deployment.get(k),str) for k in ('status','url')):raise ValueError('Invalid deployment evidence')
+    url=deployment.get('url') or ''
     if url and not re.match(r'^https?://[^\s<>]+$',url):raise ValueError('Invalid deployment URL')
-    result['deployment']={k:deployment.get(k,'')[:4000] for k in ('status','url')}
+    result['deployment']={k:(deployment.get(k) or '')[:4000] for k in ('status','url')}
     return result
 
 def recent_receipts(ai,repository,limit=3):
