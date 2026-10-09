@@ -4,6 +4,7 @@
 No provider retries: a failed CLI may already have mutated the workspace.
 """
 import argparse
+import hashlib
 import json
 import math
 import os
@@ -52,6 +53,14 @@ def main():
                 raise ValueError('Run deadline must be finite')
             timeout = min(timeout, deadline - time.time())
     root = Path(__file__).resolve().parents[2]
+    skills_root = root
+    identity_path = home / '.config/agent-fleet/machine.json'
+    if identity_path.is_file():
+        identity = json.loads(identity_path.read_text())
+        if isinstance(identity.get('profile'), str):
+            skills_root = Path(identity['profile']).expanduser().resolve().parents[1]
+    elif not (root / 'bin/opencode-deepseek.sh').is_file():
+        skills_root = home / 'ai/repos/agent-skills'
     if a.provider_model == 'codex':
         command = ['cr', '--provider', 'codex', 'exec', '--json', '--skip-git-repo-check', '--dangerously-bypass-approvals-and-sandbox', '-']
     elif a.provider_model == 'claude':
@@ -59,7 +68,7 @@ def main():
         if a.system_prompt_file:
             command += ['--append-system-prompt-file', str(a.system_prompt_file.resolve())]
     else:
-        command = [str(root / 'bin/opencode-deepseek.sh'), 'run', '--format', 'json', '-m', 'deepseek/deepseek-chat']
+        command = [str(skills_root / 'bin/opencode-deepseek.sh'), 'run', '--format', 'json', '-m', 'deepseek/deepseek-chat']
     if a.system_prompt_file and a.provider_model != 'claude':
         # Supplemental policy is task context; keep the CLI's native instructions intact.
         prompt = '<openclaw-policy>\n' + a.system_prompt_file.read_text() + '\n</openclaw-policy>\n' + prompt
@@ -164,7 +173,9 @@ def main():
             revision = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True, timeout=5).strip()
         except (OSError, subprocess.SubprocessError):
             revision = None
-        trace.write_text(json.dumps({'adapterRevision': revision, 'inputCharacters': len(prompt),
+        trace.write_text(json.dumps({'adapterRevision': revision,
+                                    'adapterSha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                                    'inputCharacters': len(prompt),
                                     'runId': env.get('AI_RUN_ID'), 'runtime': a.provider_model,
                                     'router': a.provider_model != 'deepseek', 'session': session,
                                     'exitCode': code, 'durationSeconds': round(time.monotonic() - started, 3),

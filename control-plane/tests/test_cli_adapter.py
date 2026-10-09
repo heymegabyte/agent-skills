@@ -103,6 +103,21 @@ print(json.dumps({'type':'turn.completed','usage':{'input_tokens':12,'output_tok
         self.assertNotIn('Direct throughput task',captured['args'])
         self.assertFalse(self.trace()['router'])
 
+    def test_captured_plugin_resolves_deepseek_from_machine_profile(self):
+        source = self.home / 'ai/repos/agent-skills'
+        (source / 'bin').mkdir(parents=True)
+        (source / 'bin/opencode-deepseek.sh').symlink_to(self.bin / 'cr')
+        identity = self.home / '.config/agent-fleet/machine.json'
+        identity.parent.mkdir(parents=True)
+        identity.write_text(json.dumps({'profile':str(source / 'machines/test.md')}))
+        captured = self.home / '.openclaw/tmp/package/node_modules/openclaw-fleet/cli.py'
+        captured.parent.mkdir(parents=True)
+        shutil.copyfile(ADAPTER,captured)
+        self.env['AI_RUN_LOG_DIR'] = str(self.logs)
+        result = subprocess.run([sys.executable,str(captured),'--provider-model','deepseek'],input='Captured plugin task',env=self.env,cwd=self.workspace,text=True,capture_output=True,timeout=8)
+        self.assertEqual(result.returncode,0,result.stderr)
+        self.assertEqual(len(self.trace()['adapterSha256']),64)
+
     def test_error_event_or_missing_reply_fails_even_on_exit_zero(self):
         for mode in ['claude_error','fail','empty']:
             with self.subTest(mode=mode):
