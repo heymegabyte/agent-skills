@@ -91,7 +91,7 @@ Shared skills synchronize through `agent-skills-sync.timer` every fifteen minute
 
 ## Desktop machine repositories and remote access
 
-Each persistent desktop should have its own private GitHub repository named for its remote-access hostname, separate from product repositories and the shared skill source. The primary Ubuntu desktop uses `heymegabyte/ubuntu.megabyte.space`, with its checkout at `~/ai/repos/ubuntu.megabyte.space`. Machine repositories are excluded from product `/run-the-loop` scheduling. Machine identity records the repository and remote-desktop URL so other agents can discover them.
+Each persistent desktop should have its own private GitHub repository named for its remote-access hostname, separate from product repositories and the shared skill source. The primary Ubuntu desktop uses `ProfessorManhattan/ubuntu.megabyte.space`, with its checkout at `~/ai/repos/ubuntu.megabyte.space`. Machine repositories are excluded from product `/run-the-loop` scheduling. Machine identity records the repository and remote-desktop URL so other agents can discover them.
 
 Back up an explicit allowlist of non-secret recovery configuration and service definitions to git, committing only changes and pushing after GitHub registration. Never mirror the whole home directory or commit OAuth state, private keys, passwords, browser profiles, tunnel/API tokens, raw transcripts or unrelated project files. Full disks/personal data belong in appropriate Proxmox/encrypted backups; project source belongs in its own repository.
 
