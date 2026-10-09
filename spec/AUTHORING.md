@@ -121,7 +121,7 @@ Source: obra/superpowers `using-superpowers` skill. Prevents meta-skill activati
 
 ## See
 
-- `template/SKILL.md` — starter scaffold for new skills
+- `template/SKILL.md.example` — starter scaffold for new skills
 - `rules/internal-skill-discovery.md` — `metadata.internal` pattern
 - `rules/repo-folder-hygiene.md` — ≤10 items per folder
 - anthropics/skills `spec/agent-skills-spec.md` — official upstream spec

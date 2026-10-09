@@ -14,6 +14,8 @@ paths:
 
 # Secret Auto-Provisioning
 
+For persistent local agent execution, apply [fleet secret handling](fleet-secret-handling.md) first. The historical chezmoi/macOS recipes below apply only where that broker is actually configured; they do not authorize bulk plaintext discovery, Actions environment exports, OAuth extraction or overwriting live credentials.
+
 Companion to `secret-provisioning.md`. Acquires NEW secrets via generation, API-mint, Computer Use, or manual flow. Every "set this secret" Rec = failure.
 
 ## Core mandate

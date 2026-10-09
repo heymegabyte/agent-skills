@@ -42,7 +42,10 @@ if os.environ.get('FLEET_TEST_FAIL'):
 time.sleep(.7)
 subprocess.run(['git','add','agent-change.txt'],cwd=p,check=True,stdout=subprocess.DEVNULL)
 subprocess.run(['git','-c','user.name=FleetTest','-c','user.email=test@example.invalid','commit','-m','test: verified slice'],cwd=p,check=True,stdout=subprocess.DEVNULL)
-pathlib.Path(os.environ['AI_FLEET_REPORT']).write_text(json.dumps({'majorActions':['Committed a controlled test slice'],'tests':[],'warnings':[],'nextActions':[]}))
+if os.environ.get('FLEET_TEST_ORPHAN'):
+ subprocess.run(['git','checkout','--orphan','unrelated'],cwd=p,check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+ subprocess.run(['git','-c','user.name=FleetTest','-c','user.email=test@example.invalid','commit','-m','test: unrelated history'],cwd=p,check=True,stdout=subprocess.DEVNULL)
+pathlib.Path(os.environ['AI_FLEET_REPORT']).write_text(json.dumps({'majorActions':['Committed a controlled test slice'],'tests':([{'command':'controlled failing check','status':'failed'}] if os.environ.get('FLEET_TEST_BAD_CHECK') else []),'warnings':[],'nextActions':[]}))
 (log/'test-agent-interval.json').write_text(json.dumps([start,time.time()]))
 ''')
         executable.chmod(0o755)
@@ -61,7 +64,8 @@ pathlib.Path(os.environ['AI_FLEET_REPORT']).write_text(json.dumps({'majorActions
     def tearDown(self):
         fleet.AI = self.old_ai
         os.environ['PATH'] = self.old_path
-        os.environ.pop('FLEET_TEST_FAIL', None)
+        for key in ('FLEET_TEST_FAIL','FLEET_TEST_BAD_CHECK','FLEET_TEST_ORPHAN'):
+            os.environ.pop(key, None)
         self.temp.cleanup()
 
     def test_publication_does_not_touch_dirty_canonical_checkout(self):
@@ -108,6 +112,32 @@ pathlib.Path(os.environ['AI_FLEET_REPORT']).write_text(json.dumps({'majorActions
     def test_different_repositories_execute_concurrently(self):
         first, second = self.parallel(self.projects)
         self.assertLess(second[0], first[1])
+
+    def test_clean_submodule_worktree_is_retained_without_false_failure(self):
+        local = fleet.AI / 'repos' / self.projects[0].split('/')[-1]
+        (local / '.gitmodules').write_text('# Controlled submodule fixture\n')
+        subprocess.run(['git','add','.gitmodules'],cwd=local,check=True)
+        subprocess.run(['git','-c','user.name=FleetTest','-c','user.email=test@example.invalid','commit','-m','test: submodule metadata'],cwd=local,capture_output=True,check=True)
+        subprocess.run(['git','push','origin','main'],cwd=local,capture_output=True,check=True)
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(fleet.run(self.projects[0],timeout=15),0)
+        record=json.loads(next((fleet.AI/'logs').glob('*/run.json')).read_text())
+        self.assertTrue(any('submodule' in w for w in record['warnings']))
+
+    def test_reported_failed_check_prevents_publication(self):
+        os.environ['FLEET_TEST_BAD_CHECK'] = '1'
+        local = fleet.AI / 'repos' / self.projects[0].split('/')[-1]
+        before = fleet.command(['git','ls-remote','origin','refs/heads/main'],local)
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(fleet.run(self.projects[0],timeout=15),1)
+        self.assertEqual(before,fleet.command(['git','ls-remote','origin','refs/heads/main'],local))
+
+    def test_non_descendant_result_prevents_publication(self):
+        os.environ['FLEET_TEST_ORPHAN'] = '1'
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(fleet.run(self.projects[0],timeout=15),1)
+        record=json.loads(next((fleet.AI/'logs').glob('*/run.json')).read_text())
+        self.assertEqual(record['failureCategory'],'commit-lineage')
 
     def test_secret_redaction_and_repository_allowlist(self):
         self.assertEqual(fleet.scrub('ghp_' + 'A' * 40), '[REDACTED]')

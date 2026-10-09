@@ -1,0 +1,785 @@
+{
+  "schema": 1,
+  "researchedAt": "2026-10-09",
+  "authoritativeState": "git/files/GitHub; this report and health indexes are derived",
+  "selection": {
+    "candidateCount": 30,
+    "implementedCount": 9,
+    "fraction": 0.3,
+    "method": "Prioritize observed breakage, official-contract mismatch, security exposure and broad multi-project benefit; break ties by implementation effort and reversibility. Ranking is judgment, not a benchmark score."
+  },
+  "sources": [
+    {
+      "id": "openclaw-skills",
+      "title": "OpenClaw skills",
+      "url": "https://docs.openclaw.ai/tools/skills",
+      "accessedAt": "2026-10-09",
+      "relevance": "Skill discovery, eligibility, precedence and catalog overhead.",
+      "kind": "primary"
+    },
+    {
+      "id": "openclaw-plugins",
+      "title": "OpenClaw CLI backend plugin contract",
+      "url": "https://docs.openclaw.ai/plugins/cli-backend-plugins",
+      "accessedAt": "2026-10-09",
+      "relevance": "Explicit system prompt transport and backend launch/session configuration.",
+      "kind": "primary"
+    },
+    {
+      "id": "openclaw-cli",
+      "title": "OpenClaw CLI backends",
+      "url": "https://docs.openclaw.ai/gateway/cli-backends",
+      "accessedAt": "2026-10-09",
+      "relevance": "CLI integration differs from ACP; tool bridges require explicit configuration.",
+      "kind": "primary"
+    },
+    {
+      "id": "openclaw-context",
+      "title": "OpenClaw context",
+      "url": "https://docs.openclaw.ai/concepts/context",
+      "accessedAt": "2026-10-09",
+      "relevance": "Context includes instructions, skill catalog and workspace material.",
+      "kind": "primary"
+    },
+    {
+      "id": "openclaw-pruning",
+      "title": "OpenClaw session pruning",
+      "url": "https://docs.openclaw.ai/concepts/session-pruning",
+      "accessedAt": "2026-10-09",
+      "relevance": "Pruning is runtime-specific; it does not prove native CLI token savings.",
+      "kind": "primary"
+    },
+    {
+      "id": "openclaw-compaction",
+      "title": "OpenClaw compaction",
+      "url": "https://docs.openclaw.ai/concepts/compaction",
+      "accessedAt": "2026-10-09",
+      "relevance": "Compaction is distinct from durable file memory.",
+      "kind": "primary"
+    },
+    {
+      "id": "openclaw-security",
+      "title": "OpenClaw security",
+      "url": "https://docs.openclaw.ai/gateway/security",
+      "accessedAt": "2026-10-09",
+      "relevance": "Trusted boundaries and native execution permissions need explicit review.",
+      "kind": "primary"
+    },
+    {
+      "id": "openclaw-memory",
+      "title": "OpenClaw memory",
+      "url": "https://docs.openclaw.ai/concepts/memory",
+      "accessedAt": "2026-10-09",
+      "relevance": "File-backed memory and derived retrieval have distinct responsibilities.",
+      "kind": "primary"
+    },
+    {
+      "id": "openclaw-automation",
+      "title": "OpenClaw automation",
+      "url": "https://docs.openclaw.ai/automation/cron-jobs",
+      "accessedAt": "2026-10-09",
+      "relevance": "Product automation exists; this fleet deliberately keeps recurring schedules in GitHub.",
+      "kind": "primary"
+    },
+    {
+      "id": "openclaw-health",
+      "title": "OpenClaw health checks",
+      "url": "https://docs.openclaw.ai/gateway/health",
+      "accessedAt": "2026-10-09",
+      "relevance": "Health checks establish observed service state.",
+      "kind": "primary"
+    },
+    {
+      "id": "claude-practices",
+      "title": "Claude Code best practices",
+      "url": "https://code.claude.com/docs/en/best-practices",
+      "accessedAt": "2026-10-09",
+      "relevance": "Focused context and observable verification improve coding workflows.",
+      "kind": "primary"
+    },
+    {
+      "id": "claude-hooks",
+      "title": "Claude Code hooks",
+      "url": "https://code.claude.com/docs/en/hooks",
+      "accessedAt": "2026-10-09",
+      "relevance": "Deterministic hooks can run checks without a model round trip.",
+      "kind": "primary"
+    },
+    {
+      "id": "claude-subagents",
+      "title": "Claude Code subagents",
+      "url": "https://code.claude.com/docs/en/sub-agents",
+      "accessedAt": "2026-10-09",
+      "relevance": "Subagents have separate contexts and require deliberate handoffs.",
+      "kind": "primary"
+    },
+    {
+      "id": "claude-skills",
+      "title": "Claude Code skills",
+      "url": "https://code.claude.com/docs/en/skills",
+      "accessedAt": "2026-10-09",
+      "relevance": "Skills are discovered from metadata and expanded when used.",
+      "kind": "primary"
+    },
+    {
+      "id": "claude-setup",
+      "title": "Claude Code setup",
+      "url": "https://code.claude.com/docs/en/setup",
+      "accessedAt": "2026-10-09",
+      "relevance": "Official CLI installation and authentication remain authoritative.",
+      "kind": "primary"
+    },
+    {
+      "id": "skills-spec",
+      "title": "Agent Skills specification",
+      "url": "https://agentskills.io/specification",
+      "accessedAt": "2026-10-09",
+      "relevance": "Required name/description metadata and progressive disclosure.",
+      "kind": "primary"
+    },
+    {
+      "id": "router",
+      "title": "The actual Claw Router project",
+      "url": "https://github.com/dennisonbertram/claw-router",
+      "accessedAt": "2026-10-09",
+      "relevance": "Official Claude/Codex account routing; not a hosted API gateway.",
+      "kind": "primary"
+    },
+    {
+      "id": "opencode-config",
+      "title": "OpenCode configuration",
+      "url": "https://opencode.ai/docs/config/",
+      "accessedAt": "2026-10-09",
+      "relevance": "Direct provider configuration and environment substitution.",
+      "kind": "primary"
+    },
+    {
+      "id": "opencode-run",
+      "title": "OpenCode run implementation",
+      "url": "https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/opencode/src/cli/cmd/run.ts",
+      "accessedAt": "2026-10-09",
+      "relevance": "Current run command handles stdin; verified in installed adapter tests.",
+      "kind": "primary"
+    },
+    {
+      "id": "codex-auth",
+      "title": "Codex authentication",
+      "url": "https://developers.openai.com/codex/auth/",
+      "accessedAt": "2026-10-09",
+      "relevance": "Official authentication is preserved; no consumer session conversion.",
+      "kind": "primary"
+    },
+    {
+      "id": "codex-prompts",
+      "title": "OpenAI: rethinking skills and prompts",
+      "url": "https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra",
+      "accessedAt": "2026-10-09",
+      "relevance": "Recent guidance favors concise instructions and progressive disclosure.",
+      "kind": "primary"
+    },
+    {
+      "id": "codex-evals",
+      "title": "OpenAI: testing skills with evals",
+      "url": "https://developers.openai.com/blog/eval-skills",
+      "accessedAt": "2026-10-09",
+      "relevance": "Structured CLI events support deterministic behavioral checks.",
+      "kind": "primary"
+    },
+    {
+      "id": "gh-schedule",
+      "title": "GitHub workflow schedule events",
+      "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule",
+      "accessedAt": "2026-10-09",
+      "relevance": "Scheduled runs can be delayed; cadence is not a hard real-time guarantee.",
+      "kind": "primary"
+    },
+    {
+      "id": "gh-logs",
+      "title": "GitHub workflow logs",
+      "url": "https://docs.github.com/en/actions/how-tos/monitor-workflows/use-workflow-run-logs",
+      "accessedAt": "2026-10-09",
+      "relevance": "Run logs can be inspected and deleted when necessary.",
+      "kind": "primary"
+    },
+    {
+      "id": "gh-mask",
+      "title": "GitHub workflow commands and masking",
+      "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands#masking-a-value-in-a-log",
+      "accessedAt": "2026-10-09",
+      "relevance": "Sensitive values require protection before use; command files affect later steps.",
+      "kind": "primary"
+    },
+    {
+      "id": "gh-security",
+      "title": "GitHub Actions secure use",
+      "url": "https://docs.github.com/en/actions/reference/security/secure-use",
+      "accessedAt": "2026-10-09",
+      "relevance": "Persistent self-hosted execution requires trusted code and careful credential handling.",
+      "kind": "primary"
+    },
+    {
+      "id": "gh-runner-groups",
+      "title": "GitHub runner-group REST API",
+      "url": "https://docs.github.com/en/enterprise-cloud%40latest/rest/actions/self-hosted-runner-groups",
+      "accessedAt": "2026-10-09",
+      "relevance": "Add one repository without replacing existing runner approvals.",
+      "kind": "primary"
+    },
+    {
+      "id": "gh-runner-updates",
+      "title": "GitHub runner minimum-version timeline",
+      "url": "https://github.blog/changelog/2026-06-12-github-actions-minimum-version-enforcement-timeline-for-self-hosted-runners/",
+      "accessedAt": "2026-10-09",
+      "relevance": "Runner compatibility is an operational concern; avoid blind runtime upgrades.",
+      "kind": "primary"
+    }
+  ],
+  "ideas": [
+    {
+      "rank": 1,
+      "title": "Secret-safe execution and public-log containment",
+      "category": "security",
+      "selected": true,
+      "status": "implemented",
+      "priorityRationale": "Critical observed leak outranks speculative optimizations.",
+      "resultOrDeferral": "Actions command-file/token variables removed before native execution; command contents private; four confirmed exposed log archives deleted. Rotation still required.",
+      "sourceIds": [
+        "gh-mask",
+        "gh-security",
+        "openclaw-security"
+      ],
+      "implementationFiles": [
+        "control-plane/run_context.py",
+        "control-plane/openclaw-fleet/cli.py",
+        "rules/fleet-secret-handling.md"
+      ],
+      "confidence": "high",
+      "confidenceBasis": "Observed local defect or contract with regression checks"
+    },
+    {
+      "rank": 2,
+      "title": "Honor the OpenClaw/native CLI instruction contract",
+      "category": "runtime integration",
+      "selected": true,
+      "status": "implemented",
+      "priorityRationale": "Configured skills are of little use if policy never reaches the worker.",
+      "resultOrDeferral": "Explicit system-prompt file transport; Claude appends its policy and Codex/OpenCode receive supplemental context while retaining native instructions.",
+      "sourceIds": [
+        "openclaw-plugins",
+        "openclaw-cli",
+        "claude-practices"
+      ],
+      "implementationFiles": [
+        "control-plane/openclaw-fleet/index.js",
+        "control-plane/openclaw-fleet/cli.py"
+      ],
+      "confidence": "high",
+      "confidenceBasis": "Observed local defect or contract with regression checks"
+    },
+    {
+      "rank": 3,
+      "title": "Bound turn lifetime and reap runaway native descendants",
+      "category": "reliability",
+      "selected": true,
+      "status": "implemented",
+      "priorityRationale": "Gateway/client cancellation does not necessarily cancel a remote child.",
+      "resultOrDeferral": "Absolute turn deadline, bounded repository lease wait, process-group termination and expired-deadline rejection. Immediate cross-Gateway cancellation remains a limitation.",
+      "sourceIds": [
+        "openclaw-plugins",
+        "gh-security"
+      ],
+      "implementationFiles": [
+        "control-plane/fleet.py",
+        "control-plane/openclaw-fleet/cli.py"
+      ],
+      "confidence": "high",
+      "confidenceBasis": "Observed local defect or contract with regression checks"
+    },
+    {
+      "rank": 4,
+      "title": "Small provenance-bearing recovery packets",
+      "category": "context and memory",
+      "selected": true,
+      "status": "implemented",
+      "priorityRationale": "Recovery should inspect a few relevant facts before opening large histories.",
+      "resultOrDeferral": "Per-run context.json contains same-project recent receipts, retained paths, curated surfaces and lean runtime policy; bytes recorded. No blanket token-savings claim.",
+      "sourceIds": [
+        "openclaw-context",
+        "openclaw-memory",
+        "codex-prompts"
+      ],
+      "implementationFiles": [
+        "control-plane/run_context.py",
+        "control-plane/RUNTIME.md"
+      ],
+      "confidence": "high",
+      "confidenceBasis": "Observed local defect or contract with regression checks"
+    },
+    {
+      "rank": 5,
+      "title": "Evidence-based publication and truthful recovery semantics",
+      "category": "correctness",
+      "selected": true,
+      "status": "implemented",
+      "priorityRationale": "Repeated submodule cleanup failures and unchecked report types were real defects.",
+      "resultOrDeferral": "Validate completion types/URLs/size, reject reported failing checks and non-descendant commits, retain submodule worktrees without false run failure.",
+      "sourceIds": [
+        "claude-practices",
+        "codex-evals"
+      ],
+      "implementationFiles": [
+        "control-plane/fleet.py",
+        "control-plane/run_context.py",
+        "control-plane/tests/test_fleet.py"
+      ],
+      "confidence": "high",
+      "confidenceBasis": "Observed local defect or contract with regression checks"
+    },
+    {
+      "rank": 6,
+      "title": "Explicit provider choice with private, bounded telemetry",
+      "category": "routing and cost",
+      "selected": true,
+      "status": "implemented",
+      "priorityRationale": "Operators need route evidence without exposing shell contents or guessing headroom.",
+      "resultOrDeferral": "Manual codex/claude/deepseek selection, requested/observed route, adapter/wrapper revision and numeric usage; no ambiguous mutation retry.",
+      "sourceIds": [
+        "router",
+        "opencode-config",
+        "openclaw-plugins"
+      ],
+      "implementationFiles": [
+        ".github/workflows/run-the-loop.yml",
+        "control-plane/update-callers.py",
+        "control-plane/openclaw-fleet/cli.py"
+      ],
+      "confidence": "high",
+      "confidenceBasis": "Observed local defect or contract with regression checks"
+    },
+    {
+      "rank": 7,
+      "title": "Skill lifecycle validation, scope and synchronization",
+      "category": "skills governance",
+      "selected": true,
+      "status": "implemented",
+      "priorityRationale": "New skills were not consistently linked and authoring material was discoverable as runtime skills.",
+      "resultOrDeferral": "Focused OpenClaw skill, metadata/link doctor, owner-preserving synchronization across three Claude profiles and other runtimes; authoring/template files removed from runtime discovery.",
+      "sourceIds": [
+        "skills-spec",
+        "openclaw-skills",
+        "claude-skills"
+      ],
+      "implementationFiles": [
+        "control-plane/skills-doctor.py",
+        "control-plane/skill_links.py",
+        "openclaw-integration/SKILL.md",
+        "spec/AUTHORING.md"
+      ],
+      "confidence": "high",
+      "confidenceBasis": "Observed local defect or contract with regression checks"
+    },
+    {
+      "rank": 8,
+      "title": "Derived fleet health and repeat-failure diagnosis",
+      "category": "observability",
+      "selected": true,
+      "status": "implemented",
+      "priorityRationale": "A healthy daemon is not proof that projects are making progress.",
+      "resultOrDeferral": "Read-only GitHub/local health report, actual workflow state, recent successes/failure streaks, secret-availability boolean and failure fingerprints; no extra model/timer/issue spam.",
+      "sourceIds": [
+        "openclaw-health",
+        "gh-schedule",
+        "gh-logs"
+      ],
+      "implementationFiles": [
+        "control-plane/portfolio-health.py",
+        "control-plane/fleet.py"
+      ],
+      "confidence": "high",
+      "confidenceBasis": "Observed local defect or contract with regression checks"
+    },
+    {
+      "rank": 9,
+      "title": "Portfolio-aware onboarding and verification hints",
+      "category": "project integration",
+      "selected": true,
+      "status": "implemented",
+      "priorityRationale": "The fifth project exists, and these repositories do not share one application shape.",
+      "resultOrDeferral": "Discover and onboard bricklabor.com; preserve existing runner-group approvals; curate project surfaces and verification hints for all five; pin obvious callers on main.",
+      "sourceIds": [
+        "gh-runner-groups",
+        "claude-practices",
+        "gh-schedule"
+      ],
+      "implementationFiles": [
+        "control-plane/fleet.json",
+        "machines/ubuntu-proxmox-primary.md",
+        "control-plane/update-callers.py"
+      ],
+      "confidence": "high",
+      "confidenceBasis": "Observed local defect or contract with regression checks"
+    },
+    {
+      "rank": 10,
+      "title": "Repository-scoped retrieval with scored excerpts",
+      "category": "search",
+      "selected": false,
+      "status": "deferred",
+      "priorityRationale": "Improve existing FTS before paying for vectors.",
+      "resultOrDeferral": "Deferred: current packets already bound initial recovery; measure retrieval misses first.",
+      "sourceIds": [
+        "openclaw-memory",
+        "openclaw-context"
+      ],
+      "implementationFiles": [],
+      "confidence": "conditional",
+      "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
+    },
+    {
+      "rank": 11,
+      "title": "Rehydrate local memory from retained GitHub artifacts",
+      "category": "memory durability",
+      "selected": false,
+      "status": "deferred",
+      "priorityRationale": "A new host should reconstruct useful derived context.",
+      "resultOrDeferral": "Deferred: machine bootstrap and git suffice today; artifact retention is only 90 days.",
+      "sourceIds": [
+        "gh-logs",
+        "openclaw-memory"
+      ],
+      "implementationFiles": [],
+      "confidence": "conditional",
+      "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
+    },
+    {
+      "rank": 12,
+      "title": "A single-controller Cua desktop lease",
+      "category": "desktop coordination",
+      "selected": false,
+      "status": "deferred",
+      "priorityRationale": "Parallel repository work should not race keyboard and mouse.",
+      "resultOrDeferral": "Deferred: document one-controller convention; no evidence of concurrent GUI jobs yet.",
+      "sourceIds": [
+        "openclaw-security",
+        "gh-security"
+      ],
+      "implementationFiles": [],
+      "confidence": "conditional",
+      "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
+    },
+    {
+      "rank": 13,
+      "title": "Deterministic per-surface verification registry",
+      "category": "testing",
+      "selected": false,
+      "status": "deferred",
+      "priorityRationale": "Map affected files to proven package commands.",
+      "resultOrDeferral": "Deferred: hints implemented first; test commands need validation within each product before automation.",
+      "sourceIds": [
+        "claude-hooks",
+        "codex-evals"
+      ],
+      "implementationFiles": [],
+      "confidence": "conditional",
+      "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
+    },
+    {
+      "rank": 14,
+      "title": "Cross-project dependency and deployment graph",
+      "category": "portfolio intelligence",
+      "selected": false,
+      "status": "deferred",
+      "priorityRationale": "Understand upstream site/control-plane relationships.",
+      "resultOrDeferral": "Deferred: discovered stacks are not sufficient evidence of actual dependency edges.",
+      "sourceIds": [
+        "openclaw-memory",
+        "claude-practices"
+      ],
+      "implementationFiles": [],
+      "confidence": "conditional",
+      "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
+    },
+    {
+      "rank": 15,
+      "title": "Independent review only for high-impact changes",
+      "category": "review quality",
+      "selected": false,
+      "status": "deferred",
+      "priorityRationale": "Use fresh context when review value exceeds extra compute.",
+      "resultOrDeferral": "Deferred: avoid mandatory reviewer cost for every fifteen-minute turn.",
+      "sourceIds": [
+        "claude-subagents",
+        "codex-evals"
+      ],
+      "implementationFiles": [],
+      "confidence": "conditional",
+      "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
+    },
+    {
+      "rank": 16,
+      "title": "Account headroom and reset UI",
+      "category": "compute UX",
+      "selected": false,
+      "status": "deferred",
+      "priorityRationale": "Expose safe router observations with timestamps.",
+      "resultOrDeferral": "Deferred: preserve unknown/stale states; avoid undocumented subscription APIs.",
+      "sourceIds": [
+        "router",
+        "codex-auth"
+      ],
+      "implementationFiles": [],
+      "confidence": "conditional",
+      "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
+    },
+    {
+      "rank": 17,
+      "title": "A context-quality A/B evaluation corpus",
+      "category": "optimization measurement",
+      "selected": false,
+      "status": "deferred",
+      "priorityRationale": "Measure completion quality and overhead before claiming savings.",
+      "resultOrDeferral": "Deferred: regression contracts added now; representative multi-project trials need a baseline dataset.",
+      "sourceIds": [
+        "codex-evals",
+        "codex-prompts"
+      ],
+      "implementationFiles": [],
+      "confidence": "conditional",
+      "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
+    },
+    {
+      "rank": 18,
+      "title": "Compatibility canaries before automatic runtime upgrades",
+      "category": "maintenance",
+      "selected": false,
+      "status": "deferred",
+      "priorityRationale": "An upstream tool release can alter the backend contract.",
+      "resultOrDeferral": "Deferred: installed runtime integration is verified now; automatic upgrade service adds another failure surface.",
+      "sourceIds": [
+        "gh-runner-updates",
+        "openclaw-plugins"
+      ],
+      "implementationFiles": [],
+      "confidence": "conditional",
+      "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
+    },
+    {
+      "rank": 19,
+      "title": "Native session resume with provenance checks",
+      "category": "long task continuity",
+      "selected": false,
+      "status": "deferred",
+      "priorityRationale": "Reuse history only when workspace/policy identity matches.",
+      "resultOrDeferral": "Deferred: current backend deliberately uses fresh sessions and durable files; unsafe resume could mix worktrees.",
+      "sourceIds": [
+        "openclaw-cli",
+        "openclaw-compaction"
+      ],
+      "implementationFiles": [],
+      "confidence": "conditional",
+      "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
+    },
+    {
+      "rank": 20,
+      "title": "Provider-assisted credential rotation",
+      "category": "incident response",
+      "selected": false,
+      "status": "deferred",
+      "priorityRationale": "Containment alone cannot revoke leaked credentials.",
+      "resultOrDeferral": "Deferred and required follow-up: needs each provider account; do not automate unverified destructive rotation.",
+      "sourceIds": [
+        "gh-security",
+        "gh-logs"
+      ],
+      "implementationFiles": [],
+      "confidence": "conditional",
+      "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
+    },
+    {
+      "rank": 21,
+      "title": "Proxmox full-disk backups and guest-agent verification",
+      "category": "host recovery",
+      "selected": false,
+      "status": "deferred",
+      "priorityRationale": "Git snapshots omit credentials, databases and personal data.",
+      "resultOrDeferral": "Deferred: host-level backup policy requires Proxmox access; machine README makes limits explicit.",
+      "sourceIds": [
+        "gh-security",
+        "openclaw-security"
+      ],
+      "implementationFiles": [],
+      "confidence": "conditional",
+      "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
+    },
+    {
+      "rank": 22,
+      "title": "Signed skill releases and dependency attestations",
+      "category": "supply chain",
+      "selected": false,
+      "status": "deferred",
+      "priorityRationale": "Mutable shared skills are a privileged input.",
+      "resultOrDeferral": "Deferred: SHA-pinned workflow callers plus trusted git source are sufficient current boundary.",
+      "sourceIds": [
+        "gh-security",
+        "skills-spec"
+      ],
+      "implementationFiles": [],
+      "confidence": "conditional",
+      "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
+    },
+    {
+      "rank": 23,
+      "title": "Control UI search over canonical run artifacts",
+      "category": "human workflow",
+      "selected": false,
+      "status": "deferred",
+      "priorityRationale": "Let humans inspect reports without opening each project.",
+      "resultOrDeferral": "Deferred: user excluded website publishing; current local UI remains operational.",
+      "sourceIds": [
+        "gh-logs",
+        "openclaw-memory"
+      ],
+      "implementationFiles": [],
+      "confidence": "conditional",
+      "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
+    },
+    {
+      "rank": 24,
+      "title": "Event-driven targeted turns alongside cadence",
+      "category": "scheduler evolution",
+      "selected": false,
+      "status": "deferred",
+      "priorityRationale": "Respond sooner to actionable changes.",
+      "resultOrDeferral": "Deferred: user explicitly wants one turn for every enabled repository on each tick.",
+      "sourceIds": [
+        "gh-schedule",
+        "openclaw-automation"
+      ],
+      "implementationFiles": [],
+      "confidence": "conditional",
+      "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
+    },
+    {
+      "rank": 25,
+      "title": "Global token/headroom portfolio allocation",
+      "category": "capacity planning",
+      "selected": false,
+      "status": "deferred",
+      "priorityRationale": "Allocate scarce subscription headroom across projects.",
+      "resultOrDeferral": "Deferred: user explicitly ruled out sophisticated slot allocation for now.",
+      "sourceIds": [
+        "router",
+        "gh-schedule"
+      ],
+      "implementationFiles": [],
+      "confidence": "conditional",
+      "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
+    },
+    {
+      "rank": 26,
+      "title": "Cloudflare AI Search / vector memory",
+      "category": "search infrastructure",
+      "selected": false,
+      "status": "deferred",
+      "priorityRationale": "May help when corpus scale/retrieval quality justifies it.",
+      "resultOrDeferral": "Deferred: no measured need beyond local file/FTS search; no new Cloudflare assets.",
+      "sourceIds": [
+        "openclaw-memory",
+        "openclaw-context"
+      ],
+      "implementationFiles": [],
+      "confidence": "conditional",
+      "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
+    },
+    {
+      "rank": 27,
+      "title": "Per-job tenant containers and separate OS users",
+      "category": "isolation",
+      "selected": false,
+      "status": "deferred",
+      "priorityRationale": "Real tenant boundaries exceed environment filtering.",
+      "resultOrDeferral": "Deferred: this is an explicitly trusted-owner persistent desktop; full isolation is a larger redesign.",
+      "sourceIds": [
+        "gh-security",
+        "openclaw-security"
+      ],
+      "implementationFiles": [],
+      "confidence": "conditional",
+      "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
+    },
+    {
+      "rank": 28,
+      "title": "Learn reusable skill improvements from accepted run outcomes",
+      "category": "continuous improvement",
+      "selected": false,
+      "status": "deferred",
+      "priorityRationale": "Convert repeat errors into narrow guidance and behavioral evals.",
+      "resultOrDeferral": "Deferred: avoid treating agent self-reports as training truth; gather verified examples first.",
+      "sourceIds": [
+        "codex-evals",
+        "skills-spec"
+      ],
+      "implementationFiles": [],
+      "confidence": "conditional",
+      "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
+    },
+    {
+      "rank": 29,
+      "title": "Race multiple native providers for each coding task",
+      "category": "latency experiment",
+      "selected": false,
+      "status": "rejected",
+      "priorityRationale": "Parallel answers can reduce latency for read-only questions.",
+      "resultOrDeferral": "Rejected for routine mutating turns: duplicate costs and conflicting edits outweigh unproven benefit.",
+      "sourceIds": [
+        "claude-subagents",
+        "router"
+      ],
+      "implementationFiles": [],
+      "confidence": "conditional",
+      "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
+    },
+    {
+      "rank": 30,
+      "title": "Autonomous payment/marketing production mutations",
+      "category": "business automation",
+      "selected": false,
+      "status": "rejected",
+      "priorityRationale": "Business integrations could eventually connect to orchestrated work.",
+      "resultOrDeferral": "Rejected for this setup task: real payments, messages and campaign changes need specific authorized product flows.",
+      "sourceIds": [
+        "openclaw-security",
+        "gh-security"
+      ],
+      "implementationFiles": [],
+      "confidence": "conditional",
+      "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
+    }
+  ],
+  "observations": [
+    {
+      "fact": "All three persistent runners were online/idle before rollout; existing additional repository approvals retained.",
+      "origin": "GitHub org runner and runner-group APIs"
+    },
+    {
+      "fact": "bricklabor.com exists under heymegabyte; five projects have distinct product surfaces.",
+      "origin": "GitHub metadata and repository README/package/config inspection"
+    },
+    {
+      "fact": "megabyte.space repeated failures include Git refusing submodule worktree removal.",
+      "origin": "Local run receipts; no raw credential-bearing logs retained in research"
+    },
+    {
+      "fact": "Confirmed unmasked credentials in public megabyte.space run logs. Four log archives deleted; latest 12 completed runs inspected, not an exhaustive lifetime audit. Rotation outstanding.",
+      "origin": "Captured log scan; values never printed or stored in this report"
+    },
+    {
+      "fact": "DEEPSEEK_API_KEY is unavailable and Infisical is not enrolled.",
+      "origin": "Existence-only get-secret check and enrollment-file presence"
+    },
+    {
+      "fact": "Metadata/link inventory is not proof of model-side eligibility or successful execution.",
+      "origin": "Live skills listing and native CLI Gateway probes validate separate contracts"
+    }
+  ]
+}

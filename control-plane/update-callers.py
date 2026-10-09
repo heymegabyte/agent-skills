@@ -27,6 +27,11 @@ on:
     - cron: '2,17,32,47 * * * *'
   workflow_dispatch:
     inputs:
+      runtime:
+        description: Official native CLI route
+        type: choice
+        options: [codex, claude, deepseek]
+        default: codex
       objective:
         description: Optional focus for this one loop
         type: string
@@ -40,6 +45,7 @@ jobs:
   loop:
     uses: heymegabyte/agent-skills/.github/workflows/run-the-loop.yml@{a.revision}
     with:
+      runtime: ${{{{ inputs.runtime || 'codex' }}}}
       project: {repository}
       shared-revision: {a.revision}
       runner-labels: '["self-hosted","linux","ubuntu","persistent","proxmox-vm","agent","codex"]'

@@ -125,3 +125,5 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 - `test-writer`
 - `transcriber`
 - `visual-qa`
+
+- **OpenClaw / fleet orchestration / runner context** → `openclaw-integration`; use `control-plane/RUNTIME.md` for coding turns and `control-plane/FLEET.md` for host configuration.

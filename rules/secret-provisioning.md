@@ -14,6 +14,8 @@ paths:
 
 # Secret Provisioning
 
+For persistent local agent execution, apply [fleet secret handling](fleet-secret-handling.md) first. The historical chezmoi/macOS recipes below apply only where that broker is actually configured; they do not authorize bulk plaintext discovery, Actions environment exports, OAuth extraction or overwriting live credentials.
+
 ## Why this grew
 
 - 2026-06-19: added § "Mint a scoped CF API token from the Global API Key" + § "Never-overwrite-live-secrets discipline" — two arc-proven techniques (projectsites.dev) that unblock prod secret-put without escalating to the user. Load-bearing recipes, not filler.

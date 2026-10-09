@@ -12,6 +12,9 @@ on:
       runner-labels:
         type: string
         default: '["self-hosted","linux","persistent","proxmox-vm","agent","codex"]'
+      runtime:
+        type: string
+        default: 'codex'
       objective:
         type: string
         default: ''
@@ -28,6 +31,7 @@ jobs:
     env:
       FLEET_PROJECT: ${{ inputs.project }}
       FLEET_REVISION: ${{ inputs.shared-revision }}
+      FLEET_RUNTIME: ${{ inputs.runtime }}
       FLEET_OBJECTIVE: ${{ inputs.objective }}
       FLEET_OUTPUT: '${{ github.workspace }}/fleet-report-${{ github.run_id }}-${{ github.run_attempt }}'
     steps:
@@ -56,6 +60,7 @@ jobs:
           # No ephemeral checkout contains subscription OAuth credentials.
           python3 shared-fleet/control-plane/fleet.py run \
             --repository "$FLEET_PROJECT" \
+            --runtime "$FLEET_RUNTIME" \
             --output "$FLEET_OUTPUT" \
             --message "$FLEET_OBJECTIVE"
       - name: Ensure every run has a summary and structured record

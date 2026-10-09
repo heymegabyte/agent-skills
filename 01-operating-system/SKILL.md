@@ -21,6 +21,10 @@ paths:
 
 # 01 — Operating System
 
+## Scope and authority
+
+User/system/developer instructions take precedence. For persistent fleet or machine work use `control-plane/RUNTIME.md` (coding turns) or `control-plane/FLEET.md` (configuration). Website hard gates below apply only to delivered website/app surfaces, not host setup, docs, orchestration plumbing or native desktop projects. Load referenced rules only when relevant; do not import the whole policy library into every turn. Main is normal; isolation does not require feature branches.
+
 Supreme policy. Loaded every prompt. Overrides all other skills.
 
 ## Philosophies (priority order)

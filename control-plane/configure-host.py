@@ -82,7 +82,8 @@ for project in fleet['projects']:
         'model': {'primary': 'fleet-cli/codex'}})
 agents['entries'] = existing
 c.setdefault('tools', {}).update({'sessions': {'visibility': 'all'}, 'agentToAgent': {'enabled': True}})
-c.setdefault('skills', {}).setdefault('load', {})['extraDirs'] = [str(p.parent) for p in root.glob('*/SKILL.md') if p.parent.name[:2].isdigit()]
+load = c.setdefault('skills', {}).setdefault('load', {})
+load['extraDirs'] = list(dict.fromkeys(load.get('extraDirs', []) + [str(root)]))
 plugins = c.setdefault('plugins', {})
 plugins['allow'] = list(set(plugins.get('allow', []) + ['fleet-cli']))
 plugins.setdefault('load', {})['paths'] = list(set(plugins.get('load', {}).get('paths', []) + [str(root / 'control-plane/openclaw-fleet')]))
@@ -91,14 +92,8 @@ if path.exists():
     shutil.copy2(path, state / 'openclaw.pre-fleet.json')
 path.write_text(json.dumps(c, indent=2) + '\n')
 path.chmod(0o600)
-for target in [home / '.codex/skills', home / '.claude/skills', home / '.config/opencode/skills']:
-    target.mkdir(parents=True, exist_ok=True)
-    for skill in root.glob('*/SKILL.md'):
-        if not skill.parent.name[:2].isdigit():
-            continue
-        link = target / skill.parent.name
-        if not link.exists() and not link.is_symlink():
-            link.symlink_to(skill.parent)
+from skill_links import synchronize
+synchronize(root, home)
 commands = home / '.claude/commands'
 commands.mkdir(parents=True, exist_ok=True)
 for source in (root / 'commands').glob('*.md'):
@@ -173,4 +168,4 @@ Persistent=true
 [Install]
 WantedBy=timers.target
 ''')
-print('Configured persistent OpenClaw, three pending Claude profiles and shared skill links; credentials preserved.')
+print('Configured persistent OpenClaw and shared skill links; existing account state and credentials preserved.')

@@ -3,12 +3,101 @@
   "machine": "ubuntu-proxmox-primary",
   "schedule": "2,17,32,47 * * * *",
   "runnerInstances": 3,
-  "runnerLabels": ["self-hosted", "linux", "ubuntu", "persistent", "proxmox-vm", "agent", "codex", "claude", "opencode"],
-  "projects": [
-    {"repository": "heymegabyte/projectsites.dev", "agent": "projectsites", "enabled": true, "url": "https://projectsites.dev"},
-    {"repository": "heymegabyte/megabyte.space", "agent": "megabyte", "enabled": true, "url": "https://megabyte.space"},
-    {"repository": "heymegabyte/gitl.ink", "agent": "gitlink", "enabled": true, "url": "https://gitl.ink"},
-    {"repository": "heymegabyte/deskl.ink", "agent": "desklink", "enabled": true, "url": "https://deskl.ink"}
+  "runnerLabels": [
+    "self-hosted",
+    "linux",
+    "ubuntu",
+    "persistent",
+    "proxmox-vm",
+    "agent",
+    "codex",
+    "claude",
+    "opencode"
   ],
-  "unresolvedProjects": ["bricklabor.com"]
+  "projects": [
+    {
+      "repository": "heymegabyte/projectsites.dev",
+      "agent": "projectsites",
+      "enabled": true,
+      "url": "https://projectsites.dev",
+      "kind": "website-generation",
+      "surfaces": [
+        "Cloudflare API Worker",
+        "Angular admin",
+        "Remix editor"
+      ],
+      "verificationHints": [
+        "Identify the affected app/package before choosing tests.",
+        "Verify generation output and editor independently when both change."
+      ],
+      "runtime": "codex"
+    },
+    {
+      "repository": "heymegabyte/megabyte.space",
+      "agent": "megabyte",
+      "enabled": true,
+      "url": "https://megabyte.space",
+      "kind": "cloud-control",
+      "surfaces": [
+        "Cloudflare control plane",
+        "Upstream submodule releases"
+      ],
+      "verificationHints": [
+        "Inspect git submodule status and release/deployment manifests.",
+        "A clean retained submodule worktree is not an execution failure."
+      ],
+      "runtime": "codex"
+    },
+    {
+      "repository": "heymegabyte/gitl.ink",
+      "agent": "gitlink",
+      "enabled": true,
+      "url": "https://gitl.ink",
+      "kind": "repository-catalog",
+      "surfaces": [
+        "Repository grid/catalog",
+        "GitHub workflow controls",
+        "Derived AI Search"
+      ],
+      "verificationHints": [
+        "Keep GitHub Actions authoritative for runs and dispatch."
+      ],
+      "runtime": "codex"
+    },
+    {
+      "repository": "heymegabyte/deskl.ink",
+      "agent": "desklink",
+      "enabled": true,
+      "url": "https://deskl.ink",
+      "kind": "native-desktop",
+      "surfaces": [
+        "Electron main process",
+        "Renderer",
+        "Native SQLite and PTY"
+      ],
+      "verificationHints": [
+        "Native dependency/toolchain checks differ from website deploy gates.",
+        "Serialize desktop input only, keep repository jobs concurrent."
+      ],
+      "runtime": "codex"
+    },
+    {
+      "repository": "heymegabyte/bricklabor.com",
+      "agent": "bricklabor",
+      "enabled": true,
+      "url": "https://bricklabor.com",
+      "kind": "service-business",
+      "surfaces": [
+        "Workers/Hono API",
+        "React/Vite booking UI",
+        "D1/KV/R2",
+        "Payment/SMS webhooks"
+      ],
+      "verificationHints": [
+        "Do not claim payment or notification success without integration evidence."
+      ],
+      "runtime": "codex"
+    }
+  ],
+  "unresolvedProjects": []
 }
