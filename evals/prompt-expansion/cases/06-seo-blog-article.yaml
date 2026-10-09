@@ -1,0 +1,31 @@
+# Benchmark 6 — "Create an SEO blog article about our product"
+# A CONTENT task, not an app build. The dimensions still apply but map to
+# content: intent = audience + keyword + goal; competitors = SERP/ranking
+# articles; evidence = facts/sources; "screens" = article structure;
+# "golden path" = reader journey → conversion; "reqs" = SEO acceptance
+# criteria. The deliberate trap: "our product" is unnamed — a strong
+# expansion asks the ONE load-bearing question or proceeds on a stated
+# placeholder, and does NOT fabricate product facts.
+- description: "seo-content — SEO blog article"
+  vars:
+    request: "Create an SEO blog article about our product"
+    org_type: "an SEO content/article deliverable (benchmark against top-ranking SERP articles + AI-search/GEO best practice)"
+  assert:
+    - type: llm-rubric
+      value: >
+        The expansion covers real SEO-content craft: target audience & search
+        intent, a primary keyword / topic cluster, a competitive SERP look
+        (what currently ranks and the gap to beat), an article outline with
+        headings, on-page SEO (title/meta/schema/internal links), and a
+        measurable goal (ranking / conversion). A generic "write a blog post"
+        with no keyword or SERP analysis scores LOW.
+      metric: seo_content_core
+    - type: llm-rubric
+      value: >
+        "Our product" is unspecified. The expansion handles this WITHOUT
+        inventing product facts: it either asks the single load-bearing
+        question (what is the product) or proceeds on a clearly-labelled
+        placeholder / assumption — and it does NOT fabricate specific features,
+        pricing, or claims about an unknown product. Fabricating product
+        specifics scores LOW.
+      metric: no_fabricated_product

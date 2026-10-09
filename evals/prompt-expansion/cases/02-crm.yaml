@@ -1,0 +1,23 @@
+# Benchmark 2 — "Build a modern CRM"
+# "modern" is the quality signal. A strong expansion names the CRM domain
+# (contacts, deals, pipeline, activities) AND what "modern" buys (automation,
+# AI, integrations) rather than a generic contacts list.
+- description: "crm — modern CRM"
+  vars:
+    request: "Build a modern CRM"
+    org_type: "a customer-relationship-management product (compare to Salesforce, HubSpot, Pipedrive, Attio, Close)"
+  assert:
+    - type: llm-rubric
+      value: >
+        The expansion covers the CRM domain model: contacts/accounts, a deal
+        pipeline with stages, activities/tasks and a timeline of interactions,
+        and reporting. It also addresses lead capture and email/communication
+        logging. Missing the pipeline-and-contacts core scores LOW.
+      metric: crm_core
+    - type: llm-rubric
+      value: >
+        The expansion makes "modern" concrete — e.g. workflow automation,
+        AI-assisted enrichment / next-best-action, a command palette / fast
+        keyboard-first UX, real-time collaboration, or deep integrations — not
+        just a styled table of contacts.
+      metric: modern_defined

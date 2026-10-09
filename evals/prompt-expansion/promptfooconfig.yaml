@@ -1,0 +1,183 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+#
+# §28 Prompt-Expansion Benchmark — Megabyte agent-skill system.
+#
+# WHAT THIS SCORES
+#   Not the plumbing (that's E2E) but the *generation quality* of the agent's
+#   PROMPT EXPANSION: given a thin, one-line build request, does the agent
+#   expand the SEED into the full 80% arc BEFORE building — per the
+#   predictive-completeness + first-time-excellence + competitor-research
+#   doctrine? Each case probes the dimensions a strong expansion must cover:
+#   intent, competitor evidence, architecture alternatives, full feature
+#   inventory, major screens, critical golden paths, reusable components,
+#   coherent OpenSpec reqs, actionable tasks — and the ANTI-pattern of
+#   stalling on redundant clarifying questions.
+#
+# PROVIDER POLICY (hard — rules/agent-provider-policy.md)
+#   Internal evals run on the ONE allowed internal API: DeepSeek, OpenAI-
+#   compatible endpoint, key resolved at runtime from `get-secret DEEPSEEK_API_KEY`
+#   and exported into THIS process only (see README — never hardcode, never
+#   commit, never print). ANTHROPIC_API_KEY / OPENAI_API_KEY are NEVER used
+#   here. The LLM-rubric judge runs on the same DeepSeek rail so no second
+#   provider key is needed. Subscription CLIs (claude/codex) are the frontier
+#   judgment rail for interactive work but cannot be a promptfoo provider, so
+#   the benchmark grades on DeepSeek by design.
+#
+# RUN
+#   export DEEPSEEK_API_KEY="$(get-secret DEEPSEEK_API_KEY)"
+#   npx -y promptfoo@0.124.1 eval -c promptfooconfig.yaml
+#   (full recipe + CI wiring in README.md)
+
+description: "Prompt-expansion benchmark — thin build request → full predictive-completeness expansion"
+
+# ── Provider under test ──────────────────────────────────────────────────────
+# DeepSeek Chat (V3) over the OpenAI-compatible API. Deterministic-ish (low
+# temperature) so the benchmark is reproducible run-to-run.
+providers:
+  - id: openai:chat:deepseek-chat
+    label: deepseek-v3
+    config:
+      apiBaseUrl: https://api.deepseek.com/v1
+      apiKeyEnvar: DEEPSEEK_API_KEY
+      temperature: 0.2
+      max_tokens: 4000
+
+# ── Prompt under test ────────────────────────────────────────────────────────
+# A single system+user chat prompt that asks the model to EXPAND the thin
+# request the way a Megabyte agent must (seed → full arc) before any code.
+# The thin request is injected as {{request}}; {{org_type}} gives the grader
+# context for competitor/screen expectations.
+prompts:
+  - file://expansion-prompt.yaml
+
+# ── Shared rubric applied to EVERY case ──────────────────────────────────────
+# These eleven assertions ARE the quality dimensions named in §28. They are
+# llm-rubric (judge-scored) because expansion quality is subjective; the
+# deterministic `javascript` length guard and the anti-clarifying-question
+# check are preflights that never need a model.
+defaultTest:
+  options:
+    # Judge on the same DeepSeek rail — no Anthropic/OpenAI key in the loop.
+    provider:
+      id: openai:chat:deepseek-chat
+      config:
+        apiBaseUrl: https://api.deepseek.com/v1
+        apiKeyEnvar: DEEPSEEK_API_KEY
+        temperature: 0
+  assert:
+    # -- Deterministic preflight (free, no model) ------------------------------
+    - type: javascript
+      # A real expansion is substantial. A one-paragraph non-answer fails here
+      # before we pay for any judge call.
+      value: "output.length > 1200"
+      metric: substance
+
+    # -- Dimension 1: understands the JOB, not the literal words ---------------
+    - type: llm-rubric
+      value: >
+        The response restates the USER'S UNDERLYING JOB / goal in its own
+        words (who it's for, what outcome it must deliver) rather than merely
+        echoing the one-line request. It interprets the brief charitably and
+        commits to a concrete product vision. Score high only if intent is
+        made explicit before any feature list.
+      metric: understands_intent
+
+    # -- Dimension 2: researches competitors -----------------------------------
+    - type: llm-rubric
+      value: >
+        The response names SPECIFIC comparable products / competitors (real,
+        named — not "various tools") appropriate to {{org_type}}, and states
+        what to learn or beat from each. A generic "we should research
+        competitors" sentence with no named peers scores LOW.
+      metric: researches_competitors
+
+    # -- Dimension 3: uses evidence --------------------------------------------
+    - type: llm-rubric
+      value: >
+        Claims are grounded in EVIDENCE — concrete references to competitor
+        features, market/user expectations, standards, data points, or stated
+        best practices — not unsupported assertion. Hand-wavy "users want a
+        great experience" with no specifics scores LOW.
+      metric: uses_evidence
+
+    # -- Dimension 4: proposes architecture ALTERNATIVES -----------------------
+    - type: llm-rubric
+      value: >
+        The response proposes MORE THAN ONE viable architecture / tech-stack
+        approach (e.g. two framings with trade-offs) and then PICKS one with a
+        rationale. A single take with no alternative weighed scores LOW; naming
+        two options and choosing scores HIGH.
+      metric: architecture_alternatives
+
+    # -- Dimension 5: full feature inventory -----------------------------------
+    - type: llm-rubric
+      value: >
+        The response enumerates a THOROUGH feature inventory covering the full
+        arc the user will eventually want — core features, supporting features,
+        and the empty / loading / error / success / edge states — not just the
+        one or two features the literal prompt mentioned. Breadth and the
+        presence of non-happy-path states both matter.
+      metric: feature_inventory
+
+    # -- Dimension 6: major screens --------------------------------------------
+    - type: llm-rubric
+      value: >
+        The response lists the MAJOR SCREENS / views / routes of the product
+        (named, e.g. a dashboard, a detail view, a settings surface, an empty
+        state) — enough that a builder could scaffold navigation from it.
+      metric: major_screens
+
+    # -- Dimension 7: critical golden paths ------------------------------------
+    - type: llm-rubric
+      value: >
+        The response describes at least two CRITICAL GOLDEN PATHS / end-to-end
+        user journeys (ordered step sequences a real user takes to get value),
+        not just a static feature list. Steps should be concrete enough to turn
+        into an E2E test.
+      metric: golden_paths
+
+    # -- Dimension 8: reusable components ---------------------------------------
+    - type: llm-rubric
+      value: >
+        The response identifies REUSABLE COMPONENTS / shared primitives
+        (design-system pieces, shared data/domain modules, shared services)
+        that should be built once and composed across screens — showing the
+        author is thinking in composable primitives, not one-off pages.
+      metric: reusable_components
+
+    # -- Dimension 9: coherent OpenSpec reqs ------------------------------------
+    - type: llm-rubric
+      value: >
+        The response produces COHERENT, SPEC-STYLE REQUIREMENTS — discrete,
+        testable statements (OpenSpec / "the system SHALL / MUST …" style, or
+        clearly-scoped acceptance criteria) that are internally consistent and
+        traceable to the features above. Vague goals that can't be verified
+        score LOW.
+      metric: coherent_reqs
+
+    # -- Dimension 10: actionable tasks ----------------------------------------
+    - type: llm-rubric
+      value: >
+        The response breaks the work into ACTIONABLE, appropriately-sized
+        implementation TASKS (each a concrete unit a developer could pick up
+        and finish), ideally ordered or grouped. A single "build the app" blob
+        scores LOW; a sequenced task list scores HIGH.
+      metric: actionable_tasks
+
+    # -- Dimension 11: avoids redundant clarifying questions -------------------
+    - type: llm-rubric
+      value: >
+        The response DECIDES AND PROCEEDS. It does NOT stall the user with a
+        list of clarifying questions that it could reasonably have answered by
+        making sensible assumptions. If it must flag an unknown, it states the
+        assumption it is proceeding under instead of blocking. A response that
+        asks the user to answer questions before it will expand scores LOW;
+        state any assumptions explicitly and move forward to score HIGH.
+      metric: decide_and_proceed
+
+# ── The seven benchmark requests ─────────────────────────────────────────────
+# Each lives in its own case file (cases/*.yaml) so cases are added / tuned
+# independently. Globbed in; every case inherits the eleven shared assertions
+# above and adds request-specific ones.
+tests:
+  - file://cases/*.yaml

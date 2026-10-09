@@ -1,0 +1,26 @@
+# Benchmark 1 — "Build an amazing CMS"
+# Thin, vague, adjective-led. A strong expansion must infer a real
+# content-management product: content modeling, editing, publishing workflow,
+# media, roles, and delivery — not a toy note app.
+- description: "cms — amazing CMS"
+  vars:
+    request: "Build an amazing CMS"
+    org_type: "a content management system (compare to Sanity, Contentful, Strapi, WordPress, Payload)"
+  assert:
+    # Request-specific: the CMS-defining capabilities a credible expansion names.
+    - type: llm-rubric
+      value: >
+        The expansion covers the capabilities that DEFINE a CMS: a content
+        model / schema for structured content types, a rich editing experience,
+        a draft→review→publish workflow (versioning / scheduling), media/asset
+        handling, user roles & permissions, and content DELIVERY (an API or
+        rendered front-end). Missing the content-model-and-publishing core
+        scores LOW even if the prose is polished.
+      metric: cms_core
+    - type: llm-rubric
+      value: >
+        The expansion treats "amazing" as a quality bar it must define and meet
+        (e.g. preview, collaborative/real-time editing, a polished authoring UX,
+        localization, or AI-assisted content) rather than leaving the adjective
+        unexamined.
+      metric: amazing_defined

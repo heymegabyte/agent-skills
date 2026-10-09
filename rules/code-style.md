@@ -13,6 +13,15 @@ superseded_by: null
 
 Enforce TS 7.0 strict mode, Google TS Style, ESM-only imports, and Cloudflare Workers-compatible patterns across all TypeScript and Angular code.
 
+## Discipline — simplicity-first + surgical (Karpathy)
+
+Folded from [multica-ai/andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills) (`karpathy-guidelines`, MIT) — the LLM-coding failure modes it names, reconciled with estate doctrine (NOT the upstream plugin — [[vendored-skill-compression]]):
+
+- **Maximalist on SCOPE, minimal + surgical on CODE.** Predict the full arc of WHAT to build ([[predictive-completeness]], `first-time-excellence`) — then implement each piece with the LEAST code that solves it. No speculative features, no abstraction for single-use code, no unrequested "flexibility"/config, no error-handling for impossible states. Maximalism governs scope — never a license to over-engineer the implementation.
+- **Surgical changes.** Touch only what the task needs; preserve surrounding style; make NO orthogonal edits (don't refactor unrelated code mid-task — `code-simplifier`/`dead-code-remover` clean separately).
+- **Never SILENTLY assume** — Karpathy's core pitfall: "the model makes wrong assumptions on your behalf and runs along without checking." Decide-and-proceed over stalling, BUT state the assumption you proceeded on so it's visible + correctable; ask only when genuinely blocked, never reflexively.
+- Goal-driven (verifiable success criteria + loop-until-met) already lives in [[verification-loop]] + [[e2e-testing]] (TDD-first) — not restated here.
+
 ## TypeScript (Google TS Style)
 
 - **TS 7.0** (native Go compiler, ~8–12× faster; alias TS 6.x for typescript-eslint/ts-morph/transformers until 7.1, stable ~2026-11-24, beta 10/6) — `strictInference: true`, `isolatedDeclarations: true`, `erasableSyntaxOnly` for Node 24 native TS.

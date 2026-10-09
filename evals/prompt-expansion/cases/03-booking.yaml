@@ -1,0 +1,25 @@
+# Benchmark 3 — "Build a complete booking system"
+# "complete" dares the expander to enumerate the WHOLE arc: availability,
+# scheduling, payments, notifications, cancellation/reschedule, both sides of
+# the marketplace. A thin expansion that only covers "pick a time" fails.
+- description: "booking — complete booking system"
+  vars:
+    request: "Build a complete booking system"
+    org_type: "a scheduling / appointment-booking product (compare to Calendly, Cal.com, Acuity, OpenTable, Resy)"
+  assert:
+    - type: llm-rubric
+      value: >
+        The expansion covers the end-to-end booking lifecycle: availability /
+        calendar management, real-time slot selection with double-booking
+        prevention, confirmation + reminders/notifications, reschedule &
+        cancellation, and payment / deposit handling. It also addresses BOTH
+        actors (the person booking AND the provider/host). Missing
+        availability-plus-confirmation core scores LOW.
+      metric: booking_core
+    - type: llm-rubric
+      value: >
+        The expansion honours "complete" by including the edge and failure
+        cases a real booking system must handle — timezone correctness,
+        concurrent-booking races, no-shows / waitlists, and cancellation
+        policies — rather than only the happy path.
+      metric: complete_edges

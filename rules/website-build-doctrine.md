@@ -35,6 +35,27 @@ Full protocol: `competitor-research.md`.
 
 From the one-line prompt, enumerate the COMPLETE build the user will want by satisfaction — full page set (source sitemap 1:N), every feature + every state, the gorgeous dimensions (cinematic motion, brand, bento/asymmetry, refined type), AI-native surfaces, and prod gates — into `_prediction.md`. This is the Phase 6 "what else" loop run UP FRONT, so the first pass IS the complete pass. `completeness-checker` gates DONE against THIS prediction, not the literal prompt. Under-scoping here is why a build ships "functional but plain" and the user must iterate. Full: `[[predictive-completeness]]` · `#predict`.
 
+## Spec-driven feature changes (OpenSpec) — each UI feature is a reviewable delta
+
+Every non-trivial UI feature (and each Phase 6 "what else" addition) is an **OpenSpec change**
+(`@fission-ai/openspec`): humans/agents agree on the delta before code, and every shipped feature
+leaves a durable, reviewable spec. Lightweight + fluid (no phase gates) — trivial tweaks skip it.
+
+- **Per repo (first touch, idempotent):** `openspec init . --tools claude,codex,opencode --no-animation`
+  — scaffolds `openspec/` + `/opsx:*` slash commands/skills for ALL THREE agents (Claude Code, Codex,
+  OpenCode). Non-invasive (no CLAUDE.md edit). Install: `npm i -g @fission-ai/openspec` (or `npx -y @fission-ai/openspec`); MIT · Node ≥20.19 · no MCP/API keys · 50KB context cap.
+- **The loop, per feature:** `/opsx:explore` (read-only shaping) → `/opsx:propose "<feature>"` (writes
+  `proposal.md` · `design.md` · delta `specs/` · `tasks.md`) → **review** → `/opsx:apply` (implement the
+  checklist) → `/opsx:sync` (merge the delta into `openspec/specs/`) → `/opsx:archive`.
+- **Autonomous-loop review = agent diversity, NOT a blocking human gate** (solo-builder auto-merge): the
+  proposal IS the per-feature `_prediction` reviewed by the adversarial panel — **codex** independently
+  critiques `proposal.md`+`tasks.md`, **claude** synthesizes + applies, **opencode/DeepSeek** takes
+  routine `/opsx:apply` shards ([[agent-provider-policy]]). gum-log propose/review/apply/archive per
+  [[research-expansion-orchestration]] + [[terminal-styling]].
+- **Maps onto this doctrine:** Phase -0.5 predictive scope-lock = the proposal · Phase 5 agent swarm =
+  parallel `/opsx:apply` shards · Phase 6 "what else" loop = a stream of OpenSpec changes. Every shipped
+  feature archives a change; link it from the loop LEDGER row (traceability).
+
 ## Phase 0 — Context Saturation BEFORE Any Code
 
 NO code/clone/scaffold until every public source is loaded. Fan out via parallel `Agent` spawns per `monitor-orchestration.md`. Skipping = build fail per `thin-source-amplification.md`.

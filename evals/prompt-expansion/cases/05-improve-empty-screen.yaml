@@ -1,0 +1,28 @@
+# Benchmark 5 — "Improve this empty-looking screen"
+# An ENHANCEMENT prompt, not a greenfield build. The hard test: does the
+# expander predictively enrich (add value-dense sections, states, polish,
+# AI-native touches) WITHOUT fabricating that it can see a screen it wasn't
+# shown — i.e. it states its assumption and proceeds instead of only asking
+# "which screen?".
+- description: "enhance — improve empty-looking screen"
+  vars:
+    request: "Improve this empty-looking screen"
+    org_type: "an existing application screen being enhanced (benchmark against the polish of Linear, Stripe, Vercel, Raycast)"
+  assert:
+    - type: llm-rubric
+      value: >
+        The expansion proposes concrete ways to turn a sparse screen into a
+        value-dense one: a proper first-run / empty state with a primary call to
+        action, content or data sections to fill the space, visual hierarchy &
+        layout, micro-interactions, and a path from "nothing here" to a useful
+        first action. Generic "add more stuff" with no concrete sections scores
+        LOW.
+      metric: enrichment_concrete
+    - type: llm-rubric
+      value: >
+        Because no screen image or context was provided, the expansion STATES
+        ITS ASSUMPTIONS about what the screen likely is and proceeds with a plan
+        anyway (optionally noting what it would confirm) — rather than refusing
+        or replying with only clarifying questions. Proceeding-under-assumption
+        scores HIGH; blocking on questions scores LOW.
+      metric: proceeds_without_context

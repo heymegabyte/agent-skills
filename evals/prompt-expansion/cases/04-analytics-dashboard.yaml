@@ -1,0 +1,23 @@
+# Benchmark 4 — "Build a beautiful analytics dashboard"
+# "beautiful" tests whether the expander treats visual/UX craft as a
+# first-class requirement AND still nails the data layer (sources, metrics,
+# time ranges, drill-down) — not just a pretty wireframe with fake numbers.
+- description: "analytics — beautiful analytics dashboard"
+  vars:
+    request: "Build a beautiful analytics dashboard"
+    org_type: "an analytics / BI dashboard product (compare to Vercel Analytics, PostHog, Mixpanel, Linear Insights, Stripe Dashboard)"
+  assert:
+    - type: llm-rubric
+      value: >
+        The expansion covers the analytics substance: data sources / ingestion,
+        the key metrics & KPIs to surface, chart/visualization types,
+        time-range and filter/segment controls, and drill-down from summary to
+        detail. A dashboard with no defined metrics or data source scores LOW.
+      metric: analytics_core
+    - type: llm-rubric
+      value: >
+        The expansion treats "beautiful" as a concrete, testable bar — a named
+        design system / tokens, layout (e.g. a bento or responsive grid),
+        motion / transitions, loading & empty states, dark mode, and
+        accessibility (contrast, WCAG) — not a vague "make it look nice".
+      metric: beautiful_defined

@@ -1,0 +1,29 @@
+# Benchmark 7 — "Add a complicated integration"
+# The most under-specified prompt — no integration named, no system named.
+# This is the sternest test of "decide and proceed": a strong expansion lays
+# out a GENERAL integration architecture (auth, data mapping, sync, webhooks,
+# errors, rate limits, idempotency, observability, teardown) and picks a
+# concrete representative example to make it tangible, rather than refusing
+# until told which integration.
+- description: "integration — complicated integration"
+  vars:
+    request: "Add a complicated integration"
+    org_type: "a third-party system integration (OAuth / webhooks / data-sync; benchmark against Stripe, Salesforce, Slack, or a generic REST/GraphQL partner API)"
+  assert:
+    - type: llm-rubric
+      value: >
+        The expansion lays out a robust integration ARCHITECTURE: authentication
+        (OAuth / API keys / token refresh), data mapping between the two
+        schemas, sync strategy (polling vs webhooks, full vs incremental),
+        idempotency & retries, rate-limit handling, error recovery &
+        reconciliation, and observability. Missing the auth-plus-sync-plus-error
+        core scores LOW.
+      metric: integration_architecture
+    - type: llm-rubric
+      value: >
+        Because the integration target is unnamed, the expansion DECIDES AND
+        PROCEEDS — it picks a concrete representative integration (or states the
+        assumption) to make the plan tangible and notes what would change per
+        provider, instead of replying only with "which integration do you
+        mean?". Proceeding scores HIGH; blocking scores LOW.
+      metric: proceeds_unnamed_target
