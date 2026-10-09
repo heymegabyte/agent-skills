@@ -12,6 +12,10 @@ import urllib.request
 import platform
 from fleet import AI, HOME, command, gh, manifest
 
+from runner_safety import audit
+if not audit(AI)["ok"]:
+    raise RuntimeError("Unsafe bulk-secret runner hook: run runner_safety.py --repair, then restart idle runners")
+
 configuration = manifest()
 identity = HOME / '.config/agent-fleet/machine.json'
 if identity.exists():
@@ -31,7 +35,8 @@ body = {'name': name, 'visibility': 'selected', 'selected_repository_ids': repos
         'allows_public_repositories': True}
 if group:
     gh(f'orgs/{org}/actions/runner-groups/{group["id"]}', 'PATCH', {'visibility': 'selected', 'allows_public_repositories': True})
-    gh(f'orgs/{org}/actions/runner-groups/{group["id"]}/repositories', 'PUT', {'selected_repository_ids': repository_ids})
+    for repository_id in repository_ids:
+        gh(f'orgs/{org}/actions/runner-groups/{group["id"]}/repositories/{repository_id}', 'PUT')
 else:
     group = gh(f'orgs/{org}/actions/runner-groups', 'POST', body)
 release = gh('repos/actions/runner/releases/latest')

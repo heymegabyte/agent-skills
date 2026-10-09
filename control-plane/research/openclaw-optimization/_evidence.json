@@ -232,6 +232,22 @@
       "accessedAt": "2026-10-09",
       "relevance": "Runner compatibility is an operational concern; avoid blind runtime upgrades.",
       "kind": "primary"
+    },
+    {
+      "id": "gh-runner-hooks",
+      "title": "GitHub runner pre/post-job hooks",
+      "url": "https://docs.github.com/en/enterprise-cloud%40latest/actions/how-tos/manage-runners/self-hosted-runners/run-scripts",
+      "accessedAt": "2026-10-09",
+      "kind": "primary",
+      "relevance": "Runner .env hooks execute before job steps and can write environment command files; changes require runner restart."
+    },
+    {
+      "id": "infisical-cli",
+      "title": "Official Infisical CLI reference",
+      "url": "https://infisical.com/docs/cli/reference",
+      "accessedAt": "2026-10-09",
+      "kind": "primary",
+      "relevance": "Installed official CLI help and live probes verify explicit domain, Universal Auth and single-secret get; outputs are captured privately."
     }
   ],
   "ideas": [
@@ -242,16 +258,21 @@
       "selected": true,
       "status": "implemented",
       "priorityRationale": "Critical observed leak outranks speculative optimizations.",
-      "resultOrDeferral": "Actions command-file/token variables removed before native execution; command contents private; four confirmed exposed log archives deleted. Rotation still required.",
+      "resultOrDeferral": "Removed leaking Infisical bulk-export hook from all three runners; fixed runner-ops source workflow; integrated existing identity for private single-secret broker lookups; deleted confirmed exposed log archives. Provider rotation remains required.",
       "sourceIds": [
         "gh-mask",
         "gh-security",
-        "openclaw-security"
+        "openclaw-security",
+        "gh-runner-hooks",
+        "infisical-cli"
       ],
       "implementationFiles": [
         "control-plane/run_context.py",
         "control-plane/openclaw-fleet/cli.py",
-        "rules/fleet-secret-handling.md"
+        "rules/fleet-secret-handling.md",
+        "control-plane/runner_safety.py",
+        "bin/fleet-infisical.py",
+        "bin/fleet-get-secret.py"
       ],
       "confidence": "high",
       "confidenceBasis": "Observed local defect or contract with regression checks"
@@ -770,11 +791,11 @@
       "origin": "Local run receipts; no raw credential-bearing logs retained in research"
     },
     {
-      "fact": "Confirmed unmasked credentials in public megabyte.space run logs. Four log archives deleted; latest 12 completed runs inspected, not an exhaustive lifetime audit. Rotation outstanding.",
+      "fact": "Confirmed credential disclosure originated in a runner job-started hook bulk-exporting Infisical values to GITHUB_ENV. Removed hook references and fixed its GitHub source. Expanded scan considered 99 recent runs across seven approved repositories, found 22 on this host, and deleted 15 additional confirmed exposed archives (at least 20 total recorded deletions including earlier containment). Rotation outstanding.",
       "origin": "Captured log scan; values never printed or stored in this report"
     },
     {
-      "fact": "DEEPSEEK_API_KEY is unavailable and Infisical is not enrolled.",
+      "fact": "DEEPSEEK_API_KEY is absent from the configured Infisical folder; an existing protected runner identity was discovered and integrated into get-secret. Known-secret existence lookup passed.",
       "origin": "Existence-only get-secret check and enrollment-file presence"
     },
     {

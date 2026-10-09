@@ -1,0 +1,258 @@
+{
+  "scope": "Latest 100 runs per seven approved repositories; completed since hook installation 2026-10-08T23:50Z; job metadata filters this primary host; not a lifetime audit",
+  "runsConsidered": 99,
+  "results": [
+    {
+      "repo": "projectsites.dev",
+      "runId": "38002666704",
+      "host": "primary",
+      "logs": "unavailable-or-already-deleted"
+    },
+    {
+      "repo": "projectsites.dev",
+      "runId": "37952882405",
+      "host": "primary",
+      "exposedNames": [
+        "BROWSERBASE_API_KEY",
+        "CF_API_TOKEN",
+        "CLOUDFLARE_API_KEY",
+        "CLOUDFLARE_API_TOKEN",
+        "E2E_API_KEY",
+        "E2E_TEST_PASSWORD"
+      ],
+      "logsDeleted": true
+    },
+    {
+      "repo": "projectsites.dev",
+      "runId": "37906978952",
+      "host": "primary",
+      "exposedNames": [
+        "BROWSERBASE_API_KEY",
+        "CF_API_TOKEN",
+        "CLOUDFLARE_API_KEY",
+        "CLOUDFLARE_API_TOKEN",
+        "E2E_API_KEY",
+        "E2E_TEST_PASSWORD"
+      ],
+      "logsDeleted": true
+    },
+    {
+      "repo": "projectsites.dev",
+      "runId": "37871953546",
+      "host": "primary",
+      "exposedNames": [
+        "BROWSERBASE_API_KEY",
+        "CF_API_TOKEN",
+        "CLOUDFLARE_API_KEY",
+        "CLOUDFLARE_API_TOKEN",
+        "E2E_API_KEY",
+        "E2E_TEST_PASSWORD"
+      ],
+      "logsDeleted": true
+    },
+    {
+      "repo": "megabyte.space",
+      "runId": "38002669136",
+      "host": "primary",
+      "logs": "unavailable-or-already-deleted"
+    },
+    {
+      "repo": "megabyte.space",
+      "runId": "37982349782",
+      "host": "primary",
+      "logs": "unavailable-or-already-deleted"
+    },
+    {
+      "repo": "megabyte.space",
+      "runId": "37945844223",
+      "host": "primary",
+      "logs": "unavailable-or-already-deleted"
+    },
+    {
+      "repo": "megabyte.space",
+      "runId": "37900127715",
+      "host": "primary",
+      "logs": "unavailable-or-already-deleted"
+    },
+    {
+      "repo": "megabyte.space",
+      "runId": "37869235361",
+      "host": "primary",
+      "logs": "unavailable-or-already-deleted"
+    },
+    {
+      "repo": "gitl.ink",
+      "runId": "37991859920",
+      "host": "primary",
+      "exposedNames": [
+        "BROWSERBASE_API_KEY",
+        "CF_API_TOKEN",
+        "CLOUDFLARE_API_KEY",
+        "CLOUDFLARE_API_TOKEN",
+        "E2E_API_KEY",
+        "E2E_TEST_PASSWORD"
+      ],
+      "logsDeleted": true
+    },
+    {
+      "repo": "gitl.ink",
+      "runId": "37958410948",
+      "host": "primary",
+      "exposedNames": [
+        "BROWSERBASE_API_KEY",
+        "CF_API_TOKEN",
+        "CLOUDFLARE_API_KEY",
+        "CLOUDFLARE_API_TOKEN",
+        "E2E_API_KEY",
+        "E2E_TEST_PASSWORD"
+      ],
+      "logsDeleted": true
+    },
+    {
+      "repo": "gitl.ink",
+      "runId": "37909927485",
+      "host": "primary",
+      "exposedNames": [
+        "BROWSERBASE_API_KEY",
+        "CF_API_TOKEN",
+        "CLOUDFLARE_API_KEY",
+        "CLOUDFLARE_API_TOKEN",
+        "E2E_API_KEY",
+        "E2E_TEST_PASSWORD"
+      ],
+      "logsDeleted": true
+    },
+    {
+      "repo": "gitl.ink",
+      "runId": "37872831823",
+      "host": "primary",
+      "exposedNames": [
+        "BROWSERBASE_API_KEY",
+        "CF_API_TOKEN",
+        "CLOUDFLARE_API_KEY",
+        "CLOUDFLARE_API_TOKEN",
+        "E2E_API_KEY",
+        "E2E_TEST_PASSWORD"
+      ],
+      "logsDeleted": true
+    },
+    {
+      "repo": "deskl.ink",
+      "runId": "37982431167",
+      "host": "primary",
+      "exposedNames": [
+        "BROWSERBASE_API_KEY",
+        "CF_API_TOKEN",
+        "CLOUDFLARE_API_KEY",
+        "CLOUDFLARE_API_TOKEN",
+        "E2E_API_KEY",
+        "E2E_TEST_PASSWORD"
+      ],
+      "logsDeleted": true
+    },
+    {
+      "repo": "deskl.ink",
+      "runId": "37945879634",
+      "host": "primary",
+      "exposedNames": [
+        "BROWSERBASE_API_KEY",
+        "CF_API_TOKEN",
+        "CLOUDFLARE_API_KEY",
+        "CLOUDFLARE_API_TOKEN",
+        "E2E_API_KEY",
+        "E2E_TEST_PASSWORD"
+      ],
+      "logsDeleted": true
+    },
+    {
+      "repo": "deskl.ink",
+      "runId": "37900308892",
+      "host": "primary",
+      "exposedNames": [
+        "BROWSERBASE_API_KEY",
+        "CF_API_TOKEN",
+        "CLOUDFLARE_API_KEY",
+        "CLOUDFLARE_API_TOKEN",
+        "E2E_API_KEY",
+        "E2E_TEST_PASSWORD"
+      ],
+      "logsDeleted": true
+    },
+    {
+      "repo": "deskl.ink",
+      "runId": "37869335622",
+      "host": "primary",
+      "exposedNames": [
+        "BROWSERBASE_API_KEY",
+        "CF_API_TOKEN",
+        "CLOUDFLARE_API_KEY",
+        "CLOUDFLARE_API_TOKEN",
+        "E2E_API_KEY",
+        "E2E_TEST_PASSWORD"
+      ],
+      "logsDeleted": true
+    },
+    {
+      "repo": "runner-ops",
+      "runId": "37861850279",
+      "host": "primary",
+      "exposedNames": [
+        "BROWSERBASE_API_KEY",
+        "CF_API_TOKEN",
+        "CLOUDFLARE_API_KEY",
+        "CLOUDFLARE_API_TOKEN",
+        "E2E_API_KEY",
+        "E2E_TEST_PASSWORD"
+      ],
+      "logsDeleted": true
+    },
+    {
+      "repo": "runner-ops",
+      "runId": "37861778252",
+      "host": "primary",
+      "exposedNames": [
+        "BROWSERBASE_API_KEY",
+        "CF_API_TOKEN",
+        "CLOUDFLARE_API_KEY",
+        "CLOUDFLARE_API_TOKEN",
+        "E2E_API_KEY",
+        "E2E_TEST_PASSWORD"
+      ],
+      "logsDeleted": true
+    },
+    {
+      "repo": "runner-ops",
+      "runId": "37861616314",
+      "host": "primary",
+      "unmaskedSensitiveEnvHeaders": 0
+    },
+    {
+      "repo": "skillsl.ink",
+      "runId": "37988640160",
+      "host": "primary",
+      "exposedNames": [
+        "BROWSERBASE_API_KEY",
+        "CF_API_TOKEN",
+        "CLOUDFLARE_API_KEY",
+        "CLOUDFLARE_API_TOKEN",
+        "E2E_API_KEY",
+        "E2E_TEST_PASSWORD"
+      ],
+      "logsDeleted": true
+    },
+    {
+      "repo": "skillsl.ink",
+      "runId": "37988438857",
+      "host": "primary",
+      "exposedNames": [
+        "BROWSERBASE_API_KEY",
+        "CF_API_TOKEN",
+        "CLOUDFLARE_API_KEY",
+        "CLOUDFLARE_API_TOKEN",
+        "E2E_API_KEY",
+        "E2E_TEST_PASSWORD"
+      ],
+      "logsDeleted": true
+    }
+  ]
+}

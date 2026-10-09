@@ -22,7 +22,7 @@ These are observations from repositories, not guarantees about current productio
 
 | Rank | Idea | Decision | Reason / delivered result |
 | --- | --- | --- | --- |
-| 1 | Secret-safe execution and public-log containment | **implemented** | Actions command-file/token variables removed before native execution; command contents private; four confirmed exposed log archives deleted. Rotation still required. |
+| 1 | Secret-safe execution and public-log containment | **implemented** | Actions command-file/token variables removed before native execution; command contents private; confirmed exposed archives deleted; leaking Infisical pre-job hook removed and its runner-ops source repaired. Rotation still required. |
 | 2 | Honor the OpenClaw/native CLI instruction contract | **implemented** | Explicit system-prompt file transport; Claude appends its policy and Codex/OpenCode receive supplemental context while retaining native instructions. |
 | 3 | Bound turn lifetime and reap runaway native descendants | **implemented** | Absolute turn deadline, bounded repository lease wait, process-group termination and expired-deadline rejection. Immediate cross-Gateway cancellation remains a limitation. |
 | 4 | Small provenance-bearing recovery packets | **implemented** | Per-run context.json contains same-project recent receipts, retained paths, curated surfaces and lean runtime policy; bytes recorded. No blanket token-savings claim. |
@@ -57,7 +57,7 @@ These are observations from repositories, not guarantees about current productio
 
 ### 1. Secret-safe execution and public-log containment
 
-Critical observed leak outranks speculative optimizations. Actions command-file/token variables removed before native execution; command contents private; four confirmed exposed log archives deleted. Rotation still required.
+Critical observed leak outranks speculative optimizations. Actions command-file/token variables removed before native execution; command contents private; confirmed exposed archives deleted; leaking Infisical pre-job hook removed and its runner-ops source repaired. Rotation still required.
 
 Implementation: `control-plane/run_context.py`, `control-plane/openclaw-fleet/cli.py`.
 
@@ -172,3 +172,13 @@ Primary references: [GitHub runner-group REST API](https://docs.github.com/en/en
 - [GitHub runner minimum-version timeline](https://github.blog/changelog/2026-06-12-github-actions-minimum-version-enforcement-timeline-for-self-hosted-runners/) — Runner compatibility is an operational concern; avoid blind runtime upgrades.
 
 All recommendations beyond explicit documentation contracts are our inferences from source guidance and local observations. The structured [_evidence.json](_evidence.json) maps every candidate to primary references, selection status, implementation paths and confidence limits. No raw transcripts, credential values or private business records are included.
+
+## Incident root cause and expanded containment
+
+Final log verification found the source of credential disclosure: an existing `ACTIONS_RUNNER_HOOK_JOB_STARTED` script bulk-exported Infisical production secrets into GITHUB_ENV before any workflow step. Child environment filtering alone cannot prevent those earlier step headers. All three hook references were removed and idle runners restarted. The [runner-ops source workflow](https://github.com/heymegabyte/runner-ops/blob/main/.github/workflows/bootstrap-infisical.yml) was repaired so reinstalling cannot restore that behavior. A runner-hook audit now detects this known pattern during registration.
+
+The existing protected machine identity is reused through get-secret with explicit official CLI transport; only an individual named secret is requested and no credentials are passed as command arguments. Known-secret retrieval was verified without printing values. DeepSeek's key is absent from the configured folder. The former statement that Infisical was unenrolled referred to the canonical broker configuration; the separate runner identity was discovered during incident diagnosis and is now integrated.
+
+An expanded scan considered 99 recent completed runs across seven approved repositories, filtered 22 jobs running on this host, and removed 15 more confirmed exposed archives in addition to at least five earlier recorded deletions. This is a bounded post-hook-installation audit, not a lifetime guarantee. Rotate Browserbase, Cloudflare token/global-key aliases and E2E credentials; the machine README lists affected variable names without values. Preserve the run artifacts and conclusions as canonical history.
+
+Additional primary references: [GitHub runner hooks](https://docs.github.com/en/enterprise-cloud%40latest/actions/how-tos/manage-runners/self-hosted-runners/run-scripts) and [Infisical CLI](https://infisical.com/docs/cli/reference). Installed CLI 0.43.140 help and private live probes verified the actual command contract.

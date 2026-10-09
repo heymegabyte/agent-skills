@@ -24,7 +24,7 @@ if not value:
         print('Infisical lookup failed; check identity access and provider configuration.', file=sys.stderr)
         sys.exit(3)
 path = Path.home() / '.config/agent-fleet/secrets' / name
-if not value and path.exists():
+if value is None and path.exists():
     info = path.stat()
     if info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) & 0o077:
         print('Secret file must be owned by the current user and mode 0600.', file=sys.stderr)
