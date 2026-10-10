@@ -37,7 +37,7 @@ Every execution uploads `run.json` and `summary.md` to GitHub with a 90-day arti
 
 The next fire inspects actual git/worktree state, GitHub history, task/context files, commits and tests. Worktrees from failed runs are retained; never reap them without checking their changes and commits. Do not create an issue per run or build a queue to reconstruct execution state.
 
-Git/files are canonical memory. `python3 control-plane/fleet.py index` derives a local SQLite FTS index from skills, requirements/context and run summaries; `search 'query'` retrieves provenance-bearing excerpts. Delete/rebuild it at any time. Cloudflare AI Search/D1/R2 can be introduced if a concrete retrieval need justifies them; they are not canonical ledger replacements. No Cloudflare resources are required for this local version.
+Git/files are canonical memory. `python3 control-plane/fleet.py index` derives a local SQLite FTS index from skills, requirements/context and run summaries; `search 'query'` retrieves provenance-bearing excerpts. Delete/rebuild it at any time. Cloudflare AI Search/D1/R2 can be introduced if a concrete retrieval need justifies them; they are not canonical ledger replacements. No Cloudflare database is required; the fleet dashboard uses a dedicated Cloudflare Tunnel and owner-only Access application.
 
 ## Operator commands
 
@@ -64,7 +64,7 @@ fleet-ui-open
 python3 ~/ai/repos/agent-skills/control-plane/update-callers.py <40-character-commit-sha> --push
 ```
 
-`agent.megabyte.space` is the intended human UI and repository. Current setup excludes website publishing: the authenticated host adapter runs only at `http://127.0.0.1:18888`. Controls dispatch one/all projects, enable/disable their GitHub workflows and pause/resume all. GitHub remains the scheduler. Do not expose this loopback host API publicly without an authenticated hosting and host-connection design.
+`agent.megabyte.space` is the human UI and repository. Owner-authorized publication uses Cloudflare Tunnel → loopback `http://127.0.0.1:18888`, with owner-only Cloudflare Access email PIN login. Both cloudflared and the Python origin verify Access JWTs; local credentials cannot authenticate remote requests. Enabled systemd user services `agent-fleet-ui` and `agent-fleet-cloudflared` restart automatically and user linger handles boot/logout. Setup/recovery lives in the dashboard README and private machine README. Controls dispatch one/all projects, enable/disable their GitHub workflows and pause/resume all. GitHub remains the scheduler. This does not publish desktop VNC or the OpenClaw Gateway.
 
 On machines with no existing broker, `get-secret` can use the explicitly protected local fallback installed by bootstrap; `fleet-secret-import NAME` accepts hidden input and refuses overwrites. Its files are mode 0600 under a mode 0700 directory and never committed. This is a local fallback, not a replacement for an existing encrypted recovery store. Bootstrap preserves any pre-existing `get-secret`.
 
