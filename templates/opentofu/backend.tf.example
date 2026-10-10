@@ -1,0 +1,24 @@
+# backend.tf.example — copy to backend.tf per project. NEVER commit state or backend.tf
+# with real values. R2 via the s3 backend, DELIBERATELY WITHOUT use_lockfile (#4405).
+#
+# Mutual exclusion is provided by the repo-scoped execution lock (one primary host,
+# serialized loop fires) — NOT by native R2 locking. When a second executor appears,
+# migrate to a real lock layer + `tofu init -migrate-state` (rules/opentofu-infrastructure.md).
+#
+# R2 credentials (access key / secret / endpoint) resolve from the environment at init
+# time via get-secret — never hardcoded here.
+terraform {
+  backend "s3" {
+    bucket = "tf-state-<project>"
+    key    = "<project>/terraform.tfstate"
+    region = "auto"
+    # Cloudflare R2 endpoint — set via env or here (account-scoped):
+    #   endpoints = { s3 = "https://<accountid>.r2.cloudflarestorage.com" }
+    skip_credentials_validation = true
+    skip_region_validation      = true
+    skip_requesting_account_id  = true
+    skip_metadata_api_check     = true
+    skip_s3_checksum            = true
+    # use_lockfile = true   # ← DO NOT ENABLE on R2 (OpenTofu #4405, closed "not planned").
+  }
+}

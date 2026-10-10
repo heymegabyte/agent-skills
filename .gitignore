@@ -10,3 +10,28 @@ node_modules/
 *.pyc
 __pycache__/
 /skills/
+
+# ── Tooling fabric (ADR-0001) ───────────────────────────────────────────────
+# mise: commit mise.toml + mise.lock; NEVER the per-developer local override.
+mise.local.toml
+# OpenTofu: state + plans + local provider dirs may carry secrets — NEVER commit.
+# (tofu state/locking: rules/opentofu-infrastructure.md; see also issue #4405.)
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfplan.*
+crash.log
+crash.*.log
+# .tfvars may hold secrets; commit only *.tfvars.example. Credentials come from
+# get-secret/Infisical at execution time, never from committed tfvars.
+*.tfvars
+*.auto.tfvars
+!*.tfvars.example
+# Serena: commit .serena/project.yml + memories; caches/logs are disposable.
+.serena/cache/
+.serena/logs/
+.serena/project.local.yml
+# Agent Vault: the broker's local data dir is runtime state, never canonical.
+.agent-vault/
+agent-vault.local.yaml

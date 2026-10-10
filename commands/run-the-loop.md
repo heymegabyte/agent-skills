@@ -1,5 +1,5 @@
 ---
-description: GENERIC, project-independent wrapper for "run the loop". If the current repo ships its OWN .claude/commands/run-the-loop.md, this wrapper LOADS + FOLLOWS that project command verbatim (the project command WINS — this global file never overrides project-specific instructions). Only when NO project command exists does it run a generic convergence loop — orient the canonical home, fan out the 15 named roles + the standing Long-Trail TDD case-owner, converge, adversarially review, verify, ship, reconcile. Fires when the user says "run the loop".
+description: GENERIC, project-independent wrapper for "run the loop". If the current repo ships its OWN .claude/commands/run-the-loop.md, this wrapper LOADS + FOLLOWS that project command verbatim (the project command WINS — this global file never overrides project-specific instructions). Only when NO project command exists does it run a generic convergence loop — orient the canonical home, fan out the 15 named roles + the standing Long-Trail TDD case-owner, converge, adversarially review, verify, ship, reconcile. Follows the autonomous CONVERGENCE-PROTOCOL (_shared/CONVERGENCE-PROTOCOL.md): research→implement→independent-verify stages with observable exit criteria + a resumable CONVERGENCE.md record. Auto-activates on "run the loop", "build this", "improve this", "fix this application", "upgrade this repository", "make this production ready", "finish this" — and any substantial multi-step dev request. NOT for trivial questions or one-line changes.
 argument-hint: "[role/lane name, category, or 'all' (default)]"
 ---
 
@@ -44,13 +44,34 @@ never start a large pass in a context-saturated session. Every fire is a **multi
 (fan-out → convergence → adversarial-review → verify → ship → reconcile), never queue-draining, and
 **leaves ≥1 improvement to how future loops run**.
 
+> **This fire IS one pass of the A→B→C `CONVERGENCE-PROTOCOL`** (`.claude/run-the-loop/CONVERGENCE-PROTOCOL.md`,
+> synced from the global master): Orient+Fan-out = Stage A/B, Adversarial-review+Verify = Stage C,
+> Reconcile = the `CONVERGENCE.md` tracking update. It RESUMES from `CONVERGENCE.md` (never restarts
+> research the record answers) and exits ONLY on that file's **observable convergence conditions**
+> (zero unresolved P0 · every mandatory acceptance criterion verified by fresh evidence · required
+> tests pass · no known significant vuln · important journeys green end-to-end · no major visual/
+> interaction defect · **two consecutive independent review passes clean**) within its **default
+> budgets** (≤3 Stage-A passes · ≤5 A→B→C iterations/invocation · ≤6 mutating agents · stop on 2
+> no-delta iterations) — never on an agent's confidence. Budget exhausted ⇒ checkpoint + report the
+> exact gap; never a false "converged".
+
 ## 1 — Orient (cheap; NEVER read giant ledgers in the main thread)
 
 - **Canonical home = `.claude/run-the-loop/`** if it exists. Read the small operator docs, in order,
   and only the ones present:
   - `README.md` — what the loop is + how to run one fire.
+  - `CONVERGENCE-PROTOCOL.md` — the research→implement→verify procedure + the OBSERVABLE exit criteria
+    this fire converges toward (Stages A/B/C, budgets, tracking). This is the operating procedure.
+  - `CONVERGENCE.md` — the resumable progress record (open P0s, acceptance criteria, gaps, blockers,
+    review passes). **RESUME from it — do not restart research the record already answers.**
   - `OPERATING-PRINCIPLES.md` — invariants, gates, the settled canonical answers, the category budget.
   - `BACKLOG.md` — the **frontier** (next unmet unit per workstream + acceptance). This is what you advance.
+  - `SPECIAL-TASKS.md` — **repo-specific standing tasks the loop MUST consider on EVERY fire** and fold
+    into the fan-out: recurring publishes (e.g. a blog article every 5–8h), dataset expansions (e.g.
+    scan + score more GitHub skills profiles until new champions emerge), competitor re-baselining, and
+    any "always keep doing X" directive. Treat each as a live workstream with its own acceptance, not a
+    one-off. If present, allocate ≥1 fan-out agent per active special task this fire, and record what it
+    advanced (counts, new champions, published slug) in `CONVERGENCE.md`/`LEDGER.md`.
   - `ARCHITECTURE.md` — the system shape + load-bearing decisions.
   - `DISCOVERIES.md` + `LEDGER.md` — append-only; the main thread does NOT read these wholesale
     (delegate any deep read to a fresh `Explore` agent with a ≤150-line output cap; LEDGER is where
@@ -58,7 +79,15 @@ never start a large pass in a context-saturated session. Every fire is a **multi
 - **No canonical home?** Orient from what the repo actually has: `README.md`, `CLAUDE.md`/`AGENTS.md`,
   a root `TODO.md`/backlog, `docs/`, `e2e/FEATURES.md`, open issues. Reconcile code, docs, tests, and
   visible behavior before choosing work — treat a doc describing a feature as a requirement to VERIFY,
-  not proof it works.
+  not proof it works. **Even with no full home, ALWAYS check `.claude/run-the-loop/SPECIAL-TASKS.md`** —
+  standing repo-specific tasks (recurring publishes, dataset expansions, competitor re-baselining) that
+  must be folded into this fire.
+- **Tooling fabric (if present):** when the repo has a `mise.toml`, `mise tasks` IS the capability
+  surface — prefer `mise run <task>` (`check`/`test`/`security`/`infra:*`/`semantic:*`/`loop:verify`)
+  over reverse-engineering package scripts. Detect Serena (`.serena/project.yml`), OpenTofu roots
+  (tracked `*.tf`), Semgrep (`.semgrep`/`semgrep-custom`), Agent-Vault capability
+  (`control-plane/agent-vault.services.yaml`). A missing fabric tool NEVER fails a normal code task —
+  note it and proceed (graceful during rollout). See `docs/adr/ADR-0001-agent-tooling-fabric.md`.
 - `git fetch origin -q && git pull --rebase origin <default-branch>` — a concurrent session may have
   progressed work; re-inspect the ACTUAL repo, never assume a prior attempt landed.
 - **Context budget:** the main thread holds conclusions only. Never ingest trackers/ledgers/scope docs
@@ -92,7 +121,7 @@ Diversity Review gate before DONE.
 9. **Doc Compression** — compress verbose docs losslessly; retire stale/duplicate docs into the canonical home. Specialist: `content-writer`.
 10. **Dead-Code/Hygiene** — `knip`/`ts-prune` + unused deps + stray logs + resolvable TODOs; verify-then-remove. Specialist: `dead-code-remover` / `code-simplifier`.
 11. **Performance** — Lighthouse + CWV (LCP≤2.0s / CLS≤0.05 / INP≤100ms), bundle budgets, N+1 waterfalls. Specialist: `performance-profiler`.
-12. **Security** — OWASP + IDOR + CSP + secrets + supply chain + SSRF. Specialist: `security-reviewer` (Opus-pinned).
+12. **Security** — OWASP + IDOR + CSP + secrets + supply chain + SSRF; run `mise run security:semgrep:fast` (diff-aware Semgrep) during work, and promote any recurring real defect into a tested invariant rule + fixtures ([[lint-doctrine]] § self-improving). Specialist: `security-reviewer` (Opus-pinned).
 13. **Accessibility** — axe 0 @ 6bp + the 8 manual WCAG 2.2 AA criteria. Specialist: `accessibility-auditor`.
 14. **Technology Scout** — verify stack currency + surface higher-leverage primitives / library upgrades (Context7 / WebSearch); file adoption slices. Specialist: `dependency-auditor` / `Explore`.
 15. **Loop Improvement** — deliver the mandatory ≥1 improvement to how future loops run (§7): sharpen this wrapper / the canonical docs / a gate/script / a role brief. Specialist: `general-purpose` / `meta-orchestrator`.
@@ -192,7 +221,7 @@ A fire that ships zero loop-improvement under-delivered — surface why in the r
 
 ## 8 — Verify (green BEFORE commit — no claim without fresh output)
 
-- Run the repo's real gates for each touched surface: typecheck + the touched tests (broaden if fast) + lint + any feature/drift validators + a build for any UI slice.
+- Run the repo's real gates for each touched surface: typecheck + the touched tests (broaden if fast) + lint + any feature/drift validators + a build for any UI slice. When the repo has a mise contract, that IS `mise run loop:verify` (check + test + security together) + full `mise run security:semgrep`; infra changes also run `mise run infra:validate` + `infra:plan` (plan is evidence — never auto-apply a destroy).
 - Claim ONLY what you ran THIS fire — paste the command output; a prior run or "looks correct" is not evidence.
 
 ## 9 — Ship (prod pre-authorized for the user's own repos)
@@ -206,6 +235,7 @@ A fire that ships zero loop-improvement under-delivered — surface why in the r
 - Tick each advanced frontier line in the backlog + append the ledger with the commit SHA + prod proof. Move a workstream to Done only when Acceptance is fully met.
 - **Replenish the backlog:** append the DEDUPLICATED next-wave items (Product Discovery + Technology Scout + Golden-Path + Long-Trail findings + the adversarial reviewer's fresh defects) so the NEXT fire has ready work.
 - **Confirm the ≥1 loop-improvement landed** (§7) and name it in the report.
+- **Fabric line (when relevant, non-secret):** a compact status — e.g. `mise ✓ locked · Semgrep 0 new ERROR · Serena indexed · OpenTofu <plan/no-touch> · Agent Vault <health>`. From `mise run loop:preflight` (`fabric-doctor --json`). Never dump secret values or source fragments into the Step Summary.
 - Report per the standard end-of-response block: Changes · Next unmet unit per workstream · which golden/long journey ran + what it fixed · external blockers · Recs (only genuine >2h / design-call / destructive-decision items — ship everything else inline).
 
 ## Adversarial-review phase (hunt regressions the fan-out introduced)

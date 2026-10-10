@@ -1,0 +1,128 @@
+# mise.toml — canonical reproducible toolchain + task graph for agent-skills.
+#
+# WHY: one discoverable command surface. An agent entering any repo runs
+#   `mise tasks`  → sees the supported lifecycle
+#   `mise run <name>`  → executes a stable contract
+# instead of memorising whether a repo uses npm/pnpm/uv/tofu/semgrep.
+#
+# Tasks WRAP the repo's proven scripts (bin/lint-all.sh, scripts/validate-*,
+# bin/doctor.mjs …) — mise is the front door, not a rewrite. See
+# docs/adr/ADR-0001-agent-tooling-fabric.md.
+#
+# SECRETS NEVER LIVE HERE. Non-sensitive defaults only. Secrets come from
+# `get-secret NAME` (Infisical/chezmoi/CF Secrets Store) per
+# rules/secrets-portable-resolution.md, brokered through Agent Vault where
+# configured per rules/agent-vault-brokering.md.
+
+[settings]
+# Commit mise.lock; CI installs with MISE_LOCKED=1 for byte-reproducible tools.
+lockfile = true
+# Respect .nvmrc (node SSOT) so we don't duplicate the pin or fight volta.
+idiomatic_version_file_enable_tools = ["node"]
+
+[tools]
+# Foundational runtimes the repo's own scripts need. node honours .nvmrc (=22).
+node = "22"
+python = "3.13"
+uv = "0.12"
+# Deterministic-gate tools. Pinned so every machine + CI scans with the same
+# engine (see ADR-0001 § Semgrep). opentofu validates templates/opentofu.
+shfmt = "3"
+shellcheck = "0.11"
+actionlint = "1"
+opentofu = "1.13.1"
+"pipx:semgrep" = "1.180"
+
+[env]
+# Non-sensitive, machine-agnostic defaults only.
+MISE_FABRIC = "1"
+
+# ── Canonical task vocabulary ───────────────────────────────────────────────
+# Compact + predictable. Independent checks declare no deps so mise runs them
+# concurrently; sources/outputs skip unchanged work.
+
+[tasks.setup]
+description = "One-shot machine/project setup: install locked tools + git hooks."
+run = [
+  "mise install",
+  "bash bin/install-hooks.sh",
+]
+
+[tasks.doctor]
+description = "Tooling-fabric health (toolchain/semantic/security/secrets/infra/fleet). --json for machines."
+run = "node bin/fabric-doctor.mjs {{arg(name='flags', var=true, default='')}}"
+
+[tasks.check]
+description = "Fast correctness gate — the repo's full lint-all suite (26 gates)."
+run = "bash bin/lint-all.sh"
+
+[tasks.test]
+description = "Validate skills + packs (this repo's unit layer)."
+run = [
+  "bash scripts/validate-skills.sh",
+  "node scripts/validate-packs.mjs",
+]
+
+[tasks.security]
+description = "All deterministic security gates (Semgrep + secret scan)."
+depends = ["security:semgrep", "security:secrets"]
+
+[tasks."security:semgrep"]
+description = "Full Semgrep scan: community ruleset + custom credential/fleet invariants."
+run = "bash bin/semgrep-scan.sh --full"
+
+[tasks."security:semgrep:fast"]
+description = "Diff-aware Semgrep (changed files vs merge-base) — inner-loop speed."
+run = "bash bin/semgrep-scan.sh --fast"
+
+[tasks."security:rules:test"]
+description = "Validate + unit-test every custom Semgrep rule (positive + negative fixtures)."
+run = "bash bin/semgrep-scan.sh --test"
+
+[tasks."security:secrets"]
+description = "Verified-only secret scan of the working tree."
+run = "bash bin/emdash-secret-scan 2>/dev/null || echo 'emdash-secret-scan: skipped (not on PATH)'"
+
+[tasks."semantic:index"]
+description = "Build/refresh the Serena semantic index for the current worktree."
+run = "bash bin/serena-helper.sh index"
+
+[tasks."semantic:doctor"]
+description = "Report Serena availability + index freshness for the current worktree."
+run = "bash bin/serena-helper.sh doctor"
+
+[tasks."infra:fmt"]
+description = "tofu fmt across OpenTofu roots (check mode)."
+run = "bash bin/tofu-helper.sh fmt"
+
+[tasks."infra:validate"]
+description = "Backend-free init + tofu validate -lint=all across roots."
+run = "bash bin/tofu-helper.sh validate"
+
+[tasks."infra:test"]
+description = "tofu test (plan-only assertions; creates no real resources)."
+run = "bash bin/tofu-helper.sh test"
+
+[tasks."infra:plan"]
+description = "tofu plan with structured change classification (evidence, no apply)."
+run = "bash bin/tofu-helper.sh plan"
+
+[tasks."infra:drift"]
+description = "Detect drift between state and live infra (plan -detailed-exitcode)."
+run = "bash bin/tofu-helper.sh drift"
+
+[tasks."vault:doctor"]
+description = "Agent Vault + Infisical broker health (no secrets printed)."
+run = "node bin/fabric-doctor.mjs --only=secrets {{arg(name='flags', var=true, default='')}}"
+
+[tasks."loop:preflight"]
+description = "/run-the-loop Orient aid: fast fabric status the loop reads before fan-out."
+run = "node bin/fabric-doctor.mjs --json --quiet"
+
+[tasks."loop:verify"]
+description = "/run-the-loop convergence gate: check + test + security together."
+depends = ["check", "test", "security"]
+
+[tasks.ci]
+description = "Exactly what GitHub Actions runs — same contracts as local."
+depends = ["check", "test", "security"]

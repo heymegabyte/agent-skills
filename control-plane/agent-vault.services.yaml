@@ -1,0 +1,107 @@
+# agent-vault.services.yaml — declarative, GIT-BACKED, SECRET-FREE service manifest.
+#
+# SSOT for which external services the fleet's autonomous agents may use through the
+# Agent Vault broker, and with what capability. This file NEVER contains a secret VALUE —
+# only the Infisical credential-reference NAME the broker resolves at request time.
+# Doctrine: rules/agent-vault-brokering.md. Generated-from here → broker config.
+#
+# Field schema (repo-local abstraction over Agent Vault's real `service` fields):
+#   name            logical id (slug)
+#   host            host[:port][/path] scope (glob ok, path-scoped where useful)
+#   auth_type       bearer | basic | api-key | custom | passthrough
+#   credential_ref  Infisical secret NAME to inject (NULL for passthrough) — NOT a value
+#   projects        which project loops may use it ("*" = all enabled)
+#   roles           which agent roles may use it
+#   access          read | write | admin   (least-privilege; split CF by capability)
+#   passthrough     true = forward WITHOUT injecting (OAuth that must stay untouched)
+#   notes           rationale / caveats
+#
+# unmatched_host_policy: phased. Start `passthrough` while enumerating real upstreams;
+# flip to `deny` only after the allow-list below is proven complete (see doctrine).
+unmatched_host_policy: passthrough   # TODO flip to `deny` once upstreams verified
+
+services:
+  # ── privileged, brokered (agent gets a placeholder, never the secret) ──────
+  - name: github-api
+    host: api.github.com
+    auth_type: bearer
+    credential_ref: GITHUB_FLEET_TOKEN      # Infisical NAME only; prefer a GitHub App short-lived token
+    projects: ["*"]
+    roles: [architect, test-writer, deploy-verifier, incident-responder]
+    access: write
+    passthrough: false
+    notes: >
+      Scope to the actual API surfaces needed. Agents receive a placeholder; the broker
+      injects. Prefer GitHub App installation tokens over a PAT.
+
+  - name: cloudflare-dev-management
+    host: api.cloudflare.com/client/v4
+    auth_type: bearer
+    credential_ref: CLOUDFLARE_DEV_API_TOKEN
+    projects: [projectsites.dev, megabyte.space, deskl.ink, gitl.ink]
+    roles: [architect, deploy-verifier, migration-agent]
+    access: write
+    passthrough: false
+    notes: >
+      Development management (create/update dev resources). Separate from prod. Application
+      Workers NEVER use this — they get a Secrets Store binding. See agent-vault-brokering.md.
+
+  - name: cloudflare-prod-management
+    host: api.cloudflare.com/client/v4
+    auth_type: bearer
+    credential_ref: CLOUDFLARE_PROD_API_TOKEN
+    projects: [projectsites.dev, megabyte.space]
+    roles: [deploy-verifier]
+    access: admin
+    passthrough: false
+    notes: >
+      Strongest token — fewest roles, fewest projects. Prod-management + destructive infra
+      actions remain approval-required (autonomous-engineering tier).
+
+  - name: infisical-api
+    host: app.infisical.com
+    auth_type: bearer
+    credential_ref: INFISICAL_MACHINE_IDENTITY   # machine identity / OIDC-exchanged, not a raw secret
+    projects: ["*"]
+    roles: [architect]
+    access: read
+    passthrough: false
+    notes: The credential store itself. On GitHub Actions this is OIDC-exchanged, not static.
+
+  # ── passthrough (forwarded WITHOUT injection — must stay untouched) ─────────
+  - name: anthropic-oauth-claude-cli
+    host: api.anthropic.com
+    auth_type: passthrough
+    credential_ref: null
+    projects: ["*"]
+    roles: ["*"]
+    passthrough: true
+    notes: >
+      Claude Code subscription OAuth is owned by the official CLI. NEVER broker/inject it.
+      Passthrough only. Same for platform.claude.com / mcp-proxy.anthropic.com.
+
+  - name: openai-oauth-codex-cli
+    host: chatgpt.com
+    auth_type: passthrough
+    credential_ref: null
+    projects: ["*"]
+    roles: ["*"]
+    passthrough: true
+    notes: Codex ChatGPT OAuth owned by the official Codex CLI. Passthrough only, never injected.
+
+  - name: deepseek-direct
+    host: api.deepseek.com
+    auth_type: passthrough
+    credential_ref: null
+    projects: ["*"]
+    roles: ["*"]
+    passthrough: true
+    notes: >
+      OpenCode → DeepSeek stays DIRECT (DEEPSEEK_API_KEY in env), never through Cloudflare AI
+      Gateway (agent-provider-policy.md). Passthrough preserves that; do not inject/intercept.
+
+# NO_PROXY (local control-plane never intercepted): localhost, 127.0.0.1, the OpenClaw
+# Gateway, and local MCP servers. Set at broker launch; see agent-vault-brokering.md.
+no_proxy:
+  - localhost
+  - 127.0.0.1

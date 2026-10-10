@@ -1,0 +1,8 @@
+# terraform.tfvars.example — copy to terraform.tfvars (gitignored) per project.
+# NO SECRETS here (the CF API token lives in the environment, not in tfvars).
+account_id         = "0000000000000000000000000000000000"
+zone_id            = "0000000000000000000000000000000000"
+site_hostname      = "example.com"
+origin_hostname    = "example-worker.workers.dev"
+assets_bucket_name = "example-assets"
+r2_location        = "wnam"

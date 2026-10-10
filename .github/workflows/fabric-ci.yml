@@ -1,0 +1,59 @@
+# fabric-ci.yml — the agent tooling fabric, verified in CI with the SAME mise task
+# contracts developers + agents run locally (ADR-0001). checkout → pinned mise →
+# locked install → mise run <task>. No "local version vs CI version" of a check.
+#
+# INFISICAL OIDC (enable once a machine identity exists — see rules/agent-vault-brokering.md):
+# add to a job that needs secrets:
+#   permissions: { id-token: write, contents: read }
+#   - uses: Infisical/secrets-action@<sha>   # pin to a release SHA
+#     with: { method: oidc, identity-id: ${{ vars.INFISICAL_IDENTITY_ID }},
+#             project-slug: ${{ vars.INFISICAL_PROJECT_SLUG }}, env-slug: prod }
+# Trust is bound NARROWLY to this reusable workflow via the `job_workflow_ref` OIDC
+# claim in the Infisical machine-identity config — not "any workflow in the org".
+name: fabric-ci
+
+on:
+  push:
+    paths:
+      - "mise.toml"
+      - "mise.lock"
+      - "bin/semgrep-scan.sh"
+      - "bin/serena-helper.sh"
+      - "bin/tofu-helper.sh"
+      - "bin/fabric-doctor.mjs"
+      - "templates/lint-stack/semgrep-custom/**"
+      - "templates/opentofu/**"
+      - ".github/workflows/fabric-ci.yml"
+  pull_request:
+    paths:
+      - "mise.toml"
+      - "mise.lock"
+      - "templates/lint-stack/semgrep-custom/**"
+      - "templates/opentofu/**"
+  workflow_call: {} # reusable: product repos call this to verify their fabric
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  fabric:
+    runs-on: ubuntu-latest # hermetic validation (self-hosted runner also works)
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - name: Install pinned, locked toolchain
+        uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
+        with:
+          version: 2026.10.4 # pin mise itself
+        env:
+          MISE_LOCKED: "1" # install EXACTLY what mise.lock records (CI parity)
+      - name: Semgrep custom-rule fixtures (self-improving invariants)
+        run: mise run security:rules:test
+      - name: Semgrep full scan (fleet credential/secret invariants)
+        run: mise run security:semgrep
+      - name: OpenTofu validate + plan-only tests (no real resources)
+        run: |
+          mise run infra:validate
+          mise run infra:test
+      - name: Fabric doctor (machine-readable; never prints secrets)
+        run: mise run doctor --json
