@@ -56,6 +56,8 @@ Enforce the mandatory typecheck→deploy→CDN-purge→prod-E2E→visual-verify 
 - On 401: `CLOUDFLARE_API_KEY` + `CLOUDFLARE_EMAIL`
 - Both stale: prompt `! npx wrangler login`, resume deploy once fresh
 - NEVER silently skip deploy because creds missing — surface as blocker
+- **An unset env var is NOT "no creds."** You MUST run `get-secret <KEY>` (the broker is the source of truth, and it HOLDS the CF creds) before writing BLOCKED_EXTERNAL for any credential. "I checked `env` and it was empty" is not evidence — the broker check is.
+- **Greenfield is not exempt.** A brand-new repo with no `*.workers.dev` URL yet still deploys a skeleton on the FIRST pass: `wrangler d1 create` → apply migrations `--remote` → `wrangler deploy` → curl live `/health`. Deterministically reminded by `~/.claude/hooks/enforce-cloudflare-deploy.py` on every `wrangler.*` write.
 
 ## Cloudflare `cf` CLI transition (beta — doctrine stays wrangler-first)
 

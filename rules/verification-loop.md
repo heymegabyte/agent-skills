@@ -31,6 +31,13 @@ Any code change to a deployable project:
 2. Fall back to `CLOUDFLARE_API_KEY` + `CLOUDFLARE_EMAIL`
 3. If both stale, ask user `! npx wrangler login` and resume deploy
 
+### Two BANNED rationalizations for skipping a Cloudflare deploy
+
+Deterministically enforced by `~/.claude/hooks/enforce-cloudflare-deploy.py` (fires on any `wrangler.*`/`cloudflare.config.ts` write). Both have skipped deploys before — neither is ever valid:
+
+- **"env var unset ⇒ no credentials ⇒ BLOCKED_EXTERNAL."** FALSE. An unset env var proves nothing; the `get-secret` broker is the source of truth. You MUST actually run `get-secret CLOUDFLARE_API_TOKEN` (+ `CLOUDFLARE_ACCOUNT_ID`) before writing BLOCKED_EXTERNAL for ANY credential. Only after the broker AND `wrangler login` both fail is a credential truly blocked — and then cite the exact failing command as evidence. (The CF creds ARE in the broker.)
+- **"greenfield / first slice ⇒ no deployed surface yet ⇒ defer deploy."** FALSE. Per the Prime Directive, the FIRST pass deploys a skeleton to `*.workers.dev`. "No URL yet" means create one now (`wrangler d1 create` → apply migrations `--remote` → `wrangler deploy` → curl live `/health`), never defer to "a later phase." A tested local build that was never deployed is NOT shipped.
+
 ### Docker (Cloudflare Worker container builds)
 
 - Container/Durable-Object image builds require **Docker daemon running** locally.
