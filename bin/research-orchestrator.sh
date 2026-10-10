@@ -56,6 +56,8 @@ HAS_GUM=0
 command -v gum >/dev/null 2>&1 && HAS_GUM=1
 HAS_JQ=0
 command -v jq >/dev/null 2>&1 && HAS_JQ=1
+HAS_GLOW=0
+command -v glow >/dev/null 2>&1 && HAS_GLOW=1
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RESEARCH_DIR="${RESEARCH_DIR:-${PWD}/.research}"
@@ -79,6 +81,24 @@ box() { # box <title> <color> <body>
   else
     emdash_info "$1"
     printf '%s\n' "$3" >&2
+  fi
+}
+
+# glow markdown renderer (stylized); fallback to `gum format`, then raw cat. Human
+# output → stderr (stdout stays machine-readable). Forces a style so it renders even
+# when stdout is captured (non-TTY), e.g. inside the agent's tool-result stream.
+glow_md() { # glow_md <markdown-file>
+  local f="$1"
+  [ -s "$f" ] || {
+    emdash_warn "(nothing to render: $f)"
+    return
+  }
+  if [ "$HAS_GLOW" = "1" ]; then
+    glow --style dark --width "${GLOW_WIDTH:-100}" "$f" >&2 2>/dev/null || cat "$f" >&2
+  elif [ "$HAS_GUM" = "1" ]; then
+    gum format <"$f" >&2 2>/dev/null || cat "$f" >&2
+  else
+    cat "$f" >&2
   fi
 }
 
@@ -324,9 +344,87 @@ by provider → claude ${cl} · codex ${cx} · opencode ${oc}"
     fi
     ;;
 
+  synth)
+    # Render + record a SYNTHESIZED Claude Code prompt (the output of the research).
+    title="$(getopt_val --title "$@")"
+    title="${title:-synthesized prompt}"
+    from="$(getopt_val --from "$@")"
+    pf="$(getopt_val --prompt-file "$@")"
+    inline="$(getopt_val --prompt "$@")"
+    slug="$(printf '%s' "$title" | tr '[:upper:] ' '[:lower:]-' | tr -cd 'a-z0-9-' | cut -c1-40)"
+    sf="${RESEARCH_DIR}/synth-${slug:-prompt}.md"
+    if [ -n "$pf" ] && [ -f "$pf" ]; then
+      cp "$pf" "$sf"
+    elif [ -n "$inline" ]; then
+      printf '%s\n' "$inline" >"$sf"
+    else
+      emdash_error "synth: --prompt-file FILE or --prompt \"text\" required"
+      exit 2
+    fi
+    if [ "$HAS_GUM" = "1" ]; then
+      gum style --foreground "$C_GREEN" --bold "🧠 SYNTHESIZED CLAUDE CODE PROMPT — ${title}" >&2
+      [ -n "$from" ] && gum style --foreground "$C_DIM" "   synthesized from research: ${from}" >&2
+    else
+      emdash_header "SYNTHESIZED CLAUDE CODE PROMPT — ${title}"
+      [ -n "$from" ] && emdash_log "synthesized from research: ${from}"
+    fi
+    glow_md "$sf"
+    ledger_append "{\"synth\":true,\"title\":$(json_str "$title"),\"from\":$(json_str "${from:-}"),\"file\":$(json_str "$sf"),\"at\":$(json_str "$(now_iso)")}"
+    emdash_success "synthesized prompt rendered → ${sf}"
+    printf '%s\n' "$sf"
+    ;;
+
+  report)
+    # Full, detailed, glow-rendered narrative: how claude/codex/opencode were used
+    # (table + per-session detail) AND every synthesized Claude Code prompt.
+    emdash_header "◆ RESEARCH → SYNTHESIS — full report"
+    [ -s "$LEDGER" ] || {
+      emdash_warn "no research ledger at ${LEDGER}"
+      exit 0
+    }
+    rep="${RESEARCH_DIR}/REPORT.md"
+    {
+      printf '# Research → Synthesis report\n\n'
+      printf '_How the subscription CLIs (claude · codex · opencode/DeepSeek) were used, and the Claude Code prompts synthesized from them._\n\n'
+      if [ "$HAS_JQ" = "1" ]; then
+        printf '## How the CLIs were used\n\n'
+        printf '| k | provider | role | ran | used | why |\n|---|---|---|---|---|---|\n'
+        jq -rs '
+          (map(select(.verdict==true)) | map({key:((.k//"")+"|"+(.provider//"")), value:.}) | from_entries) as $v
+          | map(select((.verdict|not) and (.synth|not)))
+          | map((. + ($v[(.k//"")+"|"+(.provider//"")] // {})) as $m
+              | "| \(.k // "-") | \(.provider // "-") | \(.role // "-") | \(if .launched then "yes" else "no" end) | \(if $m.used==true then "USED" elif $m.used==false then "no" else "pending" end) | \(($m.why // .why // "-")) |")
+          | .[]' "$LEDGER" 2>/dev/null
+        printf '\n## Per-session research detail\n\n'
+        while IFS=$'\t' read -r k prov role q out; do
+          [ -n "$prov" ] || continue
+          printf '### session %s — %s (%s)\n\n' "${k:--}" "$prov" "${role:--}"
+          [ -n "$q" ] && [ "$q" != "null" ] && printf '**Ask:** %s\n\n' "$q"
+          if [ -n "$out" ] && [ "$out" != "null" ] && [ -f "$out" ]; then
+            # shellcheck disable=SC2016  # literal markdown code-fence; %s is printf's
+            printf '```\n%s\n```\n\n' "$(grep -v '^[[:space:]]*$' "$out" | head -c 2000)"
+          fi
+        done < <(jq -rs '.[]|select((.verdict|not) and (.synth|not) and .launched==true)|[.k,.provider,.role,.question,.out]|@tsv' "$LEDGER" 2>/dev/null)
+        printf '## Synthesized Claude Code prompts\n\n'
+        while IFS=$'\t' read -r title from file; do
+          [ -n "$file" ] || continue
+          printf '### %s\n\n' "${title:-prompt}"
+          [ -n "$from" ] && [ "$from" != "null" ] && printf '_synthesized from: %s_\n\n' "$from"
+          [ -f "$file" ] && printf '%s\n\n' "$(cat "$file")"
+        done < <(jq -rs '.[]|select(.synth==true)|[.title,.from,.file]|@tsv' "$LEDGER" 2>/dev/null)
+      else
+        # shellcheck disable=SC2016  # literal markdown code-fence; %s is printf's
+        printf '## Raw ledger (jq absent)\n\n```\n%s\n```\n' "$(cat "$LEDGER")"
+      fi
+    } >"$rep"
+    glow_md "$rep"
+    emdash_success "full report → ${rep}"
+    printf '%s\n' "$rep"
+    ;;
+
   *)
     emdash_header "research-orchestrator"
-    emdash_log "subcommands: phase · plan · run · log-result · skip · verdict · summary"
+    emdash_log "subcommands: phase · plan · run · log-result · skip · verdict · synth · report · summary"
     emdash_log "see header of $(basename "${BASH_SOURCE[0]}") for flags. Doctrine: rules/research-expansion-orchestration.md"
     [ -n "$cmd" ] && {
       emdash_error "unknown subcommand: ${cmd}"

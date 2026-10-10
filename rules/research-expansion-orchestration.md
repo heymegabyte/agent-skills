@@ -21,7 +21,11 @@ superseded_by: null
 The research that happens at the START of a build/non-trivial prompt — Phase 0 context saturation,
 prompt expansion, competitor/peer scanning, "predict the 80% from the 20%" — is routed through the
 **subscription CLIs + OpenCode**, never the OpenAI/Anthropic *APIs*, and is driven by the
-deterministic, `gum`-logged `bin/research-orchestrator.sh` so a human can SEE the whole breakdown.
+deterministic, `gum`/`glow`-rendered `bin/research-orchestrator.sh` so a human can SEE the whole
+breakdown — **how `claude`/`codex`/`opencode` were used AND the Claude Code prompts synthesized from
+them**, all stylized. This is the DEFAULT for most substantial prompts (not only website builds): any
+prompt whose job warrants research + full implementation runs this expansion then drives to convergence
+(see `run-the-loop/_shared/CONVERGENCE-PROTOCOL.md`); only trivial/one-line/question-only asks skip it.
 Governs internal research only; customer product LLM calls are the preserved product axis
 ([[agent-provider-policy]] § Product-runtime boundary).
 
@@ -59,8 +63,13 @@ Every research expansion MUST narrate itself through the orchestrator so the bre
    discarded: redundant / low-signal / contradicted / out-of-scope). Never silently drop research.
 6. `… summary` — a `gum table` (k · provider · role · ran · used · why) + a counts box (total · ran ·
    used · per-provider breakdown).
+7. `… synth --title "<prompt>" --from "<k:provider,…>" --prompt-file <md>` — **render each SYNTHESIZED
+   Claude Code prompt** the research produced (`glow`-rendered markdown), recording which sessions fed
+   it. This is the payoff: the human SEES the prompts that will actually be executed, not just the research.
+8. `… report` — the full, `glow`-rendered **Research → Synthesis report** (CLI-usage table + per-session
+   detail + every synthesized prompt). Run it to close the expansion; it is the artifact a build/loop surfaces.
 
-Human output is `emdash_*`/`gum` (CI-safe fallback per [[terminal-styling]]); the only stdout is the
+Human output is `emdash_*`/`gum`/`glow` (CI-safe fallback per [[terminal-styling]]); the only stdout is the
 machine-readable result path. Secret-safe (the DeepSeek key is injected by the launcher into its
 child only — never printed/logged).
 
@@ -73,8 +82,10 @@ child only — never printed/logged).
 3. **claude synthesizes** all session outputs into the plan (not a concat of transcripts).
 4. **claude completeness critic** — "what modality/angle/source did we NOT research?" → if gaps, run
    another round; stop when a round surfaces nothing new.
-5. `verdict` each session, then `summary`. The `.research/sessions.ndjson` ledger + per-session files
-   are the secret-free, reproducible provenance of the expansion.
+5. `verdict` each session, then `summary`, then `synth` each synthesized Claude Code prompt, then a final
+   `report` (glow-rendered). The `.research/sessions.ndjson` ledger + per-session + `synth-*.md` files are
+   the secret-free, reproducible provenance of the expansion — and it feeds straight into convergence
+   (drive the synthesized prompts to FULL implementation, not a partial slice).
 
 ## Hard rules
 

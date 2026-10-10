@@ -8,6 +8,13 @@
 
 ## Activation (global default)
 
+- **Default disposition — drive every sensible prompt to FULL convergence.** For MOST prompts (whenever
+  it makes sense), the job is to fully IMPLEMENT the entire ask in the project — every part of the
+  prompt, every state, end to end, verified — not to hand back a plan, a partial slice, or "phase 1 of
+  N" unless the work genuinely cannot finish in one pass (then checkpoint `CONVERGENCE.md` + say exactly
+  what remains). A re-prompt on the same surface means the prior pass under-delivered. "Concise" is tight
+  execution, never narrow scope. Begin substantial prompts with the gum/glow research expansion
+  (`research-expansion-orchestration`) → synthesize Claude Code prompts → drive them to convergence here.
 - This protocol is the DEFAULT for any substantial software request — a feature, a bug fix across
   files, hardening, "make it production-ready", a multi-step change, or an explicit `/run-the-loop`.
 - **Trigger phrases auto-activate it** (no need to restate the convergence instructions): "build this",
