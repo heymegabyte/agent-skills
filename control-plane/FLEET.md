@@ -120,3 +120,5 @@ Regression suite: `python3 -m unittest discover -s control-plane/tests -v`. Work
 
 
 Runner preflight: `python3 control-plane/runner_safety.py` detects the known unsafe Infisical bulk-export hook. `--repair` removes only recognized hook references, preserving unrelated environment entries/hooks; restart idle runners afterward. Registration fails on that known pattern and preserves existing runner-group repository approvals. The runner-ops bootstrap now configures individual broker lookups instead of bulk job injection. Exposed Browserbase/Cloudflare/E2E credentials still require provider rotation.
+
+An owner may explicitly select a protected local source for an individual secret using `~/.config/agent-fleet/local-secret-overrides.json` (mode 0600, JSON list of names). Resolution is existing environment → explicitly selected local source → configured Infisical → ordinary local fallback when applicable. Explicit sources fail closed on missing/unsafe files; other names retain Infisical failure semantics. Primary Ubuntu uses this for DEEPSEEK_API_KEY at the owner's request. Secret values remain excluded from git, snapshots, logs and Actions command files.
