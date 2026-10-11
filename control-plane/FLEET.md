@@ -128,3 +128,8 @@ Regression suite: `python3 -m unittest discover -s control-plane/tests -v`. Work
 Runner preflight: `python3 control-plane/runner_safety.py` detects the known unsafe Infisical bulk-export hook. `--repair` removes only recognized hook references, preserving unrelated environment entries/hooks; restart idle runners afterward. Registration fails on that known pattern and preserves existing runner-group repository approvals. The runner-ops bootstrap now configures individual broker lookups instead of bulk job injection. Exposed Browserbase/Cloudflare/E2E credentials still require provider rotation.
 
 
+
+
+## Paperclip and owner remote development
+
+The primary machine also hosts Paperclip at https://swarml.ink, separately from the fleet UI. Owner-only Cloudflare Access precedes Paperclip's native account authentication. Paperclip goals/agents may be configured deliberately; do not silently duplicate GitHub-owned project schedules. Owner SSH through ssh-ubuntu.megabyte.space uses Cloudflare Access plus an enrolled owner SSH key, loopback-only OpenSSH, and persistent systemd services. Mac Emdash imports the ubuntu-fleet SSH config alias so its local cloudflared ProxyCommand is honored. Desktop VNC remains private. Installation, pinned versions, host-key fingerprint, local private backups and complete recovery commands belong in the private machine README; live state belongs in the machine profile. Never put database passwords, tunnel/SSH keys, Paperclip auth state or backup archives into git.
