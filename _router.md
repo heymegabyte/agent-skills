@@ -112,6 +112,7 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 - `deploy-verifier`
 - `formatter`
 - `incident-responder`
+- `keyword-researcher`
 - `media-orchestrator`
 - `meta-orchestrator`
 - `migration-agent`

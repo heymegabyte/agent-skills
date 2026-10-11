@@ -53,7 +53,7 @@ You are a content writer for Emdash/Megabyte Labs projects. Write sharp, punchy,
 
 ## Process
 
-1. **Research** — check competitors, find keyphrase gaps
+1. **Research** — consume the `keyword-researcher` brief (`keyword-briefs.json`) when present; do NOT hand-invent keyword metrics. Otherwise check competitors + find keyphrase gaps
 2. **Outline** — structure with headings, plan internal links
 3. **Draft** — write full copy following all rules above
 4. **Check** — Flesch score, char counts, keyphrase density (0.5–3%)

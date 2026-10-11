@@ -1,0 +1,44 @@
+{
+  // Keyword-research service — Worker entrypoint stub for the vertical slice.
+  // Provider adapters, bindings, and real resources are provisioned in a later phase.
+  // Intentionally NO account_id and NO real resource IDs here.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "keyword-research",
+  "main": "src/worker.ts",
+  "compatibility_date": "2025-01-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true,
+  },
+
+  // --- Placeholder bindings (empty until the adapter phase provisions them) ---
+  // Do NOT create real resources from this file. Fill IDs in during provisioning.
+
+  // D1: normalized keyword_opportunity store.
+  // "d1_databases": [
+  //   { "binding": "DB", "database_name": "keyword-research", "database_id": "<provision-later>" }
+  // ],
+  "d1_databases": [],
+
+  // R2: raw per-source signal snapshots (audit / provenance).
+  // "r2_buckets": [
+  //   { "binding": "RAW_SIGNALS", "bucket_name": "keyword-research-raw" }
+  // ],
+  "r2_buckets": [],
+
+  // Queues: fan-out keyword harvesting + enrichment jobs.
+  // "queues": {
+  //   "producers": [{ "binding": "HARVEST_QUEUE", "queue": "keyword-harvest" }],
+  //   "consumers": [{ "queue": "keyword-harvest", "max_batch_size": 10 }]
+  // },
+  "queues": {
+    "producers": [],
+    "consumers": [],
+  },
+
+  // Triggers: scheduled refresh of volume / GSC / trend signals.
+  // "triggers": { "crons": ["0 6 * * *"] },
+  "triggers": {
+    "crons": [],
+  },
+}

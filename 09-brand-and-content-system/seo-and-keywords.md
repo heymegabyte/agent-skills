@@ -7,7 +7,9 @@ description: "Full SEO engine: keyword research, competitor analysis, per-page p
 
 # SEO and Keywords
 
-Every page targets: 1 holy-grail keyword (high-volume) + 1-2 longtail phrases (lower competition, high intent) + semantic variations woven naturally.
+Every page targets a PRIMARY keyphrase chosen by relevance × search intent × organic ranking feasibility (not raw volume) + 1-2 supporting longtail phrases + semantic variations woven naturally. Volume is one signal among several — never the sole selector.
+
+> Canonical research engine: the `keyword-researcher` agent (`agents/keyword-researcher.md`) + `npm run seo:research`. It produces deterministic, evidence-scored opportunities + content briefs from DataForSEO + Search Console + Google Trends + Exa. Require its evidence before SEO-targeted writing; don't hand-invent metrics.
 
 ## Keyword Research Workflow
 
@@ -30,21 +32,26 @@ async function getAutocompleteSuggestions(seed: string): Promise<string[]> {
 
 #### Other tools
 
-- **DataForSEO** (~$0.01/keyword) — volume, CPC, competition, trends
-- **Google Search Console** (FREE) — real clicks, impressions, position
-- **Google Trends** — relative interest over time
+- **DataForSEO** — volume, CPC (paid), ORGANIC difficulty, SERPs, trends. Cost varies by endpoint; read live account pricing + balance via `/v3/appendix/user_data` — never hardcode a per-keyword price. Enforce the $20/mo paid cap.
+- **Google Search Console** (FREE) — real clicks, impressions, position (authorized properties only)
+- **Google Trends** — relative interest over time (index ≠ absolute volume)
+- **Exa** — competitor/source/topic evidence + differentiation (never a source of numeric volume/difficulty)
 
 ### Step 3: Competitor Analysis
 
 1. Identify 3-5 competitors
 2. Scrape `sitemap.xml` → fetch pages → extract title / h1 / meta
-3. Find gaps (keywords they rank for that we don't) + easy wins (high volume + low competition)
+3. Find gaps (keywords they rank for that we don't) + easy wins (meaningful demand + low ORGANIC difficulty — distinct from paid/CPC competition)
 
 ### Step 4: Selection Matrix
 
-- **Holy-grail** — highest volume relevant keyword
-- **Longtail 1** — lower competition, commercial intent
+Score candidates on relevance + intent + organic feasibility + demand — not volume alone. A highly relevant commercial term with modest volume beats an irrelevant high-volume term.
+
+- **Primary** — best relevance × intent × feasibility fit for the page (often NOT the highest-volume term)
+- **Longtail 1** — commercial intent, low ORGANIC difficulty
 - **Longtail 2** — informational intent, blog / resource page
+
+Paid competition (CPC / Ads) is a business signal — kept SEPARATE from organic keyword difficulty.
 
 ## Per-Page Yoast Checklist (ALL GREEN)
 
@@ -52,11 +59,11 @@ async function getAutocompleteSuggestions(seed: string): Promise<string[]> {
 - **Meta description** — 120-156 chars, contains keyword, includes CTA, unique per page
 - **URL** — short, readable, keyword-rich, lowercase, hyphens. Good: `/docker-hosting`
 - **Headings** — one H1 with keyword; H2s with longtail/semantic variations; logical hierarchy; no skipped levels
-- **Content** — keyword in first 100 words; density 0.5-3% (natural); min 300 words (600+ preferred); Flesch ≥60; short paragraphs (2-4 sentences); subheadings every 200-300 words; transition words ≥30% of sentences
+- **Content** — keyphrase in the first 100 words; use it naturally wherever it reads well (NO mandatory density target — just avoid stuffing); min 300 words (600+ preferred); Flesch ≥60; short paragraphs (2-4 sentences); subheadings every 200-300 words; transition words ≥30% of sentences
 - **Images** — alt text with keyword (natural); descriptive filename; width/height set; lazy load below-fold; WebP <200KB
 - **Internal links** — 2-3+ per page, descriptive anchors
 - **External links** — 1-2 outbound to authoritative sources, `target="_blank" rel="noopener"`
-- **Schema / JSON-LD** — 4+ per page minimum: Organization + WebSite + WebPage + domain-specific (FAQ, Product, BreadcrumbList, Article, HowTo, SoftwareApplication, DonateAction)
+- **Schema / JSON-LD** — only types that are ACCURATE for the page (no arbitrary count, never padded). Typically Organization + WebSite + WebPage + one domain-specific type when it genuinely applies (Product, BreadcrumbList, Article, HowTo, SoftwareApplication, DonateAction). FAQPage ONLY with real on-page FAQs
 - **Technical** — canonical URL, mobile-friendly, LCP <2.5s, HTTPS, no duplicate content, XML sitemap, robots.txt
 
 ## Readability Enforcement (Flesch ≥60)
@@ -91,14 +98,15 @@ for (const city of cities) {
 
 Playwright test verifying: title 30-60 chars · meta desc 120-160 chars · exactly 1 H1 · canonical URL · OG tags · JSON-LD ≥1 · no Lorem/TODO/placeholder · images have alt · internal links ≥3 · `robots.txt` 200 · `sitemap.xml` 200
 
-## API Stack ($8/mo total)
+## Research Stack (canonical)
 
-- **Google Search Console** — Free — real clicks/impressions
-- **VebAPI** — $8/mo — competitor keywords, SERP
-- **Serper free tier** — Free — 2,500/mo SERP + PAA
-- **Google Suggest** — Free — keyword expansion
-- **SearXNG (self-hosted)** — Free — PAA questions
-- **DataForSEO** — $0.0006/query — bulk volumes at scale
+The active keyword-research stack is **DataForSEO + Google Search Console + Google Trends + Exa**, orchestrated by the `keyword-researcher` agent (`agents/keyword-researcher.md`) / `npm run seo:research`. Do NOT introduce Ahrefs, Semrush, Serper, VebAPI, Keywords Everywhere, or Tavily as keyword/SERP sources.
+
+- **DataForSEO v3** — primary: discovery, volume, organic difficulty, CPC/paid competition (separate), SERPs, Trends. Cost is per-endpoint; read live pricing/balance, enforce the $20/mo paid cap, cache by freshness.
+- **Google Search Console** — free, first-party clicks/impressions/CTR/position (authorized properties only; missing rows ≠ zero).
+- **Google Trends** — relative interest (official API if authorized, else via DataForSEO). Index ≠ volume; never compare independently-normalized series.
+- **Exa** — competitor/source/topic evidence + differentiation (never a source of numeric volume/difficulty).
+- **Google Autocomplete** — free seed expansion (see Step 2).
 
 ## Google's SEO Rules (2026 Core Update)
 
