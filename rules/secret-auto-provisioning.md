@@ -31,7 +31,7 @@ Any secret whose ONLY requirement is "be a high-entropy random value both sides 
 - **API keys YOU define for YOUR own services** — `openssl rand -hex 32` prefixed (`ADMIN_TOKEN`, internal `X-API-Key`)
 - **Random IDs** — `crypto.randomUUID()` / `uuidv7()` per `[[uuid-version-discipline]]`
 
-The ONLY secrets you do NOT auto-generate: (a) Tier 1.5 data-at-rest keys (`*_ENCRYPTION_KEY` — auto-generating mid-life destroys persisted data; detect-only), and (b) third-party credentials minted by a vendor (Stripe/Resend/Clerk API keys, OAuth client secrets) — those follow Tier 2/3/4.
+The ONLY secrets you do NOT auto-generate: (a) Tier 1.5 data-at-rest keys (`*_ENCRYPTION_KEY` — auto-generating mid-life destroys persisted data; detect-only), and (b) third-party credentials minted by a vendor (Stripe/Clerk API keys, OAuth client secrets) — those follow Tier 2/3/4.
 
 ## Tiers
 
@@ -132,7 +132,7 @@ Surface deeplinked URL + reason. Never autopilot.
 
 Symptom of gated API: logged in, no "API Keys" / "Developer Settings" / "Create Key" button anywhere — it's gated, not hidden.
 
-- Self-serve instant: Stripe, Twilio, Resend, Anthropic, OpenAI, Cloudflare, Mailchimp (Marketing API).
+- Self-serve instant: Stripe, Twilio, Anthropic, OpenAI, Cloudflare, Mailchimp (Marketing API).
 - Gated — keys + alternatives are in Tier 4 above (Checkr, Trustpilot, Stripe Connect, Apple Developer, OpenSRS, Domainr).
 - `Plaid` — Sandbox instant; Development + Production require approval (not a secret we mint — app-review gate).
 
@@ -157,6 +157,8 @@ Update as vendor reality surfaces (per `prompt-as-training-signal` §6).
 2. **CF Worker secrets** — encrypted, exposed at `env.KEY`.
 3. **GitHub Actions secrets** — OIDC + CI-only credentials only.
 4. NEVER: env files in repo, `.env.local` checked in, secret-bearing screenshots/logs.
+
+Every entered/minted/derived secret also fans OUT to Infisical (appropriate project) + Paperclip (when installed), per `[[secret-provisioning]]` § Triple-store persistence — not just chezmoi + the deploy target.
 
 ### Log redaction
 
