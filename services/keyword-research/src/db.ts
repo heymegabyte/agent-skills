@@ -288,14 +288,27 @@ export async function queryOpportunities(
 /* History.                                                            */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Deterministic history-row id from a jobId, so a retried job reuses its ONE
+ * history row (paired with the INSERT OR IGNORE below) rather than appending a
+ * duplicate pointer on each redelivery.
+ */
+export function historyIdFor(jobId: string): string {
+  return `hist:${jobId}`;
+}
+
 /** Append a research-history row pointing at a persisted R2 report. */
 export async function insertHistory(
   db: D1Database,
   row: { id: string; projectId: string; tenantId: string; reportR2Key: string; createdAt: string },
 ): Promise<void> {
+  // OR IGNORE → idempotent on the PK (use `historyIdFor(jobId)` as `id`). A job
+  // that inserted history then threw before `markJobDone` and later retried to
+  // success re-runs this line with the SAME id; the second insert is a no-op, so
+  // retries never duplicate the history pointer.
   await db
     .prepare(
-      `INSERT INTO research_history (id, project_id, tenant_id, report_r2_key, created_at)
+      `INSERT OR IGNORE INTO research_history (id, project_id, tenant_id, report_r2_key, created_at)
        VALUES (?1, ?2, ?3, ?4, ?5)`,
     )
     .bind(row.id, row.projectId, row.tenantId, row.reportR2Key, row.createdAt)

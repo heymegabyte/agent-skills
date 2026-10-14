@@ -26,7 +26,7 @@ import {
   type Harness,
 } from './harness';
 import { FakeD1Database } from './fakes';
-import { getJob, getProject, insertJob, markJobDone, queryOpportunities, registerProject, ensureTenant } from '../../src/db';
+import { getJob, getProject, insertJob, markJobDone, queryOpportunities, registerProject, ensureTenant, insertHistory, historyIdFor } from '../../src/db';
 import {
   DEFAULT_MAX_ATTEMPTS,
   handleQueue,
@@ -63,6 +63,36 @@ async function seedProject(h: Harness, tenantId: string, domain = 'example.com')
 /* =================================================================== */
 /* Case 1 — migrations apply + D1 round-trip.                          */
 /* =================================================================== */
+describe('§17.12 research_history idempotency on retry', () => {
+  it('reuses ONE history row across retries (deterministic id + INSERT OR IGNORE)', async () => {
+    const db = new FakeD1Database();
+    db.applyMigrations();
+    const d1 = db.asD1();
+    const jobId = 'job-retry-xyz';
+    const base = {
+      id: historyIdFor(jobId),
+      projectId: 'p1',
+      tenantId: 'tenant:a',
+      reportR2Key: `reports/p1/${jobId}.md`,
+      createdAt: NOW().toISOString(),
+    };
+    await insertHistory(d1, base); // first attempt
+    await insertHistory(d1, base); // redelivered retry re-inserts the SAME id
+    const count = (
+      db.sqlite
+        .prepare(`SELECT COUNT(*) AS c FROM research_history WHERE id = ?`)
+        .get(historyIdFor(jobId)) as { c: number }
+    ).c;
+    expect(count).toBe(1);
+  });
+
+  it('historyIdFor is deterministic per job and distinct across jobs', () => {
+    expect(historyIdFor('a')).toBe('hist:a');
+    expect(historyIdFor('a')).toBe(historyIdFor('a'));
+    expect(historyIdFor('a')).not.toBe(historyIdFor('b'));
+  });
+});
+
 describe('§17.1 migrations apply + D1 round-trip', () => {
   it('applies 0001_init.sql and creates every table', () => {
     const db = new FakeD1Database();

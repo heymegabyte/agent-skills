@@ -24,6 +24,7 @@ import type { ReportContext } from './report';
 import {
   getJobInternal,
   getProject,
+  historyIdFor,
   insertHistory,
   markJobDone,
   markJobFailed,
@@ -191,7 +192,7 @@ export async function processJob(
     await reports.put(key, body, { httpMetadata: { contentType: 'text/markdown; charset=utf-8' } });
 
     await insertHistory(db, {
-      id: deps.newId(),
+      id: historyIdFor(msg.jobId),
       projectId: msg.projectId,
       tenantId: msg.tenantId,
       reportR2Key: key,
