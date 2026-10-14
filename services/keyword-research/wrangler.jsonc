@@ -1,7 +1,10 @@
 {
-  // Keyword-research service — Worker entrypoint stub for the vertical slice.
-  // Provider adapters, bindings, and real resources are provisioned in a later phase.
-  // Intentionally NO account_id and NO real resource IDs here.
+  // Keyword-research service — Worker control-plane configuration.
+  //
+  // CONFIG ONLY. This file declares the SHAPE of every binding (D1, R2, Queue,
+  // cron, vars) but carries NO real resource IDs and provisions NOTHING. The
+  // concrete database_id (and any account-scoped ids) are filled in at P7b when
+  // the resources are actually created; `<set-at-P7b>` marks every such slot.
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "keyword-research",
   "main": "src/worker.ts",
@@ -11,34 +14,59 @@
     "enabled": true,
   },
 
-  // --- Placeholder bindings (empty until the adapter phase provisions them) ---
-  // Do NOT create real resources from this file. Fill IDs in during provisioning.
+  // --- D1: normalized opportunity store, jobs, ledger, history, meta. ---
+  // database_id is intentionally a placeholder — `wrangler d1 create
+  // keyword-research` at P7b yields the real id that replaces <set-at-P7b>.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "keyword-research",
+      "database_id": "<set-at-P7b>",
+      "migrations_dir": "migrations",
+    },
+  ],
 
-  // D1: normalized keyword_opportunity store.
-  // "d1_databases": [
-  //   { "binding": "DB", "database_name": "keyword-research", "database_id": "<provision-later>" }
-  // ],
-  "d1_databases": [],
+  // --- R2: persisted research reports (markdown/json bytes). ---
+  "r2_buckets": [
+    {
+      "binding": "REPORTS",
+      "bucket_name": "keyword-research-reports",
+    },
+  ],
 
-  // R2: raw per-source signal snapshots (audit / provenance).
-  // "r2_buckets": [
-  //   { "binding": "RAW_SIGNALS", "bucket_name": "keyword-research-raw" }
-  // ],
-  "r2_buckets": [],
-
-  // Queues: fan-out keyword harvesting + enrichment jobs.
-  // "queues": {
-  //   "producers": [{ "binding": "HARVEST_QUEUE", "queue": "keyword-harvest" }],
-  //   "consumers": [{ "queue": "keyword-harvest", "max_batch_size": 10 }]
-  // },
+  // --- Queues: research jobs (this Worker is BOTH producer and consumer). ---
   "queues": {
-    "producers": [],
-    "consumers": [],
+    "producers": [
+      {
+        "binding": "RESEARCH_QUEUE",
+        "queue": "keyword-research-jobs",
+      },
+    ],
+    "consumers": [
+      {
+        "queue": "keyword-research-jobs",
+        "max_batch_size": 10,
+        "max_batch_timeout": 30,
+        "max_retries": 3,
+        "dead_letter_queue": "keyword-research-jobs-dlq",
+      },
+    ],
   },
 
-  // Triggers: scheduled refresh of volume / GSC / trend signals.
-  // "triggers": { "crons": ["0 6 * * *"] },
+  // --- Triggers: idempotent periodic refresh/monitor (every 6h). ---
   "triggers": {
-    "crons": [],
+    "crons": ["0 */6 * * *"],
+  },
+
+  // --- Migrations directory (top-level mirror of the per-D1 setting above). ---
+  "migrations_dir": "migrations",
+
+  // --- Vars (NON-SECRET). Access aud/team placeholders; the Access service
+  //     token + any provider creds are set via `wrangler secret put` at P7b,
+  //     NEVER committed here. ---
+  "vars": {
+    "ACCESS_AUD": "<set-at-P7b>",
+    "ACCESS_TEAM": "<set-at-P7b>",
+    "MONTHLY_BUDGET_USD": "20",
   },
 }
