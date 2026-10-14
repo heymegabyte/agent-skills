@@ -932,6 +932,233 @@ describe('§17.10 global paid-research cap (§11 — cross-tenant $20 ceiling)',
 });
 
 /* =================================================================== */
+/* Case 11 — retry does NOT double-book budget (idempotent reservation) */
+/* + P2 scope attribution uses the SAME unrounded sum the guard did.    */
+/* =================================================================== */
+describe('§17.11 idempotent reservation (retry/redelivery never double-books)', () => {
+  /** Count rows + sum (settled-or-estimated) for a tenant. */
+  function ledgerState(h: Harness, tenantId: string): { count: number; sum: number } {
+    const count = (
+      h.db.sqlite.prepare(`SELECT COUNT(*) c FROM cost_ledger WHERE tenant_id = ?`).get(tenantId) as {
+        c: number;
+      }
+    ).c;
+    const sum = Number(
+      (
+        h.db.sqlite
+          .prepare(
+            `SELECT COALESCE(SUM(COALESCE(actual_cost, estimated_cost)), 0) s
+               FROM cost_ledger WHERE tenant_id = ?`,
+          )
+          .get(tenantId) as { s: number }
+      ).s,
+    );
+    return { count, sum };
+  }
+  /** Sum (settled-or-estimated) across ALL tenants. */
+  function globalSum(h: Harness): number {
+    return Number(
+      (
+        h.db.sqlite
+          .prepare(`SELECT COALESCE(SUM(COALESCE(actual_cost, estimated_cost)), 0) s FROM cost_ledger`)
+          .get() as { s: number }
+      ).s,
+    );
+  }
+
+  it('reserveBudget is IDEMPOTENT per reservation id: a repeat reserve adds NO row and keeps sums UNCHANGED', async () => {
+    const h = makeHarness();
+    const projectId = await seedProject(h, defaultTenant());
+    const reservation = {
+      id: 'res:job-dup',
+      projectId,
+      tenantId: defaultTenant(),
+      provider: 'pipeline',
+      endpoint: 'research',
+      estimatedUsd: 1.0,
+      now: NOW(),
+    };
+    await reserveBudget(h.db.asD1(), reservation);
+    const after1 = ledgerState(h, defaultTenant());
+    expect(after1.count).toBe(1);
+
+    // Second reserve with the SAME id (a retry) → no throw, NO new row, sum same.
+    await reserveBudget(h.db.asD1(), reservation);
+    const after2 = ledgerState(h, defaultTenant());
+    expect(after2.count).toBe(1);
+    expect(after2.sum).toBeCloseTo(after1.sum, 4);
+  });
+
+  it('a job REDELIVERED while still `running` (orphaned reservation) does NOT create a 2nd row; sums UNCHANGED', async () => {
+    // Reproduce the exact P1 hazard: on a first delivery the isolate reserved +
+    // marked the job `running`, then was evicted BEFORE the catch settled — so a
+    // live `res:<jobId>` reservation (actual=NULL) is stranded and the job is
+    // still `running` (the idempotency gate only skips done/dead_letter). On
+    // redelivery the consumer MUST reuse that reservation, never write a second.
+    const h = makeHarness();
+    const projectId = await seedProject(h, defaultTenant());
+    const jobId = 'job-orphan';
+    await insertJob(h.db.asD1(), { id: jobId, projectId, tenantId: defaultTenant(), enqueuedAt: NOW().toISOString() });
+    // Hand-seed the stranded in-flight reservation under the DETERMINISTIC id
+    // the consumer derives from the jobId, and leave the job `running`.
+    await recordLedgerEntry(h.db.asD1(), {
+      id: `res:${jobId}`,
+      projectId,
+      tenantId: defaultTenant(),
+      provider: 'pipeline',
+      endpoint: 'research',
+      estimatedUsd: 1.0,
+      actualUsd: null,
+      createdAt: NOW().toISOString(),
+    });
+    h.db.sqlite.prepare(`UPDATE research_jobs SET state='running', attempts=1 WHERE id=?`).run(jobId);
+
+    const before = ledgerState(h, defaultTenant());
+    const beforeGlobal = globalSum(h);
+    expect(before.count).toBe(1); // only the orphaned reservation
+
+    // Redeliver the still-`running` job → runs to completion, reusing the one row.
+    const msg: ResearchJobMessage = { jobId, projectId, tenantId: defaultTenant(), domain: 'example.com', locale: 'en-US' };
+    const outcome = await processJob(h.db.asD1(), h.reports.asR2(), msg, h.deps.queueDeps);
+    expect(outcome).toBe('done');
+
+    const after = ledgerState(h, defaultTenant());
+    // STILL exactly one ledger row — the reservation was reused, not re-created.
+    expect(after.count).toBe(1);
+    // It settled to the mock's $0.50 actual (no phantom $1.00 estimate stacking).
+    const row = h.db.sqlite
+      .prepare(`SELECT actual_cost FROM cost_ledger WHERE id=?`)
+      .get(`res:${jobId}`) as { actual_cost: number | null };
+    expect(row.actual_cost).toBeCloseTo(0.5, 4);
+    // Global sum did not inflate across the retry.
+    expect(globalSum(h)).toBeLessThanOrEqual(beforeGlobal);
+  });
+
+  it('two processJob deliveries of the SAME running job never produce two reservation rows', async () => {
+    // A failing pipeline leaves the job retryable (`error`) WITHOUT a terminal
+    // skip; a second delivery must reserve against the SAME id → one row only.
+    // Call 1 throws (transient blip); call 2 succeeds with the canned result.
+    let calls = 0;
+    const ok = mockPipeline();
+    const flaky: typeof ok = async (input) => {
+      calls += 1;
+      if (calls === 1) throw new Error('transient provider blip');
+      return ok(input);
+    };
+    const h = makeHarness({ pipeline: flaky, queueDepsOverrides: { maxAttempts: 5 } });
+    const projectId = await seedProject(h, defaultTenant());
+    const jobId = 'job-flaky';
+    await insertJob(h.db.asD1(), { id: jobId, projectId, tenantId: defaultTenant(), enqueuedAt: NOW().toISOString() });
+    const msg: ResearchJobMessage = { jobId, projectId, tenantId: defaultTenant(), domain: 'example.com', locale: 'en-US' };
+
+    const first = await processJob(h.db.asD1(), h.reports.asR2(), msg, h.deps.queueDeps);
+    expect(first).toBe('retry'); // failed → settled-to-0 → retryable
+    const afterFirst = ledgerState(h, defaultTenant());
+    expect(afterFirst.count).toBe(1); // exactly one reservation row
+
+    const second = await processJob(h.db.asD1(), h.reports.asR2(), msg, h.deps.queueDeps);
+    expect(second).toBe('done'); // succeeds on the retry
+    const afterSecond = ledgerState(h, defaultTenant());
+    expect(afterSecond.count).toBe(1); // STILL one row — reused, not doubled
+  });
+
+  it('a genuinely cap-exceeding reserve still THROWS with the correct scope (global)', async () => {
+    const h = makeHarness();
+    // $19.50 across one tenant → only $0.50 global headroom; a $1.00 reserve for
+    // a brand-new id must still trip (NOT silently treated as an idempotent hit).
+    await recordLedgerEntry(h.db.asD1(), {
+      id: 'pre', projectId: 'p', tenantId: 'tenant:a', provider: 'p', endpoint: 'e',
+      estimatedUsd: 19.5, actualUsd: 19.5, createdAt: NOW().toISOString(),
+    });
+    let caught: BudgetExceededError | null = null;
+    await reserveBudget(h.db.asD1(), {
+      id: 'res:fresh-over', projectId: 'p', tenantId: 'tenant:b', provider: 'pipeline',
+      endpoint: 'research', estimatedUsd: 1.0, now: NOW(),
+    }).catch((e) => {
+      if (e instanceof BudgetExceededError) caught = e;
+      else throw e;
+    });
+    expect(caught).toBeInstanceOf(BudgetExceededError);
+    expect(caught!.scope).toBe('global');
+  });
+
+  it('a cap-exceeding reserve trips the PER-TENANT scope when only the tenant cap binds', async () => {
+    const h = makeHarness();
+    await recordLedgerEntry(h.db.asD1(), {
+      id: 'pre', projectId: 'p', tenantId: 'tenant:a', provider: 'p', endpoint: 'e',
+      estimatedUsd: 4, actualUsd: 4, createdAt: NOW().toISOString(),
+    });
+    let caught: BudgetExceededError | null = null;
+    await reserveBudget(
+      h.db.asD1(),
+      { id: 'res:tenant-over', projectId: 'p', tenantId: 'tenant:a', provider: 'pipeline', endpoint: 'research', estimatedUsd: 2, now: NOW() },
+      20, // global: room
+      5, // tenant: 4 + 2 = 6 > 5 → tenant trips
+    ).catch((e) => {
+      if (e instanceof BudgetExceededError) caught = e;
+      else throw e;
+    });
+    expect(caught).toBeInstanceOf(BudgetExceededError);
+    expect(caught!.scope).toBe('tenant');
+  });
+
+  it('P2 boundary: scope follows the RAW guard even where 4dp rounding would FLIP it (global binds)', async () => {
+    // The P2 bug: the 0-row re-read attributes scope from `.toFixed(4)`-rounded
+    // remaining, while the SQL guard rejected on RAW floats. Pick numbers where
+    // the two disagree — rounding bumps the global remaining UP past the estimate
+    // so the OLD code skips the (truly-binding) global branch and mislabels the
+    // refusal as 'tenant'. The raw guard is authoritative → scope MUST be global.
+    //
+    //   global spent = 19.99994, cap = 20 → RAW global remaining = 0.00006.
+    //   est = 0.00008.
+    //     guard (raw): 19.99994 + 0.00008 = 20.00002 > 20 → REJECT (0 rows). ✓
+    //     raw attrib:  est 0.00008 >  raw 0.00006        → TRUE  → 'global'. ✓ (fixed)
+    //     round attrib: est 0.00008 > round4(0.00006)=0.0001 → FALSE → skip →
+    //                   falls through to 'tenant'.                 ✗ (the bug)
+    //   tenant C spent $0 under its default $20 cap, so ONLY global can bind.
+    const h = makeHarness();
+    await recordLedgerEntry(h.db.asD1(), {
+      id: 'g1', projectId: 'p', tenantId: 'tenant:a', provider: 'p', endpoint: 'e',
+      estimatedUsd: 19.999_94, actualUsd: 19.999_94, createdAt: NOW().toISOString(),
+    });
+    let caught: BudgetExceededError | null = null;
+    await reserveBudget(h.db.asD1(), {
+      id: 'res:boundary-global', projectId: 'p', tenantId: 'tenant:c', provider: 'pipeline',
+      endpoint: 'research', estimatedUsd: 0.000_08, now: NOW(),
+    }).catch((e) => {
+      if (e instanceof BudgetExceededError) caught = e;
+      else throw e;
+    });
+    expect(caught).toBeInstanceOf(BudgetExceededError);
+    // Would be mislabeled 'tenant' by the rounded re-read; the raw guard binds global.
+    expect(caught!.scope).toBe('global');
+  });
+
+  it('P2 boundary: when ONLY the tenant cap truly binds at a sub-rounding margin, scope=tenant', async () => {
+    // Global has ample room; the tenant is at a hair under its tighter cap so the
+    // raw tenant guard is what rejects. Scope must be reported as 'tenant' even
+    // though rounding both remainings to 4dp would blur the margin.
+    const h = makeHarness();
+    await recordLedgerEntry(h.db.asD1(), {
+      id: 't1', projectId: 'p', tenantId: 'tenant:a', provider: 'p', endpoint: 'e',
+      estimatedUsd: 4.999_99, actualUsd: 4.999_99, createdAt: NOW().toISOString(),
+    });
+    let caught: BudgetExceededError | null = null;
+    await reserveBudget(
+      h.db.asD1(),
+      { id: 'res:tenant-boundary', projectId: 'p', tenantId: 'tenant:a', provider: 'pipeline', endpoint: 'research', estimatedUsd: 0.000_05, now: NOW() },
+      20, // global: 4.99999 + 0.00005 = 5.00004 ≤ 20 → global FITS
+      5, // tenant: 4.99999 + 0.00005 = 5.00004 > 5 → tenant TRIPS
+    ).catch((e) => {
+      if (e instanceof BudgetExceededError) caught = e;
+      else throw e;
+    });
+    expect(caught).toBeInstanceOf(BudgetExceededError);
+    expect(caught!.scope).toBe('tenant');
+  });
+});
+
+/* =================================================================== */
 /* Shared helpers.                                                     */
 /* =================================================================== */
 

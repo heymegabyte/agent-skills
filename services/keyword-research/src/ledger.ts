@@ -155,13 +155,25 @@ export async function assertWithinBudget(
 }
 
 /**
- * ATOMIC two-cap check-and-reserve. Writes ONE in-flight reservation row
- * (actual_cost = NULL) IFF, counting that row's `estimatedCost`, BOTH the GLOBAL
+ * ATOMIC, IDEMPOTENT two-cap check-and-reserve. Writes ONE in-flight reservation
+ * row (actual_cost = NULL) IFF (a) no row with this `reservation.id` already
+ * exists AND (b), counting that row's `estimatedCost`, BOTH the GLOBAL
  * rolling-window spend (across ALL tenants) AND this tenant's rolling-window
  * spend stay within their caps — all in a SINGLE `INSERT … SELECT … WHERE`
- * statement. This closes the TOCTOU race a separate SELECT-SUM-then-INSERT
- * leaves open: two concurrent jobs could each pass an independent check before
- * either wrote its reservation, both slipping under a cap.
+ * statement. This closes TWO hazards at once:
+ *
+ *  1. TOCTOU (concurrency) — a separate SELECT-SUM-then-INSERT lets two
+ *     concurrent jobs each pass an independent check before either writes its
+ *     reservation, both slipping under a cap. The conditional insert serializes.
+ *  2. RETRY DOUBLE-BOOKING — if the isolate is evicted (or a settle write fails)
+ *     AFTER `reserveBudget` + `markJobRunning` but BEFORE the failure path
+ *     settles the reservation to 0, a stranded `actual=NULL` row keeps counting;
+ *     on redelivery the job is still `running` (the idempotency gate only skips
+ *     done/dead_letter), so a NAIVE reserve would write a SECOND reservation row
+ *     and the phantom estimates would STACK against both caps → wrongful
+ *     rejection. Deriving a DETERMINISTIC per-job `reservation.id` (see
+ *     `reservationIdFor`) + the `NOT EXISTS` guard makes the reserve idempotent:
+ *     a retry reuses the one existing reservation instead of stacking a new one.
  *
  * The two caps (MISSION §11):
  *   • `globalCapUsd` — the hard ESTATE-WIDE ceiling (default $20). The SUM has
@@ -178,15 +190,18 @@ export async function assertWithinBudget(
  * concurrent consumers cannot both pass the guard — the loser sees the winner's
  * row in BOTH sums (or is serialized after it) and its WHERE evaluates false.
  *
- * If the guard fails, ZERO rows are inserted; we read `meta.changes` and, when
- * nothing was written, re-read both scopes to attribute the refusal and throw
- * {@link BudgetExceededError} carrying the tripped `scope` (global reported
- * first — the hard ceiling). `estimatedCost === 0` always reserves (a free unit
- * can't exceed any budget); the `? <= cap` comparisons with a 0 addend make that
- * fall out naturally.
+ * On `meta.changes === 0` we DISTINGUISH the two zero-row causes:
+ *   • a reservation row for THIS id already exists ⇒ a retry reusing it ⇒ return
+ *     the current {@link BudgetStatus} (NO throw, NO second row); or
+ *   • a cap tripped ⇒ throw {@link BudgetExceededError} with the tripped `scope`
+ *     (global first — the hard ceiling), attributed from the SAME UNROUNDED
+ *     `rawSum + est` vs cap the SQL guard used (never a `.toFixed(4)` re-read,
+ *     which could mislabel scope at a sub-0.00005 boundary).
+ * `estimatedCost === 0` always reserves (a free unit can't exceed any budget);
+ * the `? <= cap` comparisons with a 0 addend make that fall out naturally.
  *
  * Later reconciliation of the real spend is unchanged: settle this row with
- * {@link settleLedgerEntry} once the work completes.
+ * {@link settleLedgerEntry} (passing the SAME id) once the work completes.
  */
 export async function reserveBudget(
   db: D1Database,
@@ -204,9 +219,11 @@ export async function reserveBudget(
 ): Promise<BudgetStatus> {
   const windowStart = new Date(reservation.now.getTime() - WINDOW_MS).toISOString();
   const createdAt = reservation.now.toISOString();
-  // ONE conditional insert: the row lands only if, over the SAME rolling window +
-  // actual-or-estimated expression the caps use, BOTH (globalSum + est ≤ globalCap)
-  // AND (tenantSum + est ≤ tenantCap). globalSum has NO tenant filter; tenantSum
+  // ONE conditional insert: the row lands only if (a) NO row already carries this
+  // id — `NOT EXISTS` makes the reserve idempotent so a retry can't stack a
+  // second reservation — AND (b) over the SAME rolling window + actual-or-estimated
+  // expression the caps use, BOTH (globalSum + est ≤ globalCap) AND
+  // (tenantSum + est ≤ tenantCap). globalSum has NO tenant filter; tenantSum
   // filters by `tenant_id = ?3`. D1 serializes this INSERT…SELECT, so concurrent
   // consumers cannot both pass — the loser's sums already include the winner's
   // row (or are ordered after it) and its WHERE evaluates false.
@@ -215,7 +232,8 @@ export async function reserveBudget(
       `INSERT INTO cost_ledger
          (id, project_id, tenant_id, provider, endpoint, estimated_cost, actual_cost, created_at)
        SELECT ?1, ?2, ?3, ?4, ?5, ?6, NULL, ?7
-        WHERE (
+        WHERE NOT EXISTS (SELECT 1 FROM cost_ledger WHERE id = ?1)
+          AND (
           SELECT COALESCE(SUM(COALESCE(actual_cost, estimated_cost)), 0)
             FROM cost_ledger
            WHERE created_at >= ?8
@@ -240,30 +258,87 @@ export async function reserveBudget(
     )
     .run();
 
-  // D1 reports rows-affected on `meta.changes`; 0 ⇒ the guard rejected the
-  // insert ⇒ the reservation would have exceeded a cap. Re-read both scopes to
-  // attribute WHICH cap tripped (global is the hard ceiling → reported first).
+  // D1 reports rows-affected on `meta.changes`. A non-zero count ⇒ the one
+  // reservation landed ⇒ return the fresh per-tenant status.
   const changes = Number(result.meta?.changes ?? 0);
-  if (changes === 0) {
-    const global = await globalBudgetStatus(db, reservation.now, globalCapUsd);
-    if (reservation.estimatedUsd > global.remainingUsd) {
-      throw new BudgetExceededError(
-        global.remainingUsd,
-        reservation.estimatedUsd,
-        globalCapUsd,
-        'global',
-      );
-    }
-    const tenant = await budgetStatus(db, reservation.tenantId, reservation.now, tenantCapUsd);
-    throw new BudgetExceededError(
-      tenant.remainingUsd,
-      reservation.estimatedUsd,
-      tenantCapUsd,
-      'tenant',
-    );
+  if (changes !== 0) {
+    return budgetStatus(db, reservation.tenantId, reservation.now, tenantCapUsd);
   }
 
-  return budgetStatus(db, reservation.tenantId, reservation.now, tenantCapUsd);
+  // Zero rows has TWO causes — disambiguate them:
+  //  (1) a reservation row for THIS id already exists ⇒ this is a RETRY reusing
+  //      the existing reservation (the isolate died after reserving last time) ⇒
+  //      do NOT throw and do NOT write a second row; return current status; or
+  //  (2) a cap tripped ⇒ throw with the binding scope.
+  const existing = await db
+    .prepare(`SELECT 1 AS one FROM cost_ledger WHERE id = ?1`)
+    .bind(reservation.id)
+    .first<{ one: number }>();
+  if (existing) {
+    return budgetStatus(db, reservation.tenantId, reservation.now, tenantCapUsd);
+  }
+
+  // (2) A cap tripped. Attribute scope from the SAME UNROUNDED `rawSum + est`
+  // vs cap the SQL guard evaluated — NOT `BudgetStatus.remainingUsd` (which is
+  // `.toFixed(4)`-rounded and can flip the comparison at a sub-0.00005 margin).
+  // Global is checked first (the hard estate ceiling). The reported
+  // `remainingUsd` on the error stays the rounded, display-friendly value.
+  const globalRawSpent = await rawWindowSpend(db, reservation.now, null);
+  if (reservation.estimatedUsd + globalRawSpent > globalCapUsd) {
+    throw new BudgetExceededError(
+      Number(Math.max(0, globalCapUsd - globalRawSpent).toFixed(4)),
+      reservation.estimatedUsd,
+      globalCapUsd,
+      'global',
+    );
+  }
+  const tenantRawSpent = await rawWindowSpend(db, reservation.now, reservation.tenantId);
+  throw new BudgetExceededError(
+    Number(Math.max(0, tenantCapUsd - tenantRawSpent).toFixed(4)),
+    reservation.estimatedUsd,
+    tenantCapUsd,
+    'tenant',
+  );
+}
+
+/**
+ * The UNROUNDED rolling-window spend (`SUM(COALESCE(actual_cost,
+ * estimated_cost))`) — global when `tenantId` is null, else per-tenant. Shares
+ * the exact window + expression {@link budgetStatus}/{@link reserveBudget}'s
+ * guard use, but returns the RAW float so scope attribution compares the same
+ * value the SQL `WHERE` did (no `.toFixed(4)` rounding that could mislabel scope
+ * at a sub-0.00005 boundary — the P2 fix).
+ */
+async function rawWindowSpend(
+  db: D1Database,
+  now: Date,
+  tenantId: string | null,
+): Promise<number> {
+  const windowStart = new Date(now.getTime() - WINDOW_MS).toISOString();
+  const sql =
+    tenantId === null
+      ? `SELECT COALESCE(SUM(COALESCE(actual_cost, estimated_cost)), 0) AS spent
+           FROM cost_ledger
+          WHERE created_at >= ?1`
+      : `SELECT COALESCE(SUM(COALESCE(actual_cost, estimated_cost)), 0) AS spent
+           FROM cost_ledger
+          WHERE tenant_id = ?2 AND created_at >= ?1`;
+  const row = await db
+    .prepare(sql)
+    .bind(...(tenantId === null ? [windowStart] : [windowStart, tenantId]))
+    .first<{ spent: number }>();
+  return Number(row?.spent ?? 0);
+}
+
+/**
+ * Derive the DETERMINISTIC reservation ledger id for a job. Keyed ONLY on the
+ * jobId so every (re)delivery of the same job computes the identical id — the
+ * `NOT EXISTS` guard in {@link reserveBudget} then makes the reserve idempotent,
+ * and {@link settleLedgerEntry} settles the SAME row. This is what stops a
+ * retry-after-eviction from stacking a second phantom reservation.
+ */
+export function reservationIdFor(jobId: string): string {
+  return `res:${jobId}`;
 }
 
 /**

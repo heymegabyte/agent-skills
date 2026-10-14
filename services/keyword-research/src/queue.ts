@@ -33,6 +33,7 @@ import {
 import {
   BudgetExceededError,
   reserveBudget,
+  reservationIdFor,
   settleLedgerEntry,
 } from './ledger';
 
@@ -99,14 +100,21 @@ export async function processJob(
     return 'skipped';
   }
 
-  // --- ATOMIC budget check-and-reserve BEFORE any work. ---
+  // --- ATOMIC, IDEMPOTENT budget check-and-reserve BEFORE any work. ---
   // One conditional INSERT reserves the estimate IFF it fits under the cap, so
   // the reservation row is written iff within budget — no TOCTOU gap between a
   // separate check and a later insert. D1 serializes the INSERT…SELECT, so two
   // concurrent same-tenant jobs can NOT both pass (the loser sees the winner's
   // reservation in its SUM). On refusal, no row is written and the pipeline
   // never runs — the cap is never silently exceeded.
-  const ledgerId = deps.newId();
+  //
+  // The reservation id is DERIVED DETERMINISTICALLY from the jobId (not a fresh
+  // uuid), so a job REDELIVERED while still `running` — e.g. the isolate was
+  // evicted after reserving + markJobRunning but before the failure path settled
+  // the reservation to 0 — reuses the ONE existing reservation instead of
+  // stacking a second phantom one that would double-count against both caps.
+  // Every settle below uses the SAME id so the one row is always reconciled.
+  const ledgerId = reservationIdFor(msg.jobId);
   try {
     await reserveBudget(
       db,
