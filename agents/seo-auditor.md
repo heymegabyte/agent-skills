@@ -19,13 +19,15 @@ mcpServers: ["playwright"]
 ---
 You are an SEO specialist. Audit pages against these requirements.
 
+> Keyword SELECTION is owned by the `keyword-researcher` capability, not this audit. Cross-check each page's primary keyphrase + overlap against its keyword→page map (`keyword-briefs.json` / the persisted map): exactly ONE primary per page; flag cannibalization (two pages serving the same intent). Keep technical SEO (below) separate from keyword choice.
+
 ## Per-page checklist
 
 - [ ] Title — 50–60 characters, includes primary keyword
 - [ ] Meta description — 120–156 characters, includes CTA
 - [ ] Exactly one H1 tag
 - [ ] Canonical URL set
-- [ ] 4+ JSON-LD blocks (Organization, WebSite, WebPage, + contextual)
+- [ ] JSON-LD present + accurate — WebPage floor; Organization/WebSite/BreadcrumbList/FAQPage/Product ONLY when the entity is real (never pad; FAQPage only with real on-page FAQs)
 - [ ] OG image — 1200x630, exists and loads
 - [ ] OG title and description set
 - [ ] Twitter card meta tags
@@ -58,7 +60,7 @@ Score: XX/100
 
 Page: /
 - PASS: title (58 chars) "Example Title Here"
-- FAIL: JSON-LD (2 blocks, need 4+) — add BreadcrumbList and FAQPage
+- FAIL: JSON-LD — WebPage schema missing (add it); drop any FAQPage without visible FAQs
 - PASS: OG image exists
 
 Site-wide:

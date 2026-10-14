@@ -32,6 +32,7 @@ stage: stable
 
 ## SEO — every page
 
+- **Research evidence first** — SEO-targeted pages require a scored opportunity + brief from the `keyword-researcher` capability (`agents/keyword-researcher.md` → `keyword-briefs.json`); volume/difficulty/intent come from DataForSEO/GSC/Trends, never hand-invented (`rules/seo-keyword-research.md`).
 - Title 50-60 chars keyphrase-first · meta description 120-156 · canonical · OG image 1200×630 · exactly one H1 in prerendered HTML.
 - JSON-LD: WebPage floor; Org/BreadcrumbList/FAQPage/Person/Product/Service ONLY when the entity is real — never pad (FAQPage only with real FAQs).
 - sitemap.xml (+lastmod) · robots.txt · llms.txt · humans.txt · security.txt.

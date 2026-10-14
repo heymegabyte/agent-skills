@@ -8,6 +8,8 @@ updated: "2026-04-24"
 
 All research runs on the Worker, not in the container. Results written as `_`-prefixed JSON files into the build directory. Claude Code reads these — never calls APIs for research.
 
+> **SEO keyword research** is a separate canonical capability — the `keyword-researcher` engine (DataForSEO + Search Console + Google Trends + Exa → scored opportunities + content briefs in `keyword-briefs.json`). It COMPLEMENTS this business/brand pipeline, never replaces it: feed its briefs into jewel/page briefs where SEO targeting matters. See `agents/keyword-researcher.md` + `rules/seo-keyword-research.md`.
+
 ## Phase 0a: Business Profile (Google Places API)
 
 **Query** — `GOOGLE_PLACES_API_KEY` → `findplacefromtext` with business name + address. Then `place/details` for:

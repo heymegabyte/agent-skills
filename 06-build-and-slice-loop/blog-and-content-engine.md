@@ -36,6 +36,8 @@ Your markdown content here...
 
 ## SEO Integration (09/seo-and-keywords)
 
+> Topic selection + briefs come from the `keyword-researcher` engine's prioritized opportunities (`npm run seo:research` → `keyword-briefs.json`): primary topic, related queries, audience, intent, outline, UVP, sources, internal links, checklist. Consume these instead of guessing topics; never hand-invent keyword metrics.
+
 Every blog post targets a longtail keyword:
 
 - **Title tag** — contains the keyword phrase
