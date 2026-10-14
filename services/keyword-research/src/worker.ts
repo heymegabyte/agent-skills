@@ -35,7 +35,7 @@ import {
   ensureTenant,
   upsertProviderMeta,
 } from './db';
-import { budgetStatus } from './ledger';
+import { budgetStatus, globalBudgetStatus } from './ledger';
 import {
   DEFAULT_JOB_ESTIMATE_USD,
   handleQueue,
@@ -145,12 +145,25 @@ export function buildApp(deps: AppDeps): Hono<AppEnv> {
     } catch {
       freshness = { records: 0 };
     }
+    // §11 GLOBAL paid-research cap: the estate-wide spend/remaining across ALL
+    // tenants in the rolling window. Tenant-agnostic + secret-free (no id, no
+    // credential) — just the cross-tenant SUM vs the $20 ceiling. When a tenant
+    // context exists (none on public /health), the per-tenant figure can be
+    // added; here we surface only the global view.
+    const global = await globalBudgetStatus(env.DB, deps.now(), cap);
     return c.json({
       status: 'ok',
       service: 'keyword-research',
       providers,
       freshness,
-      budget: { cap_usd: cap, window_days: 30 },
+      budget: {
+        cap_usd: cap,
+        window_days: 30,
+        global: {
+          spent_usd: global.spentUsd,
+          remaining_usd: global.remainingUsd,
+        },
+      },
     });
   });
 

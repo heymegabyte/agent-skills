@@ -38,6 +38,7 @@ import {
   assertWithinBudget,
   BudgetExceededError,
   budgetStatus,
+  globalBudgetStatus,
   recordLedgerEntry,
   reserveBudget,
 } from '../../src/ledger';
@@ -754,6 +755,179 @@ describe('§17.9 atomic reserveBudget (TOCTOU-safe check-and-reserve)', () => {
     const job = await getJob(h.db.asD1(), defaultTenant(), 'job-cap');
     expect(job?.error).toMatch(/budget/i);
     expect(h.reports.store.size).toBe(0);
+  });
+});
+
+/* =================================================================== */
+/* Case 10 — GLOBAL paid-research cap (§11): a ceiling across ALL       */
+/* tenants, enforced in the SAME atomic reserve as the per-tenant cap.  */
+/* =================================================================== */
+describe('§17.10 global paid-research cap (§11 — cross-tenant $20 ceiling)', () => {
+  /** Sum spend (settled-or-estimated) across ALL tenants + count rows. */
+  function globalLedgerState(h: Harness): { count: number; sum: number } {
+    const count = (h.db.sqlite.prepare(`SELECT COUNT(*) c FROM cost_ledger`).get() as { c: number }).c;
+    const sum = Number(
+      (
+        h.db.sqlite
+          .prepare(`SELECT COALESCE(SUM(COALESCE(actual_cost, estimated_cost)), 0) s FROM cost_ledger`)
+          .get() as { s: number }
+      ).s,
+    );
+    return { count, sum };
+  }
+
+  /** Seed a settled charge for an ARBITRARY tenant (no project FK dependency). */
+  async function seedSpend(h: Harness, tenantId: string, id: string, usd: number): Promise<void> {
+    await recordLedgerEntry(h.db.asD1(), {
+      id,
+      projectId: `proj:${tenantId}`,
+      tenantId,
+      provider: 'dataforseo',
+      endpoint: 'seed',
+      estimatedUsd: usd,
+      actualUsd: usd,
+      createdAt: NOW().toISOString(),
+    });
+  }
+
+  it('globalBudgetStatus sums spend across ALL tenants in the window', async () => {
+    const h = makeHarness();
+    await seedSpend(h, 'tenant:a', 'a1', 12);
+    await seedSpend(h, 'tenant:b', 'b1', 7);
+    const status = await globalBudgetStatus(h.db.asD1(), NOW());
+    expect(status.capUsd).toBe(20);
+    expect(status.spentUsd).toBeCloseTo(19, 4);
+    expect(status.remainingUsd).toBeCloseTo(1, 4);
+  });
+
+  it('GLOBAL trip: tenant A at $12 + tenant B reserves $9 → global $21 > $20 → REJECTED (scope=global), no row', async () => {
+    const h = makeHarness();
+    await seedSpend(h, 'tenant:a', 'a1', 12); // global now $12
+    const before = globalLedgerState(h);
+
+    // Tenant B is individually WAY under its own $20 cap ($0 spent), but the
+    // $9 reserve pushes the GLOBAL window to $21 > $20 → refused on the global.
+    let caught: BudgetExceededError | null = null;
+    await reserveBudget(h.db.asD1(), {
+      id: 'b-res',
+      projectId: 'proj:tenant:b',
+      tenantId: 'tenant:b',
+      provider: 'dataforseo',
+      endpoint: 'serp',
+      estimatedUsd: 9,
+      now: NOW(),
+    }).catch((e) => {
+      if (e instanceof BudgetExceededError) caught = e;
+      else throw e;
+    });
+
+    expect(caught).toBeInstanceOf(BudgetExceededError);
+    expect(caught!.scope).toBe('global');
+    const after = globalLedgerState(h);
+    expect(after.count).toBe(before.count); // NO row written
+    expect(after.sum).toBeCloseTo(before.sum, 4);
+  });
+
+  it('PER-TENANT trip: tenantCap=$5, tenant at $4, reserve $2 → rejected (scope=tenant) though global has room', async () => {
+    const h = makeHarness();
+    await seedSpend(h, 'tenant:a', 'a1', 4); // tenant A $4, global only $4 (plenty of global room)
+    const before = globalLedgerState(h);
+
+    let caught: BudgetExceededError | null = null;
+    await reserveBudget(
+      h.db.asD1(),
+      {
+        id: 'a-res',
+        projectId: 'proj:tenant:a',
+        tenantId: 'tenant:a',
+        provider: 'dataforseo',
+        endpoint: 'serp',
+        estimatedUsd: 2, // 4 + 2 = 6 > tenantCap 5 → tenant trips
+        now: NOW(),
+      },
+      20, // global cap (lots of room)
+      5, // tenant cap (tighter per-project budget)
+    ).catch((e) => {
+      if (e instanceof BudgetExceededError) caught = e;
+      else throw e;
+    });
+
+    expect(caught).toBeInstanceOf(BudgetExceededError);
+    expect(caught!.scope).toBe('tenant');
+    const after = globalLedgerState(h);
+    expect(after.count).toBe(before.count); // NO row written
+    expect(after.sum).toBeCloseTo(before.sum, 4);
+  });
+
+  it('BOTH fit: global $10 + tenant $3, reserve $2 → succeeds, row written', async () => {
+    const h = makeHarness();
+    await seedSpend(h, 'tenant:a', 'a1', 7); // global $7 so far, tenant B separate
+    await seedSpend(h, 'tenant:b', 'b1', 3); // global now $10; tenant B at $3
+    const before = globalLedgerState(h);
+
+    // Global 10 + 2 = 12 ≤ 20 AND tenant 3 + 2 = 5 ≤ tenantCap(20 default) → fits.
+    const status = await reserveBudget(h.db.asD1(), {
+      id: 'b-res',
+      projectId: 'proj:tenant:b',
+      tenantId: 'tenant:b',
+      provider: 'dataforseo',
+      endpoint: 'serp',
+      estimatedUsd: 2,
+      now: NOW(),
+    });
+
+    const after = globalLedgerState(h);
+    expect(after.count).toBe(before.count + 1); // row WRITTEN
+    expect(after.sum).toBeCloseTo(12, 4); // global window now $12
+    expect(status.spentUsd).toBeCloseTo(5, 4); // returned per-tenant status for B
+  });
+
+  it('CONCURRENCY: two reserves against $1 of GLOBAL headroom → exactly one admitted', async () => {
+    const h = makeHarness();
+    // Global pre-spent to $19 across DIFFERENT tenants → exactly $1 of GLOBAL
+    // headroom. Each reserve is $0.60 for a DISTINCT tenant (each trivially
+    // under its own $20), so only the GLOBAL ceiling can gate them.
+    await seedSpend(h, 'tenant:a', 'a1', 19);
+    const before = globalLedgerState(h);
+
+    const attempt = (tenantId: string, id: string) =>
+      reserveBudget(h.db.asD1(), {
+        id,
+        projectId: `proj:${tenantId}`,
+        tenantId,
+        provider: 'dataforseo',
+        endpoint: 'serp',
+        estimatedUsd: 0.6,
+        now: NOW(),
+      }).then(
+        () => 'ok' as const,
+        (e) => (e instanceof BudgetExceededError ? ('refused' as const) : Promise.reject(e)),
+      );
+
+    const results = await Promise.all([attempt('tenant:b', 'b-res'), attempt('tenant:c', 'c-res')]);
+    const admitted = results.filter((r) => r === 'ok').length;
+    expect(admitted).toBe(1); // 0.60 + 0.60 = 1.20 > 1 global headroom
+    const after = globalLedgerState(h);
+    expect(after.count).toBe(before.count + 1); // exactly one new row
+    expect(after.sum).toBeLessThanOrEqual(20);
+    expect(after.sum).toBeCloseTo(19.6, 4);
+  });
+
+  it('/health reports the GLOBAL $20 spent/remaining (secret-free)', async () => {
+    const h = makeHarness();
+    await seedSpend(h, 'tenant:a', 'a1', 12);
+    await seedSpend(h, 'tenant:b', 'b1', 3); // global $15 spent
+    const res = await h.request('/health');
+    expect(res.status).toBe(200);
+    const text = await res.text();
+    expect(text).not.toContain('SVC-SECRET');
+    const json = JSON.parse(text) as {
+      budget: { cap_usd: number; window_days: number; global: { spent_usd: number; remaining_usd: number } };
+    };
+    expect(json.budget.cap_usd).toBe(20);
+    expect(json.budget.window_days).toBe(30);
+    expect(json.budget.global.spent_usd).toBeCloseTo(15, 4);
+    expect(json.budget.global.remaining_usd).toBeCloseTo(5, 4);
   });
 });
 

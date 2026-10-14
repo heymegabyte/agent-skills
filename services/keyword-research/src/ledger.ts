@@ -7,9 +7,18 @@
  *
  * The window is ROLLING: "this month" = the trailing 30 days ending at the
  * injected `now`, so spend ages out continuously rather than resetting on a
- * calendar boundary. The cap is enforced per TENANT (the billing boundary),
- * summing actual spend where settled and estimated spend where still in-flight
- * (so two concurrent jobs can't both "fit" against the same headroom).
+ * calendar boundary.
+ *
+ * TWO caps are enforced together (MISSION §11 — "global and per-project
+ * budgets" + a "global monthly paid-research cap of $20"):
+ *   • a GLOBAL ceiling across ALL tenants (the $20 hard cap — the estate-wide
+ *     spend can never exceed it, no matter how many tenants exist); and
+ *   • a per-TENANT (per-project billing boundary) budget, configurable, which
+ *     defaults to the global cap so by default only the global binds.
+ * Both sum actual spend where settled and estimated spend where still in-flight
+ * (so two concurrent jobs can't both "fit" against the same headroom), and both
+ * are checked in the SAME atomic `INSERT…SELECT` — a reservation lands IFF it
+ * fits under BOTH.
  *
  * PURE w.r.t. injected `now`: identical ledger state + clock ⇒ identical
  * decision. No wall-clock reads here.
@@ -22,16 +31,21 @@ export const WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
 /** The default hard monthly cap, in USD. */
 export const DEFAULT_CAP_USD = 20;
 
+/** Which cap a reservation tripped — the GLOBAL ceiling or the per-TENANT budget. */
+export type BudgetScope = 'global' | 'tenant';
+
 /** Thrown when a job is rejected because it would exceed the remaining budget. */
 export class BudgetExceededError extends Error {
   constructor(
     public readonly remainingUsd: number,
     public readonly estimatedUsd: number,
     public readonly capUsd: number,
+    /** Which cap tripped: the cross-tenant `'global'` ceiling or the `'tenant'` budget. */
+    public readonly scope: BudgetScope = 'tenant',
   ) {
     super(
-      `Budget breaker tripped: estimated $${estimatedUsd.toFixed(2)} exceeds remaining ` +
-        `$${remainingUsd.toFixed(2)} of the $${capUsd.toFixed(2)} monthly cap.`,
+      `Budget breaker tripped (${scope}): estimated $${estimatedUsd.toFixed(2)} exceeds remaining ` +
+        `$${remainingUsd.toFixed(2)} of the $${capUsd.toFixed(2)} ${scope} monthly cap.`,
     );
     this.name = 'BudgetExceededError';
   }
@@ -79,9 +93,43 @@ export async function budgetStatus(
 }
 
 /**
- * The circuit breaker. Throws {@link BudgetExceededError} if `estimatedUsd`
- * would push the tenant's rolling spend past the cap. Returns the pre-flight
- * {@link BudgetStatus} when the job is cleared to run.
+ * Sum spend across ALL tenants inside the rolling window — the GLOBAL view that
+ * backs the §11 estate-wide $20 ceiling. Same window + same
+ * `SUM(COALESCE(actual_cost, estimated_cost))` in-flight semantics as
+ * {@link budgetStatus}, minus the tenant filter (so every tenant's spend
+ * counts). Used by `/health` and `reserveBudget`'s refusal path.
+ */
+export async function globalBudgetStatus(
+  db: D1Database,
+  now: Date,
+  capUsd = DEFAULT_CAP_USD,
+): Promise<BudgetStatus> {
+  const windowStart = new Date(now.getTime() - WINDOW_MS).toISOString();
+  const row = await db
+    .prepare(
+      `SELECT COALESCE(SUM(COALESCE(actual_cost, estimated_cost)), 0) AS spent
+         FROM cost_ledger
+        WHERE created_at >= ?1`,
+    )
+    .bind(windowStart)
+    .first<{ spent: number }>();
+  const spentUsd = Number(row?.spent ?? 0);
+  const remainingUsd = Math.max(0, capUsd - spentUsd);
+  return {
+    capUsd,
+    spentUsd: Number(spentUsd.toFixed(4)),
+    remainingUsd: Number(remainingUsd.toFixed(4)),
+    windowStart,
+  };
+}
+
+/**
+ * LEGACY non-atomic breaker — SUPERSEDED by {@link reserveBudget}, which does an
+ * atomic check-and-reserve of BOTH caps in one statement. Kept for the read-only
+ * pre-flight/monitor paths that don't write a row. Checks BOTH the per-tenant
+ * budget AND the §11 GLOBAL ceiling, throwing with the tripped `scope` (global
+ * checked first — the hard estate ceiling). The enforcement path writes through
+ * `reserveBudget`, not here, so there is no TOCTOU window on the write path.
  *
  * `estimatedUsd === 0` always passes (a free run can't exceed any budget).
  */
@@ -91,36 +139,51 @@ export async function assertWithinBudget(
   estimatedUsd: number,
   now: Date,
   capUsd = DEFAULT_CAP_USD,
+  tenantCapUsd = capUsd,
 ): Promise<BudgetStatus> {
-  const status = await budgetStatus(db, tenantId, now, capUsd);
-  if (estimatedUsd > 0 && estimatedUsd > status.remainingUsd) {
-    throw new BudgetExceededError(status.remainingUsd, estimatedUsd, capUsd);
+  const global = await globalBudgetStatus(db, now, capUsd);
+  const tenant = await budgetStatus(db, tenantId, now, tenantCapUsd);
+  if (estimatedUsd > 0) {
+    if (estimatedUsd > global.remainingUsd) {
+      throw new BudgetExceededError(global.remainingUsd, estimatedUsd, capUsd, 'global');
+    }
+    if (estimatedUsd > tenant.remainingUsd) {
+      throw new BudgetExceededError(tenant.remainingUsd, estimatedUsd, tenantCapUsd, 'tenant');
+    }
   }
-  return status;
+  return tenant;
 }
 
 /**
- * ATOMIC check-and-reserve. Writes ONE in-flight reservation row (actual_cost =
- * NULL) IFF, counting that row's `estimatedCost`, the tenant's rolling-window
- * spend stays within the cap — all in a SINGLE `INSERT … SELECT … WHERE`
- * statement. This closes the TOCTOU race that a separate SELECT-SUM-then-INSERT
- * leaves open: two concurrent same-tenant jobs could each pass an independent
- * check before either wrote its reservation, both slipping under the cap.
+ * ATOMIC two-cap check-and-reserve. Writes ONE in-flight reservation row
+ * (actual_cost = NULL) IFF, counting that row's `estimatedCost`, BOTH the GLOBAL
+ * rolling-window spend (across ALL tenants) AND this tenant's rolling-window
+ * spend stay within their caps — all in a SINGLE `INSERT … SELECT … WHERE`
+ * statement. This closes the TOCTOU race a separate SELECT-SUM-then-INSERT
+ * leaves open: two concurrent jobs could each pass an independent check before
+ * either wrote its reservation, both slipping under a cap.
  *
- * The window + scope are IDENTICAL to {@link budgetStatus}/
- * {@link assertWithinBudget} (same tenant, same trailing-30-day window, same
- * `SUM(COALESCE(actual_cost, estimated_cost))` so in-flight spend counts) — this
- * only makes check+reserve atomic; it does NOT change cap semantics.
+ * The two caps (MISSION §11):
+ *   • `globalCapUsd` — the hard ESTATE-WIDE ceiling (default $20). The SUM has
+ *     NO tenant filter, so the sum of all tenants can never exceed it.
+ *   • `tenantCapUsd` — the per-project/per-tenant budget (default = globalCap,
+ *     so only the global binds unless a tighter budget is passed).
+ * Both reuse the SAME trailing-30-day window + `SUM(COALESCE(actual_cost,
+ * estimated_cost))` in-flight expression as {@link budgetStatus} — this only
+ * composes the two caps atomically; it does NOT change their individual
+ * semantics.
  *
  * D1 serializes writes to a database: the `INSERT … SELECT` runs as one
  * statement against a consistent snapshot and commits atomically, so two
- * concurrent consumers cannot both pass the guard — the second sees the first's
- * row in its SUM (or is serialized after it) and is refused.
+ * concurrent consumers cannot both pass the guard — the loser sees the winner's
+ * row in BOTH sums (or is serialized after it) and its WHERE evaluates false.
  *
  * If the guard fails, ZERO rows are inserted; we read `meta.changes` and, when
- * nothing was written, throw {@link BudgetExceededError} (reservation refused).
- * `estimatedCost === 0` always reserves (a free unit can't exceed any budget);
- * the `? <= cap` comparison with a 0 addend makes that fall out naturally.
+ * nothing was written, re-read both scopes to attribute the refusal and throw
+ * {@link BudgetExceededError} carrying the tripped `scope` (global reported
+ * first — the hard ceiling). `estimatedCost === 0` always reserves (a free unit
+ * can't exceed any budget); the `? <= cap` comparisons with a 0 addend make that
+ * fall out naturally.
  *
  * Later reconciliation of the real spend is unchanged: settle this row with
  * {@link settleLedgerEntry} once the work completes.
@@ -136,15 +199,17 @@ export async function reserveBudget(
     estimatedUsd: number;
     now: Date;
   },
-  capUsd = DEFAULT_CAP_USD,
+  globalCapUsd = DEFAULT_CAP_USD,
+  tenantCapUsd = globalCapUsd,
 ): Promise<BudgetStatus> {
   const windowStart = new Date(reservation.now.getTime() - WINDOW_MS).toISOString();
   const createdAt = reservation.now.toISOString();
-  // ONE conditional insert: the row lands only if the window SUM (over the SAME
-  // tenant + rolling window + actual-or-estimated expression the cap uses) PLUS
-  // this estimate stays within the cap. D1 serializes this INSERT…SELECT, so
-  // concurrent consumers cannot both pass — the loser's SUM already includes the
-  // winner's row (or is ordered after it) and its WHERE evaluates false.
+  // ONE conditional insert: the row lands only if, over the SAME rolling window +
+  // actual-or-estimated expression the caps use, BOTH (globalSum + est ≤ globalCap)
+  // AND (tenantSum + est ≤ tenantCap). globalSum has NO tenant filter; tenantSum
+  // filters by `tenant_id = ?3`. D1 serializes this INSERT…SELECT, so concurrent
+  // consumers cannot both pass — the loser's sums already include the winner's
+  // row (or are ordered after it) and its WHERE evaluates false.
   const result = await db
     .prepare(
       `INSERT INTO cost_ledger
@@ -153,8 +218,13 @@ export async function reserveBudget(
         WHERE (
           SELECT COALESCE(SUM(COALESCE(actual_cost, estimated_cost)), 0)
             FROM cost_ledger
+           WHERE created_at >= ?8
+        ) + ?6 <= ?9
+          AND (
+          SELECT COALESCE(SUM(COALESCE(actual_cost, estimated_cost)), 0)
+            FROM cost_ledger
            WHERE tenant_id = ?3 AND created_at >= ?8
-        ) + ?6 <= ?9`,
+        ) + ?6 <= ?10`,
     )
     .bind(
       reservation.id,
@@ -165,19 +235,35 @@ export async function reserveBudget(
       reservation.estimatedUsd,
       createdAt,
       windowStart,
-      capUsd,
+      globalCapUsd,
+      tenantCapUsd,
     )
     .run();
 
   // D1 reports rows-affected on `meta.changes`; 0 ⇒ the guard rejected the
-  // insert ⇒ the reservation would have exceeded the cap.
+  // insert ⇒ the reservation would have exceeded a cap. Re-read both scopes to
+  // attribute WHICH cap tripped (global is the hard ceiling → reported first).
   const changes = Number(result.meta?.changes ?? 0);
   if (changes === 0) {
-    const status = await budgetStatus(db, reservation.tenantId, reservation.now, capUsd);
-    throw new BudgetExceededError(status.remainingUsd, reservation.estimatedUsd, capUsd);
+    const global = await globalBudgetStatus(db, reservation.now, globalCapUsd);
+    if (reservation.estimatedUsd > global.remainingUsd) {
+      throw new BudgetExceededError(
+        global.remainingUsd,
+        reservation.estimatedUsd,
+        globalCapUsd,
+        'global',
+      );
+    }
+    const tenant = await budgetStatus(db, reservation.tenantId, reservation.now, tenantCapUsd);
+    throw new BudgetExceededError(
+      tenant.remainingUsd,
+      reservation.estimatedUsd,
+      tenantCapUsd,
+      'tenant',
+    );
   }
 
-  return budgetStatus(db, reservation.tenantId, reservation.now, capUsd);
+  return budgetStatus(db, reservation.tenantId, reservation.now, tenantCapUsd);
 }
 
 /**
