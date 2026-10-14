@@ -213,14 +213,85 @@ describe('research without creds (non-dry-run)', () => {
     expect(h.fetchCalls).toBe(0);
   });
 
-  it('does NOT fabricate results when creds are present but pipeline is unwired', () => {
-    const h = harness(ALL); // DataForSEO present
-    const code = run(['research', '--domain=projectsites.dev'], h.deps);
-    // Not blocked for creds, but explicitly refuses to pretend it ran.
-    expect(code).not.toBe(0);
-    expect(h.all()).toContain('NOT YET IMPLEMENTED');
-    expect(h.all()).toContain('No results were fabricated');
-    expect(h.fetchCalls).toBe(0);
+  it('runs the LIVE pipeline when creds are present (mocked transport + fs, zero real network)', async () => {
+    // A mock fetch that returns minimal DataForSEO envelopes for every call,
+    // so the live path exercises end-to-end without touching the network.
+    const dfsEnvelope = (items: unknown[]) => ({
+      ok: true,
+      status: 200,
+      async text() {
+        return JSON.stringify({
+          status_code: 20000,
+          cost: 0.01,
+          tasks: [{ id: 't', status_code: 20000, result: [{ items }] }],
+        });
+      },
+      async json() {
+        return {};
+      },
+    });
+    let fetchCalls = 0;
+    const fetchImpl = async (_url: string): Promise<Response> => {
+      fetchCalls++;
+      // keywords_for_site + keyword_ideas + search_volume etc. all read items[].
+      return dfsEnvelope([
+        { keyword: 'crm pricing', keyword_info: { search_volume: 1900, cpc: 22, competition: 0.8 }, keyword_properties: { keyword_difficulty: 30 } },
+        { keyword: 'best crm for agencies', keyword_info: { search_volume: 2400 }, keyword_properties: { keyword_difficulty: 35 } },
+      ]) as unknown as Response;
+    };
+
+    // In-memory filesystem — capture every written report; zero disk.
+    const files: Record<string, string> = {};
+    const dirs = new Set<string>();
+    const out: string[] = [];
+    const err: string[] = [];
+
+    const code = await run(['research', '--domain=projectsites.dev', '--geo=US', '--lang=en'], {
+      out: (l) => out.push(l),
+      err: (l) => err.push(l),
+      getSecretExists: probe(ALL), // DataForSEO present
+      getSecretValue: (k) => (ALL.includes(k) ? `${k}-value` : null),
+      fetchImpl,
+      now: () => new Date('2026-10-14T00:00:00.000Z'),
+      fs: {
+        async readFile(path) {
+          if (Object.prototype.hasOwnProperty.call(files, path)) return files[path]!;
+          const e = new Error('ENOENT') as NodeJS.ErrnoException;
+          e.code = 'ENOENT';
+          throw e;
+        },
+        async writeFile(path, data) {
+          files[path] = data;
+        },
+        async mkdir(path) {
+          dirs.add(path);
+          return undefined;
+        },
+      },
+    });
+
+    expect(code).toBe(0);
+    // It actually used the (mock) transport.
+    expect(fetchCalls).toBeGreaterThan(0);
+
+    // All three reports were written under the default ./research/<domain>/<ts>/.
+    const written = Object.keys(files);
+    expect(written.some((p) => p.endsWith('report.json'))).toBe(true);
+    expect(written.some((p) => p.endsWith('report.md'))).toBe(true);
+    expect(written.some((p) => p.endsWith('opportunities.csv'))).toBe(true);
+    // The page map was persisted.
+    expect(written.some((p) => p.endsWith('keyword-page-map.json'))).toBe(true);
+
+    // The JSON report parses and carries real opportunities (not fabricated).
+    const jsonPath = written.find((p) => p.endsWith('report.json'))!;
+    const report = JSON.parse(files[jsonPath]!);
+    expect(report.schema_version).toBe(1);
+    expect(report.site.domain).toBe('projectsites.dev');
+    expect(report.summary.total_opportunities).toBeGreaterThan(0);
+
+    // The summary was printed.
+    expect(out.join('\n')).toContain('research (LIVE)');
+    expect(out.join('\n')).toMatch(/Reports written to/);
   });
 });
 

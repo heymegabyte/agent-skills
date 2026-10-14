@@ -65,6 +65,31 @@ export interface ProviderStatus {
 /** Presence-only secret probe. Returns `true` iff the key exists. */
 export type GetSecretExists = (key: string) => boolean;
 
+/**
+ * Secret VALUE reader. Returns the key's value, or `null` if absent. UNLIKE the
+ * presence probe this DOES cross the value boundary, so it is used ONLY on the
+ * live (non-dry-run, creds-present) harvest path — never in `setup`/`health`/
+ * dry-run, and never logged. Injected so tests can drive the live path with
+ * fakes and ZERO child processes.
+ */
+export type GetSecretValue = (key: string) => string | null;
+
+/**
+ * Default value reader: shell `get-secret <KEY>` and capture stdout. A clean
+ * exit 0 with non-empty stdout is the value; anything else is `null` (absent).
+ * The value is returned to the caller but NEVER printed by this module.
+ */
+export const defaultGetSecretValue: GetSecretValue = (key) => {
+  const res = spawnSync(GET_SECRET_BIN, [key], {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'ignore'],
+    shell: false,
+  });
+  if (res.error || res.status !== 0) return null;
+  const value = (res.stdout ?? '').trim();
+  return value === '' ? null : value;
+};
+
 /** Options for {@link detectProviders}. */
 export interface DetectProvidersOptions {
   /** Injectable presence probe. Defaults to {@link defaultGetSecretExists}. */

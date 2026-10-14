@@ -22,11 +22,17 @@
  */
 import { parseArgs } from 'node:util';
 import {
+  defaultGetSecretValue,
   detectProviders,
   providerById,
   type GetSecretExists,
+  type GetSecretValue,
   type ProviderStatus,
 } from './providers';
+import { runResearch as runPipeline, type ResearchProviders } from './pipeline';
+import { buildDataForSeoProviders } from './cli-providers';
+import { toCsv, toJsonReport, toMarkdownReport, type ReportContext } from './report';
+import { emptyPageMap, loadPageMap, savePageMap, nodeFsIo } from './pagemap';
 
 /* ------------------------------------------------------------------ */
 /* Injectable environment.                                             */
@@ -44,13 +50,28 @@ export interface CliDeps {
   /** Presence-only secret probe, forwarded to detectProviders. */
   getSecretExists?: GetSecretExists;
   /**
-   * Fetch impl. Present ONLY so future (non-dry-run) network work is injectable.
+   * Fetch impl. Present ONLY so (non-dry-run) network work is injectable.
    * Dry-run + setup + health NEVER call it. Tests pass a fetch that throws to
-   * prove zero egress.
+   * prove zero egress on the offline paths.
    */
   fetchImpl?: (input: string, init?: RequestInit) => Promise<Response>;
   /** Injectable clock for deterministic timestamps. */
   now?: () => Date;
+  /**
+   * Secret VALUE reader — used ONLY on the live harvest path to read the
+   * credentials the adapters need. Never called on setup/health/dry-run/blocked.
+   * Defaults to the real `get-secret <KEY>` reader.
+   */
+  getSecretValue?: GetSecretValue;
+  /** Injectable filesystem for writing reports + persisting the page map. */
+  fs?: ResearchFs;
+}
+
+/** The filesystem surface the live `research` path writes through (injectable). */
+export interface ResearchFs {
+  readFile: (path: string, enc: 'utf8') => Promise<string>;
+  writeFile: (path: string, data: string, enc: 'utf8') => Promise<void>;
+  mkdir: (path: string, opts: { recursive: true }) => Promise<string | undefined>;
 }
 
 /** Build the default (real) dependency set. */
@@ -59,6 +80,22 @@ export function defaultDeps(): CliDeps {
     out: (line) => console.log(line),
     err: (line) => console.error(line),
     now: () => new Date(),
+    getSecretValue: defaultGetSecretValue,
+    // Lazy-load node:fs/promises only when the live path actually writes.
+    fs: {
+      async readFile(path, enc) {
+        const { readFile } = await import('node:fs/promises');
+        return readFile(path, enc);
+      },
+      async writeFile(path, data, enc) {
+        const { writeFile } = await import('node:fs/promises');
+        return writeFile(path, data, enc);
+      },
+      async mkdir(path, opts) {
+        const { mkdir } = await import('node:fs/promises');
+        return mkdir(path, opts);
+      },
+    },
   };
 }
 
@@ -259,6 +296,8 @@ export interface ResearchOptions {
   lang: string;
   format: ResearchFormat;
   maxSpend?: number;
+  /** Output directory; default ./research/<domain>/<timestamp>/. */
+  out?: string;
 }
 
 /**
@@ -272,7 +311,7 @@ export interface ResearchOptions {
  * a BLOCKED message (+ the provisioning URL) and return non-zero. We never
  * fabricate results.
  */
-export function runResearch(deps: CliDeps, opts: ResearchOptions): number {
+export function runResearch(deps: CliDeps, opts: ResearchOptions): number | Promise<number> {
   const statuses = detectProviders({ getSecretExists: deps.getSecretExists });
   const dfs = providerById(statuses, 'dataforseo');
 
@@ -325,16 +364,116 @@ export function runResearch(deps: CliDeps, opts: ResearchOptions): number {
     return 2;
   }
 
-  // Creds ARE present. The live harvest/score/report pipeline lands in a later
-  // phase; until then we refuse to pretend we ran it.
-  deps.err('keyword-research · research — NOT YET IMPLEMENTED');
-  deps.err('');
-  deps.err(
-    'DataForSEO credentials are present, but the live harvest pipeline is not wired ' +
-      'in this build. Use `research --domain=<d> --dry-run` to see the plan.',
+  // Creds ARE present and this is NOT a dry run → execute the live pipeline.
+  return executeResearch(deps, opts);
+}
+
+/* ------------------------------------------------------------------ */
+/* Live execution (async). Reads cred VALUES, builds adapters, runs the */
+/* pipeline, writes JSON+MD+CSV, persists the page map, prints a summary.*/
+/* ------------------------------------------------------------------ */
+
+/** Default output root: ./research/<domain>/<timestamp>/ (timestamp is clock-injected). */
+export function defaultOutDir(domain: string, at: Date): string {
+  const ts = at.toISOString().replace(/[:.]/g, '-');
+  const safeDomain = domain.replace(/[^a-z0-9.-]+/gi, '_');
+  return `research/${safeDomain}/${ts}`;
+}
+
+/**
+ * The live run. Separated from the sync gating so the sync paths (dry-run,
+ * blocked, errors) keep returning a plain number and the existing synchronous
+ * tests are untouched. Returns a process exit code.
+ */
+export async function executeResearch(deps: CliDeps, opts: ResearchOptions): Promise<number> {
+  const getSecretValue = deps.getSecretValue ?? defaultGetSecretValue;
+  const fetchImpl = deps.fetchImpl ?? ((input: string, init?: RequestInit) => fetch(input, init));
+  const fs = deps.fs;
+  const now = deps.now ?? (() => new Date());
+
+  // Read the credential VALUES (only here, never logged).
+  const login = getSecretValue('DATAFORSEO_LOGIN');
+  const password = getSecretValue('DATAFORSEO_PASSWORD');
+  if (!login || !password) {
+    // Presence said yes but the value read failed — fail honestly, never fake.
+    deps.err('keyword-research · research — BLOCKED');
+    deps.err('DataForSEO credentials could not be read at runtime. No results were fabricated.');
+    return 2;
+  }
+  const exaApiKey = getSecretValue('EXA_API_KEY');
+
+  if (!fs) {
+    deps.err('keyword-research · research — cannot write output (no filesystem available).');
+    return 4;
+  }
+
+  const providers: ResearchProviders = buildDataForSeoProviders(
+    { dataForSeo: { login, password }, exaApiKey },
+    fetchImpl,
+    { location_name: opts.geo, language_code: opts.lang },
   );
-  deps.err('No results were fabricated.');
-  return 3;
+
+  // Load (or start) the persistent keyword→page map.
+  const io = nodeFsIo(fs);
+  const mapPath = `research/${opts.domain.replace(/[^a-z0-9.-]+/gi, '_')}/keyword-page-map.json`;
+  const { map: pageMap, warning } = await loadPageMap(io, mapPath);
+
+  deps.out('keyword-research · research (LIVE)');
+  deps.out(`Domain: ${opts.domain} · geo: ${opts.geo} · lang: ${opts.lang}`);
+  if (warning) deps.out(`Note: ${warning}`);
+
+  // Run the pipeline. The page inventory is empty here (a later phase can crawl
+  // the site); an empty inventory simply means every match is a content gap.
+  const result = await runPipeline({
+    providers,
+    project: {
+      domain: opts.domain,
+      locale: opts.locale ?? `${opts.lang}-${opts.geo}`,
+      geography: opts.geo,
+      language: opts.lang,
+    },
+    pageInventory: [],
+    pageMap: pageMap ?? emptyPageMap(),
+    budget: { maxSpendUsd: opts.maxSpend ?? MONTHLY_BUDGET_USD },
+    now,
+  });
+
+  // Build the three report formats.
+  const ctx: ReportContext = {
+    domain: opts.domain,
+    locale: opts.locale ?? `${opts.lang}-${opts.geo}`,
+    geography: opts.geo,
+    language: opts.lang,
+    budgetUsd: opts.maxSpend ?? MONTHLY_BUDGET_USD,
+    generatedAt: now().toISOString(),
+  };
+  const json = toJsonReport(result, ctx);
+  const md = toMarkdownReport(result, ctx);
+  const csv = toCsv(result.opportunities);
+
+  // Write everything under --out (default ./research/<domain>/<timestamp>/).
+  const outDir = opts.out ?? defaultOutDir(opts.domain, now());
+  await fs.mkdir(outDir, { recursive: true });
+  await fs.writeFile(`${outDir}/report.json`, `${JSON.stringify(json, null, 2)}\n`, 'utf8');
+  await fs.writeFile(`${outDir}/report.md`, md, 'utf8');
+  await fs.writeFile(`${outDir}/opportunities.csv`, `${csv}\n`, 'utf8');
+
+  // Persist the updated keyword→page map.
+  await savePageMap(io, mapPath, result.keywordPageMap);
+
+  // Print a concise summary.
+  deps.out('');
+  deps.out(`Opportunities: ${result.opportunities.length} · Clusters: ${result.clusters.length}`);
+  deps.out(
+    `Spent: $${result.costActual.toFixed(2)} of $${(opts.maxSpend ?? MONTHLY_BUDGET_USD).toFixed(2)} cap.`,
+  );
+  if (result.limitations.length > 0) {
+    deps.out(`Limitations (${result.limitations.length}):`);
+    for (const lim of result.limitations) deps.out(`  • ${lim}`);
+  }
+  deps.out(`Reports written to ${outDir}/ (report.json, report.md, opportunities.csv).`);
+  deps.out(`Keyword→page map persisted to ${mapPath}.`);
+  return 0;
 }
 
 /* ------------------------------------------------------------------ */
@@ -361,6 +500,7 @@ RESEARCH OPTIONS
   --lang=<l>            Language (default: ${DEFAULT_LANG}), ISO 639-1, e.g. en.
   --format=<f>          Output format: ${RESEARCH_FORMATS.join(' | ')} (default: json).
   --max-spend=<n>       Spend cap in USD for this run (default: monthly cap $${MONTHLY_BUDGET_USD}).
+  --out=<dir>           Output directory (default: ./research/<domain>/<timestamp>/).
 
 NOTES
   • setup and health are OFFLINE-safe: no paid calls, secret VALUES never printed.
@@ -418,6 +558,7 @@ export function parseResearchArgs(argv: string[]): ResearchOptions {
         lang: { type: 'string' },
         format: { type: 'string' },
         'max-spend': { type: 'string' },
+        out: { type: 'string' },
       },
       allowPositionals: false,
       strict: true,
@@ -441,14 +582,20 @@ export function parseResearchArgs(argv: string[]): ResearchOptions {
     lang: values.lang ?? DEFAULT_LANG,
     format: parseFormat(values.format),
     maxSpend: parseMaxSpend(values['max-spend']),
+    out: values.out,
   };
 }
 
 /**
- * Parse argv and run the selected command. Returns a process exit code.
- * `argv` is the slice AFTER `node script.js` (i.e. `process.argv.slice(2)`).
+ * Parse argv and run the selected command. Returns a process exit code (or a
+ * Promise of one for the live `research` run). `argv` is the slice AFTER
+ * `node script.js` (i.e. `process.argv.slice(2)`).
+ *
+ * The OFFLINE paths (setup, health, dry-run, blocked, help, errors) return a
+ * plain `number` synchronously — so the existing synchronous tests are untouched.
+ * Only a live harvest returns a `Promise<number>`.
  */
-export function run(argv: string[], deps: CliDeps = defaultDeps()): number {
+export function run(argv: string[], deps: CliDeps = defaultDeps()): number | Promise<number> {
   const [command, ...rest] = argv;
 
   // No command, or an explicit help request → usage (exit 0).
@@ -506,6 +653,11 @@ function isMain(): boolean {
 }
 
 if (isMain()) {
-  const code = run(process.argv.slice(2));
-  process.exit(code);
+  // `run` may return a Promise on the live research path; await it either way.
+  Promise.resolve(run(process.argv.slice(2)))
+    .then((code) => process.exit(code))
+    .catch((err: unknown) => {
+      console.error(err instanceof Error ? err.stack ?? err.message : String(err));
+      process.exit(1);
+    });
 }
