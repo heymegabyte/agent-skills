@@ -129,8 +129,12 @@ export function buildApp(deps: AppDeps): Hono<AppEnv> {
     const env = c.env;
     const cap = monthlyBudgetUsd(env);
     // Provider presence is reported by NAME + boolean only — never a value.
+    // DataForSEO is "available" iff its REAL credentials (login + password) are
+    // bound — NOT tied to SERVICE_TOKEN (an unrelated Access secret). Reported
+    // only when true (omitted otherwise) so the flag never misleads, and the
+    // secret VALUES themselves are never surfaced.
     const providers = {
-      dataforseo: Boolean(env.SERVICE_TOKEN) || undefined, // placeholder-safe
+      dataforseo: Boolean(env.DATAFORSEO_LOGIN && env.DATAFORSEO_PASSWORD) || undefined,
     };
     // Freshness is a store-level question; we report the shape even when empty.
     let freshness: { records: number } = { records: 0 };

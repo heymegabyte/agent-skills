@@ -34,7 +34,13 @@ import {
   reportKey,
 } from '../../src/queue';
 import { runScheduled, cronWindowStamp, CRON_WINDOW_MS, opportunityIdFor } from '../../src/worker';
-import { assertWithinBudget, BudgetExceededError, budgetStatus, recordLedgerEntry } from '../../src/ledger';
+import {
+  assertWithinBudget,
+  BudgetExceededError,
+  budgetStatus,
+  recordLedgerEntry,
+  reserveBudget,
+} from '../../src/ledger';
 import { makeBatch } from './fakes';
 import type { ResearchJobMessage } from '../../src/env';
 
@@ -318,6 +324,28 @@ describe('§17.5 Access middleware', () => {
     expect(json.budget.cap_usd).toBe(20);
   });
 
+  it('/health does NOT tie dataforseo availability to SERVICE_TOKEN', async () => {
+    // Harness sets SERVICE_TOKEN but NO DataForSEO creds → the flag must NOT be
+    // true (it would be misleading to report dataforseo up on an unrelated token).
+    const h = makeHarness(); // env has SERVICE_TOKEN='SVC-SECRET', no DFS creds
+    const res = await h.request('/health');
+    const json = (await res.json()) as { providers: { dataforseo?: boolean } };
+    expect(json.providers.dataforseo).not.toBe(true);
+  });
+
+  it('/health reports dataforseo=true ONLY when real DataForSEO creds are present', async () => {
+    const h = makeHarness({
+      env: { DATAFORSEO_LOGIN: 'login@example.com', DATAFORSEO_PASSWORD: 'pw' },
+    });
+    const res = await h.request('/health');
+    const text = await res.text();
+    // Truthful signal, but the secret values themselves never appear.
+    expect(text).not.toContain('login@example.com');
+    expect(text).not.toContain('pw');
+    const json = JSON.parse(text) as { providers: { dataforseo?: boolean } };
+    expect(json.providers.dataforseo).toBe(true);
+  });
+
   it('401 on a protected route with NO credentials', async () => {
     const h = makeHarness();
     const res = await h.request('/opportunities?projectId=p1');
@@ -560,6 +588,172 @@ describe('§17.8 cost limit (job over remaining budget rejected by breaker)', ()
     });
     const status = await budgetStatus(h.db.asD1(), defaultTenant(), NOW());
     expect(status.remainingUsd).toBeCloseTo(0.4, 4);
+  });
+});
+
+/* =================================================================== */
+/* Case 9 — atomic budget reserve (check+reserve is ONE statement).    */
+/* =================================================================== */
+describe('§17.9 atomic reserveBudget (TOCTOU-safe check-and-reserve)', () => {
+  /** Count ledger rows + sum spend (settled-or-estimated) for the tenant. */
+  function ledgerState(h: Harness, tenantId: string): { count: number; sum: number } {
+    const count = (
+      h.db.sqlite
+        .prepare(`SELECT COUNT(*) c FROM cost_ledger WHERE tenant_id = ?`)
+        .get(tenantId) as { c: number }
+    ).c;
+    const sum = Number(
+      (
+        h.db.sqlite
+          .prepare(
+            `SELECT COALESCE(SUM(COALESCE(actual_cost, estimated_cost)), 0) s
+               FROM cost_ledger WHERE tenant_id = ?`,
+          )
+          .get(tenantId) as { s: number }
+      ).s,
+    );
+    return { count, sum };
+  }
+
+  it('writes a reservation row when the estimate FITS under the cap', async () => {
+    const h = makeHarness();
+    const projectId = await seedProject(h, defaultTenant());
+    // Pre-spend to $19.50 → $0.50 remains.
+    await recordLedgerEntry(h.db.asD1(), {
+      id: 'pre', projectId, tenantId: defaultTenant(), provider: 'p', endpoint: 'e',
+      estimatedUsd: 19.5, actualUsd: 19.5, createdAt: NOW().toISOString(),
+    });
+    const before = ledgerState(h, defaultTenant());
+
+    // A $0.40 reserve fits in the $0.50 headroom → succeeds + writes a row.
+    await reserveBudget(h.db.asD1(), {
+      id: 'r1',
+      projectId,
+      tenantId: defaultTenant(),
+      provider: 'pipeline',
+      endpoint: 'research',
+      estimatedUsd: 0.4,
+      now: NOW(),
+    });
+
+    const after = ledgerState(h, defaultTenant());
+    expect(after.count).toBe(before.count + 1);
+    expect(after.sum).toBeCloseTo(19.9, 4);
+  });
+
+  it('REFUSES the reservation (throws, NO row written, SUM unchanged) when it would exceed the cap', async () => {
+    const h = makeHarness();
+    const projectId = await seedProject(h, defaultTenant());
+    // Pre-spend to $19.50 → only $0.50 remains.
+    await recordLedgerEntry(h.db.asD1(), {
+      id: 'pre', projectId, tenantId: defaultTenant(), provider: 'p', endpoint: 'e',
+      estimatedUsd: 19.5, actualUsd: 19.5, createdAt: NOW().toISOString(),
+    });
+    const before = ledgerState(h, defaultTenant());
+
+    // A $1.00 reserve would push to $20.50 > $20 cap → refused.
+    await expect(
+      reserveBudget(h.db.asD1(), {
+        id: 'r2',
+        projectId,
+        tenantId: defaultTenant(),
+        provider: 'pipeline',
+        endpoint: 'research',
+        estimatedUsd: 1.0,
+        now: NOW(),
+      }),
+    ).rejects.toBeInstanceOf(BudgetExceededError);
+
+    // The reservation row was NOT written and the window SUM is unchanged.
+    const after = ledgerState(h, defaultTenant());
+    expect(after.count).toBe(before.count);
+    expect(after.sum).toBeCloseTo(before.sum, 4);
+  });
+
+  it('holds the cap under CONCURRENT same-tenant reserves (only the ones that fit are written)', async () => {
+    const h = makeHarness();
+    const projectId = await seedProject(h, defaultTenant());
+    // Pre-spend to $19.00 → exactly $1.00 remains; each reserve is $0.60, so at
+    // MOST one of two concurrent reserves can be admitted (0.60+0.60 = 1.20 > 1).
+    await recordLedgerEntry(h.db.asD1(), {
+      id: 'pre', projectId, tenantId: defaultTenant(), provider: 'p', endpoint: 'e',
+      estimatedUsd: 19.0, actualUsd: 19.0, createdAt: NOW().toISOString(),
+    });
+
+    const attempt = (id: string) =>
+      reserveBudget(h.db.asD1(), {
+        id,
+        projectId,
+        tenantId: defaultTenant(),
+        provider: 'pipeline',
+        endpoint: 'research',
+        estimatedUsd: 0.6,
+        now: NOW(),
+      }).then(
+        () => 'ok' as const,
+        (e) => (e instanceof BudgetExceededError ? ('refused' as const) : Promise.reject(e)),
+      );
+
+    const results = await Promise.all([attempt('c1'), attempt('c2')]);
+    const admitted = results.filter((r) => r === 'ok').length;
+    // Exactly one admitted; the cap is never silently exceeded.
+    expect(admitted).toBe(1);
+    const after = ledgerState(h, defaultTenant());
+    expect(after.count).toBe(2); // the $19 seed + the single admitted reserve
+    expect(after.sum).toBeLessThanOrEqual(20);
+    expect(after.sum).toBeCloseTo(19.6, 4);
+  });
+
+  it('a zero-cost reserve always writes a row (a free unit can never exceed any cap)', async () => {
+    const h = makeHarness();
+    const projectId = await seedProject(h, defaultTenant());
+    await recordLedgerEntry(h.db.asD1(), {
+      id: 'pre', projectId, tenantId: defaultTenant(), provider: 'p', endpoint: 'e',
+      estimatedUsd: 20, actualUsd: 20, createdAt: NOW().toISOString(),
+    });
+    await reserveBudget(h.db.asD1(), {
+      id: 'free', projectId, tenantId: defaultTenant(), provider: 'pipeline',
+      endpoint: 'research', estimatedUsd: 0, now: NOW(),
+    });
+    const after = ledgerState(h, defaultTenant());
+    expect(after.count).toBe(2);
+  });
+
+  it('processJob writes exactly ONE reservation row and settles it to actual (no double-count)', async () => {
+    const h = makeHarness();
+    const projectId = await seedProject(h, defaultTenant());
+    await insertJob(h.db.asD1(), { id: 'job-res', projectId, tenantId: defaultTenant(), enqueuedAt: NOW().toISOString() });
+    const msg: ResearchJobMessage = { jobId: 'job-res', projectId, tenantId: defaultTenant(), domain: 'example.com', locale: 'en-US' };
+    const outcome = await processJob(h.db.asD1(), h.reports.asR2(), msg, h.deps.queueDeps);
+    expect(outcome).toBe('done');
+    // Exactly one ledger row for the job, settled to the mock's $0.50 actual.
+    const rows = h.db.sqlite
+      .prepare(`SELECT estimated_cost, actual_cost FROM cost_ledger WHERE tenant_id = ?`)
+      .all(defaultTenant()) as { estimated_cost: number; actual_cost: number | null }[];
+    expect(rows.length).toBe(1);
+    expect(rows[0]!.actual_cost).toBeCloseTo(0.5, 4);
+  });
+
+  it('rejects via the atomic reserve when the window is already at the cap (job never runs)', async () => {
+    const h = makeHarness();
+    const projectId = await seedProject(h, defaultTenant());
+    // Pre-spend to $19.50 so the $1.00 job estimate cannot be reserved.
+    await recordLedgerEntry(h.db.asD1(), {
+      id: 'pre', projectId, tenantId: defaultTenant(), provider: 'p', endpoint: 'e',
+      estimatedUsd: 19.5, actualUsd: 19.5, createdAt: NOW().toISOString(),
+    });
+    await insertJob(h.db.asD1(), { id: 'job-cap', projectId, tenantId: defaultTenant(), enqueuedAt: NOW().toISOString() });
+    const msg: ResearchJobMessage = { jobId: 'job-cap', projectId, tenantId: defaultTenant(), domain: 'example.com', locale: 'en-US' };
+    const outcome = await processJob(h.db.asD1(), h.reports.asR2(), msg, h.deps.queueDeps);
+    expect(outcome).toBe('rejected');
+    // No reservation row was written for the rejected job (only the $19.50 seed).
+    const count = (
+      h.db.sqlite.prepare(`SELECT COUNT(*) c FROM cost_ledger WHERE tenant_id = ?`).get(defaultTenant()) as { c: number }
+    ).c;
+    expect(count).toBe(1);
+    const job = await getJob(h.db.asD1(), defaultTenant(), 'job-cap');
+    expect(job?.error).toMatch(/budget/i);
+    expect(h.reports.store.size).toBe(0);
   });
 });
 

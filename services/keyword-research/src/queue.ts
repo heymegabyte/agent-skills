@@ -32,8 +32,7 @@ import {
 } from './db';
 import {
   BudgetExceededError,
-  assertWithinBudget,
-  recordLedgerEntry,
+  reserveBudget,
   settleLedgerEntry,
 } from './ledger';
 
@@ -100,31 +99,38 @@ export async function processJob(
     return 'skipped';
   }
 
-  // --- Budget breaker BEFORE any work. ---
+  // --- ATOMIC budget check-and-reserve BEFORE any work. ---
+  // One conditional INSERT reserves the estimate IFF it fits under the cap, so
+  // the reservation row is written iff within budget — no TOCTOU gap between a
+  // separate check and a later insert. D1 serializes the INSERT…SELECT, so two
+  // concurrent same-tenant jobs can NOT both pass (the loser sees the winner's
+  // reservation in its SUM). On refusal, no row is written and the pipeline
+  // never runs — the cap is never silently exceeded.
+  const ledgerId = deps.newId();
   try {
-    await assertWithinBudget(db, msg.tenantId, DEFAULT_JOB_ESTIMATE_USD, nowDate, deps.capUsd);
+    await reserveBudget(
+      db,
+      {
+        id: ledgerId,
+        projectId: msg.projectId,
+        tenantId: msg.tenantId,
+        provider: 'pipeline',
+        endpoint: 'research',
+        estimatedUsd: DEFAULT_JOB_ESTIMATE_USD,
+        now: nowDate,
+      },
+      deps.capUsd,
+    );
   } catch (e) {
     if (e instanceof BudgetExceededError) {
-      // Reject without running the pipeline; mark error (retryable only if the
-      // window later frees up — but we do NOT ask for immediate redelivery).
+      // Reservation refused (would exceed the cap). Mark error WITHOUT running
+      // the pipeline and WITHOUT leaving a reservation row behind; we do NOT ask
+      // for immediate redelivery (retryable only if the window later frees up).
       await markJobFailed(db, msg.jobId, `budget: ${e.message}`, maxAttempts, nowIso);
       return 'rejected';
     }
     throw e;
   }
-
-  // Reserve the estimated spend up-front (in-flight) so concurrent jobs see it.
-  const ledgerId = deps.newId();
-  await recordLedgerEntry(db, {
-    id: ledgerId,
-    projectId: msg.projectId,
-    tenantId: msg.tenantId,
-    provider: 'pipeline',
-    endpoint: 'research',
-    estimatedUsd: DEFAULT_JOB_ESTIMATE_USD,
-    actualUsd: null,
-    createdAt: nowIso,
-  });
 
   await markJobRunning(db, msg.jobId, nowIso);
 

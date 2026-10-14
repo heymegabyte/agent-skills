@@ -27,6 +27,14 @@ export interface Env {
   SERVICE_TOKEN?: string;
   /** Hard monthly USD budget cap (defaults to 20 when unset). */
   MONTHLY_BUDGET_USD?: string;
+
+  // --- Provider credentials (secrets; set via `wrangler secret put` at P7b). ---
+  /** DataForSEO API login — its presence (with the password) is the ONLY real
+   *  signal that DataForSEO is wired. Never tie DataForSEO health to any other
+   *  binding. The value itself is a secret and is never surfaced. */
+  DATAFORSEO_LOGIN?: string;
+  /** DataForSEO API password (secret; paired with DATAFORSEO_LOGIN). */
+  DATAFORSEO_PASSWORD?: string;
 }
 
 /**

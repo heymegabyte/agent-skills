@@ -100,6 +100,87 @@ export async function assertWithinBudget(
 }
 
 /**
+ * ATOMIC check-and-reserve. Writes ONE in-flight reservation row (actual_cost =
+ * NULL) IFF, counting that row's `estimatedCost`, the tenant's rolling-window
+ * spend stays within the cap — all in a SINGLE `INSERT … SELECT … WHERE`
+ * statement. This closes the TOCTOU race that a separate SELECT-SUM-then-INSERT
+ * leaves open: two concurrent same-tenant jobs could each pass an independent
+ * check before either wrote its reservation, both slipping under the cap.
+ *
+ * The window + scope are IDENTICAL to {@link budgetStatus}/
+ * {@link assertWithinBudget} (same tenant, same trailing-30-day window, same
+ * `SUM(COALESCE(actual_cost, estimated_cost))` so in-flight spend counts) — this
+ * only makes check+reserve atomic; it does NOT change cap semantics.
+ *
+ * D1 serializes writes to a database: the `INSERT … SELECT` runs as one
+ * statement against a consistent snapshot and commits atomically, so two
+ * concurrent consumers cannot both pass the guard — the second sees the first's
+ * row in its SUM (or is serialized after it) and is refused.
+ *
+ * If the guard fails, ZERO rows are inserted; we read `meta.changes` and, when
+ * nothing was written, throw {@link BudgetExceededError} (reservation refused).
+ * `estimatedCost === 0` always reserves (a free unit can't exceed any budget);
+ * the `? <= cap` comparison with a 0 addend makes that fall out naturally.
+ *
+ * Later reconciliation of the real spend is unchanged: settle this row with
+ * {@link settleLedgerEntry} once the work completes.
+ */
+export async function reserveBudget(
+  db: D1Database,
+  reservation: {
+    id: string;
+    projectId: string;
+    tenantId: string;
+    provider: string;
+    endpoint: string;
+    estimatedUsd: number;
+    now: Date;
+  },
+  capUsd = DEFAULT_CAP_USD,
+): Promise<BudgetStatus> {
+  const windowStart = new Date(reservation.now.getTime() - WINDOW_MS).toISOString();
+  const createdAt = reservation.now.toISOString();
+  // ONE conditional insert: the row lands only if the window SUM (over the SAME
+  // tenant + rolling window + actual-or-estimated expression the cap uses) PLUS
+  // this estimate stays within the cap. D1 serializes this INSERT…SELECT, so
+  // concurrent consumers cannot both pass — the loser's SUM already includes the
+  // winner's row (or is ordered after it) and its WHERE evaluates false.
+  const result = await db
+    .prepare(
+      `INSERT INTO cost_ledger
+         (id, project_id, tenant_id, provider, endpoint, estimated_cost, actual_cost, created_at)
+       SELECT ?1, ?2, ?3, ?4, ?5, ?6, NULL, ?7
+        WHERE (
+          SELECT COALESCE(SUM(COALESCE(actual_cost, estimated_cost)), 0)
+            FROM cost_ledger
+           WHERE tenant_id = ?3 AND created_at >= ?8
+        ) + ?6 <= ?9`,
+    )
+    .bind(
+      reservation.id,
+      reservation.projectId,
+      reservation.tenantId,
+      reservation.provider,
+      reservation.endpoint,
+      reservation.estimatedUsd,
+      createdAt,
+      windowStart,
+      capUsd,
+    )
+    .run();
+
+  // D1 reports rows-affected on `meta.changes`; 0 ⇒ the guard rejected the
+  // insert ⇒ the reservation would have exceeded the cap.
+  const changes = Number(result.meta?.changes ?? 0);
+  if (changes === 0) {
+    const status = await budgetStatus(db, reservation.tenantId, reservation.now, capUsd);
+    throw new BudgetExceededError(status.remainingUsd, reservation.estimatedUsd, capUsd);
+  }
+
+  return budgetStatus(db, reservation.tenantId, reservation.now, capUsd);
+}
+
+/**
  * Append a ledger entry. Called twice per costed unit of work in the normal
  * flow: once up-front with the estimate (actual = null), then settled with the
  * real cost. Here we support both in one call: pass `actualUsd` to record a
