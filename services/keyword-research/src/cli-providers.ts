@@ -14,7 +14,9 @@
  */
 import { DataForSeoAdapter } from './adapters/dataforseo';
 import { ExaAdapter } from './adapters/exa';
+import { TrendsAdapter } from './adapters/trends';
 import type { FetchImpl } from './adapters/http';
+import type { SeasonalityPoint } from './types';
 import { crawlSiteInventory } from './crawl';
 import type { PageRecord } from './types';
 import type { ExistingPage } from './pagemap';
@@ -109,6 +111,8 @@ export function buildDataForSeoProviders(
 ): ResearchProviders {
   const dfs = new DataForSeoAdapter(creds.dataForSeo, fetchImpl);
   const exa = creds.exaApiKey ? new ExaAdapter({ apiKey: creds.exaApiKey }, fetchImpl) : null;
+  // Trends resolve via DataForSEO here (no official-Trends creds on this path).
+  const trendsAdapter = new TrendsAdapter({ fetchImpl, dataforseo: dfs });
   const locExtra: Record<string, unknown> = {
     ...(loc.location_name ? { location_name: loc.location_name } : {}),
     ...(loc.language_code ? { language_code: loc.language_code } : {}),
@@ -158,18 +162,37 @@ export function buildDataForSeoProviders(
       return { rows, cost: res.cost };
     },
 
-    // Phase D — trend direction + seasonality (first keyword per call via explore).
+    // Phase D — trend direction + momentum + seasonality, DERIVED from the
+    // DataForSEO Google Trends interest-over-time index series (0–100), NEVER
+    // an absolute volume. We explore each keyword, parse its series, and derive
+    // normalized signals; a keyword whose series is absent/too-short yields NO
+    // row (the trend dimension then simply drops for it — never fabricated).
     async trends(keywords): Promise<ProviderCall<TrendRow>> {
       if (keywords.length === 0) return { rows: [], cost: 0 };
-      // A single explore call carries a keyword set; we surface direction only
-      // where the series supports it. (Kept deliberately conservative — no
-      // direction is inferred when the adapter returns no usable series.)
-      const res = await dfs.trendsExplore<unknown>(keywords, locExtra);
-      // The trends envelope shape varies; without a confident series we emit NO
-      // rows rather than guess a direction. This still lets the pipeline proceed
-      // (trend dimension simply drops) and never fabricates a trend.
       const rows: TrendRow[] = [];
-      return { rows, cost: res.cost };
+      // DataForSEO bills trends per explore call; the adapter exposes no cost on
+      // `explore`, so we attribute 0 here (trends is a minor line item and the
+      // metered cap is enforced against the Labs/SERP spend). Kept honest: no
+      // fabricated cost.
+      for (const keyword of keywords) {
+        const res = await trendsAdapter.explore(keyword, {
+          ...(loc.location_name ? { geo: loc.location_name } : {}),
+        });
+        if (!res.available) continue;
+        const { direction, momentum, seasonalityCurve } = res.signals;
+        // Emit a row ONLY when at least one signal is present (direction is the
+        // gate: null direction ⇒ the series was too short to say anything).
+        if (direction === null && momentum === null && seasonalityCurve === null) continue;
+        const row: TrendRow = { keyword };
+        if (direction !== null) row.direction = direction;
+        // The pipeline/schema store momentum as a 0..1 MAGNITUDE (strength);
+        // our derivation is a signed −1..1 rate, so we pass |momentum| as the
+        // strength and let `direction` carry the sign. Clamped for safety.
+        if (momentum !== null) row.momentum = Math.min(1, Math.abs(momentum));
+        if (seasonalityCurve !== null) row.seasonality = seasonalityCurve as SeasonalityPoint[];
+        rows.push(row);
+      }
+      return { rows, cost: 0 };
     },
 
     // Phase E — SERP organic + competitor coverage.
