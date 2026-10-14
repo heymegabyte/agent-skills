@@ -15,6 +15,10 @@
 import { DataForSeoAdapter } from './adapters/dataforseo';
 import { ExaAdapter } from './adapters/exa';
 import type { FetchImpl } from './adapters/http';
+import { crawlSiteInventory } from './crawl';
+import type { PageRecord } from './types';
+import type { ExistingPage } from './pagemap';
+import { stemKeyword } from './cluster';
 import type {
   CandidateKeyword,
   EnrichmentRow,
@@ -211,4 +215,76 @@ export function buildDataForSeoProviders(
   }
 
   return providers;
+}
+
+/* ------------------------------------------------------------------ */
+/* Site-inventory wiring — crawl → the ExistingPage shape the pipeline */
+/* matcher consumes. Kept here (not in cli.ts) so it's unit-testable    */
+/* without the CLI's argv/fs plumbing, same as the provider mapping.    */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Turn one crawled {@link PageRecord} into the richer {@link ExistingPage} the
+ * page-map matcher reads. The matcher stem-compares an opportunity keyword
+ * against each page's `targetKeywords`, so we derive those from the page's own
+ * human-readable signals (title + h1 + headings) — the honest "what this page is
+ * about" text the HTML actually carried. We never invent keywords: a page with
+ * no title/h1/headings contributes an empty `targetKeywords` list (and simply
+ * won't match anything). Intent is intentionally left undefined — the crawl can
+ * see a page's words but not reliably its intent, and guessing would weaken the
+ * cannibalization signal (which keys on a KNOWN intent match).
+ */
+export function pageRecordToExistingPage(page: PageRecord): ExistingPage {
+  // Collect candidate phrases, dedup by their stem so near-duplicate headings
+  // (e.g. a title echoed as the h1) don't bloat the list.
+  const phrases = [page.title, page.h1, ...page.headings].filter(
+    (p): p is string => typeof p === 'string' && p.trim().length > 0,
+  );
+  const targetKeywords: string[] = [];
+  const seenStems = new Set<string>();
+  for (const phrase of phrases) {
+    const stem = stemKeyword(phrase);
+    if (stem === '' || seenStems.has(stem)) continue;
+    seenStems.add(stem);
+    targetKeywords.push(phrase.trim());
+  }
+  return {
+    url: page.url,
+    ...(page.title ? { title: page.title } : {}),
+    targetKeywords,
+  };
+}
+
+export interface CrawledInventory {
+  inventory: ExistingPage[];
+  limitations: string[];
+}
+
+/**
+ * Crawl `origin` (no credentials, mocked-fetch-friendly) and map the result into
+ * the pipeline's `pageInventory` shape. Total: any crawl failure degrades to an
+ * EMPTY inventory plus a limitation note (existing-page matching then treats
+ * every keyword as a content gap — honest, never fabricated). Never throws.
+ */
+export async function buildCrawledInventory(
+  fetchImpl: FetchImpl,
+  origin: string,
+  opts: { maxPages?: number; concurrency?: number } = {},
+): Promise<CrawledInventory> {
+  try {
+    const { pages, limitations } = await crawlSiteInventory({
+      fetchImpl,
+      origin,
+      ...(opts.maxPages !== undefined ? { maxPages: opts.maxPages } : {}),
+      ...(opts.concurrency !== undefined ? { concurrency: opts.concurrency } : {}),
+    });
+    return { inventory: pages.map(pageRecordToExistingPage), limitations };
+  } catch (e) {
+    return {
+      inventory: [],
+      limitations: [
+        `Site-inventory crawl failed (${(e as Error)?.message ?? String(e)}); proceeding with an empty inventory (every keyword treated as a content gap, no pages fabricated).`,
+      ],
+    };
+  }
 }

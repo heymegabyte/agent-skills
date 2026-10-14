@@ -30,7 +30,7 @@ import {
   type ProviderStatus,
 } from './providers';
 import { runResearch as runPipeline, type ResearchProviders } from './pipeline';
-import { buildDataForSeoProviders } from './cli-providers';
+import { buildDataForSeoProviders, buildCrawledInventory } from './cli-providers';
 import { toCsv, toJsonReport, toMarkdownReport, type ReportContext } from './report';
 import { emptyPageMap, loadPageMap, savePageMap, nodeFsIo } from './pagemap';
 
@@ -422,8 +422,19 @@ export async function executeResearch(deps: CliDeps, opts: ResearchOptions): Pro
   deps.out(`Domain: ${opts.domain} · geo: ${opts.geo} · lang: ${opts.lang}`);
   if (warning) deps.out(`Note: ${warning}`);
 
-  // Run the pipeline. The page inventory is empty here (a later phase can crawl
-  // the site); an empty inventory simply means every match is a content gap.
+  // Build the REAL page inventory by crawling the site (no credentials). This is
+  // total: a crawl failure degrades to an empty inventory + a limitation note, so
+  // existing-page matching stays HONEST (every keyword a content gap) and the run
+  // never aborts. The crawl reuses the SAME injected `fetchImpl`, so the mocked-
+  // transport tests stay hermetic (zero real network).
+  const origin = /^https?:\/\//i.test(opts.domain) ? opts.domain : `https://${opts.domain}`;
+  const { inventory: pageInventory, limitations: crawlLimitations } = await buildCrawledInventory(
+    fetchImpl,
+    origin,
+  );
+  deps.out(`Site inventory: ${pageInventory.length} page(s) crawled from ${origin}.`);
+
+  // Run the pipeline against the crawled inventory.
   const result = await runPipeline({
     providers,
     project: {
@@ -432,11 +443,15 @@ export async function executeResearch(deps: CliDeps, opts: ResearchOptions): Pro
       geography: opts.geo,
       language: opts.lang,
     },
-    pageInventory: [],
+    pageInventory,
     pageMap: pageMap ?? emptyPageMap(),
     budget: { maxSpendUsd: opts.maxSpend ?? MONTHLY_BUDGET_USD },
     now,
   });
+
+  // Fold crawl limitations into the run's limitations so the report + summary
+  // carry them (the crawl runs before the pipeline, so they're prepended).
+  result.limitations.unshift(...crawlLimitations);
 
   // Build the three report formats.
   const ctx: ReportContext = {

@@ -218,3 +218,32 @@ export const RawSignals = z.object({
     .optional(),
 });
 export type RawSignals = z.infer<typeof RawSignals>;
+
+/**
+ * One page as OBSERVED by the site-inventory crawler — the raw, no-credentials
+ * polish signal that tells the pipeline which URLs the site already publishes.
+ *
+ * Deliberately a FLAT, source-faithful record of what the HTML actually carried:
+ *  - Every text field is `null` when the tag was absent (missing `<title>` ⇒
+ *    `title: null`), NEVER an empty string and NEVER invented — the same
+ *    "null means we don't know" doctrine the metric fields follow.
+ *  - `headings` holds the page's `<h2>`/`<h3>` text in document order; `[]` when
+ *    none were found. (`<h1>` is split out into its own field.)
+ *
+ * This is the crawler's OUTPUT contract. The page-map's `ExistingPage` (which the
+ * matcher/pipeline consume) is a richer, interpreted shape; a thin adapter derives
+ * `ExistingPage` from a `PageRecord` at the wiring boundary (never the reverse).
+ */
+export const PageRecord = z.object({
+  /** Normalized absolute URL (fragment dropped, trailing slash stripped). */
+  url: z.string().url(),
+  /** `<title>` text, or `null` when the page had none. */
+  title: z.string().nullable(),
+  /** First `<h1>` text, or `null` when the page had none. */
+  h1: z.string().nullable(),
+  /** `<meta name="description">` content, or `null` when absent. */
+  metaDescription: z.string().nullable(),
+  /** `<h2>`/`<h3>` text in document order; `[]` when none. */
+  headings: z.array(z.string()),
+});
+export type PageRecord = z.infer<typeof PageRecord>;
