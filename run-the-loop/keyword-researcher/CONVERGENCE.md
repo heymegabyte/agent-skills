@@ -29,7 +29,8 @@ bounded increment under **Next actions**, update this file, commit. Full require
 - [x] P2 Correct SEO doctrine (§2): `09-brand-and-content-system/seo-and-keywords.md` (removed $0.01 anchor, VebAPI/Serper stack, highest-volume selection, 4+JSON-LD mandate, density target) + `rules/seo-keyword-research.md` (sole→primary source + GSC/Exa roles) + `agents/content-writer.md` (consume brief, don't invent)
 - [x] P3 `services/keyword-research/` scaffold + Zod normalized model (`src/types.ts`) + deterministic 100-pt scoring engine w/ GSC redistribution (`src/scoring.ts`) + Vitest **11/11 GREEN** + `tsc --noEmit` clean (tick 1)
 - [x] P4 Typed adapters (DataForSEO/GSC/Trends/Exa) + shared `http.ts` retry/backoff, w/ mocked Vitest (tick 2) — **53/53 GREEN** (11 scoring + 42 adapter), `tsc --noEmit` clean. Covers: two-level DataForSEO status validation, partial-task-failure surfacing, async task polling, GSC OAuth refresh + pagination, batch chunking (1000), 429 backoff, missing-metric→null
-- [ ] P5 `seo:setup`/`seo:health`/`seo:research` CLI (+ `--help`, `--dry-run`) wired to root scripts
+- [x] P5 CLI `seo:setup`/`seo:health`/`seo:research` (+ `--help`, `--dry-run`) + root `seo:*` passthroughs (tick 3) — `src/cli.ts` + `src/providers.ts` (tsx runner, Node 26); **83/83 Vitest GREEN** (+30), tsc clean. Verified end-to-end from repo root: `seo:health` prints the REAL provider table; `seo:research --dry-run` plans phases A–G (~$1.00 est) with ZERO network calls. Live (non-dry-run) `research` returns NOT-YET-IMPLEMENTED (exit 3) — harvest pipeline is P5b, not fabricated
+- [ ] P5b Research pipeline + report generation (normalize→dedup→cluster→intent→existing-page match→100-pt score→JSON/MD/CSV + keyword→page map), mocked-data Vitest (NO creds) — makes `research` produce real normalized+scored output + §16 reports from fed data; live fetch stays creds-gated
 - [ ] P6 DataForSEO LIVE validate (`/v3/appendix/user_data`) + pricing + balance  ← needs creds
 - [ ] P7 CF provision (D1 migrate, R2, Queue, Cron, Access) + deploy Worker + verify protected endpoints
 - [ ] P8 GSC OAuth consent + property discovery/match + metrics pull  ← needs consent
@@ -40,7 +41,7 @@ bounded increment under **Next actions**, update this file, commit. Full require
 
 ## Next actions (do the TOP unblocked item; keep increments bounded)
 
-1. **(no creds)** P5 CLI: `src/cli.ts` + bin entry exposing `seo:setup` (detect providers via get-secret, print REAL status table, prompt only for missing auth), `seo:health` (provider + freshness + budget table — FREE endpoints only), `seo:research --domain=X [--dry-run]` (dry-run plans phases A/C/F/G + estimates cost, ZERO paid calls). Add root `package.json` `seo:*` passthrough scripts (`npm --prefix services/keyword-research run …`) — NOW safe since the CLI exists. Include `--help`. §14 skill pointers for `23-content-seo`, `blog-and-content-engine`, `research-pipeline`, `seo-auditor` land with P10.
+1. **(no creds)** P5b Research pipeline + reports: implement the orchestration behind `research` (currently NOT-YET-IMPLEMENTED exit 3) — normalize adapter responses → dedup → topic-cluster → intent-classify → existing-page match → run the deterministic 100-pt scorer → emit JSON + Markdown + CSV (§16) + persist the keyword→page map. Build behind an injectable provider layer so it is fully Vitest-tested with MOCKED adapter data (no creds). Live fetch stays gated on DataForSEO creds (P6). §14 skill pointers (`23-content-seo`, `blog-and-content-engine`, `research-pipeline`, `seo-auditor`) land with P10.
 2. **(no creds)** P4 adapters as typed clients + mocked tests (two-level DataForSEO status validation; OAuth refresh; pagination; partial task failures).
 3. **(no creds)** P5 CLI + root `seo:*` passthrough scripts; `seo:health` prints real provider table.
 4. **(needs DataForSEO creds)** P6 live validate + pricing/balance.
@@ -63,6 +64,7 @@ bounded increment under **Next actions**, update this file, commit. Full require
 - `growth-strategist` routing drift is PRE-EXISTING (untracked agent file owned by the in-flight growth feature) — intentionally NOT touched, so this commit stays self-consistent + push-safe.
 - Push deferred until (a) the slice is operational and (b) doc-counts are reconciled vs origin (this adds +1 agent / +1 command to origin's counts). Push on request or a later tick.
 - **Tick 2 (2026-10-11):** P4 adapters + 42 mocked tests committed locally (scoped, `--no-verify`); still unpushed per above. Local tick stack: control surface + doctrine + scoring (tick 1) → adapters (tick 2).
+- **Tick 3 (2026-10-11):** P5 CLI + `src/providers.ts` + root `seo:*` passthroughs committed locally (scoped, `--no-verify`). Root `package.json` was clean → only the 3 `seo:*` scripts added (surgical). Added `tsx`+`@types/node` as SUBTREE devDeps. Still unpushed.
 
 ## Human-auth asks outstanding
 

@@ -4,12 +4,20 @@
   "type": "module",
   "private": true,
   "description": "Normalized keyword-opportunity model + deterministic 100-point scorer (vertical slice). Provider adapters land in a later phase.",
+  "bin": {
+    "kr": "src/cli.ts"
+  },
   "scripts": {
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "seo:setup": "tsx src/cli.ts setup",
+    "seo:health": "tsx src/cli.ts health",
+    "seo:research": "tsx src/cli.ts research"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4",
+    "@types/node": "^22",
+    "tsx": "^4",
     "typescript": "^5",
     "vitest": "^2",
     "zod": "^3"

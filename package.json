@@ -55,7 +55,10 @@
     "validate": "bash scripts/validate-skills.sh && node scripts/validate-packs.mjs",
     "validate:packs": "node scripts/validate-packs.mjs",
     "sha-pin": "node scripts/sha-pin-actions.mjs .github/workflows/*.yml",
-    "sha-pin:check": "node scripts/sha-pin-actions.mjs --check .github/workflows/*.yml"
+    "sha-pin:check": "node scripts/sha-pin-actions.mjs --check .github/workflows/*.yml",
+    "seo:setup": "npm --prefix services/keyword-research run seo:setup",
+    "seo:health": "npm --prefix services/keyword-research run seo:health",
+    "seo:research": "npm --prefix services/keyword-research run seo:research --"
   },
   "keywords": [
     "claude-code",
