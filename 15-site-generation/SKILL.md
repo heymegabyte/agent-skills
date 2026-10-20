@@ -60,7 +60,7 @@ Run the end-to-end AI website generation pipeline: research→media→Bolt artif
 ## Dual-Template Architecture (TWO REPOS — NEVER CONFUSE)
 
 - **Local Business**: `megabytespace/template.projectsites.dev` — Vite + React + Tailwind + shadcn/ui, 15 local components, CSS var brand slots. Use for: restaurant, salon, medical, legal, fitness, contractor, retail, etc.
-- **SaaS**: `megabytespace/saas-starter` — Hono + D1 + Clerk + Stripe + Inngest + Resend on CF Workers. Use for: SaaS products, APIs, dev tools, platforms.
+- **SaaS**: `megabytespace/saas-starter` — Hono + D1 + Clerk + Stripe + Inngest + Amazon SES on CF Workers. Use for: SaaS products, APIs, dev tools, platforms.
 
 ### Template selection (from `_form_data.json.category`)
 
@@ -156,7 +156,7 @@ Every hero image/video literally depicts page topic — `/mass-schedule` gets st
 
 ### Empty-Config Widgets
 
-Gate every third-party widget on env var: `{import.meta.env.VITE_TURNSTILE_SITEKEY ? <div className="cf-turnstile" data-sitekey={...} /> : null}`. Same for Stripe pk, PostHog snippet, Resend embed. Empty `data-sitekey=""` = console error on every render.
+Gate every third-party widget on env var: `{import.meta.env.VITE_TURNSTILE_SITEKEY ? <div className="cf-turnstile" data-sitekey={...} /> : null}`. Same for Stripe pk, PostHog snippet. Empty `data-sitekey=""` = console error on every render.
 
 ### Post-Deploy Parallel Scan (BOTH scripts required — deploy not verified without both)
 
@@ -178,5 +178,10 @@ Gate every third-party widget on env var: `{import.meta.env.VITE_TURNSTILE_SITEK
 - About page 2000+ words | every claim factually accurate from research
 - Blog → individual routes per post with RSS feed
 - Addresses → Google Maps links | phone → `tel:` links | email → `mailto:` links
+
+### Web-platform capabilities (per `rules/web-platform-capabilities.md`)
+
+- **#30 advanced Web App Manifest** — `shortcuts` (top 3 actions), `screenshots` (wide + narrow for richer install UI), `share_target`, `file_handlers`, `launch_handler`; **Badging API** (`navigator.setAppBadge`, install-gated) — verified by `validate-pwa-kit.mjs`.
+- Scan the catalog trigger table during generation and opportunistically deploy every matching capability (Popover/Anchor/Invoker, View Transitions, scroll-driven, `field-sizing`, `<details name>`, container queries) — all progressive-enhancement with fallbacks. Skill 16 §3 covers the PWA kit; skill 16 rule 119 is the umbrella.
 
 ## See submodules for: research-pipeline, media-acquisition, build-prompts, quality-gates, domain-features, template-system, local-seo, bolt-artifact-protocol, page-set-expansion, source-fidelity-loop, build-breaking-rules.

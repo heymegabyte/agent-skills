@@ -103,6 +103,10 @@ Every slot MUST end build w/ `filled_url != null AND filled_score >= relevance_f
 - **Video** — Veo 3.1 (primary rail: cinematic + narrative stitching, 7-8 × 8-sec clips → 60-sec arc); Kling 3.0 / Runway Gen-4.5 fallbacks; HeyGen (explainer/spokesperson); captions VTT + transcript; `prefers-reduced-motion` → static poster fallback
 - **OG (1200×630)** — Satori edge-rendered, per-route unique, BRANDED CARD never raw photo, ≤100KB, cached KV 7d / R2 forever
 
+## Web-platform capabilities (super-boost — per `rules/web-platform-capabilities.md`)
+
+- **#28 WebGPU** for GPU hero visuals / shaders / client-side inference — **Limited support (Firefox-blocked, ~88%)**, so a **WebGL2 or static-poster fallback is mandatory**; never gate the hero on it, and `prefers-reduced-motion` → static frame.
+
 ## Stock Photography + Asset Compression + Performance
 
 **Stock**: Pexels first (free, API); Pixabay second. Never Unsplash (generic), iStock/Getty (paid). Critique-and-remix loop max 3 rounds; AI vision <7/10 = reject + regenerate.

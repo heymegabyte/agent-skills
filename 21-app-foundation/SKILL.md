@@ -48,6 +48,12 @@ stage: stable
 
 - Infer the org type; deliver its standard page set (nonprofit floor = 24 routes: 14 standard + 10 jewels; SaaS / marketing / local-business each their floor). Missing standard pages = incomplete.
 
+## Web-platform capabilities (super-boost — per `rules/web-platform-capabilities.md`)
+
+- **#24 WebAuthn/passkeys + conditional (autofill) UI** on every auth surface — enable via Clerk's passkey support, never hand-roll; password/email-link fallback.
+- **#29 Background Sync + Periodic Sync + Web Push** for installable SaaS PWAs — offline form-submit replay + re-engagement; Chromium-only → IndexedDB-queue + replay-on-load fallback (never load-bearing).
+- Scan the catalog's trigger table on every build and deploy every capability whose trigger matches — all progressive-enhancement.
+
 ## Experience baseline (non-negotiable)
 
 - Embarrassingly easy for a busy non-technical owner: succeeds first try, no manual. ≤3 steps to any outcome · one primary CTA per screen · empty states become first-action launchpads · instant feedback + undo.

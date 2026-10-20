@@ -30,9 +30,9 @@ stage: stable
 
 - Agent capability fabric: official `cloudflare/skills` upstream + direct Cloudflare API Code Mode MCP (`https://mcp.cloudflare.com/mcp`) + MCP Server Portal for appropriate remote MCP fleets. Code Mode for large/variable catalogs; direct tools for small predictable calls. See `[[cloudflare-agent-fabric]]` + `[[ai-search-knowledge-fabric]]`.
 
-
 - **Workers AI** + **AI Gateway** as runtime control plane. Use **Dynamic Routes** for versioned model policy (conditions, budgets/rate limits, rollout, timeouts/retries, fallbacks) on compatible product calls. AI Gateway cache is exact-request caching unless current docs say otherwise — do not claim semantic caching. BYOK secrets belong in Secrets Store. **AI Search** is the managed retrieval/indexing layer for the knowledge fabric; **Vectorize** remains the lower-level vector primitive where direct vector control is needed.
 - Every app is AI-native (per app-foundation): generative / chat-as-UI / voice / multimodal where they add value.
+- **Client-side on-device AI (#27, `[[web-platform-capabilities]]`)**: Chrome built-in Gemini Nano (Prompt / Translator / Summarizer / Writer / Rewriter) is a zero-cost, private, zero-latency FIRST tier for summarize / translate / "TL;DR" — feature-detect and **fall back to Workers AI** (the estate default) off-Chromium. Never gate core functionality on it.
 
 ## Media pipeline
 

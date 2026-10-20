@@ -38,6 +38,11 @@ stage: stable
 
 - A busy non-technical owner succeeds first try, no manual. ≤3 steps to any outcome · one primary CTA per screen · empty states are first-action launchpads · instant feedback + undo · never a doomed/dead control (disable with the reason + fix, or hide) · the user's words, never internal jargon. Every change leaves the surface easier, never harder.
 
+## Web-platform capabilities (super-boost — per `rules/web-platform-capabilities.md`)
+
+- Forms: **#18 `field-sizing: content`** auto-grows textarea/inputs (drop the JS hack); **#3 native `<dialog>` + `showModal()`** for confirm/edit modals (auto-inert + focus-trap, no lib).
+- **#2 Popover** for non-modal menus/tooltips; **#22 async Clipboard** for copy affordances; **#5 Navigation API** for routing. Scan the catalog trigger table every build; all progressive-enhancement with fallbacks.
+
 ## Feature catalog (build blocks, as the app needs)
 
 - Admin dashboard · blog/content engine · data tables · site search · file uploads · i18n · PWA (manifest + offline + A2HS) · realtime/websockets · rich-text editor · onboarding/first-run · Cmd+K command palette (every clickable action has a shortcut) · webhooks (signed, verified) · AI chat/copilot · branded 404/500 · custom domains (`{slug}.projectsites.dev` + custom, SSL).
