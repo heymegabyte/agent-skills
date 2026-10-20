@@ -149,6 +149,8 @@ Style a parent from its descendants/state with zero JS (card-with-image, form-wi
 label:has(+ input:checked) { font-weight: 600; }
 ```
 
+Fallback: none needed — Baseline Widely; a non-matching `:has()` is simply inert.
+
 ### 8. `@property` typed custom properties — ◾ Baseline 2024
 
 Register a type so gradients/angles/colors *animate* (conic spinners, animated borders, hover sweeps).
@@ -193,6 +195,8 @@ Correct full-height heroes on mobile with a moving URL bar (no more cut-off `100
 .hero { min-height: 100svh; }   /* safe: smallest viewport; dvh if you want it to track the bar */
 ```
 
+Fallback: none needed — Baseline Widely; older engines use the `vh` you also set.
+
 ### 12. `subgrid` — ◾ Baseline 2023
 
 Child grids inherit parent tracks → bento cards with perfectly aligned rows/footers.
@@ -213,6 +217,8 @@ A11y-as-craft: respect OS motion/contrast and survive Windows High Contrast. Gat
 @media (prefers-contrast: more) { :root { --border: CanvasText; } }
 @media (forced-colors: active) { .btn { border: 1px solid ButtonText; } }
 ```
+
+Fallback: none needed — Baseline; an unknown media query is a no-op (content stays fully usable).
 
 ### 14. Trusted Types + Reporting API — ✅V Baseline 2026
 

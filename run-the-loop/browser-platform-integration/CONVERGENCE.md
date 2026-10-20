@@ -45,16 +45,18 @@ a trigger, AND (c) an always-loaded surface points at the catalog so it is reach
       catalog (super-boost by default, detail stays in catalog for token economy); skill 16 §12 rule 119 already enforces it on site builds
 - [x] P9 Verify (tick 7) — catalog has exactly **30** numbered entries (#1…#30); **22 files** reference `web-platform-capabilities`
       (the catalog + `always.md` + 12 skills + 8 rules); every capability wired into ≥1 relevant skill; `[[web-platform-capabilities]]` resolves; markdownlint-cli2 clean on all touched files across ticks 1-7
-- [~] P10 Convergence review — **pass 1 done (tick 8, independent subagent): VERDICT PASS.** 2 minor findings, BOTH FIXED same tick:
-      (a) #19/#22/#23 (Baseline-Widely items in the Tier-2 band) now carry explicit "no guard needed — Baseline" fallback notes;
-      (b) skill 16 rule 119 cross-refs disambiguated (skill-16 "rule N" vs catalog "#N"). Pass 2 (must be clean, zero new findings) pending → then STOP.
+- [x] P10 Convergence review — **TWO consecutive clean independent passes (ticks 8-9).** Pass 1: VERDICT PASS, 2 minor findings fixed
+      (#19/#22/#23 fallback notes; skill-16 rule-119 disambiguation). Pass 2 (tick 9, fresh independent subagent): **VERDICT PASS, zero
+      substantive new findings** — confirmed 30 entries, 64 balanced language-tagged fences, all Chromium-only items non-load-bearing, AVOID
+      complete, trigger table valid, pass-1 fixes landed, wire-ins defer examples (no duplication). One non-blocking cosmetic nit it named
+      (#7/#11/#13 lacked the uniform "no guard needed" note) applied same tick → catalog now fully uniform. **CONVERGED.**
 
-## Next actions (do the TOP item; keep increments bounded, one batch per tick)
+## Next actions — ✅ CONVERGED (tick 9). Nothing left.
 
-1. **P10 — convergence review (pass 2 of 2, FINAL).** Spawn a SECOND independent reviewer (fresh context) over the catalog + wire-in
-   targets with the same rubric PLUS confirmation that pass-1's two fixes landed (#19/#22/#23 fallback notes; skill-16 rule-119 disambiguation).
-   Must return VERDICT PASS with ZERO new findings. If clean → mark P10 done, loop CONVERGED → report + `CronDelete ec398e1c`.
-   If any new finding → fix it this tick and require another clean pass (two consecutive clean passes is the gate).
+All of P0–P10 complete; the Definition of Done is met with two consecutive clean independent review passes. The loop is a
+**pure no-op** from here: each remaining tick should re-read this file, see CONVERGED, and report "converged, no action" cheaply.
+The cron `ec398e1c` was deleted on convergence (tick 9) — if it was recreated, delete it again and hold. No further edits unless
+the 30-item set changes or a consuming skill drifts.
 
 ## Tick log
 
@@ -84,3 +86,7 @@ a trigger, AND (c) an always-loaded surface points at the catalog so it is reach
 - **Tick 8 (2026-10-20):** P10 pass 1 — independent subagent review (fresh context, adversarial rubric) → **VERDICT PASS**. 2 minor findings
   fixed same tick: (a) added "no guard needed — Baseline" fallback notes to catalog #19/#22/#23; (b) disambiguated skill-16 rule-119
   cross-refs (its own "rule N" vs catalog "#N"). markdownlint clean. Committed scoped. Next: P10 pass 2 (must be clean) → converge.
+- **Tick 9 (2026-10-20):** P10 pass 2 — second independent fresh-context subagent → **VERDICT PASS, zero substantive new findings**
+  (30 entries, 64 balanced fences, Chromium-only non-load-bearing, AVOID complete, pass-1 fixes confirmed, no example duplication).
+  Applied the one non-blocking cosmetic nit it named (uniform "no guard needed" note on #7/#11/#13). **TWO consecutive clean passes →
+  CONVERGED.** Deleted cron `ec398e1c`. 9 scoped commits (fee659b→this), all local/unpushed per the markdown-repo push-deferred policy.
