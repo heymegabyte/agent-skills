@@ -127,6 +127,12 @@ function calculateReadingTime(text: string): number {
 }
 ```
 
+## Native content primitives (per `[[web-platform-capabilities]]`)
+
+- **#19 `<details name>` exclusive accordions** for FAQ blocks — native single-open, zero JS, pairs with `FAQPage` JSON-LD (highest AI-citation rate).
+- **#20 `hidden=until-found` + `content-visibility:auto`** on long posts / collapsed sections — stays Ctrl-F-findable + deep-linkable, and skips offscreen render cost (protects CLS/INP).
+- **#1 View Transitions** for `/blog` → `/blog/[slug]` navigation (cross-document #26 on the static-render path).
+
 ## Structured Data (per post)
 
 ```json

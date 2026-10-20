@@ -32,6 +32,7 @@ Write sharp, punchy, Flesch ≥60 copy with action-verb CTAs, servant framing, a
 - **Sentences** — 15-20 words
 - **Paragraphs** — 2 max
 - Numbers: specific.
+- **Render** headlines with `text-wrap: balance` and body with `text-wrap: pretty` (`[[web-platform-capabilities]]` #10) — kills orphans/rivers; `balance` headings-only, `pretty` body-only.
 
 ## Human voice (anti-slop)
 

@@ -37,8 +37,8 @@ a trigger, AND (c) an always-loaded surface points at the catalog so it is reach
 - [x] P5 Wire-in batch C — perf/security/obs (tick 4): `rules/quality-metrics.md` (#4,20,23,LoAF),
       `rules/csp-trusted-types.md` (#14), `13-observability-and-growth/SKILL.md` (#14,21,22), `07-quality-and-verification/SKILL.md` (LoAF + Playwright forced-colors/reduced-motion).
       **Correction:** `fetch-defaults.md` dropped from batch — it governs outbound-scraping UA, not resource-loading; #4 `fetchpriority` placed in `quality-metrics.md` where it belongs.
-- [ ] P6 Wire-in batch D — content/a11y/text: `rules/text-contrast.md` (#9 + contrast-color AVOID note),
-      `09-brand-and-content-system` copy rule (#10), `06-build-and-slice-loop/blog-and-content-engine.md` (#19), `23-content-seo/SKILL.md` (#19,20)
+- [x] P6 Wire-in batch D — content/a11y/text (tick 5): `rules/text-contrast.md` (#9 + `contrast-color()` AVOID in Never),
+      `rules/copy-writing.md` (#10 `text-wrap`), `06-build-and-slice-loop/blog-and-content-engine.md` (#1,19,20,26), `23-content-seo/SKILL.md` (#19,20)
 - [ ] P7 Wire-in batch E — app/PWA/AI/CF: `21-app-foundation/SKILL.md` (#24,29), `28-cf-integrations-reference/SKILL.md` (#27),
       `15-site-generation` Site-Mode PWA (#30), `12-media-orchestration/SKILL.md` (#28), `24-functional/SKILL.md` (#3,18)
 - [ ] P8 Always-on reach — one line in `rules/always.md` + `16` Hard Gates so the catalog is reached by default on every site build
@@ -47,11 +47,10 @@ a trigger, AND (c) an always-loaded surface points at the catalog so it is reach
 
 ## Next actions (do the TOP item; keep increments bounded, one batch per tick)
 
-1. **P6 — wire-in batch D (content/a11y/text).** Add pointer blocks to `rules/text-contrast.md` (#9 + `contrast-color()` AVOID note),
-   `rules/copy-writing.md` (#10 `text-wrap`), `06-build-and-slice-loop/blog-and-content-engine.md` (#19 `<details name>`),
-   `23-content-seo/SKILL.md` (#19,20). Keep examples in the catalog.
-2. P7 batch E (app/PWA/AI/CF: `21` #24,29 · `28` #27 · `15` #30 · `12` #28 · `24` #3,18). 3. P8 always-on reach (`always.md`; skill 16 §12 r119 done).
-   4. P9 verify (grep each of 30 referenced ≥1×). 5. P10 review (2 clean passes) → STOP.
+1. **P7 — wire-in batch E (app/PWA/AI/CF).** Add pointer blocks to `21-app-foundation/SKILL.md` (#24 passkeys, #29 Background Sync),
+   `28-cf-integrations-reference/SKILL.md` (#27 on-device AI → Workers AI fallback), `15-site-generation` Site-Mode PWA (#30 manifest/Badging),
+   `12-media-orchestration/SKILL.md` (#28 WebGPU + WebGL2 fallback), `24-functional/SKILL.md` (#3 `<dialog>`, #18 `field-sizing`).
+2. P8 always-on reach (`rules/always.md`; skill 16 §12 r119 done). 3. P9 verify (grep each of 30 referenced ≥1×). 4. P10 review (2 clean passes) → STOP.
 
 ## Tick log
 
@@ -68,3 +67,6 @@ a trigger, AND (c) an always-loaded surface points at the catalog so it is reach
 - **Tick 4 (2026-10-20):** P5 wire-in batch C (perf/security/obs). Pointer blocks → `rules/quality-metrics.md` (#4,20,23,LoAF),
   `rules/csp-trusted-types.md` (#14 See-link), `13-observability-and-growth/SKILL.md` (#14,21,22), `07-quality-and-verification/SKILL.md`
   (LoAF culprit-script + Playwright forced-colors/reduced-motion a11y matrix). Dropped `fetch-defaults.md` (wrong fit). markdownlint clean. Committed scoped. Next: P6 batch D.
+- **Tick 5 (2026-10-20):** P6 wire-in batch D (content/a11y/text). `rules/text-contrast.md` (#9 + `contrast-color()` AVOID in Never),
+  `rules/copy-writing.md` (#10 text-wrap render note), `06-build-and-slice-loop/blog-and-content-engine.md` (#1,19,20,26 content primitives),
+  `23-content-seo/SKILL.md` (#19 `<details name>`, #20 `hidden=until-found` for crawlable collapsed content). markdownlint clean. Committed scoped. Next: P7 batch E.

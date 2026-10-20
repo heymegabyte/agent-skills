@@ -45,6 +45,10 @@ stage: stable
 
 - Quotable answer blocks (40-60 words). FAQPage schema. Every JSON-LD fact also appears as visible HTML. Lead paragraph answers the query in <40 words. EEAT: author bio + Person schema + `sameAs` + dated revisions + ownership.
 
+## Native content primitives
+
+- Per `[[web-platform-capabilities]]`: render FAQ blocks with **#19 `<details name>`** exclusive accordions (native single-open, no JS, pairs with `FAQPage` JSON-LD); keep long collapsed content as **#20 `hidden=until-found`** so it stays Ctrl-F-findable + deep-linkable (indexable, never hidden from crawlers/AI).
+
 ## Truth & citations
 
 - Every factual claim APA-cited to a real source. Never fabricate people, stats, timelines, or testimonials. Testimonials carry verifiable attribution.
