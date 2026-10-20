@@ -46,6 +46,14 @@ Cross-links: `[[frontend-stack]]` `[[cinematic-ui-patterns]]` `[[gorgeous-by-def
 - **Router**: TanStack Router; `command` palette wired to route actions (the mandated ⌘K per `[[always]]`).
 - **Contrast**: shadcn tokens must clear `[[text-contrast]]` AA — verify the generated palette, don't trust defaults.
 
+## Native web-platform primitives (compose before adding libs)
+
+Per `[[web-platform-capabilities]]` (the 30-capability super-boost catalog), prefer native primitives over JS libraries when they fit:
+
+- **#2 Popover API + #15 CSS Anchor Positioning** → `tooltip` / `dropdown-menu` / `popover` / `hover-card` can drop Floating-UI; **#16 Invoker Commands** (`command`/`commandfor`) trigger them with zero handler JS.
+- **#3 native `<dialog>`** backs `dialog`/`sheet` (auto-inert + `::backdrop`); **#6 style queries** drive variant theming from `--` tokens; **#18 `field-sizing`** auto-grows `textarea`.
+- Radix/shadcn still own focus-trap + ARIA where the native primitive doesn't — layer them, and keep every enhancement `@supports`-guarded.
+
 ## Anti-patterns (build-fail)
 
 - Installing `@shadcn/ui` as a runtime dep (it is NOT a package — it is a CLI that copies code).

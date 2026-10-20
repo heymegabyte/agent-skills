@@ -107,6 +107,10 @@ Build anti-AI-slop premium interfaces: dark-first OKLCH color, fluid `clamp()` t
 - `appearance:base-select` native `<select>` (Chrome 135+) · `@supports` for progressive enhancement
 - **Baseline 2026**: `@scope` · Anchor positioning · Scroll-state queries · `@starting-style` · `interpolate-size: allow-keywords` · `field-sizing: content` · `text-wrap: pretty` · `@property`
 
+## Web-platform capabilities (super-boost catalog)
+
+The CSS primitives above — `:has()` (#7), style queries (#6), anchor positioning (#15), Popover (#2), `color-mix`/relative color (#9), `field-sizing`, `text-wrap`, `@property` (#8) — are the opportunistic set: deploy every one whose trigger matches per `rules/web-platform-capabilities.md` (full copy-paste examples + a situation→capability trigger table + each fallback). Add **#12 subgrid** for aligned bento rows and **#1 View Transitions** for route/state swaps. All progressive-enhancement; Chromium-only items stay non-load-bearing.
+
 ## W3C DTCG Design Tokens (2025.10 Stable)
 
 - JSON `.tokens` / `.tokens.json`, MIME `application/design-tokens+json`
