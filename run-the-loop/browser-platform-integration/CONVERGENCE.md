@@ -29,8 +29,9 @@ a trigger, AND (c) an always-loaded surface points at the catalog so it is reach
       what/why/2026-support/fallback/trigger + copy-paste example; fast trigger table; build/QA + avoid
       sections; self-critique (tick 1)
 - [x] P2 First live pointer — `rules/gorgeous-by-default.md` references the catalog (always-on design pack) (tick 1)
-- [ ] P3 Wire-in batch A — motion/visual: `11-motion-and-interaction-system/SKILL.md` (#1,8,17,23 + animation-trigger),
-      `rules/cinematic-ui-patterns.md` (#1,8,17), `16-cinematic-website-prime-directive/SKILL.md` (#1,11,25,26)
+- [x] P3 Wire-in batch A — motion/visual (tick 2): pointer blocks added to `11-motion-and-interaction-system/SKILL.md`
+      (#1,8,17,23 + animation-trigger + LoAF), `rules/cinematic-ui-patterns.md` (#1,2,8,15,16,17), and skill 16 §12 as
+      new always-on rule **119** (catalog = super-boost layer; names #2,3,5,6,7,12,15,16,18,19,20,21,22,27). 111-118→111-119 refs updated.
 - [ ] P4 Wire-in batch B — frontend/components: `rules/frontend-stack.md` (#2,3,5,16,18),
       `rules/shadcn-design-system.md` (#2,6,15), `10-experience-and-design-system/SKILL.md` (#6,7,9,15)
 - [ ] P5 Wire-in batch C — perf/security/obs: `rules/fetch-defaults.md` (#4), `rules/quality-metrics.md` (#4,20,23,LoAF),
@@ -45,11 +46,11 @@ a trigger, AND (c) an always-loaded surface points at the catalog so it is reach
 
 ## Next actions (do the TOP item; keep increments bounded, one batch per tick)
 
-1. **P3 — wire-in batch A (motion/visual).** Add a short "Opportunistic web-platform capabilities" block to
-   `11-motion-and-interaction-system/SKILL.md`, `rules/cinematic-ui-patterns.md`, and `16-.../SKILL.md` pointing at
-   `rules/web-platform-capabilities.md` with the item numbers above + a one-line trigger each. Keep examples in the catalog.
-2. P4 batch B (frontend/components). 3. P5 batch C (perf/security/obs). 4. P6 batch D (content/a11y).
-   5. P7 batch E (app/PWA/AI/CF). 6. P8 always-on reach. 7. P9 verify. 8. P10 review (2 clean passes) → STOP.
+1. **P4 — wire-in batch B (frontend/components).** Add a short "Opportunistic web-platform capabilities" pointer block to
+   `rules/frontend-stack.md` (#2,3,5,16,18), `rules/shadcn-design-system.md` (#2,6,15), and
+   `10-experience-and-design-system/SKILL.md` (#6,7,9,15) → `rules/web-platform-capabilities.md`, one-line trigger each. Examples stay in the catalog.
+2. P5 batch C (perf/security/obs). 3. P6 batch D (content/a11y). 4. P7 batch E (app/PWA/AI/CF).
+   5. P8 always-on reach (`always.md` + already in skill 16 §12 r119). 6. P9 verify. 7. P10 review (2 clean passes) → STOP.
 
 ## Tick log
 
@@ -57,3 +58,6 @@ a trigger, AND (c) an always-loaded surface points at the catalog so it is reach
   and `rules/web-platform-capabilities.md` (full 30-entry catalog, examples + trigger table). Wired the
   first live pointer into `rules/gorgeous-by-default.md`. Committed scoped. markdownlint-cli2 clean on the
   3 new/edited files. Next: P3 batch A.
+- **Tick 2 (2026-10-20):** P3 wire-in batch A (motion/visual). Pointer blocks → `11-motion-and-interaction-system/SKILL.md`
+  and `rules/cinematic-ui-patterns.md`; skill 16 §12 gets always-on rule **119** (catalog = super-boost layer); 111-118→111-119.
+  markdownlint-cli2 clean on all 4 touched files. Committed scoped. Next: P4 batch B (frontend/components).

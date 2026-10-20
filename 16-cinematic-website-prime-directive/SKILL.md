@@ -96,7 +96,7 @@ One-line prompt → satisfy all 100 build-breaking rules across 10 categories be
 54. Workers Tracing `[observability] enabled = true` + OTLP export to Axiom
 55. AI Gateway binding for every LLM call
 56. Turnstile invisible (`data-appearance="interaction-only"`) on every form — NEVER visible
-57. Stripe checkout / Resend transactional / Clerk auth (M2M JWT) stubs where appropriate
+57. Stripe checkout / Amazon SES transactional / Clerk auth (M2M JWT) stubs where appropriate
 58. Calendly / Cal.com inline booking when applicable
 59. Google Maps embed via Maps Embed API, lazy-loaded
 60. Live chat (Crisp / Plain) only when support is stated goal. **Cmd+K opens AI chat or command palette AND focuses text input same frame** — `autofocus` + `requestAnimationFrame(() => inputRef.current?.focus({preventScroll:true}))` after open-state flip, re-press = re-focus + `select()`, Esc returns focus to trigger. Playwright build gate: `await page.keyboard.press('Meta+K'); await expect(input).toBeFocused();`
@@ -153,7 +153,7 @@ One-line prompt → satisfy all 100 build-breaking rules across 10 categories be
 99. Browser console: zero errors, zero CSP violations, zero failed resources
 100. DONE = deployed at real URL + every Hard Gate green + Self-Verify per route + announced
 
-Anything less than all 100 — plus always-on rules 111-118 (§12) — is in-progress.
+Anything less than all 100 — plus always-on rules 111-119 (§12) — is in-progress.
 
 ## 11. Source-Site Enhancement (101-110 — fires when prompt names existing domain)
 
@@ -187,7 +187,7 @@ Anything less than all 100 — plus always-on rules 111-118 (§12) — is in-pro
 
 110. **Monitor-fire on first tool-call message** — rebuild prompt is multi-faceted (≥7 independent work units: crawl → classify → org-type-infer → demographic-i18n → jewel-content-author → IA-normalize → Squarespace-dedupe → deploy-verify). Sequential = build fail. See `rules/source-site-enhancement.md` § Parallel-agent playbook.
 
-## 12. Current-Platform Motion + Asset Discipline (111-118 — always on, every build)
+## 12. Current-Platform Motion + Asset Discipline (111-119 — always on, every build)
 
 111. **Scroll-driven animation = progressive enhancement** — `animation-timeline: view()` / `scroll()` ONLY inside `@supports (animation-timeline: view())`. Firefox: unsupported as of late 2026 — verify at caniuse before relying. Never animation-only state.
 112. **JS fallback auto-disables when CSS wins** — IntersectionObserver reveal runs only where native support is absent: `if (!CSS.supports('animation-timeline: view()')) observe(...)`. Double-driving one element = double motion = fail.
@@ -197,3 +197,5 @@ Anything less than all 100 — plus always-on rules 111-118 (§12) — is in-pro
 116. **Bento asymmetry recipe** — auto-fill `minmax()` grid + 1-2 span-2 anchor cards + accent wash on the anchors. A uniform card wall is slop (extends rule 9's anti-centered-stack mandate).
 117. **Kinetic gradient type** — `background-clip: text` + `background-size: 200%` (or larger) + slow `background-position` pan; gate on `prefers-reduced-motion: no-preference`.
 118. **Immutable assets MUST be content-versioned** — any `Cache-Control: immutable` / 1yr asset ships as hashed filename or `?v=<version>` bumped on EVERY change, INCLUDING any `_headers` Early-Hints preload of the same URL (CF 103 Early Hints cache also lags a deploy briefly). Reference incident (claude.megabyte.space, 2026-10-04): a stylesheet served `immutable, max-age=1yr` on an UNVERSIONED URL left returning visitors on stale CSS indefinitely.
+
+119. **Web-platform capability catalog = the super-boost layer** — on EVERY build, scan `rules/web-platform-capabilities.md` (30 capabilities, copy-paste examples + a situation→capability trigger table) and opportunistically deploy every one whose trigger matches, each as progressive enhancement with its fallback. Beyond the items already mandated above (View Transitions #15/#45, Speculation Rules #18, `fetchpriority` #64, `text-wrap` #6, `color-mix` #5, LoAF #70, passkeys #79, manifest #21-23), that means reaching for: **#2 Popover + #15 CSS Anchor Positioning + #16 Invoker Commands** (tooltips/menus/dialogs, no JS libs), **#3 native `<dialog>`** (auto-inert modals), **#5 Navigation API** (SPA routing), **#6 container/style queries + #7 `:has()` + #12 subgrid** (context-driven layout), **#18 `field-sizing`** (auto-grow form inputs), **#19 `<details name>`** (exclusive FAQ accordions), **#20 `hidden=until-found`** (findable collapsed content), **#22 async Clipboard + #21 Web Share**, and **#27 on-device AI** (→ Workers AI fallback). Chromium-only items stay non-load-bearing; never regress INP/LCP/CLS or a11y.

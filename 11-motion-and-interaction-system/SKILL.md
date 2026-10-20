@@ -147,4 +147,16 @@ Audit gate: Playwright cycles each interactive through 4 states → diff ≥3px 
 - ❌ Animations that block input (INP >100ms)
 - ❌ Easter eggs on critical conversion paths
 
+## Web-platform capabilities (super-boost catalog)
+
+This skill owns the motion contracts above; the full opportunistic browser-API set lives in `rules/web-platform-capabilities.md` (copy-paste examples + a trigger table). On every animated surface also reach for:
+
+- **#1 same-doc View Transitions** + **#17 scroll-driven** (`animation-timeline`) — detailed above; the catalog adds the `@supports` + visible-default fallback boilerplate so Firefox never hides content.
+- **#8 `@property`** — register `<angle>`/`<color>`/`<length>` custom props so gradients, conic rings, and hover sweeps actually animate (Tier-3 cinematic, zero JS).
+- **#23 IntersectionObserver** — use for animation *logic* (lazy-init, count-up triggers); prefer #17 for pure-visual reveals so nothing touches the main thread.
+- **Scroll-TRIGGERED `animation-trigger`** (Chrome 146-only) — declarative alternative to IO for firing a time-based animation at a scroll boundary; mandatory `@supports` fallback, opportunistic only.
+- **LoAF + web-vitals attribution** (build/QA) — so a janky animation names its own culprit script (`sourceURL`). See the catalog's Build/QA section.
+
+All gated by `prefers-reduced-motion` (above) and fallback-guarded — opportunistic ≠ reckless.
+
 ## See submodules: view-transitions.md, scroll-driven.md, micro-interactions.md, reduced-motion.md, build-breaking-rules.md.
