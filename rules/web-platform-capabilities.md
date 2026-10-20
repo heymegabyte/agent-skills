@@ -288,6 +288,8 @@ Native single-open FAQ accordion, no JS, and `FAQPage` JSON-LD-friendly.
 <details name="faq"><summary>Q2</summary>…</details>  <!-- opening one closes the others -->
 ```
 
+Fallback: none needed — Baseline Widely; an unknown `name` degrades to independent (non-exclusive) accordions.
+
 ### 20. `hidden=until-found` + `content-visibility:auto` — ◾ mixed
 
 Collapsed content stays Ctrl-F findable + deep-linkable; skip offscreen rendering for big scroll perf.
@@ -319,6 +321,8 @@ One-tap copy on code blocks, coupons, referral/share links (rich `write()` too).
 await navigator.clipboard.writeText(code);   // then show a "Copied ✓" micro-toast (0.333s)
 ```
 
+Fallback: none needed — Baseline; `document.execCommand('copy')` only for pre-2020 engines.
+
 ### 23. Intersection / Resize Observers — ◾ Baseline
 
 Reveal-on-scroll, lazy sections, container-aware widgets WITHOUT scroll/resize listeners (protects INP).
@@ -328,7 +332,7 @@ new IntersectionObserver((es) => es.forEach(e => e.isIntersecting && e.target.cl
   { rootMargin: '0px 0px -10% 0px' }).observe(el);
 ```
 
-Prefer #17 scroll-driven animations for pure-visual reveals; use observers for logic (lazy-init, counters).
+Prefer #17 scroll-driven animations for pure-visual reveals; use observers for logic (lazy-init, counters). Fallback: none needed — Baseline Widely.
 
 ### 24. WebAuthn / passkeys + Credential Management conditional UI — ◾ broad
 

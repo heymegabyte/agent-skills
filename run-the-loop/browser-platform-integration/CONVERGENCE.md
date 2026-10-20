@@ -45,14 +45,16 @@ a trigger, AND (c) an always-loaded surface points at the catalog so it is reach
       catalog (super-boost by default, detail stays in catalog for token economy); skill 16 §12 rule 119 already enforces it on site builds
 - [x] P9 Verify (tick 7) — catalog has exactly **30** numbered entries (#1…#30); **22 files** reference `web-platform-capabilities`
       (the catalog + `always.md` + 12 skills + 8 rules); every capability wired into ≥1 relevant skill; `[[web-platform-capabilities]]` resolves; markdownlint-cli2 clean on all touched files across ticks 1-7
-- [ ] P10 Convergence review — 2 independent read-throughs: every item has a trigger + example reachable from its wire-in target; no dead pointers; AVOID items carry the warning
+- [~] P10 Convergence review — **pass 1 done (tick 8, independent subagent): VERDICT PASS.** 2 minor findings, BOTH FIXED same tick:
+      (a) #19/#22/#23 (Baseline-Widely items in the Tier-2 band) now carry explicit "no guard needed — Baseline" fallback notes;
+      (b) skill 16 rule 119 cross-refs disambiguated (skill-16 "rule N" vs catalog "#N"). Pass 2 (must be clean, zero new findings) pending → then STOP.
 
 ## Next actions (do the TOP item; keep increments bounded, one batch per tick)
 
-1. **P10 — convergence review (pass 1 of 2).** Independent read-through of the catalog + every wire-in target: confirm each of the 30
-   has a concrete trigger + a copy-paste example reachable, each Tier-2/3 item states its `@supports`/feature-detect fallback, Chromium-only
-   items are non-load-bearing, the two AVOID items carry the warning, and no `[[web-platform-capabilities]]` pointer is dead. Fix any gap found.
-2. P10 pass 2 — second independent read-through must be clean (zero new findings) → then STOP and report convergence.
+1. **P10 — convergence review (pass 2 of 2, FINAL).** Spawn a SECOND independent reviewer (fresh context) over the catalog + wire-in
+   targets with the same rubric PLUS confirmation that pass-1's two fixes landed (#19/#22/#23 fallback notes; skill-16 rule-119 disambiguation).
+   Must return VERDICT PASS with ZERO new findings. If clean → mark P10 done, loop CONVERGED → report + `CronDelete ec398e1c`.
+   If any new finding → fix it this tick and require another clean pass (two consecutive clean passes is the gate).
 
 ## Tick log
 
@@ -79,3 +81,6 @@ a trigger, AND (c) an always-loaded surface points at the catalog so it is reach
 - **Tick 7 (2026-10-20):** P8 + P9. P8: one scoped super-boost line added to `rules/always.md` (every build scans the catalog; detail
   stays in-catalog for token economy). P9 verify: catalog = exactly 30 entries (#1…#30); 22 files reference `web-platform-capabilities`
   (catalog + `always.md` + 12 skills + 8 rules); every capability wired ≥1×; link resolves; markdownlint clean. Committed scoped. Next: P10 review (2 passes).
+- **Tick 8 (2026-10-20):** P10 pass 1 — independent subagent review (fresh context, adversarial rubric) → **VERDICT PASS**. 2 minor findings
+  fixed same tick: (a) added "no guard needed — Baseline" fallback notes to catalog #19/#22/#23; (b) disambiguated skill-16 rule-119
+  cross-refs (its own "rule N" vs catalog "#N"). markdownlint clean. Committed scoped. Next: P10 pass 2 (must be clean) → converge.
