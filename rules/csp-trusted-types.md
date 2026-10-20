@@ -99,3 +99,4 @@ Audit every use before enforcing. Run `grep -rn 'innerHTML\|outerHTML\|insertAdj
 - ``auto-meta-work`` — analytics-specific connect-src entries (PostHog, GA4)
 - `[[verification-loop]]` — browser console CSP violation = build fail
 - `[[hono-api]]` — Hono middleware chain order; CSP goes first
+- `[[web-platform-capabilities]]` — #14 (Trusted Types + Reporting API, both Baseline 2026); this rule is the full implementation the catalog points to

@@ -130,6 +130,13 @@ Each: 100–300 word brief, ≤200 word summary back. Per `rules/agent-selection
 - For SPA per-route CWV: web-vitals v4+ with `softNavs:true`
 - Target ≤100ms cinematic; ≤200ms = fail per `_kernel/standards.md#cwv`
 
+## Web-platform capabilities (the QA layer should adopt)
+
+Per `[[web-platform-capabilities]]` (super-boost catalog) Build/QA section:
+
+- **LoAF + `web-vitals/attribution`** (above) names the culprit `sourceURL` behind a slow INP — wire into RUM + the performance-profiler agent; degrade to `longtask` off-Chromium.
+- **Playwright a11y matrix** — run axe under `forced-colors: active`, `prefers-reduced-motion: reduce`, and dark mode across the 6 breakpoints so #13 regressions (High-Contrast, reduced-motion) fail CI, not users.
+
 ## Console-error gate
 
 After every deploy: browser console must show 0 CSP violations, 0 JS errors, 0 failed resources. Fixed by `rules/verification-loop.md` console-error gate.

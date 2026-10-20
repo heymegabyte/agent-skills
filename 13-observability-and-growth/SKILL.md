@@ -119,4 +119,11 @@ CRO: sticky CTA bar on mobile · scroll-progress bar (subtle) · exit-intent mod
 
 Sentry → Inngest pipeline: (1) Sentry webhook on `event.alert.triggered` → (2) Inngest dispatches `incident-responder` agent → (3) agent reads event, traces to source file, proposes fix, opens PR via gh MCP → (4) PR auto-merges if all CI gates pass per `rules/ai-seniority.md`.
 
+## Web-platform capabilities (growth + obs)
+
+Per `[[web-platform-capabilities]]` (super-boost catalog):
+
+- **#21 Web Share API** (`navigator.share`) for one-tap share on blog/product/referral surfaces (CRO/virality) → clipboard-copy fallback (#22); **Web Share Target** lets an installed PWA receive shares.
+- **#14 Reporting API** — point `report-to` at a Worker to collect CSP/Trusted-Types + deprecation/crash reports from real traffic into PostHog (pairs with `[[csp-trusted-types]]` § violation triage).
+
 ## See submodules: posthog, ga4-gtm, sentry, stripe-billing, square-payments, listmonk, plg-framework, programmatic-seo, incident-remediation, geo-ai-search, local-conversions.

@@ -27,6 +27,15 @@ triggers:
 - SPA per-route CWV: **Soft Navigations API** (`softNavs:true`, web-vitals v6 — since v4)
 - **Static-asset caching on CF Workers (`_headers`): cache-busted files need an EXPLICIT `immutable` rule, and a hardcoded preload `?v=` rots.** (1) Each `?v=`-busted file (`styles.css`, `app.js`) needs its OWN `/path` → `Cache-Control: public, max-age=31536000, immutable` line — the ASSETS default is `max-age=0, must-revalidate`, so a MISSING rule silently re-validates it every visit (add the rule when you externalize a file — `app.js` was re-validated for weeks because only `styles.css` had one). Icons/manifest/sitemap get a moderate `max-age` (604800 / 86400). (2) A `Link: </styles.css?v=X>; rel=preload` with a hardcoded `X` DRIFTS the moment you bump the CSS `?v=` → the browser preloads the WRONG url (double-fetch, zero benefit). DERIVE the preload `?v=` from the HTML at build (same hardcoded-value-rot class as the sitemap lastmod — `[[verify-against-source-of-truth]]`). (3) **CF Early Hints caches the `Link` header SEPARATELY** — after a `_headers` change the OLD preload lingers as a 2nd `Link` from the Early-Hints cache until a few requests re-cache it; verify with REPEATED fetches, not one. E2E-guard: cache-busted asset is `immutable`, icons are cached, and every preload `?v=` equals the served CSS version. Ref: agent.megabyte.space 2026-10-07.
 
+## Web-platform capabilities (perf levers)
+
+Per `[[web-platform-capabilities]]` (super-boost catalog), the cheapest perf wins ship by default:
+
+- **#4 `fetchpriority="high"`** on the LCP image + its `<link rel=preload>`; `fetchpriority="low"` on offscreen/below-fold assets (Google Flights LCP 2.6s→1.9s). Zero-risk — ignored if unknown.
+- **#20 `content-visibility: auto`** (+ `contain-intrinsic-size` to avoid scrollbar jump) skips rendering offscreen sections; `hidden=until-found` keeps collapsed content Ctrl-F-findable + deep-linkable.
+- **#23 Intersection/Resize Observers** replace scroll/resize listeners (protect INP — never read layout on the scroll event).
+- **LoAF + `web-vitals` v4 attribution** names the exact culprit script behind a slow INP (see `[[07-quality-and-verification]]` § INP debugging + the catalog Build/QA section).
+
 ## Budgets
 
 - JS ≤ 200KB gz total/route; no single chunk > 250KB gz (code-split React.lazy + manualChunks)
