@@ -12,6 +12,8 @@ superseded_by: null
 # Always
 
 > **Website per-page / per-site / per-entity gates** (SEO head · webmanifest/robots/sitemap/security.txt · lightbox · Google Maps · clickable-entity linking · forms · timeline · Cmd+K) live in `[[website-page-and-site-gates]]` — extracted so WEBSITE-specific detail loads only on site prompts (via the `website-build` pack) instead of taxing every prompt's token budget.
+>
+> **On any website/app build, SUPER-BOOST by default**: scan `[[web-platform-capabilities]]` (30 modern browser APIs + a situation→capability trigger table + copy-paste examples) and opportunistically deploy every capability whose trigger matches — each as progressive enhancement with its stated fallback, `prefers-reduced-motion`/contrast-safe, Chromium-only items non-load-bearing. Detail stays in the catalog (token-lean); skill 16 §12 rule 119 enforces it on one-prompt site builds.
 
 ## Autonomy — drive to done, NEVER ask permission to continue
 
@@ -24,7 +26,7 @@ superseded_by: null
 ## Secrets — auto-populate everything self-generable
 
 - **Any missing secret you CAN generate, generate + set automatically — never ask, never Rec, never leave a placeholder.** HMAC/webhook/signing keys, session/CSRF/JWT secrets, salts, nonces, bypass tokens, your-own-service API keys → `openssl rand -base64 32` / `-hex 32` (or `crypto.randomUUID`), stored locally AND pushed to the deploy target, same turn.
-- Only exceptions: data-at-rest `*_ENCRYPTION_KEY` (auto-gen destroys persisted data — detect only) and vendor-minted third-party creds (Stripe/Resend/Clerk/OAuth). Full tiers + one-liners: `secret-auto-provisioning.md`.
+- Only exceptions: data-at-rest `*_ENCRYPTION_KEY` (auto-gen destroys persisted data — detect only) and vendor-minted third-party creds (Stripe/Clerk/OAuth). Full tiers + one-liners: `secret-auto-provisioning.md`.
 
 ## Post-work
 

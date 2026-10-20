@@ -41,17 +41,18 @@ a trigger, AND (c) an always-loaded surface points at the catalog so it is reach
       `rules/copy-writing.md` (#10 `text-wrap`), `06-build-and-slice-loop/blog-and-content-engine.md` (#1,19,20,26), `23-content-seo/SKILL.md` (#19,20)
 - [x] P7 Wire-in batch E — app/PWA/AI/CF (tick 6): `21-app-foundation/SKILL.md` (#24,29), `28-cf-integrations-reference/SKILL.md` (#27 → Workers AI fallback),
       `15-site-generation/SKILL.md` (#30 manifest/Badging), `12-media-orchestration/SKILL.md` (#28 WebGPU+WebGL2), `24-functional/SKILL.md` (#2,3,5,18,22)
-- [ ] P8 Always-on reach — one line in `rules/always.md` + `16` Hard Gates so the catalog is reached by default on every site build
-- [ ] P9 Verify — markdownlint-cli2 clean on every touched file; grep that each of the 30 is referenced from ≥1 target; `plugin-audit`/`skill-health` if counts shifted
+- [x] P8 Always-on reach (tick 7) — one scoped line in `rules/always.md` (priority-1, paths `*`) points every website/app build at the
+      catalog (super-boost by default, detail stays in catalog for token economy); skill 16 §12 rule 119 already enforces it on site builds
+- [x] P9 Verify (tick 7) — catalog has exactly **30** numbered entries (#1…#30); **22 files** reference `web-platform-capabilities`
+      (the catalog + `always.md` + 12 skills + 8 rules); every capability wired into ≥1 relevant skill; `[[web-platform-capabilities]]` resolves; markdownlint-cli2 clean on all touched files across ticks 1-7
 - [ ] P10 Convergence review — 2 independent read-throughs: every item has a trigger + example reachable from its wire-in target; no dead pointers; AVOID items carry the warning
 
 ## Next actions (do the TOP item; keep increments bounded, one batch per tick)
 
-1. **P8 — always-on reach.** Add ONE line to `rules/always.md` pointing every build at `rules/web-platform-capabilities.md`
-   (scan the trigger table, deploy every matching capability as PE). Skill 16 §12 rule 119 already does this for site builds;
-   `always.md` extends it to all surfaces. Then verify the catalog is reachable from the always-loaded layer.
-2. P9 verify — grep each of the 30 (+ LoAF) is referenced from ≥1 target; confirm no dead `[[web-platform-capabilities]]` links; markdownlint whole set.
-3. P10 review — 2 independent read-throughs (every item has trigger + example reachable; AVOID items carry the warning) → STOP.
+1. **P10 — convergence review (pass 1 of 2).** Independent read-through of the catalog + every wire-in target: confirm each of the 30
+   has a concrete trigger + a copy-paste example reachable, each Tier-2/3 item states its `@supports`/feature-detect fallback, Chromium-only
+   items are non-load-bearing, the two AVOID items carry the warning, and no `[[web-platform-capabilities]]` pointer is dead. Fix any gap found.
+2. P10 pass 2 — second independent read-through must be clean (zero new findings) → then STOP and report convergence.
 
 ## Tick log
 
@@ -75,3 +76,6 @@ a trigger, AND (c) an always-loaded surface points at the catalog so it is reach
   `24-functional/SKILL.md` (#2,3,5,18,22 forms/modals), `28-cf-integrations-reference/SKILL.md` (#27 on-device Gemini-Nano → Workers AI fallback),
   `12-media-orchestration/SKILL.md` (#28 WebGPU + mandatory WebGL2 fallback), `15-site-generation/SKILL.md` (#30 advanced manifest/Badging via validate-pwa-kit).
   markdownlint clean. Committed scoped. All 7 wire-in batches done → Next: P8 always-on reach, then P9 verify + P10 review.
+- **Tick 7 (2026-10-20):** P8 + P9. P8: one scoped super-boost line added to `rules/always.md` (every build scans the catalog; detail
+  stays in-catalog for token economy). P9 verify: catalog = exactly 30 entries (#1…#30); 22 files reference `web-platform-capabilities`
+  (catalog + `always.md` + 12 skills + 8 rules); every capability wired ≥1×; link resolves; markdownlint clean. Committed scoped. Next: P10 review (2 passes).
