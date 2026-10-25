@@ -89,6 +89,20 @@ superseded_by: null
   View Transitions (0 KB) over JS. No animation-for-its-own-sake.
 - **Every state designed:** empty states orient + offer one easy next action; errors
   give cause + ID + Retry/Learn-more; distinguish loading / empty / unauth / 5xx.
+- **An auto-retry / self-heal MASKS the missing error state — when retries are exhausted
+  the failure goes SILENT unless a TERMINAL user-facing state catches it.** Transparent
+  retry (reload the resource, re-fetch, reconnect) is great UX — but it tricks you into
+  thinking the error is "handled" when you've only DEFERRED a silent dead-stop: the Nth
+  failure returns quietly and the surface just freezes (a stuck player, a spinner that
+  never resolves, a blank panel) with no message + no way out. Every retry needs a
+  terminal branch: on exhaustion, surface the error (cause + recovery) AND take an
+  auto-recovery action that keeps the flow alive (skip the broken item, serve stale, fall
+  back) — with a consecutive-failure CAP so a real outage stops cleanly ("check your
+  connection") instead of racing the whole list, and reset the streak on the next success.
+  Ref: bz.rocks 2026-10-25 — the audio engine self-healed ONE transient retry (CF
+  cold-start 503) but a persistently-broken track then dead-stopped the player silently;
+  added `onTrackError` → toast + auto-skip (nextTrack), 3-failure cap → "check your
+  connection" + pause, reset on `playing`. Cross-links `[[error-recovery]]`, `[[embarrassingly-easy-to-use]]`.
 - **Keyboard-first:** ⌘K palette; arrows navigate; focus discipline.
 - **AI-native:** stream tokens, optimistic echo, skeleton before first token, render
   answers as widgets not walls of text — and make those widgets ACTIONABLE: wire a
