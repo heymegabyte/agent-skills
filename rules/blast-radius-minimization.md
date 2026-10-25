@@ -92,6 +92,41 @@ Deploy 3 (optional cleanup): DROP old column AFTER 30 days of zero reads.
 
 See `reference/blast-radius-minimization.md` for the correct and incorrect SQL patterns.
 
+## Destructive-capability fixes: independent adversarial review before merge
+
+<!-- grow-ok: +34 lines captures the fire-773 asymmetric-data-loss incident (projectsites.dev editor) as a durable rule + reference incident — a new failure class, not restated content. -->
+
+A fix for a COMPLETENESS bug can introduce a DESTRUCTIVE regression — the highest-blast-radius
+failure (silent data loss, not a crash). The classic trap: the **delete-set source ≠ the
+preserve-set source.** When a "commit all changes" / "sync" / "reconcile" fix computes what to
+DELETE from one view of the data and what to KEEP from a DIFFERENT view, any item present in the
+delete-view but absent from the preserve-view is silently destroyed.
+
+- **Any fix that ADDS a delete / overwrite / rename / force-reconcile against a CANONICAL store**
+  (git `main`, the production DB, the source-of-truth bucket) gets an INDEPENDENT adversarial review
+  BEFORE merge — a reviewer who did NOT write the fix, tasked to FIND the data-loss scenario (per
+  the `[[diversity-merge-gate]]` skill + the loop's §5 adversarial phase). The author's own tests
+  pass on the happy path; the destructive edge needs a skeptic.
+- **The two guards every delete-emitting fix needs:** (1) a **representability check** — only emit a
+  delete for an item the preserve-source could actually have carried (a text-only snapshot must NEVER
+  delete a binary it can't represent — preserve it via the base/unchanged set); (2) a **completeness
+  floor** — refuse an implausibly-large deletion (empty/partial input must never wipe the store) with
+  a typed error, never a silent mass-delete.
+- **Verify the guard LIVE, non-destructively** — prove the floor REFUSES a mass-delete on real data
+  (returns the typed reason, writes nothing), not just unit-locked.
+
+### Reference incident (projectsites.dev editor, fire-773, 2026-10-25)
+
+A fix made "Commit & Save" commit DELETIONS (the prior code never emitted a `removed` entry — dead
+code — so a file deleted in the working tree was silently never committed: a completeness bug). But
+it read the FULL base tree (incl. binaries) as the delete candidates while the client posted a
+TEXT-ONLY snapshot as the preserve set — so ONE "Save" click would have `sha:null`-deleted every
+binary asset (logo/favicon/og/fonts) from git `main`. The INDEPENDENT adversarial reviewer (not the
+author) caught it and BLOCKED the deploy; the fix-forward added `isTextRepresentablePath` (binaries
+preserved via `base_tree`) + an `unsafe_delete_ratio` floor, both live-proven (`{committed:false,
+reason:'unsafe_delete_ratio'}` refused a 100% mass-delete on prod). Completeness-fix → destructive
+regression → caught by the gate → guarded. This is WHY the adversarial gate exists.
+
 ## Rollback-first deployment culture
 
 - Every deploy must have a rollback answer BEFORE it ships.
@@ -109,6 +144,7 @@ See `reference/blast-radius-minimization.md` for the `pre-deploy-check.sh` scrip
 - Sharing mutable state across tenants in a DO (one corrupted state = everyone's state).
 - "We'll rollback by reverting the commit" — code revert ≠ schema revert; test `wrangler rollback` before you need it.
 - Skipping the 5-minute thought experiment because the change "feels small."
+- Merging a fix that ADDS a delete/overwrite to a canonical store on the author's own green tests, with NO independent adversarial review for the asymmetric-data-loss class (delete-set source ≠ preserve-set source).
 
 ## Cross-links
 
