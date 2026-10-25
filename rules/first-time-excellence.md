@@ -91,7 +91,11 @@ superseded_by: null
   give cause + ID + Retry/Learn-more; distinguish loading / empty / unauth / 5xx.
 - **Keyboard-first:** ⌘K palette; arrows navigate; focus discipline.
 - **AI-native:** stream tokens, optimistic echo, skeleton before first token, render
-  answers as widgets not walls of text; per-feature kill-switch.
+  answers as widgets not walls of text — and make those widgets ACTIONABLE: wire a
+  result card to the real in-app action (play / open / apply / add) IN-CONTEXT via
+  the host-command bridge, so the user stays in the conversation (recommends → tap →
+  it happens), never a link that navigates away. Keep a modifier/middle-click escape
+  that still opens the full page. Per-feature kill-switch.
 - **Perf + a11y as craft:** INP ≤200ms (target <150 mobile), tabular-nums to kill
   shift; global `prefers-reduced-motion` (reduce, don't strip); box-shadow focus rings
   that respect radius; `@media (hover:hover)`; 16px+ inputs; icon-only → `aria-label`.
