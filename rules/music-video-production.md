@@ -30,7 +30,36 @@ Brian should never have to re-request any of them. SSOT for bz.rocks specifics:
   too rapidly." It was *good* but too fast. Fix = min-hold-in-seconds (≈ halved the cut count,
   ~3s holds) + rapid only at the climax — re-stitched from the cache for $0.
 
-## 2. Creative floor — hyper-real · action · beauty · cars · many angles
+## 2. Story PLOT that tracks the lyric's MEANING (MANDATORY — not a shot-reel)
+
+- Every music video is a SHORT FILM with an actual PLOT — causal architecture
+  (setup → escalation → turn → cost → payoff) that tracks the LYRIC'S MEANING —
+  NOT a sequence of gorgeous hyper-real shots strung to the beat. The craft serves
+  the story; the story is the spine.
+- MINE THE FULL LYRIC for plot, not just a hook image. Every distinct lyric idea is
+  a candidate beat: who the characters are + what they're leaving (stakes/backstory),
+  the forces at work (who gives the order and why — the system/the machine), the turn,
+  the cost, the resolution. Build the arc from the song's own narrative + themes.
+- Give PLOT ARCHITECTURE: bookend setups that pay off (what they leave ↔ what they
+  reclaim; the machine set up ↔ toppled), interior character arcs (goal + need +
+  contradiction, not just actions), and a theme that DEEPENS as the plot advances.
+- A beautiful montage with no plot UNDER-DELIVERS even when every frame is hyper-real.
+  The FIRST pass must already carry the plot — "add more plot" as a re-prompt means the
+  first pass shipped a shot-reel, not a film. Predict the fuller plot from the 20%.
+- Author it the CINEMA MIND way (the **video-plot-architecture** + **video-screenwriter**
+  skills): a validated causal ProductionManifest (scenes with because/therefore links,
+  setup/payoffs, state transitions) BEFORE any spend — the plot is proven on paper, then shot.
+- Reference incident: bz.rocks "The Last Soldier Refused" 2026-10-25 — a clean 7-beat spine
+  (order → refuse → ripple → home) was gorgeous but thin; Brian: "make it have more of a
+  story plot that coincides with the lyrics meaning." Enriched to 10 scenes mining the full
+  lyric — the futures the boys leave ("born with a future then forced to choose"), the crooked
+  command chain ("commands crack through a crooked connection"), the war machine's power
+  vanishing when the soldiers withdraw ("generals grieving for power that vanished when people
+  stopped believing… a war needs soldiers and the soldiers withdrew"), the east-west global
+  ripple, the enemy's children ("can't make his children inherit our debt") — real plot
+  architecture tracking the song's deeper meaning, inside the same hyper-real film.
+
+## 3. Creative floor — hyper-real · action · beauty · cars · many angles
 
 - **Hyper-realistic always** — indistinguishable from real live-action (never CGI/game-render).
 - **Action-forward** — the film leans heavily on ACTION, not a pretty mood montage. Something
@@ -43,7 +72,7 @@ Brian should never have to re-request any of them. SSOT for bz.rocks specifics:
   low-angle hero, aerial/drone, macro insert, tracking, orbit, dutch, POV). No two adjacent shots
   share a setup. Beauty of image is a per-shot requirement.
 
-## 3. Engagement-driving — built to make the audience comment + share
+## 4. Engagement-driving — built to make the audience comment + share
 
 - Design specific **comment-bait moments**: a jaw-drop hero beat, a "rewind that" micro-detail, an
   Easter egg, a visual question the comments will debate, a satisfying payoff that begs a reaction.
@@ -51,7 +80,7 @@ Brian should never have to re-request any of them. SSOT for bz.rocks specifics:
 - Every video should give the community (YouTube/IG/TikTok comments, fan pages) something to talk
   about — not just be watched, but provoke a response.
 
-## 4. Cheaper + higher quality (model economy)
+## 5. Cheaper + higher quality (model economy)
 
 - **Default to the BEST model for the look** (Seedance 2.5 for most shots). Use a cheaper model
   (MiniMax) ONLY for genuinely low-value shots that won't benefit from a better model — which should
@@ -65,7 +94,7 @@ Brian should never have to re-request any of them. SSOT for bz.rocks specifics:
   durations, reference-conditioning to cut retto-retries, beat-aligned shot lengths (no wasted
   footage), generate a reusable shot POOL and intercut it to the beat rather than one-clip-per-cut.
 
-## 5. Model policy (as verified 2026-10-24)
+## 6. Model policy (as verified 2026-10-24)
 
 - **Seedance 2.5** (`bytedance/seedance-2.5/*` via Fal) = default high-quality rail — unmatched epic
   scale/crowds/atmosphere; 4–30s; 720p native (1080p via draft→complete). SLOW (~7min/clip), strict
