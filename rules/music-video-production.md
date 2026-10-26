@@ -110,7 +110,7 @@ Brian should never have to re-request any of them. SSOT for bz.rocks specifics:
   durations, reference-conditioning to cut retto-retries, beat-aligned shot lengths (no wasted
   footage), generate a reusable shot POOL and intercut it to the beat rather than one-clip-per-cut.
 
-## 6. Model policy (as verified 2026-10-24)
+## 6. Model policy — Veo BANNED · Seedance 2.5 default · OpenMontage to adopt (updated 2026-10-25)
 
 - **Native MiniMax token-plan EXHAUSTED mid-film → run the SAME Hailuo-02 model via Fal, never switch models.** When the native `api.minimax.io` subscription hits its token/credit cap (status `2056`) partway through a render, the fix that PRESERVES the recurring lead's face is to generate the remaining clips with the SAME model on a different billing rail — `fal-ai/minimax/hailuo-02/pro/text-to-video` (1080p, 6s) via Fal (`FAL_ADMIN_API_KEY`) — NOT Veo/Seedance, which would visibly drift the lead mid-film. Because clip generation is resumable (cached clips are skipped), the mix is per-CLIP but the MODEL is uniform, so the lead stays consistent across native+Fal clips. Reference: bz.rocks "The Last Soldier Refused" 2026-10-25 — native MiniMax ran out at clip 22/50; added a `MINIMAX_FAL=1` mode to `scripts/veo-film.mjs` (same Hailuo-02 via Fal) and resumed from cache for the remaining 28. The general principle: **when a rail runs dry mid-film, change the RAIL, not the MODEL.**
 
@@ -123,11 +123,26 @@ Brian should never have to re-request any of them. SSOT for bz.rocks specifics:
 - **MiniMax Hailuo-02** (native, Brian's subscription key) = cap-compliant ($0.25/s) default when
   Seedance's cost/speed/strictness don't fit, and the ONLY safe rail for explicit dragon/gore;
   1080p native, fast, permissive.
-- **Veo 3.1** (via Fal) = premium alt (8s, over the $0.25/s cap) for a signature shot.
+- **Veo — DO NOT USE (Brian directive 2026-10-25).** Never generate ANY shot with Veo (3.1 or any
+  version), on Fal or Gemini — it is off the menu entirely, not merely over the $0.25/s cap. The quality
+  rail is **Seedance 2.5**; the cap-compliant/permissive rail is **MiniMax Hailuo**. The `scripts/veo-film.mjs`
+  NAME is legacy — invoke it with `SEEDANCE=1` (or `MINIMAX=1`), **never its Veo default**; treat any
+  remaining Veo code path as vestigial (prefer removing it over calling it). This supersedes the old
+  "Veo = premium alt for a signature shot" line.
+- **OpenMontage = the preferred agentic video-production SYSTEM to adopt** (`github.com/calesthio/OpenMontage`,
+  AGPL-3.0, released 2026-06). It turns Claude Code itself into a full studio — 12 pipelines, 52 tools,
+  500+ skills — driven by human-readable YAML manifests + Markdown skills, running LOCAL (Python/Node/FFmpeg)
+  with local models (WAN/Hunyuan/LTX/CogVideo) OR paid cloud (FLUX/Kling/Runway/Suno/ElevenLabs), ~$0.15–$3/video.
+  **NOT set up here yet** — Brian's "ideally if it's set up" (2026-10-25); ADOPTING it is the direction
+  (`git clone … && make setup`, evaluate via [[foss-absorption]]). Until it's installed, **Seedance 2.5 via
+  Fal is the usable default** — not Veo. AGPL is fine for our LOCAL/internal production use (we don't
+  distribute it as a network service) — see the [[foss-absorption]] license-gate + [[agpl-isolation-via-http-boundary]].
+  When adopted, prefer its manifest-driven pipeline + scored provider selection over the bespoke `veo-film.mjs`.
 
 ## Cross-links
 
 `[[project_music-video-pipeline]]` (bz.rocks SSOT: rails, keys, the dragon film) · CINEMA MIND
 **video-music** (beat grid) · **video-editing** (cut-on-beat) · **video-continuity**
-(reference conditioning = character consistency) · **video-model-router** (per-shot model) ·
-**video-producer** (cost) · `[[first-time-excellence]]` · `[[gorgeous-by-default]]`.
+(reference conditioning = character consistency) · **video-model-router** (per-shot model; Veo-banned,
+Seedance/OpenMontage-aware) · **video-producer** (cost) · `[[foss-absorption]]` (adopt OpenMontage) ·
+`[[first-time-excellence]]` · `[[gorgeous-by-default]]`.
