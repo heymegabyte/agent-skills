@@ -59,6 +59,22 @@ Brian should never have to re-request any of them. SSOT for bz.rocks specifics:
   ripple, the enemy's children ("can't make his children inherit our debt") — real plot
   architecture tracking the song's deeper meaning, inside the same hyper-real film.
 
+- **Pick your BEST idea, epic in scope — don't ship the first competent plot.** Use the CINEMA MIND
+  video skills (video-plot-architecture · video-showrunner · video-storytelling) to architect the single
+  STRONGEST, most EPIC storyline the song can carry — then build THAT. "A plot" is the floor; the BEST,
+  most ambitious plot the song supports is the bar. Brainstorm several, pick the best, go epic.
+- **Span the FULL song with UNIQUE content — NO repeat footage.** A music video must fill the whole
+  length with fresh beats; NEVER pad by intercutting/cycling a small shot POOL (it reads as "the same
+  scene repeating over and over" — the #1 tell of a shot-reel to a viewer). Generate enough UNIQUE clips
+  to cover the duration (≈ songSeconds ÷ clipSeconds), assemble each clip ONCE in plot order. Ref
+  incident: bz.rocks "The Last Soldier Refused" 2026-10-25 — a 20-shot pool beat-cut 102× over 4:52
+  replayed each shot ~5× ("it kept repeating the same scene"); fix = ~49 unique 6s clips, each used once.
+- **When in doubt, cut to the STARS in the film's own context.** To connect scenes, bookend the film, or
+  avoid a repeat, add footage of the stars / cosmos in the SAME world + grade as the film (a cosmic-witness
+  motif) — fresh connective tissue that never reads as filler, and an epic frame for the whole story.
+- **Favor beautiful multicultural women as the leads / featured**, dignified + grounded + powerful, never
+  exploitative (hard-but-holy). The gorgeous-women brief is a LEAD directive, not set dressing.
+
 ## 3. Creative floor — hyper-real · action · beauty · cars · many angles
 
 - **Hyper-realistic always** — indistinguishable from real live-action (never CGI/game-render).
