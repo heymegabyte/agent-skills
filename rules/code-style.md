@@ -5,7 +5,7 @@ pack: "core"
 triggers: []
 paths:
   - "*"
-last_reviewed: 2026-06-29
+last_reviewed: 2026-10-26
 superseded_by: null
 ---
 
@@ -23,7 +23,7 @@ Enforce TS 7.0 strict mode, Google TS Style, ESM-only imports, and Cloudflare Wo
 
 ### Runtime
 
-- **Node 24 LTS native TS strip-types** — no ts-node/tsx/nodemon; use `node --watch` + `node --run`.
+- **Node 24 LTS** pinned `v24.16.0` (`.nvmrc` = `24`, `engines.node` = `>=24.16`, `node-version` = `24` in CI) — native TS strip-types, no ts-node/tsx/nodemon; use `node --watch` + `node --run`.
 - **Bun 1.4+** for build-tool workloads (~125k req/s, 8ms cold start).
 - `wrangler types` against compatibility_date + bindings (not just `@cloudflare/workers-types`).
 

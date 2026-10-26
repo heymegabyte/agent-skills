@@ -6,7 +6,7 @@
  * Verify ~monthly (Chrome ships every 2 weeks since Sep 2026) via:
  *   curl -s 'https://chromiumdash.appspot.com/fetch_releases?channel=Stable&platform=Mac&num=1' | jq -r '.[0].version'
  *
- * Last updated: 2026-09-27 → Chrome 153.0.8010.x. iOS UA: Apple froze the OS token at
+ * Last updated: 2026-10-05 → Chrome 154.0.8037.x. iOS UA: Apple froze the OS token at
  * 18_6 since iOS 26 (fingerprint defense) — only Version/ tracks the real iOS (=27).
  */
 export const REAL_UA_DESKTOP =
