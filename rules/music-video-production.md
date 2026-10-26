@@ -112,6 +112,9 @@ Brian should never have to re-request any of them. SSOT for bz.rocks specifics:
 
 ## 6. Model policy (as verified 2026-10-24)
 
+- **Native MiniMax token-plan EXHAUSTED mid-film → run the SAME Hailuo-02 model via Fal, never switch models.** When the native `api.minimax.io` subscription hits its token/credit cap (status `2056`) partway through a render, the fix that PRESERVES the recurring lead's face is to generate the remaining clips with the SAME model on a different billing rail — `fal-ai/minimax/hailuo-02/pro/text-to-video` (1080p, 6s) via Fal (`FAL_ADMIN_API_KEY`) — NOT Veo/Seedance, which would visibly drift the lead mid-film. Because clip generation is resumable (cached clips are skipped), the mix is per-CLIP but the MODEL is uniform, so the lead stays consistent across native+Fal clips. Reference: bz.rocks "The Last Soldier Refused" 2026-10-25 — native MiniMax ran out at clip 22/50; added a `MINIMAX_FAL=1` mode to `scripts/veo-film.mjs` (same Hailuo-02 via Fal) and resumed from cache for the remaining 28. The general principle: **when a rail runs dry mid-film, change the RAIL, not the MODEL.**
+
+
 - **Seedance 2.5** (`bytedance/seedance-2.5/*` via Fal) = default high-quality rail — unmatched epic
   scale/crowds/atmosphere; 4–30s; 720p native (1080p via draft→complete). SLOW (~7min/clip), strict
   content checker, and **rejects dragons (copyright) + gore (content)** — design those shots
