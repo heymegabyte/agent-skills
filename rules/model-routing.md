@@ -77,6 +77,22 @@ Rules (enforce in agent frontmatter + settings):
 - Agent **and slash-command** frontmatter `model:` / `fallback_model:` use **aliases only**. A full ID (`claude-opus-4-8[1m]`) is provider-locked — invalid on native Anthropic (the `[1m]` suffix) and a wrong ID 404s → breaks the spawn. (Eval/judge model pins that call a model client directly may use the evergreen `claude-haiku-4-5` form — portable via DeepSeek's `claude-*` prefix-map — never a dated `-20251001` snapshot.)
 - Never hardcode a provider's model IDs in `settings.json` (the base, provider-agnostic layer — set `"model": "opus"`). Put provider specifics in `settings.local.json` (the DeepSeek override) or the shell env, so switching providers = swapping only that layer.
 - Secrets via `apiKeyHelper` (→ `get-secret DEEPSEEK_API_KEY`), never a hardcoded `ANTHROPIC_AUTH_TOKEN`/`ANTHROPIC_API_KEY` on disk. **Gotcha:** `apiKeyHelper` has LOWER precedence than those two env vars — a hardcoded token silently disables the helper (it "isn't used"), so REMOVE the token for the helper to take effect. `apiKeyHelper` DOES work with a custom `ANTHROPIC_BASE_URL` (its output is sent as `Authorization: Bearer`, which is what DeepSeek's endpoint expects).
+## DeepSeek rail — thinking mode needs the proxy
+
+DeepSeek's Anthropic-compatible endpoint returns `HTTP 400` on turn 2 of every tool-calling task
+when thinking is enabled: the endpoint requires the `thinking` block (with the `signature` it
+issued) to be replayed on later requests, and Claude Code's Anthropic<->OpenAI conversion drops it.
+The 400 message names `content[].thinking`, which hides that the real loss is the signature.
+
+Claude Code sends `thinking: {"type":"adaptive"}` on this rail, not `{"type":"enabled"}`, so the
+failure looks intermittent and does not reproduce with thinking off.
+
+Run Claude Code on DeepSeek through `bin/deepseek-proxy.sh` (proxy: `bin/deepseek-proxy/proxy.mjs`,
+zero-dependency, loopback only). It captures reasoning from the SSE stream and re-injects it. Do not
+add a bespoke per-session workaround. See `bin/deepseek-proxy/README.md` for the mechanism, the
+transport details that broke naive proxies (`accept-encoding: zstd`, upstream base path), and the
+in-memory cache boundary.
+
 - Current DeepSeek IDs (per DeepSeek's official Claude Code docs, Sep 2026): `deepseek-flash` / `deepseek-flash[1m]`. `deepseek-v4-flash` is undocumented ON THIS RAIL — prefer `deepseek-flash`. (The OpenCode/Zen rail below uses a DIFFERENT namespace where `deepseek-v4-*` IS canonical — never copy IDs across rails.)
 
 ## OpenCode harness — direct DeepSeek for local development
