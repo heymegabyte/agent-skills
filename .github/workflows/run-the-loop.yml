@@ -84,6 +84,18 @@ jobs:
           with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as file: file.write(summary)
           PY
           fi
+      - name: Append per-project cost rollup to the run summary
+        if: always()
+        shell: bash
+        run: |
+          export PATH="$HOME/.local/bin:$HOME/ai/tools/bin:$HOME/.volta/bin:$PATH"
+          test -f shared-fleet/control-plane/cost.py || exit 0
+          logs="$RUNNER_TEMP/cost-logs/${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          mkdir -p "$logs"
+          cp "$FLEET_OUTPUT/run.json" "$logs/run.json" 2>/dev/null || exit 0
+          printf '\n---\n\n' >> "$GITHUB_STEP_SUMMARY"
+          # cost.py prints the markdown rollup to STDERR + JSON to stdout — capture the markdown.
+          python3 shared-fleet/control-plane/cost.py --logs "$RUNNER_TEMP/cost-logs" 2>>"$GITHUB_STEP_SUMMARY" 1>/dev/null || true
       - name: Upload canonical GitHub run record
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
