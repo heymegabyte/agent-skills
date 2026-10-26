@@ -25,6 +25,7 @@ The complete Angular doctrine (fires when `stack-selector`/`frontend-stack` pick
 Build inside an **Nx monorepo running Angular 22** with **Angular CLI MCP**. Standalone only. Signals only. No NgModules.
 
 - **Angular 22** pinned `22.x` in `package.json` + `angular.json`. **Nx 23** wrapper (Angular-22 support landed Nx 23.1; Nx 22 can't build Ng22); `nx.json` at root; apps under `apps/`, libs under `libs/`.
+- **Node 24 LTS** pinned `v24.16.0` (`.nvmrc` = `24`, `engines.node` = `>=24.16`, `node-version` = `24` in CI) — Nx 23 + native TS executors require it; no ts-node/tsx/nodemon shims.
 - **Standalone components** ONLY (NgModules banned). `provideRouter` / `provideHttpClient` / `provideAnimationsAsync` in `app.config.ts`.
 - **Signals** (`signal`, `computed`, `effect`, `linkedSignal`, `resource`) for state. NO RxJS subjects for component state.
 - **Typed Reactive Forms** (`FormGroup<T>`, `FormControl<T>`) + **NGX Formly** for schema-driven forms, Zod-backed (`zod-to-json-schema`). No template-driven forms.
@@ -51,7 +52,7 @@ Build inside an **Nx monorepo running Angular 22** with **Angular CLI MCP**. Sta
 
 - ❌ NgModules · template-driven forms · RxJS subjects for component state (use signals)
 - ❌ Any UI kit other than Spartan + CDK + Floating UI · ngx-translate / Transloco (use `@angular/localize`)
-- ❌ ts-node / nodemon (Node 24 native TS + Nx executors) · Karma+Jasmine (Vitest) · Protractor (Playwright)
+- ❌ ts-node / nodemon (Node 24 LTS native TS + Nx executors) · Karma+Jasmine (Vitest) · Protractor (Playwright)
 - ❌ `[ngStyle]` / `[ngClass]` for static bindings · `[(ngModel)]` in Reactive-Forms context
 
 ## RxJS-First at Every Backend Edge
