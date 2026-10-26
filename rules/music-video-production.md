@@ -133,11 +133,14 @@ Brian should never have to re-request any of them. SSOT for bz.rocks specifics:
   AGPL-3.0, released 2026-06). It turns Claude Code itself into a full studio — 12 pipelines, 52 tools,
   500+ skills — driven by human-readable YAML manifests + Markdown skills, running LOCAL (Python/Node/FFmpeg)
   with local models (WAN/Hunyuan/LTX/CogVideo) OR paid cloud (FLUX/Kling/Runway/Suno/ElevenLabs), ~$0.15–$3/video.
-  **NOT set up here yet** — Brian's "ideally if it's set up" (2026-10-25); ADOPTING it is the direction
-  (`git clone … && make setup`, evaluate via [[foss-absorption]]). Until it's installed, **Seedance 2.5 via
-  Fal is the usable default** — not Veo. AGPL is fine for our LOCAL/internal production use (we don't
-  distribute it as a network service) — see the [[foss-absorption]] license-gate + [[agpl-isolation-via-http-boundary]].
-  When adopted, prefer its manifest-driven pipeline + scored provider selection over the bespoke `veo-film.mjs`.
+  **ADOPTED 2026-10-26** — cloned + fully credentialed + `make setup` done (exit 0) at
+  **`~/tools/OpenMontage`** (`.env` has FAL_KEY + MINIMAX_API_KEY + REPLICATE_API_TOKEN → drives our
+  Seedance/MiniMax/Kling rails; deps in a local `.venv` + Remotion composer + Piper TTS + HyperFrames;
+  foss-absorption-verified AGPLv3 via file-level scan). **AGPL COMPLIANCE = RUN-UPSTREAM ONLY**: run it
+  LOCALLY, NEVER vendor its source into bz.rocks or any proprietary repo, NEVER expose it as a network
+  service — the video OUTPUTS are ours, its CODE stays isolated in `~/tools/OpenMontage`. Seedance 2.5 via
+  Fal remains the usable default rail; use OpenMontage (open the project in Claude Code → drive its YAML
+  pipelines) for whole-film agentic production — see [[foss-absorption]] + [[agpl-isolation-via-http-boundary]].
 
 ## Cross-links
 
