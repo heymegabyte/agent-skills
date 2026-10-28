@@ -33,6 +33,9 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 - **Doctrinal principles** → `rules/agent-resilience-discipline`, `rules/backwards-compatibility-removal-cadence`, `rules/blast-radius-minimization`, `rules/conditional-ci-gates`, `rules/cost-per-request-accountability`, `rules/customer-facing-changelog`, `rules/data-residency-by-default`, `rules/error-budget`, `rules/fail-fast-build-fail-soft-prod`, `rules/mcp-auth-options`, `rules/mcp-server-hardening`, `rules/one-way-two-way-doors`, `rules/pii-handling-discipline`, `rules/production-observability-default-on`, `rules/root-cause-validator-findings`, `rules/state-is-the-enemy`, `rules/structured-logging`, `rules/supply-chain-integrity`, `rules/sync-ui-async-backing`, `rules/ttfr-north-star`, `rules/uuid-version-discipline`, `rules/vendor-risk-tiering`, `rules/webhook-as-skill-pattern`, `rules/working-backwards`
 - **New project** → `02`, `05`, `06`, `09`, `21`
 - **Build feature** → `05`, `06`, `07`, `24`
+- **Go CLI / TUI / terminal prompts / aid / install.doctor** → `rules/terminal-styling`, `rules/package-preference-registry`, `rules/agent-provider-policy`, `05`
+- **Rust / WASM / native runner** → `05`, `rules/cloudflare-hostable-supervisor`, `07/performance-optimization`
+- **OnePrompt / draftl.ink / streaming build / incremental preview** → `rules/event-sourced-build-progress`, `06`, `10`
 - **Debug / CI failure** → `07`, `08` — especially `gh-fix-ci`, `spec-driven-development`
 - **Deploy / launch** → `08`, `26` — add `09` if SEO/content changed
 - **Design / frontend polish** → `09`, `10`, `11`, `12`, `22`
@@ -87,6 +90,8 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 - `coolify/**`, `docker-compose*` → `05/coolify-docker-proxmox`
 - `CLAUDE.md`, `.claude/**`, `AGENTS.md`, `CODEX.md`, `GEMINI.md`, `.cursor/**`, `.windsurf/**` → `01`
 - `package.json`, `tsconfig.json` → `05`
+- `go.mod`, `cmd/**`, `*.go` → `rules/terminal-styling`, `05`
+- `Cargo.toml`, `*.wasm` → `05`, `07/performance-optimization`
 - `**/container.ts`, `**/site-generation.ts`, `Dockerfile` → `15`, `05`
 - `**/prompts/*.prompt.md` → `15`
 - `vectorize/**`, `*embeddings*`, `*rag*` → `05/cf-rag-vectorize-pattern`

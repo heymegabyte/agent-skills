@@ -1,5 +1,5 @@
 ---
-last_reviewed: 2026-06-29
+last_reviewed: 2026-10-27
 superseded_by: null
 name: "package-preference-registry"
 priority: 3
@@ -32,6 +32,11 @@ Prefer high-quality OSS that cuts implementation risk or creates reusable capabi
 Paid/pro-only deps · proprietary UI kits · non-commercial licenses · duplicate libs for one purpose · demos masquerading as features · unmaintained libs.
 
 ## Decisions (✅ install now · ⏳ defer until feature exists · 🔌 adapter-only · ❌ reject)
+
+### Native Go CLI / Rust and WASM
+
+- Use native **Go** for new CLIs. Follow `[[terminal-styling]]` for Cobra, compatible current Charm libraries, attractive prompts, Markdown runbooks and machine-safe output; evaluate each dependency for its actual purpose.
+- Rust/WASM is conditional on measured value and target compatibility per `05-architecture-and-stack/SKILL.md`. Reuse mature native tools such as **restic/rclone** for backup/transfer work rather than rebuilding their engines.
 
 ### UI / components (Angular)
 

@@ -3,7 +3,7 @@ name: "experience-and-design-system"
 description: "Anti-AI-slop design system for distinctive, premium interfaces. Bold typography, dark-first #060610, fluid clamp() type, cascade layers + native nesting + container queries, OKLCH color, @starting-style, View Transitions API, DTCG tokens."
 metadata:
   version: "2.2.0"
-  updated: "2026-10-04"
+  updated: "2026-10-27"
   effort: "high"
   model: "opus"
 license: "Rutgers"
@@ -121,6 +121,13 @@ Build anti-AI-slop premium interfaces: dark-first OKLCH color, fluid `clamp()` t
 - `DESIGN.md`: plain-text markdown; sections: Visual Theme, Color Palette, Typography, Spacing + Layout, Components, Elevation
 - Atomic docs: context-rich units per component with states, variants, props, constraints, a11y, rationale
 - MCP servers (Figma Dev Mode MCP) for programmatic access
+
+### Shared components and live build presentation
+
+- Reuse the canonical **Storybook** components and approved tokens/themes across OnePrompt and draftl.ink. Define stable section slots and typed content/asset contracts so agents can work independently without duplicating component systems.
+- Show the cached/precompiled theme shell immediately, then update the isolated preview iframe with accepted granular patches. Keep research/build state visible and truthful; preserve the host editor's framework-owned DOM and use the generated site's renderer/HMR. Existing React/Tailwind/shadcn site templates and the Angular administration surface remain distinct.
+- Prefer native CSS/Web Animations/View Transitions for the reveal. Respect reduced motion and keyboard focus; never delay real build work to stage an animation. WASM/SWC belongs in a browser worker only if measured transform savings justify it.
+- The assembly, ordering and reconnect contract lives in `rules/event-sourced-build-progress.md`; completion lives in `06-build-and-slice-loop/SKILL.md`.
 
 ## Layout
 

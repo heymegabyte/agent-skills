@@ -12,7 +12,7 @@
 
 ## Tiers
 
-For host-specific routing and scheduling, [the fleet policy](../control-plane/FLEET.md) and `../machines/` profiles are authoritative. On the primary persistent Ubuntu VM, Codex is preferred for system/setup work, OpenClaw orchestrates, and Claw Router routes official subscription profiles. Local DeepSeek uses `DEEPSEEK_API_KEY` directly through OpenCode; local CLI development traffic never goes through Cloudflare AI Gateway or a hosted OpenCode billing gateway.
+For host-specific routing and scheduling, [the fleet policy](../control-plane/FLEET.md) and `../machines/` profiles are authoritative. On the primary persistent Ubuntu VM, Codex is preferred for system/setup work, OpenClaw orchestrates, and Claw Router routes official subscription profiles. The existing fleet uses `DEEPSEEK_API_KEY` directly through OpenCode; its local development traffic never goes through Cloudflare AI Gateway or a hosted OpenCode billing gateway. The separately approved AID product-client route is scoped below.
 
 ### Frontier — architecture · research · judgment (subscription CLIs ONLY)
 - **Claude Code** (`claude` CLI, user's Claude subscription) — primary architect, integrator,
@@ -85,3 +85,7 @@ For host-specific routing and scheduling, [the fleet policy](../control-plane/FL
 3. Throughput implementation → OpenCode + DeepSeek (swarm when parallelizable).
 4. Claude subscription unavailable → surface a clear failure (subscription auth required). Do NOT
    auto-enable API credits or mint keys.
+
+## AID product-client boundary
+
+The owner-approved `aid` client retains OpenCode integration and connects to the configured aidl.ink-compatible endpoint/model, predominantly DeepSeek, using browser/device login and user-scoped application sessions. This explicit product-client path is separate from the persistent fleet's direct-DeepSeek route; it does not migrate fleet schedules/providers or relax Claude/Codex subscription rules. Provider keys stay server-side and are never bundled into the client. UX, install.doctor configuration and capture settings belong to `[[terminal-styling]]`.
