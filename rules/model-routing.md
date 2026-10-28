@@ -91,6 +91,16 @@ OpenCode's **Zen** gateway is the unified pay-per-use billing rail (one account 
 - **Deprecations**: `minimax-m2.5` deprecated 2026-08-05 and `minimax-m2.1` 2026-03-15 — route MiniMax work to `m2.7`/`m3` only.
 - **Rail discipline**: three distinct ID namespaces now exist — Anthropic (`opus`/`sonnet`/`haiku` aliases), DeepSeek-direct for Claude Code (`deepseek-flash`), and OpenCode/Zen (`opencode/deepseek-v4-*`, `opencode/minimax-*`). Config carries TIER ALIASES; only the per-harness adapter layer resolves to a rail's IDs (per `[[agent-neutrality]]`).
 
+## DeepSeek rail routing + cache pre-warming (issue #6)
+
+Three cost controls live in `bin/` for the OpenCode → DeepSeek rail. They do not change any agent file: agents keep tier aliases, and one table maps tiers to DeepSeek IDs.
+
+- **Agent-level routing** — `bin/deepseek-routing.sh agent-coverage` audits `agents/*.md` against the issue's target table and fails on drift; `resolve <agent>` prints the DeepSeek ID a tier alias resolves to. Target: `opus` → `deepseek-v4-pro[1m]` (architect, security-reviewer, completeness-checker); `sonnet`/`haiku` → `deepseek-flash` (test-writer, code-simplifier, changelog-generator, visual-qa, content-writer, plus every other non-judgment agent — 75% of agents). `visual-qa` moved Opus → Sonnet here: it is screenshot diffing, not judgment.
+- **Cache pre-warming** — `bin/deepseek-routing.sh warm <model> <system-prompt-prefix>` sends one minimal `max_tokens` request for the prefix the session will actually send, then stamps the prefix hash with a TTL (`DEEPSEEK_WARM_TTL`, default 1800 s). A warm request only helps when it shares the next request's prefix, so warm the real system prompt — not a dummy string. `run -a <agent> …` warms lazily and then `exec`s `opencode run` with the agent's model.
+- **Effort escalator** — `bin/effort-escalator.py classify "<task text>"` scores keywords into `low | medium | high | max` (architecture/refactor/security/auth/payment/debug/migration → `max`; rename/format/typo/changelog/docs-only → `low`; feature implementation → `high`; otherwise `medium`). `hook` reads a `PreToolUse`/prompt payload JSON on stdin. `run` passes the result as `opencode run --variant`.
+
+Warm-cache savings depend on provider-side cache retention and are reported by `warm` as ESTIMATES from the token usage it observes (`prompt_cache_hit_tokens`), never as an invoice figure. `bin/deepseek-cost-model.py` computes the routing + cache savings over a fixed workload and writes the measurement to `docs/deepseek-cost.md`.
+
 ## Retired models (requests error)
 
 - `claude-3-opus`
@@ -107,9 +117,9 @@ OpenCode's **Zen** gateway is the unified pay-per-use billing rail (one account 
 
 ## Agent routing
 
-- **Opus** — architect, completeness-checker, computer-use-operator, incident-responder, meta-orchestrator, performance-profiler, security-reviewer, visual-qa (each has `model_fallback: claude-sonnet-4-6` + `effort_fallback: high` per `opus-quota-fallback`)
+- **Opus** — architect, completeness-checker, computer-use-operator, incident-responder, meta-orchestrator, performance-profiler, security-reviewer (each has `model_fallback: claude-sonnet-4-6` + `effort_fallback: high` per `opus-quota-fallback`)
 - **Burst capacity until 2026-11-04**: claimed Claude cloud-session credits run OUTSIDE plan limits — route round-sweeps / fan-outs / unattended batches to `claude --cloud` first, per `account-entitlements`.
-- **Sonnet** — accessibility-auditor, browser-operator, content-writer, deploy-verifier, media-orchestrator, migration-agent, motion-choreographer, resource-broker, seo-auditor, test-writer
+- **Sonnet** — accessibility-auditor, browser-operator, content-writer, deploy-verifier, media-orchestrator, migration-agent, motion-choreographer, resource-broker, seo-auditor, test-writer, visual-qa
 - **Haiku** — changelog-drafter, changelog-generator, code-simplifier, cost-estimator, dead-code-remover, dependency-auditor, formatter, model-router, renamer, transcriber
 
 ## Quota-aware routing
@@ -163,7 +173,7 @@ Standing routing policy for APPLICATION LLM calls + agent build pipelines — a 
 
 Hierarchical compounds gains over flat fanout. Sub-agent prompts 100–300 words — beyond that you're cloning context, not specializing.
 
-Spawned specialists for batch test/feature work run on the standing `CLAUDE_CODE_SUBAGENT_MODEL=claude-sonnet-4-6` default per `parallel-subagent-economy` — Opus orchestrates, Sonnet builds. Opus-pinned reviewers (architect/security/visual-qa/meta-orchestrator) override that default with an explicit `model: opus` on the spawn; the call-level model param takes precedence over the env default.
+Spawned specialists for batch test/feature work run on the standing `CLAUDE_CODE_SUBAGENT_MODEL=claude-sonnet-4-6` default per `parallel-subagent-economy` — Opus orchestrates, Sonnet builds. Opus-pinned reviewers (architect/security/meta-orchestrator) override that default with an explicit `model: opus` on the spawn; the call-level model param takes precedence over the env default.
 
 
 ## Cloudflare AI Gateway Dynamic Routes (product runtime)
