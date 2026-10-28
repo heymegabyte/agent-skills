@@ -6,6 +6,10 @@ superseded_by: null
 
 # Rules Changelog — auto-maintained by the router-reconcile hook.
 
+## 2026-10-28
+
+- **remote-desktop-webtop** — feat(rules): new rule — any browser-presented desktop DEFAULTS to a KasmVNC webtop (linuxserver/webtop) behind CF Access Zero Trust + Google SSO (single sign-in, no app basic-auth); Selkies ONLY when low-latency WebRTC/GPU streaming is absolutely necessary; includes the egress-IP-geolocation browser-locale gotcha (WARP egress → Google served Russian) + fix (Brian directive, ubuntu.megabyte.space)
+
 ## 2026-09-20
 
 - **browser-automation-routing** — feat(rules): new rule — default CF Browser Rendering + Stagehand for browser automation, fall back to the user's Chrome for cookie/session persistence; cross-linked into computer-use-safety + fetch-defaults + crawling-testing-browser-supervisor; added to infra pack + prompt-cache load order (Brian directive)
