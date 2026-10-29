@@ -1,6 +1,9 @@
 name: ai
 description: AI features — contract-first, evals, agents, sandbox
 members:
+  - rules/ai-abundance-maximalism
+  - rules/cloudflare-agent-fabric
+  - rules/ai-search-knowledge-fabric
   - rules/contract-first-ai
   - rules/evals
   - rules/sandbox-execution
@@ -21,3 +24,4 @@ members:
   - rules/agent-selection
   - rules/agent-neutrality
   - rules/account-entitlements
+  - rules/trace-driven-self-evolution

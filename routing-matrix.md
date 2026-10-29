@@ -74,6 +74,16 @@ Classify every reusable lesson before writing it anywhere. This is the single de
 - Was an experiment that didn't work out
 - Must not stay canonical but might be referenced later
 
+## Where it LIVES — agent-skills vs this project vs another project (default: agent-skills)
+
+The decision table above routes by signal TYPE; this axis routes by REPO/FOLDER. Re-decide every time with CURRENT context — a thing that was project-only can become universal. (Owner directive 2026-10-29.)
+
+- **Default to agent-skills** — the synced `~/.claude/plugins/heymegabyte-agent-skills` (→ skills.link / skillsl.ink GH), loaded by every runtime (Claude Code · Codex · OpenCode · OpenClaw · Paperclip adapters). On the margin a tie breaks TOWARD agent-skills (breadth of reuse + one source of truth).
+- **The test:** would ≥2 projects benefit? → agent-skills (universal). Only THIS repo? → this project's `.claude/`. Only ANOTHER specific project? → that project's `.claude/` (go put it there).
+- **Multi-project propagation:** when a change affects several+ projects, the CANONICAL copy lives in agent-skills and each project REFERENCES it — never fork N drifting copies. Flag estate-wide changes so they propagate (`rules/drift-detection.md`).
+- **Promote UP when scope grows:** a project-local lesson that recurs in a 2nd project moves to agent-skills the SAME turn it recurs (3× repeat → skill, per `rules/prompt-as-training-signal.md`).
+- Universal ≠ always-loaded: most reusable knowledge is a trigger-loaded rule/skill, not a `CLAUDE.md` line — still obey the always-load budget.
+
 ## Anti-Patterns
 
 - **Don't dump into CLAUDE.md**. It should be <200 lines. Put procedural knowledge into skills.
