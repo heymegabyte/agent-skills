@@ -5,3 +5,4 @@ members:
   - rules/competitor-research
   - rules/fetch-defaults
   - rules/crawling-testing-browser-supervisor
+  - rules/upstream-absorption-register
