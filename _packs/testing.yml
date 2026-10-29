@@ -1,6 +1,7 @@
 name: testing
 description: Playwright E2E + Vitest + AI vision QA
 members:
+  - rules/product-completeness
   - 07-quality-and-verification
   - 25-quality-performance
   - rules/e2e-testing
@@ -8,3 +9,4 @@ members:
   - rules/quality-metrics
   - rules/forge-with-test-scaffold-pattern
   - rules/verify-against-source-of-truth
+  - rules/ast-grep-structural-capability
