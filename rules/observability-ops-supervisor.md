@@ -37,4 +37,12 @@ Major user actions emit telemetry; frontend errors and backend logs are captured
 - **Audit logs** for sensitive actions per `auth-permissions-security-supervisor`
 - **Admin health/status panels** — surface workflow runs, error rates, queue depth, AI spend
 - **Analytics optional for local reproducibility** — the app runs fully with telemetry disabled (no hard dependency on a vendor key)
-- Tiered vendor stack per `auto-meta-work` (solo → PostHog + Workers Tracing; enterprise → add Sentry/GA4/Axiom)
+- Estate baseline per `production-observability-default-on`: server-side Sentry on every Worker + PostHog + Workers Tracing; enterprise adds GA4/GTM and Axiom. Local development remains functional with telemetry disabled.
+
+## OpenTelemetry discipline (§9.3 / §19.2 — spec-verified 2026-10-29)
+
+- **No duplicate spans** — never record the same model generation twice (application instrumentation AND AI-Gateway/platform export). Pick ONE authoritative source per generation; model logical agent spans, tool spans, and provider-call spans with explicit parentage, not flat duplicates.
+- **Privacy filtering is PER-EXPORTER** — a Langfuse masking hook does NOT sanitize a second copy exported to Sentry or another collector. Apply redaction/allowlists at EVERY exporter/destination and verify each path with controlled synthetic-secret fixtures.
+- **GenAI semantic conventions are `development`-stability AND have MOVED** to the `open-telemetry/semantic-conventions-genai` repo — the main `semantic-conventions` repo's gen-ai pages are now deprecated/unmaintained (verified via Context7). Follow the MAINTAINED repo; PIN the semconv version/maturity you depend on (development-level attributes can change); a deprecated entry in the OLD registry alone does NOT justify dropping/renaming working attributes.
+- **Workers caveat** — do NOT assume an arbitrary Node OTel auto-instrumentation SDK runs unchanged inside Workers; verify supported propagation + span attributes against the installed runtime. Workers log/trace export is not a substitute for a separate metrics strategy.
+- Carry **W3C Trace Context** across services; prefer stable conventions and pin + document any `development`/`alpha` convention you adopt.
