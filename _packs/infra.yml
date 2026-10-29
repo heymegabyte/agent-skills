@@ -1,6 +1,14 @@
 name: infra
 description: Secrets + auth + deploy infrastructure
 members:
+  - rules/agent-vault-brokering
+  - rules/cloudflare-domain-launch-monitoring
+  - rules/cua-spaces-integration
+  - rules/healthchecks-job-monitoring
+  - rules/opentofu-infrastructure
+  - rules/remote-desktop-webtop
+  - rules/tail-worker-agent-observability
+  - rules/secrets-portable-resolution
   - rules/secret-provisioning
   - rules/secret-auto-provisioning
   - 08-deploy-and-runtime-verification
@@ -10,6 +18,7 @@ members:
   - rules/browser-automation-routing
   - rules/docker-slim-all-containers
   - rules/neon-database-conservation
+  - rules/backup-transfer-recovery
   - rules/email-deliverability
   - rules/email-deliverability-implementation
   - rules/cloudflare-native-provisioning
