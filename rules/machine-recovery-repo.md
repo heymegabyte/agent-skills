@@ -12,6 +12,26 @@ that machine's **infrastructure-as-code**: a fresh clone + its runbook must brin
 nothing. This is the host sibling of `[[domain-named-project-dns]]` (which makes a domain-named
 *website* live at its domain); this rule makes a host-named *machine* resurrectable.
 
+## Two provisioning layers — install.doctor (universal) + the home repo (machine-specific)
+
+- **EVERY machine is provisioned by install.doctor** (`github.com/heymegabyte/install.doctor`,
+  chezmoi-based; entrypoint `start.sh` / `bash <(curl -sSL https://install.doctor/start)`). It
+  installs the estate-UNIVERSAL baseline — Docker, Homebrew + the `software.yml` software group,
+  Netdata, Grafana Alloy, fail2ban, cloudflared, codex, fonts, shell pre-warm, the command-not-found
+  AI installer. Drive it through the `desktop-provisioning` skill. NEVER duplicate this in a home repo.
+- **Each machine's HOME REPO (`<host-fqdn>`, e.g. `ubuntu.megabyte.space`) stores ONLY the
+  machine-specific delta** install.doctor does not carry: this host's services (compose dirs +
+  `setup.sh`), its systemd units, crontab, `/etc` hardening generator + records, tunnel/Access
+  provisioning, and the snapshot-backup + restore path. This IS the per-host FQDN git-backup repo the
+  `desktop-provisioning` skill prescribes — this rule is what makes it RESTORE-capable, not just backed up.
+- **The split test:** "would another estate machine want this verbatim?" yes → install.doctor
+  (universal, reusable); no → the home repo (unique to this box's fleet role / services / `/etc` /
+  tunnel hostnames). Recovery order is always **install.doctor FIRST, then the home repo's runbook**.
+- **Dual role of the home domain:** the git repo is the machine's **config source-of-truth**, and —
+  where the host serves a browser surface — the live domain is also the **access portal** to the
+  machine (e.g. `ubuntu.megabyte.space` is BOTH the config SoT *and* the KasmVNC web-desktop portal,
+  per `[[remote-desktop-webtop]]`). Keep both roles intact on every change.
+
 ## The mandate
 
 - **Full resurrection from the repo.** Everything needed to rebuild the machine is committed — as a
@@ -33,7 +53,8 @@ nothing. This is the host sibling of `[[domain-named-project-dns]]` (which makes
 
 ## What "complete" must cover (audit checklist)
 
-- **OS + bootstrap** (fresh-install prereqs, the estate bootstrap, guest-agent for clean snapshots).
+- **OS + install.doctor** (fresh-install prereqs → `install.doctor` for the universal baseline →
+  guest-agent for clean snapshots). The home-repo steps below all run AFTER install.doctor completes.
 - **Every service** as a deploy dir (`<service>/` with compose + idempotent `setup.sh`): the app, its
   DB, the web/desktop surface, the telemetry agent (Alloy/Netdata) — none "assumed to already exist".
 - **System config** via one generator (sysctl, zram/swap, journald caps, firewall default-deny,
