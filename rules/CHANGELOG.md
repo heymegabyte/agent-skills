@@ -6,6 +6,10 @@ superseded_by: null
 
 # Rules Changelog — auto-maintained by the router-reconcile hook.
 
+## 2026-10-29
+
+- **machine-recovery-repo** — feat(rules): new rule — a repo named for a HOST/machine must be able to fully resurrect that machine from bare metal (all non-secret config committed as generators or captured records, secrets excluded-but-documented, a single RECOVERY.md runbook, a snapshot timer that keeps it current, every new service/system-config gets a generator + capture same turn). Host sibling of domain-named-project-dns. Reference impl: ubuntu.megabyte.space (Brian directive)
+
 ## 2026-10-28
 
 - **remote-desktop-webtop** — feat(rules): new rule — any browser-presented desktop DEFAULTS to a KasmVNC webtop (linuxserver/webtop) behind CF Access Zero Trust + Google SSO (single sign-in, no app basic-auth); Selkies ONLY when low-latency WebRTC/GPU streaming is absolutely necessary; includes the egress-IP-geolocation browser-locale gotcha (WARP egress → Google served Russian) + fix (Brian directive, ubuntu.megabyte.space)
