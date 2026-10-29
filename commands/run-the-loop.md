@@ -82,6 +82,11 @@ never start a large pass in a context-saturated session. Every fire is a **multi
   not proof it works. **Even with no full home, ALWAYS check `.claude/run-the-loop/SPECIAL-TASKS.md`** —
   standing repo-specific tasks (recurring publishes, dataset expansions, competitor re-baselining) that
   must be folded into this fire.
+- **In the `heymegabyte/agent-skills` repo itself** (no `.claude/run-the-loop/` home), the standing
+  ecosystem-upgrade loop (cron `4481379b`, 30m, MASTER PROMPT REVISION 2) uses the durable procedure
+  `prompts/converge-agent-ecosystem.md` (reusable procedure + authority map + acceptance gates) with its
+  mutable checkpoint at `docs/agent-skills-master/RECOVERY.md`. Read both, then drain ONE bounded, verified
+  backlog slice per fire (never all sections / all 210 ideas at once).
 - **Tooling fabric (if present):** when the repo has a `mise.toml`, `mise tasks` IS the capability
   surface — prefer `mise run <task>` (`check`/`test`/`security`/`infra:*`/`semantic:*`/`loop:verify`)
   over reverse-engineering package scripts. Detect Serena (`.serena/project.yml`), OpenTofu roots
@@ -126,7 +131,14 @@ Diversity Review gate before DONE.
 14. **Technology Scout** — verify stack currency + surface higher-leverage primitives / library upgrades (Context7 / WebSearch); file adoption slices. Specialist: `dependency-auditor` / `Explore`.
 15. **Loop Improvement** — deliver the mandatory ≥1 improvement to how future loops run (§7): sharpen this wrapper / the canonical docs / a gate/script / a role brief. Specialist: `general-purpose` / `meta-orchestrator`.
 
-**PLUS the standing role (runs EVERY fire, alongside the 15):**
+**Growth & business roster — ONE comprehensive loop markets + grows the business, it does not only build code** (added per the fleet doctrine: `rules/paperclip-openclaw-fleet-doctrine.md`). The loop's job is the WHOLE arc — solve issues · build the product · **market the business** · grow distribution · convert · operate on data. Paperclip delegates these across the fleet (Claude judgment · Codex review · DeepSeek throughput) exactly like the dev roles; per-project recurring publishes (e.g. a daily blog post for a given site) live in that repo's `SPECIAL-TASKS.md` as standing crons, not here. These are a floor — mint more as a project needs them.
+
+16. **Growth & Distribution** — SEO/AEO/GEO, structured data, sitemap/`llms.txt` freshness, backlinks, launch posts, directory/listing submissions, social presence; "distribution > technology" (skill 13). Specialist: `seo-auditor` / `content-writer`.
+17. **Marketing Content** — blog cadence, landing-page copy, email campaigns (Amazon SES), lifecycle/onboarding sequences, changelog-as-marketing; grounded in real product + analytics, never slop. Specialist: `content-writer` / `blog-autopublish` skill.
+18. **Monetization & Conversion** — pricing pages, funnels, Stripe Billing/Link, paywalls/entitlements, trial→paid, conversion-rate experiments behind flags. Specialist: `architect` / domain builder.
+19. **Business Analytics & Ops** — read the four telemetry rails (PostHog · GA4 · Sentry · Langfuse), turn signal into next-wave backlog (drop-off, error spikes, LLM-eval regressions, cost), close the data→action loop. Specialist: `performance-profiler` / `cost-estimator`.
+
+**PLUS the standing role (runs EVERY fire, alongside the 15 + growth roster):**
 
 - **Long-Trail TDD case-owner** — the browser-connected coding agent that OWNS code + tests + a live
   browser in ONE isolated worktree and drives an EXACT, LONG, stateful test case to completion via TDD.
@@ -141,6 +153,11 @@ Diversity Review gate before DONE.
   authenticates through the real test UI + backend; it prefers finishing a checkpointed case before
   rotating coverage; and it never runs two overlapping copies on the same case/resources. The UX/Visual
   role SUPPORTS the case-owner without creating competing edits.
+- **Estate Architecture & Entitlements** — on the scheduled portfolio routine or when a fire exposes an
+  estate-wide gap/high-value entitlement, reconcile the full product architecture and dispatch safe work.
+  Spend claimed Claude cloud-session credit first on suitable GitHub-backed unattended work. Use browse CLI
+  for web automation and the singleton Cua lane only for native/otherwise-inaccessible authenticated UI.
+  Account/team/billing/reward/admin-key mutations require an evidence-rich Paperclip approval before action.
 
 **Dynamic role creation** — when a fire surfaces a concern no canonical role owns (a new integration,
 a recurring incident class, a migration campaign), MINT a purpose-built role that fire: name it, give

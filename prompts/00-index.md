@@ -24,6 +24,7 @@ This directory is the canonical prompt library — self-contained, copy-pasteabl
 | 08 | `08-repo-cleanup-pass.md` | "clean up the repo", "remove stale patterns", "consolidate decisions" | General repo cleanup — stale patterns, orphaned configs, consolidation |
 | 09 | `09-skill-retrospective.md` | "review my skills", "what skills need updating", "skill audit" | Run a skill retrospective — audit health, gaps, and drift |
 | 10 | `10-release-readiness-review.md` | "is this ready to ship", "release readiness", "pre-launch review" | Pre-release checklist — verify everything before shipping |
+| 11 | `converge-agent-ecosystem.md` | "run the loop" (agent-skills ecosystem), "converge the ecosystem", MASTER-PROMPT fires | Durable procedure for the standing agent-skills ecosystem-upgrade loop (cron `4481379b`, 30m). Reusable procedure + authority map + acceptance gates; mutable checkpoint in `docs/agent-skills-master/RECOVERY.md`. NON-numbered by design — a standing-loop procedure, not a one-shot 40–80-line copy-paste prompt. |
 
 ---
 
@@ -36,4 +37,4 @@ This directory is the canonical prompt library — self-contained, copy-pasteabl
 
 ## Last updated
 
-2026-06-30
+2026-10-29
