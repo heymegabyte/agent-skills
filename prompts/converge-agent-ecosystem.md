@@ -38,6 +38,14 @@ transcript; this file extracts the actionable procedure, deliverables, and catal
 - Tenant isolation + customer-analytics boundary intact; secrets via get-secret/Infisical only; main-first (no force-push/blanket-stage); subscription-CLI ≠ product-API.
 - At-least-once side effects need idempotency + dedup; never blindly re-dispatch an uncertain upload/post/email/payment/deploy.
 
+## Convergence & post-convergence HOLD discipline (hard-won — fires 21-31)
+
+- **Claim convergence only after enumerating EVERY backlog line** — never by pattern-matching "the big items are done." A line-by-line re-verification pass is mandatory before any "converged" claim; a prematurely-declared convergence a later fire must retract wastes trust (fire 21→22).
+- **Post-convergence the loop HOLDS; it does not manufacture work.** Each fire: (a) reconcile source for an owner/fleet unblock (FRESH-fetch, never a stale remote), (b) advance a slice ONLY if one became actionable, (c) re-verify shipped coherence. A genuinely-converged NARROW task-loop legitimately idles — manufacturing busywork to look productive is forbidden.
+- **Self-suppress checkpoint churn:** a no-state-change HOLD fire reconciles + reports only — it does NOT re-commit a near-identical log. Commit ONCE only when (i) an owner/fleet item becomes actionable, (ii) a regression appears, or (iii) the fire produces a genuine evidence-based finding/reclassification a future fire would otherwise re-investigate.
+- **Re-test a "gated" classification when its blocker may have lifted** (the inverse of premature convergence): an owner-gated item can become autonomous once a dependency resolves — re-check against current evidence before holding, and record a sharpened gating if it stays blocked.
+- **Scanner-health before accepting ANY "zero/clean" result** (dogfood `../rules/ast-grep-structural-capability.md`): a scan reporting zero findings must first prove it SELECTED its inputs — "0 files selected" / missing grammars / parse errors / skipped paths = an INCOMPLETE scan (false-clean), never a pass. Verify selection, then trust the zero.
+
 ## Research policy
 
 - Cloudflare → official CF docs + CF-docs MCP first (keep doc-read separate from the broad infra-write MCP). Others → Context7 first, then official vendor docs/release notes.
@@ -63,4 +71,4 @@ Checkpoint [`../docs/agent-skills-master/RECOVERY.md`] · router `../_router.md`
 
 ## Last updated
 
-2026-10-29 (fire 3 — REVISION 2 reconciliation).
+2026-10-29 (fire 3 authored; fire 33 added the Convergence & post-convergence HOLD discipline section).
