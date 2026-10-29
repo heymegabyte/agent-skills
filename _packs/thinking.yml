@@ -1,0 +1,6 @@
+name: thinking
+description: Reasoning + context-expansion principles
+members:
+  - rules/ideal-architecture-loop
+  - rules/expand-context-always
+  - rules/openspec-review-lenses
