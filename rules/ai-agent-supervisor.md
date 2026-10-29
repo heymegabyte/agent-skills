@@ -45,3 +45,7 @@ AI is foundational to the platform per `ai-permanence` — never a bolt-on, neve
 - **Prefer local/self-hostable** AI where practical (Ollama/vLLM/transformers.js) per cost + privacy
 - **Tenant-scoped + permission-aware + flag-gated** — every AI feature behind a server flag + killswitch + budget/timeout/truncation per `feature-flags`
 - **Evals** for AI-heavy behavior per `evals` — generation quality is tracked like any load-bearing layer
+
+## Promptfoo evaluation-idea catalog
+
+- 30 reusable Promptfoo AI/agent-evaluation hypotheses (PF-01…30 — regression corpus, model routing, structured-output/tool-use/trajectory checks, RAG grounding, injection/authz red-team, latency/cost discipline, eval-as-bounded-evidence-producer) live in `reference/service-ideas/promptfoo.md`. Assess per-project; reusable methods only; a green judge ≠ the intended result.
