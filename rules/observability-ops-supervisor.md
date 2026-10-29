@@ -47,8 +47,9 @@ Major user actions emit telemetry; frontend errors and backend logs are captured
 - **Workers caveat** — do NOT assume an arbitrary Node OTel auto-instrumentation SDK runs unchanged inside Workers; verify supported propagation + span attributes against the installed runtime. Workers log/trace export is not a substitute for a separate metrics strategy.
 - Carry **W3C Trace Context** across services; prefer stable conventions and pin + document any `development`/`alpha` convention you adopt.
 
-## Service-idea catalogs (observability)
+## Service-idea catalogs (observability + analytics)
 
 - 30 reusable Sentry improvement hypotheses (SEN-01…30 — reliability, release health, performance, data integrity, privacy, multitenant) live in `reference/service-ideas/sentry.md`.
 - 30 reusable Langfuse Cloud AI-observability hypotheses (LF-01…30 — execution visibility, prompt/model economics, retrieval + factual reliability, eval validity, multitenant, data governance) live in `reference/service-ideas/langfuse.md`.
+- 30 reusable PostHog product-analytics hypotheses (PH-01…30 — activation, funnels, retention, experiments, revenue, consent/tenant-isolation) live in `reference/service-ideas/posthog.md`. Customer-analytics tenant boundary applies (owned destinations only; customer sites get no owner tags by default).
 - Assess per-project against real evidence; reusable methods only, no live product state.
