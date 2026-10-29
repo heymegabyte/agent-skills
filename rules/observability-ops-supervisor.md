@@ -46,3 +46,7 @@ Major user actions emit telemetry; frontend errors and backend logs are captured
 - **GenAI semantic conventions are `development`-stability AND have MOVED** to the `open-telemetry/semantic-conventions-genai` repo — the main `semantic-conventions` repo's gen-ai pages are now deprecated/unmaintained (verified via Context7). Follow the MAINTAINED repo; PIN the semconv version/maturity you depend on (development-level attributes can change); a deprecated entry in the OLD registry alone does NOT justify dropping/renaming working attributes.
 - **Workers caveat** — do NOT assume an arbitrary Node OTel auto-instrumentation SDK runs unchanged inside Workers; verify supported propagation + span attributes against the installed runtime. Workers log/trace export is not a substitute for a separate metrics strategy.
 - Carry **W3C Trace Context** across services; prefer stable conventions and pin + document any `development`/`alpha` convention you adopt.
+
+## Sentry improvement-idea catalog
+
+- 30 reusable Sentry improvement hypotheses (SEN-01…30 — reliability, release health, performance, data integrity, privacy, multitenant) live in `reference/service-ideas/sentry.md`. Assess per-project against real evidence; reusable methods only, no live product state.
