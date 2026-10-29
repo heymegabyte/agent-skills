@@ -14,77 +14,12 @@
     "rules/model-routing.md",
     "rules/agent-neutrality.md",
     "rules/verification-loop.md",
-    "rules/prompt-as-training-signal.md"
-  ],
-  "skills": [
-    {
-      "path": "01-operating-system/SKILL.md"
-    },
-    {
-      "path": "02-goal-and-brief/SKILL.md"
-    },
-    {
-      "path": "04-preference-and-memory/SKILL.md"
-    },
-    {
-      "path": "05-architecture-and-stack/SKILL.md"
-    },
-    {
-      "path": "06-build-and-slice-loop/SKILL.md"
-    },
-    {
-      "path": "07-quality-and-verification/SKILL.md"
-    },
-    {
-      "path": "08-deploy-and-runtime-verification/SKILL.md"
-    },
-    {
-      "path": "09-brand-and-content-system/SKILL.md"
-    },
-    {
-      "path": "10-experience-and-design-system/SKILL.md"
-    },
-    {
-      "path": "11-motion-and-interaction-system/SKILL.md"
-    },
-    {
-      "path": "12-media-orchestration/SKILL.md"
-    },
-    {
-      "path": "13-observability-and-growth/SKILL.md"
-    },
-    {
-      "path": "14-independent-idea-engine/SKILL.md"
-    },
-    {
-      "path": "15-site-generation/SKILL.md"
-    },
-    {
-      "path": "16-cinematic-website-prime-directive/SKILL.md"
-    },
-    {
-      "path": "21-app-foundation/SKILL.md"
-    },
-    {
-      "path": "22-visual-experience/SKILL.md"
-    },
-    {
-      "path": "23-content-seo/SKILL.md"
-    },
-    {
-      "path": "24-functional/SKILL.md"
-    },
-    {
-      "path": "25-quality-performance/SKILL.md"
-    },
-    {
-      "path": "26-platform-delivery/SKILL.md"
-    },
-    {
-      "path": "27-trust-compliance/SKILL.md"
-    },
-    {
-      "path": "28-cf-integrations-reference/SKILL.md"
-    }
+    "rules/prompt-as-training-signal.md",
+    "rules/low-hanging-fruit.md",
+    "rules/ideal-architecture-loop.md",
+    "rules/openspec-operating-contract.md",
+    "rules/figma-design-approval-gate.md",
+    "rules/claude-cloud-first.md",
+    "rules/go-application-policy.md"
   ]
 }

@@ -1,45 +1,21 @@
 {
-  "_generated_by": "bin/gen-harness-manifests.mjs — do not edit directly",
   "name": "heymegabyte-skills",
   "version": "7.2.1",
-  "instructions": "Load rules/ directory. Each .md file is a standing instruction.",
-  "files": [
-    "rules/always.md",
-    "rules/autonomous-engineering.md",
-    "rules/code-style.md",
-    "rules/feature-flags.md",
-    "rules/brian-preferences.md",
-    "rules/solo-builder-doctrine.md",
-    "rules/main-only-branch.md",
-    "rules/no-staging-doctrine.md",
-    "rules/zod-everywhere.md",
-    "rules/fetch-defaults.md",
-    "rules/model-routing.md",
-    "rules/agent-neutrality.md",
-    "rules/verification-loop.md",
-    "rules/prompt-as-training-signal.md",
-    "01-operating-system/SKILL.md",
-    "02-goal-and-brief/SKILL.md",
-    "04-preference-and-memory/SKILL.md",
-    "05-architecture-and-stack/SKILL.md",
-    "06-build-and-slice-loop/SKILL.md",
-    "07-quality-and-verification/SKILL.md",
-    "08-deploy-and-runtime-verification/SKILL.md",
-    "09-brand-and-content-system/SKILL.md",
-    "10-experience-and-design-system/SKILL.md",
-    "11-motion-and-interaction-system/SKILL.md",
-    "12-media-orchestration/SKILL.md",
-    "13-observability-and-growth/SKILL.md",
-    "14-independent-idea-engine/SKILL.md",
-    "15-site-generation/SKILL.md",
-    "16-cinematic-website-prime-directive/SKILL.md",
-    "21-app-foundation/SKILL.md",
-    "22-visual-experience/SKILL.md",
-    "23-content-seo/SKILL.md",
-    "24-functional/SKILL.md",
-    "25-quality-performance/SKILL.md",
-    "26-platform-delivery/SKILL.md",
-    "27-trust-compliance/SKILL.md",
-    "28-cf-integrations-reference/SKILL.md"
-  ]
+  "description": "Focused workflows for building and operating reliable SaaS products.",
+  "author": {
+    "name": "heymegabyte"
+  },
+  "skills": "./.agents/skills/",
+  "interface": {
+    "displayName": "Agent Skills for SaaS",
+    "shortDescription": "Build reliable SaaS products",
+    "longDescription": "Progressively disclosed workflows for SaaS architecture, implementation, design, quality, delivery, trust, and growth.",
+    "developerName": "heymegabyte",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Plan SaaS products",
+      "Build vertical slices",
+      "Verify releases"
+    ]
+  }
 }

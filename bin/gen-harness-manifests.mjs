@@ -5,7 +5,8 @@
  * Generates companion harness manifests from the canonical agentskills source of truth.
  * Emits: .codex-plugin/plugin.json, .opencode/config.json, .kimi-plugin/plugin.json
  *
- * Source of truth: NN-*\/SKILL.md (frontmatter) + rules/*.md + .claude-plugin/plugin.json
+ * Source of truth: NN-*\/SKILL.md plus approved named skills (frontmatter),
+ * rules/*.md, and .claude-plugin/plugin.json
  * Never edit the output files directly — re-run this script instead.
  *
  * @see reference/multi-harness-portability.md
@@ -58,7 +59,8 @@ function readVersion(root) {
 }
 
 /**
- * Discover all numbered skill directories (NN-*) that contain a SKILL.md.
+ * Discover all numbered skill directories (NN-*) and approved named skill
+ * directories that contain a SKILL.md.
  *
  * @param {string} root - Repo root path.
  * @returns {Array<{ dir: string; path: string; name: string; description: string }>}
@@ -66,9 +68,10 @@ function readVersion(root) {
 function discoverSkills(root) {
   const entries = readdirSync(root, { withFileTypes: true });
   const skills = [];
+  const namedSkills = new Set();
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
-    if (!/^\d{2}-/.test(entry.name)) continue;
+    if (!/^\d{2}-/.test(entry.name) && !namedSkills.has(entry.name)) continue;
     const skillPath = join(root, entry.name, 'SKILL.md');
     if (!existsSync(skillPath)) continue;
     const src = readFileSync(skillPath, 'utf8');
@@ -125,6 +128,12 @@ const ALWAYS_LOAD_RULES = [
   'rules/agent-neutrality.md',
   'rules/verification-loop.md',
   'rules/prompt-as-training-signal.md',
+  'rules/low-hanging-fruit.md',
+  'rules/ideal-architecture-loop.md',
+  'rules/openspec-operating-contract.md',
+  'rules/figma-design-approval-gate.md',
+  'rules/claude-cloud-first.md',
+  'rules/go-application-policy.md',
 ];
 
 // ─── main ────────────────────────────────────────────────────────────────────
@@ -146,17 +155,25 @@ const domainFiles = skills
 
 // ── 1. .codex-plugin/plugin.json ─────────────────────────────────────────────
 /**
- * OpenAI Codex harness manifest.
- * Codex does not support hooks or dynamic routing — exports harness-neutral rules only.
+ * OpenAI Codex compatibility manifest. Skills remain progressively disclosed;
+ * durable repository guidance belongs in AGENTS.md, not an always-loaded file list.
  *
  * @see reference/multi-harness-portability.md § "OpenAI Codex"
  */
 const codexManifest = {
-  _generated_by: 'bin/gen-harness-manifests.mjs — do not edit directly',
   name: 'heymegabyte-skills',
   version,
-  instructions: 'Load rules/ directory. Each .md file is a standing instruction.',
-  files: [...alwaysLoadRules, ...skillPaths],
+  description: 'Focused workflows for building and operating reliable SaaS products.',
+  author: { name: 'heymegabyte' },
+  skills: './.agents/skills/',
+  interface: {
+    displayName: 'Agent Skills for SaaS',
+    shortDescription: 'Build reliable SaaS products',
+    longDescription: 'Progressively disclosed workflows for SaaS architecture, implementation, design, quality, delivery, trust, and growth.',
+    developerName: 'heymegabyte',
+    category: 'Developer Tools',
+    capabilities: ['Plan SaaS products', 'Build vertical slices', 'Verify releases'],
+  },
 };
 
 writeJson(join(ROOT, '.codex-plugin', 'plugin.json'), codexManifest);
@@ -170,7 +187,10 @@ writeJson(join(ROOT, '.codex-plugin', 'plugin.json'), codexManifest);
 const opencodeConfig = {
   _generated_by: 'bin/gen-harness-manifests.mjs — do not edit directly',
   instructions: alwaysLoadRules,
-  skills: skills.map((s) => ({ path: s.path })),
+  // OpenCode discovers skills from directories (`.opencode/skills/*/SKILL.md`,
+  // `~/.claude/skills`, `~/.agents/skills`) — there is NO `skills` config key.
+  // The skill set is therefore not listed here. See bin/gen-opencode-harness.mjs
+  // for the agents/commands/tools/plugins bridge into ~/.config/opencode/.
 };
 
 writeJson(join(ROOT, '.opencode', 'config.json'), opencodeConfig);
@@ -200,6 +220,6 @@ writeJson(join(ROOT, '.kimi-plugin', 'plugin.json'), kimiManifest);
 
 console.log(`gen-harness-manifests: wrote 3 manifests (version ${version})`);
 console.log(`  skills: ${skills.length}  always-load rules: ${alwaysLoadRules.length}`);
-console.log(`  .codex-plugin/plugin.json  (${codexManifest.files.length} files)`);
-console.log(`  .opencode/config.json      (${opencodeConfig.skills.length} skills)`);
+console.log(`  .codex-plugin/plugin.json  (${skills.length} progressively disclosed skills)`);
+console.log(`  .opencode/config.json      (${alwaysLoadRules.length} instructions)`);
 console.log(`  .kimi-plugin/plugin.json   (${kimiManifest.skills.length} skills)`);
