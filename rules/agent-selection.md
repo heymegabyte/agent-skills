@@ -107,7 +107,7 @@ Emit BEFORE spawning:
 
 - Fan-out WIDTH sweet spot 3-4, hard ceiling 6, batch beyond 6 — governed by `parallel-subagent-economy.md`.
 - Spawned specialists run on `CLAUDE_CODE_SUBAGENT_MODEL=claude-sonnet-4-6` default.
-- Exceptions: security/architect/visual-qa/payment reviewers use explicit `model: opus`.
+- Exceptions: security/architect/payment reviewers use explicit `model: opus` (`visual-qa` runs on the Sonnet/Flash tier since issue #6 — screenshot diffing, not judgment).
 
 ## Agent Diversity Review gate (KEYSTONE — final review)
 

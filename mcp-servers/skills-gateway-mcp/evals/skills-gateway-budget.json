@@ -1,0 +1,47 @@
+{
+  "server": "skills-gateway-mcp",
+  "_comment": "Budget / contract golden tests. These guard the property the issue asks for: the gateway costs ~1K tokens per session and loads one skill on demand. Thresholds are asserted as max_token_delta against the measured tool-definition cost.",
+  "tests": [
+    {
+      "id": "list-tools-cost-is-bounded",
+      "_comment": "The entire tool surface must stay well under 1K tokens (4 chars/token). A regression that inlines skill descriptions here would blow the budget silently.",
+      "tool": "__meta_list_tools",
+      "expected_tool_count_max": 3,
+      "max_listing_chars": 4000,
+      "scoring": "__meta_list_tools"
+    },
+    {
+      "id": "search-result-is-cheap",
+      "_comment": "A 5-hit search must stay small enough to paste into a turn.",
+      "tool": "search_skills",
+      "input": { "query": "deploy cloudflare workers", "max_results": 5 },
+      "max_result_chars": 6000,
+      "scoring": "schema-valid"
+    },
+    {
+      "id": "section-load-is-cheaper-than-full-load",
+      "_comment": "load_skill with sections must return strictly less than the whole file.",
+      "tool": "load_skill",
+      "input": { "name": "architecture-and-stack", "sections": ["Reliability"] },
+      "max_result_chars": 12000,
+      "expected_contains": ["Reliability"],
+      "scoring": "schema-valid"
+    },
+    {
+      "id": "min-result-is-present",
+      "_comment": "Every result carries at least one text content block, so a client never gets an empty payload.",
+      "tool": "search_skills",
+      "input": { "query": "testing" },
+      "min_result_chars": 20,
+      "scoring": "schema-valid"
+    },
+    {
+      "id": "schema-valid-max-results-clamped",
+      "_comment": "max_results above the schema ceiling is rejected, not silently clamped.",
+      "tool": "search_skills",
+      "input": { "query": "testing", "max_results": 100 },
+      "expected_is_error": true,
+      "scoring": "error-shape"
+    }
+  ]
+}
