@@ -15,7 +15,7 @@ paths:
 
 - "Hey" not "Hi". No preamble/postamble/hedging.
 - Pick ONE answer, never offer options. Never ask permission. Just do it.
-- Silence = approval.
+- Avoid unnecessary confirmation for safe reversible work; silence is not authorization for consequential actions.
 
 ## Text output
 
@@ -37,6 +37,19 @@ paths:
 4. Compatibility
 
 Open-source only.
+
+## Language preference (when choosing an implementation language)
+
+Prefer the HIGHER language; drop down only for a concrete reason (platform constraint · perf-/systems-critical · a mature library that exists only lower · an existing codebase already in that language):
+
+1. **TypeScript** — the default for ~everything (apps, services, CF Workers, CLIs, tools); matches the estate stack (Node 24 native TS · Bun · Workers · Angular). See [[code-style]], [[stack-selector]].
+2. **Rust** — perf-/systems-critical, WASM, native CLIs, concurrency-correctness.
+3. **Go** — simple high-throughput services/daemons, single-binary infra tools, Go-native ecosystems (k8s, cloud SDKs).
+4. **Python** — ML/data/science + libraries that exist only there (glue, scraping, notebooks).
+5. **C#** — only for an existing .NET codebase or a hard Windows-platform requirement.
+6. **others** — only when a platform/runtime leaves no higher option.
+
+"Whenever possible" = prefer TS unless a reason above applies — never reach past it for familiarity or novelty. Governs APP / SERVICE / TOOL language choice; shell scripts stay **Bash** (per [[terminal-styling]]) and queries stay **SQL** — not a mandate to rewrite those.
 
 ## Command vocabulary
 
@@ -95,7 +108,7 @@ Every URL clickable, every URL specific.
 - **ALWAYS auto-push — never hold work, never emit "NEEDS BRIAN" for a `git push`.** Commit AND `git push` to the remote automatically, same turn, for EVERY Brian repo: side repos (agentskills, saas-starter, plugins, tools) AND project repos under `~/emdash/repositories/*` (njsk.org, etc.). A push is autonomous infrastructure, never a human-gated step. (Brian directive 2026-06-19 — corrected the old "never push emdash projects" stance after it stranded 229 commits + a "NEEDS BRIAN: push" line.)
 - **Deploy = build + `wrangler deploy` + push, autonomously.** "Deploy latest" / any deploy means ship it AND push the source — don't ask, don't defer.
 - **Only `~/emdash-projects/*`** (the legacy frontend-managed tree, if any) stays Brian-pushed-from-PR. Everything in `~/emdash/repositories/*` is auto-push.
-- `How to improve?` → always find 50 more things, explore every branch, never cap effort.
+- `How to improve?` → search broadly, rank ideas, and implement the strongest candidates within the active budget and authorization.
 
 ## Skill/Rule File Format
 

@@ -13,6 +13,11 @@ superseded_by: null
 
 Enforce TS 7.0 strict mode, Google TS Style, ESM-only imports, and Cloudflare Workers-compatible patterns across all TypeScript and Angular code.
 
+## Language selection order
+
+- **TypeScript > Rust > Go > Python > C# > others** — prefer the highest whenever possible; drop down only for a concrete reason (platform · perf/systems-critical · a library only available lower · an existing codebase). SSOT + rationale: [[brian-preferences]] § Language preference.
+- Governs app/service/tool language; shell scripts stay **Bash** (§ Bash below + [[terminal-styling]]), queries stay **SQL**.
+
 ## Discipline — simplicity-first + surgical (Karpathy)
 
 Folded from [multica-ai/andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills) (`karpathy-guidelines`, MIT) — the LLM-coding failure modes it names, reconciled with estate doctrine (NOT the upstream plugin — [[vendored-skill-compression]]):
@@ -150,7 +155,7 @@ Pre-commit via **lefthook** (not husky). CI runs same checks (lint gates test).
 
 - `@hono/zod-validator`, `@hono/zod-openapi`, `hc`
 - `drizzle-orm` (v1 RQBv2), `drizzle-kit`
-- `@clerk/backend`, `zod`
+- `better-auth`, `zod`
 - `@editorjs/editorjs`, `@uppy/core`, `ag-grid`, `copilotkit`
 - `eslint`, `prettier`, `typescript-eslint`, `angular-eslint`, `eslint-plugin-perfectionist`, `eslint-plugin-security`
 - `oxlint`, `knip`, `jscpd`, `dependency-cruiser`, `lefthook`
