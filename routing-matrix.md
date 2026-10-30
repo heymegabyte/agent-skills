@@ -39,6 +39,7 @@ Classify every reusable lesson before writing it anywhere. This is the single de
 - Might be invoked by name ("run the retrospective")
 - Has a clear trigger phrase
 - Benefits from progressive disclosure (frontmatter → body → reference)
+- **Format = the agentskills.io open standard** (Anthropic-origin): a `<name>/SKILL.md` folder with `name`+`description` frontmatter (minimum) + instructions, optional `scripts/`/`references/`/`assets/`. Our extra keys (`pack`/`priority`/`triggers`) are ADDITIVE — a generic skills-compatible agent reads name+description+body and ignores them — so keep `name`+`description` present and every skill stays portable to the Skills Hub.
 
 ### Goes to a prompt when:
 
