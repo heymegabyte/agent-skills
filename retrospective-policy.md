@@ -9,7 +9,7 @@ Run the retrospective skill (`agentskills-retrospective`) when:
 1. The user asked a **follow-up** that wouldn't have been needed if a better instruction existed
 2. The user **repeated** a known task pattern (second occurrence in this or recent sessions)
 3. The user **corrected** Claude on a durable preference (not a one-off clarification)
-4. The turn revealed a **reusable workflow** (multi-step process worth extracting)
+4. The turn **completed a complex, multi-step task** whose PROCEDURE is reusable — proactively distill it into a skill, even on first occurrence IF clearly reusable (the `routing-matrix.md` anti-one-off guard still applies: never skill a true one-off). Absorbed from Hermes's autonomous-skill-creation reflex.
 5. The turn surfaced **stale docs**, missing tests, or architecture drift
 6. The user made a **stack decision** or **philosophy change**
 7. The turn exposed a **missing checklist, validation rule, or safety guard**
