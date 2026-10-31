@@ -6,6 +6,10 @@ This repository contains 23 skill categories, 28 agents, and 149 reference docs 
 
 CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1-rc | Clerk | Stripe + Link (default) · Square on request | Inngest | Amazon SES | Bun | Playwright v1.63+ | PostHog | Sentry
 
+## Canonical UI and approval (HARD RULE)
+
+For every UI, component, Storybook, theme, Figma, OnePrompt, or ProjectSites task, first read [rules/theme-tools-canonical-components.md](rules/theme-tools-canonical-components.md). Every visual component is sourced, edited, updated, managed, tested, and published through the source repository backing **ui.theme.tools**; **theme.tools** owns starting themes/tokens. Consume pinned packages, not local forks or mutable hosted scripts. This supersedes older draftl.ink and per-app copied-component defaults. Guide Brian through explicit Figma approval per screen or for the complete design before programming new/materially changed UI. A general request to implement everything is not design approval. OnePrompt requires Cloudflare, PostHog, Sentry, GA4, GTM, Langfuse Cloud, and Promptfoo, with verified delivery rather than merely installed SDKs. Use manifest-first progressive previews and smallest-sufficient, authorized stack patches; keep generated previews isolated.
+
 ## Internal Agent Providers (HARD RULE)
 
 Internal dev/research/agent-orchestration runs on **subscription CLIs** (`claude` + `codex`) for frontier judgment and **DeepSeek-via-OpenCode** (`bin/opencode-deepseek.sh`) for throughput — NEVER the `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` paid APIs to make a model research/plan/review/write code when a CLI can do it. Launch every internal CLI via `bin/with-subscription-cli.sh` (a child `claude` must not inherit `ANTHROPIC_API_KEY`; a child `codex` must not inherit `OPENAI_API_KEY` — either overrides the subscription and bills). Customer-facing OpenAI/Anthropic PRODUCT features are a separate, preserved, platform-billed axis. SSOT: `rules/agent-provider-policy.md`.
