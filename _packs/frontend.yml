@@ -3,6 +3,7 @@ description: React 19 + Vite OR Angular 22 + Nx frontend
 members:
   - 10-experience-and-design-system
   - 11-motion-and-interaction-system
+  - rules/theme-tools-canonical-components
   - rules/frontend-stack
   - rules/stack-selector
   - rules/cinematic-ui-patterns
