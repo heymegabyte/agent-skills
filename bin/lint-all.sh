@@ -56,7 +56,9 @@ runGate() {
     FAIL=$((FAIL + 1))
     GATE_STATUSES+=("fail")
     local errsum
-    errsum=$(head -5 /tmp/lint-all-$$-out 2>/dev/null | tr '\n' ' ' | head -c 200)
+    # head -c truncates by BYTES — iconv -c drops any multibyte char left dangling at the cut,
+    # so GATE_DETAILS (and thus the --json `details`) is always valid UTF-8 (fire 50 finding).
+    errsum=$(head -5 /tmp/lint-all-$$-out 2>/dev/null | tr '\n' ' ' | head -c 200 | iconv -f UTF-8 -t UTF-8 -c 2>/dev/null)
     GATE_DETAILS+=("$cmd_summary — $errsum")
     if [ "$JSON" = "0" ]; then
       printf '  ✗ %s\n' "$cmd_summary" >&2
