@@ -4,6 +4,7 @@ members:
   - 10-experience-and-design-system
   - 11-motion-and-interaction-system
   - 22-visual-experience
+  - rules/theme-tools-canonical-components
   - rules/text-contrast
   - rules/logo-contrast
   - rules/logo-generation
