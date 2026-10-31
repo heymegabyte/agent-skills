@@ -254,6 +254,12 @@ def estimate_tokens(s: str) -> int:
     return max(1, len(s) // 4)
 
 
+def _one_line(text: str, limit: int = 120) -> str:
+    """Collapse whitespace + truncate to a single lean line (for match summaries)."""
+    s = " ".join((text or "").split())
+    return s[: limit - 1] + "…" if len(s) > limit else s
+
+
 
 def cmd_sync_metadata():
     """Fast, KEYLESS sync of routing metadata (priority/pack/triggers/paths/tokens)
@@ -832,10 +838,23 @@ def cmd_route(prompt: str, cwd: str | None = None, cache_only: bool = False,
     else:
         total = 0
 
+    # id → one-line description for the selected set (additive; lets a consumer show WHAT
+    # matched, not just that it matched — existing hooks read id/reason + ignore this field)
+    desc_map = {}
+    if final:
+        drow = conn.execute(
+            f"SELECT id, description FROM skills WHERE id IN ({','.join('?' * len(final))})",
+            final,
+        )
+        desc_map = {r[0]: r[1] for r in drow.fetchall()}
+
     conn.close()
 
     return {
-        "selected": [{"id": sid, "reason": selected[sid]} for sid in final],
+        "selected": [
+            {"id": sid, "reason": selected[sid], "description": _one_line(desc_map.get(sid, ""))}
+            for sid in final
+        ],
         "dropped_for_budget": dropped,
         "fingerprint": fp,
         "total_tokens": total,
