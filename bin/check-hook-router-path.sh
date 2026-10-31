@@ -5,13 +5,15 @@
 # hook's `|| true` wrapper, so the whole skill-router INJECTION layer dies SILENTLY (no error,
 # no injection, ever — wired-but-broken / config≠proof).
 #
-# Report-only by default (exit 0) — the live fix is OWNER-GATED (untracked global config +
-# activating a dormant per-prompt injection everywhere). `--strict` exits 1 (CI, once revived).
+# Health check: exits 1 when any invoking hook points at a DEAD/mismatched router, 0 when all
+# resolve. Designed to run as a NON-BLOCKING lint-all soft-info section (the harness never fails
+# the build on an info section — the non-zero exit only flags drift so `--quiet` surfaces it); the
+# LIVE fix (reviving the hooks) is OWNER-GATED (untracked global config + per-prompt blast radius).
 # `--json`: uniform envelope per rules/uniform-json-output.md.
 #
 # Env: CLAUDE_HOOKS_DIR (default ~/.claude/hooks) · HOME (resolves CLAUDE_DIR-form paths).
 #
-# Usage: bash bin/check-hook-router-path.sh [--json] [--strict]
+# Usage: bash bin/check-hook-router-path.sh [--json]
 
 set -uo pipefail
 
@@ -36,11 +38,9 @@ say_err() {
 }
 
 JSON=0
-STRICT=0
 for arg in "$@"; do
   case "$arg" in
     --json) JSON=1 ;;
-    --strict) STRICT=1 ;;
     *)
       say_err "unknown arg: $arg"
       exit 2
@@ -112,9 +112,7 @@ for hook in "$HOOKS_DIR"/*.py; do
 done
 
 code=0
-if [ "$dead" -gt 0 ] && [ "$STRICT" = 1 ]; then
-  code=1
-fi
+[ "$dead" -gt 0 ] && code=1
 
 if [ "$JSON" = 1 ]; then
   ts="$(emit_iso_ts)"

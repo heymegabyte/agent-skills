@@ -278,6 +278,7 @@ runInfoSection() {
 runInfoSection "pricing" "bin/check-pricing.sh"
 runInfoSection "skill-required-fields" "bin/check-skill-required-fields.sh"
 runInfoSection "skill-pack-claim" "bin/check-skill-pack-claim.sh"
+runInfoSection "hook-router-path" "bin/check-hook-router-path.sh"
 
 if [ "$JSON" = "0" ]; then
   INFO_BUF=$(mktemp)
@@ -296,9 +297,11 @@ if [ "$JSON" = "0" ]; then
     "bin/check-skill-required-fields.sh" 4
   emitInfoSection "ℹ SKILL.md pack: claim drift (info-only, doesn't gate)" \
     "bin/check-skill-pack-claim.sh" 5
+  emitInfoSection "ℹ hook→router dead-path (info-only, doesn't gate; fix owner-gated)" \
+    "bin/check-hook-router-path.sh" 6
 
   if [ "$QUIET" = "1" ] && [ "$INFO_DRIFT" = "0" ]; then
-    printf '\n━━━ ℹ 3 audit sections clean (pricing · skill-required-fields · skill-pack-claim) — use `npm run lint` for full output\n' >&2
+    printf '\n━━━ ℹ 4 audit sections clean (pricing · skill-required-fields · skill-pack-claim · hook-router-path) — use `npm run lint` for full output\n' >&2
   else
     cat "$INFO_BUF" >&2
   fi
