@@ -16,6 +16,7 @@ Usage:
   skill-router.py route <prompt> [--cwd PATH] [--cache PATH] [--tool TOOL]
                                        # Resolve full skill manifest for a prompt
   skill-router.py track <skill_id>     # Append used skill to session cache
+  skill-router.py index [--json]       # Emit the minimal L0 ecosystem index (all skills+rules, no bodies)
 """
 # PEP 563: defer annotation evaluation so PEP-604 unions (`str | None`) parse on
 # Python 3.9 (system python3), not just 3.10+. Keeps the router runnable by hooks.
@@ -864,6 +865,60 @@ def cmd_track(skill_id: str, cwd: str | None = None) -> None:
 # -----------------------------------------------------------------------------
 # CLI dispatch
 # -----------------------------------------------------------------------------
+def cmd_index(as_json: bool = False) -> None:
+    """Emit the minimal L0 ecosystem index (REVISION 2 §11): one compact line per
+    skill + rule — id · [pack/priority] · one-line description — derived LIVE from
+    discover_skills() so it can never drift from a hand-maintained copy. The cheap
+    L0 layer of progressive retrieval: orient over the whole ecosystem without
+    loading a single full body, narrow the set, THEN load L4 source on demand."""
+    items = discover_skills()
+
+    def one_line(text: str) -> str:
+        collapsed = " ".join((text or "").split())
+        return collapsed[:117] + "..." if len(collapsed) > 120 else collapsed
+
+    skills = [s for s in items if s["type"] == "skill"]
+    rules = [s for s in items if s["type"] == "rule"]
+    if as_json:
+        print(json.dumps({
+            "meta": {
+                "generated_by": "skill-router.py index",
+                "skills": len(skills),
+                "rules": len(rules),
+                "total": len(items),
+            },
+            "items": [
+                {
+                    "id": s["id"],
+                    "type": s["type"],
+                    "pack": s["pack"],
+                    "priority": s["priority"],
+                    "triggers": len(s["triggers"]),
+                    "path": s["path"],
+                    "description": one_line(s["description"]),
+                }
+                for s in items
+            ],
+        }, indent=2))
+        return
+    lines = [
+        "# L0 Ecosystem Index (generated — `skill-router.py index`)",
+        "",
+        f"{len(skills)} skills · {len(rules)} rules · {len(items)} total. "
+        "Minimal routing layer — id · [pack/priority] · one-line description; "
+        "load a full body only after this L0 pass narrows the set.",
+        "",
+        "## Skills",
+        "",
+    ]
+    for s in skills:
+        lines.append(f"- **{s['id']}** [{s['pack'] or '-'}/p{s['priority']}] — {one_line(s['description'])}")
+    lines += ["", "## Rules", ""]
+    for s in rules:
+        lines.append(f"- **{s['id']}** [{s['pack'] or '-'}/p{s['priority']}] — {one_line(s['description'])}")
+    print("\n".join(lines))
+
+
 def main(argv: list[str]) -> int:
     if len(argv) < 2:
         print(__doc__, file=sys.stderr)
@@ -902,6 +957,9 @@ def main(argv: list[str]) -> int:
         if "--cwd" in argv:
             cwd = argv[argv.index("--cwd") + 1]
         cmd_track(argv[2], cwd)
+        return 0
+    if cmd == "index":
+        cmd_index(as_json="--json" in argv)
         return 0
     print(f"unknown command: {cmd}", file=sys.stderr)
     print(__doc__, file=sys.stderr)
