@@ -15,8 +15,9 @@ Enforce TS 7.0 strict mode, Google TS Style, ESM-only imports, and Cloudflare Wo
 
 ## Language selection order
 
-- **TypeScript > Rust > Go > Python > C# > others** — prefer the highest whenever possible; drop down only for a concrete reason (platform · perf/systems-critical · a library only available lower · an existing codebase). SSOT + rationale: [[brian-preferences]] § Language preference.
-- Governs app/service/tool language; shell scripts stay **Bash** (§ Bash below + [[terminal-styling]]), queries stay **SQL**.
+- **TWO PRIMARY languages, reach for first:** **TypeScript** (all app/service/tool/CLI logic) + **Bash** (system scripts, glue, host + CI automation, systemd/cron jobs, exporters, anything that shells out). Full order: **TS ≈ Bash > Rust > Go > Python > C# > others** — drop below the two primaries only for a concrete reason (platform · perf/systems-critical · a library only available lower · an existing codebase). SSOT + rationale: [[brian-preferences]] § Language preference.
+- **Python is NOT a default** — only genuine ML/data/science or a library that exists *only* there. A host exporter / parser / glue script / systemd job is **Bash** (or TS), NEVER Python for convenience (reference incident: a Proxmox SMART exporter written in Python → rewritten to Bash, 2026-10-31).
+- Queries stay **SQL**.
 
 ## Discipline — simplicity-first + surgical (Karpathy)
 

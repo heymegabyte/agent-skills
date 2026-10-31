@@ -40,16 +40,7 @@ Open-source only.
 
 ## Language preference (when choosing an implementation language)
 
-Prefer the HIGHER language; drop down only for a concrete reason (platform constraint · perf-/systems-critical · a mature library that exists only lower · an existing codebase already in that language):
-
-1. **TypeScript** — the default for ~everything (apps, services, CF Workers, CLIs, tools); matches the estate stack (Node 24 native TS · Bun · Workers · Angular). See [[code-style]], [[stack-selector]].
-2. **Rust** — perf-/systems-critical, WASM, native CLIs, concurrency-correctness.
-3. **Go** — simple high-throughput services/daemons, single-binary infra tools, Go-native ecosystems (k8s, cloud SDKs).
-4. **Python** — ML/data/science + libraries that exist only there (glue, scraping, notebooks).
-5. **C#** — only for an existing .NET codebase or a hard Windows-platform requirement.
-6. **others** — only when a platform/runtime leaves no higher option.
-
-"Whenever possible" = prefer TS unless a reason above applies — never reach past it for familiarity or novelty. Governs APP / SERVICE / TOOL language choice; shell scripts stay **Bash** (per [[terminal-styling]]) and queries stay **SQL** — not a mandate to rewrite those.
+**TWO PRIMARY LANGUAGES — reach for these FIRST (Brian 2026-10-31):** **TypeScript** for all app/service/tool/CLI logic; **Bash** for system scripts / glue / systemd / cron / CI / anything that shells out (ShellCheck + shfmt + `emdash_*`). **Python is NOT a default** — only genuine ML/data/science or a Python-only library; a host exporter / parser / glue / systemd job is Bash (or TS), **never Python for convenience** (catch yourself writing `*.py` for system work → rewrite in Bash). Fallback when TS/Bash genuinely don't fit (concrete reason only — platform · perf/systems-critical · a lower-only library · an existing codebase): **TS ≈ Bash > Rust > Go > Python(ML/data only) > C# > others**; queries stay **SQL**. Full order + the reference incident: [[code-style]] § Language selection order.
 
 ## Command vocabulary
 
