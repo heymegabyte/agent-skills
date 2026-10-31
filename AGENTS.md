@@ -2,6 +2,10 @@
 
 This repository contains 23 skill categories, 28 agents, and 149 reference docs for autonomous product building.
 
+## Scoped shared-platform mandate (2026-10-31)
+
+For OnePrompt.site/ProjectSites.dev, theme.tools/ui.theme.tools, desktop.management, Inbox.vision, pdf.kitchen and their shared infrastructure, load [rules/platform-shared-capabilities.md](rules/platform-shared-capabilities.md) before older stack defaults, then its relevant modules. The [platform pack](_packs/platform.yml) and [execution prompt](prompts/platform-convergence.md) require Bolt.diy, Cloudflare Agents, AG-UI, json-render, MCP Apps, Better Auth, AI Search instead of QMD, PlateJS, React Flow, Remotion, Infisical Agent Vault, shared connectors and automation. These scoped decisions supersede conflicting defaults below; preserve unrelated policies and migrate safely. Apply them during `/run-the-loop`, retain explicit Figma approval, and distinguish committed policy from verified product functionality and acknowledged consumer sync.
+
 ## Stack
 
 CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1-rc | Clerk | Stripe + Link (default) · Square on request | Inngest | Amazon SES | Bun | Playwright v1.63+ | PostHog | Sentry

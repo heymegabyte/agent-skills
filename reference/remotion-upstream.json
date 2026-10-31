@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "repository": "remotion-dev/skills",
+  "reviewedAt": "2026-10-31",
+  "commit": "30d4553ecd46fbc5212fd0ff006ae43af522158b",
+  "routerPath": "skills/remotion-best-practices/SKILL.md",
+  "routerBlob": "1aac6dbbf9941672c70e910290dfc1afef0a2bac",
+  "routerVersion": "4.0.539",
+  "integrationMode": "reference-and-original-synthesis",
+  "vendored": false,
+  "licenseReview": "The inspected root tree has no LICENSE and package.json has no license field. Verify applicable rights before copying/distributing upstream skill text; this is not a blanket legal conclusion.",
+  "localRule": "rules/platform-content-media.md",
+  "guidance": ["preserve-user-edits", "preview-before-export", "load-relevant-router-references", "typed-compositions", "frame-derived-timing", "captions-and-saas-runtime-review"],
+  "refresh": {"trigger": "relevant-remotion-loop-work", "steps": ["Resolve current upstream revision", "Review diff and applicable licensing", "Reconcile local requirements and tests", "Update this receipt only after review"], "autoVendor": false}
+}

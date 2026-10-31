@@ -1,0 +1,7 @@
+name: platform
+description: Shared Cloudflare agent, UI, identity, knowledge, publishing, media and connector contracts
+members:
+  - rules/platform-shared-capabilities
+  - rules/platform-agent-ui
+  - rules/platform-knowledge-integrations
+  - rules/platform-content-media
