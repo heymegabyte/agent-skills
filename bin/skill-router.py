@@ -17,6 +17,7 @@ Usage:
                                        # Resolve full skill manifest for a prompt
   skill-router.py track <skill_id>     # Append used skill to session cache
   skill-router.py index [--json]       # Emit the minimal L0 ecosystem index (all skills+rules, no bodies)
+  skill-router.py capsule <id> [--json]  # Emit an L1 capsule (intent + section outline, not the full body)
 """
 # PEP 563: defer annotation evaluation so PEP-604 unions (`str | None`) parse on
 # Python 3.9 (system python3), not just 3.10+. Keeps the router runnable by hooks.
@@ -865,6 +866,66 @@ def cmd_track(skill_id: str, cwd: str | None = None) -> None:
 # -----------------------------------------------------------------------------
 # CLI dispatch
 # -----------------------------------------------------------------------------
+def make_capsule(item: dict, max_sections: int = 14) -> str:
+    """Build the L1 capsule for a skill/rule (REVISION 2 §11): intent + structural
+    outline — the id line, the description, and the body's section-header outline
+    (## / ### lines) — but NOT the full body. The mid-tier between the L0 index line
+    and the L4 full body: load a capsule for a mid-priority selection to orient on
+    what a skill covers + its shape at a fraction of the body's tokens."""
+    body = item.get("body", "") or ""
+    headers = []
+    for line in body.splitlines():
+        s = line.strip()
+        if s.startswith("### "):
+            headers.append("  - " + s[4:].strip())
+        elif s.startswith("## "):
+            headers.append("- " + s[3:].strip())
+    desc = " ".join((item.get("description") or "").split())
+    out = [f"## {item['id']} [{item.get('pack') or '-'}/p{item.get('priority', 3)}]", ""]
+    if desc:
+        out += [desc, ""]
+    if headers:
+        out.append("Sections:")
+        out += headers[:max_sections]
+        if len(headers) > max_sections:
+            out.append(f"- … (+{len(headers) - max_sections} more sections)")
+    else:
+        out.append("(no section headers — short rule; load full body if needed)")
+    out += ["", f"→ full body: `{item.get('path', '')}`"]
+    return "\n".join(out)
+
+
+def cmd_capsule(skill_id: str, as_json: bool = False) -> int:
+    """Emit the L1 capsule for ONE skill/rule id (+ its body-vs-capsule token
+    reduction). Accepts a skill id (`07-quality-and-verification`) or a rule id
+    (`rules/verification-loop` or the bare `verification-loop`)."""
+    items = discover_skills()
+    item = next((s for s in items if s["id"] == skill_id), None)
+    if item is None:
+        item = next((s for s in items if s["id"] == f"rules/{skill_id}"), None)
+    if item is None:
+        print(f"capsule: unknown skill/rule id: {skill_id}", file=sys.stderr)
+        return 1
+    capsule = make_capsule(item)
+    body_tok = estimate_tokens(item.get("body", "") or "")
+    cap_tok = estimate_tokens(capsule)
+    reduction = round(100 * (1 - cap_tok / body_tok)) if body_tok else 0
+    if as_json:
+        print(json.dumps({
+            "id": item["id"],
+            "path": item.get("path", ""),
+            "body_tokens": body_tok,
+            "capsule_tokens": cap_tok,
+            "reduction_pct": reduction,
+            "capsule": capsule,
+        }, indent=2))
+    else:
+        print(capsule)
+        print(f"\n<!-- L1 capsule: {cap_tok} tok vs {body_tok} tok body — {reduction}% reduction -->",
+              file=sys.stderr)
+    return 0
+
+
 def cmd_index(as_json: bool = False) -> None:
     """Emit the minimal L0 ecosystem index (REVISION 2 §11): one compact line per
     skill + rule — id · [pack/priority] · one-line description — derived LIVE from
@@ -961,6 +1022,11 @@ def main(argv: list[str]) -> int:
     if cmd == "index":
         cmd_index(as_json="--json" in argv)
         return 0
+    if cmd == "capsule":
+        if len(argv) < 3:
+            print("usage: capsule <skill_id> [--json]", file=sys.stderr)
+            return 1
+        return cmd_capsule(argv[2], as_json="--json" in argv)
     print(f"unknown command: {cmd}", file=sys.stderr)
     print(__doc__, file=sys.stderr)
     return 1
