@@ -9,6 +9,7 @@ members:
   - 11-motion-and-interaction-system
   - 12-media-orchestration
   - 14-independent-idea-engine
+  - rules/theme-tools-canonical-components
   - rules/website-build-doctrine
   - rules/predictive-completeness
   - rules/competitor-research
