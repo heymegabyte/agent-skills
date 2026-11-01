@@ -74,10 +74,35 @@ resolve_router_path() {
   esac
 }
 
+# diagnose_dead <resolved-path> — set DD_CAUSE (+ DD_SYMLINK/DD_TARGET) explaining WHY the router
+# path doesn't resolve: a DANGLING SYMLINK in an ancestor (the common case — a stale `~/.claude/bin`
+# left pointing at an old/renamed plugin name) vs a plainly-missing path. Drives the correct fix.
+DD_CAUSE=""
+DD_SYMLINK=""
+DD_TARGET=""
+diagnose_dead() {
+  local d
+  DD_CAUSE="missing-path"
+  DD_SYMLINK=""
+  DD_TARGET=""
+  d="$(dirname "$1")"
+  while [ -n "$d" ] && [ "$d" != "/" ] && [ "$d" != "." ]; do
+    if [ -L "$d" ] && [ ! -e "$d" ]; then
+      DD_CAUSE="dangling-symlink"
+      DD_SYMLINK="$d"
+      DD_TARGET="$(readlink "$d")"
+      return 0
+    fi
+    d="$(dirname "$d")"
+  done
+}
+
 checked=0
 dead=0
 hooks_json=""
 first=1
+fix_symlink=""
+fix_target=""
 for hook in "$HOOKS_DIR"/*.py; do
   [ -f "$hook" ] || continue
   # in-scope = a module-level `ROUTER =` assignment that is INVOKED via subprocess (the router
@@ -89,6 +114,7 @@ for hook in "$HOOKS_DIR"/*.py; do
   name="$(basename "$hook")"
   line="$(grep -m1 -E '^ROUTER[[:space:]]*=' "$hook" || true)"
   resolved=""
+  cause=""
   if [ -z "$line" ]; then
     status="no-router-assign"
   else
@@ -98,17 +124,24 @@ for hook in "$HOOKS_DIR"/*.py; do
     elif [ ! -e "$resolved" ]; then
       status="dead"
       dead=$((dead + 1))
+      diagnose_dead "$resolved"
+      cause="$DD_CAUSE"
+      if [ -n "$DD_SYMLINK" ] && [ -z "$fix_symlink" ]; then
+        fix_symlink="$DD_SYMLINK"
+        fix_target="$DD_TARGET"
+      fi
     elif grep -q 'def discover_skills' "$resolved" 2>/dev/null; then
       status="ok"
     else
       status="exists-not-router"
+      cause="wrong-file"
       dead=$((dead + 1))
     fi
   fi
-  say "$name → ${resolved:-<no ROUTER=>} [$status]"
+  say "$name → ${resolved:-<no ROUTER=>} [$status${cause:+ · $cause}]"
   [ "$first" = 1 ] || hooks_json="$hooks_json,"
   first=0
-  hooks_json="$hooks_json{$(emit_kv_string hook "$name"),$(emit_kv_string router_path "$resolved"),$(emit_kv_string status "$status")}"
+  hooks_json="$hooks_json{$(emit_kv_string hook "$name"),$(emit_kv_string router_path "$resolved"),$(emit_kv_string status "$status"),$(emit_kv_string cause "$cause")}"
 done
 
 code=0
@@ -125,7 +158,12 @@ fi
 
 if [ "$dead" -gt 0 ]; then
   say_err "$dead/$checked skill-router hook(s) reference a DEAD/mismatched router → injection silently no-ops."
-  say_err "Fix (owner-gated — global live config): mkdir -p \"$HOME/.claude/bin\" && ln -s \"$PLUGIN_ROUTER\" \"$HOME/.claude/bin/skill-router.py\""
+  if [ -n "$fix_symlink" ]; then
+    say_err "Root cause: \"$fix_symlink\" is a DANGLING symlink → \"$fix_target\" (missing). The real router is in $SELF_DIR."
+    say_err "Fix (owner-gated — global live config): rm \"$fix_symlink\" && ln -s \"$SELF_DIR\" \"$fix_symlink\""
+  else
+    say_err "Fix (owner-gated — global live config): mkdir -p \"$HOME/.claude/bin\" && ln -s \"$PLUGIN_ROUTER\" \"$HOME/.claude/bin/skill-router.py\""
+  fi
 elif [ "$checked" -gt 0 ]; then
   say "all $checked skill-router hook(s) resolve to the real router ✓"
 else
