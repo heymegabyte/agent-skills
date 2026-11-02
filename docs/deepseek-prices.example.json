@@ -1,0 +1,10 @@
+{
+  "_comment": "PLACEHOLDER prices in USD per 1M tokens — NOT VERIFIED. Replace every value with the published DeepSeek price list (https://api-docs.deepseek.com/quick_start/pricing) before quoting any savings figure. bin/deepseek-cost-model.py deliberately ships no price constants; this file exists only so the model can be run end to end in CI and docs dry-runs.",
+  "chat_in": 0.27,
+  "chat_out": 1.1,
+  "pro_in": 0.55,
+  "pro_out": 2.19,
+  "flash_in": 0.14,
+  "flash_out": 0.28,
+  "cache_hit_discount": 0.9
+}
