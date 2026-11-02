@@ -30,6 +30,7 @@ Wait for explicit "yes". Re-confirm within the same project only for: new servic
 - VMs: OPNsense, Ubuntu Desktop, macOS, Windows 11, Home Assistant OS, Coolify server
 - Backup: daily ZFS snapshots → R2 (3-2-1)
 - Network: VLAN segmentation, 10+ VLANs
+- Ingress: `cloudflared` is the front door for every service; host firewalls remain enabled with default-deny inbound. Add only source-scoped, service-specific exceptions per `rules/server-ingress-firewall.md`.
 
 ### OPNsense
 
@@ -181,8 +182,10 @@ services:
     environment:
       - DATABASE_URL=postgresql://...
       - SECRET_KEY=${SECRET_KEY}
+    # Prefer no host port. Let cloudflared/reverse proxy reach the container network.
+    # If a host bind is required, bind loopback only:
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
     volumes:
       - data:/app/data
 volumes:
@@ -248,3 +251,7 @@ See `08/backup-and-disaster-recovery` for the full single-zip restore plan.
 - Self-hosted service orchestration
 - Proxmox infrastructure awareness
 - When-to-use-Coolify decision logic
+
+## Server ingress security
+
+Apply `rules/server-ingress-firewall.md` to every provision or deployment: Tunnel-first ingress, private origin binds, enabled default-deny host firewall, and one explicit least-privilege rule for each justified exception. Never publish a Docker port on all interfaces by default and never disable the firewall as a troubleshooting step.
