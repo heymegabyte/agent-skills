@@ -29,6 +29,7 @@ superseded_by: null
 ## Post-work
 
 - Deploy + test + purge
+- Sync reusable dotfile, package-manager, or system config updates to `install.doctor` (`home/` Chezmoi templates + `post-installx`) same turn (`[[workstation-shared-provisioning-policy]]`)
 - Update CLAUDE.md
 - Remove dead code/comments/imports
 - Stale docs = bugs
