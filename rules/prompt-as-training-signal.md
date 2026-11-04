@@ -47,8 +47,8 @@ Every user prompt is a training signal — and evidence the previous turn under-
 
 ### 5. `"How can we improve ___"` / `"What else ___"` / `"Top N ideas"`
 
-- **Means:** invitation to operate at full extra-mile/auto-integrate-recs surface.
-- **Extract:** which surface the user is investing in — note in a project memory entry.
+- **Means:** invitation to operate at full extra-mile/auto-integrate-recs surface — and a signal that pass-1 predictive completeness left high-value ideas on the table.
+- **Extract:** which surface the user is investing in — note in a project memory entry, and once the user selects from the "Top X" list, execute §8 below in the same turn.
 
 ### 6. `"Ensure ___ is in ___"` / `"Save ___ to memory"` / `"Add ___ to the rules"`
 
@@ -58,7 +58,17 @@ Every user prompt is a training signal — and evidence the previous turn under-
 ### 7. `"Why didn't ___?"` / `"How come ___?"` / venting
 
 - **Means:** a behavior violated a prior preference or the user's implicit model.
-- **Write to:** `feedback_<topic>.md` memory with the prohibited behavior + reason given. Surface conflict in `rules/conflict-resolution.md` if applicable.
+- **Write to:** `feedback_<topic>.md` memory with the prohibited behavior + reason given. Surface conflict under `~/.claude/CLAUDE.md` § Conflict Resolution if applicable.
+
+### 8. Selection / Approval from a Printed `"Top X"` List (`"implement these"`, `"remove X, skip Y, and implement the rest"`)
+
+- **Means:** every item the user selects from a printed "Top X" (e.g., Top 30) list is a feature/config that **should have been automatically implemented before the user ever had to ask for the 30 ideas**. Any item the user explicitly drops or rejects is a permanent negative preference.
+- **Mandatory 4-Step Pre-Emptive Integration Loop (run in the SAME turn):**
+  1. **Note Wanted vs. Rejected Items**: Record which items from the "Top X" list the user wants implemented and which items they explicitly excluded or removed.
+  2. **Root-Cause Why It Wasn't Auto-Implemented**: For every wanted item, ask yourself: *"Why wasn't this feature/configuration already automatically implemented on pass 1, before the user asked for the Top X ideas?"* Identify the exact gap in the predictive checklist, domain skill, or bootstrap/starter template.
+  3. **Modify Agent Skills & Upstream Defaults**: Update the owning skill/rule in `~/.agentskills` (`heymegabyte/agent-skills`) and any canonical upstream bootstrap/template repo (`heymegabyte/install.doctor`, `template.projectsites.dev`) **in the same turn** so the idea is **automatically integrated next time before the user ever asks for a "Top X" list**.
+  4. **Codify Exclusions**: Record any rejected/removed items as explicit `NEVER` guardrails in the relevant skill/rule so they are never proposed or provisioned again.
+- **Cross-links:** `[[auto-integrate-recs]]` · `[[predictive-completeness]]` · `[[always]]`.
 
 ## Extraction protocol
 
@@ -70,6 +80,17 @@ For every prompt:
 4. **Write the artifact** — append to the file, update the index, commit + push.
 5. **Cross-link** — add `[[backlink]]` from both sides. Skipping this step lets the same lesson recur in unrelated projects weeks later.
 6. **THEN execute the requested work** with the new wisdom already in force.
+
+## Every-turn parallel upstream integration decision
+
+Run this decision alongside the primary task on **every prompt**, without waiting for the user to ask:
+
+1. Did this turn reveal reusable system configuration, provisioning, security, service, package, monitoring, backup, recovery, or host-integration logic? If yes, reconcile it into `heymegabyte/install.doctor` through that repo's OpenSpec, implementation, documentation, and regression tests in the same turn.
+2. Did this turn reveal reusable themes, design tokens, theme transformations, visual primitives, or web components? If yes, reconcile them into `theme.tools` or `ui.theme.tools` through that repo's OpenSpec, documentation, and tests in the same turn.
+3. Keep only product composition, host identity, secrets, device IDs, and irreducible role-specific behavior in the originating repository.
+4. If there is no evidence-backed reusable improvement, do not manufacture churn. The decision is mandatory; mutation is conditional on value.
+
+This is a parallel workstream, not a follow-up recommendation. It must not delay urgent restoration, but it must be completed before claiming the turn done when an applicable safe integration exists. Cross-link: `[[workstation-shared-provisioning-policy]]`.
 
 ## Where the artifacts live
 

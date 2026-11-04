@@ -28,9 +28,19 @@ Ship improvements inline instead of listing them as recommendations. Anything un
 
 ## Top-N Rec list handling
 
-- "Top 10 features" / "20 ideas": pick the BEST 4-6 and SHIP them.
+- "Top 10 features" / "20 ideas" / "Top 30 missing items": pick the BEST 4-6 and SHIP them immediately when operating autonomously.
 - Defer the rest with one-line cost rationale + a single-paragraph cluster note.
 - NEVER ship a Rec list of 10 items and 0 implementations.
+
+## Post-"Top X" Selection Root-Cause & Pre-Emptive Skill Upgrade
+
+Whenever a "Top X" (e.g., Top 30) list has been printed and the user responds with which items they want implemented (or which ones to exclude/modify):
+
+1. **Note Wanted vs. Excluded Items**: Track the exact subset of items the user approved for implementation and any items they rejected or trimmed.
+2. **Ask Why Each Wanted Feature Wasn't Already Auto-Implemented**: For every item the user wants implemented, ask yourself: *"Why wasn't this feature automatically implemented already, before the user had to ask for the Top X ideas?"*
+3. **Modify Agent Skills for Automatic Next-Time Integration**: Update the governing skill/rule in `~/.agentskills` (`heymegabyte/agent-skills`) and any upstream bootstrap/starter repository (`install.doctor`, `template.projectsites.dev`) **in the same turn** so those features get **automatically integrated on pass 1 next time—before the user ever asks for a "Top X" list**.
+4. **Blocklist Rejected Items**: Add rejected items as explicit negative guardrails in the owning rule/skill so they are never suggested or installed again.
+5. **Cross-links**: `[[prompt-as-training-signal]]` §8 · `[[predictive-completeness]]` · `[[always]]`.
 
 ## Anti-patterns
 
