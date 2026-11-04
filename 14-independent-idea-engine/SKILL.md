@@ -10,15 +10,15 @@ license: "Rutgers"
 compatibility:
   claude-code: ">=2.0.0"
   agentskills: ">=1.0.0"
-priority: 3
-pack: "polish"
 stage: beta
+priority: 3
+pack: "core"
 triggers:
   - "what else"
   - "ideas"
   - "co-founder"
 paths:
-  - "org:website_build"
+  - "*"
 ---
 
 # 14 — Independent Idea Engine
@@ -50,11 +50,13 @@ Every idea passes through:
 
 Output: `_ideas.md` w/ accepted + rejected + reasons.
 
-## Auto-implement threshold
+## Auto-implement threshold (Full-Cohort Default — Brian 2026-11-04)
 
-- Confidence ≥0.85 AND aligned AND <30min wall-time AND no design conversation → SHIP per `rules/auto-integrate-recs.md`
-- Confidence 0.7-0.85 OR 30min-2h OR shipping w/ brief mention → SHIP + report
-- Confidence <0.7 OR design conversation needed → Recs section w/ cost/value
+- **Brian wants ~90–95%+ of Top 30 lists implemented automatically.** Do not cap auto-implementation at a small "top 4–6" subset or wait for human confirmation on safe ideas.
+- **Confidence ≥0.65 AND aligned AND not destructive/irreversible (`approval-required`) AND not on the negative blocklist (`Superset`, `onlykey`, `fido2`, `Biome`, `Resend`) → AUTO-IMPLEMENT in the same turn** per `rules/auto-integrate-recs.md` and `rules/improvement-audit.md`.
+- Fan out independent implementation tasks across `~/.agentskills/bin/opencode-swarm.mjs`, use feature flags (`rules/feature-flags.md`) for experimental product surfaces, and use lazy CLI shims (`cnf-build-shims`) for optional workstation tools.
+- Immediately sync reusable patterns upstream to `heymegabyte/agent-skills`, `heymegabyte/install.doctor`, or `template.projectsites.dev` in the same turn so future projects/hosts inherit them on pass 1 before a Top 30 list is ever needed.
+- Confidence <0.65 OR genuinely destructive/irreversible (`approval-required`) OR blocked on a vendor-minted secret → surface in `Recs` / `🚫 Rejected` with one-line rationale.
 
 ## Evaluation dimensions
 
