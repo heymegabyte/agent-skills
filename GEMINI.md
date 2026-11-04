@@ -9,6 +9,7 @@ CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan U
 
 ## Rules
 
+- **Prefer TypeScript over Python** (Node 24 native strip-types / Bun + Bash for system glue; never reach for Python by default for scripts, automation, verifiers, exporters, or tests)
 - TypeScript strict, never `any`, prefer `interface` over `type`
 - Hono inline handlers for RPC type inference
 - Zod validation on all inputs

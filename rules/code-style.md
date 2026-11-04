@@ -13,6 +13,12 @@ superseded_by: null
 
 Enforce TS 7.0 strict mode, Google TS Style, ESM-only imports, and Cloudflare Workers-compatible patterns across all TypeScript and Angular code.
 
+## Language selection order
+
+- **Prefer TypeScript over Python — TWO PRIMARY languages, reach for first:** **TypeScript** (all app/service/tool/CLI/verifier/test logic via Node 24 native strip-types or Bun) + **Bash** (system scripts, glue, host + CI automation, systemd/cron jobs, anything that shells out). Full order: **TS ≈ Bash > Rust > Go > Python > C# > others** — drop below the two primaries only for a concrete reason (platform · perf/systems-critical · a library only available lower · an existing codebase). SSOT + rationale: `[[brian-preferences]]` § Language preference.
+- **Python is NOT a default** — only genuine ML/data/science or a library that exists *only* there. A host exporter, verifier, parser, glue script, or systemd job is **TypeScript** or **Bash**, NEVER Python for convenience.
+- Queries stay **SQL**.
+
 ## TypeScript (Google TS Style)
 
 - **TS 7.0** (native Go compiler, ~8–12× faster; alias TS 6.x for typescript-eslint/ts-morph/transformers until 7.1, stable ~2026-11-24, beta 10/6) — `strictInference: true`, `isolatedDeclarations: true`, `erasableSyntaxOnly` for Node 24 native TS.
