@@ -11,7 +11,7 @@ transcript; this file extracts the actionable procedure, deliverables, and catal
 ## Authority map (who owns what — never collapse)
 
 - **OpenSpec** (`../openspec/`) — canonical behavioral requirements + per-change deltas. Initialized (config.yaml, specs/, changes/archive/).
-- **Figma** — approved visual design; prose mockup NEVER satisfies the gate ([[figma-design-approval-gate]]).
+- **Figma** — optional visual collaboration and handoff; when an applicable policy activates its approval gate, only the exact approved artifact/revision satisfies that gate ([[figma-design-approval-gate]]).
 - **Paperclip** (swarml.ink) — work coordination/assignment/budgets/retry/history; the transactional runtime ledger.
 - **GitHub** (`heymegabyte/agent-skills`, branch `master`) — source, versioned specs, CI evidence, linked issues.
 - **Langfuse Cloud** — AI execution traces, prompt projections, eval observations/datasets.
@@ -46,6 +46,8 @@ transcript; this file extracts the actionable procedure, deliverables, and catal
 - **Re-test a "gated" classification when its blocker may have lifted** (the inverse of premature convergence): an owner-gated item can become autonomous once a dependency resolves — re-check against current evidence before holding, and record a sharpened gating if it stays blocked.
 - **Scanner-health before accepting ANY "zero/clean" result** (dogfood `../rules/ast-grep-structural-capability.md`): a scan reporting zero findings must first prove it SELECTED its inputs — "0 files selected" / missing grammars / parse errors / skipped paths = an INCOMPLETE scan (false-clean), never a pass. Verify selection, then trust the zero.
 
+- **A HOLD never suppresses a DUE periodic obligation.** Self-suppress silences no-state-change CHURN — it does NOT silence the step-2 obligation check. Every fire, BEFORE holding, confirm no standing periodic obligation (e.g. the weekly Mon 08:00 ET upstream review in [[upstream-absorption-register]]) came DUE during the HOLD stretch; if one did, CATCH IT UP this fire and commit the result (an obligation met is a genuine state change, not churn). A HOLD that lets a dated obligation silently lapse is a miss (fire 90: the weekly review slipped 2 days because fires 54-89 held without the catch-up check).
+
 ## Research policy
 
 - Cloudflare → official CF docs + CF-docs MCP first (keep doc-read separate from the broad infra-write MCP). Others → Context7 first, then official vendor docs/release notes.
@@ -71,4 +73,4 @@ Checkpoint [`../docs/agent-skills-master/RECOVERY.md`] · router `../_router.md`
 
 ## Last updated
 
-2026-10-29 (fire 3 authored; fire 33 added the Convergence & post-convergence HOLD discipline section).
+2026-11-04 (fire 3 authored; fire 33 added the Convergence & post-convergence HOLD discipline section; fire 90 added the "a HOLD never suppresses a DUE periodic obligation" bullet).
