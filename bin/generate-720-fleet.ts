@@ -1075,19 +1075,21 @@ function updateAgentProfiles(): void {
   }
 }
 
-// 3. Execution
-console.log('Generating exhaustive 720 recommendations artifact...');
-const artifactContent = generateArtifact();
-const artifactPath = resolve(ARTIFACT_DIR, 'top-30-recommendations-for-24-agents.md');
-writeFileSync(artifactPath, artifactContent, 'utf8');
+// 3. Execution (run only when invoked directly)
+if (import.meta.url === `file://${process.argv[1]}`) {
+  console.log('Generating exhaustive 720 recommendations artifact...');
+  const artifactContent = generateArtifact();
+  const artifactPath = resolve(ARTIFACT_DIR, 'top-30-recommendations-for-24-agents.md');
+  writeFileSync(artifactPath, artifactContent, 'utf8');
 
-const metadata = {
-  summary: "Comprehensive operational ledger detailing the Top 30 Converged Tactical Capabilities, Upgrades, and Enhancements for all 24 Canonical Paramilitary Agent Roles (720 total recommendations). Grounded in 2026 state-of-the-art autonomous software engineering benchmarks, AST-aware tooling, deterministic proof of life, Auftragstaktik mission command, and 100% 1:1 Paperclip parity.",
-  updatedAt: new Date().toISOString(),
-  userFacing: true
-};
-writeFileSync(`${artifactPath}.metadata.json`, JSON.stringify(metadata, null, 2), 'utf8');
-console.log(`✓ Wrote artifact: ${artifactPath} (${artifactContent.length} bytes)`);
+  const metadata = {
+    summary: "Comprehensive operational ledger detailing the Top 30 Converged Tactical Capabilities, Upgrades, and Enhancements for all 24 Canonical Paramilitary Agent Roles (720 total recommendations). Grounded in 2026 state-of-the-art autonomous software engineering benchmarks, AST-aware tooling, deterministic proof of life, Auftragstaktik mission command, and 100% 1:1 Paperclip parity.",
+    updatedAt: new Date().toISOString(),
+    userFacing: true
+  };
+  writeFileSync(`${artifactPath}.metadata.json`, JSON.stringify(metadata, null, 2), 'utf8');
+  console.log(`✓ Wrote artifact: ${artifactPath} (${artifactContent.length} bytes)`);
 
-updateAgentProfiles();
-console.log('\nAll 720 tactical recommendations generated and implemented across the fleet.');
+  updateAgentProfiles();
+  console.log('\nAll 720 tactical recommendations generated and implemented across the fleet.');
+}

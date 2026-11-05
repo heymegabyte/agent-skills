@@ -2427,13 +2427,15 @@ ${dodContent}
   return `${frontmatter}\n${body.trim()}\n`;
 }
 
-console.log(`Converging ${ELITE_FLEET.length} canonical agent roles into world elite-class profiles...`);
+if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith('converge-elite-fleet.ts')) {
+  console.log(`Converging ${ELITE_FLEET.length} canonical agent roles into world elite-class profiles...`);
 
-for (const agent of ELITE_FLEET) {
-  const filePath = resolve(AGENTS_DIR, `${agent.name}.md`);
-  const content = generateEliteMarkdown(agent);
-  writeFileSync(filePath, content, 'utf8');
-  console.log(`✓ Converged ${agent.name}.md (${agent.callSign} - ${agent.title})`);
+  for (const agent of ELITE_FLEET) {
+    const filePath = resolve(AGENTS_DIR, `${agent.name}.md`);
+    const content = generateEliteMarkdown(agent);
+    writeFileSync(filePath, content, 'utf8');
+    console.log(`✓ Converged ${agent.name}.md (${agent.callSign} - ${agent.title})`);
+  }
+
+  console.log(`\nSuccessfully converged all ${ELITE_FLEET.length} agents in ${AGENTS_DIR}`);
 }
-
-console.log(`\nSuccessfully converged all ${ELITE_FLEET.length} agents in ${AGENTS_DIR}`);

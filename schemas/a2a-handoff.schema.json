@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "A2AHandoffPayload",
+  "description": "Deterministic Agent-to-Agent (A2A) structured handoff contract under Auftragstaktik mission command.",
+  "type": "object",
+  "required": [
+    "missionId",
+    "sender",
+    "recipient",
+    "timestamp",
+    "status",
+    "roeTier",
+    "proofOfLife",
+    "artifacts"
+  ],
+  "properties": {
+    "missionId": {
+      "type": "string",
+      "description": "Unique mission execution identifier or UUID"
+    },
+    "sender": {
+      "type": "object",
+      "required": ["name", "callSign", "rank"],
+      "properties": {
+        "name": { "type": "string" },
+        "callSign": { "type": "string" },
+        "rank": { "type": "string" }
+      }
+    },
+    "recipient": {
+      "type": "object",
+      "required": ["name", "callSign"],
+      "properties": {
+        "name": { "type": "string" },
+        "callSign": { "type": "string" }
+      }
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["SUCCESS", "FAILED", "BLOCKED", "IN_PROGRESS", "NEEDS_AUDIT"]
+    },
+    "roeTier": {
+      "type": "string",
+      "enum": ["GREEN", "AMBER", "RED"]
+    },
+    "proofOfLife": {
+      "type": "object",
+      "required": ["command", "exitCode", "attestation"],
+      "properties": {
+        "command": { "type": "string" },
+        "exitCode": { "type": "integer" },
+        "attestation": { "type": "string" },
+        "hash": { "type": "string" }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "description"],
+        "properties": {
+          "path": { "type": "string" },
+          "description": { "type": "string" },
+          "sha256": { "type": "string" }
+        }
+      }
+    },
+    "nextAction": {
+      "type": "string",
+      "description": "Specific tactical action requested from the recipient unit"
+    }
+  },
+  "additionalProperties": false
+}
