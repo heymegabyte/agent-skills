@@ -22,9 +22,9 @@
     "secrets": "Infisical",
     "credentialBroker": "Infisical Agent Vault",
     "sharedUtilitiesHome": "@theme.tools (heymegabyte/theme.tools)",
-    "integrations": "Independent Cloudflare-native Nango port in @theme.tools (@theme.tools/nango)",
-    "automation": "License-permitted Activepieces-derived Cloudflare-native port in @theme.tools (@theme.tools/activepieces)",
-    "socialPublishing": "Cloudflare-native Postiz port in @theme.tools (@theme.tools/postiz)"
+    "integrations": "Cloudflare-native OAuth2/PKCE & sync engine in @theme.tools (@theme.tools/integrations)",
+    "automation": "Cloudflare-native workflow automation engine in @theme.tools (@theme.tools/workflows)",
+    "socialPublishing": "Cloudflare-native social scheduling & distribution engine in @theme.tools (@theme.tools/social)"
   },
   "defaultThemeToolsLibraries": {
     "coreWorkspace": [
@@ -35,9 +35,9 @@
       "@theme.tools/testing"
     ],
     "absorbedSaasEngines": [
-      "@theme.tools/activepieces",
-      "@theme.tools/nango",
-      "@theme.tools/postiz",
+      "@theme.tools/workflows",
+      "@theme.tools/integrations",
+      "@theme.tools/social",
       "@theme.tools/scheduling",
       "@theme.tools/signing",
       "@theme.tools/forms",

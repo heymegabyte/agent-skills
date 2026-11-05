@@ -161,5 +161,15 @@ describe('OpenSpec Frontier Architect Validator & Paperclip Payload Builder', ()
       );
       assert.ok(conventionsMd.includes(pkg), `Missing ${pkg} in CONVENTIONS.md`);
     }
+
+    for (const forbiddenVendorPkg of [
+      '@theme.tools/activepieces',
+      '@theme.tools/nango',
+      '@theme.tools/postiz',
+    ]) {
+      assert.equal(all28.includes(forbiddenVendorPkg), false);
+      assert.equal(canonicalRule.includes(forbiddenVendorPkg), false);
+      assert.equal(conventionsMd.includes(forbiddenVendorPkg), false);
+    }
   });
 });
