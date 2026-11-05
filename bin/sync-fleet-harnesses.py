@@ -1,213 +1,322 @@
 #!/usr/bin/env python3
-"""Provision and verify gemini, codex, claude, and opencode (LiteLLM + DeepSeek) across fleet hosts."""
 import base64
 import json
 import os
 import subprocess
-import sys
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 HOME = Path.home()
-GET_SECRET = str(HOME / ".local/bin/get-secret")
 
+# 0. Fix local macos opencode.jsonc cua-driver MCP + machine.json + global rules + CF ZT CA
+local_oc_jsonc = HOME / ".config/opencode/opencode.jsonc"
+if local_oc_jsonc.exists():
+    # Use python to ensure cua-driver is in mcp of opencode.jsonc
+    pass
 
-def get_secret(name: str) -> str:
-    r = subprocess.run([GET_SECRET, name], capture_output=True, text=True, check=True)
-    val = r.stdout.strip()
-    if not val:
-        raise RuntimeError(f"Secret {name} is empty")
-    return val
+# Read gh token from local macOS
+gh_token = subprocess.run(["gh", "auth", "token"], capture_output=True, text=True, check=True).stdout.strip()
 
+# Read Cloudflare ZT CA and ensure-cloudflare-zt-ca.sh from install.doctor
+id_repo = HOME / "emdash/repositories/install.doctor"
+cf_ca_script_path = id_repo / "home/dot_local/bin/executable_ensure-cloudflare-zt-ca.sh"
+cf_ca_b64 = base64.b64encode(cf_ca_script_path.read_bytes()).decode() if cf_ca_script_path.exists() else ""
 
-REMOTE_PROVISION = r"""
-import sys, os, json, base64, subprocess
+# Also grab the Cloudflare WARP CA cert from ubuntu.megabyte.space
+cf_cert_pem = subprocess.run(
+    ["ssh", "ubuntu.megabyte.space", "cat /usr/local/share/ca-certificates/cloudflare-warp-zt.crt 2>/dev/null || cat /etc/ssl/certs/Cloudflare_CA.pem 2>/dev/null || true"],
+    capture_output=True, text=True
+).stdout.strip()
+
+HOSTS = {
+    "local": {
+        "ssh": None,
+        "user": "Apple",
+        "ip": "10.0.0.138",
+        "machine": {
+            "machineId": "macos-owner-primary",
+            "profile": "/Users/Apple/ai/repos/agent-skills/machines/macos-owner-primary.md",
+            "skillsRepository": "heymegabyte/agent-skills",
+            "preferredSetupAgent": "agy",
+            "sshHostname": "macbook-pro.megabyte.space",
+            "sshAlias": "macbook-pro.megabyte.space",
+            "paperclipUrl": "https://swarml.ink",
+        },
+    },
+    "zen.megabyte.space": {
+        "ssh": "zen.megabyte.space",
+        "user": "ubuntu",
+        "ip": "10.0.0.162",
+        "machine": {
+            "machineId": "zen-linux-workstation",
+            "profile": "/home/ubuntu/ai/repos/agent-skills/machines/zen-linux-workstation.md",
+            "skillsRepository": "heymegabyte/agent-skills",
+            "preferredSetupAgent": "codex",
+            "machineRepository": "heymegabyte/zen.megabyte.space",
+            "machineCheckout": "/home/ubuntu/ai/repos/zen.megabyte.space",
+            "remoteAccess": "Owner-only Cloudflare Access tunnel + KasmVNC loopback :20 (127.0.0.1:6901/5920)",
+            "sshHostname": "zen.megabyte.space",
+            "sshAlias": "zen.megabyte.space",
+            "paperclipUrl": "https://swarml.ink",
+        },
+    },
+    "omen.megabyte.space": {
+        "ssh": "omen.megabyte.space",
+        "user": "ubuntu",
+        "ip": "10.0.0.161",
+        "machine": {
+            "machineId": "omen-linux-workstation",
+            "profile": "/home/ubuntu/ai/repos/agent-skills/machines/omen-linux-workstation.md",
+            "skillsRepository": "heymegabyte/agent-skills",
+            "preferredSetupAgent": "codex",
+            "machineRepository": "heymegabyte/omen.megabyte.space",
+            "machineCheckout": "/home/ubuntu/ai/repos/omen.megabyte.space",
+            "remoteAccess": "Owner-only Cloudflare Access tunnel + KasmVNC loopback :20 (127.0.0.1:6901/5920)",
+            "sshHostname": "omen.megabyte.space",
+            "sshAlias": "omen.megabyte.space",
+            "paperclipUrl": "https://swarml.ink",
+        },
+    },
+    "legion.megabyte.space": {
+        "ssh": "legion.megabyte.space",
+        "user": "ubuntu",
+        "ip": "10.0.0.143",
+        "machine": {
+            "machineId": "legion-linux-workstation",
+            "profile": "/home/ubuntu/ai/repos/agent-skills/machines/legion-linux-workstation.md",
+            "skillsRepository": "heymegabyte/agent-skills",
+            "preferredSetupAgent": "codex",
+            "machineRepository": "heymegabyte/legion.megabyte.space",
+            "machineCheckout": "/home/ubuntu/ai/repos/legion.megabyte.space",
+            "remoteAccess": "Owner-only Cloudflare Access tunnel + KasmVNC loopback :20 (127.0.0.1:8444/5920)",
+            "sshHostname": "legion.megabyte.space",
+            "sshAlias": "legion.megabyte.space",
+            "paperclipUrl": "https://swarml.ink",
+        },
+    },
+    "ubuntu.megabyte.space": {
+        "ssh": "ubuntu.megabyte.space",
+        "user": "professormanhattan",
+        "ip": "10.0.0.156",
+        "machine": {
+            "machineId": "ubuntu-proxmox-primary",
+            "profile": "/home/professormanhattan/ai/repos/agent-skills/machines/ubuntu-proxmox-primary.md",
+            "skillsRepository": "heymegabyte/agent-skills",
+            "preferredSetupAgent": "codex",
+            "machineRepository": "ProfessorManhattan/ubuntu.megabyte.space",
+            "machineCheckout": "/home/professormanhattan/ai/repos/ubuntu.megabyte.space",
+            "remoteAccess": "Owner-only Cloudflare Access SSH; owner Mac WARP /32 SSH route; desktop VNC private",
+            "sshHostname": "ubuntu.megabyte.space",
+            "paperclipUrl": "https://swarml.ink",
+            "sshAlias": "ubuntu.megabyte.space",
+            "warpState": "/home/professormanhattan/.config/agent-fleet/warp.json",
+        },
+    },
+}
+
+# 1. Collect/generate SSH public keys across all 5 hosts
+pubkeys = []
+KEY_SCRIPT = """
+from pathlib import Path
+import subprocess
+ssh_dir = Path.home() / ".ssh"
+ssh_dir.mkdir(parents=True, exist_ok=True)
+ssh_dir.chmod(0o700)
+pub = ssh_dir / "id_ed25519.pub"
+priv = ssh_dir / "id_ed25519"
+if not pub.exists():
+    subprocess.run(["ssh-keygen", "-t", "ed25519", "-N", "", "-f", str(priv)], check=True, stdout=subprocess.DEVNULL)
+print(pub.read_text().strip())
+"""
+for h, cfg in HOSTS.items():
+    if cfg["ssh"] is None:
+        r = subprocess.run(["python3", "-c", KEY_SCRIPT], capture_output=True, text=True, check=True)
+    else:
+        r = subprocess.run(["ssh", cfg["ssh"], "python3 -c " + subprocess.list2cmdline([KEY_SCRIPT])], capture_output=True, text=True, check=True)
+    k = r.stdout.strip()
+    if k:
+        pubkeys.append(k)
+print("Collected", len(pubkeys), "SSH public keys across fleet")
+
+# 2. Rsync ~/.agentskills/ to all 4 remote Linux hosts in parallel
+def sync_agentskills(host):
+    if host == "local":
+        ag_repo = HOME / "ai/repos/agent-skills"
+        ag_repo.parent.mkdir(parents=True, exist_ok=True)
+        if not ag_repo.exists():
+            ag_repo.symlink_to(HOME / ".agentskills")
+        return "local linked"
+    # Ensure ~/.agentskills is a real directory or points to ~/ai/repos/agent-skills, then rsync
+    prep = """
+    mkdir -p "$HOME/ai/repos/agent-skills"
+    if [ -L "$HOME/.agentskills" ]; then
+      rm -f "$HOME/.agentskills"
+    elif [ -d "$HOME/.agentskills" ] && [ ! -d "$HOME/.agentskills/.git" ]; then
+      cp -rn "$HOME/.agentskills/." "$HOME/ai/repos/agent-skills/" 2>/dev/null || true
+      rm -rf "$HOME/.agentskills"
+    elif [ -d "$HOME/.agentskills/.git" ] && [ ! -L "$HOME/ai/repos/agent-skills" ]; then
+      rm -rf "$HOME/ai/repos/agent-skills"
+      mv "$HOME/.agentskills" "$HOME/ai/repos/agent-skills"
+    fi
+    ln -sfn "$HOME/ai/repos/agent-skills" "$HOME/.agentskills"
+    """
+    subprocess.run(["ssh", host, prep], check=True)
+    subprocess.run([
+        "rsync", "-az", "--delete",
+        "--exclude=.git/objects/pack/*.tmp",
+        str(HOME / ".agentskills") + "/",
+        f"{host}:~/ai/repos/agent-skills/"
+    ], check=True)
+    return f"{host} rsynced"
+
+with ThreadPoolExecutor(max_workers=5) as ex:
+    for res in ex.map(sync_agentskills, HOSTS.keys()):
+        print("agentskills:", res)
+
+# 3. Apply per-host convergence (machine.json, global rules, cua-driver MCP in all 4 harnesses, git config, gh auth, SSH mesh, CF ZT CA)
+REMOTE_CONVERGE = r"""
+import base64, json, os, subprocess, sys
 from pathlib import Path
 
-data = json.loads(sys.stdin.read())
+payload = json.loads(sys.stdin.read())
 home = Path.home()
 
-# 1. Ensure ~/.local/bin/get-secret and ~/.config/agent-fleet/secrets
-local_bin = home / ".local/bin"
-local_bin.mkdir(parents=True, exist_ok=True)
-gs_path = local_bin / "get-secret"
-if not gs_path.exists():
-    gs_path.write_bytes(base64.b64decode(data["get_secret_b64"]))
-    gs_path.chmod(0o700)
-
+# A. ~/.config/agent-fleet/machine.json
 fleet_dir = home / ".config/agent-fleet"
-secrets_dir = fleet_dir / "secrets"
-secrets_dir.mkdir(parents=True, exist_ok=True)
-fleet_dir.chmod(0o700)
-secrets_dir.chmod(0o700)
+fleet_dir.mkdir(parents=True, exist_ok=True)
+(fleet_dir / "machine.json").write_text(json.dumps(payload["machine"], indent=2) + "\n")
 
-for k, v in [("DEEPSEEK_API_KEY", data["deepseek_key"]), ("LITELLM_API_KEY", data["litellm_key"])]:
-    sp = secrets_dir / k
-    sp.write_text(v + "\n")
-    sp.chmod(0o600)
+# B. Global doctrine files (~/.claude/CLAUDE.md, ~/.codex/AGENTS.md, ~/.gemini/GEMINI.md, ~/.config/opencode/AGENTS.md)
+ag = home / ".agentskills"
+for dest_rel, src_name in [
+    (".claude/CLAUDE.md", "CLAUDE.md"),
+    (".codex/AGENTS.md", "AGENTS.md"),
+    (".gemini/GEMINI.md", "GEMINI.md"),
+    (".config/opencode/AGENTS.md", "AGENTS.md"),
+]:
+    dest = home / dest_rel
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    src = ag / src_name
+    if src.exists():
+        dest.write_text(src.read_text())
 
-overrides_path = fleet_dir / "local-secret-overrides.json"
-existing_overrides = []
-if overrides_path.exists():
-    try:
-        existing_overrides = json.loads(overrides_path.read_text())
-    except Exception:
-        existing_overrides = []
-for k in ["DEEPSEEK_API_KEY", "LITELLM_API_KEY"]:
-    if k not in existing_overrides:
-        existing_overrides.append(k)
-overrides_path.write_text(json.dumps(existing_overrides, indent=2) + "\n")
-overrides_path.chmod(0o600)
-
-# 2. Ensure ~/.agentskills/bin/opencode-deepseek.sh and opencode-deepseek-auth.sh
-ag_bin = home / ".agentskills/bin"
-ag_bin.mkdir(parents=True, exist_ok=True)
-for name, b64_key in [("opencode-deepseek.sh", "opencode_deepseek_sh_b64"), ("opencode-deepseek-auth.sh", "opencode_deepseek_auth_sh_b64")]:
-    p = ag_bin / name
-    p.write_bytes(base64.b64decode(data[b64_key]))
-    p.chmod(0o755)
-
-# 3. Write ~/.config/opencode/opencode.json and ~/.config/opencode/opencode.jsonc
-oc_dir = home / ".config/opencode"
-oc_dir.mkdir(parents=True, exist_ok=True)
+# C. cua-driver MCP in claude (~/.claude.json), codex (~/.codex/config.toml), opencode (~/.config/opencode/opencode.jsonc)
 cua_bin = str(home / ".local/bin/cua-driver")
-
-oc_json = {
-    "$schema": "https://opencode.ai/config.json",
-    "mcp": {
-        "cua-driver": {
-            "type": "local",
-            "command": [cua_bin, "mcp"],
-            "enabled": True
-        }
-    }
-}
-(oc_dir / "opencode.json").write_text(json.dumps(oc_json, indent=2) + "\n")
-
-oc_jsonc = {
-    "$schema": "https://opencode.ai/config.json",
-    "model": "litellm/deepseek-v4-pro",
-    "small_model": "litellm/deepseek-flash",
-    "disabled_providers": ["openai", "anthropic"],
-    "mcp": {
-        "cua-driver": {
-            "type": "local",
-            "command": [cua_bin, "mcp"],
-            "enabled": True
-        }
-    },
-    "provider": {
-        "litellm": {
-            "npm": "@ai-sdk/openai-compatible",
-            "name": "LiteLLM (llm.megabyte.space - DeepSeek 4-key rotation + fallback + Langfuse)",
-            "options": {"baseURL": "https://llm.megabyte.space/v1"},
-            "models": {
-                "deepseek-v4-pro": {
-                    "name": "DeepSeek V4 Pro (rotated)",
-                    "reasoning": True,
-                    "tool_call": True,
-                    "temperature": True,
-                    "limit": {"context": 1048576, "output": 393216},
-                    "modalities": {"input": ["text"], "output": ["text"]},
-                    "variants": {"high": {"reasoningEffort": "high"}, "max": {"reasoningEffort": "max"}}
-                },
-                "deepseek-flash": {
-                    "name": "DeepSeek V4.1 Flash (rotated)",
-                    "reasoning": True,
-                    "tool_call": True,
-                    "temperature": True,
-                    "attachment": True,
-                    "limit": {"context": 1048576, "output": 393216},
-                    "modalities": {"input": ["text", "image"], "output": ["text"]},
-                    "variants": {"low": {"reasoningEffort": "low"}, "high": {"reasoningEffort": "high"}}
-                },
-                "deepseek-chat": {"name": "DeepSeek Chat (rotated)", "tool_call": True, "temperature": True},
-                "deepseek-reasoner": {"name": "DeepSeek Reasoner (rotated)", "reasoning": True, "tool_call": True}
-            }
-        },
-        "deepseek": {
-            "npm": "@ai-sdk/openai-compatible",
-            "name": "DeepSeek (direct)",
-            "options": {"baseURL": "https://api.deepseek.com"},
-            "models": {
-                "deepseek-v4-pro": {
-                    "name": "DeepSeek V4 Pro",
-                    "reasoning": True,
-                    "tool_call": True,
-                    "temperature": True,
-                    "attachment": False,
-                    "limit": {"context": 1048576, "output": 393216},
-                    "modalities": {"input": ["text"], "output": ["text"]}
-                },
-                "deepseek-flash": {
-                    "name": "DeepSeek V4.1 Flash",
-                    "reasoning": True,
-                    "tool_call": True,
-                    "temperature": True,
-                    "attachment": True,
-                    "limit": {"context": 1048576, "output": 393216},
-                    "modalities": {"input": ["text", "image"], "output": ["text"]}
-                },
-                "deepseek-chat": {
-                    "name": "DeepSeek Chat (legacy -> V4.1 Flash)",
-                    "tool_call": True,
-                    "temperature": True,
-                    "attachment": True,
-                    "limit": {"context": 1048576, "output": 393216},
-                    "modalities": {"input": ["text", "image"], "output": ["text"]}
-                },
-                "deepseek-reasoner": {
-                    "name": "DeepSeek Reasoner (legacy -> V4.1 Flash)",
-                    "reasoning": True,
-                    "tool_call": True,
-                    "temperature": True,
-                    "attachment": False,
-                    "limit": {"context": 1048576, "output": 393216},
-                    "modalities": {"input": ["text"], "output": ["text"]}
-                }
-            }
-        }
-    }
-}
-(oc_dir / "opencode.jsonc").write_text(json.dumps(oc_jsonc, indent=2) + "\n")
-
-# 4. Sync ~/.local/share/opencode/auth.json (0600)
-oc_data = home / ".local/share/opencode"
-oc_data.mkdir(parents=True, exist_ok=True)
-oc_data.chmod(0o700)
-auth_path = oc_data / "auth.json"
-auth_obj = {}
-if auth_path.exists():
+claude_json = home / ".claude.json"
+cdata = {}
+if claude_json.exists():
     try:
-        auth_obj = json.loads(auth_path.read_text())
+        cdata = json.loads(claude_json.read_text())
     except Exception:
-        auth_obj = {}
-auth_obj["deepseek"] = {"type": "api", "key": data["deepseek_key"]}
-auth_obj["litellm"] = {"type": "api", "key": data["litellm_key"]}
-auth_path.write_text(json.dumps(auth_obj, indent=2) + "\n")
-auth_path.chmod(0o600)
+        cdata = {}
+cdata.setdefault("mcpServers", {})["cua-driver"] = {
+    "type": "stdio",
+    "command": cua_bin,
+    "args": ["mcp"],
+    "env": {}
+}
+claude_json.write_text(json.dumps(cdata, indent=2) + "\n")
 
-print(f"Synced OpenCode + LiteLLM + DeepSeek on {os.uname().nodename}")
+codex_toml = home / ".codex/config.toml"
+codex_toml.parent.mkdir(parents=True, exist_ok=True)
+toml_txt = codex_toml.read_text() if codex_toml.exists() else ""
+if "[mcp_servers.cua-driver]" not in toml_txt:
+    block = f'\n[mcp_servers.cua-driver]\ncommand = "{cua_bin}"\nargs = ["mcp"]\nenabled = true\n'
+    codex_toml.write_text(toml_txt.rstrip() + "\n" + block)
+
+oc_jsonc = home / ".config/opencode/opencode.jsonc"
+if oc_jsonc.exists():
+    raw_txt = oc_jsonc.read_text()
+    if '"cua-driver"' not in raw_txt:
+        # Insert mcp block or parse if clean JSON
+        try:
+            lines = [l for l in raw_txt.splitlines() if not l.strip().startswith("//")]
+            obj = json.loads("\n".join(lines))
+            obj.setdefault("mcp", {})["cua-driver"] = {
+                "type": "local",
+                "command": [cua_bin, "mcp"],
+                "enabled": True
+            }
+            oc_jsonc.write_text(json.dumps(obj, indent=2) + "\n")
+        except Exception:
+            pass
+
+# D. Git global identity
+name = subprocess.run(["git", "config", "--global", "user.name"], capture_output=True, text=True).stdout.strip()
+email = subprocess.run(["git", "config", "--global", "user.email"], capture_output=True, text=True).stdout.strip()
+if not name:
+    subprocess.run(["git", "config", "--global", "user.name", "Brian Zalewski"], check=False)
+if not email:
+    subprocess.run(["git", "config", "--global", "user.email", "brian@megabyte.space"], check=False)
+subprocess.run(["git", "config", "--global", "init.defaultBranch", "main"], check=False)
+
+# E. GitHub CLI (gh) auth
+env = os.environ.copy()
+env["PATH"] = f"{home / '.local/bin'}:/opt/homebrew/bin:/usr/local/bin:" + env.get("PATH", "")
+st = subprocess.run(["gh", "auth", "status"], env=env, capture_output=True, text=True)
+if st.returncode != 0 and payload.get("gh_token"):
+    subprocess.run(["gh", "auth", "login", "--hostname", "github.com", "--git-protocol", "https", "--with-token"], input=payload["gh_token"] + "\n", env=env, capture_output=True, text=True)
+    subprocess.run(["gh", "auth", "setup-git"], env=env, capture_output=True, text=True)
+
+# F. SSH Mesh (~/.ssh/authorized_keys + ~/.ssh/config)
+ssh_dir = home / ".ssh"
+ssh_dir.mkdir(parents=True, exist_ok=True)
+ssh_dir.chmod(0o700)
+ak = ssh_dir / "authorized_keys"
+ak_lines = ak.read_text().splitlines() if ak.exists() else []
+for pk in payload.get("pubkeys", []):
+    if pk not in ak_lines:
+        ak_lines.append(pk)
+ak.write_text("\n".join([l for l in ak_lines if l.strip()]) + "\n")
+ak.chmod(0o600)
+
+ssh_cfg = ssh_dir / "config"
+cfg_txt = ssh_cfg.read_text() if ssh_cfg.exists() else ""
+mesh_entries = [
+    ("zen.megabyte.space", "zen", "10.0.0.162", "ubuntu"),
+    ("omen.megabyte.space", "omen", "10.0.0.161", "ubuntu"),
+    ("legion.megabyte.space", "legion", "10.0.0.143", "ubuntu"),
+    ("ubuntu.megabyte.space", "ubuntu", "10.0.0.156", "professormanhattan"),
+    ("macbook-pro.megabyte.space", "macos", "10.0.0.138", "Apple"),
+]
+added = []
+for fqdn, short, ip, usr in mesh_entries:
+    if f"Host {fqdn}" not in cfg_txt:
+        added.append(f"Host {fqdn} {short}\n  HostName {ip}\n  User {usr}\n  IdentityFile ~/.ssh/id_ed25519\n  StrictHostKeyChecking accept-new\n")
+if added:
+    ssh_cfg.write_text(cfg_txt.rstrip() + "\n\n# Fleet LAN SSH Mesh\n" + "\n".join(added) + "\n")
+    ssh_cfg.chmod(0o600)
+
+# G. Cloudflare WARP Zero Trust CA script & PEM
+if payload.get("cf_cert_pem"):
+    ca_dir = home / ".config/agent-fleet/ca"
+    ca_dir.mkdir(parents=True, exist_ok=True)
+    (ca_dir / "cloudflare-warp-zt.pem").write_text(payload["cf_cert_pem"] + "\n")
+if payload.get("cf_ca_b64"):
+    script_p = home / ".local/bin/ensure-cloudflare-zt-ca.sh"
+    script_p.parent.mkdir(parents=True, exist_ok=True)
+    script_p.write_bytes(base64.b64decode(payload["cf_ca_b64"]))
+    script_p.chmod(0o755)
+    subprocess.run([str(script_p)], env=env, capture_output=True, text=True)
+
+print(f"Converged {os.uname().nodename}")
 """
 
-
-def main():
-    targets = sys.argv[1:] or ["zen.megabyte.space", "omen.megabyte.space", "legion.megabyte.space", "ubuntu.megabyte.space"]
+def converge_host(item):
+    h, cfg = item
     payload = json.dumps({
-        "deepseek_key": get_secret("DEEPSEEK_API_KEY"),
-        "litellm_key": get_secret("LITELLM_API_KEY"),
-        "opencode_deepseek_sh_b64": base64.b64encode((HOME / ".agentskills/bin/opencode-deepseek.sh").read_bytes()).decode(),
-        "opencode_deepseek_auth_sh_b64": base64.b64encode((HOME / ".agentskills/bin/opencode-deepseek-auth.sh").read_bytes()).decode(),
-        "get_secret_b64": base64.b64encode((HOME / ".local/bin/get-secret").read_bytes()).decode(),
+        "machine": cfg["machine"],
+        "gh_token": gh_token,
+        "pubkeys": pubkeys,
+        "cf_cert_pem": cf_cert_pem,
+        "cf_ca_b64": cf_ca_b64,
     })
-    for host in targets:
-        r = subprocess.run(
-            ["ssh", "-o", "ConnectTimeout=10", host, "python3 -c " + subprocess.list2cmdline([REMOTE_PROVISION])],
-            input=payload,
-            capture_output=True,
-            text=True,
-        )
-        print(f"[{host}] rc={r.returncode}: {r.stdout.strip()} {r.stderr.strip()}")
+    if cfg["ssh"] is None:
+        r = subprocess.run(["python3", "-c", REMOTE_CONVERGE], input=payload, capture_output=True, text=True, check=True)
+    else:
+        r = subprocess.run(["ssh", cfg["ssh"], "python3 -c " + subprocess.list2cmdline([REMOTE_CONVERGE])], input=payload, capture_output=True, text=True, check=True)
+    return f"{h}: {r.stdout.strip()}"
 
-
-if __name__ == "__main__":
-    main()
+with ThreadPoolExecutor(max_workers=5) as ex:
+    for res in ex.map(converge_host, HOSTS.items()):
+        print(res)
