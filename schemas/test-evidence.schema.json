@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "revision",
+    "artifact",
+    "environment",
+    "task",
+    "test_id",
+    "state",
+    "fresh",
+    "attempt",
+    "duration_ms",
+    "started_at",
+    "finished_at"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "state": {
+      "enum": ["fresh_pass", "valid_cache", "failed", "incomplete", "blocked", "not_applicable"]
+    },
+    "fresh": { "type": "boolean" },
+    "attempt": { "type": "integer", "minimum": 1 },
+    "duration_ms": { "type": "integer", "minimum": 0 }
+  },
+  "additionalProperties": true
+}

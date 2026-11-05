@@ -1,6 +1,7 @@
 name: testing
 description: Playwright E2E + Vitest + AI vision QA
 members:
+  - 07-quality-and-verification/tdd-verification
   - rules/product-completeness
   - 07-quality-and-verification
   - 25-quality-performance

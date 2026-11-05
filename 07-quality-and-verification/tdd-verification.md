@@ -1,168 +1,105 @@
 ---
-name: "TDD Verification"
-version: "2.0.0"
-updated: "2026-04-23"
-description: "Full-application test user simulation. 10-point journey test that proves everything works. Completion-driven execution workflow and assumption protocol for blocking decisions."
+name: 'TDD Verification'
+version: '3.0.0'
+updated: '2026-11-04'
+description: 'Use for features, bug fixes, refactors, test failures, and release verification. Selects the cheapest convincing tests, enforces genuine red-green-refactor, and produces complete evidence.'
 ---
 
-# TDD Verification (Test User Simulation)
+# TDD and truthful verification
 
-## The Test User
+Use this as the authoritative testing workflow. Load only the relevant family guides from `references/testing-families/`; the machine catalog is `references/testing-catalog.json`.
 
-Every application has a synthetic "test user" that walks through the ENTIRE product:
+## First establish the test contract
 
-```typescript
-// e2e/full-journey.spec.ts — THE test that proves everything works
-import { test, expect } from '@playwright/test';
+1. State the observable requirement, invariant, ordinary example, and consequential failure.
+2. Build the application profile and inspect the existing suite, failures, durations, flakes, dependencies, ownership, and last trustworthy baseline.
+3. Separate intended compatibility from discovered defects. Characterize critical correct legacy behavior before refactoring; do not canonize a bug.
+4. Choose the cheapest layer that can prove the behavior independently: static, unit/property, component/story, runtime integration/contract, browser/API journey, deployed check, or human evaluation.
+5. Bind the requirement to catalog IDs, stable test IDs, inputs, execution tier, owner, and evidence in the existing OpenSpec/requirements record.
 
-const PROD_URL = process.env.PROD_URL;
+## Genuine red → green → refactor
 
-test.describe('Full Application Journey (Test User)', () => {
+1. Write one focused test before production behavior.
+2. Run it and observe a semantic failure caused by absent or incorrect behavior. Syntax, import, fixture, login, credential, or environment failures are harness defects—not RED.
+3. If the test passes immediately, it may be characterization or existing behavior; record that truth. Do not invent a red history.
+4. Implement the smallest coherent change satisfying the requirement. Never hardcode test inputs, add test-only production paths, or mirror the implementation in assertions.
+5. Run focused GREEN, then affected required checks. Refactor only under green and verify again after the final edit.
+6. For pure refactors, trustworthy existing tests establish the baseline; no artificial failure is required. For generated code, test the generator plus important consumer contracts. For copy/format-only edits, use proportionate existing checks and inspection.
 
-  test('1. Homepage loads and looks correct', async ({ page }) => {
-    await page.goto(PROD_URL!);
-    await expect(page).toHaveTitle(/.+/);
-    await expect(page.locator('h1')).toBeVisible();
-    await expect(page.locator('nav')).toBeVisible();
-    await expect(page.locator('footer')).toBeVisible();
-    // No console errors
-    const errors: string[] = [];
-    page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
-    await page.waitForTimeout(1000);
-    expect(errors).toEqual([]);
-  });
+## Brownfield protection
 
-  test('2. Navigation works — every link resolves', async ({ page }) => {
-    await page.goto(PROD_URL!);
-    const links = await page.locator('nav a[href]').all();
-    for (const link of links) {
-      const href = await link.getAttribute('href');
-      if (!href || href.startsWith('#') || href.startsWith('mailto:')) continue;
-      const url = href.startsWith('http') ? href : `${PROD_URL}${href}`;
-      const res = await page.request.get(url);
-      expect(res.status(), `Link ${href} returned ${res.status()}`).toBeLessThan(400);
-    }
-  });
+- Prioritize authentication/recovery, authorization/tenant isolation, billing/irreversible effects, durable writes/deletion, migrations, publishing/rollback, Preview versus Production, AI tool execution, and one complete user journey.
+- Add characterization before risky refactors. Every confirmed defect retains a minimal public-interface regression test.
+- Expectations come from specifications, domain rules, provider contracts, or independently worked examples—not copied code.
+- Preserve critical existing behavior across shared themes, components, schemas, routes, flags, assets, configuration, and external versions.
 
-  test('3. All images load', async ({ page }) => {
-    await page.goto(PROD_URL!);
-    const images = page.locator('img');
-    const count = await images.count();
-    for (let i = 0; i < count; i++) {
-      const img = images.nth(i);
-      const complete = await img.evaluate(el => (el as HTMLImageElement).complete);
-      const natW = await img.evaluate(el => (el as HTMLImageElement).naturalWidth);
-      const src = await img.getAttribute('src');
-      expect(complete, `Image not loaded: ${src}`).toBe(true);
-      expect(natW, `Broken image (0 width): ${src}`).toBeGreaterThan(0);
-    }
-  });
+## UI and Storybook
 
-  test('4. Contact form submits successfully', async ({ page }) => {
-    await page.goto(`${PROD_URL}/contact`);
-    // Skip if no contact page
-    if (page.url().includes('404')) return;
-    await page.fill('input[name="name"], #name', 'Playwright Test User');
-    await page.fill('input[type="email"], #email', 'test@playwright.dev');
-    await page.fill('textarea, #message', 'Automated test submission — please ignore.');
-    // Check for Turnstile and skip submit if present (can't solve in test)
-    const hasTurnstile = await page.locator('.cf-turnstile').count();
-    if (hasTurnstile === 0) {
-      await page.click('button[type="submit"]');
-      await page.waitForTimeout(2000);
-      // Verify success state or no error
-      const error = page.locator('.error, [class*="error"]');
-      expect(await error.count()).toBe(0);
-    }
-  });
+- Construct application UI from canonical theme.tools themes/assets and ui.theme.tools web components. Add missing reusable capabilities in their canonical repositories rather than duplicating them in applications.
+- Storybook is the executable discovery surface for components, sections, complete pages, and full sites. Cover meaningful loaded/loading/empty/error/pending states, interactions, accessibility, responsive behavior, and consumer contracts.
+- Keep addon-vitest as the canonical story interaction path. Reuse stories and assertions in remote Playwright against an immutable built Storybook when Browser Run compatibility is required.
 
-  test('5. Mobile responsive — no horizontal scroll', async ({ page }) => {
-    await page.setViewportSize({ width: 375, height: 667 });
-    await page.goto(PROD_URL!);
-    const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
-    const viewportWidth = await page.evaluate(() => window.innerWidth);
-    expect(bodyWidth).toBeLessThanOrEqual(viewportWidth + 5); // 5px tolerance
-  });
+## Selective execution
 
-  test('6. Keyboard navigation reaches main CTA', async ({ page }) => {
-    await page.goto(PROD_URL!);
-    for (let i = 0; i < 30; i++) {
-      await page.keyboard.press('Tab');
-      const tag = await page.evaluate(() => document.activeElement?.tagName);
-      if (tag === 'BUTTON' || tag === 'A') return; // Reached interactive element
-    }
-    throw new Error('Keyboard trap — could not reach any interactive element in 30 tabs');
-  });
+- Prefer the established task graph; use Nx only after inspecting the installed version and proving its graph/inputs are correct. Do not maintain competing graphs.
+- Select from validated affected tasks, changed tests/config/fixtures, explicit requirement/route/API/component mappings, supported runner dependencies, trustworthy history, critical sentinels, and risk obligations.
+- Missing baselines, deleted/new files, stale maps, dynamic dependencies, unknown global inputs, graph errors, and uncovered behavior widen selection. They never yield an empty pass.
+- Emit a selection manifest before execution. Live browser/provider checks run fresh; cache only deterministic work with complete provenance.
+- Prove selectivity with controlled changes and periodically compare against broader trusted runs. Disable unsafe optimization at a boundary after a miss.
 
-  test('7. SEO essentials present', async ({ page }) => {
-    await page.goto(PROD_URL!);
-    // Title
-    const title = await page.title();
-    expect(title.length).toBeGreaterThan(10);
-    // Meta description
-    const desc = await page.locator('meta[name="description"]').getAttribute('content');
-    expect(desc).toBeTruthy();
-    // H1
-    expect(await page.locator('h1').count()).toBe(1);
-    // JSON-LD
-    expect(await page.locator('script[type="application/ld+json"]').count()).toBeGreaterThanOrEqual(1);
-    // OG image
-    expect(await page.locator('meta[property="og:image"]').getAttribute('content')).toBeTruthy();
-  });
+## Five-minute required path
 
-  test('8. Performance — page loads under 3s', async ({ page }) => {
-    const start = Date.now();
-    await page.goto(PROD_URL!, { waitUntil: 'domcontentloaded' });
-    const elapsed = Date.now() - start;
-    expect(elapsed).toBeLessThan(3000);
-  });
+- Target 300 seconds from workflow acceptance to complete verdict: selection/cache ≤30s; static/unit/component/contract and preview preparation by 120s; selected remote browser and sentinels by 270s; reconciliation in the final 30s.
+- Record queue, setup, execution, cold/warm behavior, capacity, cache provenance, browser minutes, external calls, and cost separately.
+- At deadline, unfinished, missing, cancelled, infrastructure-blocked, or artifact-lost required checks block deployment. Optimize selection/setup/caching/parallelism; never weaken validation to hit the number.
+- Deeper mutation, fuzzing, load/soak, recovery, compatibility, and live-model evaluation may be immutable-revision prerequisites outside the normal path when risk requires them.
 
-  test('9. No placeholder content', async ({ page }) => {
-    await page.goto(PROD_URL!);
-    const text = await page.locator('body').textContent();
-    const banned = ['Lorem', 'ipsum', 'TODO', 'FIXME', 'placeholder', 'coming soon', 'TBD'];
-    for (const word of banned) {
-      expect(text!.toLowerCase()).not.toContain(word.toLowerCase());
-    }
-  });
+## Cloudflare Browser Run
 
-  test('10. Error pages are branded', async ({ page }) => {
-    const res = await page.goto(`${PROD_URL}/this-page-absolutely-does-not-exist-xyz`);
-    expect(res?.status()).toBe(404);
-    // Should NOT be browser default — check for brand elements
-    await expect(page.locator('h1')).toBeVisible();
-    await expect(page.locator('a[href="/"]')).toBeVisible();
-  });
-});
-```
+- Control Playwright from existing CI and connect remote Chromium over authorized CDP. Start with one owned session per worker; reuse its browser, create a fresh context per test, and isolate backend namespaces.
+- Use an account-scoped leased semaphore and launch-rate limiter, reserve ordinary product capacity, respect Retry-After within deadline, and close contexts/sessions in `finally` and cancellation handlers.
+- Verify the exact immutable preview identity before assertions. Scope credentials to approved origins and prevent redirects/third parties from receiving them.
+- Run a capability probe for context isolation, upload/download, trace, screenshot, storage state, dialogs, interception, service workers, and failure cleanup. Report unsupported behavior honestly.
+- Browser Run is the primary remote Chromium lane, not proof of Firefox, WebKit, real devices, assistive technology, or human usability.
 
-## Completion-Driven Execution
+## Evidence gate
 
-Every prompt should drive toward this test suite passing 100%. The workflow:
+- One authority reconciles every required task, test, shard, retry, cache receipt, deeper prerequisite, and human obligation.
+- States are fresh-pass, valid-cache, failed, incomplete, blocked, or explicitly not-applicable. Unexpected zero discovery, skipped required tests, disabled targets, cancelled shards, missing reports, or infrastructure errors cannot pass.
+- Preserve first failure and classify retry success as flake evidence. Quarantine requires owner, reason, expiry, and replacement protection.
+- Record revision, build/deployment identity, graph/selector version, runtime/browser, config, seed, duration, attempts, cache trust, and useful redacted artifacts.
+- Inspect final diff, expectations, snapshots, exclusions, tolerances, thresholds, and gate changes. Expectation changes require a behavioral reason; do not delete failures or broaden mocks for green.
 
-1. Build / modify code
-2. Deploy to production
-3. Run `full-journey.spec.ts` against `PROD_URL`
-4. Any failures → fix the code → re-deploy → re-run
-5. All pass → take screenshots at all breakpoints
-6. AI visually inspect screenshots
-7. Any critiques → fix → re-deploy → re-screenshot
-8. Zero critiques + all tests green = DONE
+## Family routing
 
-This means every prompt ends with a verified, visually inspected, fully tested production site.
+- F01 domain/unit; F02 components; F03 integration/contracts; F04 system journeys; F05 visual/compatibility.
+- F06 accessibility/usability; F07 generated/adversarial; F08 security/privacy; F09 distributed data; F10 performance/cost.
+- F11 resilience/recovery; F12 deployment/platform; F13 AI/agents/evals; F14 content/analytics/observability; F15 suite/skill effectiveness.
+- Every family has IDs `.01`–`.30`. A single convincing test may satisfy several IDs; irrelevant items require a specific rationale. Policy coverage and application rollout state remain distinct.
 
-## Assumption Protocol (When Answers Are Needed)
+## Layer adapters
 
-When the AI needs information to proceed:
+- Unit/property: Vitest and fast-check with deterministic seeds and independently calculated oracles.
+- Worker integration: the installed supported Cloudflare Vitest integration with per-file storage isolation and explicit per-test cleanup.
+- Contracts: executable Zod/API/message/provider fixtures plus compatibility evidence for independently deployed consumers.
+- Components: Storybook addon-vitest, semantic Testing Library interaction, axe enforcement, and shared theme/component contracts.
+- Journeys: Playwright with persisted outcome checks, bounded condition waits, isolated identities/data, and provider sandboxes only when authorized.
+- Mutation/fuzz/load: targeted Stryker, bounded fast-check/fuzz corpora, and k6-style thresholds in deeper tiers selected by risk.
+- AI: deterministic tool/state boundaries first; Promptfoo/Langfuse datasets and bounded live evaluations only with approved budget.
 
-1. **Can it be inferred?** (from domain name, project type, existing code) → infer and proceed
-2. **Is it a default?** (from `CONVENTIONS.md`, `SKILL_PROFILES.md`) → use the default
-3. **Is it blocking?** (API key, domain name, billing decision) → ask casually, provide the default:
+## Resource discipline
 
-   ```
-   Quick question — should this be a donation site or a SaaS product?
-   I'm going with donation site based on the domain name.
-   Let me know if that's wrong, otherwise I'll keep building.
-   ```
+- Use explicit run/application/account limits for browser minutes, sessions, launch rate, provider calls, AI tokens, and dollars.
+- Test data factories issue tenant/run-scoped identifiers and cleanup manifests; retries and shards cannot share mutable server state accidentally.
+- Retain only useful redacted traces, screenshots, reports, seeds, and minimal reproducers for a declared period in test-only artifact storage.
+- Never add paid capacity, disable access control, run destructive production tests, or contact real customers to force a verdict.
 
-4. **Never block on non-critical decisions.** Make the best assumption, document it, keep going.
+## Independent review
+
+- High-risk acceptance review receives the requirement and raw artifacts, not hidden answers or the implementation's own rationale as an oracle.
+- Deterministic requirements use exact assertions; qualitative design/usability/accessibility uses calibrated human or model review with limitations.
+- Positive and negative controls prove the harness can pass a known-good case and fail deliberately broken behavior.
+
+## Report
+
+Report actual commands, immutable revision/artifacts, selected-test reasons, outcomes, timing, parallelism, cache behavior, costs, fresh versus reused evidence, critical paths protected, counts by family/state, and concrete blockers. Never claim an unexecuted check or unavailable provider receipt.

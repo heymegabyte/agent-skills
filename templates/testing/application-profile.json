@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "application": "replace-me",
+  "owner": "replace-me",
+  "revision": "replace-me",
+  "stack": { "languages": [], "frameworks": [], "deployment": [], "shared_packages": [] },
+  "boundaries": {
+    "flags": [],
+    "bindings": [],
+    "apis": [],
+    "stores": [],
+    "auth": [],
+    "tenants": [],
+    "payments": [],
+    "messaging": [],
+    "jobs": [],
+    "ai": [],
+    "browsers": [],
+    "accessibility": []
+  },
+  "critical_paths": [],
+  "test_baseline": { "commands": [], "failures": [], "durations": [], "flakes": [] }
+}

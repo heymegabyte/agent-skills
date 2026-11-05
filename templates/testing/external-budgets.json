@@ -1,0 +1,7 @@
+{
+  "schema_version": "1.0.0",
+  "browser_run": { "max_minutes": 0, "max_concurrency": 0, "launches_per_second": 0 },
+  "ai_evaluations": { "max_calls": 0, "max_usd": 0 },
+  "providers": { "max_calls": 0 },
+  "artifact_retention_days": 7
+}

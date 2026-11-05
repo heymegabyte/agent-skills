@@ -1,0 +1,19 @@
+{
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "production": ["default", "!{projectRoot}/**/*.spec.*"],
+    "sharedGlobals": [
+      "{workspaceRoot}/package-lock.json",
+      "{workspaceRoot}/nx.json",
+      "{workspaceRoot}/tsconfig.base.json",
+      "{workspaceRoot}/themes/**/*",
+      "{workspaceRoot}/assets/**/*",
+      "{workspaceRoot}/migrations/**/*",
+      "{workspaceRoot}/test/**/*"
+    ]
+  },
+  "targetDefaults": {
+    "test": { "inputs": ["default", "^default"], "cache": true },
+    "e2e-live": { "inputs": ["default", "^production"], "cache": false }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "baseline",
+    "head",
+    "application",
+    "artifact",
+    "graph_version",
+    "changed_inputs",
+    "selected",
+    "reasons",
+    "fallbacks",
+    "tier",
+    "estimated_seconds",
+    "mandatory"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "baseline": { "type": ["string", "null"] },
+    "head": { "type": "string" },
+    "selected": { "type": "array", "minItems": 1 },
+    "fallbacks": { "type": "array" },
+    "mandatory": { "type": "array" }
+  },
+  "additionalProperties": true
+}

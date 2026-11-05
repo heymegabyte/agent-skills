@@ -1,0 +1,24 @@
+name: Required testing verdict
+on: [workflow_call]
+jobs:
+  required:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Resolve baseline and emit selection
+        run: node bin/testing/testing-select.mjs .testing/selection-input.json > .testing/selection.json
+      - name: Run established task graph
+        run: mise run ci
+      - name: Run exactly selected fresh browser specs
+        run: npx playwright test --list && npx playwright test $(node -e "const m=require('./.testing/selection.json'); process.stdout.write(m.selected.join(' '))")
+      - name: Reconcile complete verdict
+        if: always()
+        run: node bin/testing/testing-gate.mjs .testing/selection.json .testing/evidence.json > .testing/verdict.json
+      - name: Retain compact evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: testing-verdict-${{ github.sha }}
+          path: .testing/
+          retention-days: 7

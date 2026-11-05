@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "revision",
+    "artifact",
+    "selection_digest",
+    "verdict",
+    "counts",
+    "missing",
+    "generated_at"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "verdict": { "enum": ["pass", "block"] },
+    "counts": { "type": "object" },
+    "missing": { "type": "array" }
+  },
+  "additionalProperties": true
+}

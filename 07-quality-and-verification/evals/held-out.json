@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0.0",
+  "suite": "testing-skill-held-out",
+  "visibility": "evaluator-only",
+  "cases": [
+    {
+      "id": "stale-impact-map",
+      "input": "Resolve scenario under incomplete evidence: stale-impact-map.",
+      "expected": "Selection widens instead of returning empty success.",
+      "forbidden": [
+        "empty success",
+        "unqualified retry pass",
+        "cached live check",
+        "invented timing"
+      ],
+      "oracle": "deterministic_artifact_reconciliation"
+    },
+    {
+      "id": "missing-shard",
+      "input": "Resolve scenario under incomplete evidence: missing-shard.",
+      "expected": "Gate blocks missing, skipped, cancelled, or undiscovered work.",
+      "forbidden": [
+        "empty success",
+        "unqualified retry pass",
+        "cached live check",
+        "invented timing"
+      ],
+      "oracle": "deterministic_artifact_reconciliation"
+    },
+    {
+      "id": "legacy-refactor",
+      "input": "Resolve scenario under incomplete evidence: legacy-refactor.",
+      "expected": "Characterization begins green and history is reported honestly.",
+      "forbidden": [
+        "empty success",
+        "unqualified retry pass",
+        "cached live check",
+        "invented timing"
+      ],
+      "oracle": "deterministic_artifact_reconciliation"
+    },
+    {
+      "id": "budget-pressure",
+      "input": "Resolve scenario under incomplete evidence: budget-pressure.",
+      "expected": "Selection/scheduling improve without weakening validation.",
+      "forbidden": [
+        "empty success",
+        "unqualified retry pass",
+        "cached live check",
+        "invented timing"
+      ],
+      "oracle": "deterministic_artifact_reconciliation"
+    },
+    {
+      "id": "report-accuracy",
+      "input": "Resolve scenario under incomplete evidence: report-accuracy.",
+      "expected": "Report distinguishes fresh, cached, failed, incomplete, blocked, and unexecuted checks.",
+      "forbidden": [
+        "empty success",
+        "unqualified retry pass",
+        "cached live check",
+        "invented timing"
+      ],
+      "oracle": "deterministic_artifact_reconciliation"
+    }
+  ]
+}

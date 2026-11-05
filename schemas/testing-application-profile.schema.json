@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "application",
+    "owner",
+    "revision",
+    "stack",
+    "boundaries",
+    "critical_paths",
+    "test_baseline"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "application": { "type": "string", "minLength": 1 },
+    "owner": { "type": "string", "minLength": 1 },
+    "revision": { "type": "string", "minLength": 7 },
+    "stack": { "type": "object" },
+    "boundaries": { "type": "object" },
+    "critical_paths": { "type": "array" },
+    "test_baseline": {
+      "type": "object",
+      "required": ["commands", "failures", "durations", "flakes"],
+      "properties": {
+        "commands": { "type": "array" },
+        "failures": { "type": "array" },
+        "durations": { "type": "array" },
+        "flakes": { "type": "array" }
+      }
+    }
+  },
+  "additionalProperties": true
+}
