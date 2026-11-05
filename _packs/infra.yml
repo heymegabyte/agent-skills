@@ -25,3 +25,4 @@ members:
   - rules/server-ingress-firewall
   - rules/terminal-styling
   - rules/litellm-gateway
+  - coolify-cluster-standard
