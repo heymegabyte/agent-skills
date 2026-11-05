@@ -53,7 +53,7 @@ describe('Paramilitary Fleet Command Doctrine & Tools', () => {
     assert.ok(sitrep.includes('9. NEXT WAYPOINT: Ship to staging'));
   });
 
-  it('validates that all 24 canonical paramilitary agent profiles contain military call signs, ROE, and 30 ideas', () => {
+  it('validates that all 24 canonical paramilitary agent profiles contain military call signs, ROE, and converged tactical pillars', () => {
     const files = readdirSync(AGENTS_DIR).filter(f => {
       if (!f.endsWith('.md') || f.startsWith('.')) return false;
       const stat = lstatSync(resolve(AGENTS_DIR, f));
@@ -68,8 +68,13 @@ describe('Paramilitary Fleet Command Doctrine & Tools', () => {
         paramilitaryCount++;
         assert.ok(content.includes('Commander\'s Intent'), `${file} missing Commander's Intent`);
         assert.ok(content.includes('Rules of Engagement'), `${file} missing Rules of Engagement`);
-        assert.ok(content.includes('Top 30 Tactical Capabilities'), `${file} missing Top 30 Tactical Capabilities`);
+        assert.ok(
+          content.includes('Converged Elite Tactical Mastery Pillars') || content.includes('Tactical Capabilities'),
+          `${file} missing Tactical Mastery Pillars`
+        );
         assert.ok(content.includes('PACE'), `${file} missing PACE`);
+        assert.ok(content.includes('Self-Healing Error Recovery Runbook'), `${file} missing Self-Healing Error Recovery Runbook`);
+        assert.ok(content.includes('Machine-Verifiable Definition of Done'), `${file} missing Definition of Done`);
       }
     }
 
