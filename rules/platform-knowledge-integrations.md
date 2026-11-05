@@ -41,9 +41,10 @@ Applies under [shared platform policy](platform-shared-capabilities.md). Sources
 - Key caches by security scope, authorization version and corpus/index revision. Measure freshness lag, retrieval quality, denied cross-tenant probes and deletion/ACL convergence. A sync request accepted by the API is not proof of updated search results.
 - Preserve old QMD access only for an explicitly tracked migration dependency; do not add new QMD paths. Remove after parity, authorization and deletion tests pass.
 
-## Shared integration and automation plane
+## Shared integration, automation, social & utility plane in `@theme.tools`
 
-- Create versioned TypeScript contracts for Connection, CredentialRef, ConnectorManifest, Action, Trigger, SyncCursor, WebhookReceipt, RateLimitPolicy, Run and typed errors. Share them across every product, agent tool, MCP App and automation step.
+- **Store all reusable utilities and CF-native engines in `@theme.tools` (`heymegabyte/theme.tools`)**: Anything that can be reused across sites MUST live in `@theme.tools`, including our Cloudflare-native ports of **Activepieces** (`@theme.tools/activepieces`), **Nango** (`@theme.tools/nango`), and **Postiz** (`@theme.tools/postiz`), plus `@theme.tools/shared-utils` and `@theme.tools/blog`.
+- Create versioned TypeScript contracts for Connection, CredentialRef, ConnectorManifest, Action, Trigger, SyncCursor, WebhookReceipt, RateLimitPolicy, SocialPostSchedule, SocialChannelReceipt, Run and typed errors. Share them across every product, agent tool, MCP App and automation step from `@theme.tools`.
 - Better Auth establishes actor identity; the integration layer owns customer connections/consent and token lifecycle; Agent Vault brokers supported credentialed requests; Activepieces-derived workflows orchestrate actions. Only one owner refreshes each token family.
 - Keep encrypted credentials and refresh tokens server-side behind a scoped secret-reference abstraction, backed by approved Infisical facilities where supported. Product databases store references/metadata, not plaintext. Never use a shared platform token to impersonate a customer's connection.
 - OAuth callback state is one-time, signed/bound to actor/tenant/provider/redirect and expires. Defend against account linking, confused-deputy and SSRF attacks; display whose account was connected and granted capabilities.

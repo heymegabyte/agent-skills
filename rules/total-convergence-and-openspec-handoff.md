@@ -80,8 +80,9 @@ Whenever the agent evaluates at the end of a prompt pass what updates can be inf
    - Extract reusable rules, skills, convergence checklists, verification scripts, and orchestration helpers discovered during the turn.
 2. **`heymegabyte/install.doctor` (`/Users/Apple/emdash/repositories/install.doctor`)**:
    - Extract reusable dotfiles, shell environment defaults (`megabyte-cache.sh.tmpl`), package-manager configs, systemd/LaunchAgent units, lazy CLI shims (`cnf-build-shims`), and workstation/server provisioning scripts inferred from the prompt or response.
-3. **`heymegabyte/theme.tools` & `ui.theme.tools` (`/Users/Apple/emdash/repositories/theme.tools`)**:
-   - Extract reusable OKLCH theme tokens, component state contracts, Storybook stories, visual state matrix validators, and shared UI primitives (`@theme-tools/ui`, `@theme-tools/themes`) inferred from the prompt or response.
+3. **`heymegabyte/theme.tools` & `ui.theme.tools` (`@theme.tools`, `/Users/Apple/emdash/repositories/theme.tools`)**:
+   - **`@theme.tools` is the single canonical location for ALL shared utilities, reusable TypeScript libraries, UI components, themes, and complex cross-site engines.** Anything that can be reused across sites MUST be stored in `@theme.tools` (`packages/shared-utils`, `packages/blog`, `packages/ui`, `packages/themes`, etc.), explicitly including our **Cloudflare-native ports of Activepieces (`@theme.tools/activepieces`), Nango (`@theme.tools/nango`), and Postiz (`@theme.tools/postiz`)**, plus shared scheduling, signing, forms, shortlinks, API keys, notifications, and CRM engines so complex features can be effortlessly reused across every site.
+   - Extract reusable OKLCH theme tokens, component state contracts, Storybook stories, visual state matrix validators, shared utilities, and CF-native engine adapters (`@theme-tools/ui`, `@theme-tools/themes`, `@theme-tools/shared-utils`) inferred from the prompt or response.
 4. **Any Other Implicated Project Repository**:
    - Reconcile host or product changes into the active project repository (`legion.megabyte.space`, `coolify.megabyte.space`, `projectsites.dev`, etc.).
 

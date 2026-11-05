@@ -21,8 +21,10 @@
     "video": "Remotion",
     "secrets": "Infisical",
     "credentialBroker": "Infisical Agent Vault",
-    "integrations": "Independent Cloudflare-native Nango-style contracts and adapters",
-    "automation": "License-permitted Activepieces-derived Cloudflare-native library"
+    "sharedUtilitiesHome": "@theme.tools (heymegabyte/theme.tools)",
+    "integrations": "Independent Cloudflare-native Nango port in @theme.tools (@theme.tools/nango)",
+    "automation": "License-permitted Activepieces-derived Cloudflare-native port in @theme.tools (@theme.tools/activepieces)",
+    "socialPublishing": "Cloudflare-native Postiz port in @theme.tools (@theme.tools/postiz)"
   },
   "supersedesInScope": {"builder": "VibeSDK", "knowledge": "QMD", "authenticationDefault": "Clerk"},
   "catalog": {"components": "ui.theme.tools", "themes": "theme.tools", "immutableVersions": true, "consumerForks": false},
