@@ -1,5 +1,32 @@
 # Skills System Changelog
 
+## [Unreleased] — 2026-10-26 — DeepSeek V4 thinking-mode proxy (MEG-207 / agent-skills#3)
+
+### What this unlocks for you
+
+Multi-turn agentic work on the DeepSeek rail with thinking mode enabled. Before this change the
+second request of every tool-calling task failed with a deterministic `HTTP 400` from DeepSeek's
+Anthropic-compatible endpoint (`The content[].thinking in the thinking mode must be passed back`).
+Claude Code drops the reasoning during its Anthropic<->OpenAI conversion.
+
+### New
+
+- `bin/deepseek-proxy/proxy.mjs` — zero-dependency loopback proxy that captures reasoning from the
+  SSE stream, re-injects it into assistant `tool_use` turns on later requests, and strips
+  `output_config` / `reasoning_effort` when `thinking.type` is `disabled`.
+- `bin/deepseek-proxy.sh` — launcher that starts the proxy, points `claude` at it, and tears the
+  proxy down on exit (`--no-proxy` bypasses it).
+- `bin/deepseek-proxy/README.md` — mechanism, env knobs, and the signature trap.
+- `bin/__tests__/deepseek-proxy.test.mjs` — 14 tests; a fake upstream reproduces the 400 and a
+  negative control proves the 3-turn conversation fails on turn 2 without the proxy.
+
+### Verified live (2026-10-26, `deepseek-v4-pro`, `thinking.type: adaptive`)
+
+- Raw `curl` with a `tool_use` assistant turn and no `thinking`: `HTTP 400`, repeatable.
+- Same request through the proxy: `HTTP 200`.
+- `claude -p "<tool-calling prompt>"` through `bin/deepseek-proxy.sh`: `num_turns: 2`,
+  `is_error: false`, result `DONE`.
+
 ## [Unreleased] — 2026-06-18 — Integration arc: skills 17–19, 20+ commands, 15 doctrines, eval harness, MCP forge
 
 ### What this unlocks for you
