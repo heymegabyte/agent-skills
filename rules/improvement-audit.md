@@ -59,13 +59,16 @@ Score each candidate 0-10 on all ten; record the vector, not just the mean.
 - **Dedupe + combine BEFORE ranking.** Fold near-duplicates into one; merge small ideas that are only valuable together into one stronger candidate. The merged idea is re-scored.
 - Rank by composite with a veto: any candidate scoring 0 on **Security** or **Architectural fit** is rejected outright regardless of composite.
 
-## Ship rule — top-30% is a FLOOR, not a ceiling
+## Ship rule — implement every idea the AI thinks is recommendable
 
-- Ship **at least** the top 30% of survivors for each dimension — but 30% is the MINIMUM, never the budget.
-- **Ship every clearly-justified idea**, even above the 30th percentile: if the vector is strong (high user-value + feasible + good fit + low cost) and it clears the [[auto-integrate-recs]] 4-question filter (<2h, no design conversation, reversible, no external blocker), SHIP IT this turn.
-- Only three things stop a justified idea from shipping now: it needs a design conversation, it's an irreversible/precedent-setting call, or it's blocked on an unbuilt prereq/external dependency. Those become Recs with next-prompt language per [[auto-integrate-recs]] — nothing else does.
-- Capping shipped ideas at "exactly 30%" to look disciplined is itself a failure mode. Discipline is in the SCORING, not in withholding wins.
-- Mark every candidate: ✅ shipped · ⏸ Rec (with reason + next-prompt language) · 🚫 rejected (with reason).
+- **Core Mandate (Brian 2026-11-04):** **Any of the ideas that the AI thinks are recommendable should be implemented.** Never stop at "top 30%" or "top 4–6", and never withhold recommendable ideas as passive recommendations.
+- If the AI judges a candidate idea to be recommendable (it genuinely improves the surface, passes the 10-factor rubric without a 0 on Security or Architectural fit, and does not violate an explicit negative blocklist such as `Superset`, `onlykey`, `fido2`, `Biome`, or `Resend`), **implement it in the same turn**. If an idea is not worth implementing, reject it (`🚫`) — do not recommend it.
+- **How to implement every recommendable idea in the same turn:**
+  1. **Parallel Swarm Offload**: Decompose independent implementation units into a manifest and execute via `~/.agentskills/bin/opencode-swarm.mjs --tasks <manifest.json>` (scaling up to 200 parallel workers).
+  2. **Eager-Minimum + Lazy-Everywhere for CLIs/Tools**: Provision core daemons/harnesses eagerly and wire optional CLIs, linters, cloud tools, and TUIs as zero-cost lazy shims (`cnf-build-shims` + `not-found-hook.sh` backed by the 3-tier `megabyte-local-proxy`).
+  3. **Feature Flags for Product Capabilities**: Ship ambitious UI/backend features behind dark-launch feature flags (`[[feature-flags]]`) so every recommendable idea lands in code safely.
+- Only genuine external blockers (`approval-required` destructive/irreversible actions or missing vendor-minted third-party credentials) pause implementation.
+- Mark every candidate: ✅ implemented · ⏸ blocked (with exact external blocker) · 🚫 rejected (not recommendable, with reason).
 
 ## Three horizons (sort every survivor)
 

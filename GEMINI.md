@@ -13,6 +13,8 @@ CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan U
 
 ## Rules
 
+- **Prefer TypeScript over Python** (Node 24 native strip-types / Bun + Bash for system glue; never reach for Python by default for scripts, automation, verifiers, exporters, or tests)
+- **Implement Every Recommendable Idea & Top-X Feedback Loop (`rules/prompt-as-training-signal.md` §8, `rules/auto-integrate-recs.md`, `rules/improvement-audit.md`)**: **Any of the ideas that the AI thinks are recommendable should be implemented.** Never cap at 4–6 or 30%: implement every recommendable idea in the same turn (using `opencode-swarm.mjs`, feature flags, or lazy CLI shims `cnf-build-shims`), ask yourself **why each wanted feature wasn't automatically implemented before the user asked for the Top X ideas**, and modify `~/.agentskills` + upstream templates (`install.doctor`, `template.projectsites.dev`) in the same turn so the idea gets automatically integrated on pass 1 next time.
 - TypeScript strict, never `any`, prefer `interface` over `type`
 - Hono inline handlers for RPC type inference
 - Zod validation on all inputs
