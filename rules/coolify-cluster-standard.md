@@ -15,7 +15,7 @@ paths:
 
 # Coolify Multi-Node Cluster & GPU Workload Standard (Pass-1 Mandate)
 
-Whenever provisioning, onboarding, auditing, or modifying a Coolify server or multi-node workstation (`localhost` VM 100 `10.0.0.155`, `legion.megabyte.space` `10.0.0.143`, `omen.megabyte.space` `10.0.0.161`, `zen.megabyte.space` `10.0.0.162`), automatically apply all Wave-1 and Wave-2 pass-1 standards below without waiting for a "Top 30" audit prompt.
+Whenever provisioning, onboarding, auditing, or modifying a Coolify server or multi-node workstation (`localhost` VM 100 `10.0.0.155`, `legion.megabyte.space` `10.0.0.143`, `omen.megabyte.space` `10.0.0.161`, `zen.megabyte.space` `10.0.0.162`), automatically apply all Wave-1, Wave-2, and Wave-3 pass-1 standards below without waiting for a "Top 30" audit prompt.
 
 ## 1. GPU & CPU Workload Placement & Offload (Wave 1 #1–#3, Wave 2 #14–#15, #17)
 - **Never run CUDA/ROCm GPU workloads or heavy headless browsers on the CPU-only control plane (`VM 100`)**:
@@ -64,5 +64,19 @@ Whenever provisioning, onboarding, auditing, or modifying a Coolify server or mu
   - Cap local backup retention `database_backup_retention_amount_locally = 7` across all `ScheduledDatabaseBackup` rows, and keep `/usr/local/bin/coolify-sync-nocodb-sqlite` active so NocoDB's SQLite database is mirrored into Postgres before scheduled backups.
   - Reconcile `StandalonePostgresql::find(0)` (`coolify-db`) metadata (`postgres:15-alpine`, `running:healthy`, `limits_memory = '4g'`).
 
-## 5. Explicit Negative Blocklist (Wave 1 #29 Excluded)
+## 5. Wave-3 Self-Healing, Database/Runtime Tuning, & Zero-False-Alert Discipline (Wave 3 #1–#36)
+- **CrowdSec `acquis.yaml` Compatibility & Traefik v3.7 Hygiene (Wave 3 #1–#3, #11–#12, #32)**:
+  - Never add `namespace:` keys inside `/opt/crowdsec/config/acquis.yaml` for `source: appsec` (unsupported in CrowdSec v1.7.x; causes crash-loop).
+  - Run `traefik:v3.7` on `coolify-proxy`, keep `/data/coolify/proxy` free of POSIX ACLs (`setfacl -b -R /data/coolify/proxy && chmod 600 /data/coolify/proxy/acme.json` inside `/usr/local/bin/coolify-fix-ssh-perms`), sync `Server::find(0)->proxy['last_saved_settings']` and `last_applied_settings` to `md5sum /data/coolify/proxy/docker-compose.yml`, and run `/usr/local/bin/coolify-proxy-watchdog` every 2m.
+- **JVM, Go (`GOMEMLIMIT`), LiteLLM, MariaDB, PHP-FPM, Postgres, & Redis Deep Tuning (Wave 3 #8–#10, #14–#15, #19, #22–#23, #33–#34)**:
+  - **Nexus 3**: Bound JVM heap & direct memory (`-Xms1024m -Xmx1536m -XX:MaxDirectMemorySize=1024m -XX:MaxMetaspaceSize=256m -XX:+UseG1GC`).
+  - **Grafana Alloy**: Set `GOMEMLIMIT=3000MiB` and scope `beyla.ebpf` `open_ports` to active HTTP/RPC ports (`80,443,2283,3000,3001,4000,5000,8000,8080,8081,9000`).
+  - **MariaDB & PHP-FPM**: Enforce `/etc/mysql/conf.d/99-coolify-tuning.cnf` (`innodb_buffer_pool_size=512M`, `slow_query_log=1`, `long_query_time=1.0`), `pm.max_requests = 500`, and `opcache.memory_consumption = 256` (`99-coolify-opcache.ini`).
+  - **Postgres & Redis**: Enforce `track_io_timing=on`, `log_min_duration_statement=1000`, `idle_in_transaction_session_timeout=5min`, `statement_timeout=15min`, weekly `VACUUM (ANALYZE)` cron (`/etc/cron.d/coolify-postgres-vacuum`), and Redis `tcp-keepalive 60` + `hz 15` (`redis:7.4-alpine` / `postgres:16-alpine`).
+- **Worker Node GPU Persistence, Autoheal, Journald Caps, & Zero-Alert Drift (Wave 3 #5–#7, #16–#18, #21, #24–#31, #35)**:
+  - Enable `nvidia-smi -pm 1` (`nvidia-persistenced`) and `willfarrell/autoheal:1.2.0` on `legion` and `omen`.
+  - Cap `systemd-journald` (`SystemMaxUse=1G`) across all 4 nodes (`VM 100`, `legion`, `omen`, `zen`).
+  - Keep `DECOMMISSIONED_PREFIXES` updated in `/data/coolify/scripts/restore-drill.py`, `dump_all = false` on NocoDB backup (`id=8`), `--update-baseline` after image upgrades in `/data/coolify/scripts/image-scan.py`, and provision `/opt/observability/grafana/dashboards/estate/coolify-cluster-gpu.json` + GPU Prometheus alert rules (`NvidiaGpuHighMemory`, `NvidiaGpuHighTemperature`).
+
+## 6. Explicit Negative Blocklist (Wave 1 #29 Excluded)
 - **Do NOT deploy Diun or pin floating `:latest` tags**: The estate intentionally uses rolling `:latest` tags with automated updates; never recommend or deploy Diun or replace `:latest` tags with static digests unless explicitly asked.
