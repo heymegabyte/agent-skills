@@ -13,8 +13,10 @@ compatibility:
 submodules:
   - accessibility-gate.md
   - adversarial-testing.md
+  - agent-preflight.md
   - llm-evals.md
   - agentic-security.md
+  - ast-mutation-testing.md
   - audio-video-sync.md
   - build-breaking-rules.md
   - chrome-and-browser-workflows.md
@@ -24,14 +26,17 @@ submodules:
   - e2e-accumulation.md
   - eval-driven-development.md
   - evidence-collection.md
+  - flaky-test-elimination.md
   - performance-optimization.md
   - picovoice-eagle-biometric.md
   - security-hardening.md
   - semgrep-codebase-rules.md
   - slop-detection.md
   - spec-driven-development.md
+  - speculative-rollouts.md
   - stagehand-ai-fallback.md
   - stagehand-ai-testing.md
+  - tdd-discipline.md
   - tdd-verification.md
   - testing-matrices.md
   - ui-completeness-sweep.md
@@ -154,4 +159,4 @@ After every deploy: browser console must show 0 CSP violations, 0 JS errors, 0 f
 - `e2e/COVERAGE.yml` — feature→spec map; CI fails on any feature without entry/test
 - Pre-commit lint: new component without matching `e2e/<feature>/` warns
 
-## See submodules: ai-vision-qa.md, multi-agent-testing.md, visual-regression.md.
+## See submodules: tdd-discipline.md (450-ID 15-family TDD & selective CI gate), families/F01..F15, ai-vision-qa.md, multi-agent-testing.md, visual-regression.md.

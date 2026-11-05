@@ -86,3 +86,31 @@ members:
   - rules/emdash-fleet
   - rules/supremacy-wars
   - rules/CHANGELOG
+  - rules/agent-a2a-contract
+  - rules/agent-preflight-discipline
+  - rules/ast-mutation-and-strict-types
+  - rules/backup-tiering
+  - rules/context-hydration
+  - rules/coolify-cluster-standard
+  - rules/episodic-memory-and-context-budgets
+  - rules/feature-expansion-mandate
+  - rules/fleet-secret-handling
+  - rules/linux-desktop-gnome-preference
+  - rules/machine-recovery-repo
+  - rules/multi-agent-consensus-and-auctions
+  - rules/multi-agent-dag-orchestration
+  - rules/openclaw-paperclip-doctrine
+  - rules/paramilitary-fleet-command-doctrine
+  - rules/platform-agent-ui
+  - rules/platform-content-media
+  - rules/platform-knowledge-integrations
+  - rules/platform-shared-capabilities
+  - rules/progressive-screen-scaffold-approval
+  - rules/shared-blackboard-collaboration
+  - rules/speculative-execution-and-evidence-ledgers
+  - rules/sso-auth-standard
+  - rules/theme-tools-canonical-components
+  - rules/tool-firewall-and-instruction-hierarchy
+  - rules/total-convergence-and-openspec-handoff
+  - rules/trajectory-discipline-and-evaluator-gate
+  - rules/workstation-shared-provisioning-policy

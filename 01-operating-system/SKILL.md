@@ -32,6 +32,7 @@ Coordinate repository workflows within the authority granted by the host and cur
 5. **Main-only branch** — `rules/main-only-branch.md`
 6. **Pick ONE, never options** — `rules/brian-preferences.md`
 7. **Paperclip AI + OpenClaw fleet governance** — `rules/openclaw-paperclip-doctrine.md`
+8. **Paramilitary Fleet Operations & Auftragstaktik** — `01-operating-system/paramilitary-fleet-operations.md` and `rules/paramilitary-fleet-command-doctrine.md`
 
 ## Autonomy default
 
