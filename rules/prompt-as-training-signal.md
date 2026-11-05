@@ -47,8 +47,8 @@ Every user prompt is a training signal — and evidence the previous turn under-
 
 ### 5. `"How can we improve ___"` / `"What else ___"` / `"Top N ideas"`
 
-- **Means:** invitation to operate at full extra-mile/auto-integrate-recs surface.
-- **Extract:** which surface the user is investing in — note in a project memory entry.
+- **Means:** invitation to operate at full extra-mile/auto-integrate-recs surface — and a signal that pass-1 predictive completeness left high-value ideas on the table.
+- **Extract:** which surface the user is investing in — note in a project memory entry, and once the user selects from the "Top X" list, execute §8 below in the same turn.
 
 ### 6. `"Ensure ___ is in ___"` / `"Save ___ to memory"` / `"Add ___ to the rules"`
 
@@ -60,6 +60,16 @@ Every user prompt is a training signal — and evidence the previous turn under-
 - **Means:** a behavior violated a prior preference or the user's implicit model.
 - **Write to:** `feedback_<topic>.md` memory with the prohibited behavior + reason given. Surface conflict under `~/.claude/CLAUDE.md` § Conflict Resolution if applicable.
 
+### 8. Selection / Approval from a Printed `"Top X"` List (`"implement these"`, `"remove X, skip Y, and implement the rest"`)
+
+- **Means:** every item the user selects from a printed "Top X" (e.g., Top 30) list is a feature/config that **should have been automatically implemented before the user ever had to ask for the 30 ideas**. Any item the user explicitly drops or rejects is a permanent negative preference.
+- **Mandatory 4-Step Pre-Emptive Integration Loop (run in the SAME turn):**
+  1. **Note Wanted vs. Rejected Items**: Record which items from the "Top X" list the user wants implemented and which items they explicitly excluded or removed.
+  2. **Root-Cause Why It Wasn't Auto-Implemented**: For every wanted item, ask yourself: *"Why wasn't this feature/configuration already automatically implemented on pass 1, before the user asked for the Top X ideas?"* Identify the exact gap in the predictive checklist, domain skill, or bootstrap/starter template.
+  3. **Modify Agent Skills & Upstream Defaults**: Update the owning skill/rule in `~/.agentskills` (`heymegabyte/agent-skills`) and any canonical upstream bootstrap/template repo (`heymegabyte/install.doctor`, `template.projectsites.dev`) **in the same turn** so the idea is **automatically integrated next time before the user ever asks for a "Top X" list**.
+  4. **Codify Exclusions**: Record any rejected/removed items as explicit `NEVER` guardrails in the relevant skill/rule so they are never proposed or provisioned again.
+- **Cross-links:** `[[auto-integrate-recs]]` · `[[predictive-completeness]]` · `[[always]]`.
+
 ## Extraction protocol
 
 For every prompt:
@@ -70,6 +80,22 @@ For every prompt:
 4. **Write the artifact** — append to the file, update the index, commit + push.
 5. **Cross-link** — add `[[backlink]]` from both sides. Skipping this step lets the same lesson recur in unrelated projects weeks later.
 6. **THEN execute the requested work** with the new wisdom already in force.
+
+## Every-turn parallel upstream triad integration decision (`agent-skills` + `install.doctor` + `theme.tools` + touched projects)
+
+Whenever the agent asks itself at the end of a prompt pass what updates can be inferred from the prompt and response for `agent-skills`, it **MUST run all three upstream syncs in parallel** (plus any other implicated project) — without waiting for the user to ask:
+
+1. **`heymegabyte/agent-skills` (`~/.agentskills`)**: Did this turn reveal a reusable rule, skill, convergence loop check, verification script, or orchestration pattern? Update `agent-skills` immediately.
+2. **`heymegabyte/install.doctor` (`/Users/Apple/emdash/repositories/install.doctor`)**: Did this turn reveal reusable system configuration, dotfiles, shell env exports, package-manager settings, security, service units, lazy CLI shims (`cnf-build-shims`), monitoring, backup, recovery, or host-integration logic? Reconcile it into `install.doctor` in parallel next to `agent-skills`.
+3. **`heymegabyte/theme.tools` & `ui.theme.tools` (`/Users/Apple/emdash/repositories/theme.tools`)**: Did this turn reveal reusable themes, OKLCH design tokens, 16-state visual component contracts, widget micro-loop patterns, Storybook visual gates, or shared web components (`@theme-tools/ui`, `@theme-tools/themes`)? Reconcile or queue future work in `theme.tools` via OpenSpec in parallel next to `agent-skills` and `install.doctor`.
+4. **OpenSpec + Paperclip Issue Registration Across Every Touched Repository**:
+   - Properly use **OpenSpec** (`openspec/changes/<change-id>/{proposal.md,design.md,tasks.md,specs/}`) in each respective repository (`agent-skills`, `install.doctor`, `theme.tools`, and any other project) to save the work and generate the task files.
+   - **Frontier Architect Mandate**: OpenSpec `proposal.md`, `design.md`, `tasks.md`, and `specs/` MUST be authored by **Claude Code (`claude`) with a fully-loaded, hydrated context** (or `codex` / `antigravity`). **NEVER spell out the details of the app or OpenSpec with `opencode`.**
+   - Add/sync the corresponding issue/task in **Paperclip** (via `~/.agentskills/bin/openspec-paperclip-sync.ts`, Paperclip MCP, or `paperclipai issue create`) with the **direct deep link to the OpenSpec definition(s)** in each Paperclip project (`agent-skills`, `install.doctor`, `theme.tools`, etc.).
+5. **Recommendations, Next Steps & Deferred Work → OpenSpec + Paperclip**:
+   - At the end of any prompt (or whenever a huge prompt cannot be 100% finished in the current pass and the agent defers remaining sub-features), materialize any remaining recommendations, next steps, or unfinished sub-features as an **OpenSpec** change AND file the linked issue in **Paperclip** so Paperclip automatically tends to it (`[[total-convergence-and-openspec-handoff]]`).
+
+This is a mandatory parallel workstream on every turn. Cross-links: `[[total-convergence-and-openspec-handoff]]` · `[[workstation-shared-provisioning-policy]]` · `[[openspec-operating-contract]]`.
 
 ## Where the artifacts live
 

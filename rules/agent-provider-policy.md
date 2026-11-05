@@ -28,16 +28,11 @@ Typical `throughput-safe` work includes mechanical code changes, scoped feature 
 
 When two or more independent throughput-safe slices exist, launch an **OpenCode swarm** unless coordination, contention, or launch overhead would make the total outcome worse. Do not require a minimum time saving: reduced Codex/Claude/Gemini usage, greater coverage, independent attempts, and preserved premium context all count as benefits. Use 3–4 workers by default when enough real work exists, obey the global host pool, and never exceed configured concurrency or provider limits. Assign disjoint file/module ownership, give each worker a compact contract, and prohibit nested swarms unless the scheduler explicitly permits them. Use serial waves for dependencies or shared hot files. Swarm output is untrusted until the parent folds it, checks conflicts, and runs the complete verification suite once.
 
-### Frontier — architecture · research · judgment (subscription CLIs ONLY)
-- **Claude Code** (`claude` CLI, user's Claude subscription) — primary architect, integrator,
-  final implementation judge, hard debugging, requirements reconciliation, deep architectural
-  expansion, final verification.
-- **Codex** (`codex` CLI, user's ChatGPT subscription) — independent heavy researcher,
-  architecture challenger, second opinion, adversarial reviewer, plan/prompt critic,
-  independent solution generator.
-- **Gemini CLI** (user subscription) — independent multimodal/frontier judgment and review; like
-  Codex and Claude, it delegates throughput-safe execution to OpenCode rather than consuming its
-  premium context on routine volume.
+### Frontier — architecture · research · judgment · OpenSpec Authoring (subscription CLIs ONLY)
+- **Claude Code** (`claude` CLI, user's Claude subscription) — **Primary Architect** with a fully-loaded, hydrated context (`<=900K tokens`), OpenSpec specification author (`proposal.md`, `design.md`, `tasks.md`, `specs/`), integrator, final implementation judge, hard debugging, requirements reconciliation, deep architectural expansion, final verification.
+- **Codex** (`codex` CLI, user's ChatGPT subscription) — independent heavy researcher, architecture challenger, OpenSpec Architect/critic, second opinion, adversarial reviewer, plan/prompt critic, independent solution generator.
+- **Gemini CLI / Antigravity** (user subscription) — independent multimodal/frontier Architect, OpenSpec author, judgment, and review; like Codex and Claude, it delegates throughput-safe execution to OpenCode rather than consuming its premium context on routine volume.
+- **HARD RULE — OpenSpec Authorship (`[[openspec-operating-contract]]`, `[[total-convergence-and-openspec-handoff]]`)**: Only an agent explicitly assigned the `architect` role for that change may author or modify OpenSpec architectural specifications (`proposal.md`, `design.md`, `tasks.md`, `specs/`); model or harness identity alone is insufficient. **NEVER** use `opencode` (DeepSeek) for this work. The assigned frontier architect records `**Architect Role:** assigned` in proposal and design before delegating bounded implementation.
 - For important work run Claude + Codex **independently**, then Claude synthesizes (not concat).
 - **Codex unavailable/unauthed is NOT fatal** → Claude performs an extra architecture /
   expansion / adversarial-review pass itself, then proceeds.

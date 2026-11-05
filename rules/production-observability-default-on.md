@@ -80,6 +80,9 @@ Per `CLAUDE.md` + `[[paperclip-openclaw-fleet-doctrine]]`, **every** project —
 - **Google Analytics (GA4)** — audience / acquisition / marketing attribution; pairs with the `/run-the-loop` Growth roster.
 - **Sentry** (`@sentry/cloudflare` v11, server-side) — errors + stream trace lifecycle; estate baseline on every Worker (pillar 4).
 - **Langfuse** — LLM/agent observability: every AI call traced (prompt · model · tokens · cost · latency · eval score). Mandatory on any AI-native surface (per AI-permanence, that's most of them) and on the fleet's own agent runs.
+  - **Graceful Fallback + Bounded Timeout Contract (Mandatory)**: Langfuse MUST always be used AND MUST degrade gracefully if Langfuse is down, slow, or unreachable:
+    1. **Strict Timeout (`2500ms`)**: Configure every Langfuse SDK instance, fetch call, and OTLP exporter with an explicit timeout (`timeout: 2500` / `AbortSignal.timeout(2500)` / `LANGFUSE_TIMEOUT_MS=2500`).
+    2. **Fail-Open Wrapper + Circuit Breaker (`~/.agentskills/bin/lib/langfuse-safe.ts`)**: Wrap all `trace`, `generation`, `score`, `getPrompt`, and `flushAsync` operations in a non-throwing `try/catch` (`ctx.waitUntil` on Cloudflare Workers) with a 3-strike circuit breaker (60s open cooldown) and local JSONL spool (`${XDG_CACHE_HOME:-$HOME/.cache}/megabyte/ai/langfuse-spool/traces.jsonl` on Node/CLI hosts). A down Langfuse endpoint must NEVER fail or delay an LLM call, Worker request, or agent turn.
 - **+ Cloudflare AI Gateway** in front of all LLM calls for caching + cost control + `$ai_*` telemetry — LLM-heavy or not.
 - Workers Tracing OTLP + structured JSON logging (pillars 1 + 3) remain the Worker-level substrate.
 

@@ -1,15 +1,20 @@
 ---
 name: "always"
+last_reviewed: 2026-06-28
+superseded_by: null
 priority: 1
 pack: "core"
 triggers: []
 paths:
   - "*"
-last_reviewed: 2026-06-28
-superseded_by: null
 ---
 
 # Always
+
+> **Context hydration:** substantial agents use the available window aggressively—up to 900K related
+> tokens on 1M-context models—from exact repository source, Context7, scoped AI Search, and current
+> primary evidence. Skill-catalog 2% description compression is discovery-only; fully load every
+> selected skill and required reference. Full contract: `[[context-hydration]]`.
 
 > **Website per-page / per-site / per-entity gates** (SEO head · webmanifest/robots/sitemap/security.txt · lightbox · Google Maps · clickable-entity linking · forms · timeline · Cmd+K) live in `[[website-page-and-site-gates]]` — extracted so WEBSITE-specific detail loads only on site prompts (via the `website-build` pack) instead of taxing every prompt's token budget.
 >
@@ -18,26 +23,31 @@ superseded_by: null
 ## Autonomy — drive to done, NEVER ask permission to continue
 
 - **Going all the way to completion is the permanent default.** Never end a turn with a stop/continue question — "stop here or continue?", "want me to start the next item?", "should I keep going?" — that offloads a decision the user already made (finish it) back onto them. It is a FAILURE MODE, not politeness.
+- **OpenSpec is continuous, not conversationally gated.** When the requested outcome is authorized, run propose → apply → verify → sync → archive autonomously in the same logical work chain. A generated phase skill cannot manufacture a user checkpoint; orchestrate the next native phase yourself.
+- **Assume and advance.** Infer reversible details from repository truth, business/product goals, and durable preferences. Record meaningful assumptions, then execute. Ask only when a loaded skill explicitly requires it or the decision meets the approval-required/blocked taxonomy.
+- **Do useful unasked work.** Ship adjacent safe, reversible, testable improvements that serve the business, product, website, or app, even when the literal prompt did not enumerate them; govern durable additions through the active or a linked OpenSpec change.
 - When work remains (a roadmap, a backlog, a half-built feature, a "next" item), just DO it — re-arm the loop / spawn the agents / start the next item — and report what shipped + what's already in progress. A turn ends with momentum, not a question.
 - A momentary scope call ("stop the loop", "ship it") is NOT a standing preference to halt — the standing preference is always: finish everything finishable, then keep driving the roadmap. Don't re-litigate it next turn.
 - **The ONLY legitimate pause** is a genuinely human-gated decision: a secret/credential only the user can mint (vendor-issued, per Secrets §), an irreversible business/legal/brand choice (pricing, one-way-door architecture), or real-world truth you can't source (real reviews/photos/address). Everything else is yours to drive to done — see `autonomous-engineering.md` 4-tier (only `approval-required`/`blocked` pause).
+- **Antigravity harness invariant**: Antigravity does not prompt the user at all unless it has an intentional question on purpose from the agent skills (using `ask_question`) or it needs permission to do something dangerous (`approval-required` tier). Never prompt for routine progress or next steps.
 - Brian-gated `🔑` items still get their decision-independent slice shipped the same turn (`[[feedback_brian_gated_item_has_decision_independent_slice]]`); you advance a buildable item, never block.
 
 ## Secrets — auto-populate everything self-generable
 
 - **Any missing secret you CAN generate, generate + set automatically — never ask, never Rec, never leave a placeholder.** HMAC/webhook/signing keys, session/CSRF/JWT secrets, salts, nonces, bypass tokens, your-own-service API keys → `openssl rand -base64 32` / `-hex 32` (or `crypto.randomUUID`), stored locally AND pushed to the deploy target, same turn.
-- Only exceptions: data-at-rest `*_ENCRYPTION_KEY` (auto-gen destroys persisted data — detect only) and vendor-minted third-party creds (Stripe/Better Auth/OAuth). Full tiers + one-liners: `secret-auto-provisioning.md`.
+- Only exceptions: data-at-rest `*_ENCRYPTION_KEY` (auto-gen destroys persisted data — detect only) and vendor-minted third-party creds (Stripe/Clerk/OAuth). Full tiers + one-liners: `secret-auto-provisioning.md`.
 
-## Post-work
+## Post-work & End-of-Turn Parallel Triad Convergence
 
 - Deploy + test + purge
+- **Parallel Triad Sync (`agent-skills` + `install.doctor` + `theme.tools` + touched repos)**: At the end of every prompt pass, evaluate and apply inferred updates in parallel across `heymegabyte/agent-skills`, `heymegabyte/install.doctor`, and `heymegabyte/theme.tools` (`ui.theme.tools`), plus any other project touched. Save future/multi-step work via **OpenSpec** (`openspec/changes/<change-id>/` authored by `claude`/`codex`/`antigravity` with full hydrated context — **NEVER `opencode`**) and register the linked issue in each respective **Paperclip** project via `~/.agentskills/bin/openspec-paperclip-sync.ts` (`[[total-convergence-and-openspec-handoff]]`, `[[prompt-as-training-signal]]`).
+- **Extracted Micro-Task Convergence Loops**: Every UI widget, screen, business rule, performance path, security boundary, and AI execution surface MUST run the `CREATE → RENDER → EXPERIENCE → CRITIQUE → MODIFY → COMPARE` micro-loop across all 16 visual states and 10 critique lenses (`[[total-convergence-and-openspec-handoff]]`, `[[gorgeous-by-default]]`).
+- **Zero-Drop Handoff to Paperclip**: Whenever a huge prompt has remaining slices after the current pass, when the AI stops pursuing remaining sub-features ("gives up" due to context/scope ceiling), or when any recommendation/next step (`Recs:` / `Next:`) remains at the end of a prompt, materialize it via **OpenSpec** (authored by `claude`/`codex`/`antigravity`) and file the issue in **Paperclip** with a deep link to the OpenSpec files so Paperclip automatically tends to it.
+- **Langfuse Always-On + Graceful Fallback**: Always trace AI/LLM/agent calls to **Langfuse**, wrapped with a bounded timeout (`2500ms`, `AbortSignal.timeout(2500)`), circuit breaker, and fail-open fallback (`~/.agentskills/bin/lib/langfuse-safe.ts`) so a down Langfuse endpoint never blocks or fails execution (`[[production-observability-default-on]]`).
+- **After any "Top X" list selection**: note which items the user wanted implemented (and which were rejected), ask yourself why each wanted feature wasn't automatically implemented before the user asked for the "Top X" ideas, and modify `~/.agentskills` (plus upstream templates/bootstraps `install.doctor`, `theme.tools`, `template.projectsites.dev`) in the same turn so the idea gets automatically integrated next time (`[[prompt-as-training-signal]]` §8, `[[auto-integrate-recs]]`)
 - Update CLAUDE.md
 - Remove dead code/comments/imports
 - Stale docs = bugs
-
-## Paste-target copy (descriptions, bios, captions)
-
-- Copy for a reflowing paste field (YouTube/app-store/social/meta/textarea) ships with PROSE UNWRAPPED — one line per paragraph, blank line between; preserve list/link/section breaks. By DEFAULT, not on-request. Full: `[[paste-target-text-sanitization]]`.
 
 ## Multi-faceted prompts
 

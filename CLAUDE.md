@@ -20,9 +20,19 @@ Brian Zalewski. Principal SE, 14yr. Megabyte Labs / HeyMegabyte. Solo AI builder
 6. **Real user journeys** — simulate homepage-start journeys via Cloudflare Browser Run or Browserbase (whichever is configured); drive HIGH % coverage from full-journey runs.
 7. **Black + cyan + gorgeous** — everything black + cyan + gorgeous + beautiful + animated + annotated + cited + HBO-level + cinematic + catchy.
 
-## Core Loop
+## Core Loop & Total Multi-Axis Convergence (`rules/total-convergence-and-openspec-handoff.md`)
 
 - One relentless session: architect → parallel phases → spawn/kill agents → verify → ship.
+- **Extracted Micro-Task Convergence Loops (Always Active)**:
+  - Every UI widget, sub-feature, business rule, API route, security boundary, and performance path executes `CREATE → RENDER/EXECUTE → EXPERIENCE → CRITIQUE → MODIFY → COMPARE` across all **16 visual states** (`default`, `hover`, `focus-visible`, `active`, `selected`, `disabled`, `loading`, `expanded`, `collapsed`, `dragging`, `drop-target`, `success`, `warning`, `error`, `empty`, `populated`) and **10 critique lenses** (`Works? Missing? 3s clarity? Fewer steps? 10x more gorgeous? 0.333s motion? AI-native? Business rules/Zod? Perf/security? Triad lesson?`).
+- **End-of-Prompt Parallel Triad Sync (`agent-skills` + `install.doctor` + `theme.tools` + touched projects)**:
+  - At the end of every prompt pass, infer and apply updates in parallel across `heymegabyte/agent-skills`, `heymegabyte/install.doctor`, and `heymegabyte/theme.tools` (`ui.theme.tools`), plus any other project touched.
+  - Save all future/multi-step work, recommendations (`Recs:`), next steps (`Next:`), or deferred sub-features ("give-up" boundary on huge prompts) via **OpenSpec** (`openspec/changes/<change-id>/{proposal.md,design.md,tasks.md,specs/}`) in each respective repository and register the linked issue in **Paperclip** (`~/.agentskills/bin/openspec-paperclip-sync.ts` / Paperclip MCP) with a deep link to the OpenSpec files.
+- **Frontier Architect Only for OpenSpec (`claude` / `codex` / `antigravity` — NEVER `opencode`)**:
+  - Only an agent explicitly assigned the `architect` role for the specific change may author or modify OpenSpec architectural artifacts; Claude/model identity alone is insufficient. Record `**Architect Role:** assigned` in proposal and design.
+  - **Claude Code (`claude`) with a fully-loaded, hydrated context** (or `codex` / `antigravity`) is the Architect who authors OpenSpec details. **NEVER spell out the details of the app or OpenSpec with `opencode`.**
+- **Langfuse Always-On + Graceful Timeout Fallback (`2500ms`)**:
+  - Always trace AI/LLM/agent calls to Langfuse with a strict `2500ms` timeout (`AbortSignal.timeout(2500)`), circuit breaker, and fail-open fallback (`~/.agentskills/bin/lib/langfuse-safe.ts`) so Langfuse outages never block execution.
 - `progress.md` at 60% context → fresh agent.
 - Scheduling is scope-specific: product-owned jobs and approved fleet routines may run on schedules; agent-skills itself remains excluded from scheduled product loops. This repository may run bounded, on-demand maintenance only unless the owner explicitly changes that scope.
 - Aggressively grab safe, reversible, in-scope low-hanging fruit (`rules/low-hanging-fruit.md`). Broad perfect/build requests traverse `rules/ideal-architecture-loop.md` and stop after evidence-based convergence.

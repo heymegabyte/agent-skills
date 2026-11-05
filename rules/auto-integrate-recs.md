@@ -24,7 +24,7 @@ Ship improvements inline instead of listing them as recommendations. Anything un
 1. **<30 min?** → ship inline, no Rec mention needed.
 2. **30 min–2h?** → ship inline + one-line callout in the report.
 3. **>2h but no design call needed?** → ship anyway; compounding value justifies the cost.
-4. **Requires design conversation / external blocker / irreversible decision?** → THIS is a Rec. Surface with cost/value pitch + concrete next-prompt language.
+4. **Requires design conversation / external blocker / irreversible decision / multi-wave scope ceiling?** → Materialize immediately as an **OpenSpec** change (`openspec/changes/<change-id>/` authored by `claude` with full hydrated context, `codex`, or `antigravity` — **NEVER `opencode`**) in the target repository AND file the linked issue in **Paperclip** (via `~/.agentskills/bin/openspec-paperclip-sync.ts`, Paperclip MCP, or `paperclipai issue create`) with the deep link to the OpenSpec definition so Paperclip automatically tends to it (`[[total-convergence-and-openspec-handoff]]`). Surface in `Recs:` / `Next:` with the Paperclip issue ID and OpenSpec link.
 
 ## Top-N / Top-30 Rule — Implement Every Idea the AI Thinks Is Recommendable
 
