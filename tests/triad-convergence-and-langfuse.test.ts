@@ -133,4 +133,33 @@ describe('OpenSpec Frontier Architect Validator & Paperclip Payload Builder', ()
     assert.equal(invalidRes.valid, false);
     assert.ok(invalidRes.errors.some((e) => e.includes('NEVER opencode')));
   });
+
+  it('registers all 28 default @theme.tools libraries in platform-stack.json, theme-tools-canonical-components.md, and CONVENTIONS.md', () => {
+    const repoRoot = path.resolve(import.meta.dirname, '..');
+    const stackJson = JSON.parse(
+      fs.readFileSync(path.join(repoRoot, 'reference', 'platform-stack.json'), 'utf8'),
+    );
+    const canonicalRule = fs.readFileSync(
+      path.join(repoRoot, 'rules', 'theme-tools-canonical-components.md'),
+      'utf8',
+    );
+    const conventionsMd = fs.readFileSync(path.join(repoRoot, 'CONVENTIONS.md'), 'utf8');
+
+    const { coreWorkspace, absorbedSaasEngines, foundationalUtilities } =
+      stackJson.defaultThemeToolsLibraries;
+    assert.equal(coreWorkspace.length, 5);
+    assert.equal(absorbedSaasEngines.length, 15);
+    assert.equal(foundationalUtilities.length, 8);
+
+    const all28 = [...coreWorkspace, ...absorbedSaasEngines, ...foundationalUtilities];
+    assert.equal(all28.length, 28);
+
+    for (const pkg of all28) {
+      assert.ok(
+        canonicalRule.includes(pkg),
+        `Missing ${pkg} in rules/theme-tools-canonical-components.md`,
+      );
+      assert.ok(conventionsMd.includes(pkg), `Missing ${pkg} in CONVENTIONS.md`);
+    }
+  });
 });
