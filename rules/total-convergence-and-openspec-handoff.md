@@ -80,8 +80,9 @@ Whenever the agent evaluates at the end of a prompt pass what updates can be inf
    - Extract reusable rules, skills, convergence checklists, verification scripts, and orchestration helpers discovered during the turn.
 2. **`heymegabyte/install.doctor` (`/Users/Apple/emdash/repositories/install.doctor`)**:
    - Extract reusable dotfiles, shell environment defaults (`megabyte-cache.sh.tmpl`), package-manager configs, systemd/LaunchAgent units, lazy CLI shims (`cnf-build-shims`), and workstation/server provisioning scripts inferred from the prompt or response.
-3. **`heymegabyte/theme.tools` & `ui.theme.tools` (`/Users/Apple/emdash/repositories/theme.tools`)**:
-   - Extract reusable OKLCH theme tokens, component state contracts, Storybook stories, visual state matrix validators, and shared UI primitives (`@theme-tools/ui`, `@theme-tools/themes`) inferred from the prompt or response.
+3. **`heymegabyte/theme.tools` & `ui.theme.tools` (`@theme.tools`, `/Users/Apple/emdash/repositories/theme.tools`)**:
+   - **`@theme.tools` is the single canonical location for ALL shared utilities, reusable TypeScript libraries, UI components, themes, and complex cross-site engines.** Anything that can be reused across sites MUST be stored in `@theme.tools` (`packages/shared-utils`, `packages/blog`, `packages/ui`, `packages/themes`, etc.), explicitly including our **Cloudflare-native ports of Activepieces (`@theme.tools/activepieces`), Nango (`@theme.tools/nango`), and Postiz (`@theme.tools/postiz`)**, plus shared scheduling, signing, forms, shortlinks, API keys, notifications, and CRM engines so complex features can be effortlessly reused across every site.
+   - Extract reusable OKLCH theme tokens, component state contracts, Storybook stories, visual state matrix validators, shared utilities, and CF-native engine adapters (`@theme-tools/ui`, `@theme-tools/themes`, `@theme-tools/shared-utils`) inferred from the prompt or response.
 4. **Any Other Implicated Project Repository**:
    - Reconcile host or product changes into the active project repository (`legion.megabyte.space`, `coolify.megabyte.space`, `projectsites.dev`, etc.).
 
@@ -111,14 +112,13 @@ Everything entered at a prompt must converge into the ecosystem without loss:
 
 ---
 
-## 4. HARD RULE: Explicitly Assigned Architect Only for OpenSpec (NEVER `opencode`)
+## 4. HARD RULE: Frontier Architect Only for OpenSpec (`claude` / `codex` / `antigravity` — NEVER `opencode`)
 
-- Only an agent that the orchestrator explicitly assigned the **architect role for the change** may author or modify `proposal.md`, `design.md`, `tasks.md`, or `specs/`. Being Claude, Codex, Gemini/Antigravity, or any other frontier model is not by itself a role assignment and does not authorize OpenSpec architecture work.
-- The assigned architect records `> **Architect:** <frontier-harness>` and `> **Architect Role:** assigned` in both `proposal.md` and `design.md`; missing or inconsistent role metadata fails validation.
+- **Claude Code (`claude`) with a fully-loaded, informative hydrated context** (or **`codex`** / **`antigravity`** when operating in those frontier harnesses) is the **Architect** who authors OpenSpec specifications (`proposal.md`, `design.md`, `tasks.md`, and `specs/<capability>/spec.md`).
 - **NEVER spell out the architectural, business-rule, or application details of an OpenSpec using `opencode` (DeepSeek).**
 - **Why**: OpenSpec defines the architectural contract, domain invariants, security boundaries, and acceptance criteria that downstream worker swarms execute against. Using a lightweight throughput model (`opencode`) to write architectural specs degrades specification fidelity and causes downstream drift.
 - **Division of Labor**:
-  - **Explicitly assigned Frontier Architect (`claude` with full hydrated context · `codex` · `antigravity`)**: Hydrates repository context (`<=900K tokens`), designs the architecture, writes the OpenSpec (`proposal.md`, `design.md`, `tasks.md`, `specs/`), posts the linked issue to Paperclip (`openspec-paperclip-sync.ts` / Paperclip MCP), reviews diffs, and runs final verification.
+  - **Frontier Architect (`claude` with full hydrated context · `codex` · `antigravity`)**: Hydrates repository context (`<=900K tokens`), designs the architecture, writes the OpenSpec (`proposal.md`, `design.md`, `tasks.md`, `specs/`), posts the linked issue to Paperclip (`openspec-paperclip-sync.ts` / Paperclip MCP), reviews diffs, and runs final verification.
   - **Throughput Swarm (`opencode` via LiteLLM DeepSeek pool)**: Executes bounded implementation tasks *after* the Frontier Architect has written and locked the OpenSpec contract.
 
 ---
