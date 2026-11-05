@@ -35,6 +35,7 @@
 - [21 App Foundation](21-app-foundation/SKILL.md) — baseline every delivered app must satisfy
 - [22 Visual & Experience](22-visual-experience/SKILL.md) — gorgeous-UI bar for every app
 - [23 Content & SEO](23-content-seo/SKILL.md) — copy + discoverability bar
+- [Blog Publishing](blog-publishing/SKILL.md) — research-driven editorial orchestration, exact A01–L30 catalog, shared Plate/UI ownership
 - [24 Functional](24-functional/SKILL.md) — what every delivered app must DO
 - [25 Quality & Performance](25-quality-performance/SKILL.md) — perf + quality bars
 - [26 Platform & Delivery](26-platform-delivery/SKILL.md) — how apps ship + stay up

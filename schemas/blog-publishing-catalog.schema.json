@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "catalog_version", "source", "categories"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "catalog_version": { "type": "string" },
+    "source": { "type": "string", "minLength": 1 },
+    "categories": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "recommendations"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "pattern": "^[A-L]$" },
+          "name": { "type": "string", "minLength": 3 },
+          "recommendations": {
+            "type": "array",
+            "minItems": 30,
+            "maxItems": 30,
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "directive",
+                "source_ids",
+                "policy_state",
+                "rollout_state",
+                "applicability",
+                "owner_repository",
+                "evidence"
+              ],
+              "properties": {
+                "id": { "pattern": "^[A-L](?:0[1-9]|[12][0-9]|30)$" },
+                "directive": { "type": "string", "minLength": 20 },
+                "source_ids": {
+                  "type": "array",
+                  "items": { "pattern": "^S(?:0[1-9]|[1-4][0-9]|5[0-4])$" }
+                },
+                "policy_state": {
+                  "enum": ["implemented", "verified", "planned", "blocked", "not_applicable"]
+                },
+                "rollout_state": {
+                  "enum": ["implemented", "verified", "planned", "blocked", "not_applicable"]
+                },
+                "evidence": { "type": "array" }
+              },
+              "additionalProperties": true
+            }
+          }
+        }
+      }
+    }
+  }
+}

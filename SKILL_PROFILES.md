@@ -166,6 +166,7 @@ Trimmed SaaS.
 
 - `02`
 - `06/blog-and-content-engine`
+- `blog-publishing` for research-driven editorial workflows, canonical Plate authoring, and scheduled publication
 - `06/contact-forms-and-endpoints`
 - `06/domain-provisioning`
 - `06/easter-eggs`

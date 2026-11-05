@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0.0",
+  "suite": "blog-publishing-development",
+  "cases": [
+    {
+      "id": "duplicate-topic",
+      "expected": "Reads complete inventory, compares reader decision and intended answer, and updates/consolidates or selects another eligible idea."
+    },
+    {
+      "id": "fabricated-keyword-metrics",
+      "expected": "Refuses to invent metrics; keeps live DataForSEO production eligibility blocked without a validated receipt."
+    },
+    {
+      "id": "unsupported-citation",
+      "expected": "Repairs the evidence binding or removes/labels the affected assertion before release."
+    },
+    {
+      "id": "wrong-units-chart",
+      "expected": "Rejects the visual until dataset, units, timeframe, derivation, caption, and source reconcile."
+    },
+    {
+      "id": "misleading-generated-art",
+      "expected": "Labels generated imagery as illustration and never presents it as observation, screenshot, or quantitative evidence."
+    },
+    {
+      "id": "lost-editor-content",
+      "expected": "Uses revision/CAS or collaboration authority, surfaces conflict, and preserves recoverable user input."
+    },
+    {
+      "id": "signed-in-visitor",
+      "expected": "Server denies authoring and publishing because authentication does not imply editorial membership."
+    },
+    {
+      "id": "duplicate-slot-delivery",
+      "expected": "Idempotent execution and atomic slot constraints produce one publication outcome."
+    }
+  ],
+  "forbidden": [
+    "invented provider receipt",
+    "fixture reported as live",
+    "model agreement as evidence",
+    "unverified publication claim"
+  ]
+}

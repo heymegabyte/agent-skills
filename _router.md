@@ -39,6 +39,7 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 - **Deploy / launch** → `08`, `26` — add `09` if SEO/content changed
 - **Design / frontend polish** → `09`, `10`, `11`, `12`, `22`
 - **SEO / copy** → `09`, `23` — add `06/blog-and-content-engine` or `13/analytics-configuration` when relevant; add `rules/paste-target-text-sanitization` when emitting any description/bio/caption for a paste field
+- **Research, write, edit, schedule, publish, or measure blog content** → `blog-publishing` — load only applicable A–L guides; runtime/shared UI remains canonical in theme.tools and ui.theme.tools
 - **Billing / auth** → `05/auth-and-session-management`, `05/enterprise-multi-tenancy`, `06/webhook-system`, `13/stripe-billing`
 - **File uploads / admin / data grids** → `06/file-uploads-and-storage`, `admin-dashboard`, `data-tables`
 - **Embedded database browser / editor / query console / schema explorer** → `rules/database-data-supervisor`, `05/drizzle-orm-and-migrations`, `reference/orcaq-database-editor-inspiration`; use OrcaQ as workflow inspiration with production-safe mutation gates
