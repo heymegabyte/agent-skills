@@ -110,11 +110,11 @@ Define Hono-on-Workers API patterns including RPC mode, WorkerEntrypoint binding
 - `await env.MY_CONTAINER.fetch()` from a Worker spins a Docker container on demand
 - Escape hatch for non-JS runtimes (Playwright headful, ffmpeg, Python ML)
 
-## Better Auth M2M JWT (2026-02-24)
+## Clerk M2M JWT (2026-02-24)
 
 - Free, networkless verification for service-to-service identity
 - Use instead of static API keys between Workers
-- `BETTER_AUTH_SECRET` PEM verification for zero-RTT session checks at the edge
+- `CLERK_JWT_KEY` PEM verification for zero-RTT session checks at the edge
 
 ## OpenAPI generation
 
@@ -122,6 +122,12 @@ Define Hono-on-Workers API patterns including RPC mode, WorkerEntrypoint binding
 - **`@asteasolutions/zod-to-openapi`** derives the spec from Zod schemas: `extendZodWithOpenApi(z)` once at startup + `OpenApiGeneratorV31` to build the registry — never hand-maintain OpenAPI YAML/JSON.
 - Use `@hono/zod-validator` (or `hono-openapi`'s own resolver) for per-route input validation; Zod remains the SSOT per `[[zod-everywhere]]`.
 - `@hono/zod-openapi` is **superseded** for new OpenAPI work — use `hono-openapi` + `zod-to-openapi` instead.
+
+## TypeSpec authoritative contract (pilot — single source, emit OpenAPI)
+
+- **Where a surface wants ONE authoritative API contract above the runtime**, author it in TypeSpec and EMIT OpenAPI 3.1 — `tsp compile . --emit=@typespec/openapi3` (or `tspconfig.yaml` `emit: ["@typespec/openapi3"]`, `openapi-versions: [3.1.0]`; verified 2026-11-04 via Context7 `/microsoft/typespec`). The emitted OpenAPI is a GENERATED artifact — never hand-edit it; regenerate + drift-check (committed == emitted).
+- **Do NOT adopt TypeSpec's client/server code generators** (`@typespec/http-server-js`, `http-server-csharp`, client emitters). The OpenAPI document is the deliverable; **Hono + Zod stay the runtime**, validated against the emitted contract — collapsing the hand-OpenAPI / route-code / Zod triple-source drift into one.
+- This is a **pilot** on one surface before any fleet-wide move. Full proposal/design/spec: `openspec/changes/pilot-typespec-authoritative-api-contract/` (§21). The Zod-derived `hono-openapi` path above stays the DEFAULT for surfaces not in the pilot.
 
 ## CF 2026 primitives (Agents/Dev Week — reach for these before rolling your own)
 
