@@ -314,6 +314,16 @@ ${dodItems}
 2. **Switch**: Trigger PACE alternate route (\`${agent.pace.alternate}\`) seamlessly.
 3. **Backoff**: Apply exponential jitter to queue retries without dropping in-flight request payloads.
 4. **Log**: Record token consumption and failover event in Langfuse telemetry.
+
+---
+
+## 11. RigorBench Trajectory Discipline & Evaluator-Optimizer Audit Protocols
+
+### Trajectory Constraints & Token Budget Guardrails
+- **Maximum Step Horizon**: Maximum 20 tool invocation steps per sub-task. If a solution is not reached within 20 steps, pause, checkpoint state via \`bin/worktree-sandbox.ts\`, and emit an AMBER SITREP.
+- **Red-Green TDD Mandate**: Write or verify a failing test asserting desired behavior BEFORE modifying implementation code. Passing the test provides binary Proof of Life.
+- **Evaluator-Optimizer Pairing**: Work is not committed to production until an independent Evaluator unit verifies the AST and test diffs against acceptance criteria.
+- **Durable Checkpointing**: For long-horizon operations, persist operational discoveries and state checkpoints to the fleet blackboard (\`bin/fleet-blackboard.ts\`).
 `;
 }
 

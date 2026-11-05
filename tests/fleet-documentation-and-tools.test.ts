@@ -7,13 +7,18 @@ import { validateAcyclic, detectFileCollisions, getExecutionBatches, type DagNod
 import { AgentCircuitBreaker } from '../bin/agent-circuit-breaker.ts';
 import { diagnoseError } from '../bin/self-healing-runbook.ts';
 import { runAgentPreflight } from '../bin/agent-preflight.ts';
+import { TrajectoryGovernor } from '../bin/trajectory-governor.ts';
+import { auditCodeDiff } from '../bin/evaluator-critic.ts';
+import { verifyImportedSymbols } from '../bin/verify-ast-symbols.ts';
+import { FleetBlackboard } from '../bin/fleet-blackboard.ts';
+import { evaluateRigor } from '../bin/rigor-scorer.ts';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DOCS_AGENTS_DIR = resolve(__dirname, '..', 'docs', 'agents');
 const SCHEMAS_DIR = resolve(__dirname, '..', 'schemas');
 
 describe('Fleet Documentation & Field Manual Integrity', () => {
-  it('validates that all 24 canonical agent roles possess comprehensive field manuals', () => {
+  it('validates that all 24 canonical agent roles possess comprehensive field manuals with Section 11', () => {
     assert.ok(existsSync(DOCS_AGENTS_DIR), 'docs/agents/ directory must exist');
     const files = readdirSync(DOCS_AGENTS_DIR).filter(f => f.endsWith('.md') && f !== 'README.md');
     assert.equal(files.length, 24, `Expected exactly 24 field manuals in docs/agents/, found ${files.length}`);
@@ -32,6 +37,7 @@ describe('Fleet Documentation & Field Manual Integrity', () => {
       assert.ok(content.includes('PACE Communications Resilience Matrix'), `${f} missing Section 8`);
       assert.ok(content.includes('Machine-Verifiable Definition of Done'), `${f} missing Section 9`);
       assert.ok(content.includes('Operational Scenarios & Failure Mitigation Playbooks'), `${f} missing Section 10`);
+      assert.ok(content.includes('RigorBench Trajectory Discipline & Evaluator-Optimizer Audit Protocols'), `${f} missing Section 11`);
     }
   });
 
@@ -121,5 +127,56 @@ describe('Fleet Autonomous Tooling & DAG Execution', () => {
     assert.equal(report.passed, true);
     assert.ok(report.checks.some(c => c.name === 'Canonical Agent Profile' && c.passed));
     assert.ok(report.checks.some(c => c.name === 'Auftragstaktik Doctrine Compliance' && c.passed));
+  });
+
+  it('governs step budget and triggers halt at step ceiling', () => {
+    const gov = new TrajectoryGovernor(5);
+    assert.equal(gov.recordStep('read').allowed, true);
+    assert.equal(gov.recordStep('grep').allowed, true);
+    assert.equal(gov.recordStep('edit').allowed, true);
+    assert.equal(gov.recordStep('test').allowed, true);
+    assert.equal(gov.recordStep('verify').allowed, true);
+    const halted = gov.recordStep('extra');
+    assert.equal(halted.allowed, false);
+    assert.ok(halted.haltReason?.includes('TRAJECTORY HALT'));
+  });
+
+  it('audits code diffs and rejects loose any and debug leftovers', () => {
+    const cleanDiff = `+export function add(a: number, b: number): number { return a + b; }`;
+    const cleanVerdict = auditCodeDiff(cleanDiff);
+    assert.equal(cleanVerdict.approved, true);
+
+    const dirtyDiff = `+export function add(a: any): any { console.log(a); return a; }`;
+    const dirtyVerdict = auditCodeDiff(dirtyDiff);
+    assert.equal(dirtyVerdict.approved, false);
+    assert.ok(dirtyVerdict.findings.some(f => f.rule === 'strict-types-no-any'));
+  });
+
+  it('verifies AST imported symbols against target exports', () => {
+    const testFile = resolve(__dirname, 'paramilitary-fleet.test.ts');
+    const symbols = verifyImportedSymbols(testFile);
+    assert.ok(symbols.length > 0);
+    assert.ok(symbols.every(s => s.found));
+  });
+
+  it('posts and retrieves shared memory on the fleet blackboard', () => {
+    FleetBlackboard.post('test:endpoint', 'https://api.swarml.ink', 'SRE', 'REACTION-01');
+    const retrieved = FleetBlackboard.get('test:endpoint');
+    assert.equal(retrieved, 'https://api.swarml.ink');
+    FleetBlackboard.delete('test:endpoint');
+  });
+
+  it('computes RigorBench engineering process score and grade', () => {
+    const scoreReport = evaluateRigor({
+      totalSteps: 12,
+      hasFailingTestFirst: true,
+      hasPassingTestFinal: true,
+      gitClean: true,
+      hasSitrep: true,
+      zeroAnyViolations: true
+    });
+
+    assert.ok(scoreReport.score >= 90);
+    assert.ok(['A+', 'A'].includes(scoreReport.grade));
   });
 });
