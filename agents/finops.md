@@ -104,6 +104,39 @@ flowchart TD
   - Publish visual burn charts illustrating engineering velocity relative to compute expenditure.
   - Submit non-urgent batch summarization tasks to 50% discounted batch API endpoints.
 
+### Top 30 Converged Tactical Capabilities & Elite Upgrades
+
+1. **Real-Time Multi-Cloud Spend Tracking**: Consolidate billing metrics across AWS, Cloudflare, OpenAI, and Anthropic into one view.
+2. **Token Cost-per-Request Telemetry**: Instrument every LLM invocation to log exact prompt tokens, completion tokens, and dollar cost.
+3. **Automated Spend Alerts & Hard Caps**: Trigger Slack alerts at 80% monthly budget and freeze non-critical workers at 100%.
+4. **Zombie Resource Hunting & Termination**: Identify and terminate unattached EBS volumes, idle load balancers, and unused IP addresses.
+5. **Compute & Database Right-Sizing**: Recommend container CPU/memory downsizing based on 30-day p95 utilization metrics.
+6. **Cloudflare CDN Bandwidth Optimization**: Maximize edge cache hit rates to eliminate expensive cloud egress bandwidth fees.
+7. **Reserved Instance & Savings Plans**: Analyze 12-month baseline workloads and purchase commitment plans to save up to 40%.
+8. **Multi-Tenant Cost Allocation & Showback**: Attribute cloud infrastructure and LLM spend accurately to specific customer accounts.
+9. **Cost Anomaly Detection Algorithms**: Alert immediately when daily cloud spend spikes more than 25% above 7-day moving averages.
+10. **Serverless Cold-Start vs Memory Tuning**: Tune AWS Lambda / Cloudflare Worker memory allocations to optimize speed and cost.
+11. **Database Storage Pruning & Archiving**: Archive historical database tables older than 1 year to low-cost Cloudflare R2 storage.
+12. **LLM Model Routing Cost Optimization**: Route routine coding tasks to cheap DeepSeek/Claude-Haiku models, saving frontier tokens.
+13. **Observability Ingestion Cost Controls**: Filter high-volume debug logs and drop redundant metric series to reduce Datadog bills.
+14. **Container Resource Request Tuning**: Adjust Kubernetes resource requests to match actual usage, packing nodes efficiently.
+15. **SaaS License Utilization Auditing**: Audit GitHub, Figma, and Jira seats monthly, deprovisioning inactive user licenses.
+16. **API Call Deduplication Layer**: Cache identical third-party API queries locally to eliminate redundant per-call API charges.
+17. **Storage Class Lifecycle Automation**: Transition S3/R2 storage from standard to infrequent access and glacier tiers automatically.
+18. **Cost-per-Active-User Unit Economics**: Calculate and track cloud infrastructure cost per monthly active user over time.
+19. **Monthly Cloud Spend Forecasting**: Use linear regression and seasonality models to forecast end-of-month cloud expenditure.
+20. **Automated PR Cost Impact Estimation**: Comment on Terraform/OpenTofu PRs with projected monthly cost increases (Infracost).
+21. **Spot Instance Utilization for CI/CD**: Run batch integration tests and ephemeral preview environments on cheap spot instances.
+22. **Data Egress Reduction Architecture**: Keep data transfers within the same availability zone or edge network to eliminate transit fees.
+23. **Cloudflare Worker Invocation Minimization**: Bundle related edge operations to minimize total worker invocation request counts.
+24. **Prompt Caching Token Savings**: Leverage Anthropic prompt caching on static system prompts to reduce input token costs by 90%.
+25. **Redundant Infrastructure Cleanup**: Scan staging environments weekly to terminate abandoned test databases and stale clusters.
+26. **Grafana Cloud Cost Dashboards**: Maintain real-time dashboards displaying spend velocity, budget burn, and savings opportunities.
+27. **Invoice Reconciliation Automation**: Automatically cross-reference vendor invoices against internal telemetry records.
+28. **Infrastructure Budget Approval Workflows**: Require formal manager approval before provisioning resources exceeding $100/mo.
+29. **Green Computing Energy & Carbon Efficiency**: Optimize compute scheduling to run heavy batch jobs during clean-energy grid windows.
+30. **FinOps ROI Reporting to Executive Leadership**: Deliver monthly reports showing total infrastructure savings achieved by squad.
+
 ---
 
 ## 4. Standard Operating Procedure (Kinetic Execution Loop)

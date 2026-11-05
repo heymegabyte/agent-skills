@@ -104,6 +104,39 @@ flowchart TD
   - Keep package dependencies auto-updated via Renovate with grouped minor updates.
   - Pin hermetic Node, pnpm, and compiler versions across all development and CI environments.
 
+### Top 30 Converged Tactical Capabilities & Elite Upgrades
+
+1. **OpenTofu Infrastructure as Code**: Declare all cloud resources, networks, and DNS records in version-controlled OpenTofu code.
+2. **GitHub Actions Cache Optimization**: Accelerate CI pipelines using aggressive dependency and build artifact caching.
+3. **Distroless Multi-Stage Docker Builds**: Package applications into minimal distroless containers under 50MB in size.
+4. **Trivy & Grype Vulnerability Scanning**: Scan container images and dependencies in CI, blocking builds on high/critical CVEs.
+5. **Gitleaks & TruffleHog Secret Detection**: Run pre-commit and CI secret scanners to prevent API keys from entering git history.
+6. **Automated Dependency Updates (Renovate)**: Configure Renovate to automate patch and minor dependency pull requests.
+7. **SBOM Generation (CycloneDX/SPDX)**: Generate Software Bill of Materials on every build for complete supply chain transparency.
+8. **Cloud Resource Tagging Enforcer**: Automatically enforce environment, owner, and cost-center tags on all infrastructure.
+9. **Least-Privilege IAM Policy Generation**: Author scoped IAM roles granting only strictly required permissions to workloads.
+10. **Automated Let's Encrypt TLS Renewal**: Automate wildcard TLS certificate issuance and renewal via Cloudflare DNS-01 challenges.
+11. **Cloudflare Zero-Trust Network Access**: Guard internal staging environments and admin panels behind Cloudflare Access SSO.
+12. **Ephemeral Preview Environments**: Provision isolated preview environments for every pull request, tearing down on merge.
+13. **Cosign / Sigstore Artifact Signing**: Cryptographically sign container images and build artifacts with verifiable provenance.
+14. **Turborepo Remote Caching**: Share build artifacts across CI runners and developer machines to avoid duplicate compilations.
+15. **Strict Branch Protection Rules**: Require passing tests, code review approvals, and signed commits on master branches.
+16. **Container Registry Security Scanning**: Enable continuous vulnerability scanning in Amazon ECR or GitHub Container Registry.
+17. **Hardened Ephemeral CI Runners**: Execute CI jobs on isolated, disposable runners with restricted network permissions.
+18. **Canary Deployment Automated Rollbacks**: Roll back releases automatically if error rates or latencies spike on canary pods.
+19. **Drift Detection for Cloud Infrastructure**: Run scheduled OpenTofu plans to alert on out-of-band cloud infrastructure changes.
+20. **CIS Benchmark Hardening**: Apply Center for Internet Security hardening benchmarks to all container and server images.
+21. **Container Resource Limits & Requests**: Define explicit CPU and memory requests and limits on all container specifications.
+22. **Slack/Discord Deployment Notifications**: Broadcast build status, deployment completions, and rollbacks to engineering channels.
+23. **SLSA Level 3 Provenance Attestation**: Generate tamper-proof build provenance attestations for all production release artifacts.
+24. **Disaster Recovery Automation Runbooks**: Maintain scripted runbooks to reconstruct entire cloud environments from scratch.
+25. **Semgrep Static Analysis Gating**: Run custom Semgrep security and quality rules on every pull request.
+26. **Infisical / Vault Secret Provisioning**: Inject secrets into runtime containers dynamically without writing to disk or env files.
+27. **Git Commit Provenance Verification**: Verify GPG or SSH commit signatures to guarantee developer identity on all branches.
+28. **Dynamic Environment Teardown**: Schedule automatic termination of idle preview environments to eliminate compute waste.
+29. **Continuous Cloud Compliance Auditing**: Validate SOC2 and ISO27001 control compliance through automated pipeline evidence.
+30. **Zero-Trust Pipeline Network Egress**: Restrict CI runner outbound internet access to whitelisted package registries and APIs.
+
 ---
 
 ## 4. Standard Operating Procedure (Kinetic Execution Loop)

@@ -105,6 +105,39 @@ flowchart TD
   - Convert sprint retrospectives and post-mortems into machine-enforced rule updates in ~/.agentskills.
   - Publish executive NATO-standard SITREPs detailing battle progress, completed sectors, and remaining runway.
 
+### Top 30 Converged Tactical Capabilities & Elite Upgrades
+
+1. **Dynamic Dependency DAG Orchestrator**: Generate acyclic execution graphs with zero circular dependencies across squads.
+2. **Token Economic Ceiling Governor**: Hard cap token burn with predictive extrapolation to prevent budget blowouts.
+3. **9-Line SITREP Ingestion Pipeline**: Parse standardized military status reports and update operational dashboards in real-time.
+4. **Auftragstaktik Objective Decomposition**: Translate high-level ambiguous briefs into explicit Commander Intent with binary acceptance criteria.
+5. **PACE Comms Resilience Matrix**: Dynamically fail over between Codex, Claude, DeepSeek, and Gemini without losing context.
+6. **Disjoint Battle Space Enforcer**: Guarantee that no two agent squads touch the same file tree simultaneously to eliminate merge conflicts.
+7. **Sovereign Multi-Account Quota Arbiter**: Allocate rate-limit buckets and monthly quotas across multiple provider accounts dynamically.
+8. **Anti-Hallucination Verification Gates**: Mandate verifiable Proof of Life (passing test suite / zero-exit status) before approving milestones.
+9. **Autonomous Deadlock Arbiter**: Detect inter-agent wait states and resolve priority locks using deterministic hierarchy rules.
+10. **Continuous Skill Improvement Trigger**: Automatically schedule skill upgrades based on operational failure retrospectives.
+11. **One-Way vs. Two-Way Door Classifier**: Tag decisions by reversibility; execute two-way doors instantly and audit one-way doors.
+12. **Error-Budget Burn-Rate Monitor**: Pause speculative feature deployments if the production error budget burns faster than 2x SLO rate.
+13. **Kill-Switch Circuit Breaker**: Instantly halt compromised or looping sub-agents across all active workspaces.
+14. **Dark-Launch Feature Flag Coordinator**: Mandate that all major architectural changes deploy dark before public routing.
+15. **Cross-Repository Synchronizer**: Orchestrate atomic multi-repository releases across agent-skills, install.doctor, and theme.tools.
+16. **Battle Damage Assessment (BDA) Logger**: Synthesize post-incident root causes into permanent institutional memory rules.
+17. **Zero-Drift Documentation Auditor**: Prevent PR merges where implementation diverges from architectural specification.
+18. **Human-in-the-Loop Escalation Filter**: Guardrail human attention by escalating only genuinely dangerous or financial actions.
+19. **Dynamic Squad Reallocation**: Shift autonomous sub-agent workers dynamically to congested critical paths.
+20. **Context Hydration Enforcer**: Strictly enforce the 900K token context hydration limit to maintain peak cognitive fidelity.
+21. **Redundancy Pruning Engine**: Periodically inspect task queues to terminate duplicate or obsolete exploratory sub-agents.
+22. **Cryptographic Attestation Gate**: Require cryptographic signing on all production deployment artifacts before release.
+23. **Sprint Velocity & Token ROI Calculator**: Measure code production and test velocity per dollar of LLM spend.
+24. **Cross-Squad Memory Synchronizer**: Consolidate shared domain discoveries into project memory files across agent boundaries.
+25. **Security ROE Compliance Monitor**: Continuously scan agent command streams for violations of Green/Amber/Red boundaries.
+26. **Multi-Tenant Resource Allocator**: Partition worker quotas cleanly across concurrent client organizations or project sites.
+27. **Executive Briefing Distillation**: Generate concise, punchy visual summaries for leadership without drowning in logs.
+28. **Milestone Sign-Off Ledger**: Maintain an immutable ledger of verifiable milestones signed off with exact git commit SHAs.
+29. **Zero-Confirmation Engineering Mandate**: Enforce silence-as-approval on standard non-destructive development workflows.
+30. **Strategic Technical Debt Horizon Scanner**: Quantify technical debt accumulation and schedule automated debt-repayment sprints.
+
 ---
 
 ## 4. Standard Operating Procedure (Kinetic Execution Loop)

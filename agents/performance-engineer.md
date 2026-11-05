@@ -104,6 +104,39 @@ flowchart TD
   - Eliminate layout thrashing by grouping DOM read operations before writes.
   - Capture live user Web Vitals using PerformanceObserver and stream to observatory telemetry.
 
+### Top 30 Converged Tactical Capabilities & Elite Upgrades
+
+1. **Core Web Vitals Optimization**: Guarantee LCP < 1.2s, INP < 100ms, and CLS < 0.05 across all production web pages.
+2. **Time to First Byte (TTFB < 100ms)**: Leverage Cloudflare Workers and edge caching to deliver HTML in under 100ms globally.
+3. **JavaScript Bundle Budget Enforcement**: Fail CI builds when the initial uncompressed client JavaScript bundle exceeds 150KB.
+4. **Modern Image Formats (AVIF/WebP)**: Convert and serve all raster imagery in AVIF and WebP formats with responsive srcset sizes.
+5. **Web Font Loading Optimization**: Subset fonts to required character sets and apply font-display: swap to prevent FOIT.
+6. **Server-Side Streaming & Suspense**: Stream HTML chunks progressively to display above-the-fold content immediately.
+7. **Critical CSS Inlining**: Inline critical above-the-fold CSS while deferring secondary stylesheets to eliminate render-blocking.
+8. **V8 Flame Graph CPU Profiling**: Profile client and server JavaScript execution using Chrome DevTools flame graphs to eliminate bottlenecks.
+9. **Heap Snapshot Memory Diagnostics**: Take memory heap snapshots to identify and eliminate JavaScript memory leaks.
+10. **Stale-While-Revalidate Edge Caching**: Implement Cache-Control: s-maxage=3600, stale-while-revalidate=86400 headers on dynamic routes.
+11. **DOM Node Count Minimization**: Keep total rendered DOM nodes under 800 per page to minimize layout calculation overhead.
+12. **Component Re-Render Optimization**: Prevent unnecessary React re-renders using React.memo, useMemo, and fine-grained signals.
+13. **Request Deduplication Layer**: Deduplicate identical concurrent fetch requests using SWR or TanStack Query caching.
+14. **Database Query Plan Optimization**: Eliminate sequential scans on large database tables by creating composite and partial indexes.
+15. **Cloudflare KV Micro-Caching**: Cache high-frequency read queries in edge KV storage with 60-second TTLs to shield the database.
+16. **Web Worker Background Offloading**: Offload heavy data processing, parsing, and cryptographic operations to dedicated Web Workers.
+17. **Hover-Based Speculative Prefetching**: Prefetch next-page bundles and API data when users hover over navigation links.
+18. **Brotli & Gzip Compression Tuning**: Compress all text assets using Brotli level 6 for optimal transfer speed and minimal CPU overhead.
+19. **Layout Thrashing Elimination**: Batch DOM reads and writes using requestAnimationFrame to prevent forced synchronous layouts.
+20. **GPU-Accelerated CSS Animations**: Animate exclusively using transform and opacity properties to utilize hardware GPU layers.
+21. **Third-Party Script Offloading**: Offload Google Analytics and marketing tags to Web Workers via Partytown to free the main thread.
+22. **API Response Payload Minification**: Strip null and redundant fields from API JSON responses to reduce payload transfer sizes.
+23. **WebSocket Message Rate Throttling**: Throttle and debounce real-time WebSocket state broadcasts to avoid saturating clients.
+24. **Virtual List Scrolling for Massive Datasets**: Render large data tables and lists using virtual DOM windowing (TanStack Virtual).
+25. **Serverless Cold-Start Mitigation**: Keep cloud functions warm and eliminate heavy import dependencies to achieve <50ms cold starts.
+26. **HTTP/3 & 0-RTT Protocol Optimization**: Enable HTTP/3 and QUIC protocols on edge servers to accelerate connection handshakes.
+27. **Content-Hashed Asset Cache Busting**: Assign immutable cache headers (max-age=31536000, immutable) to content-hashed assets.
+28. **Edge CDN Anycast Proximity Routing**: Route user traffic to the geographically nearest Cloudflare edge data center automatically.
+29. **Client Battery & Thermal Profiling**: Measure CPU wakeups and power consumption to ensure applications run cool on mobile devices.
+30. **Automated Performance Regression CI Gating**: Run automated Lighthouse CI tests on every pull request, failing on score drops.
+
 ---
 
 ## 4. Standard Operating Procedure (Kinetic Execution Loop)

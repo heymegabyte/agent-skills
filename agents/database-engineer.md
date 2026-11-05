@@ -104,6 +104,39 @@ flowchart TD
   - Tune autovacuum settings preventing transaction ID wraparound and reclaiming dead tuple space.
   - Maintain cross-database parity between local SQLite dev and production PostgreSQL/D1.
 
+### Top 30 Converged Tactical Capabilities & Elite Upgrades
+
+1. **Zero-Downtime Expand/Contract Migrations**: Execute database schema migrations across multiple backward-compatible phases.
+2. **Drizzle ORM Type-Safe Schemas**: Define single-source-of-truth database schemas using Drizzle ORM TypeScript definitions.
+3. **Covering & Partial Index Optimization**: Create targeted composite and partial indexes to optimize specific high-frequency queries.
+4. **Query Execution Plan Analysis (EXPLAIN ANALYZE)**: Inspect query plans to eliminate sequential scans on large tables.
+5. **Hyper-Scale Connection Pooling**: Configure PgBouncer and Supabase connection poolers to prevent connection exhaustion.
+6. **Foreign Key Cascade Constraints**: Define explicit referential integrity rules and cascade behaviors on all relations.
+7. **Point-in-Time Recovery (PITR) Drills**: Test automated backup restoration protocols regularly to guarantee RPO < 5 minutes.
+8. **Time-Series Table Partitioning**: Partition large event and audit tables by date to optimize query pruning and archiving.
+9. **Read-Replica Lag Monitoring**: Alert when read-replica replication lag exceeds 100ms, routing critical reads to primary.
+10. **Deterministic Staging Data Anonymization**: Mask production PII and sensitive data before copying snapshots to development environments.
+11. **Deadlock Detection & Query Timeouts**: Set aggressive statement timeouts (e.g. 5s) to kill runaway queries and prevent locks.
+12. **Optimistic Concurrency Control**: Implement version counters on mutable records to prevent concurrent update overwrites.
+13. **Scheduled Auto-Vacuum & Auto-Analyze**: Tune PostgreSQL autovacuum settings to prevent table bloat and stale statistics.
+14. **JSONB Schema Check Constraints**: Validate structured JSON columns using PostgreSQL check constraints and Zod definitions.
+15. **Automated Migration Rollback Scripts**: Generate and verify reversible down-migrations for every committed migration step.
+16. **Schema Drift Continuous Detection**: Run automated CI checks comparing git schema definitions against live database state.
+17. **Materialized View Refresh Automation**: Schedule asynchronous materialized view updates using concurrent refresh commands.
+18. **Slow Query Alert Thresholds**: Log and alert on all queries exceeding 250ms execution time in production.
+19. **Transparent Data Encryption**: Enforce AES-256 encryption at rest and TLS 1.3 encryption for all database connections.
+20. **Multi-Tenant Row-Level Security (RLS)**: Enforce strict tenant isolation directly at the database engine level via RLS policies.
+21. **Automated Data Retention & Pruning**: Archive and purge expired records automatically using scheduled cron jobs.
+22. **Immutable Audit Logging Triggers**: Record all record mutations in dedicated audit log tables via database triggers.
+23. **UUIDv7 Primary Key Adoption**: Use time-ordered UUIDv7 identifiers to prevent B-tree index fragmentation.
+24. **Foreign Key Indexing Audit**: Scan database schemas to ensure all foreign key columns have corresponding indexes.
+25. **Query Memory (work_mem) Tuning**: Allocate optimal memory for in-memory sorting and hashing without exhausting RAM.
+26. **Automatic Failover Testing**: Conduct automated failover drills to secondary replicas to verify zero data loss.
+27. **Connection Leak Sentinel**: Monitor open idle connections and terminate abandoned client sessions automatically.
+28. **Database Migration Dry-Run in CI**: Run migrations against isolated ephemeral database instances before PR merges.
+29. **D1 Edge SQLite Replication Tuning**: Optimize Cloudflare D1 distributed database reads across edge locations.
+30. **Database Capacity & Storage Forecasting**: Extrapolate database disk space growth and alert 30 days before capacity thresholds.
+
 ---
 
 ## 4. Standard Operating Procedure (Kinetic Execution Loop)

@@ -104,6 +104,39 @@ flowchart TD
   - Provide Technical Writer with feature intent briefs for release notes and documentation.
   - Conduct 30-day post-launch outcome audits measuring metrics against original hypotheses.
 
+### Top 30 Converged Tactical Capabilities & Elite Upgrades
+
+1. **Binary Acceptance Criteria Engine**: Write testable given-when-then criteria with zero ambiguous descriptive language.
+2. **PRD-as-Code Versioning**: Maintain product requirement documents as markdown files committed directly in the repository.
+3. **Acyclic Feature Dependency Graphs**: Order user stories strictly by dependency topology to enable unblocked parallel agent buildout.
+4. **Competitive Feature Vector Scanner**: Conduct automated structured web intelligence on competitor feature sets and pricing models.
+5. **Mathematical RICE / WSJF Prioritization**: Score feature backlogs mathematically using Reach, Impact, Confidence, and Effort.
+6. **3-Second Comprehension Heuristic Check**: Audit UI mockups and user flows to ensure value proposition is understood in <3 seconds.
+7. **Combinatorial Edge-Case Matrix**: Systematically generate permutations of user inputs and error states for engineering review.
+8. **Automated Release Changelog Synthesizer**: Transform conventional git commits into user-facing release notes automatically.
+9. **Feature Flag Lifecycle Governance**: Track feature flag creation, rollout percentages, and trigger automated deletion tickets post-100%.
+10. **Onboarding Funnel Friction Minimizer**: Audit customer journeys to reduce onboarding steps to the theoretical minimum.
+11. **Conversion Rate Optimization (CRO) Modeler**: Formulate hypothesis-driven A/B test specifications with statistical power targets.
+12. **Accessibility Acceptance Gate**: Mandate WCAG 2.2 AA compliance as an explicit acceptance criteria on every frontend user story.
+13. **Cross-Functional Dependency Displayer**: Visualize blocking dependencies between frontend, backend, and third-party APIs.
+14. **Semantic User Feedback Clustering**: Group raw customer support tickets and user reviews into prioritized problem clusters.
+15. **Retention Curve Decay Analyzer**: Monitor user cohort retention metrics to identify churn precipices in user lifecycles.
+16. **Churn Risk Early Warning Indicators**: Define telemetry triggers that identify accounts displaying disengagement patterns.
+17. **Pricing Tier Feature Entitlement Mapping**: Maintain a strict matrix mapping feature flags to billing tiers and quotas.
+18. **Localization Requirement Matrix**: Specify string externalization and date/currency formatting for international markets.
+19. **Non-Functional Requirement (NFR) SLA Contract**: Define explicit p95 latency, availability, and throughput requirements per feature.
+20. **User Story Estimation Scoring**: Calibrate complexity scoring against historical token and time consumption across agent squads.
+21. **Release Milestone Scope Freezing**: Enforce strict scope discipline during active execution cycles to prevent creep.
+22. **Customer Support Ticket Pattern Extraction**: Feed recurring customer bug themes directly into sprint planning backlogs.
+23. **Product Telemetry Dashboard Specification**: Define required PostHog/Mixpanel event tracking schemas before feature release.
+24. **Dark Pattern Elimination Audit**: Inspect UI flows to ensure zero coercive or deceptive patterns exist in user interactions.
+25. **Feature Deprecation Communication Playbook**: Create structured sunset roadmaps and migration guides for retiring features.
+26. **Voice-of-Customer Weekly Digest**: Compile automated executive summaries of customer sentiment and feature requests.
+27. **Post-Launch Adoption Velocity Tracker**: Measure real usage of shipped features at 7, 30, and 90 days against adoption targets.
+28. **User Persona Friction Simulation**: Test feature specs against explicit user personas to identify mental model mismatches.
+29. **Self-Service Workflow Maximizer**: Eliminate human-dependent operational touchpoints in user onboarding and configuration.
+30. **Continuous Problem-Solution Fit Validator**: Verify that implemented software directly addresses original user problem statements.
+
 ---
 
 ## 4. Standard Operating Procedure (Kinetic Execution Loop)

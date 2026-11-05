@@ -104,6 +104,39 @@ flowchart TD
   - Handle multi-monitor configurations with accurate virtual coordinate mapping.
   - Test installer packages (.dmg, .pkg, .deb) end-to-end through native setup wizards.
 
+### Top 30 Converged Tactical Capabilities & Elite Upgrades
+
+1. **Native GUI Automation via Cua-Driver CLI**: Drive native desktop operating systems (macOS, Linux, Windows) using direct Cua CLI tools.
+2. **Deterministic Accessibility Tree Parsing**: Snapshot and bind UI actions to stable accessibility element tokens rather than raw coordinates.
+3. **Resolution-Normalized Coordinate Clicking**: Fall back to normalized percentage-based coordinates when accessibility trees are missing.
+4. **Multi-Display & Multi-Window Management**: Enumerate, focus, and manage multiple desktop windows and monitor displays reliably.
+5. **Clipboard Leakage Prevention**: Automate keyboard shortcuts without exposing sensitive tokens or credentials in system clipboards.
+6. **Human-Like Velocity Mouse Movements**: Simulate realistic mouse cursor acceleration curves to avoid triggering anti-bot bot detection.
+7. **Desktop Application Lifecycle Management**: Launch, monitor, verify, and cleanly terminate native operating system applications.
+8. **Native Desktop Browser Automation**: Drive Chrome, Safari, and Firefox natively on desktop environments with session persistence.
+9. **Perceptual Screenshot Diffing & Verification**: Capture screen snapshots and verify UI state changes using perceptual visual diffing.
+10. **OCR Text Extraction & Visual Parsing**: Extract onscreen text from legacy desktop applications using local optical character recognition.
+11. **Secure Credential Keystroke Injection**: Inject login credentials directly into password fields without logging plaintext strings.
+12. **Automated System Dialog Dismissal**: Automatically detect and dismiss operating system permission prompts and modal alerts.
+13. **Cursor Position Verification Before Action**: Verify that mouse cursor position has arrived at target bounds before triggering clicks.
+14. **Rate-Limited Human-Cadence Input**: Throttle typing speeds and click intervals to match natural human interaction speeds.
+15. **Operating System Menu Bar Interaction**: Navigate system menus (Apple menu, File, Edit, View) reliably using native menu paths.
+16. **Audio Output Monitoring & Verification**: Monitor system audio output to verify sound playback during media automation workflows.
+17. **Native Open/Save File Dialog Handling**: Automate interaction with native operating system file picker and save dialogs.
+18. **Background Process Health Supervision**: Monitor CPU and memory usage of target applications during long-running GUI tasks.
+19. **Desktop Notification Interception**: Detect, parse, and dismiss operating system toast notifications and banner alerts.
+20. **DPI Scaling & Retina Adaptation**: Adjust coordinate calculations dynamically based on screen pixel density (Retina/4K).
+21. **Window Tiling & Geometry Snapping**: Snap target windows into precise screen coordinates (e.g. 1920x1080) for consistent automation.
+22. **Desktop Workflow Recording & Trajectory Replay**: Record multi-step desktop tasks and replay them deterministically across machines.
+23. **Frozen Window Auto-Recovery**: Detect unresponsiveness in desktop applications and force-kill/restart frozen processes.
+24. **Sandboxed Virtual Machine Execution**: Execute untrusted or destructive GUI tasks inside isolated virtual machines or Docker containers.
+25. **Terminal Window Automation via GUI Focus**: Focus native terminal applications and execute commands with interactive visual verification.
+26. **System Settings Inspection & Toggle Automation**: Automate configuration of system settings (network, display, sound) via GUI.
+27. **Session State Checkpointing & Resume**: Save execution checkpoints during complex desktop workflows to resume seamlessly on failure.
+28. **Zero-Touch Software Installer Automation**: Automate multi-step software installation wizards and license agreement acceptances.
+29. **Visual Anomaly Detection During Execution**: Detect visual bugs, flickering, and misplaced dialogs during desktop task execution.
+30. **Emergency GUI Stop Hotkey**: Maintain a global fail-safe hotkey (e.g. Cmd+Shift+Escape) to halt autonomous GUI actions instantly.
+
 ---
 
 ## 4. Standard Operating Procedure (Kinetic Execution Loop)

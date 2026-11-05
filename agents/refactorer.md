@@ -104,6 +104,39 @@ flowchart TD
   - Replace expensive deep clone operations with efficient shallow copies or Immer.
   - Protect configuration structures with `as const` and `Object.freeze` assertions.
 
+### Top 30 Converged Tactical Capabilities & Elite Upgrades
+
+1. **Dead Code & Export Elimination (Knip)**: Run automated AST sweeps to detect and delete unused functions, variables, and exports.
+2. **DRY Code Consolidation**: Consolidate duplicated logic across multiple modules into unified, well-tested shared utilities.
+3. **Function Decomposition (<30 Lines)**: Break large, monolithic functions into small, single-responsibility helper functions.
+4. **Cyclomatic Complexity Reduction**: Refactor deeply nested if/else blocks into early returns and pattern matching to simplify logic.
+5. **Magic String & Number Replacement**: Replace hardcoded strings and numbers with typed enums and named constants.
+6. **Legacy Async/Await Modernization**: Refactor obsolete callback patterns and raw promise chains into clean async/await syntax.
+7. **Circular Dependency Elimination**: Detect and decouple circular imports using madge and clean architectural layering.
+8. **Strict TypeScript Type Narrowing**: Replace loose type assertions and any types with discriminated unions and type guards.
+9. **Obsolete Library Replacement**: Replace bloated deprecated dependencies (e.g. Moment.js, Lodash) with modern native equivalents.
+10. **Dependency Tree Pruning**: Remove unneeded transitive dependencies to minimize node_modules footprint and attack surface.
+11. **Domain-Driven Folder Rationalization**: Organize code into cohesive domain folders rather than arbitrary type-based directories.
+12. **Semantic Variable & Function Renaming**: Rename cryptic variable names into clear, self-documenting descriptive names.
+13. **Pure Function Extraction**: Extract stateless business calculations into pure, deterministic functions that are trivial to unit test.
+14. **Interface Segregation Discipline**: Break bloated interfaces into small, client-specific interfaces matching actual usage.
+15. **Global Mutable State Elimination**: Encapsulate shared state into scoped stores or dependency-injected services.
+16. **Standardized Result Type Error Handling**: Replace unpredictable thrown errors with typed Result<T, E> return structures.
+17. **Build Output Warning Elimination**: Resolve all compiler and bundler deprecation warnings to keep build logs completely clean.
+18. **Code Comment Freshness Auditing**: Delete outdated, misleading comments and replace them with self-explanatory code structures.
+19. **Regular Expression Optimization**: Rewrite complex, unreadable regex patterns with clear flags and unit-tested matches.
+20. **Tailwind CSS Class Deduplication**: Consolidate repetitive Tailwind utility strings into shared component variants via CVA.
+21. **Component Prop Interface Simplification**: Reduce bloated component prop lists by composing sub-components cleanly.
+22. **Memory Allocation Hot-Path Profiling**: Profile CPU and memory in hot execution loops, replacing inefficient allocations.
+23. **Unified API Client Extraction**: Replace scattered inline fetch calls with centralized, type-safe API client wrapper methods.
+24. **Test File Co-Location & Structure Alignment**: Place unit test files directly adjacent to the implementation files they test.
+25. **Promise Concurrency Optimization**: Replace sequential await loops with Promise.allSettled for parallel asynchronous operations.
+26. **Static Code Smell Detection**: Run automated linters to flag feature envy, long parameter lists, and data clumps.
+27. **Monorepo Import Path Normalization**: Standardize workspace import paths (@org/package) across all monorepo applications.
+28. **Retired Feature Flag Removal**: Search and cleanly remove code branches associated with 100% permanently released feature flags.
+29. **Uniform Formatting & Style Enforcement**: Apply automated formatting across the entire codebase to eliminate style arguments.
+30. **Legacy File Format Upgrades**: Migrate deprecated configuration files (CommonJS, YAML) to modern standard formats.
+
 ---
 
 ## 4. Standard Operating Procedure (Kinetic Execution Loop)

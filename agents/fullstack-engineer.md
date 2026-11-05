@@ -104,6 +104,39 @@ flowchart TD
   - Extract reusable components into @theme.tools/ui for monorepo-wide leverage.
   - Execute pre-commit typechecks and tests ensuring zero dirty or broken commits.
 
+### Top 30 Converged Tactical Capabilities & Elite Upgrades
+
+1. **16-State Component Design Matrix**: Implement default, hover, focus, active, disabled, loading, empty, error, and 8 more states.
+2. **Strict TypeScript Zero-Any Mandate**: Use native TypeScript strip-types with strict null checks and zero any or as any.
+3. **Zod Input/Output Boundary Parsing**: Validate all API responses and form inputs with Zod schemas at runtime boundaries.
+4. **Optimistic UI Updates with Auto-Rollback**: Render state changes immediately while queuing mutations, reverting smoothly on error.
+5. **Server-Side Streaming with React Suspense**: Stream HTML chunks from the edge to achieve sub-second perceived load times.
+6. **Zero-Orphan Tailwind Styling**: Enforce utility-first styling with design system tokens and zero unconstrained inline styles.
+7. **Accessible Keyboard Focus Management**: Ensure focus rings, trap focus in modals, and restore focus seamlessly upon dismissal.
+8. **Automated Playwright E2E Component Tests**: Write deterministic end-to-end component interaction tests in headless CI.
+9. **Micro-Interactions with <333ms Easing**: Polish UI feedback with spring physics and cubic-bezier transitions under 333ms.
+10. **Mobile-First Responsive Breakpoints**: Develop interfaces responsive across 320px, 640px, 768px, 1024px, 1280px, and 1536px.
+11. **Offline-First IndexedDB Caching**: Persist working user state locally to prevent data loss during network interruptions.
+12. **Actionable Error Boundaries**: Wrap component trees in error boundaries that display clear recovery buttons, not white screens.
+13. **Cumulative Layout Shift (CLS) Zero Guarantee**: Reserve layout dimensions for all dynamic images, embeds, and skeleton states.
+14. **Critical Asset Preloading & Subsetting**: Preload primary webfonts and hero assets to eliminate layout flashes (FOIT/FOUT).
+15. **Dynamic Route & Component Code-Splitting**: Lazy load heavy interactive widgets and routes using dynamic imports.
+16. **Dark/Light Theme Switching with CSS Variables**: Implement flicker-free theme switching synchronized with user system preferences.
+17. **Debounced Search with AbortController**: Prevent race conditions and network waste by aborting in-flight stale fetch requests.
+18. **Secure Cookie & Session Handling**: Read and transmit authentication credentials strictly via HttpOnly, SameSite cookies.
+19. **SSE & WebSocket Real-Time Synchronization**: Subscribe to real-time events with auto-reconnection and exponential backoff.
+20. **Semantic HTML5 Tag Discipline**: Use main, nav, section, article, header, and footer strictly according to semantic standards.
+21. **Unified Toast & Notification System**: Provide non-blocking, accessible feedback for background asynchronous operations.
+22. **Copy-to-Clipboard with Micro-Feedback**: Implement reliable clipboard copy with clear animated visual confirmation.
+23. **Multi-Step Form State Machine**: Manage complex multi-page wizards with persistent state validation between steps.
+24. **SVG Icon Tree-Shaking**: Import SVG icons individually as inline symbols to avoid bloated icon bundle overhead.
+25. **Visual Snapshot Regression Testing**: Capture pixel-level component snapshots to detect unintended styling regressions.
+26. **Prop Drilling Elimination via Signals/Context**: Decouple deeply nested state using scoped stores or React context.
+27. **Localized Number & Date Formatting**: Render numbers, currencies, and dates using standard Intl browser formatters.
+28. **Lint & Format Zero-Tolerance Gate**: Pass Biome/Prettier and ESLint without warnings before completing any task.
+29. **Breadcrumb Navigation & Dynamic Page Titles**: Update document titles and accessible breadcrumbs dynamically on route changes.
+30. **Form Auto-Save with Local Drafts**: Automatically persist draft inputs to prevent data loss on accidental page navigation.
+
 ---
 
 ## 4. Standard Operating Procedure (Kinetic Execution Loop)

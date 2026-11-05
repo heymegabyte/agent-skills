@@ -104,6 +104,39 @@ flowchart TD
   - Verify that error responses disclose zero stack traces or internal environment details.
   - Maintain compliance audit trails satisfying SOC2, HIPAA, and ISO27001 requirements.
 
+### Top 30 Converged Tactical Capabilities & Elite Upgrades
+
+1. **OWASP Top 10 Automated Defense**: Implement automated security checks specifically testing against the OWASP Top 10 categories.
+2. **Strict Content Security Policy (CSP)**: Enforce nonce-based CSP headers disallowing unsafe-inline scripts and objects.
+3. **CORS Origin Hardening**: Enforce explicit allowed-origin lists with credentials verification, disallowing wildcard origins.
+4. **DOMPurify Client Sanitization**: Sanitize all user-generated HTML content before rendering to eliminate Cross-Site Scripting (XSS).
+5. **Anti-CSRF Token Enforcement**: Protect state-mutating endpoints with cryptographic double-submit cookies or SameSite=Strict.
+6. **Parameterized Database Queries**: Audit all database interaction layers to ensure zero dynamic SQL string interpolation.
+7. **Dependency Supply Chain Audits**: Run pnpm audit and Dependabot to block vulnerabilities in open-source dependencies.
+8. **Brute-Force & Rate-Limiting Defense**: Implement progressive exponential delays on repeated failed login and auth attempts.
+9. **PII & Token Masking in Logs**: Redact passwords, credit cards, SSNs, and JWT tokens from all logging and observability pipelines.
+10. **Broken Object Level Auth (BOLA) Testing**: Verify that API endpoints rigorously validate tenant ownership on every resource ID.
+11. **Cryptographic Key Rotation Automation**: Rotate API signing keys and database encryption keys on a scheduled 90-day cycle.
+12. **HTTP Security Header Hardening**: Mandate HSTS (max-age 31536000), X-Content-Type-Options, and X-Frame-Options on all routes.
+13. **Secret Scanning in Pull Requests**: Block PRs containing hardcoded secrets, private keys, or credentials before merging.
+14. **Zero-Trust Internal Network Policies**: Require cryptographically signed service-to-service tokens for all internal API calls.
+15. **Session Fixation Protection**: Invalidate old session identifiers and issue fresh tokens immediately upon user authentication.
+16. **Argon2id Password Hashing**: Hash stored passwords using Argon2id with memory-hard parameters and per-user cryptographic salts.
+17. **Strict Input Whitelist Validation**: Validate all incoming payloads against explicit Zod schemas, stripping unrecognized fields.
+18. **File Upload Malware & MIME Scanning**: Verify magic bytes of uploaded files and scan for malicious payloads before storage.
+19. **CVSS v3.1 Vulnerability Scoring**: Assign standardized CVSS scores to identified vulnerabilities to prioritize remediation.
+20. **Subresource Integrity (SRI) Hashes**: Enforce cryptographic SRI hash checks on all third-party scripts and CDN stylesheets.
+21. **Automated Penetration Testing Suites**: Run automated DAST security scans (ZAP/Nuclei) against staging environments in CI.
+22. **Security Exception Governance**: Track approved temporary security exceptions with mandatory expiration dates and owners.
+23. **Secure Cookie Discipline**: Set Secure, HttpOnly, and SameSite=Strict attributes on all authentication and session cookies.
+24. **STRIDE Threat Modeling Diagrams**: Maintain threat models identifying spoofing, tampering, and information disclosure risks.
+25. **Immutable Audit Logging**: Stream security events and admin actions to write-once, tamper-evident audit log storage.
+26. **JWT Expiration & Revocation Lists**: Use short-lived access tokens (15m) paired with revocable refresh token tracking.
+27. **Webhook HMAC-SHA256 Verification**: Verify inbound webhooks using cryptographic signature comparison with timing-attack defense.
+28. **API Endpoint Authorization Matrix**: Audit role-based access control (RBAC) permissions across every registered API endpoint.
+29. **Server-Side Request Forgery (SSRF) Defense**: Filter and block internal IP addresses (127.0.0.1, 169.254.169.254) on outbound requests.
+30. **Bug Bounty & Disclosure Triage**: Triage external security vulnerability reports and verify remediation within 24 hours.
+
 ---
 
 ## 4. Standard Operating Procedure (Kinetic Execution Loop)

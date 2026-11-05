@@ -16,6 +16,7 @@
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { homedir } from 'node:os';
+import { FLEET_RECOMMENDATIONS } from './generate-720-fleet.ts';
 
 const AGENTS_DIR = resolve(homedir(), '.agentskills', 'agents');
 mkdirSync(AGENTS_DIR, { recursive: true });
@@ -2317,6 +2318,13 @@ pace:
     return `### Pillar ${idx + 1}: ${p.title}\n\n${caps}`;
   }).join('\n\n');
 
+  const recs = FLEET_RECOMMENDATIONS.find(r => r.name === agent.name);
+  let recsBlock = '';
+  if (recs && recs.recommendations.length > 0) {
+    recsBlock = `\n\n### Top 30 Converged Tactical Capabilities & Elite Upgrades\n\n` +
+      recs.recommendations.map((r, i) => `${i + 1}. **${r.split(':')[0]}**: ${r.split(':').slice(1).join(':').trim()}`).join('\n');
+  }
+
   const runbookContent = agent.recoveryRunbook.map(r => `| **${r.scenario}** | ${r.action} |`).join('\n');
   const dodContent = agent.definitionOfDone.map(d => `- [ ] ${d}`).join('\n');
 
@@ -2366,7 +2374,7 @@ ${roeRed}
 
 ## 3. Converged Elite Tactical Mastery Pillars
 
-${pillarsContent}
+${pillarsContent}${recsBlock}
 
 ---
 

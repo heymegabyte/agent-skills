@@ -104,6 +104,39 @@ flowchart TD
   - Maintain an up-to-date glossary decoding internal acronyms and domain terminology.
   - Track open post-mortem action items until verified closed in production.
 
+### Top 30 Converged Tactical Capabilities & Elite Upgrades
+
+1. **Multi-Hour Session Condensation**: Condense lengthy multi-agent conversations into concise, structured executive summaries.
+2. **Repomix Schema-Validated JSON Summaries**: Ingest codebase snapshots via Repomix and emit structured, validated JSON summaries.
+3. **Meeting & Audio Transcript Action Extraction**: Parse raw meeting transcripts to extract explicit action items, owners, and deadlines.
+4. **Git Commit & PR Diff Synthesis**: Translate complex git commit histories and multi-file diffs into readable release summaries.
+5. **Pull Request Risk & Impact Summaries**: Generate PR descriptions highlighting breaking changes, architectural risks, and test coverage.
+6. **Technical Documentation Distillation**: Distill complex technical RFCs into one-page summaries tailored for non-technical stakeholders.
+7. **Automated Daily Standup Digest Generation**: Compile daily engineering progress, blockers, and next steps from git and issue logs.
+8. **Error Log Stack Trace Clustering**: Group thousands of error log lines into distinct root-cause issue summaries for triage.
+9. **Research Paper & RFC Key Takeaways**: Extract primary hypotheses, findings, and trade-offs from academic and engineering papers.
+10. **Semantic Changelog & Migration Guides**: Synthesize code changes between version tags into comprehensive migration instructions.
+11. **Executive Dashboard Bulleted Digests**: Deliver high-signal, bulleted metrics digests to leadership without data clutter.
+12. **Slack & Discord Thread Summarization**: Summarize sprawling community and team chat threads into actionable decision logs.
+13. **Customer Feedback Theme Aggregation**: Consolidate user feedback from multiple channels into prioritized theme summaries.
+14. **Architectural Decision Record (ADR) Extraction**: Extract rationale, context, and consequences from engineering discussions into ADRs.
+15. **Incident Timeline Reconstruction**: Reconstruct chronological event timelines from server logs and chat transcripts post-outage.
+16. **High-Signal Low-Noise Filtering**: Strip conversational filler and repetitive acknowledgments from archived agent logs.
+17. **Bulleted Key Decision Logs**: Maintain an unbroken running log of all approved technical and organizational decisions.
+18. **Knowledge Base Article Auto-Generation**: Draft help center articles automatically from resolved customer support tickets.
+19. **Context Window Lossless Compression**: Compress working memory contexts using semantic summarization without losing key facts.
+20. **Weekly Company Milestone Retrospectives**: Compile weekly achievements, metrics, and misses into unified company updates.
+21. **Email Thread Chain Consolidation**: Summarize long, multi-party email chains into clear status updates and pending replies.
+22. **Cross-Repository Dependency Update Digests**: Summarize upstream dependency updates across multi-repo ecosystems.
+23. **Compliance Audit Log Summaries**: Synthesize raw audit log events into readable compliance evidence for security auditors.
+24. **Test Suite Failure Root-Cause Reports**: Summarize failing test suites into exact failure reasons and recommended fixes.
+25. **Code Review Comment Distillation**: Group and prioritize reviewer feedback on pull requests into clear revision checklists.
+26. **Customer Success Call Notes**: Summarize client meetings, recording customer goals, pain points, and requested follow-ups.
+27. **Security Scan Executive Summaries**: Translate complex vulnerability scan outputs into prioritized risk matrices for leadership.
+28. **Bug Triage Daily Digest**: Compile daily incoming bug reports categorized by severity, component, and affected users.
+29. **Architecture Diagram Generation from Code**: Summarize codebase architecture into structured Mermaid.js diagrams from source files.
+30. **Automated Library README Authoring**: Generate clear, accurate README files for newly created libraries and utility packages.
+
 ---
 
 ## 4. Standard Operating Procedure (Kinetic Execution Loop)

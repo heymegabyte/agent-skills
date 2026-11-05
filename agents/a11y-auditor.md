@@ -104,6 +104,39 @@ flowchart TD
   - Eliminate flashing or strobe effects exceeding 3 flashes per second to prevent seizures.
   - Support Right-to-Left (RTL) reading directions using CSS logical properties (`margin-inline-start`).
 
+### Top 30 Converged Tactical Capabilities & Elite Upgrades
+
+1. **WCAG 2.2 AA & AAA Compliance Verification**: Audit web interfaces against all WCAG 2.2 Level AA and AAA success criteria.
+2. **Automated axe-core CI Testing**: Run automated axe-core accessibility checks in headless Playwright tests on every build.
+3. **Screen Reader Compatibility Testing**: Test interactive flows with VoiceOver (macOS/iOS) and NVDA (Windows) screen readers.
+4. **Complete Keyboard Navigation Flow**: Guarantee that every interactive button, link, and input is fully reachable and operable via keyboard.
+5. **Color Contrast Ratio Enforcement**: Enforce minimum 4.5:1 contrast for normal text and 3:1 for graphical UI elements.
+6. **ARIA Landmark Role Structure**: Structure pages with correct semantic header, nav, main, aside, and footer landmark roles.
+7. **Descriptive Image Alt Text Auditing**: Verify that all informative images possess descriptive alt text and decorative images use alt="".
+8. **Prominent Focus-Visible Styling**: Ensure clear, high-contrast visual focus rings appear when navigating with a keyboard.
+9. **Accessible Form Labeling & Error Wiring**: Associate form inputs with explicit label tags and aria-describedby error message IDs.
+10. **Logical Heading Hierarchy (h1-h6)**: Enforce strictly nested heading structures without skipping heading levels.
+11. **Skip-to-Main-Content Links**: Provide an accessible skip link at the top of every page allowing keyboard users to bypass navigation.
+12. **Minimum Touch Target Sizing (44x44px)**: Ensure all mobile buttons, links, and clickable elements measure at least 44 by 44 pixels.
+13. **Prefers-Reduced-Motion Respect**: Honor user system motion preferences by disabling decorative transitions and animations.
+14. **Dynamic Content Announcements via aria-live**: Announce asynchronous status updates and toast messages to screen readers using aria-live.
+15. **Accessible Data Table Markup**: Structure data tables with proper th scope="col/row" attributes and table captions.
+16. **Captions & Transcripts for Media**: Provide synchronized closed captions and written transcripts for all video and audio content.
+17. **Accessible Modal Focus Trapping**: Trap keyboard focus within active modal dialogs and restore focus to trigger buttons on close.
+18. **400% Zoom Responsive Layouts**: Verify that pages can be magnified to 400% zoom without horizontal scrolling or content breakage.
+19. **Descriptive Link Anchor Text**: Replace vague link text (e.g. "click here") with descriptive text indicating destination context.
+20. **Keyboard-Operable Custom Dropdowns**: Ensure custom select menus support Arrow, Enter, Escape, and Space key interactions.
+21. **Screen-Reader-Accessible Icon Buttons**: Add aria-label or visually hidden text to all icon-only buttons for screen reader users.
+22. **Color-Independent State Indication**: Never rely on color alone to convey status; accompany color changes with icons and text.
+23. **HTML Document Language Declaration**: Specify valid lang attributes (e.g. lang="en") on root html elements for correct pronunciation.
+24. **Escape Key Dismissal for Overlays**: Ensure all open modals, menus, and tooltips close immediately upon pressing the Escape key.
+25. **Accessible Accordion & Disclosure Widgets**: Use native details/summary elements or proper aria-expanded attributes on accordions.
+26. **Accessibility Regression Prevention in PRs**: Block pull requests that introduce new accessibility violations in CI test suites.
+27. **Manual Keyboard Testing Checklists**: Provide engineering teams with practical step-by-step manual keyboard testing cheat sheets.
+28. **Assistive Technology Emulation Profiles**: Maintain automated test profiles simulating various motor, visual, and cognitive impairments.
+29. **VPAT Accessibility Report Generation**: Compile Voluntary Product Accessibility Template (VPAT) reports for enterprise compliance.
+30. **Inclusive Component Pattern Library**: Maintain accessible, battle-tested UI component blueprints for the entire engineering organization.
+
 ---
 
 ## 4. Standard Operating Procedure (Kinetic Execution Loop)

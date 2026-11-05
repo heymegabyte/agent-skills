@@ -105,6 +105,39 @@ flowchart TD
   - Review all database schema migrations for forward-only, zero-downtime expand-contract patterns.
   - Embed OpenTelemetry spans, metrics, and trace propagation into core architectural patterns.
 
+### Top 30 Converged Tactical Capabilities & Elite Upgrades
+
+1. **AST-Aware Symbol Graph Navigator**: Map entire codebase call graphs using Tree-Sitter to prevent breaking downstream callers.
+2. **OpenAPI & Zod Contract Locking**: Lock API schemas prior to writing implementation code to ensure zero drift.
+3. **OpenSpec Universal Specification Authoring**: Author RFCs, proposals, and task manifests strictly using frontier models (Claude/Codex/Antigravity).
+4. **Edge-First Microservice Topology**: Architect stateless services optimized for Cloudflare Workers and V8 isolates.
+5. **Canonical @theme.tools Adoption Enforcer**: Mandate reuse of standard @theme.tools shared packages before authoring custom utilities.
+6. **Hexagonal Clean Architecture Boundaries**: Isolate domain logic completely from database adapters and third-party transport layers.
+7. **Bundle Size & Tree-Shaking Budget Guard**: Enforce strict <150KB initial client bundle budgets in continuous integration.
+8. **Idempotent Endpoint Contract Standard**: Require all state-mutating API routes to accept and honor unique Idempotency-Keys.
+9. **Time-to-First-Route (TTFR) Sub-200ms Mandate**: Design routing and caching topologies to guarantee sub-200ms cold responses.
+10. **Event-Driven Asynchronous Decoupling**: Use Cloudflare Queues and durable message brokers for all non-blocking operations.
+11. **Zero-Orphan Code Static Validator**: Run knip in architectural gates to eliminate unused exports, dead types, and zombie packages.
+12. **Schema Migration Reversibility Specification**: Require an automated, tested down-migration for every database schema change.
+13. **Distributed Tracing Propagation Contract**: Standardize W3C Trace Context headers across all edge, API, and worker boundaries.
+14. **Content Security Policy (CSP) & Trusted Types**: Architect strict CSP header specifications forbidding unsafe-inline and unsafe-eval.
+15. **Multi-Region Data Residency Model**: Design storage topologies adhering to GDPR/CCPA data sovereignty requirements.
+16. **Monorepo Package Workspace Isolation**: Prevent leaky internal package boundaries using strict TypeScript project references.
+17. **Semantic Versioning & Deprecation Schedule**: Enforce formal semver deprecation cycles with automated runtime warning logs.
+18. **Token Bucket Rate Limiting Architecture**: Design tiered rate-limiting algorithms with burst capacity allowances per tier.
+19. **Dead Code Elimination Scanner**: Integrate automated dead code sweeps into weekly architectural hygiene routines.
+20. **Backward-Compatible Evolution Pattern**: Require additive schema changes with graceful fallback defaults for older clients.
+21. **Cross-Platform CLI Uniformity Spec**: Ensure CLI tools operate identically across macOS, Linux (Gnome), and Windows.
+22. **Edge Stale-While-Revalidate KV Caching**: Architect multi-tiered caching strategies utilizing edge KV and browser cache headers.
+23. **Webhook-as-Skill Pattern Standard**: Implement incoming webhooks as self-contained executable skills with schema validation.
+24. **Architectural Decision Record (ADR) Generator**: Automatically record all non-trivial structural decisions in markdown ADRs.
+25. **AST Architecture Regression Guard**: Lint against forbidden import directions (e.g., UI directly importing DB models).
+26. **State Machine Determinism with XState**: Model complex business flows as formal state machines with exhaustiveness checks.
+27. **Streaming SSR & Progressive Hydration Spec**: Mandate HTML streaming and selective hydration to prevent main thread blocking.
+28. **Distributed Cache Invalidation Protocols**: Implement tag-based cache purging across globally distributed edge nodes.
+29. **Zero-Trust Inter-Service Authorization**: Validate mTLS or cryptographically signed service tokens between all microservices.
+30. **Anti-Pattern Continuous Auditing**: Scan commits automatically for god-objects, primitive obsession, and tight coupling.
+
 ---
 
 ## 4. Standard Operating Procedure (Kinetic Execution Loop)

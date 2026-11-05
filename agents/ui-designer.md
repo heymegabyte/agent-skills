@@ -104,6 +104,39 @@ flowchart TD
   - Synchronize Tailwind configurations perfectly with Figma design tokens.
   - Style Recharts and SVG data visualizations with custom tooltips, subtle gridlines, and gradients.
 
+### Top 30 Converged Tactical Capabilities & Elite Upgrades
+
+1. **Tailwind Design Token System**: Define single-source-of-truth typography, spacing, and color tokens using CSS variables.
+2. **16-State Component Design Matrix**: Design default, hover, focus, active, selected, disabled, loading, and error states for all UI elements.
+3. **Cinematic Motion Choreography (<333ms)**: Create smooth cubic-bezier micro-interaction transitions under 333ms in duration.
+4. **Dark & Light Mode Contrast Parity**: Ensure all color combinations exceed WCAG AAA 7:1 contrast ratios in both light and dark modes.
+5. **Modular Typography Scale & Rhythm**: Enforce consistent typographic hierarchies and proportional line-height baselines.
+6. **Haptic & Visual Feedback Design**: Design subtle press states, scale transformations, and active highlights for interactive elements.
+7. **Consistent Lucide Icon System**: Maintain an icon catalog with uniform stroke widths, optical alignment, and bounding boxes.
+8. **Responsive Grid Breakpoint Standards**: Design layouts adapting fluidly across mobile (320px), tablet (768px), and desktop (1440px).
+9. **Empty State & Skeleton Loaders**: Design high-polish skeleton loaders that mimic exact content layout, preventing layout shift.
+10. **Visual Hierarchy & Whitespace Discipline**: Structure layouts with intentional whitespace to guide user attention to primary actions.
+11. **Subtle Glassmorphism & Elevation**: Layer UI cards using subtle border highlights, backdrop blurs, and multi-layered drop shadows.
+12. **Accessible Color Palette Generation**: Build color ramps with mathematically verified contrast steps across all theme variants.
+13. **Modal & Drawer Entrance Physics**: Choreograph smooth spring-physics slide and fade animations for overlays and dialogs.
+14. **Data Visualization Chart Styling**: Style interactive charts with readable legends, tooltips, and accessible colorblind-safe palettes.
+15. **Button Visual Hierarchy Standard**: Clearly distinguish primary actions, secondary options, ghost buttons, and destructive triggers.
+16. **Form Control Inline Validation Design**: Design non-intrusive inline validation errors with clear icons and actionable guidance.
+17. **Breadcrumb & Navigation UX**: Design intuitive navigation hierarchies allowing users to understand their current context instantly.
+18. **Image Aspect Ratio Preservation**: Maintain consistent aspect ratio containers to prevent cumulative layout shift while images load.
+19. **Card & List Density Controls**: Provide comfortable and compact density modes for data-heavy dashboard tables and cards.
+20. **Mobile Bottom Sheet UX**: Design swipeable bottom sheets for mobile devices to replace awkward mobile modal dialogs.
+21. **Dynamic Tooltip & Popover Placement**: Design smart tooltips that automatically flip and adjust position based on screen boundaries.
+22. **High-Visibility Focus Ring Styling**: Design prominent, aesthetic focus rings that guarantee keyboard accessibility compliance.
+23. **Cross-Browser Custom Scrollbars**: Style subtle, modern scrollbars matching the color theme across Chromium, Safari, and Firefox.
+24. **Design System Documentation in Storybook**: Maintain live component documentation displaying interactive variant props.
+25. **Component Variant Composition**: Build composable UI variants using class-variance-authority (CVA) for clean developer handoffs.
+26. **Visual Polish & Kerning Audits**: Inspect rendered interfaces to eliminate awkward line wraps, uncentered icons, and optical misalignments.
+27. **Interactive Micro-Prototype Scaffolding**: Create code-first interactive prototypes to test interaction physics before implementation.
+28. **Brand Identity Asset Kits**: Package vector SVGs, favicons, social cards, and logos in all required digital resolutions.
+29. **Accessibility Focus Trap Indicators**: Ensure modal dialogs and dropdown menus visually reflect trapped keyboard focus states.
+30. **Responsive Table to Card Transformations**: Design data tables that transform gracefully into stacked cards on mobile screens.
+
 ---
 
 ## 4. Standard Operating Procedure (Kinetic Execution Loop)
