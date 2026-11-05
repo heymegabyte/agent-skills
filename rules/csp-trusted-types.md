@@ -68,6 +68,16 @@ Audit every use before enforcing. Run `grep -rn 'innerHTML\|outerHTML\|insertAdj
 | `new Function(str)` | Blocked by CSP; restructure |
 | `eval(str)` | Blocked by CSP; restructure |
 | `script.src = url` | `script.src = policy.createScriptURL(url)` |
+| `navigator.serviceWorker.register(url)` | ensure the `default` policy exists FIRST (see below) |
+| `new Worker(url)` / `new SharedWorker(url)` / `importScripts(url)` | same — TrustedScriptURL sink under enforced TT |
+
+## Service worker / Worker registration under enforced TT (easy to miss)
+
+`navigator.serviceWorker.register(scriptURL)` (and `new Worker`, `importScripts`) is a **TrustedScriptURL sink** when `require-trusted-types-for 'script'` is enforced — a plain string is **blocked** (`This document requires 'TrustedScriptURL' assignment. The action has been blocked.`) and the SW silently never registers. Two things are BOTH required:
+
+- **`worker-src 'self'`** in the CSP. With `script-src 'strict-dynamic'` and no `worker-src`, `worker-src` falls back through `child-src` → `script-src`, and strict-dynamic blocks a plain worker-script URL. Add `worker-src 'self'` explicitly.
+- **The pass-through `default` TT policy must exist on EVERY page that registers** — a string passed to the sink is coerced by `defaultPolicy.createScriptURL`. If one page (e.g. the cockpit) creates the policy but another (e.g. a marketing/landing page) doesn't, registration is blocked only on the page that lacks it. You **cannot** use a scoped named policy (e.g. `sw-url`) when the CSP is `trusted-types default` — that directive is an **allowlist permitting only the `default` name**; widen it to `trusted-types default sw-url` if you genuinely want a scoped one, otherwise reuse `default`.
+- **Caught only by a real browser** — curl sees valid JS at `/sw.js`; only a Chromium load shows the TT console error + `getRegistration()` returning none. Verify registration in a headless browser after shipping, but use `getRegistration()` (NOT `serviceWorker.ready`, which can hang forever in automation when no worker activates). Ref incident: inbox.vision fire 44 — cockpit created `default` so `/app` registered, landing didn't → `/` was TT-blocked until the landing boot created the same pass-through `default` policy before `register()`.
 
 ## Violation triage workflow
 
@@ -99,4 +109,3 @@ Audit every use before enforcing. Run `grep -rn 'innerHTML\|outerHTML\|insertAdj
 - ``auto-meta-work`` — analytics-specific connect-src entries (PostHog, GA4)
 - `[[verification-loop]]` — browser console CSP violation = build fail
 - `[[hono-api]]` — Hono middleware chain order; CSP goes first
-- `[[web-platform-capabilities]]` — #14 (Trusted Types + Reporting API, both Baseline 2026); this rule is the full implementation the catalog points to

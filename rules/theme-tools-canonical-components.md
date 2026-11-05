@@ -157,3 +157,7 @@ Whenever an agent encounters any of the situations below, it MUST reach for the 
 - Prefer fewer powerful abstractions and simpler operation over speculative feature count. Rank by user value, risk reduction, reuse, latency/cost, effort, and reversibility.
 - Continue while a demonstrably high-value, authorized, testable improvement remains within the task's scope. Stop at an explicit approval/credential/runtime boundary or when remaining ideas do not justify their cost/risk.
 - Never claim perfection, exhaustive repository coverage, passing unrun tests, completed vendor integration, or deployed behavior from documentation alone. Preserve the exact residual backlog and next acceptance gates.
+
+## Why this grew
+
+Broadened from a UI/theme/editorial-component charter into the canonical home for **ALL reusable code** — adding the 28-library capability-first routing matrix and the "fires on any reusable code / earned-generic / naming-SSOT / end-of-turn-capture" mandate — per the standing user directive (2026-11-04) that **any reusable code is stored away in `@theme.tools`**. The triggers + `concern:architecture` path were widened so this rule loads when reusable BACKEND code is written, not only UI work. This body is the authoritative routing matrix other rules point to rather than restate.
