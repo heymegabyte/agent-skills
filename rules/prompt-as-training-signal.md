@@ -81,16 +81,21 @@ For every prompt:
 5. **Cross-link** — add `[[backlink]]` from both sides. Skipping this step lets the same lesson recur in unrelated projects weeks later.
 6. **THEN execute the requested work** with the new wisdom already in force.
 
-## Every-turn parallel upstream integration decision
+## Every-turn parallel upstream triad integration decision (`agent-skills` + `install.doctor` + `theme.tools` + touched projects)
 
-Run this decision alongside the primary task on **every prompt**, without waiting for the user to ask:
+Whenever the agent asks itself at the end of a prompt pass what updates can be inferred from the prompt and response for `agent-skills`, it **MUST run all three upstream syncs in parallel** (plus any other implicated project) — without waiting for the user to ask:
 
-1. Did this turn reveal reusable system configuration, provisioning, security, service, package, monitoring, backup, recovery, or host-integration logic? If yes, reconcile it into `heymegabyte/install.doctor` through that repo's OpenSpec, implementation, documentation, and regression tests in the same turn.
-2. Did this turn reveal reusable themes, design tokens, theme transformations, visual primitives, or web components? If yes, reconcile them into `theme.tools` or `ui.theme.tools` through that repo's OpenSpec, documentation, and tests in the same turn.
-3. Keep only product composition, host identity, secrets, device IDs, and irreducible role-specific behavior in the originating repository.
-4. If there is no evidence-backed reusable improvement, do not manufacture churn. The decision is mandatory; mutation is conditional on value.
+1. **`heymegabyte/agent-skills` (`~/.agentskills`)**: Did this turn reveal a reusable rule, skill, convergence loop check, verification script, or orchestration pattern? Update `agent-skills` immediately.
+2. **`heymegabyte/install.doctor` (`/Users/Apple/emdash/repositories/install.doctor`)**: Did this turn reveal reusable system configuration, dotfiles, shell env exports, package-manager settings, security, service units, lazy CLI shims (`cnf-build-shims`), monitoring, backup, recovery, or host-integration logic? Reconcile it into `install.doctor` in parallel next to `agent-skills`.
+3. **`heymegabyte/theme.tools` & `ui.theme.tools` (`/Users/Apple/emdash/repositories/theme.tools`)**: Did this turn reveal reusable themes, OKLCH design tokens, 16-state visual component contracts, widget micro-loop patterns, Storybook visual gates, or shared web components (`@theme-tools/ui`, `@theme-tools/themes`)? Reconcile or queue future work in `theme.tools` via OpenSpec in parallel next to `agent-skills` and `install.doctor`.
+4. **OpenSpec + Paperclip Issue Registration Across Every Touched Repository**:
+   - Properly use **OpenSpec** (`openspec/changes/<change-id>/{proposal.md,design.md,tasks.md,specs/}`) in each respective repository (`agent-skills`, `install.doctor`, `theme.tools`, and any other project) to save the work and generate the task files.
+   - **Frontier Architect Mandate**: OpenSpec `proposal.md`, `design.md`, `tasks.md`, and `specs/` MUST be authored by **Claude Code (`claude`) with a fully-loaded, hydrated context** (or `codex` / `antigravity`). **NEVER spell out the details of the app or OpenSpec with `opencode`.**
+   - Add/sync the corresponding issue/task in **Paperclip** (via `~/.agentskills/bin/openspec-paperclip-sync.ts`, Paperclip MCP, or `paperclipai issue create`) with the **direct deep link to the OpenSpec definition(s)** in each Paperclip project (`agent-skills`, `install.doctor`, `theme.tools`, etc.).
+5. **Recommendations, Next Steps & Deferred Work → OpenSpec + Paperclip**:
+   - At the end of any prompt (or whenever a huge prompt cannot be 100% finished in the current pass and the agent defers remaining sub-features), materialize any remaining recommendations, next steps, or unfinished sub-features as an **OpenSpec** change AND file the linked issue in **Paperclip** so Paperclip automatically tends to it (`[[total-convergence-and-openspec-handoff]]`).
 
-This is a parallel workstream, not a follow-up recommendation. It must not delay urgent restoration, but it must be completed before claiming the turn done when an applicable safe integration exists. Cross-link: `[[workstation-shared-provisioning-policy]]`.
+This is a mandatory parallel workstream on every turn. Cross-links: `[[total-convergence-and-openspec-handoff]]` · `[[workstation-shared-provisioning-policy]]` · `[[openspec-operating-contract]]`.
 
 ## Where the artifacts live
 

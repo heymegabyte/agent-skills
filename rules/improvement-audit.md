@@ -81,12 +81,12 @@ Every survivor lands in exactly one horizon; horizons set sequencing, not whethe
 - A dimension is not "done" while any **Essential** idea is unshipped — that overrides the 30% floor upward.
 - Record each survivor's horizon next to its score so the backlog frontier is self-sorting.
 
-## Promote winners → OpenSpec + backlog (SAME TURN)
+## Promote winners & unfinished items → OpenSpec + Paperclip (SAME TURN, Parallel Triad)
 
-- Every shipped non-trivial idea archives an **OpenSpec change** per [[website-build-doctrine]] § OpenSpec: `/opsx:propose "<idea>"` → review → `/opsx:apply` → `/opsx:sync` → `/opsx:archive`; link the archived change from the loop LEDGER row (traceability). Trivial tweaks skip it.
-- Every ⏸ Rec (design-blocked / prereq-blocked / differentiation-deferred) is written to the project `BACKLOG.md` as a frontier item with its score vector + horizon + the one-line next-prompt language — never left only in chat.
-- Essential + premium-parity survivors that can't ship this turn jump the backlog queue ahead of differentiation items.
-- Fold any generalizable pattern the audit surfaced back into the owning rule the SAME TURN ([[prompt-as-training-signal]]).
+- Every shipped non-trivial idea and every remaining/deferred item (`⏸` or follow-up horizon) MUST be saved via **OpenSpec** (`openspec/changes/<change-id>/{proposal.md,design.md,tasks.md,specs/}`) in the respective repository (`agent-skills`, `install.doctor`, `theme.tools`, or the target app repo).
+- **Frontier Architect Mandate**: OpenSpec details (`proposal.md`, `design.md`, `tasks.md`, `specs/`) MUST be authored by **Claude Code (`claude`) with a fully-loaded, hydrated context** (or `codex` / `antigravity`). **NEVER spell out the details of the app or OpenSpec with `opencode`.**
+- **Paperclip Issue Registration**: For every repository where an OpenSpec definition is added or updated, create/update the corresponding task in **Paperclip** (via `~/.agentskills/bin/openspec-paperclip-sync.ts`, Paperclip MCP, or `paperclipai issue create`) with the direct deep link to the OpenSpec files so Paperclip automatically tends to it (`[[total-convergence-and-openspec-handoff]]`).
+- Fold any generalizable pattern the audit surfaced back into `agent-skills`, `install.doctor`, and `theme.tools` (`ui.theme.tools`) in parallel in the SAME TURN (`[[prompt-as-training-signal]]`).
 
 ## Avoid artificial breadth + speculative features
 
