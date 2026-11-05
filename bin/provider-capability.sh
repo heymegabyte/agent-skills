@@ -10,7 +10,7 @@
 #
 # This script inspects the local machine and emits ONE JSON object to stdout
 # describing which providers are installed/authenticated, whether the DeepSeek
-# secret is present (PRESENCE only — the value is never read or printed), and
+# secret/native auth is present (PRESENCE only — values are never printed), and
 # whether any forbidden API-key env var is leaking into the environment.
 #
 # Invariants:
@@ -26,13 +26,14 @@
 # JSON shape:
 #   {"claude":{"installed":bool,"version":str},
 #    "codex":{"installed":bool,"version":str,"authenticated":bool,"available":bool},
-#    "opencode":{"installed":bool,"version":str,"deepseek_models":[...],"available":bool},
+#    "opencode":{"installed":bool,"version":str,"deepseek_models":[...],"available":bool,
+#                "native_auth":bool,"config_shadowed":bool},
 #    "get_secret":{"present":bool},
 #    "deepseek":{"present":bool},
 #    "env_leak":{"anthropic_api_key_set":bool,"openai_api_key_set":bool},
 #    "policy_ok":bool}
 #
-# policy_ok = claude.installed AND deepseek.present
+# policy_ok = claude.installed AND opencode.available AND a DeepSeek auth source
 #             AND NOT(anthropic_api_key_set OR openai_api_key_set)
 
 set -euo pipefail
@@ -112,6 +113,8 @@ fi
 OPENCODE_INSTALLED="$(detectCommand opencode)"
 OPENCODE_VERSION=''
 OPENCODE_DEEPSEEK_MODELS=()
+OPENCODE_NATIVE_AUTH='false'
+OPENCODE_CONFIG_SHADOWED='false'
 if [ "$OPENCODE_INSTALLED" = 'true' ]; then
   OPENCODE_VERSION="$(opencode --version 2>/dev/null | firstLine || true)"
   # Collect DeepSeek-capable model identifiers (empty array if none).
@@ -119,6 +122,17 @@ if [ "$OPENCODE_INSTALLED" = 'true' ]; then
     model="${model%$'\r'}"
     [ -n "$model" ] && OPENCODE_DEEPSEEK_MODELS+=("$model")
   done < <(opencode models 2>/dev/null | grep -i deepseek || true)
+fi
+
+AUTH_FILE="${OPENCODE_AUTH_FILE:-${XDG_DATA_HOME:-$HOME/.local/share}/opencode/auth.json}"
+if command -v jq >/dev/null 2>&1 && [ -f "$AUTH_FILE" ] &&
+  jq -e '.deepseek.type == "api" and (.deepseek.key | type == "string" and length > 0)' "$AUTH_FILE" >/dev/null 2>&1; then
+  OPENCODE_NATIVE_AUTH='true'
+fi
+CONFIG_FILE="${OPENCODE_CONFIG_FILE:-${XDG_CONFIG_HOME:-$HOME/.config}/opencode/opencode.jsonc}"
+if [ -f "$CONFIG_FILE" ] &&
+  grep -Eq '"apiKey"[[:space:]]*:[[:space:]]*"\{env:DEEPSEEK_API_KEY\}"' "$CONFIG_FILE"; then
+  OPENCODE_CONFIG_SHADOWED='true'
 fi
 # available = installed AND at least one DeepSeek model exposed.
 OPENCODE_AVAILABLE='false'
@@ -132,7 +146,7 @@ GET_SECRET_PRESENT="$(detectCommand get-secret)"
 # --- deepseek secret (PRESENCE only — value never read/printed) -------------
 DEEPSEEK_PRESENT='false'
 if [ "$GET_SECRET_PRESENT" = 'true' ]; then
-  if get-secret DEEPSEEK_API_KEY >/dev/null 2>&1; then
+  if get-secret --exists DEEPSEEK_API_KEY >/dev/null 2>&1; then
     DEEPSEEK_PRESENT='true'
   fi
 fi
@@ -146,7 +160,9 @@ OPENAI_KEY_SET='false'
 # --- policy verdict --------------------------------------------------------
 POLICY_OK='false'
 if [ "$CLAUDE_INSTALLED" = 'true' ] &&
-  [ "$DEEPSEEK_PRESENT" = 'true' ] &&
+  [ "$OPENCODE_AVAILABLE" = 'true' ] &&
+  { [ "$DEEPSEEK_PRESENT" = 'true' ] || [ "$OPENCODE_NATIVE_AUTH" = 'true' ]; } &&
+  [ "$OPENCODE_CONFIG_SHADOWED" = 'false' ] &&
   [ "$ANTHROPIC_KEY_SET" = 'false' ] &&
   [ "$OPENAI_KEY_SET" = 'false' ]; then
   POLICY_OK='true'
@@ -185,9 +201,10 @@ JSON="$(
   printf '"codex":{"installed":%s,"version":"%s","authenticated":%s,"available":%s},' \
     "$(jsonBool "$CODEX_INSTALLED")" "$(jsonEscape "$CODEX_VERSION")" \
     "$(jsonBool "$CODEX_AUTHED")" "$(jsonBool "$CODEX_AVAILABLE")"
-  printf '"opencode":{"installed":%s,"version":"%s","deepseek_models":%s,"available":%s},' \
+  printf '"opencode":{"installed":%s,"version":"%s","deepseek_models":%s,"available":%s,"native_auth":%s,"config_shadowed":%s},' \
     "$(jsonBool "$OPENCODE_INSTALLED")" "$(jsonEscape "$OPENCODE_VERSION")" \
-    "$MODELS_JSON" "$(jsonBool "$OPENCODE_AVAILABLE")"
+    "$MODELS_JSON" "$(jsonBool "$OPENCODE_AVAILABLE")" \
+    "$(jsonBool "$OPENCODE_NATIVE_AUTH")" "$(jsonBool "$OPENCODE_CONFIG_SHADOWED")"
   printf '"get_secret":{"present":%s},' "$(jsonBool "$GET_SECRET_PRESENT")"
   printf '"deepseek":{"present":%s},' "$(jsonBool "$DEEPSEEK_PRESENT")"
   printf '"env_leak":{"anthropic_api_key_set":%s,"openai_api_key_set":%s},' \

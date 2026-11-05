@@ -110,11 +110,11 @@ Define Hono-on-Workers API patterns including RPC mode, WorkerEntrypoint binding
 - `await env.MY_CONTAINER.fetch()` from a Worker spins a Docker container on demand
 - Escape hatch for non-JS runtimes (Playwright headful, ffmpeg, Python ML)
 
-## Clerk M2M JWT (2026-02-24)
+## Better Auth M2M JWT (2026-02-24)
 
 - Free, networkless verification for service-to-service identity
 - Use instead of static API keys between Workers
-- `CLERK_JWT_KEY` PEM verification for zero-RTT session checks at the edge
+- `BETTER_AUTH_SECRET` PEM verification for zero-RTT session checks at the edge
 
 ## OpenAPI generation
 

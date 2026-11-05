@@ -129,9 +129,9 @@ Prompts use `{{token}}` substitution from `_brand.json` + page data.
 
 ### 15 — Email signature header
 
-- **Use** — 4:1 thin banner for transactional email header (Resend / Inngest templates)
+- **Use** — 4:1 thin banner for transactional email header (Amazon SES / Inngest templates)
 - **Prompt** — *"thin email banner with {{BRAND_NAME}} wordmark area on left, abstract {{BRAND_HEX}} shapes on right, leave 30% left blank for logo overlay"*
-- **Output** — `/images/ideogram/email-header.png` · **Consumer** — Resend email templates
+- **Output** — `/images/ideogram/email-header.png` · **Consumer** — Amazon SES email templates
 
 ### 16 — PDF cover (annual report / press kit)
 

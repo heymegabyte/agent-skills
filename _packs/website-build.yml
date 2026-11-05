@@ -1,6 +1,7 @@
 name: website-build
 description: One-line "build/rebuild X.com" prompts. Phase -1 → Phase 8 doctrine.
 members:
+  - rules/seo-keyword-research
   - 16-cinematic-website-prime-directive
   - 15-site-generation
   - 02-goal-and-brief

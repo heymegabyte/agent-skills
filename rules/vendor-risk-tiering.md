@@ -31,7 +31,7 @@ Every third-party service used in a project is classified at integration time. T
 
 ### Load-bearing
 
-Replacing this vendor requires a **multi-week migration** touching data, auth contracts, or core infrastructure. Examples: Cloudflare (Workers, D1, R2, Durable Objects), Clerk (auth), Stripe (default accept rail + billing/payouts per `payments`), Square (POS — on-request rail only), Amazon SES (transactional email — sole rail; SendGrid break-glass only).
+Replacing this vendor requires a **multi-week migration** touching data, auth contracts, or core infrastructure. Examples: Cloudflare (Workers, D1, R2, Durable Objects), Better Auth (auth), Stripe (default accept rail + billing/payouts per `payments`), Square (POS — on-request rail only), Amazon SES (transactional email — sole rail; SendGrid break-glass only).
 
 **Overhead for load-bearing vendors:**
 

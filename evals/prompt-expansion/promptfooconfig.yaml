@@ -31,16 +31,16 @@
 description: "Prompt-expansion benchmark — thin build request → full predictive-completeness expansion"
 
 # ── Provider under test ──────────────────────────────────────────────────────
-# DeepSeek Chat (V3) over the OpenAI-compatible API. Deterministic-ish (low
+# DeepSeek V4.1 Flash over the OpenAI-compatible API. Deterministic-ish (low
 # temperature) so the benchmark is reproducible run-to-run.
 providers:
-  - id: openai:chat:deepseek-chat
-    label: deepseek-v3
+  - id: openai:chat:deepseek-flash
+    label: deepseek-v4.1-flash
     config:
       apiBaseUrl: https://api.deepseek.com/v1
       apiKeyEnvar: DEEPSEEK_API_KEY
       temperature: 0.2
-      max_tokens: 4000
+      max_tokens: 8000
 
 # ── Prompt under test ────────────────────────────────────────────────────────
 # A single system+user chat prompt that asks the model to EXPAND the thin
@@ -59,7 +59,7 @@ defaultTest:
   options:
     # Judge on the same DeepSeek rail — no Anthropic/OpenAI key in the loop.
     provider:
-      id: openai:chat:deepseek-chat
+      id: openai:chat:deepseek-flash
       config:
         apiBaseUrl: https://api.deepseek.com/v1
         apiKeyEnvar: DEEPSEEK_API_KEY

@@ -98,7 +98,7 @@ ONE action, owner-chosen:
 - **Salons** → "Book Now" (Vagaro/Square Appointments/Booksy/Cal.com)
 - **Medical/dental** → "Request Appointment" (Tebra/Phreesia/Cal.com webhook)
 - **Legal** → "Free Consultation" (Cal.com 30min slot)
-- **Contractors** → "Get Free Quote" (form → Inngest → Resend to owner + auto-reply)
+- **Contractors** → "Get Free Quote" (form → Inngest → Amazon SES to owner + auto-reply)
 
 NEVER multiple equal-weight CTAs above fold — one primary + "Call Now" `tel:` as universal secondary.
 
@@ -156,7 +156,7 @@ Two paths in priority order:
 1. **Google Business Profile is the CMS** — Hours, photos, services, FAQs, posts edited in Google's UI; build pulls from Places API every 6 hours via Cron Trigger; site re-renders affected pages.
 2. **Markdown files in a private R2-mirrored repo** — about story, blog posts, custom descriptions, team bios. Owner emails/texts changes to `brian@megabyte.space`, AI commits + redeploys (~10s turnaround).
 
-Scaffold `/admin` (Clerk magic-link, TipTap or Editor.js) only when owner asks — email path covers 80%.
+Scaffold `/admin` (Better Auth magic-link, TipTap or Editor.js) only when owner asks — email path covers 80%.
 
 ## Performance Budget (relaxed for local)
 
@@ -195,7 +195,7 @@ Build cannot ship until:
 
 1. Google Places fields all populated at confidence ≥0.85
 2. NAP consistency gate passes
-3. Primary CTA functional end-to-end (form lands in Resend inbox / booking opens correct calendar / `tel:` dials)
+3. Primary CTA functional end-to-end (form delivers via Amazon SES / booking opens correct calendar / `tel:` dials)
 4. Map widget renders (no API key error)
 5. Reviews JSON-LD validates against schema.org
 6. Mobile sticky CTA bar visible at 375px

@@ -98,6 +98,26 @@ Two payment concerns that fire together on any money-handling build: which rail 
 - E-commerce sites (catalog + cart + checkout + inventory) route payments through the **Medusa.js** Stripe plugin (Square plugin when requested), NOT directly — Medusa owns the order state machine + idempotency. Full mandate: `ecommerce-stack`.
 - Stripe-default applies in front of Medusa; Link rides through Stripe Checkout/Payment Element inside it.
 
+## Retention + Monetization — keep the money (2026)
+
+The money-KEEPING half of payments. Every billing build ships these, not just the charge path. (Added 2026-10-25 from the estate-upgrade audit — `[[estate-upgrade-audit]]`.)
+
+### Smart dunning + save flows (highest-ROI retention, no product change)
+
+- **20–40% of all churn is INVOLUNTARY** (failed cards) — recover 40–65% of it with **smart dunning**: optimized retry schedule (Stripe Billing Smart Retries / `invoice.payment_failed` with backoff), **pre-dunning email** before the renewal, an **in-app card-update prompt** (`customer.source.expiring`), and a **backup payment method** on file. Ship this on EVERY recurring build — it's the single highest-ROI retention move.
+- **Cancellation save flow** rescues 10–15%: on `cancel_at_period_end`, offer pause / downgrade / discount / "what went wrong?" before confirming — never a one-click dead-end cancel.
+- Wire both to the existing `payment_events` dedupe + Amazon SES (per the refund section) — reuse, don't rebuild.
+
+### Monetization motion (gate on VALUE, not features)
+
+- **Reverse-trial / hybrid is the 2026 PLG default** (65% of PLG SaaS; reverse trials 8–12% "great"): freemium signup volume + a time-boxed full-feature trial. Give full access to reach the ACTIVATION event; gate advanced/ongoing-value features (usage caps as the natural upgrade trigger), never the aha moment. Entitlement mechanics: `[[account-entitlements]]`.
+- **Usage-based pricing → ship an INTERACTIVE calculator** (static table → calculator ≈ +47% pricing-page conversion). Subscription → annual/monthly toggle with the 15–20% save message. Limit choice; a **"Most Popular" badge ≈ +12–15% mid-tier**; anchor on the cost of NOT solving the problem.
+
+### Product-led expansion (NRR is the 2026 headline metric)
+
+- Target **NRR > 100%** (negative net churn — existing customers pay more YoY regardless of logos lost; >100% grows ~2.5× faster). Expansion = 40–67% of new ARR at scale → build upgrade triggers INTO the product, not a manual upsell motion.
+- **Surface the upgrade at the moment of need:** an in-product "your team is approaching the tier limit" / "you've used 80% of X" prompt converts far better than a quarterly review. Usage-based + hybrid pricing beats flat per-seat on NRR (revenue scales with success). Entitlement checks power this — reuse Stripe Billing usage metering.
+
 ## Refund + Dispute Automation
 
 No payment feature merges without automated refund + dispute paths wired up. A solo builder cannot staff a refund queue; manual queues accrue chargebacks silently until the processor flags the account at 0.75%.

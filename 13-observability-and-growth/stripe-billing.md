@@ -22,7 +22,7 @@ updated: "2026-05-10"
 stripe.subscriptions.update(subId, { items: [{ id: itemId, quantity: seatCount }] })
 ```
 
-- Auto-adjust on member add/remove via Clerk org webhook; prorates mid-cycle
+- Auto-adjust on member add/remove via Better Auth org webhook; prorates mid-cycle
 - Display: `"$12/seat/mo × 8 seats = $96/mo"`
 
 **Stripe Tax** — automatic tax calculation:
@@ -129,7 +129,7 @@ app.post('/api/webhooks/stripe', async (c) => {
 
   switch (event.type) {
     case 'checkout.session.completed':
-      // Activate subscription, send welcome email via Resend
+      // Activate subscription, send welcome email via Amazon SES
       break;
     case 'customer.subscription.deleted':
       // Deactivate subscription, send retention email
@@ -160,7 +160,7 @@ app.get('/api/donation-progress', async (c) => {
 ### Post-Donation Flow
 
 1. Success page with confetti animation (06/easter-eggs energy)
-2. Auto-email via Resend: thank you + tax receipt + ask to share
+2. Auto-email via Amazon SES: thank you + tax receipt + ask to share
 3. Auto-email all participants when goal is met
 4. PostHog event: `donation_complete` with amount and method
 

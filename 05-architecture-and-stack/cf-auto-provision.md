@@ -1,6 +1,6 @@
 ---
 name: "CF Auto-Provision"
-description: "Single-function project bootstrap via Cloudflare MCP + cf CLI (~3000 API ops). One call provisions D1 database (global read replication), KV namespaces (cache + rate limit), R2 bucket, DNS records, Worker routes, Flagship project, and generates wrangler.jsonc with all bindings. Integrates Clerk, Stripe, PostHog, and Sentry project creation."
+description: "Single-function project bootstrap via Cloudflare MCP + cf CLI (~3000 API ops). One call provisions D1 database (global read replication), KV namespaces (cache + rate limit), R2 bucket, DNS records, Worker routes, Flagship project, and generates wrangler.jsonc with all bindings. Integrates Better Auth, Stripe, PostHog, and Sentry project creation."
 updated: "2026-04-23"
 ---
 
@@ -23,7 +23,7 @@ interface ProvisionResult {
   domain: string;
   wranglerToml: string;
   integrations: {
-    clerkAppId?: string;
+    authConfigured?: string;
     stripeProductId?: string;
     posthogProjectId?: string;
     sentryProjectSlug?: string;
@@ -136,20 +136,20 @@ For saas type, add: *.{domain}/*
 
 ## Third-Party Integration
 
-### Clerk (saas type only)
+### Better Auth (saas type only)
 
 ```bash
-# Via Clerk Dashboard API or CLI
-curl -X POST https://api.clerk.com/v1/applications \
-  -H "Authorization: Bearer $CLERK_SECRET_KEY" \
+# Via Better Auth Dashboard API or CLI
+curl -X POST https://api.better-auth.com/v1/applications \
+  -H "Authorization: Bearer $BETTER_AUTH_SECRET" \
   -d '{"name": "{project}", "allowed_origins": ["https://{domain}"]}'
 ```
 
-Extract `CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` from response. Add to wrangler secrets:
+Extract `BETTER_AUTH_URL` and `BETTER_AUTH_SECRET` from response. Add to wrangler secrets:
 
 ```bash
-echo "$CLERK_SECRET_KEY" | wrangler secret put CLERK_SECRET_KEY
-echo "$CLERK_PUBLISHABLE_KEY" | wrangler secret put CLERK_PUBLISHABLE_KEY
+echo "$BETTER_AUTH_SECRET" | wrangler secret put BETTER_AUTH_SECRET
+echo "$BETTER_AUTH_URL" | wrangler secret put BETTER_AUTH_URL
 ```
 
 ### Stripe
@@ -231,7 +231,7 @@ async function bootstrapProject(
   ];
   if (type === 'saas') {
     tasks.push(
-      createClerkApp(project, domain).then((id) => { integrations.clerkAppId = id; }),
+      provisionBetterAuth(project, domain).then((id) => { integrations.authConfigured = id; }),
       createStripeProduct(project).then((id) => { integrations.stripeProductId = id; }),
     );
   }
@@ -256,6 +256,6 @@ async function bootstrapProject(
 | R2 | Images, PDFs | User uploads, exports | Generated files |
 | Durable Objects | No | Realtime rooms | No |
 | Queues | No | Email, webhooks | Webhook processing |
-| Clerk | No | Yes | No |
+| Better Auth | No | Yes | No |
 | Stripe | No | Yes (3 tiers) | Optional (usage-based) |
 | Cron | Sitemap regen | Usage alerts, cleanup | Key rotation |

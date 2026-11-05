@@ -3,7 +3,7 @@
 Every SaaS built with Emdash must ship with ALL of these. This is the SPEC.md template.
 Check each item as acceptance criteria. Each unchecked item = a failing test = not done.
 
-## 1. Authentication (Clerk)
+## 1. Authentication (Better Auth)
 
 - [ ] Email + password signup/login
 - [ ] Google Sign-In (one-click)
@@ -96,7 +96,7 @@ Check each item as acceptance criteria. Each unchecked item = a failing test = n
 - [ ] Time to value < 60 seconds (user sees core value in first minute)
 - [ ] Skip option (never force, but encourage)
 
-## 8. Email (Resend)
+## 8. Email (Amazon SES)
 
 - [ ] Welcome email (on signup)
 - [ ] Email verification (magic link)

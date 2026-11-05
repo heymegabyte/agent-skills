@@ -39,7 +39,7 @@ deep-research passes (2026-10-19 → 2026-10-20).
 21. Web Share + Share Target — ◾ share broad mobile/Safari; Share Target Chromium/install-gated → `13`, PWA rules
 22. Async Clipboard API — ◾ Baseline → `gorgeous-by-default.md`
 23. Intersection / Resize Observers (replace scroll/resize listeners) — ◾ Baseline → `11`, `quality-metrics.md`
-24. WebAuthn / passkeys + Credential Management conditional UI — ◾ broad (pairs with Clerk) → `21`
+24. WebAuthn / passkeys + Credential Management conditional UI — ◾ broad (pairs with Better Auth) → `21`
 
 ## Tier 3 — OPPORTUNISTIC (Chromium-only / device- or install-gated; feature-detect, never load-bearing)
 

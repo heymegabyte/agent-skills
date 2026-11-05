@@ -324,15 +324,15 @@ function ChatUI() {
 }
 ```
 
-## When to use this vs plain Clerk
+## When to use this vs plain Better Auth
 
 | Scenario | Use |
 |---|---|
 | Agent reads/writes user's Google Calendar | **Auth0 Token Vault** |
 | Agent posts to user's Slack workspace | **Auth0 Token Vault** |
 | Agent executes a financial trade on behalf of user | **Auth0 Token Vault + CIBA** |
-| Agent uses YOUR service's API (not user's 3rd-party) | **Clerk** — standard JWT |
-| No agent delegation needed | **Clerk** — simpler, better DX |
+| Agent uses YOUR service's API (not user's 3rd-party) | **Better Auth** — standard JWT |
+| No agent delegation needed | **Better Auth** — simpler, better DX |
 
 ## Gotchas
 

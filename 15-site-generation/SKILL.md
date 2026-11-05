@@ -60,7 +60,7 @@ Run the end-to-end AI website generation pipeline: research→media→Bolt artif
 ## Dual-Template Architecture (TWO REPOS — NEVER CONFUSE)
 
 - **Local Business**: `megabytespace/template.projectsites.dev` — Vite + React + Tailwind + shadcn/ui, 15 local components, CSS var brand slots. Use for: restaurant, salon, medical, legal, fitness, contractor, retail, etc.
-- **SaaS**: `megabytespace/saas-starter` — Hono + D1 + Clerk + Stripe + Inngest + Amazon SES on CF Workers. Use for: SaaS products, APIs, dev tools, platforms.
+- **SaaS**: `megabytespace/saas-starter` — Hono + D1 + Better Auth + Stripe + Inngest + Amazon SES on CF Workers. Use for: SaaS products, APIs, dev tools, platforms.
 
 ### Template selection (from `_form_data.json.category`)
 

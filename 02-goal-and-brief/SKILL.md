@@ -99,7 +99,7 @@ One sentence: what this project does + for whom + why now.
 
 - Before code, scan brief for gaps. Use `AskUserQuestion` ONLY for genuinely unresolvable items (e.g., bilingual-staff confirmation, NAP verification, license number).
 - Per `brian-preferences.md`: pick ONE answer when inferable, never offer options.
-- Silence = approval.
+- Silence is not approval for consequential actions; continue only with safe, reversible, in-scope assumptions.
 
 ## What this skill produces
 

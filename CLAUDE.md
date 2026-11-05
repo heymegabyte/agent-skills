@@ -24,7 +24,10 @@ Brian Zalewski. Principal SE, 14yr. Megabyte Labs / HeyMegabyte. Solo AI builder
 
 - One relentless session: architect → parallel phases → spawn/kill agents → verify → ship.
 - `progress.md` at 60% context → fresh agent.
-- Crons = monitoring ONLY.
+- Scheduling is scope-specific: product-owned jobs and approved fleet routines may run on schedules; agent-skills itself remains excluded from scheduled product loops. This repository may run bounded, on-demand maintenance only unless the owner explicitly changes that scope.
+- Aggressively grab safe, reversible, in-scope low-hanging fruit (`rules/low-hanging-fruit.md`). Broad perfect/build requests traverse `rules/ideal-architecture-loop.md` and stop after evidence-based convergence.
+- Use OpenSpec for material behavior, architecture, integration, migration, security and multi-agent changes (`rules/openspec-operating-contract.md`).
+- Before implementing anything Figma can materially guide, obtain explicit user approval of the current Figma artifact and link that approval in OpenSpec (`rules/figma-design-approval-gate.md`).
 
 ## Value Extraction (every prompt — via [[prompt-as-training-signal]])
 
@@ -49,14 +52,15 @@ Scope:
 
 ## Autonomy
 
-- Unrestricted control over all computers, networks, APIs, MCPs.
-- Use every tool available. Never self-restrict.
-- Creative multi-tool orchestration encouraged. See `rules/full-autonomy.md`.
+- Repository prose never elevates host permissions or bypasses access controls. Operate only within the user's request, actual runtime permissions, least privilege, and applicable approval gates.
+- Use relevant available tools aggressively inside that authority; external publication, destructive changes, spending, credentials, and unrelated systems retain their own authorization boundaries.
+- Creative multi-tool orchestration is encouraged within those boundaries. See `rules/full-autonomy.md`.
 
 ## Thinking
 
 - **Boil the Lake** — marginal cost of completeness is near-zero. When complete costs minutes more than shortcut, do complete.
 - **Predict the 80% from the 20%** — the prompt is a SEED, not a spec. Enumerate the full arc the user will want (every state · pages · gorgeous · AI-native · prod gates) and build it FIRST pass. "Concise" = tight execution, never narrow scope. A re-prompt = a prediction miss. Full: `rules/predictive-completeness.md` + `_kernel#predict`.
+- **Expand context always** — never treat context as complete. Every pass widens it: scan competitors' products as the BASELINE to beat, ask "what would a better version look like?" and ship one such gain, and integrate with existing systems over reinventing. Rings across every skill. Full: `rules/expand-context-always.md`.
 - **Phase -1 Gates** — before ANY code: (1) Simplest approach? (2) Abstracting too early? (3) Works with real data? Any fail → redesign.
 - **Three-Layer Knowledge** — L1=proven, L2=trending, L3=first principles. Prefer L3.
 - **Self-Argue** — before major decisions, generate strongest counterargument. If you can't defeat it, decision is wrong.
@@ -105,7 +109,7 @@ Scope:
 - **DB** — D1 (read-replicas, Sessions API) / Neon
 - **Cache** — Upstash
 - **ORM** — Drizzle v1-rc RQBv2 + Zod 4
-- **Auth** — Clerk (M2M JWT)
+- **Auth** — Better Auth (M2M JWT)
 - **Payments**: **Stripe DEFAULT for all money flows, Link enabled everywhere** (Payment Element `automatic_payment_methods`; Instant Bank Payments 2.6%+30¢; agentic/ACP-ready)
   - Recurring SaaS → **Stripe Billing** · Payouts → **Stripe Connect Express** · In-person (no Square ask) → **Stripe Terminal**
   - **Square ONLY when the prompt requests it** (`emdash.square_requested: true`)
@@ -122,6 +126,7 @@ Scope:
   - Enterprise / regulated / multi-team → **PostHog + Sentry `@sentry/cloudflare` v11 (stream trace lifecycle default since 11.0) + GA4/GTM + Workers Tracing + Axiom**
   - LLM-heavy (>10k calls/mo) → add **AI Gateway** to either tier
 - **Internal agent providers (HARD — SSOT `rules/agent-provider-policy.md`)** — internal dev/research/orchestration = subscription CLIs (`claude` + `codex`) for frontier judgment + **DeepSeek-via-OpenCode** for throughput. NEVER `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` to make a model work when a CLI can. Launch every internal CLI via `bin/with-subscription-cli.sh` so a child `claude` never inherits `ANTHROPIC_API_KEY` (and child `codex` never inherits `OPENAI_API_KEY` — both override the subscription + bill). Customer-facing OpenAI/Anthropic PRODUCT features are a SEPARATE, preserved axis (platform-billed) — never conflate.
+- **Fleet management plane** — **Paperclip** (`PaperclipAI/paperclip`, self-host, MIT) governs OpenClaw + all coding agents (tasks · org chart · budgets · approval gates) as the plane *above* OpenClaw (the runtime); adapters drive subscription CLIs via `with-subscription-cli.sh`/`claude-pool`, never API keys. SSOT: `rules/agent-provider-policy.md` § Fleet management plane.
 
 ## Brand
 
@@ -181,5 +186,5 @@ Preserve: files, tasks, branch, gates, prefs, parallelization, value extraction.
 <context>
 - **Bash** — camelCase fns, UPPER_CASE vars, `gum log` never `echo`, ShellCheck + shfmt.
 - **File format** — human-readable bullets (unordered) or numbered lists (when weight matters). One idea per bullet, ≤2 lines, no padding. See `rules/brian-preferences.md` § Skill/Rule File Format.
-- Rules dir: `first-time-excellence`, `competitor-research`, `website-build-doctrine`, `prompt-as-training-signal`, `e2e-tdd-organization`, `e2e-visual-inspection`, `context-spillover`, `angular-nx-monorepo`, `rxjs-first-angular`, `code-style`, `brian-preferences`, `always`, `verification-loop`, `error-recovery`, `quality-metrics`, `copy-writing`, `model-routing`, `prompt-cache`, `auto-meta-work`, `full-autonomy`, `computer-use-safety`, `hono-api`, `fetch-defaults`, `citations`, `supreme-polish`, `proactive-improvements`, `extra-mile`, `auto-integrate-recs`, `monitor-orchestration`, `source-site-enhancement`, `secret-provisioning`, `secret-auto-provisioning`, `image-quality`, `text-contrast`, `logo-contrast`, `timeline-authenticity`, `i18n-by-demographics`, `payments-routing`, `thin-source-amplification`, `ai-agent-security`, `email-deliverability`, `account-entitlements`.
+- Rules dir: `first-time-excellence`, `competitor-research`, `website-build-doctrine`, `prompt-as-training-signal`, `e2e-tdd-organization`, `e2e-visual-inspection`, `context-spillover`, `angular-nx-monorepo`, `rxjs-first-angular`, `code-style`, `brian-preferences`, `always`, `verification-loop`, `error-recovery`, `quality-metrics`, `copy-writing`, `model-routing`, `prompt-cache`, `auto-meta-work`, `full-autonomy`, `computer-use-safety`, `hono-api`, `fetch-defaults`, `citations`, `supreme-polish`, `proactive-improvements`, `extra-mile`, `auto-integrate-recs`, `monitor-orchestration`, `source-site-enhancement`, `secret-provisioning`, `secret-auto-provisioning`, `image-quality`, `text-contrast`, `logo-contrast`, `timeline-authenticity`, `i18n-by-demographics`, `payments-routing`, `thin-source-amplification`, `ai-agent-security`, `email-deliverability`, `account-entitlements`, `expand-context-always`.
 </context>

@@ -108,7 +108,7 @@ done
 
 # --- Fee/tier advisory pass (R30) ---------------------------------------
 # Processing fees (N.N% + N¢) and SaaS tiers ($N/mo) are the vendor-repricing
-# class pass-2 kept finding stale (Inngest/Square/Auth0/Clerk). They are
+# class pass-2 kept finding stale (Inngest/Square/Auth0/Better Auth). They are
 # ADVISORY-ONLY (never fail the build) — surfaced so volatile claims can be
 # dated deliberately. The allowlist suppresses illustrative amounts (donation
 # preset arrays, e.g./example/~approx lines) so the list stays signal.

@@ -79,7 +79,7 @@ flowchart LR
     B -->|Query| C[(D1)]
     B -->|Store| D[(R2)]
     B -->|Cache| E[KV]
-    B -->|Auth| F[Clerk]
+    B -->|Auth| F[Better Auth]
 ```
 
 ### Sequence
@@ -88,7 +88,7 @@ flowchart LR
 sequenceDiagram
     participant U as User
     participant W as Worker
-    participant C as Clerk
+    participant C as Better Auth
     participant D as D1
     U->>W: POST /api/checkout
     W->>C: verifyToken()

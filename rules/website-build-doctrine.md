@@ -47,7 +47,10 @@ leaves a durable, reviewable spec. Lightweight + fluid (no phase gates) — triv
 - **The loop, per feature:** `/opsx:explore` (read-only shaping) → `/opsx:propose "<feature>"` (writes
   `proposal.md` · `design.md` · delta `specs/` · `tasks.md`) → **review** → `/opsx:apply` (implement the
   checklist) → `/opsx:sync` (merge the delta into `openspec/specs/`) → `/opsx:archive`.
-- **Autonomous-loop review = agent diversity, NOT a blocking human gate** (solo-builder auto-merge): the
+- **Figma approval is a blocking human gate for every designable surface:** create/update the Figma artifact,
+  obtain explicit user approval, and record its URL/node/version in the OpenSpec change before `/opsx:apply`
+  (`[[figma-design-approval-gate]]`). Independent research, content, backend and infrastructure work may continue.
+- **After Figma approval, autonomous review adds agent diversity:** the
   proposal IS the per-feature `_prediction` reviewed by the adversarial panel — **codex** independently
   critiques `proposal.md`+`tasks.md`, **claude** synthesizes + applies, **opencode/DeepSeek** takes
   routine `/opsx:apply` shards ([[agent-provider-policy]]). gum-log propose/review/apply/archive per

@@ -53,8 +53,8 @@ Output: `_ideas.md` w/ accepted + rejected + reasons.
 ## Auto-implement threshold
 
 - Confidence ≥0.85 AND aligned AND <30min wall-time AND no design conversation → SHIP per `rules/auto-integrate-recs.md`
-- Confidence 0.7-0.85 OR 30min-2h OR shipping w/ brief mention → SHIP + report
-- Confidence <0.7 OR design conversation needed → Recs section w/ cost/value
+- Confidence 0.7-0.85 → implement only when reversible, in scope, and covered by the current budget; otherwise record a recommendation
+- Confidence <0.7, consequential action, or design conversation needed → recommend with cost/value and required decision
 
 ## Evaluation dimensions
 
@@ -95,7 +95,7 @@ Ideas serving higher pursuits get +0.1 confidence boost.
 3. Filter through self-critique
 4. Score on evaluation dimensions
 5. Sort by confidence × impact
-6. Auto-implement top tier
+6. Auto-implement only safe, authorized, budgeted top-tier items
 7. Propose middle tier
 8. Reject bottom tier with reason
 
@@ -115,6 +115,6 @@ Ideas serving higher pursuits get +0.1 confidence boost.
 
 ## Cadence
 
-- After every implementation: "What else?" loop until zero remain
+- After implementation, run one adjacent-opportunity pass; continue only while the bounded loop budget and acceptance criteria permit
 - Per `~/.claude/CLAUDE.md` § Self-Improvement
-- Per `rules/brian-preferences.md` "How to improve? always find 50 more things, explore every branch, never cap effort"
+- Preserve deferred ideas with reopening conditions rather than expanding effort without a bound

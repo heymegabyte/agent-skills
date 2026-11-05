@@ -342,14 +342,14 @@ Prefer #17 scroll-driven animations for pure-visual reveals; use observers for l
 
 ### 24. WebAuthn / passkeys + Credential Management conditional UI — ◾ broad
 
-Passkey autofill on sign-in — highest-security, highest-conversion auth. Pairs with mandated Clerk.
+Passkey autofill on sign-in — highest-security, highest-conversion auth. Pairs with mandated Better Auth.
 
 ```js
 const cred = await navigator.credentials.get({ mediation: 'conditional', publicKey: opts }); // autofill UI
 // <input autocomplete="username webauthn">
 ```
 
-Fallback: password / email-link. Clerk exposes passkeys — enable rather than hand-roll.
+Fallback: password / email-link. Better Auth exposes passkeys — enable rather than hand-roll.
 
 ---
 

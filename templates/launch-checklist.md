@@ -61,7 +61,7 @@
 - [ ] GitHub repository description and URL updated
 - [ ] GitHub social preview image (1280x640) uploaded
 - [ ] Product Hunt listing prepared (if applicable)
-- [ ] Launch email sent via Listmonk/Resend to subscriber list
+- [ ] Launch email sent via Listmonk (bulk, SES SMTP relay) to subscriber list
 
 ## Legal & Compliance (P1)
 

@@ -64,12 +64,12 @@ Every iteration ships ONE feature end-to-end through every layer (UI → API →
 - First slice is always the homepage hero + nav + footer
 - Real H1, real meta tags, real OG card, real JSON-LD
 - Deploy before adding any other route — establishes design system, auth layer, analytics tier, deploy pipeline
-- Per `rules/website-build-doctrine.md` Phase 0 / Phase 1
+- Per the website-build-doctrine Phase 0 / Phase 1
 
 ## Anti-placeholder (NON-NEGOTIABLE)
 
 - ❌ Lorem ipsum
-- ❌ TODO / FIXME / TBD in shipped user-visible strings (source-comment TODOs OK per `rules/todos-are-roadmap.md`)
+- ❌ TODO / FIXME / TBD in shipped user-visible strings (source-comment TODOs OK per the todos-are-roadmap rule)
 - ❌ Gray placeholder boxes / silhouettes
 - ❌ "Coming soon" without firm date
 - ❌ Stub images / generic SVGs
@@ -77,18 +77,18 @@ Every iteration ships ONE feature end-to-end through every layer (UI → API →
 - ❌ Bracket placeholders `[Insert Name]` / `[Your Title]`
 - ❌ Single-character "x" / "?" labels
 
-Per `rules/copy-writing.md` § Production-review copy gate. Build validator greps `dist/` for these patterns.
+Per the copy-writing rule § Production-review copy gate. Build validator greps `dist/` for these patterns.
 
 ## Slice contract (every slice ships ALL of these)
 
-1. **Types** + **Zod schemas** at boundaries (`rules/zod-everywhere.md`)
+1. **Types** + **Zod schemas** at boundaries (the zod-everywhere rule)
 2. **Contract-first API** (typed request/response)
 3. **Loading + empty + error + success states** (4-state system per `10-experience-and-design-system`)
-4. **Accessibility** (axe 0 violations + WCAG 2.2 AA per `_kernel/standards.md#wcag22`)
-5. **6-breakpoint responsive** (per `_kernel/standards.md#breakpoints`)
+4. **Accessibility** (axe 0 violations + WCAG 2.2 AA per the kernel WCAG-2.2 standard)
+5. **6-breakpoint responsive** (per the kernel breakpoints standard)
 6. **Observability** (Sentry breadcrumb + PostHog event + Workers Trace span)
-7. **Tests** (Vitest unit + Playwright E2E from homepage outward per `rules/e2e-testing.md`)
-8. **Feature flag** where rollout risk exists (`rules/feature-flags.md`)
+7. **Tests** (Vitest unit + Playwright E2E from homepage outward per the e2e-testing rule)
+8. **Feature flag** where rollout risk exists (the feature-flags rule)
 9. **Tenant isolation** (`org_id` on every row + every query, 404 on mismatch)
 10. **Docs** (JSDoc on exports + module README)
 
@@ -150,7 +150,7 @@ e2e/
 
 ## Build loop (per slice)
 
-1. **Write failing test** (Playwright TDD-RED first per `rules/e2e-testing.md`)
+1. **Write failing test** (Playwright TDD-RED first per the e2e-testing rule)
 2. **Author migration** (`drizzle/0NNN_<feature>.sql`) + update `db/schema.ts`
 3. **Apply locally** (`npm run db:apply:local`)
 4. **Implement** (route, lib, page, components)
@@ -161,7 +161,7 @@ e2e/
 9. **Prod E2E** (`npm run e2e:prod` against PROD_URL)
 10. **Verify console** (zero errors, zero CSP violations, zero failed resources)
 11. **AI vision QA** (6bp screenshots → vision rubric ≥9/10)
-12. **Commit + push** (conventional commits per `rules/main-only-branch.md`)
+12. **Commit + push** (conventional commits per the main-only-branch rule)
 13. **Update `e2e/FEATURES.md`** + CHANGELOG
 
 ## Real content sourcing
@@ -170,10 +170,10 @@ e2e/
 - Images: real photos > AI-generated brand-aligned > zero (skill 12)
 - Data: real API / Workers AI / D1 query > mocked
 - Testimonials: real attribution > none (never fabricated)
-- Stats: cited per `rules/citations.md`
+- Stats: cited per the citations rule
 
 ## When to stop adding sections
 
-Per `rules/website-build-doctrine.md` Phase 2: keep adding until next would dilute. Stop when "next hurts," never "we have enough."
+Per the website-build-doctrine Phase 2: keep adding until next would dilute. Stop when "next hurts," never "we have enough."
 
-## See submodules: vertical-slice.md, file-organization.md, anti-placeholder.md.
+## See the per-feature build guides listed in this skill's `submodules` frontmatter (admin-dashboard, data-tables, pwa-kit, webhook-system, …). Vertical-slicing, file organization, and anti-placeholder rules are covered in the sections above.

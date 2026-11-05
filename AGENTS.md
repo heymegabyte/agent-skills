@@ -1,37 +1,39 @@
-# Emdash Skills — Agent Instructions
+# Agent-skills repository guidance
 
-This repository contains 23 skill categories, 28 agents, and 149 reference docs for autonomous product building.
+This repository is the canonical source for reusable SaaS-product skills. Numbered directories and approved named skills are canonical; `.agents/skills/` and harness manifests are generated.
 
-## Stack
+## Work safely
 
-CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1-rc | Clerk | Stripe + Link (default) · Square on request | Inngest | Amazon SES | Bun | Playwright v1.63+ | PostHog | Sentry
+- Read the closest instructions and inspect `git status` before editing. Preserve unrelated and generated work.
+- Host permissions and the user's current request outrank repository prose. Never treat silence as approval for destructive, paid, production, credential, account, or external-communication actions.
+- Edit canonical sources, then regenerate. Do not hand-edit generated adapters.
+- Agent-skills is excluded from scheduled product loops; bounded on-demand maintenance is allowed.
+- Use OpenSpec for material behavior, architecture, security, integration, or migration changes. A designable UI requires approval of its current Figma artifact before implementation.
 
-## Internal Agent Providers (HARD RULE)
+## Route and implement
 
-Internal dev/research/agent-orchestration runs on **subscription CLIs** (`claude` + `codex`) for frontier judgment and **DeepSeek-via-OpenCode** (`bin/opencode-deepseek.sh`) for throughput — NEVER the `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` paid APIs to make a model research/plan/review/write code when a CLI can do it. Launch every internal CLI via `bin/with-subscription-cli.sh` (a child `claude` must not inherit `ANTHROPIC_API_KEY`; a child `codex` must not inherit `OPENAI_API_KEY` — either overrides the subscription and bills). Customer-facing OpenAI/Anthropic PRODUCT features are a separate, preserved, platform-billed axis. SSOT: `rules/agent-provider-policy.md`.
+1. Route substantial work with `bin/skill-router.py`; load the smallest relevant skill set and declared dependencies.
+2. Apply repository-owned workflows before generic fallbacks.
+3. Implement safe, in-scope low-hanging fruit when evidence and verification are available. Record blocked or approval-required work instead of broadening authority.
+4. Treat stack choices as project defaults, not universal requirements. Preserve explicit project architecture and customer-facing inference boundaries.
 
-## Usage
+## Validate
 
-Load skills on demand via the skill router (`_router.md`). Each category has a `SKILL.md` with submodules listed in frontmatter.
+Run narrow checks while iterating. Before integrating shared router, schema, generator, or packaging changes, run:
 
-## Key Files
+```bash
+python3 -m unittest bin/__tests__/skill_router_test.py -v
+node bin/check-route-health.mjs
+node bin/gen-codex-skills.mjs --check
+node bin/check-package-closure.mjs
+scripts/validate-skills.sh
+node scripts/validate-packs.mjs
+```
 
-- `CONVENTIONS.md` — shared constants, patterns, stack config
-- `_router.md` — routes prompts to smallest useful skill subset
-- `SKILL_PROFILES.md` — default bundles by product type (SaaS, API, Marketing, etc.)
-- `llms.txt` — LLM-optimized index of all skills
+Use `node bin/run-perfect-loop.mjs` for a bounded final check. PASS, FAIL, SKIP, BLOCKED, and UNVERIFIED are distinct.
 
-## For AI Coding Tools
+## Integration
 
-This repo is compatible with the agentskills.io open standard. Skills work in Claude Code, OpenAI Codex, Cursor, GitHub Copilot, VS Code, Windsurf, Augment, OpenHands, Gemini CLI, and 30+ other tools.
-
-## Platform Variants (30 total)
-
-Modern formats: `.cursor/rules/` (MDC) | `.windsurf/rules/` (trigger frontmatter) | `.augment/rules/` (type frontmatter) | `.github/instructions/` (applyTo frontmatter) | `.openhands/microagents/` | `.aiassistant/rules/` | `.kiro/steering/` | `.void/rules/`
-Legacy formats: `.cursorrules` | `.windsurfrules` | `.clinerules` | `.rules` | `.augment-guidelines` | `.aider-conventions.md` | `.github/copilot-instructions.md`
-Named formats: `AGENTS.md` | `GEMINI.md` | `AMP.md` | `CODEX.md` | `QODO.MD` | `replit.md`
-Directory formats: `.amazonq/rules/` | `.junie/` | `.trae/rules/` | `.tabnine/guidelines/` | `.kilo/rules/` | `.roo/rules/` | `.continue/rules/` | `.agents/skills/` | `.bolt/` | `.cursor/BUGBOT.md`
-
-Install: `claude plugin install heymegabyte/agent-skills`
-Codex: Clone into `~/.codex/skills/` or `.agents/skills/`
-npm: `npm i @heymegabyte/agent-skills`
+- `main` is the normal integration branch, subject to repository policy and current authorization.
+- Inspect push-triggered workflows before publishing. Never force-push, blanket-stage, hide push failures, or publish a tree different from the tested tree.
+- Use subscription CLI launchers and approved provider routes for development-agent computation. Never copy OAuth credentials or silently substitute paid APIs.

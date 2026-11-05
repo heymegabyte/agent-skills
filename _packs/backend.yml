@@ -1,6 +1,7 @@
 name: backend
 description: CF Workers + Hono + D1 + Drizzle + Zod backend
 members:
+  - rules/go-application-policy
   - 05-architecture-and-stack
   - 08-deploy-and-runtime-verification
   - 13-observability-and-growth

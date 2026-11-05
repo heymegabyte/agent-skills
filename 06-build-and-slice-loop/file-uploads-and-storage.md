@@ -213,7 +213,7 @@ CREATE TABLE files (
   filename TEXT NOT NULL,
   content_type TEXT NOT NULL,
   size INTEGER NOT NULL,
-  uploaded_by TEXT NOT NULL,        -- Clerk user ID
+  uploaded_by TEXT NOT NULL,        -- Better Auth user ID
   public_url TEXT NOT NULL,
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );

@@ -786,7 +786,7 @@ Update tailwind safelist + index exports + `validate-route-metadata.mjs` registr
 ## Dual-Template Architecture
 
 - **`megabytespace/template.projectsites.dev`** — local business (this template). 19 components, CSS var brand slots, conversion tracking, PWA.
-- **`megabytespace/saas-starter`** — SaaS. Hono+D1+Clerk+Stripe+Inngest+Resend on CF Workers.
+- **`megabytespace/saas-starter`** — SaaS. Hono+D1+Better Auth+Stripe+Inngest+Amazon SES on CF Workers.
 
 Container selects from `_form_data.json.category`: local categories → `~/template-local`; SaaS categories → `~/template-saas`.
 

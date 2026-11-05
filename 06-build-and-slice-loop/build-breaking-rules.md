@@ -29,7 +29,7 @@ Initialized from prompt-improvements brainstorm 2026-05-10 — 8 template-levera
 - Analytics auto-provisioning
 - GTM + PostHog + Sentry + GA4 stubs wired
 - Turnstile widget
-- Resend stub
+- Amazon SES stub
 - Route metadata template
 - JSON-LD generators
 

@@ -39,7 +39,7 @@ Replace with cited concrete number `(Author, Year)` OR delete entirely.
 - Never say "the system is ready"
 - Never truncate code
 - Full URLs only — no "go to X dashboard" without the link
-- Silence = approval
+- Avoid unnecessary confirmation for safe reversible work; never infer consequential authorization from silence
 
 ## End-of-Response Markdown Report
 

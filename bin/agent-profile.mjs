@@ -118,7 +118,7 @@ function autoDetect(dir) {
   if (hasAngular || hasSsr || hasDep(pkg, 'hono') || hasDep(pkg, 'express') || hasDep(pkg, 'drizzle-orm')) {
     return 'saas';
   }
-  if (hasDep(pkg, 'inngest') || hasDep(pkg, '@clerk/nextjs') || hasDep(pkg, 'next-auth')) {
+  if (hasDep(pkg, 'inngest') || hasDep(pkg, 'better-auth') || hasDep(pkg, 'next-auth')) {
     return 'saas';
   }
 

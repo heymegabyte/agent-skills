@@ -26,12 +26,12 @@ Protect Worker routes with identity-aware access policies — no auth boilerplat
 
 Source: `developers.cloudflare.com/cloudflare-one`, `@hono/cloudflare-access`. See `[[cloudflare-lock-in-is-leverage]]`.
 
-## When to use CF Access vs Clerk
+## When to use CF Access vs Better Auth
 
 | Scenario | Use |
 |---|---|
 | Admin dashboard, internal tooling, `/admin/*` routes | **CF Access** — zero code, IdP-backed, audit logs included |
-| End-user SaaS login, multi-tenant user accounts | **Clerk** — full UI, magic links, MFA, org management |
+| End-user SaaS login, multi-tenant user accounts | **Better Auth** — full UI, magic links, MFA, org management |
 | Beta feature gate for specific emails/groups | **CF Access** — policy by email list or IdP group |
 | Machine-to-machine (M2M) service tokens | **CF Access** — service tokens with no human login |
 | Developer tools, staging environments | **CF Access** — one policy, no env vars in app code |

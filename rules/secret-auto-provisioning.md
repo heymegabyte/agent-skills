@@ -31,7 +31,7 @@ Any secret whose ONLY requirement is "be a high-entropy random value both sides 
 - **API keys YOU define for YOUR own services** — `openssl rand -hex 32` prefixed (`ADMIN_TOKEN`, internal `X-API-Key`)
 - **Random IDs** — `crypto.randomUUID()` / `uuidv7()` per `[[uuid-version-discipline]]`
 
-The ONLY secrets you do NOT auto-generate: (a) Tier 1.5 data-at-rest keys (`*_ENCRYPTION_KEY` — auto-generating mid-life destroys persisted data; detect-only), and (b) third-party credentials minted by a vendor (Stripe/Clerk API keys, OAuth client secrets) — those follow Tier 2/3/4.
+The ONLY secrets you do NOT auto-generate: (a) Tier 1.5 data-at-rest keys (`*_ENCRYPTION_KEY` — auto-generating mid-life destroys persisted data; detect-only), and (b) third-party credentials minted by a vendor (Stripe/Better Auth API keys, OAuth client secrets) — those follow Tier 2/3/4.
 
 ## Tiers
 

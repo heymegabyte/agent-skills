@@ -26,7 +26,7 @@ superseded_by: null
 ## Secrets — auto-populate everything self-generable
 
 - **Any missing secret you CAN generate, generate + set automatically — never ask, never Rec, never leave a placeholder.** HMAC/webhook/signing keys, session/CSRF/JWT secrets, salts, nonces, bypass tokens, your-own-service API keys → `openssl rand -base64 32` / `-hex 32` (or `crypto.randomUUID`), stored locally AND pushed to the deploy target, same turn.
-- Only exceptions: data-at-rest `*_ENCRYPTION_KEY` (auto-gen destroys persisted data — detect only) and vendor-minted third-party creds (Stripe/Clerk/OAuth). Full tiers + one-liners: `secret-auto-provisioning.md`.
+- Only exceptions: data-at-rest `*_ENCRYPTION_KEY` (auto-gen destroys persisted data — detect only) and vendor-minted third-party creds (Stripe/Better Auth/OAuth). Full tiers + one-liners: `secret-auto-provisioning.md`.
 
 ## Post-work
 
@@ -34,6 +34,10 @@ superseded_by: null
 - Update CLAUDE.md
 - Remove dead code/comments/imports
 - Stale docs = bugs
+
+## Paste-target copy (descriptions, bios, captions)
+
+- Copy for a reflowing paste field (YouTube/app-store/social/meta/textarea) ships with PROSE UNWRAPPED — one line per paragraph, blank line between; preserve list/link/section breaks. By DEFAULT, not on-request. Full: `[[paste-target-text-sanitization]]`.
 
 ## Multi-faceted prompts
 

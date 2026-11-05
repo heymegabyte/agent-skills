@@ -6,6 +6,9 @@ priority: 3
 pack: "backend"
 triggers:
   - "database"
+  - "embedded database"
+  - "database editor"
+  - "data editor"
   - "schema"
   - "migration"
   - "d1"
@@ -21,6 +24,7 @@ Cloudflare-hostable data access first (D1/KV/R2/DO), Neon/Upstash behind adapter
 ## When this fires
 
 - Any persistence, cache, search, or analytics-modeling decision
+- Any embedded database browser, query console, schema explorer, editable data grid, or database administration surface
 
 ## Tooling + when to use
 
@@ -43,3 +47,5 @@ Cloudflare-hostable data access first (D1/KV/R2/DO), Neon/Upstash behind adapter
 - **Tenant isolation** — every table carries `org_id`; every query filters by it (defense-in-depth even behind a route gate)
 - **Safe import/export** + **idempotent** operations (re-runnable without double effect)
 - NocoDB only where customers/admins genuinely manage databases — not as a generic admin shortcut
+- **Use OrcaQ as an inspiration source for embedded database editing UX.** Read `reference/orcaq-database-editor-inspiration.md` before designing or substantially changing a database browser/editor. Evaluate its local-first workspaces, environment labels, strict mutation confirmation, schema explorer, editable query grid, SQL/EXPLAIN workflow, ERDs, safe schema diff, and portable state. Adapt only what fits; do not copy it wholesale or treat it as a mandatory dependency.
+- Database editors default to read-only in production/unknown environments. Preview mutations, enforce authorization and tenant scope server-side, confirm destructive/bulk changes, redact secrets, and emit an audit trail.

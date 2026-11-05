@@ -41,8 +41,8 @@ Tiered PostHog+Sentry+GA4 stacks wired from day one; feature flags, PLG patterns
 
 Per `_kernel/standards.md#integrations`:
 
-- **Tier 1 (solo)** — PostHog + Workers Tracing OTLP (2 vendors max, cookie-free, free tier covers <10k MAU)
-- **Tier 2 (enterprise)** — + Sentry `@sentry/cloudflare` v9 + GA4/GTM + Axiom
+- **Baseline (every Worker)** — server-side Sentry `@sentry/cloudflare` v11 + PostHog + Workers Tracing OTLP; no browser Sentry SDK by default
+- **Tier 2 (enterprise)** — baseline + GA4/GTM + Axiom
 - **Tier 3 (LLM-heavy >10k calls/mo)** — + AI Gateway
 
 ## PostHog (Tier 1 cornerstone)
@@ -52,7 +52,7 @@ Per `_kernel/standards.md#integrations`:
 - CSP: `script-src` + `connect-src` for posthog domain
 - Per-feature event naming: `<feature>:<action>` (`signup:complete`, `editor:save`, `share:copy`)
 
-## Sentry (Tier 2)
+## Sentry (baseline)
 
 - `@sentry/cloudflare` v11 (stream trace lifecycle default since 11.0) + `withSentry` wrapper; project via `mcp__sentry__create_project` (org:`megabyte-labs`)
 - `SENTRY_DSN` via `wrangler secret put`
@@ -89,7 +89,7 @@ Per `_kernel/standards.md#integrations`:
 ## PLG 7-Layer Framework
 
 1. **Discovery** — SEO + AI search + word-of-mouth + paid
-2. **Sign-up** — passwordless preferred (Clerk M2M JWT)
+2. **Sign-up** — passwordless preferred (Better Auth M2M JWT)
 3. **Activation** — first-value-in-X-min metric (aha moment per `rules/feature-flags.md` instrumentation)
 4. **Engagement** — DAU/MAU ratio, session depth
 5. **Retention** — D1/D7/D30 cohort

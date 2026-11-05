@@ -2,7 +2,7 @@
 """
 capture-prompt — deterministic, NON-BLOCKING prompt ingestion (AGENTSKILLS §6).
 
-UserPromptSubmit hook. Appends each incoming user prompt VERBATIM — plus an ISO-8601
+UserPromptSubmit hook. Appends each safe incoming user prompt — plus an ISO-8601
 UTC timestamp, the cwd, and the session id when present — as ONE NDJSON line to the
 durable inbox at ~/.agentskills/.agent/prompt-inbox.ndjson.
 
@@ -48,11 +48,27 @@ def main() -> int:
     if not isinstance(prompt, str) or not prompt.strip():
         return 0  # nothing meaningful to ingest
 
+    # Quarantine likely credentials locally. Never persist or echo the suspected value.
+    # This intentionally favors false positives: discarded prompts remain represented by
+    # a hash/provenance record so the user can see that capture happened without leakage.
+    import hashlib
+    import re
+    secret_patterns = [
+        r"\b(?:sk|pk|rk|ghp|github_pat|xox[baprs]|AKIA|AIza)[-_A-Za-z0-9]{16,}\b",
+        r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----",
+        r"(?i)\b(?:api[_-]?key|secret|token|password)\s*[:=]\s*[^\s]{12,}",
+    ]
+    suspected_secret = any(re.search(pattern, prompt) for pattern in secret_patterns)
+    digest = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+
     record = {
         "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "cwd": payload.get("cwd") or os.getcwd(),
         "session_id": payload.get("session_id") or payload.get("transcript_path") or None,
-        "prompt": prompt,  # VERBATIM — never truncated/transformed
+        "source": payload.get("source") or "claude-user-prompt",
+        "content_sha256": digest,
+        "decision": "discard-secret" if suspected_secret else "pending",
+        "prompt": None if suspected_secret else prompt,
     }
 
     try:

@@ -47,10 +47,10 @@ const CHECK = process.argv.includes('--check')
 
 // DeepSeek direct rail (OpenCode) has exactly two tiers:
 const MODEL_MAP = {
-  opus: 'deepseek/deepseek-v4-pro',
-  fable: 'deepseek/deepseek-v4-pro',
-  sonnet: 'deepseek/deepseek-flash',
-  haiku: 'deepseek/deepseek-flash',
+  opus: 'litellm/deepseek-v4-pro',
+  fable: 'litellm/deepseek-v4-pro',
+  sonnet: 'litellm/deepseek-flash',
+  haiku: 'litellm/deepseek-flash',
 }
 // Agents that ingest screenshots/images must run on flash (pro is text-only).
 const VISION_AGENTS = new Set([
@@ -58,6 +58,8 @@ const VISION_AGENTS = new Set([
   'computer-use-operator',
   'browser-operator',
   'media-orchestrator',
+  'deploy-verifier',
+  'accessibility-auditor',
 ])
 
 // OpenCode `color` only accepts #RRGGBB hex or 8 theme names — NOT Claude's
@@ -73,6 +75,25 @@ const COLOR_MAP = {
   rainbow: '#7c3aed',
   red: '#ef4444',
   yellow: '#eab308',
+}
+
+// MCP tools are disabled globally in opencode.jsonc (`tools`); re-enable per
+// specialized agent so only they pay the context cost.
+const MCP_AGENTS = {
+  'security-reviewer': ['semgrep_*'],
+  'dependency-auditor': ['semgrep_*'],
+  'deploy-verifier': ['cloudflare-api_*'],
+  architect: ['cloudflare-api_*'],
+  'incident-responder': ['cloudflare-api_*'],
+}
+
+// DeepSeek `reasoning_effort` passthrough — spend reasoning only where it wins.
+const EFFORT_AGENTS = {
+  architect: 'high',
+  'security-reviewer': 'high',
+  'meta-orchestrator': 'high',
+  'completeness-checker': 'high',
+  'incident-responder': 'high',
 }
 
 function parseFrontmatter(src) {
@@ -111,12 +132,16 @@ function buildAgentFrontmatter(fm, name) {
   if (VISION_AGENTS.has(name)) model = MODEL_MAP.haiku // force flash (vision)
 
   const lines = ['---', `description: ${JSON.stringify(fm.description)}`, 'mode: subagent', `model: ${model}`, 'temperature: 0.1']
-  if (readOnly || bashDenied || !bashGranted) {
+  const perm = []
+  if (readOnly) perm.push('  edit: deny')
+  if (bashDenied || !bashGranted) perm.push('  bash: deny')
+  for (const m of MCP_AGENTS[name] || []) perm.push(`  "${m}": allow`)
+  if (perm.length) {
     lines.push('permission:')
-    if (readOnly) lines.push('  edit: deny')
-    if (bashDenied || !bashGranted) lines.push('  bash: deny')
+    lines.push(...perm)
   }
   if (fm.maxTurns) lines.push(`steps: ${fm.maxTurns}`)
+  if (EFFORT_AGENTS[name]) lines.push(`reasoningEffort: "${EFFORT_AGENTS[name]}"`)
   if (fm.color && COLOR_MAP[fm.color]) lines.push(`color: "${COLOR_MAP[fm.color]}"`) // quoted: unquoted #… is a YAML comment
   lines.push('---')
   return lines.join('\n')

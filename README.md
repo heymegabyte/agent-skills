@@ -276,8 +276,8 @@ Every deploy must clear all gates. No exceptions. No overrides.
      │              │             │              │
      │         KV/Upstash    Zod valid.     Migrations
      │              │             │
-     ├── Clerk (auth)        Turnstile
-     ├── Stripe (pay)        Resend (email)
+     ├── Better Auth (auth)        Turnstile
+     ├── Stripe (pay)        Amazon SES (email)
      ├── PostHog (analytics) Sentry (errors)
      └── GA4/GTM (tracking)  Inngest (jobs)
 ```
@@ -336,12 +336,12 @@ Copy-paste as-is — each routes through the skill graph to a deployed, gate-cle
 ### Build a SaaS from a domain
 
 ```
-Build acmebilling.dev — recurring subscription billing for indie SaaS founders. Stripe-native, Clerk auth, Inngest for retry workflows.
+Build acmebilling.dev — recurring subscription billing for indie SaaS founders. Stripe-native, Better Auth auth, Inngest for retry workflows.
 ```
 
 - **Skills** — 01 → 02 → 03 → 05 → 06 → 07 → 08 → 13
 - **Agents** — architect (Opus) → 5 parallel build agents → deploy-verifier + seo-auditor + visual-qa
-- **Gate fires** — API Key Gate checks `STRIPE_*`, `CLERK_*`, `INNGEST_*`, `CLOUDFLARE_API_KEY` (global) before any scaffold
+- **Gate fires** — API Key Gate checks `STRIPE_*`, `BETTER_AUTH_*`, `INNGEST_*`, `CLOUDFLARE_API_KEY` (global) before any scaffold
 - **Output** — live Worker on `acmebilling.dev` with checkout, dashboard, webhook handler, Sentry + PostHog + GA4 wired
 
 ### Rebuild an existing site
@@ -382,7 +382,7 @@ Build sjsk.org — community clothing distribution for SJSK in Newark, donor por
 
 - **Skills** — 01 → 02 → 09 → 13 (Stripe-first GiveDirectly UX)
 - **Gate** — `STRIPE_*` keys
-- **Output** — Donate CTA in nav, recurring + one-time, Resend tax receipts, impact counters with IO+rAF roll-in
+- **Output** — Donate CTA in nav, recurring + one-time, Amazon SES tax receipts, impact counters with IO+rAF roll-in
 
 ### Brainstorm before you build
 
@@ -396,7 +396,7 @@ What's the highest-ROI thing I can ship this week? Read PORTFOLIO.md, scan curre
 ### Add a feature to an existing project
 
 ```
-Add a magic-link auth flow to acme.dev — passwordless email via Resend, Clerk session, redirect to /dashboard.
+Add a magic-link auth flow to acme.dev — passwordless email via Amazon SES, Better Auth session, redirect to /dashboard.
 ```
 
 - **Skills** — 05 (architecture decision) → 06 (build slice) → 07 (Playwright E2E homepage-first)

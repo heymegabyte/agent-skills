@@ -52,7 +52,7 @@ Measure → hypothesis → test → analyze → iterate. Never skip baseline mea
 ## Churn Prevention
 
 - **Cancellation flow** — survey (too expensive | missing feature | switching | other) → offer alternatives (pause, downgrade, discount) → confirm
-- **Win-back** — automated email at 7/30/90 days via Resend
+- **Win-back** — automated email at 7/30/90 days via Amazon SES
 - **Usage decline** — PostHog event tracking, alert when weekly active drops 50%
 - **Dunning** — 3 retries over 7 days, Stripe Smart Retries enabled
 
@@ -131,5 +131,5 @@ Track weekly conversion rate. Alert if rate drops >20% WoW. Typical local busine
 
 - **PostHog** — funnel analysis + feature flags + session replay
 - **Stripe** — billing portal, proration, Smart Retries, revenue recovery
-- **Resend** — transactional + win-back emails
+- **Amazon SES** — transactional + win-back emails
 - **Inngest** — automated lifecycle workflows (trial → paid → churn sequences)

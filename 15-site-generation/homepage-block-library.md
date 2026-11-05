@@ -51,7 +51,7 @@ Canonical block taxonomy for `template.projectsites.dev` homepage composition. E
 
 31. **`donate-tier-ladder`** — 5-7 dollar-amount tier cards ($25, $50, $100, $250, $500, $1K, Custom) — each shows what that gift buys, primary CTA "Give Now" deep-links to Stripe with `?amount=` prefilled.
 32. **`monthly-vs-onetime-toggle`** — Donation form embedded with monthly/one-time toggle, animated tier-impact reveal on toggle, "Your $50/mo = 600 meals/year" social-proof helper.
-33. **`volunteer-shift-picker`** — Calendar widget showing next 30 days, available shifts, click-to-claim, captures email+phone, Resend confirmation triggers.
+33. **`volunteer-shift-picker`** — Calendar widget showing next 30 days, available shifts, click-to-claim, captures email+phone, Amazon SES confirmation triggers.
 34. **`in-kind-needs-board`** — 6-12 "most-needed" tiles with thermometer fill bars (% of monthly target hit), Amazon wishlist link per item, "Bring this Saturday →" CTA.
 35. **`major-gifts-callout`** — Full-bleed dark band targeting $10K+ donors: planned giving, named-gift opportunities, "Book a call with our director →" Calendly embed.
 
@@ -65,7 +65,7 @@ Canonical block taxonomy for `template.projectsites.dev` homepage composition. E
 
 ## Tier 8 — Closer / CTA + Newsletter (pick 1)
 
-41. **`newsletter-signup-conversion-band`** — Full-bleed dark band, oversized headline ("Join 12,400 readers"), Turnstile-protected email input, Resend triggered, no decoration distractions.
+41. **`newsletter-signup-conversion-band`** — Full-bleed dark band, oversized headline ("Join 12,400 readers"), Turnstile-protected email input, Amazon SES triggered, no decoration distractions.
 42. **`upcoming-events-strip`** — Next 3 events horizontal cards: date chip + title + 1-line desc + "RSVP →" — Cal.com / iCal feed sync.
 43. **`partner-with-us-cta`** — Corporate-partnership pitch: "Bring your team for a service day", 3-4 corporate-fit bullets, "Book a tour →" Calendly.
 44. **`legacy-gift-cta`** — Planned-giving callout: "Leave a legacy", financial-advisor-ready language, link to a dedicated legacy page + EIN + bequest sample language.

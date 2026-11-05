@@ -55,9 +55,12 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       - name: Purge Cache
+        env: # pass secrets via env — GitHub best practice; never interpolate ${{ secrets }} into run scripts
+          CF_ZONE_ID: ${{ secrets.CF_ZONE_ID }}
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
-          curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CF_ZONE_ID }}/purge_cache" \
-            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+          curl -s -X POST "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/purge_cache" \
+            -H "Authorization: Bearer $CF_API_TOKEN" \
             --data '{"purge_everything":true}'
 
   lighthouse:
@@ -80,7 +83,9 @@ jobs:
 
 Set via: `gh secret set CLOUDFLARE_API_TOKEN --body "..."` or through GitHub UI.
 
-## Branch Preview Deploys (Optional)
+## Branch Preview Deploys (Project-profile exception only)
+
+The default solo-owned profile in `rules/no-staging-doctrine.md` does not create preview environments. Use the following only when a repository-owned delivery profile explicitly requires preview acceptance before production; never infer it globally from this example.
 
 ```yaml
   preview:

@@ -63,7 +63,7 @@ You are the meta-orchestrator — the supreme coordinator of all available tools
 - **Auto-deploy** — GitHub (merge PR) → Cloudflare (deploy) → Playwright (E2E) → Sentry (check errors) → Slack (report)
 - **Content pipeline** — WordPress (draft) → Firecrawl (check SEO) → Figma (generate images) → WordPress (publish) → Slack (announce)
 - **Issue triage** — Plane (new issue) → GitHub (find related code) → analyze → Plane (update with findings)
-- **Onboarding flow** — Clerk (new user) → Stripe (create customer) → Resend (welcome email) → PostHog (track) → Slack (notify team)
+- **Onboarding flow** — Better Auth (new user) → Stripe (create customer) → Amazon SES (welcome email) → PostHog (track) → Slack (notify team)
 
 ## Rules
 

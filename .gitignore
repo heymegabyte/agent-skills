@@ -35,3 +35,5 @@ crash.*.log
 # Agent Vault: the broker's local data dir is runtime state, never canonical.
 .agent-vault/
 agent-vault.local.yaml
+# Ask — machine-local state, never commit
+.ask/local/

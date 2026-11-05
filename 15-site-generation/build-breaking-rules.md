@@ -296,7 +296,7 @@ When source site links a PDF (CV, resume, brochure, menu, whitepaper, annual rep
 ### Stripe setup
 
 - Stripe Connect when site is multi-tenant marketplace; standard Stripe account otherwise.
-- Tax-receipt email auto-fires via Stripe webhook → Resend.
+- Tax-receipt email auto-fires via Stripe webhook → Amazon SES.
 
 ### Validator (`validate-donation-stripe-first.mjs`)
 
@@ -901,11 +901,11 @@ Required content for enriched sub-page:
 
 ### Concept
 
-- Every published `*.projectsites.dev` MUST ship a Clerk-gated owner-only meta-layer (`<aside data-owner-only data-gamification-bar>`). Public visitors see ZERO gamification chrome.
+- Every published `*.projectsites.dev` MUST ship a Better Auth-gated owner-only meta-layer (`<aside data-owner-only data-gamification-bar>`). Public visitors see ZERO gamification chrome.
 
 ### Twelve mechanics (all D1-tracked)
 
-1. **XP = `sites.iteration_count`** with named levels: L1 Seed → L3 Sprout → L5 Bloom → L10 Apex → L20 Legend. Level transitions trigger Resend congrats email + confetti micro-animation on next owner visit.
+1. **XP = `sites.iteration_count`** with named levels: L1 Seed → L3 Sprout → L5 Bloom → L10 Apex → L20 Legend. Level transitions trigger Amazon SES congrats email + confetti micro-animation on next owner visit.
 2. **Owner top-bar** — fixed-bottom-right pill showing `LVL N · Next: <goody>` + "Rebuild" CTA + "Showcase rank #N"; respects `prefers-reduced-motion` + Esc-dismissable per session.
 3. **Achievement registry** — `D1.achievements (id, site_id, slug, earned_at)` with seed badges: `first_build` (iter 1), `founder_mode` (iter 3 + multimedia shipped), `polished` (Lighthouse a11y+perf ≥95), `cited` (every claim APA-sourced), `federated` (ActivityPub live), `viral` (embeddable widget on 3rd-party site via referer log), `beloved` (≥100 hearts), `streaker` (4 consecutive weekly rebuilds), `patron` (premium `/create` opt-in).
 4. **Streak counter** — `sites.weekly_streak_count` increments when `last_rebuild_at - prev_rebuild_at <= 8 days`; resets to 0 on gap; 4-week streak → `builds.budget_remaining_cents += 2000`.
@@ -914,7 +914,7 @@ Required content for enriched sub-page:
 7. **Referral loop** — every site emits signed `?ref=<slug>` in shared URLs; new owner signing up with ref token gives BOTH sites `+1 build_credit + budget_remaining_cents=500`; `D1.referrals (referrer_slug, referee_slug, created_at)`.
 8. **Visitor heart button** — bottom-right of every published site, Turnstile-protected + KV rate-limited (1 heart/IP/24h); increments `sites.heart_count`; ≥100 hearts mints `beloved`.
 9. **Delight-moment voting** — each `delight_moments[]` entry renders thumbs-up button at component level (owner-toggle in dashboard); top-voted moments (>10 votes) auto-promoted to skill 15 reusable templates registry.
-10. **Weekly streak email** via Resend cron — Subject: "Your `<slug>.projectsites.dev` is N days since last rebuild — rebuild to unlock goody #X"; deep-links to `/dashboard?action=rebuild`.
+10. **Weekly streak email** via Amazon SES cron — Subject: "Your `<slug>.projectsites.dev` is N days since last rebuild — rebuild to unlock goody #X"; deep-links to `/dashboard?action=rebuild`.
 11. **Build-quality score** — composite `(contrast_pass_pct × 25) + (a11y_score × 25) + (perf_score × 25) + (content_depth_score × 15) + (delight_moments_count × 10)`; 0-100 gauge + drives leaderboard rank.
 12. **Premium tier as status** — `/create` opt-in mints public-visible `data-tier="patron"` on `<html>` → Patron badge in showcase + 3× iteration rate + access to Veo 3.1/HeyGen/ElevenLabs voice clone goodies.
 
@@ -1096,12 +1096,12 @@ data: {"phase": "research|asset|generation|inspection|quality|domain", "step": "
 
 ## Every site (1337 LAYER #6 — hidden owner /_terminal)
 
-***UNIVERSAL — BUILD-BREAKING — Clerk-gated WebContainer shell***
+***UNIVERSAL — BUILD-BREAKING — Better Auth-gated WebContainer shell***
 
 ### Concept
 
-- Every site MUST expose hidden, Clerk-gated `/_terminal` route booting a WebContainer in-browser instance with site's source tree mounted read-only.
-- Unauthenticated → 404 (NEVER 403 — leaks existence). Owner (Clerk session matches `sites.owner_user_id`) → 200.
+- Every site MUST expose hidden, Better Auth-gated `/_terminal` route booting a WebContainer in-browser instance with site's source tree mounted read-only.
+- Unauthenticated → 404 (NEVER 403 — leaks existence). Owner (Better Auth session matches `sites.owner_user_id`) → 200.
 
 ### UI
 
@@ -1122,7 +1122,7 @@ data: {"phase": "research|asset|generation|inspection|quality|domain", "step": "
 
 ### Validator (`validate-owner-terminal.mjs`)
 
-- Assert `/_terminal` returns 404 when unauthenticated; returns 200 with `<div id="xterm-container">` when Clerk session matches `owner_user_id`.
+- Assert `/_terminal` returns 404 when unauthenticated; returns 200 with `<div id="xterm-container">` when Better Auth session matches `owner_user_id`.
 
 **Reference**: Brian 1337 brainstorm rec #37.
 
@@ -1142,7 +1142,7 @@ data: {"phase": "research|asset|generation|inspection|quality|domain", "step": "
 - `template_render;dur=...;desc="..."`
 - `ai_inference;dur=...;desc="<model>"`
 - `validation;dur=...;desc="..."`
-- `auth;dur=...;desc="Clerk verify"`
+- `auth;dur=...;desc="Better Auth verify"`
 - `analytics;dur=...;desc="PostHog enqueue"`
 - `total;dur=...;desc="Sum"`
 
@@ -1589,13 +1589,13 @@ data: {"phase": "research|asset|generation|inspection|quality|domain", "step": "
 
 ## Every site (MISSION DOCTRINE — DELIGHT #5 — personalized owner greeting)
 
-***UNIVERSAL — BUILD-BREAKING — Clerk session-aware welcome***
+***UNIVERSAL — BUILD-BREAKING — Better Auth session-aware welcome***
 
 ### Requirements
 
-- Every site MUST detect owner (Clerk session matches `sites.owner_user_id`) and surface non-intrusive top-bar OR toast: "Welcome back, `<first_name>`. Site is on iteration `<N>`. `<X>` visitors since your last login. `<Y>` new hearts."
+- Every site MUST detect owner (Better Auth session matches `sites.owner_user_id`) and surface non-intrusive top-bar OR toast: "Welcome back, `<first_name>`. Site is on iteration `<N>`. `<X>` visitors since your last login. `<Y>` new hearts."
 - Owner-only — public visitors never see it.
-- Server-side render decision in worker route based on Clerk session lookup (never client-only injection — avoids CLS + ensures indexers see clean public HTML).
+- Server-side render decision in worker route based on Better Auth session lookup (never client-only injection — avoids CLS + ensures indexers see clean public HTML).
 
 ### Validator (`validate-owner-greeting.mjs`)
 

@@ -42,13 +42,13 @@ const CSP = [
 
 ## OWASP Top 10:2025 Prevention
 
-- **A01 Broken Access Control** — Clerk JWT on protected routes
+- **A01 Broken Access Control** — Better Auth JWT on protected routes
 - **A02 Security Misconfiguration** — security headers on every response
 - **A03 Supply Chain Failures (NEW)** — `npm audit` in CI, Dependabot, lockfile audit, SRI
 - **A04 Cryptographic Failures** — HTTPS-only, wrangler secrets
 - **A05 Injection** — Zod + Drizzle parameterized queries
 - **A06 Insecure Design** — threat modeling at architecture phase
-- **A07 Authentication Failures** — Clerk, rate limit login
+- **A07 Authentication Failures** — Better Auth, rate limit login
 - **A08 Software/Data Integrity** — webhook sig verification, SRI
 - **A09 Security Logging/Alerting** — Sentry captures all errors
 - **A10 Exceptional Conditions (NEW)** — `try/catch` all, `onError` handler, graceful degradation
@@ -65,7 +65,7 @@ const CSP = [
 ## Rules
 
 1. Zod on ALL input (body, query, params, headers). No unvalidated input touches logic.
-2. Never `eval()`, `innerHTML`, `document.write()`. Use `textContent`.
+2. Never use `eval`, `innerHTML`, or `document.write`. Use `textContent`.
 3. Parameterized queries only. Drizzle default. Raw must `.bind()`.
 4. Secrets in `wrangler secret put` only. Never in code, `.env` in repos, or `wrangler.toml` vars.
 5. CORS — exact origins only. Never `'*'` in production.
@@ -74,7 +74,7 @@ const CSP = [
 8. Webhook signatures verified before parsing payload.
 9. `npm audit --production` in CI. Critical/high blocks deploy.
 10. No sensitive data in URLs (tokens, PIIs appear in logs/Referer).
-11. Cookies — `HttpOnly`, `Secure`, `SameSite=Strict`. Prefer Clerk JWT.
+11. Cookies — `HttpOnly`, `Secure`, `SameSite=Strict`. Prefer Better Auth JWT.
 12. Log security events (failed auth, rate limits, invalid sigs) to Sentry.
 
 ## Key Patterns
@@ -105,14 +105,14 @@ async function verifyTurnstile(token: string, secret: string, ip: string): Promi
 }
 ```
 
-### Auth Middleware (Clerk JWT)
+### Auth Middleware (Better Auth JWT)
 
 ```typescript
 function requireAuth() {
   return async (c, next) => {
     const token = c.req.header('authorization')?.slice(7);
     if (!token) return c.json({ error: 'Unauthorized' }, 401);
-    try { const payload = await verifyToken(token, { secretKey: c.env.CLERK_SECRET_KEY }); c.set('userId', payload.sub); }
+    try { const payload = await verifyToken(token, { secretKey: c.env.BETTER_AUTH_SECRET }); c.set('userId', payload.sub); }
     catch { return c.json({ error: 'Invalid token' }, 401); }
     await next();
   };
@@ -125,7 +125,7 @@ function requireAuth() {
 
 ## Secret Rotation (Every 90 days)
 
-- Rotate: `STRIPE_API_KEY`, `TURNSTILE_SECRET`, `CLERK_SECRET_KEY`
+- Rotate: `STRIPE_API_KEY`, `TURNSTILE_SECRET`, `BETTER_AUTH_SECRET`
 - Verify `npm audit` 0 critical/high
 - Review Dependabot
 - Check CF WAF

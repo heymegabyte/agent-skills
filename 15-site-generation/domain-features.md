@@ -39,7 +39,7 @@ Two layers: universal (every site) + category-specific (loaded by business type)
 
 ### Contact & Conversion
 
-- **Contact form** — with Turnstile invisible captcha, Zod validation, Resend delivery
+- **Contact form** — with Turnstile invisible captcha, Zod validation, Amazon SES delivery
 - **Click-to-call button** — `tel:` link, prominent on mobile
 - **Click-to-directions** — Google Maps directions URL with encoded address
 - **WhatsApp/SMS button** — `wa.me/` link if phone available, floating on mobile
@@ -101,7 +101,7 @@ Two layers: universal (every site) + category-specific (loaded by business type)
   - Event types via cal.diy REST API or admin; owner one-click flow per `non-technical-owner-onboarding`.
   - **Caveat**: cal.diy is "personal / non-production" per Cal.com (no teams/orgs/SSO/SLA). For enterprise clients needing teams/SSO/routing → hosted **Cal.com** (fallback) or self-host full Cal.com.
 - **Cal.com (hosted) — fallback** — when the client needs teams, SSO, routing forms, or a managed SLA cal.diy doesn't cover.
-- **Appointment request form** — for businesses needing human confirmation (medical, legal); Zod + Turnstile + Resend per `website-page-and-site-gates` § Every form.
+- **Appointment request form** — for businesses needing human confirmation (medical, legal); Zod + Turnstile + Amazon SES per `website-page-and-site-gates` § Every form.
 - **Booking CTA** — links to existing system (OpenTable, Resy, Calendly, etc.) if discovered in research; `target="_blank" rel="noopener"`.
 - **Build-gate**: a service business with bookable services (salon/medical/legal/trades/restaurant) that renders a "Book"/"Schedule" CTA with NO working booking surface (cal.diy embed OR appointment form OR external link) = build fail.
 

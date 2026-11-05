@@ -72,7 +72,7 @@ WebPage floor. Add Organization · BreadcrumbList · FAQPage · Person · Produc
 - DB: D1 (read-replicas, Sessions API) / Neon (via Hyperdrive)
 - Cache: Upstash / KV
 - ORM: Drizzle v1 RQBv2 + Zod 4
-- Auth: Clerk (M2M JWT)
+- Auth: Better Auth (M2M JWT)
 - Payments: Stripe + Link DEFAULT (accept; IBP 2.6%+30¢) / Stripe Billing (SaaS) / Connect (payouts) / Square on prompt request only
 - Jobs: Inngest / Workflows v2
 - Email: Amazon SES (sole rail) + Listmonk (bulk); SendGrid break-glass

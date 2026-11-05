@@ -66,7 +66,7 @@ Dark theme FIRST. Purple for cosmic/space only.
 - **Database** — D1 / Neon
 - **ORM** — Drizzle v1-rc (rc.4; NOT GA as of 2026-10 — production-proven, no stable tag/down-migrations yet)
 - **Validation** — Zod 4
-- **Auth** — Clerk Core 3 (SaaS) / Authentik (self-hosted)
+- **Auth** — Better Auth Core 3 (SaaS) / Authentik (self-hosted)
 - **Payments** — Stripe + Link DEFAULT for all money flows (Billing for SaaS, pin `2026-09-30.endive` — stripe-node 23.0.0, verified 2026-10-05; endive = new breaking major after dahlia; Connect payouts; IBP 2.6%+30¢) / Square only on prompt request
 - **Email** — Amazon SES (sole transactional rail) + Listmonk (bulk); SendGrid break-glass
 - **Jobs** — Inngest v4 / CF Workflows v2
@@ -566,24 +566,24 @@ JSON-LD boosts LLM accuracy 16% → 54% (AI search visibility for ChatGPT / Perp
 - **`Bun.redis`** — 7.9x faster than ioredis. 66 commands. Auto-reconnect, command timeouts, message queuing. Replaces `ioredis` / `redis` npm packages.
 - **`Bun.s3`** — built-in S3 client with backpressure handling. Replaces `@aws-sdk/client-s3`. Note: CF Workers use R2 binding directly, not S3 client.
 
-## Clerk Core 3 (Mar 2026 — Breaking)
+## Better Auth Core 3 (Mar 2026 — Breaking)
 
 ### Breaking changes
 
-- `@clerk/clerk-react` → `@clerk/react`
-- `@clerk/clerk-expo` → `@clerk/expo`
+- `better-auth` → `better-auth`
+- `better-auth` → `better-auth`
 - `<Protect>` / `<SignedIn>` / `<SignedOut>` → unified `<Show when="signed-in|signed-out" />`
-- `getToken()` now throws `ClerkOfflineError` (was null)
-- `@clerk/types` deprecated (import from SDK packages)
+- `getToken()` now throws `BetterAuthSessionError` (was null)
+- `better-auth` deprecated (import from SDK packages)
 - ~50KB gzipped bundle reduction
-- Upgrade: `npx @clerk/upgrade` codemod, requires Node 20.9+
+- Upgrade: `npx better-auth` codemod, requires Node 20.9+
 
-### Clerk CLI (Apr 22 2026)
+### Better Auth CLI (Apr 22 2026)
 
-- `clerk init` — framework detect + scaffold
-- `clerk config` — auth settings
-- `clerk api` — BAPI access
-- `clerk deploy` — coming
+- `better-auth init` — framework detect + scaffold
+- `better-auth config` — auth settings
+- `better-auth api` — BAPI access
+- `better-auth deploy` — coming
 
 ### API Keys GA (Apr 17 2026)
 

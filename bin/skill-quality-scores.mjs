@@ -67,7 +67,7 @@ function scoreDescription(desc) {
   // Specificity signals (0-3)
   const signals = ['Cloudflare', 'Workers', 'D1', 'R2', 'KV', 'Zod', 'Drizzle',
     'shadcn', 'TanStack', 'Tailwind', 'Hono', 'Playwright', 'Vitest',
-    'React', 'Angular', 'Vite', 'D1', 'Inngest', 'Resend', 'PostHog',
+    'React', 'Angular', 'Vite', 'D1', 'Inngest', 'SES', 'PostHog',
     'Sentry', 'Lighthouse', 'axe', 'WCAG', 'CLS', 'LCP', 'INP', 'CWV'];
   const matches = signals.filter(s => desc.includes(s));
   score += Math.min(matches.length, 3);

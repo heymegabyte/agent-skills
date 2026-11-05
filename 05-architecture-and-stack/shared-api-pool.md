@@ -91,12 +91,12 @@ Active project `.env.local` (check `$CLAUDE_ENV_FILE` when set)
 
 **Missing:** `LEMONSQUEEZY_API_KEY` (handles tax/VAT automatically)
 
-### Email (2 keys)
+### Email
 
-- `RESEND_API_KEY` — modern, React Email
-- `SENDGRID_API_KEY` — legacy (free tier removed May 2025)
+- `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY` (+ `SES_REGION`, `EMAIL_FROM`) — **Amazon SES**, the sole transactional rail (SES v2 via aws4fetch on Workers)
+- `SENDGRID_API_KEY` — legacy break-glass only, never a default
 
-**Missing:** `POSTMARK_SERVER_TOKEN` (highest deliverability) | `LOOPS_API_KEY` (SaaS marketing) | `PLUNK_SECRET_KEY` (open-source)
+**Missing:** none — SES covers transactional; Listmonk (via SES SMTP relay) covers bulk/newsletters.
 
 ### Search (3 keys)
 

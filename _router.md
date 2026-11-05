@@ -30,15 +30,18 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 
 ## Task Routing
 
-- **Doctrinal principles** → `rules/agent-resilience-discipline`, `rules/backwards-compatibility-removal-cadence`, `rules/blast-radius-minimization`, `rules/conditional-ci-gates`, `rules/cost-per-request-accountability`, `rules/customer-facing-changelog`, `rules/data-residency-by-default`, `rules/error-budget`, `rules/fail-fast-build-fail-soft-prod`, `rules/mcp-auth-options`, `rules/mcp-server-hardening`, `rules/one-way-two-way-doors`, `rules/pii-handling-discipline`, `rules/production-observability-default-on`, `rules/root-cause-validator-findings`, `rules/state-is-the-enemy`, `rules/structured-logging`, `rules/supply-chain-integrity`, `rules/sync-ui-async-backing`, `rules/ttfr-north-star`, `rules/uuid-version-discipline`, `rules/vendor-risk-tiering`, `rules/webhook-as-skill-pattern`, `rules/working-backwards`
+- **Doctrinal principles** → `rules/agent-resilience-discipline`, `rules/backwards-compatibility-removal-cadence`, `rules/blast-radius-minimization`, `rules/conditional-ci-gates`, `rules/cost-per-request-accountability`, `rules/customer-facing-changelog`, `rules/data-residency-by-default`, `rules/error-budget`, `rules/fail-fast-build-fail-soft-prod`, `rules/mcp-auth-options`, `rules/mcp-server-hardening`, `rules/one-way-two-way-doors`, `rules/paste-target-text-sanitization`, `rules/pii-handling-discipline`, `rules/production-observability-default-on`, `rules/root-cause-validator-findings`, `rules/state-is-the-enemy`, `rules/structured-logging`, `rules/supply-chain-integrity`, `rules/sync-ui-async-backing`, `rules/ttfr-north-star`, `rules/uuid-version-discipline`, `rules/vendor-risk-tiering`, `rules/webhook-as-skill-pattern`, `rules/working-backwards`
 - **New project** → `02`, `05`, `06`, `09`, `21`
+- **Go application / CLI / TUI / terminal UI** → `rules/go-application-policy`, `terminal-development`; prefer Cobra + Viper for command/config foundations, then choose Bubble Tea + Lip Gloss or tview + tcell as one primary UI stack
+- **Go desktop application** → `rules/go-application-policy`; use Wails v2, with explicit approval required for Electron or any non-allowlisted Go import
 - **Build feature** → `05`, `06`, `07`, `24`
 - **Debug / CI failure** → `07`, `08` — especially `gh-fix-ci`, `spec-driven-development`
 - **Deploy / launch** → `08`, `26` — add `09` if SEO/content changed
 - **Design / frontend polish** → `09`, `10`, `11`, `12`, `22`
-- **SEO / copy** → `09`, `23` — add `06/blog-and-content-engine` or `13/analytics-configuration` when relevant
+- **SEO / copy** → `09`, `23` — add `06/blog-and-content-engine` or `13/analytics-configuration` when relevant; add `rules/paste-target-text-sanitization` when emitting any description/bio/caption for a paste field
 - **Billing / auth** → `05/auth-and-session-management`, `05/enterprise-multi-tenancy`, `06/webhook-system`, `13/stripe-billing`
 - **File uploads / admin / data grids** → `06/file-uploads-and-storage`, `admin-dashboard`, `data-tables`
+- **Embedded database browser / editor / query console / schema explorer** → `rules/database-data-supervisor`, `05/drizzle-orm-and-migrations`, `reference/orcaq-database-editor-inspiration`; use OrcaQ as workflow inspiration with production-safe mutation gates
 - **Realtime / AI features** → `05/ai-technology-integration`, `06/realtime-and-websockets`, `ai-chat-widget`, `copilot-and-ai-features`
 - **Growth / analytics** → `13` — add `09/social-automation` when publishing
 - **Brainstorm / ideas** → `14`, `02`
@@ -46,6 +49,7 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 - **Motion / animation** → `11`, `10`
 - **Chat / messaging UI** → `06/chat-native-dashboard`, `06/realtime-and-websockets`, `06/notification-center`
 - **Microcopy / UX writing** → `06/microcopy-library`, `09`
+- **Description / bio / caption / "print a description" (any paste-target copy)** → `rules/paste-target-text-sanitization`, `rules/copy-writing`
 - **Evidence / screenshots** → `07/evidence-collection`, `07/visual-inspection-loop`
 - **Enterprise / multi-tenant** → `05/enterprise-multi-tenancy`, `05/auth-and-session-management`, `13/stripe-billing`
 - **Infra / self-hosted** → `05/coolify-docker-proxmox`, `05/cf-auto-provision`, `08/uptime-and-health`
@@ -87,6 +91,7 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 - `coolify/**`, `docker-compose*` → `05/coolify-docker-proxmox`
 - `CLAUDE.md`, `.claude/**`, `AGENTS.md`, `CODEX.md`, `GEMINI.md`, `.cursor/**`, `.windsurf/**` → `01`
 - `package.json`, `tsconfig.json` → `05`
+- `go.mod`, `go.sum`, `*.go`, `wails.json` → `rules/go-application-policy`; add `terminal-development` for CLI/TUI concerns
 - `**/container.ts`, `**/site-generation.ts`, `Dockerfile` → `15`, `05`
 - `**/prompts/*.prompt.md` → `15`
 - `vectorize/**`, `*embeddings*`, `*rag*` → `05/cf-rag-vectorize-pattern`

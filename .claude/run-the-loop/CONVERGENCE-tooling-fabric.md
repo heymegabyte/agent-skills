@@ -6,9 +6,11 @@ is NOT a scheduled product loop — this tracks THIS integration only.
 
 ## Status
 
-- **Converged?** No — Pass 1 (foundation) complete + verified on darwin-arm64. Phases H–L remain.
-- **Stage:** A/B done (research + implement foundation); C (adversarial review) pending.
+- **Converged?** No — Pass 1 (foundation) complete + verified. Pass 2 (2026-10-10) re-verified against
+  current sources + recorded corrections (`docs/adr/ADR-0002-*`). Phases H–L remain (gated/remote).
+- **Stage:** A/B done; C partial (current-sources audit done; adversarial code review still pending).
 - **Branch:** `master` — changes committed locally, **push GATED** (see Blockers).
+- **Decisions:** 7 posted to Ask room `questionl.ink/manhattan` (2026-10-10); remaining phases bound to them below.
 
 ## What Pass 1 delivered (verified)
 
@@ -26,6 +28,34 @@ is NOT a scheduled product loop — this tracks THIS integration only.
 | Agent Vault | secret-free `control-plane/agent-vault.services.yaml` + `rules/agent-vault-brokering.md` | no values; passthrough for OAuth/DeepSeek |
 | Doctor | `bin/fabric-doctor.mjs` (toolchain/semantic/security/secrets/infra/fleet, `--json`) | `mise run doctor` → 8 pass 0 fail |
 | Docs | ADR-0001; `rules/opentofu-infrastructure.md`; `.gitignore` state/cache hardening | — |
+
+## Pass 2 (2026-10-10) — verification + current-sources corrections
+
+- **Re-verified live (darwin-arm64):** `mise tasks ls` → 21 tasks load; `bin/semgrep-scan.sh --test`
+  → 5/5 custom-rule fixtures pass; all fabric scripts + `agent-vault.services.yaml` present.
+- **ADR-0002** records the current-sources audit. Safety-material corrections:
+  - **OpenTofu #4405 CLOSED "not planned"** (fix PR unmerged) → R2 native `use_lockfile` carries a live
+    orphan-lock risk; keep it OUT of the canonical state path.
+  - **Agent Vault = Preview MIT HTTP proxy, ≠ Infisical Agent;** no upstream outage/snapshot-age surface
+    and no documented same-host-vs-separate-host isolation → doctrine reports these as known gaps, never
+    claims the guarantee.
+  - OIDC `job_workflow_ref` binds via the **Claims map**; Cloudflare provider **v5.27.0**; `semgrep mcp`
+    + `oraios/serena --project-from-cwd` confirmed current; Serena memory → `read_only_memory_patterns`
+    supports "local-hints-only".
+- **Follow-ups queued (reversible):** pin CF provider v5.27.0 in `templates/opentofu`; clarify Agent-Vault-
+  vs-Infisical-Agent + drop implied snapshot-age in `rules/agent-vault-brokering.md`.
+
+## Remaining frontier → bound to open Ask decisions (`questionl.ink/manhattan`)
+
+| Gap | Ask question | Reversible here? |
+|---|---|---|
+| H — /run-the-loop fabric wiring (Orient detect; Security `security:semgrep:fast`; Verify `loop:verify`) | — (not gated) | Yes — next fire |
+| GitHub Actions + Infisical OIDC | `github-oidc-trust-binding` | Workflow authorable; trust bind gated |
+| Project rollout ×5 | `mise-adoption-pace` | Needs project repos + per-repo inspection |
+| F (live) Agent Vault broker + strict-deny | `agentvault-host-model-strictdeny` | **Remote (Ubuntu host)** |
+| G (live) OpenTofu import | `opentofu-state-backend-locking` + `opentofu-cloudflare-import-scope` | **Remote + prod state** |
+| Serena memory config | `serena-memory-policy` | Yes — once answered |
+| Commit/push to canonical main | `commit-push-canonical-main` | Gated on answer |
 
 ## Remaining convergence gaps (next passes)
 

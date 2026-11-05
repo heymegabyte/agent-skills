@@ -39,7 +39,7 @@ Collect load-bearing vendors from two places in parallel:
   - Skip entries where `tier !== 'load-bearing'` — replaceable vendors need no schedule.
   - Compute `next_rotation = last_rotated + rotation_cadence_days days`.
 
-**C. Built-in defaults** — if neither source lists a vendor that IS clearly load-bearing (Clerk, Stripe, Square, Resend), surface a warning:
+**C. Built-in defaults** — if neither source lists a vendor that IS clearly load-bearing (Better Auth, Stripe, Square, Amazon SES), surface a warning:
 
 ```
 WARN: No rotation record found for well-known load-bearing vendor <name>.
@@ -76,9 +76,9 @@ ROTATIONS DUE IN NEXT 30 DAYS — 2026-06-18
 
 | Urgency  | Vendor      | Keys                          | Due Date   | Days Left |
 |----------|-------------|-------------------------------|------------|-----------|
-| OVERDUE  | clerk       | CLERK_SECRET_KEY              | 2026-06-10 | -8        |
+| OVERDUE  | better-auth       | BETTER_AUTH_SECRET              | 2026-06-10 | -8        |
 | URGENT   | stripe      | STRIPE_SECRET_KEY             | 2026-06-22 | 4         |
-| SOON     | resend      | RESEND_API_KEY                | 2026-07-05 | 17        |
+| SOON     | amazon-ses  | AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY | 2026-07-05 | 17 |
 
 Vendors with no rotation due in 30 days: square (next: 2026-08-14, 57 days)
 
@@ -168,8 +168,8 @@ If vendors were found in `_research.json` but are absent from `~/.claude/mcp-reg
 
 ```
 ADVISORY: Add these to ~/.claude/mcp-registry.json to enable /audit-mcp-fleet rotation tracking:
-  - clerk     (secret_rotation_days: 90, secret_keys: ["CLERK_SECRET_KEY"])
-  - resend    (secret_rotation_days: 90, secret_keys: ["RESEND_API_KEY"])
+  - better-auth      (secret_rotation_days: 90, secret_keys: ["BETTER_AUTH_SECRET"])
+  - amazon-ses (secret_rotation_days: 90, secret_keys: ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"])
 ```
 
 Do NOT auto-write the registry — user approves edits to `~/.claude/mcp-registry.json`.

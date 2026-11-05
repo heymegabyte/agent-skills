@@ -1,6 +1,9 @@
 name: frontend
 description: React 19 + Vite OR Angular 22 + Nx frontend
 members:
+  - rules/frontend-judgeable-no-orphan-code
+  - rules/web-platform-capabilities
+  - rules/ui-first-mock-data
   - 10-experience-and-design-system
   - 11-motion-and-interaction-system
   - rules/frontend-stack
@@ -13,3 +16,4 @@ members:
   - rules/buttons-accommodate-largest-text
   - rules/real-time-data-no-manual-refresh
   - rules/public-front-door
+  - rules/login-screen-webgl

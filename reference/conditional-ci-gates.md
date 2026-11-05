@@ -136,14 +136,15 @@ For multi-environment wrangler setups:
 
 ## Named example: email-auth gate
 
-The script itself must also exit 0 with a warning when `DOMAIN` or `RESEND_API_KEY` is absent — two layers of conditional defense.
+The script itself must also exit 0 with a warning when `DOMAIN` or `AWS_SECRET_ACCESS_KEY` is absent — two layers of conditional defense.
 
 ```yaml
 - name: Validate email auth (SPF / DKIM / DMARC)
   if: hashFiles('scripts/validate-email-auth.mjs') != ''
   run: node scripts/validate-email-auth.mjs
   env:
-    RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     DOMAIN: ${{ vars.DOMAIN }}
 ```
 

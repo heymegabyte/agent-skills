@@ -127,7 +127,7 @@ Brian (2026-05-11): *"Come up with 100 ideas + recommendations + upgrades on how
 
 91. **Auto-provision GA4+GTM+PostHog+Sentry** — `provision-analytics.sh` at end-of-scaffold; zero manual dashboard work.
 92. **Auto Sentry release** — `sentry-cli releases new` + sourcemaps upload + finalize on deploy.
-93. **Listmonk auto-provisioned** — Coolify VM, Resend SMTP relay, list created with brand-styled welcome email.
+93. **Listmonk auto-provisioned** — Coolify VM, Amazon SES SMTP relay, list created with brand-styled welcome email.
 94. **CSP report-uri** — per site, `/csp-report` endpoint logs to D1; alerts on spike.
 95. **Stripe webhook scaffold** — idempotent receiver, signature verification, Inngest fan-out; ships in template.
 96. **Status page auto-register** — site added to `statushub.megabyte.space` on first deploy.

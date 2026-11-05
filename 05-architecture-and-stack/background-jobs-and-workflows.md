@@ -87,7 +87,7 @@ export const handleStripeInvoice = inngest.createFunction(
         .where(eq(subscriptions.stripeCustomerId, invoice.customer))
     );
     await step.run('send-receipt', () =>
-      resend.emails.send({ to: invoice.customer_email, template: 'receipt', data: invoice })
+      sendEmail(env, { to: invoice.customer_email, subject: 'Your receipt', html: renderReceipt(invoice) }) // Amazon SES (SES v2)
     );
     await step.run('track-analytics', () =>
       posthog.capture({ distinctId: event.data.userId, event: 'invoice_paid', properties: { amount: invoice.amount_paid } })
@@ -140,7 +140,7 @@ export const dailyReport = inngest.createFunction(
   async ({ step }) => {
     const stats = await step.run('gather-stats', () => getDailyStats());
     await step.run('send-report', () =>
-      resend.emails.send({ to: 'hey@megabyte.space', subject: 'Daily Report', html: formatReport(stats) })
+      sendEmail(env, { to: 'hey@megabyte.space', subject: 'Daily Report', html: formatReport(stats) }) // Amazon SES (SES v2)
     );
   }
 );

@@ -76,7 +76,7 @@ the 30-item set changes or a consuming skill drifts.
 - **Tick 5 (2026-10-20):** P6 wire-in batch D (content/a11y/text). `rules/text-contrast.md` (#9 + `contrast-color()` AVOID in Never),
   `rules/copy-writing.md` (#10 text-wrap render note), `06-build-and-slice-loop/blog-and-content-engine.md` (#1,19,20,26 content primitives),
   `23-content-seo/SKILL.md` (#19 `<details name>`, #20 `hidden=until-found` for crawlable collapsed content). markdownlint clean. Committed scoped. Next: P7 batch E.
-- **Tick 6 (2026-10-20):** P7 wire-in batch E (app/PWA/AI/CF). `21-app-foundation/SKILL.md` (#24 passkeys-via-Clerk, #29 Background Sync),
+- **Tick 6 (2026-10-20):** P7 wire-in batch E (app/PWA/AI/CF). `21-app-foundation/SKILL.md` (#24 passkeys-via-Better Auth, #29 Background Sync),
   `24-functional/SKILL.md` (#2,3,5,18,22 forms/modals), `28-cf-integrations-reference/SKILL.md` (#27 on-device Gemini-Nano → Workers AI fallback),
   `12-media-orchestration/SKILL.md` (#28 WebGPU + mandatory WebGL2 fallback), `15-site-generation/SKILL.md` (#30 advanced manifest/Badging via validate-pwa-kit).
   markdownlint clean. Committed scoped. All 7 wire-in batches done → Next: P8 always-on reach, then P9 verify + P10 review.

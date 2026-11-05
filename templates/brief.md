@@ -66,7 +66,7 @@
 
 - **Hosting:** Cloudflare Workers + Pages (edge performance, free tier generous)
 - **Database:** D1 (simple relational needs, zero config)
-- **Auth:** Clerk (fast integration, handles edge cases)
+- **Auth:** Better Auth (fast integration, handles edge cases)
 - **Payments:** Stripe (industry standard, good DX)
 
 ## Success Criteria

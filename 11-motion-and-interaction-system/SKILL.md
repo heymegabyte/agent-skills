@@ -159,4 +159,6 @@ This skill owns the motion contracts above; the full opportunistic browser-API s
 
 All gated by `prefers-reduced-motion` (above) and fallback-guarded — opportunistic ≠ reckless.
 
-## See submodules: view-transitions.md, scroll-driven.md, micro-interactions.md, reduced-motion.md, build-breaking-rules.md.
+## Further guidance
+
+The motion contracts live in this entry and `build-breaking-rules.md`; broader browser capability guidance lives in `rules/web-platform-capabilities.md`. Do not reference nonexistent per-technique submodules.

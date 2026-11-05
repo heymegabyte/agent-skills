@@ -34,3 +34,9 @@ pre-commit:
     validate-packs:
       glob: "{_packs/*.yml,rules/*.md,[0-9][0-9]-*/SKILL.md}"
       run: node scripts/validate-packs.mjs
+    audit-opencode-compat:
+      run: node bin/audit-opencode-compat.mjs --check
+    audit-cross-harness:
+      run: node bin/audit-cross-harness.mjs --check
+    gen-opencode-harness:
+      run: node bin/gen-opencode-harness.mjs --check

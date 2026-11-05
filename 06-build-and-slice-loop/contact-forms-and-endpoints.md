@@ -2,7 +2,7 @@
 name: "Contact Forms and Endpoints"
 version: "2.0.0"
 updated: "2026-04-23"
-description: "Every site gets a working contact form with Turnstile captcha, Zod validation, Resend email delivery, success/error/loading states, and 8-point form test matrix. Auto-creates the /api/contact endpoint, form HTML, and Playwright tests. No form is ever a dead end."
+description: "Every site gets a working contact form with Turnstile captcha, Zod validation, Amazon SES email delivery, success/error/loading states, and 8-point form test matrix. Auto-creates the /api/contact endpoint, form HTML, and Playwright tests. No form is ever a dead end."
 ---
 
 # Contact Forms and Endpoints
@@ -40,7 +40,7 @@ description: "Every site gets a working contact form with Turnstile captcha, Zod
 
 ```typescript
 import { z } from 'zod';
-import { Resend } from 'resend';
+import { AwsClient } from 'aws4fetch';
 
 const ContactSchema = z.object({
   name: z.string().min(1).max(200),
@@ -66,22 +66,26 @@ app.post('/api/contact', async (c) => {
     return c.json({ error: 'Too many messages. Try again later.' }, 429);
   }
 
-  // Send via Resend
-  const resend = new Resend(c.env.RESEND_API_KEY);
-  await resend.emails.send({
-    from: `${name} via Site <contact@${c.env.DOMAIN}>`,
-    to: ['brian@megabyte.space'],
-    replyTo: email,
-    subject: `Contact from ${name}`,
-    html: renderContactEmail({ name, email, message }),
+  // Send via Amazon SES (SES v2 via aws4fetch — see deskl.ink workers/api/src/email/ses.ts)
+  const region = c.env.SES_REGION ?? 'us-east-1';
+  const aws = new AwsClient({ accessKeyId: c.env.AWS_ACCESS_KEY_ID, secretAccessKey: c.env.AWS_SECRET_ACCESS_KEY, region, service: 'ses' });
+  const sendEmail = (body: unknown) =>
+    aws.fetch(`https://email.${region}.amazonaws.com/v2/email/outbound-emails`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+    });
+
+  await sendEmail({
+    FromEmailAddress: `${name} via Site <contact@${c.env.DOMAIN}>`,
+    Destination: { ToAddresses: ['brian@megabyte.space'] },
+    ReplyToAddresses: [email],
+    Content: { Simple: { Subject: { Data: `Contact from ${name}` }, Body: { Html: { Data: renderContactEmail({ name, email, message }) } } } },
   });
 
   // Confirmation email to sender
-  await resend.emails.send({
-    from: `Brian <brian@megabyte.space>`,
-    to: [email],
-    subject: "Got it — we'll be in touch",
-    html: renderConfirmationEmail({ name }),
+  await sendEmail({
+    FromEmailAddress: `Brian <brian@megabyte.space>`,
+    Destination: { ToAddresses: [email] },
+    Content: { Simple: { Subject: { Data: "Got it — we'll be in touch" }, Body: { Html: { Data: renderConfirmationEmail({ name }) } } } },
   });
 
   // Track in PostHog

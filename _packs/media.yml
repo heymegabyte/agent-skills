@@ -1,6 +1,7 @@
 name: media
 description: Image/video/audio generation + optimization
 members:
+  - rules/music-video-production
   - 12-media-orchestration
   - rules/image-quality
   - rules/image-optimization

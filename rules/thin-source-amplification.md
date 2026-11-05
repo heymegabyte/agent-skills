@@ -110,7 +110,7 @@ Fire amplification phases in priority order until floor is cleared.
   - **HVAC** — "Annual maintenance schedule", "Symptoms-to-cause diagnostic flowchart"
   - **Restaurant** — "Party-booking planning timeline", "Allergen reference card"
   - **Nonprofit** — "How-to-apply-for-services flowchart", "Volunteer onboarding pack"
-- Hosted via Resend double-opt-in; PDF delivered + drip campaign
+- Hosted via Listmonk double-opt-in (Amazon SES relay); PDF delivered + drip campaign
 
 ### Phase 10 — Cross-channel content reuse
 

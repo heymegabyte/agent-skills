@@ -233,7 +233,7 @@ First-episode auto-submit to:
 - (d) **Podcast Index** `https://podcastindex.org/add` (free, instant)
 - (e) **Amazon Music Podcasters** `https://podcasters.amazon.com`
 
-Document each submission in `_podcast_directories.json` with timestamp + directory URL + status. Brian receives Resend email summary after first episode goes live.
+Document each submission in `_podcast_directories.json` with timestamp + directory URL + status. Brian receives an Amazon SES email summary after first episode goes live.
 
 ## Infographic Gallery (≥3 Panels — `/about` Below Podcast)
 

@@ -41,7 +41,7 @@ For any app with AI chat, copilot features, agent workflows, or MCP integrations
 ### 5. Insecure Output Handling
 
 - Sanitize LLM output before rendering in HTML (XSS via AI)
-- Never `eval()` or `innerHTML` LLM output
+- Never `eval` or `innerHTML` LLM output
 - Markdown rendering — allowlisted tags only
 - Code execution — CF Dynamic Workers / Sandboxes for isolation
 

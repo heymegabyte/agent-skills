@@ -53,7 +53,7 @@
     {
       "id": "auth-001",
       "name": "Authentication Integration",
-      "description": "Clerk setup, sign-in/sign-up flows, protected routes, webhook handler",
+      "description": "Better Auth setup, sign-in/sign-up flows, protected routes, webhook handler",
       "skill_refs": ["06/webhook-system", "05-architecture"],
       "estimated_minutes": 15,
       "priority": "high",

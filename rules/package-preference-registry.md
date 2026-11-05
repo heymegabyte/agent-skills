@@ -153,6 +153,21 @@ Paid/pro-only deps · proprietary UI kits · non-commercial licenses · duplicat
 - ⏳ **Crawlee** (OSS crawl/import).
 - 🔌 **Firecrawl**/**browser-use** — only if license/deployment fit.
 
+### Go CLI / terminal applications
+
+- ✅ **Cobra** (`github.com/spf13/cobra`) — preferred command framework for non-trivial Go CLIs: subcommands, flags, help, validation, examples, and shell completion.
+- ✅ **Viper** (`github.com/spf13/viper`) — preferred layered configuration when flags, environment, files, and defaults are needed. Use an injected `viper.New()` instance, decode to a typed validated config, and avoid global state.
+- ✅ **Bubble Tea + Lip Gloss** (`github.com/charmbracelet/bubbletea`, `github.com/charmbracelet/lipgloss`) — preferred pair for custom, responsive, state-machine-driven TUIs.
+- ✅ **tview + tcell** (`github.com/rivo/tview`, `github.com/gdamore/tcell`) — preferred pair for widget-heavy forms, tables, grids, trees, and low-level terminal behavior.
+- Choose one primary TUI pair; do not install or combine both speculatively. Preserve a non-interactive mode and stable machine-readable output. Apply `terminal-development` for the complete decision, architecture, accessibility, and verification contract.
+
+### Go application platform
+
+- ✅ **Wails v2** (`github.com/wailsapp/wails/v2`) — required desktop framework for Go applications; Electron needs explicit exception approval.
+- ✅ **Resty v2** (`github.com/go-resty/resty/v2`) · **GORM** (`gorm.io/gorm`) · **validator v10** (`github.com/go-playground/validator/v10`) · **Casbin v2** (`github.com/casbin/casbin/v2`) · **Zap** (`go.uber.org/zap`) · **Testify** (`github.com/stretchr/testify`) — approved direct dependencies when their capability is actually required.
+- ✅ **GoReleaser** — approved pinned release tool, not a product-code import.
+- Apply `rules/go-application-policy.md`: standard library is allowed; any other direct third-party import requires explicit HITL approval before source, skill, `go.mod`, or `go.sum` changes. GORM drivers and Wails plugins are separate modules and are not automatically approved.
+
 ## ProjectSites.dev stack
 
 ProjectSites.dev's Cloudflare-first, status-tagged recommended stack (backend/CF/admin/React/AI/auth/search/quality/services/infra + Core/Recommended/Conditional/Study/Avoid gates) lives in `[[projectsites-recommended-stack]]` (scoped — loads on projectsites/website-build prompts, not every prompt) and the in-repo `docs/STACK.md`.

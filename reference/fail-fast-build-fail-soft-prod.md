@@ -13,7 +13,7 @@ import { z } from 'zod';
 const EnvSchema = z.object({
   DATABASE_URL: z.string().url(),
   POSTHOG_API_KEY: z.string().min(1),
-  CLERK_SECRET_KEY: z.string().startsWith('sk_'),
+  BETTER_AUTH_SECRET: z.string().startsWith('sk_'),
 });
 
 // .parse() throws ZodError with full details on failure

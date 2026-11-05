@@ -52,8 +52,8 @@ Stale docs are bugs. Code, comments, markdown, and configs stay in sync at all t
 - Commented-out code (git has history)
 
 ```typescript
-// GOOD: Clerk webhook sends display_name, but our DB schema uses name
-user.name = clerkUser.display_name;
+// GOOD: Better Auth webhook sends display_name, but our DB schema uses name
+user.name = sessionUser.display_name;
 
 // GOOD: Rate limit: 10 req/60s per IP (CF KV-based). See: https://...
 ```

@@ -22,7 +22,7 @@ For EVERY payment / donation flow, generate these tests:
 
 After any feature that sends transactional email:
 
-1. **Send test email** — trigger the flow with test data, verify Resend API returns 200
+1. **Send test email** — trigger the flow with test data, verify the Amazon SES API returns 200 + a MessageId (use the SES mailbox simulator `success@simulator.amazonses.com` to avoid real sends)
 2. **Check email content** — verify subject line, body, and any dynamic fields render correctly (no `{undefined}` or `{null}`)
 3. **Verify unsubscribe link** — if present, confirm it works and is CAN-SPAM compliant
 

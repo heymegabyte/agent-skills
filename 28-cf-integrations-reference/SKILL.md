@@ -23,7 +23,7 @@ stage: stable
 - Data: **D1** (Sessions API + read replicas; dynamic sitemap from D1) · **R2** · **KV** (60s host/config cache) · **Hyperdrive** (accelerate Neon/Postgres when a CF primitive can't) · **Drizzle ORM** + migrations at the boundary.
 - Compute + coordination: **Durable Objects** patterns — rate-limiter · WebSocket/realtime + presence · agent-DO; **Queues** for async delivery · **Browser Run/CDP** for headless jobs + production E2E · **@cloudflare/computer** (preview) for lightweight agent filesystem/shell/Git work. Heavy coding/desktop execution defaults to Daytona → Coolify MCP runner → GitHub runner on Ubuntu Desktop VM/Proxmox; do not default to Cloudflare Sandbox.
 - API: **Hono** RPC-mode + **OpenAPI generation** from Hono. Zod at every boundary.
-- Auth + tenancy: **Clerk** (M2M JWT) · Zero Trust Access · enterprise multi-tenancy · multi-tenant subdomain provisioning (`{slug}.projectsites.dev`).
+- Auth + tenancy: **Better Auth** (M2M JWT) · Zero Trust Access · enterprise multi-tenancy · multi-tenant subdomain provisioning (`{slug}.projectsites.dev`).
 - Provisioning: CF-native products are API-provisionable with the global key (Turnstile/DNS/custom-domains) — never hand-create in the dashboard.
 
 ## AI / edge intelligence

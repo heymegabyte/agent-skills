@@ -2,7 +2,7 @@
 name: "Admin Dashboard"
 version: "2.0.0"
 updated: "2026-04-23"
-description: "Lightweight /admin panel for content moderation and data review. Embedded bolt.diy editor (editor.projectsites.dev) iframe for code management. D1-backed with basic auth or Clerk. Manages testimonials, feedback, blog posts, newsletter subscribers, and webhook logs. Not a full CMS — just enough to moderate and review."
+description: "Lightweight /admin panel for content moderation and data review. Embedded bolt.diy editor (editor.projectsites.dev) iframe for code management. D1-backed with basic auth or Better Auth. Manages testimonials, feedback, blog posts, newsletter subscribers, and webhook logs. Not a full CMS — just enough to moderate and review."
 ---
 
 # Admin Dashboard
@@ -31,9 +31,9 @@ This is NOT a full CMS or code editor. Code management happens through the embed
 ```typescript
 // Simple admin auth middleware
 app.use('/admin/*', async (c, next) => {
-  // Option 1: Clerk — check admin role
-  const clerkUser = await verifyClerkToken(c);
-  if (clerkUser?.role !== 'admin') return c.redirect('/');
+  // Option 1: Better Auth — check admin role
+  const sessionUser = await verifyBetterAuthSession(c);
+  if (sessionUser?.role !== 'admin') return c.redirect('/');
 
   // Option 2: Basic auth (simpler projects)
   const auth = c.req.header('Authorization');
@@ -158,7 +158,7 @@ app.post('/admin/chat', async (c) => {
 
 ### Post-Build Notification
 
-After every deploy, send critique email via Resend:
+After every deploy, send critique email via Amazon SES:
 
 - Include link to admin dashboard for follow-up
 - Severity levels — CRITICAL (blocks launch), WARNING (should fix), INFO (nice to have)

@@ -110,6 +110,16 @@ superseded_by: null
   the host-command bridge, so the user stays in the conversation (recommends → tap →
   it happens), never a link that navigates away. Keep a modifier/middle-click escape
   that still opens the full page. Per-feature kill-switch.
+- **Agentic UX (when the surface DRIVES an agent, not just streams an answer).** Balance autonomy with
+  oversight across the agent's lifecycle: (1) **intent preview** before it acts — show the planned steps +
+  offer three choices, not two: **Proceed / Edit / Handle it myself**; (2) an **autonomy dial** earned over
+  time — Preview (confirm each step) → Supervised (auto-run low-stakes, ask on high-stakes) → Autonomous
+  (checkpoints only); (3) explicit **capability boundaries** (what it can do / needs approval for / can't
+  touch); (4) a **progress FEED** narrating activity in plain language — never a spinner/bar for a
+  40-tool-call run; (5) **Review → Adjust → Approve** (no chained modals); (6) 3-part errors (what / why /
+  what-to-try-next). User understands why, can intervene, has a safety net → the agent is a tool, not a
+  black box. Generalizes the estate's `[[computer-use-mastery]]` safety gate into product UX; sits beneath
+  `[[cinematic-hud-standard]]`.
 - **Perf + a11y as craft:** INP ≤200ms (target <150 mobile), tabular-nums to kill
   shift; global `prefers-reduced-motion` (reduce, don't strip); box-shadow focus rings
   that respect radius; `@media (hover:hover)`; 16px+ inputs; icon-only → `aria-label`.

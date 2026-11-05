@@ -81,12 +81,18 @@ Rules (enforce in agent frontmatter + settings):
 - Secrets via `apiKeyHelper` (→ `get-secret DEEPSEEK_API_KEY`), never a hardcoded `ANTHROPIC_AUTH_TOKEN`/`ANTHROPIC_API_KEY` on disk. **Gotcha:** `apiKeyHelper` has LOWER precedence than those two env vars — a hardcoded token silently disables the helper (it "isn't used"), so REMOVE the token for the helper to take effect. `apiKeyHelper` DOES work with a custom `ANTHROPIC_BASE_URL` (its output is sent as `Authorization: Bearer`, which is what DeepSeek's endpoint expects).
 - Current DeepSeek IDs (per DeepSeek's official Claude Code docs, Sep 2026): `deepseek-flash` / `deepseek-flash[1m]`. `deepseek-v4-flash` is undocumented ON THIS RAIL — prefer `deepseek-flash`. (The OpenCode/Zen rail below uses a DIFFERENT namespace where `deepseek-v4-*` IS canonical — never copy IDs across rails.)
 
-## OpenCode harness — LiteLLM gateway by default; direct providers are break-glass
+## OpenCode harness — LiteLLM DeepSeek rotation by default; direct DeepSeek is the fallback; Zen is an optional separate rail
 
-Internal throughput defaults to configured LiteLLM routes for local Ollama or DeepSeek through
-`https://llm.megabyte.space/v1`. Use `bin/opencode-deepseek.sh` for CLI work and
-`bin/opencode-deepseek-doctor.sh` for diagnosis. Direct `deepseek/*` and OpenCode Zen routes are
-fallback rails only; do not mix their model-ID namespaces with `litellm/*`.
+Internal throughput defaults to the **LiteLLM rotation gateway** (`[[litellm-gateway]]`): the global
+`~/.config/opencode/opencode.jsonc` sets `model: litellm/deepseek-v4-pro` (reasoning) + `small_model:
+litellm/deepseek-flash` (fast/vision) against `https://llm.megabyte.space/v1` with `apiKey:
+{env:LITELLM_API_KEY}`. The gateway rotates the 4-key DeepSeek pool (`simple-shuffle`) + cross-provider
+fallback + Langfuse tracing, so a swarm of parallel OpenCode workers survives the per-key 429s that a
+single raw key hits — which is exactly why it is the default. Launchers export `LITELLM_API_KEY` from
+`get-secret`; a GUI launch without it, or a gateway outage, falls back to the **direct** `deepseek/*`
+provider (`api.deepseek.com`, native OpenCode credential). Use `bin/opencode-deepseek.sh` for CLI work
+and `bin/opencode-deepseek-doctor.sh` for diagnosis. Do not mix `deepseek/*` / `litellm/*` IDs with the
+`opencode/*` Zen namespace.
 
 OpenCode is the default execution child of **Gemini, Claude, OpenAI/Codex, and every other premium model service** whenever it can complete a unit effectively. This includes small bounded units even when delegation is not faster. Assess swarm decomposition for every handoff, fan out safe independent units, and escalate only an ambiguous, sensitive, unsupported, or repeatedly failed slice back to the premium parent with evidence.
 
@@ -99,7 +105,7 @@ OpenCode's **Zen** gateway is an optional unified pay-per-use billing rail (one 
   - **Fast (haiku-tier)** → `opencode/deepseek-v4-flash` — $0.14/$0.28 (a `deepseek-v4-flash-free` variant exists; `-vision-exp` adds image input at the same price). Changelogs, renames, formatting, transcription.
 - **Deprecations**: `minimax-m2.5` deprecated 2026-08-05 and `minimax-m2.1` 2026-03-15 — route MiniMax work to `m2.7`/`m3` only.
 - **Rail discipline**: three distinct ID namespaces now exist — Anthropic (`opus`/`sonnet`/`haiku` aliases), DeepSeek-direct for Claude Code (`deepseek-flash`), and OpenCode/Zen (`opencode/deepseek-v4-*`, `opencode/minimax-*`). Config carries TIER ALIASES; only the per-harness adapter layer resolves to a rail's IDs (per `[[agent-neutrality]]`).
-- **Vision routing (direct rail)**: `deepseek-v4-pro` is **text-only** (`modalities.input: ["text"]`), `deepseek-flash` is **multimodal** (`["text","image"]`). Any agent/skill that ingests screenshots or images (visual-qa, computer-use-operator, browser-operator, media-orchestrator, video-* QA, browser-control-mastery) MUST run on `deepseek/deepseek-flash` — never pro. The generated OpenCode agents in `~/.config/opencode/agents/` already encode this (vision agents pinned to flash by `bin/gen-opencode-harness.mjs`).
+- **Vision routing**: `deepseek-v4-pro` is **text-only** (`modalities.input: ["text"]`), `deepseek-flash` is **multimodal** (`["text","image"]`). Any agent/skill that ingests screenshots or images (visual-qa, computer-use-operator, browser-operator, media-orchestrator, video-* QA, browser-control-mastery) MUST run on the **flash** tier (`litellm/deepseek-flash` default rail, or `deepseek/deepseek-flash` direct fallback) — never pro. The generated OpenCode agents in `~/.config/opencode/agents/` encode this (vision agents pinned to flash by `bin/gen-opencode-harness.mjs`).
 
 ## Retired models (requests error)
 

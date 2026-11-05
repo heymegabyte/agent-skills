@@ -45,7 +45,7 @@ posthog.capture('onboarding_complete', { time_to_complete_ms: elapsed });
 
 ## Welcome Email (`09/email-templates`)
 
-Sent immediately after signup via Resend:
+Sent immediately after signup via Amazon SES:
 
 ```
 Subject: "Welcome to [Product] 🎉"

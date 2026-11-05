@@ -96,7 +96,7 @@ One-line prompt → satisfy all 100 build-breaking rules across 10 categories be
 54. Workers Tracing `[observability] enabled = true` + OTLP export to Axiom
 55. AI Gateway binding for every LLM call
 56. Turnstile invisible (`data-appearance="interaction-only"`) on every form — NEVER visible
-57. Stripe checkout / Amazon SES transactional / Clerk auth (M2M JWT) stubs where appropriate
+57. Stripe checkout / Amazon SES transactional / Better Auth auth (M2M JWT) stubs where appropriate
 58. Calendly / Cal.com inline booking when applicable
 59. Google Maps embed via Maps Embed API, lazy-loaded
 60. Live chat (Crisp / Plain) only when support is stated goal. **Cmd+K opens AI chat or command palette AND focuses text input same frame** — `autofocus` + `requestAnimationFrame(() => inputRef.current?.focus({preventScroll:true}))` after open-state flip, re-press = re-focus + `select()`, Esc returns focus to trigger. Playwright build gate: `await page.keyboard.press('Meta+K'); await expect(input).toBeFocused();`

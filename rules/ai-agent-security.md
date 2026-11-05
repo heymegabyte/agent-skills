@@ -41,6 +41,20 @@ Every surface that consumes untrusted content through a model — AI chat panels
 - **Sandbox generated/executed code** per `sandbox-execution` — never run model-authored code in the main runtime
 - Multi-model verification chain for high-stakes actions (one model proposes, another adversarially reviews)
 
+## Untrusted regex (ReDoS — a caller/model-supplied pattern IS executable code)
+
+- Any `matches` / `pattern` / `filter` / `grep` field that becomes `new RegExp(x)` is a DoS surface — a model or caller handing you a regex is handing you code, not data. **An input-length OR pattern-length CAP does NOT make it safe:** catastrophic backtracking is EXPONENTIAL in input length, so a vulnerable pattern (`(a+)+`, `(a*)*`, `(a|a)*`) hangs the isolate even on a tiny input.
+- **Sound guards only:** (a) a **quantified-group rejector** on the pattern before compiling, or (b) a **linear-time engine** (RE2/wasm). A hand-rolled **`/\)[*+{]/.test(pattern)`** (reject any quantifier applied to a group) is **zero-dependency and STRICTER than `safe-regex`'s star-height check** — it also catches ambiguous-alternation backtracking (`(a|a)*`) that star-height misses, with no supply-chain surface. Pair it with a bounded input slice + the runtime CPU-limit backstop, and gate the endpoint behind auth. Ref: browse.tools `expect.matches` assertion, 2026-10-30.
+- Compile in `try/catch` (invalid pattern → reject, never throw); run only against a bounded input slice; never echo the raw pattern or match internals in an error.
+
+## Browser / computer-use agents (the screen + DOM are untrusted input)
+
+- The rendered **page / DOM / screenshot is untrusted input** exactly like a fetched document — never let on-screen text become instructions. **Adversarial images** can hijack the visual-grounding pipeline of screenshot/Set-of-Mark agents, not just text.
+- Wrap untrusted page content in **nonce-suffixed delimiters** (SANDWICH); **taint-the-turn** — once attacker-controllable content is ingested, require approval for any exfil-capable action that turn (data-provenance à la CaMeL, ~67% blocked in AgentDojo).
+- **Egress allowlist** for autonomous browser/CU runs: deny network by default, allow only the task's domains; **block private ranges + the cloud-metadata endpoint** (`169.254.169.254`) — a hijacked agent's favorite credential-theft target.
+- **HITL only on irreversible/outbound/credentialed** browser actions (submit/pay/send/delete/auth); read-only navigation runs free (avoid approval fatigue). **Isolate every session** (dedicated profile, sandbox) so a hijacked run is contained.
+- Full playbooks: `[[browser-control-mastery]]` (browser) · `[[computer-use-mastery]]` (desktop/GUI).
+
 ## MCP security
 
 - **OAuth 2.1 mandatory** for remote MCP servers (spec, June 18 2025) + **RFC 8707 Resource Indicators** — bind each token to ONE audience so a server can't replay it elsewhere (confused-deputy fix)

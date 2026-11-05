@@ -26,6 +26,17 @@ Cross-links: `[[gorgeous-by-default]]` · `[[extra-mile]]` · `[[ttfr-north-star
 - **Never present a doomed or dead control.** A button that will fail (precondition unmet, seat limit, missing config) is disabled WITH the reason + the fix, or hidden. (Per `action-button-must-gate-on-server-precondition`.)
 - **Speak the user's words.** Business-owner language, never our internal jargon (no "org", "entitlement", "workflow", "manifest" in user-facing copy).
 
+## Activation — engineer the first session BACKWARD from the aha moment
+
+Onboarding is not a feature tour; it is the shortest path to the user's first real RESULT. Most conversion problems are value-realization problems, not pricing problems (+25% activation ≈ +34% MRR; aha in <5 min ≈ 40% higher 30-day retention). (Added 2026-10-25, estate-upgrade audit — `[[estate-upgrade-audit]]`.)
+
+- **Define the activation event CONCRETELY, per persona, then build backward to it.** "First invoice sent / first report generated / first automation that runs" — not "completed the tour." Engineer the whole first session to reach it within 24h (ideally minutes). Instrument it: **activation rate** (% of signups who hit the aha in session 1–2) is THE onboarding metric; **TTV** = median signup→value-event; review drop-off by persona weekly.
+- **Goal-based branching, not one path for all.** A 2–3 question signup survey (role / use-case) → branch the flow by intent (role/use-case flows lift activation 30–50%); separate admin vs end-user paths ("power users want access, new users want guidance").
+- **Kill the blank start** (extends "empty states are launchpads"): pre-fill a template / sample workspace (Figma/Canva get you creating in ~10s), or land in the real product with ONE highlighted action ("Import your first contact") — never a blank dashboard that reads as broken.
+- **A 3–5 item value-checklist tied to the activation event:** one action per item, ordered easiest-first for momentum, the FINAL item IS the activation event, and every step ends in REAL value (not busywork). Checklist-completers convert 2–3×.
+- **Let them in first, verify later** — magic-link / social sign-in, skip non-essential fields, seed smart defaults from the signup survey (a ten-field form → two). Replace static product tours with behavior-triggered contextual tooltips (2026 shift).
+- **AI pilot** (per `ai-permanence` / `[[ai-abundance-maximalism]]`): dynamic empty states + behavioral checklist reordering (e.g. suggest a starter workspace from company + industry) — the AI removes the first-run blank-page anxiety.
+
 ## For the generated sites (the product output)
 
 - The delivered site must be embarrassingly easy for the OWNER to run AND for their VISITOR to use: obvious CTAs, click-to-call, one-tap directions, a contact form that just works, no config.
@@ -43,4 +54,5 @@ This mandate is mirrored so it can't be missed: this rule (universal), the proje
 - Copy that assumes the user knows our data model.
 - More than one competing primary CTA on a screen.
 - A "success" that dead-ends instead of offering the obvious next action.
+- A feature TOUR instead of a path to the first real result; a blank dashboard on first login (no template / sample data / single highlighted action).
 - Any surface where the honest answer to "would an owner need help here?" is yes.

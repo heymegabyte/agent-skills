@@ -38,7 +38,7 @@ One paragraph. What was decided, precisely.
  *
  * @param env - Worker bindings (requires KV + D1)
  * @param key - Feature flag key, max 32 chars, lowercase snake_case
- * @param userId - Authenticated user ID (Clerk sub), or null for anonymous
+ * @param userId - Authenticated user ID (Better Auth sub), or null for anonymous
  * @param anonId - PostHog distinct_id for anonymous rollout
  * @returns true if the flag is enabled for this user/session
  * @throws {FlagNotFoundError} if the key does not exist in the database
@@ -74,7 +74,7 @@ Two-sentence system description.
 - R2 buckets: `<BUCKET>` — what it stores, lifecycle rules
 
 ## Auth
-Clerk for all user-facing auth. M2M via JWT (zero-RTT verification at edge).
+Better Auth for all user-facing auth. M2M via JWT (zero-RTT verification at edge).
 
 ## Payment rails
 Square for accept-money, Stripe Connect Express for payouts. See `docs/decisions/0003-payments-routing.md`.

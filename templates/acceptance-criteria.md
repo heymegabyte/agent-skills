@@ -13,7 +13,7 @@
 - [ ] **Primary user flow** — [Describe the main thing users do] completable end-to-end
 - [ ] **Authentication** — Sign up, sign in, sign out, password reset all work (if applicable)
 - [ ] **Payment flow** — Checkout to confirmation works with Stripe test cards (if applicable)
-- [ ] **Contact form** — Submits successfully, sends email via Resend, shows confirmation
+- [ ] **Contact form** — Submits successfully, sends email via Amazon SES, shows confirmation
 - [ ] **API health** — GET /health returns 200 with `{ status: "ok", version, timestamp }`
 - [ ] **Data persistence** — Created data survives page refresh and is retrievable
 
@@ -84,7 +84,7 @@
 - [ ] **Analytics** — GA4 firing page_view events on navigation
 - [ ] **PostHog** — Events tracked, feature flags working
 - [ ] **Error tracking** — Sentry capturing and reporting errors
-- [ ] **Email** — Transactional emails sending via Resend
+- [ ] **Email** — Transactional emails sending via Amazon SES
 - [ ] **Payments** — Stripe webhooks receiving and processing (if applicable)
 
 ## Polish (P2 — Nice to Have)

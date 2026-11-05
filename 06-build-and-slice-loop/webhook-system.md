@@ -2,7 +2,7 @@
 name: "Webhook System"
 version: "2.0.0"
 updated: "2026-04-23"
-description: "Consolidated webhook handling for Stripe, Clerk, GitHub, and custom events. Signature verification, event routing, idempotency via D1 dedup table (batch API, no BEGIN), retry-safe handlers, Drizzle v1 + RQBv2, and outbound webhook dispatch with HMAC signing, retry with exponential backoff, delivery logging, and customer-facing event catalog."
+description: "Consolidated webhook handling for Stripe, Better Auth, GitHub, and custom events. Signature verification, event routing, idempotency via D1 dedup table (batch API, no BEGIN), retry-safe handlers, Drizzle v1 + RQBv2, and outbound webhook dispatch with HMAC signing, retry with exponential backoff, delivery logging, and customer-facing event catalog."
 ---
 
 # Webhook System
@@ -55,16 +55,16 @@ webhooks.post('/stripe', async (c) => {
   return c.json({ received: true });
 });
 
-// Clerk webhooks
-webhooks.post('/clerk', async (c) => {
+// Better Auth webhooks
+webhooks.post('/better-auth', async (c) => {
   const body = await c.req.text();
-  // Clerk uses Svix for webhook signing
+  // Better Auth uses Svix for webhook signing
   // Verify with svix library or manually check headers
   const svixId = c.req.header('svix-id');
   const svixTimestamp = c.req.header('svix-timestamp');
   const svixSignature = c.req.header('svix-signature');
 
-  // Verify signature (use @clerk/backend or svix package)
+  // Verify signature (use better-auth or svix package)
   const event = JSON.parse(body);
 
   switch (event.type) {
@@ -90,7 +90,7 @@ export { webhooks };
 ```sql
 CREATE TABLE webhook_events (
   event_id TEXT PRIMARY KEY,
-  source TEXT NOT NULL,       -- 'stripe', 'clerk', 'github'
+  source TEXT NOT NULL,       -- 'stripe', 'better-auth', 'github'
   type TEXT NOT NULL,         -- 'checkout.session.completed'
   processed_at TEXT NOT NULL,
   payload TEXT                -- optional: store full payload for debugging
@@ -128,14 +128,14 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session, env: Env
 }
 ```
 
-### Clerk: User Created
+### Better Auth: User Created
 
 ```typescript
-async function handleUserCreated(user: ClerkUser, env: Env) {
+async function handleUserCreated(user: BetterAuthUser, env: Env) {
   const db = drizzle(env.DB);
   await db.insert(users).values({
     id: ulid(),
-    clerkId: user.id,
+    userId: user.id,
     email: user.email_addresses[0].email_address,
     name: `${user.first_name} ${user.last_name}`.trim(),
   });
@@ -158,11 +158,11 @@ stripe listen --forward-to https://domain.com/webhooks/stripe
 # Events: checkout.session.completed, customer.subscription.deleted, invoice.payment_failed
 ```
 
-### Clerk
+### Better Auth
 
 ```
-# Clerk Dashboard → Webhooks → Add endpoint
-# URL: https://domain.com/webhooks/clerk
+# Better Auth Dashboard → Webhooks → Add endpoint
+# URL: https://domain.com/webhooks/better-auth
 # Events: user.created, user.deleted, session.created
 ```
 

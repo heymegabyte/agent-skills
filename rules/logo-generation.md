@@ -30,6 +30,14 @@ surface without a real mark — if none exists, run the pipeline below and gener
 Workers AI image generation is always available** (no third-party key), so "no key / no credit" is
 NEVER an excuse to defer the logo.
 
+## House logo style — the Megabyte Labs mark (EVERY website/app, no exceptions)
+
+- **EVERY website / app / product this estate ships gets a real generated logo if it doesn't already have one — no exceptions (Brian 2026-10-30).** A build without a logo in the header is incomplete. (Concrete pending example: **browser.tools** needs a header mark in this exact style — currently missing.)
+- **The house style = the Megabyte Labs mark: a SQUARE logo that boldly presents the entity's NAME in a strong text font** — clean, high-contrast, a bold legible wordmark laid out in a square. Square-first because the favicon IS the mark: it must read at a 16px browser tab AND as a hero, and convert directly to favicon (16/32/48) + apple-touch 180 + maskable PWA 192/512.
+- **Ideogram builds it** — primary when `IDEOGRAM_API_KEY` is funded (its lettering is crisp enough to bake the name); CF Workers AI flux is the always-available fallback. ALWAYS run Ideogram to build the mark when one is missing.
+- **Condition on the BRAND context — its existing colors + fonts.** Pull the brand's palette (hex) + font family from its design tokens / existing site BEFORE generating; feed them to Ideogram — put the palette in the `color_palette` members param when supported AND always restate the exact hex codes + the font family name in the prompt text (the reliable path; Ideogram has no dedicated font param). Never generate off-brand.
+- **Generate 4 → image-analysis selects → generate the final.** Produce **4** distinct candidates (4 separate images, or a 4-on-1 contact sheet = one AI-vision read), score each against the rubric below, pick the winner via image analysis, then produce the final polished mark from the winning direction. Never ship the first draft; never pick by hand without the vision pass.
+
 ## The pipeline (every brand, in order)
 
 1. **RESEARCH a pre-existing same-brand logo FIRST.** Before generating anything, look for a real

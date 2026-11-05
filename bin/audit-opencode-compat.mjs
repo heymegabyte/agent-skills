@@ -114,7 +114,7 @@ if (existsSync(AD)) {
     const model = (fm.match(/^model:\s*([^\n]+)/m) || [])[1]?.trim() || ''
     const mode = (fm.match(/^mode:\s*([^\n]+)/m) || [])[1]?.trim() || ''
     if (!/^description:/.test(fm)) fail(`agent ${f}: missing description`)
-    if (!/^deepseek\//.test(model)) fail(`agent ${f}: bad model "${model}"`)
+    if (!/^(litellm|deepseek)\//.test(model)) fail(`agent ${f}: bad model "${model}"`)
     if (CLAUDE_MODEL.test(model)) fail(`agent ${f}: Claude id leak "${model}"`)
     if (mode && !/^(subagent|primary|all)$/.test(mode)) fail(`agent ${f}: bad mode "${mode}"`)
   }

@@ -37,7 +37,7 @@ Research data informs scaffold choices (stack, features, pages).
 ## Phase 3: Build (parallel agents in worktrees, ~15min)
 
 - **Agent I (backend)** — Auth webhooks, Stripe checkout/portal/webhooks, domain-specific API routes, Inngest workflows. Sentry + PostHog instrumentation on every route.
-- **Agent J (frontend)** — Replace landing page placeholders with real content. Dashboard with real data. Auth pages via Clerk components. Uses pre-profiled images in suggested placements.
+- **Agent J (frontend)** — Replace landing page placeholders with real content. Dashboard with real data. Auth pages via Better Auth components. Uses pre-profiled images in suggested placements.
 - **Agent K (tests)** — Write failing Playwright tests for every SPEC.md AC. Homepage → navigate → interact → verify. Test account flows.
 
 ## Phase 4: Verify (parallel, loop max 3)

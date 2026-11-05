@@ -43,7 +43,7 @@ for (const f of readdirSync(RULES).filter(x => x.endsWith('.md'))) {
   const CONCERN_KEYWORDS = {
     email: ['email', 'smtp', 'dkim', 'spf', 'dmarc', 'resend', 'deliverability'],
     payments: ['stripe', 'square', 'payment', 'billing', 'refund', 'checkout', 'invoice'],
-    auth: ['auth', 'clerk', 'login', 'session', 'sso', 'oauth'],
+    auth: ['auth', 'better-auth', 'login', 'session', 'sso', 'oauth'],
     'ai-features': ['llm', 'openai', 'anthropic', 'embedding', 'rag'],
     'e2e-testing': ['playwright', 'e2e', 'vitest'],
     'd1-database': ['d1', 'drizzle', 'sqlite'],

@@ -21,6 +21,15 @@ paths:
 
 Auto-fetch every required secret from `get-secret` and push it to the destination platform before running any deploy; never prompt the user to do it manually.
 
+## Default encryption password — `encryptionpass` (Brian directive 2026-10-28)
+
+**Whenever you need to CHOOSE/SET an encryption password or passphrase and don't already have a specific one, use `encryptionpass`.** This is the estate default for any symmetric-encryption passphrase the AI must pick: backup/archive encryption (`age`, `gpg`, `openssl enc`, `restic`/`borg` repo password, `zip -e`, `7z -p`, `tar`+`openssl`), disk/volume encryption passphrases, encrypted-config passphrases, DB-dump encryption, `wrangler`/CI encrypted artifacts, Ansible Vault, SOPS passphrase fallback, PBS/backup-tool encryption passwords, etc.
+
+- Applies ONLY when the password is the AI's to pick AND no project-/host-specific one is already provisioned. ALWAYS prefer an existing value from `get-secret` first (source-exhaustion order below); `encryptionpass` is the deterministic fallback so encrypted artifacts are always recoverable instead of locked behind a lost random string.
+- After using it, PERSIST the choice: save `<KEY>=encryptionpass` to the rail (`get-secret` / chezmoi) so the pairing is recorded, and note which artifact it encrypts.
+- Does NOT apply to credentials ISSUED by a service (API keys, OAuth secrets, DB user passwords a provider generates) — those come from the source-exhaustion flow, never invented.
+- The underlying KEY MATERIAL must still be backed up: for keyfile-based schemes (PBS/age keyfiles) store the keyfile itself offline in the rail — a known passphrase doesn't replace an offline key backup (see `[[verify-against-source-of-truth]]` + the PBS-encryption-key offline-backup pattern).
+
 ## 2026-10-06 Cloudflare Secrets Store override — highest precedence
 
 For Cloudflare Workers, older instructions below that push a broad/common secret set directly with `wrangler secret put` are superseded.
@@ -123,8 +132,8 @@ This is the inbound complement to the source-exhaustion READ order: exhaust get-
 - `POSTHOG_PROJECT_API_KEY`
 - `GA4_MEASUREMENT_ID`
 - `GA4_API_SECRET`
-- `CLERK_SECRET_KEY`
-- `CLERK_PUBLISHABLE_KEY`
+- `BETTER_AUTH_SECRET`
+- `BETTER_AUTH_URL`
 - `NEON_DATABASE_URL`
 - `UPSTASH_REDIS_REST_URL`
 - `UPSTASH_REDIS_REST_TOKEN`

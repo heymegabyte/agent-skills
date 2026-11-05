@@ -128,7 +128,7 @@ DRAFT_PATH=""
 if [ "$AUTO_DRAFT" = "1" ]; then
   emdashSection "Auto-drafting semgrep rule via OpenCode + DeepSeek"
   DEEPSEEK_RAIL="$SKILLS_ROOT/bin/opencode-deepseek.sh"
-  MODEL="deepseek/deepseek-chat"
+  MODEL="deepseek/deepseek-flash"  # fast/throughput tier (DeepSeek-V4.1-Flash)
   # Graceful degradation: if the rail launcher is missing, or opencode itself is
   # not installed (the launcher exits 127), skip cleanly — never hard-fail the run.
   if [ ! -x "$DEEPSEEK_RAIL" ]; then

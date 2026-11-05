@@ -136,7 +136,7 @@ app.doc('/api/v1/doc', {
   security: [{ bearerAuth: [] }],
   components: {
     securitySchemes: {
-      bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT', description: 'Clerk session token' },
+      bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT', description: 'Better Auth session token' },
     },
   },
 });

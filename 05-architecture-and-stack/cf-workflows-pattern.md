@@ -48,7 +48,8 @@ export class OrderWorkflow extends WorkflowEntrypoint<Env, { orderId: string }> 
     });
 
     await step.do('send confirmation', async () => {
-      await this.env.RESEND.emails.send({
+      // Amazon SES (sole email rail) — SES v2 via aws4fetch; see deskl.ink workers/api/src/email/ses.ts
+      await sendEmail(this.env, {
         from: 'orders@example.com',
         to: order.email,
         subject: 'Order confirmed',

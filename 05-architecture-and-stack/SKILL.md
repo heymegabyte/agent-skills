@@ -63,9 +63,9 @@ Default stack: `_kernel/standards.md#stack`. Override conditions below.
 
 Adapters live in `libs/core/ports/`. Product code imports port, never vendor SDK directly. See `rules/cloudflare-hostable-supervisor.md`.
 
-## Auth (default Clerk M2M JWT)
+## Auth (default Better Auth M2M JWT)
 
-- **Clerk** — M2M JWT (free, networkless verification), passkeys, OAuth, magic links; **Better Auth** when Clerk pricing doesn't fit (rare) (free tier: 50K MRU since 2026-02)
+- **Better Auth** — M2M JWT (free, networkless verification), passkeys, OAuth, magic links; **Better Auth** when Better Auth pricing doesn't fit (rare) (free tier: 50K MRU since 2026-02)
 - Hash API keys at rest. Audit log every sensitive action.
 - Tenant isolation: every table carries `org_id`, every query filters by it (404 on mismatch, never 403)
 
@@ -110,7 +110,7 @@ database_name = "myapp"
   "compatibility_date": "2026-04-15",
   "compatibility_flags": ["nodejs_compat"],
   "observability": { "enabled": true },
-  "secrets_required": ["CLERK_SECRET_KEY", "RESEND_API_KEY"],
+  "secrets_required": ["BETTER_AUTH_SECRET", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"],
   "d1_databases": [{ "binding": "DB", "database_name": "myapp" }],
   "kv_namespaces": [{ "binding": "CACHE", "id": "..." }],
   "r2_buckets": [{ "binding": "BUCKET", "bucket_name": "myapp-assets" }],
@@ -126,4 +126,6 @@ database_name = "myapp"
 4. Failure mode → Graceful degradation defined?
 5. Migration path → If we have to leave CF, what does it cost?
 
-## See submodules: cloudflare-primitives.md, data-patterns.md, reliability.md, auth-patterns.md.
+## Further guidance
+
+Load only the task-relevant files declared in this skill's `submodules` frontmatter. That list is the canonical dependency inventory and is validated against the filesystem.

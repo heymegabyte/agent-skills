@@ -23,3 +23,4 @@ members:
   - rules/email-deliverability-implementation
   - rules/cloudflare-native-provisioning
   - rules/terminal-styling
+  - rules/litellm-gateway

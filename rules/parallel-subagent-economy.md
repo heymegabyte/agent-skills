@@ -14,9 +14,9 @@ paths:
 
 # Parallel Subagent Economy
 
-**Fan out whenever doing so saves ≥5 min wall-clock over serial**, provided units genuinely independent. Sonnet specialists often cheaper than one Opus thread.
+**Delegate every bounded unit OpenCode + DeepSeek is expected to complete correctly.** When two or more such units are genuinely independent, fan them out without requiring a minimum wall-clock saving. Reducing Codex, Claude, or Gemini quota, context, cost, or attention is a first-class benefit; use premium-model subagents only when the slice itself needs frontier judgment.
 
-Hard preconditions: units independent (distinct files, no shared state, no data dependency) AND real minutes to save — never fan out for appearance on serial-by-nature or trivially-fast work.
+Hard preconditions for a swarm: units are independent (distinct ownership, no shared mutable state, no data dependency) and OpenCode is expected to preserve correctness. Never fan out serial-by-nature work or invent duplicate work merely to create a swarm. A single small unit still goes to one OpenCode worker when it is throughput-safe.
 
 ## Layering (this rule sits UNDER existing mesh)
 
@@ -28,6 +28,7 @@ Hard preconditions: units independent (distinct files, no shared state, no data 
 ## Mechanics (v2.1.x verified June 2026)
 
 - **Parallel = orchestrator emitting MULTIPLE Task/Agent calls in ONE turn.** No on/off toggle; concurrency bounded by Anthropic rate limits.
+- **Cross-harness swarm = a Codex, Claude, or Gemini parent dispatching multiple independent OpenCode jobs in one wave.** Use `bin/opencode-deepseek.sh`, respect `config/agent-fleet-routing.json`, and count every live job against the global worker pool.
 - Subagents start **fresh** (system preamble + your brief). `CLAUDE_CODE_FORK_SUBAGENT=1` makes them inherit parent — leave **UNSET**.
 - `ultracode` is **session-only** (`/effort ultracode`) — NOT a settings.json value.
 - Real env levers: `CLAUDE_CODE_SUBAGENT_MODEL` (SET), `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` (UNSET), `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1` (UNSET).
@@ -51,22 +52,23 @@ Per-agent multipliers (DOMINANT first):
 
 **Dollar reality:** 4-unit job — serial-Opus ~$5.50 · parallel-4×Opus ~$8-9 · parallel-4×Sonnet ~$2.50. Parallel-on-Sonnet often cheaper than single Opus thread.
 
-## ≥5-minute wall-clock rule (primary trigger)
+## Benefit rule (primary trigger)
 
 ```
-Serial time   = sum of unit durations
-Parallel time ≈ longest unit + ~2 min overhead
-Fan out when  serial − parallel ≥ 5 min  AND  units independent
+Delegate unit when = OpenCode is expected to satisfy its contract
+Swarm when         = 2+ delegated units are independent
+Benefit            = speed + premium quota/context/cost saved + coverage gained
+Do not swarm when  = contention, coordination, or duplicated work makes the total outcome worse
 ```
 
-Examples: 2×8 min → saves ~6 → **fan out**. 3×4 min → saves ~6 → **fan out**. 2×3 min → saves ~1 → **serial**.
+Examples: two independent three-minute edits → **two-worker OpenCode swarm** if they own disjoint files; one three-minute edit → **one OpenCode worker**; schema then handler in the same module → **one serial OpenCode worker**; security architecture → **premium parent**.
 
 ## Two common shapes that clear the test
 
-- **Test-writing batch** — ≥2 independent spec targets ≥5-min. Zero shared state. **One agent per 2-3 spec dirs (batch), never one-agent-per-spec.** TDD-RED-first inside each.
-- **Feature/test-impl batch** — ≥2 independent feature modules ≥5-min; **one agent owns one `libs/features/<slug>/` end-to-end** (schema + handler + UI + unit + E2E + docs). TDD-RED spec and impl stay together in same agent.
+- **Test-writing batch** — ≥2 independent spec targets. Zero shared state. **One agent per 2-3 spec dirs (batch), never one-agent-per-spec.** TDD-RED-first inside each.
+- **Feature/test-impl batch** — ≥2 independent feature modules; **one agent owns one `libs/features/<slug>/` end-to-end** (schema + handler + UI + unit + E2E + docs). TDD-RED spec and impl stay together in same agent.
 - **Read-only sweeps** (grep / audit / drift-scan) — fan out freely; zero write-conflict, minimal cost; doesn't count against width ceiling.
-- **Doesn't clear ≥5-min** → foreground / single thread.
+- **One bounded unit** → one OpenCode worker; do not keep it on the premium parent solely because it is quick.
 
 ## Fan-out width (token-bounded)
 
@@ -75,7 +77,11 @@ Examples: 2×8 min → saves ~6 → **fan out**. 3×4 min → saves ~6 → **fan
 - **Batch, don't trickle, don't blow ceiling.** >6 units → sequential waves of ≤6 (12 units → two waves of 6 or 6 agents × 2 units each).
 - **Width = distinct file ownership + no shared state.** 9 specs across 3 files = 3 agents.
 
+These bounds apply to OpenCode swarms too. Start at the smallest width that captures most of the speedup; increase only when measured queue time and independent work justify it.
+
 ## Sonnet-specialist cost default (biggest token lever)
+
+For new cross-harness delegation, **OpenCode + DeepSeek is the throughput default before Sonnet**. The Sonnet rules below govern native Claude subagents when OpenCode is unhealthy, incompatible with the task, or demonstrably lower quality for that bounded slice.
 
 - **`CLAUDE_CODE_SUBAGENT_MODEL=claude-sonnet-4-6` SET** (in `~/.claude/settings.json` § env). Every spawned specialist runs Sonnet at `high` effort. ~0% quality loss on impl/test work.
 - **Orchestrator (main thread) stays Opus `xhigh`** — decomposes, slices, folds, verifies. **Never implements.**
@@ -96,7 +102,7 @@ Examples: 2×8 min → saves ~6 → **fan out**. 3×4 min → saves ~6 → **fan
 
 ## When NOT to parallelize (serial correct)
 
-- Saves <5 min wall-clock (single unit or batch individually quick)
+- Only one unit exists (delegate it to one OpenCode worker rather than creating a swarm)
 - Dependent chain — `schema → handler → UI` for ONE module stays in ONE agent; parallelize ACROSS features
 - Shared mutable infra — one `index.ts` barrel, one migration, one design-token file → serialize
 - Exploratory / ambiguous scope — decompose first, then batch
@@ -104,7 +110,7 @@ Examples: 2×8 min → saves ~6 → **fan out**. 3×4 min → saves ~6 → **fan
 
 ## ultracode + env levers
 
-- **`ultracode` — USE for heavy test-writing or feature-impl sessions** (`/effort ultracode`). Spins Dynamic Workflows = deterministic parallel fan-out with built-in per-branch validation. This rule's ≥5-min trigger + 6-wide ceiling + Sonnet default + batch-beyond-6 guardrails **still bind** ultracode workflows.
+- **`ultracode` — USE for heavy test-writing or feature-impl sessions** (`/effort ultracode`). Spins Dynamic Workflows = deterministic parallel fan-out with built-in per-branch validation. This rule's independence/correctness trigger + 6-wide ceiling + throughput-tier default + batch-beyond-6 guardrails **still bind** ultracode workflows.
 - **`CLAUDE_CODE_SUBAGENT_MODEL=claude-sonnet-4-6` — SET (standing default).** Highest-ROI single change.
 - **`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` — LEAVE UNSET.** Adds inter-agent chatter; independent batches don't need coordination.
 - **`CLAUDE_CODE_DISABLE_BACKGROUND_TASKS` + `CLAUDE_CODE_DISABLE_WORKFLOWS` — LEAVE UNSET.**
@@ -113,7 +119,7 @@ Examples: 2×8 min → saves ~6 → **fan out**. 3×4 min → saves ~6 → **fan
 
 *Vendored discipline from [obra/Superpowers](https://github.com/obra/Superpowers) (MIT, Jesse Vincent). Full skill: `20-superpowers` → dispatching-parallel-agents/SKILL.md.*
 
-- **Explicit trigger:** 2+ tasks that can be worked WITHOUT shared state or sequential dependency → dispatch in parallel; this complements the ≥5-min wall-clock test above.
+- **Explicit trigger:** 2+ OpenCode-safe tasks that can be worked WITHOUT shared state or sequential dependency → dispatch in parallel; no time-saved threshold applies.
 - **Independence test BEFORE parallelizing:** prove no shared mutable state AND no ordering dependency. Either fails → single agent or serial waves, not parallel.
 - **Group failures by problem domain first** — one agent per independent domain (distinct test file / subsystem / bug). Related failures (fixing one may fix others) → investigate together, don't fan out.
 - **Constrain scope in the brief** — name the exact files and add "do NOT touch other code / production code"; an unconstrained agent refactors everything.

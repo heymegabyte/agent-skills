@@ -13,7 +13,7 @@ separate Write tool call, ordered by importance, with per-file structure guidanc
 ## Usage
 
 ```
-/prepare-multi-file-brief src/worker/routes/auth.ts,src/worker/schemas/auth.ts,e2e/auth.spec.ts "Clerk JWT auth guard for Hono with D1 user lookup and Playwright E2E"
+/prepare-multi-file-brief src/worker/routes/auth.ts,src/worker/schemas/auth.ts,e2e/auth.spec.ts "Better Auth JWT auth guard for Hono with D1 user lookup and Playwright E2E"
 ```
 
 ## Logic

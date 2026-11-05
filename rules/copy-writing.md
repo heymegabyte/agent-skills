@@ -34,6 +34,10 @@ Write sharp, punchy, Flesch ≥60 copy with action-verb CTAs, servant framing, a
 - Numbers: specific.
 - **Render** headlines with `text-wrap: balance` and body with `text-wrap: pretty` (`[[web-platform-capabilities]]` #10) — kills orphans/rivers; `balance` headings-only, `pretty` body-only.
 
+## Paste-target line breaks
+
+- Copy destined for a reflowing field (YouTube / app-store / social bio+caption / meta / textarea) ships with PROSE UNWRAPPED — one line per paragraph, blank line between. Never hand off your own ~75-char wraps; preserve list/link/section newlines. Default, not on-request. Full: `[[paste-target-text-sanitization]]`.
+
 ## Human voice (anti-slop)
 
 Instructional/technical prose (skills, rules, docs) gets the same slop-removal discipline. Canonical: ``skill-authoring-contract`` § Human voice; `[[micro-test-instruction-wording]]` proves wording binds.

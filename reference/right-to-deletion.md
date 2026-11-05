@@ -6,7 +6,7 @@ Sourced on demand by `rules/compliance.md`.
 
 ## Web form intake handler
 
-Full Hono route for `POST /account/delete`. Verifies Turnstile, checks Clerk session
+Full Hono route for `POST /account/delete`. Verifies Turnstile, checks Better Auth session
 ownership (falls back to email-confirmation token), creates the CF Workflow instance,
 and writes the audit row immediately.
 
@@ -30,7 +30,7 @@ app.post('/account/delete', zValidator('json', DeletionRequestSchema), async (c)
   if (!ts.success) return c.json({ error: 'Turnstile failed' }, 422)
 
   // Verify ownership — require auth OR email confirmation token
-  const session = getSession(c) // Clerk session
+  const session = getSession(c) // Better Auth session
   if (!session || session.email !== email) {
     // Send confirmation email with a signed token instead
     const token = await createDeletionToken(email, c.env)
@@ -94,12 +94,10 @@ export class DeletionCascade extends WorkflowEntrypoint<Env, z.infer<typeof Dele
       return
     }
 
-    // 2. Revoke Clerk sessions
-    await step.do('revoke-clerk-sessions', { retries: { limit: 3, delay: '5 seconds' } }, async () => {
-      await fetch(`https://api.clerk.com/v1/users/${userId}/sessions`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${this.env.CLERK_SECRET_KEY}` },
-      })
+    // 2. Invalidate Better Auth sessions — Better Auth keeps sessions in OUR D1, so this is a
+    //    local DELETE (no external API, no secret); done first so the account can't act mid-deletion.
+    await step.do('revoke-sessions', { retries: { limit: 3, delay: '5 seconds' } }, async () => {
+      await this.env.DB.prepare('DELETE FROM session WHERE "userId" = ?').bind(userId).run()
     })
 
     // 3. Purge KV cache

@@ -81,11 +81,11 @@ Pin this alongside the other `05-architecture-and-stack` submodules. Reflects th
 - **`wrangler types`** — supported way to get typed bindings (over `@cloudflare/workers-types`)
 - **Remote bindings** via `remote: true` per binding — routes operations through Miniflare to real prod resources during dev. New default workflow — local code + remote bindings for hard-to-mock services (R2, AI, Vectorize).
 
-## Clerk + Workers
+## Better Auth + Workers
 
-- **Clerk M2M JWT tokens** (2026-02-24) — free, networkless verification for service-to-service identity
-- `CLERK_JWT_KEY` PEM verification for zero-RTT session checks at the edge
-- Use Clerk M2M instead of static API keys between Workers
+- **Better Auth M2M JWT tokens** (2026-02-24) — free, networkless verification for service-to-service identity
+- `BETTER_AUTH_SECRET` PEM verification for zero-RTT session checks at the edge
+- Use Better Auth M2M instead of static API keys between Workers
 
 ## Drizzle v1 + RQBv2
 

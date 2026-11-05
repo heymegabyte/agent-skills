@@ -2,7 +2,7 @@
 name: "Email Templates"
 version: "1.1.0"
 updated: "2026-04-23"
-description: "Branded HTML transactional email: dark gradient header, clean body, dark mode. Contact confirmations, newsletter welcome, donation receipts. Resend via verified megabyte.space."
+description: "Branded HTML transactional email: dark gradient header, clean body, dark mode. Contact confirmations, newsletter welcome, donation receipts. Amazon SES via verified megabyte.space."
 ---
 
 # Email Templates
@@ -164,26 +164,29 @@ This means [specific impact statement].
 [CTA: See the Impact]
 ```
 
-## Sending via Resend
+## Sending via Amazon SES
 
 ```typescript
-import { Resend } from 'resend';
+import { AwsClient } from 'aws4fetch';
 
-const resend = new Resend(env.RESEND_API_KEY);
+const region = env.SES_REGION ?? 'us-east-1';
+const aws = new AwsClient({ accessKeyId: env.AWS_ACCESS_KEY_ID, secretAccessKey: env.AWS_SECRET_ACCESS_KEY, region, service: 'ses' });
 
-await resend.emails.send({
-  from: 'Brian <brian@megabyte.space>',
-  to: [recipient],
-  subject: 'Subject line',
-  html: renderedTemplate,
-  reply_to: 'brian@megabyte.space',
+await aws.fetch(`https://email.${region}.amazonaws.com/v2/email/outbound-emails`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    FromEmailAddress: env.EMAIL_FROM,
+    Destination: { ToAddresses: [recipient] },
+    Content: { Simple: { Subject: { Data: subject }, Body: { Html: { Data: html }, Text: { Data: text } } } },
+  }),
 });
 ```
 
-- **Verified domain** — megabyte.space
-- **API key** — shared key pool (05/shared-api-pool)
-- **Rate limit** — 100 emails/day on free tier
-- **For bulk** — use Listmonk on Cloudflare Containers
+- **Verified domain** — megabyte.space (EasyDKIM identity on the project's own domain)
+- **Credentials** — `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY` + `SES_REGION` + `EMAIL_FROM` (shared pool, 05/shared-api-pool)
+- **Reference impl** — deskl.ink `workers/api/src/email/ses.ts`
+- **For bulk** — use Listmonk on Cloudflare Containers (SES SMTP relay)
 
 ## Testing Checklist
 

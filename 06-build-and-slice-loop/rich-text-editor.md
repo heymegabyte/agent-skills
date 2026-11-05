@@ -82,7 +82,7 @@ export class EditorComponent implements AfterViewInit, OnDestroy {
   }
 
   private getToken(): string {
-    // Inject Clerk token from auth service
+    // Inject Better Auth token from auth service
     return '';
   }
 }
@@ -115,7 +115,7 @@ CREATE TABLE content_blocks (
   entity_id TEXT NOT NULL,
   blocks TEXT NOT NULL,         -- JSON (Editor.js OutputData)
   version INTEGER NOT NULL DEFAULT 1,
-  updated_by TEXT NOT NULL,     -- Clerk user ID
+  updated_by TEXT NOT NULL,     -- Better Auth user ID
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 CREATE INDEX idx_content_entity ON content_blocks(entity_type, entity_id);
@@ -141,7 +141,7 @@ content.put('/:type/:id', zValidator('json', z.object({
   const { blocks } = c.req.valid('json');
   const type = c.req.param('type');
   const id = c.req.param('id');
-  const userId = c.get('userId'); // from Clerk middleware
+  const userId = c.get('userId'); // from Better Auth middleware
 
   await c.env.DB.prepare(
     'INSERT INTO content_blocks (id, entity_type, entity_id, blocks, version, updated_by) VALUES (?, ?, ?, ?, (SELECT COALESCE(MAX(version),0)+1 FROM content_blocks WHERE entity_type=? AND entity_id=?), ?)'

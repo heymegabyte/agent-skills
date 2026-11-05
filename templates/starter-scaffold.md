@@ -1,6 +1,6 @@
 ---
 name: "Starter Scaffold"
-description: "Pre-wired Hono+D1+Clerk+Stripe+Inngest skeleton for one-prompt SaaS deploys"
+description: "Pre-wired Hono+D1+Better Auth+Stripe+Inngest skeleton for one-prompt SaaS deploys"
 ---
 
 # Starter Scaffold Template
@@ -23,7 +23,7 @@ Deploy this skeleton on first prompt. Folder name = domain. All bindings pre-wir
 │   ├── index.ts              # Hono app entry, middleware stack, routes
 │   ├── routes/
 │   │   ├── health.ts         # GET /health { status, version, timestamp }
-│   │   ├── auth.ts           # Clerk webhook + session middleware
+│   │   ├── auth.ts           # Better Auth webhook + session middleware
 │   │   ├── billing.ts        # Stripe checkout, portal, webhooks
 │   │   ├── api.ts            # Domain-specific API routes
 │   │   └── inngest.ts        # Inngest serve endpoint
@@ -31,10 +31,10 @@ Deploy this skeleton on first prompt. Folder name = domain. All bindings pre-wir
 │   │   ├── schema.ts         # Drizzle schema (users, subscriptions, ...)
 │   │   └── migrations/       # Drizzle Kit migrations
 │   ├── lib/
-│   │   ├── auth.ts           # Clerk middleware (verifyToken)
+│   │   ├── auth.ts           # Better Auth middleware (verifyToken)
 │   │   ├── billing.ts        # Stripe helpers (createCheckout, createPortal)
 │   │   ├── inngest.ts        # Inngest client + functions
-│   │   ├── email.ts          # Resend transactional wrapper
+│   │   ├── email.ts          # Amazon SES v2 transactional wrapper (aws4fetch)
 │   │   └── turnstile.ts      # CF Turnstile verification
 │   └── types.ts              # Env bindings type
 ├── public/
@@ -127,12 +127,15 @@ export interface Env {
   DB: D1Database;
   KV: KVNamespace;
   AI: Ai;
-  CLERK_SECRET_KEY: string;
-  CLERK_WEBHOOK_SECRET: string;
+  BETTER_AUTH_SECRET: string;
+  BETTER_AUTH_SECRET: string;
   STRIPE_SECRET_KEY: string;
   STRIPE_WEBHOOK_SECRET: string;
   TURNSTILE_SECRET: string;
-  RESEND_API_KEY: string;
+  AWS_ACCESS_KEY_ID: string;
+  AWS_SECRET_ACCESS_KEY: string;
+  SES_REGION: string;
+  EMAIL_FROM: string;
   INNGEST_EVENT_KEY: string;
   INNGEST_SIGNING_KEY: string;
   SITE_NAME: string;
@@ -147,7 +150,7 @@ export interface Env {
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 
 export const users = sqliteTable('users', {
-  id: text('id').primaryKey(), // Clerk user ID
+  id: text('id').primaryKey(), // Better Auth user ID
   email: text('email').notNull(),
   name: text('name'),
   stripeCustomerId: text('stripe_customer_id'),
@@ -173,10 +176,10 @@ export const subscriptions = sqliteTable('subscriptions', {
     "@hono/zod-validator": "^0.4",
     "drizzle-orm": "1.0.0-rc.4",
     "zod": "^4",
-    "@clerk/backend": "^2",
+    "better-auth": "^2",
     "stripe": "^18",
     "inngest": "^4",
-    "resend": "^4"
+    "aws4fetch": "^1.0.20"
   },
   "devDependencies": {
     "wrangler": "^4",
@@ -205,11 +208,14 @@ wrangler kv namespace create KV
 wrangler d1 migrations apply DOMAIN-db --remote
 
 # 4. Set secrets
-wrangler secret put CLERK_SECRET_KEY
+wrangler secret put BETTER_AUTH_SECRET
 wrangler secret put STRIPE_SECRET_KEY
 wrangler secret put STRIPE_WEBHOOK_SECRET
 wrangler secret put TURNSTILE_SECRET
-wrangler secret put RESEND_API_KEY
+wrangler secret put AWS_ACCESS_KEY_ID
+wrangler secret put AWS_SECRET_ACCESS_KEY
+wrangler secret put SES_REGION
+wrangler secret put EMAIL_FROM
 
 # 5. Deploy
 npx wrangler deploy

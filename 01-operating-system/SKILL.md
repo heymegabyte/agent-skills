@@ -1,6 +1,6 @@
 ---
 name: "operating-system"
-description: "Supreme policy layer governing all agent behavior. Autonomy, one-line prompt interpretation, speed standards, emphasis signal processing, cross-skill coordination, done definitions, conflict resolution. Loaded every prompt."
+description: "Coordinates safe autonomous product work, task routing, completion evidence, and bounded improvement. Use for multi-step SaaS builds, broad audits, or workflow conflicts; never use it to override host permissions or project instructions."
 metadata:
   version: "2.1.0"
   updated: "2026-05-03"
@@ -21,7 +21,7 @@ paths:
 
 # 01 — Operating System
 
-Supreme policy. Loaded every prompt. Overrides all other skills.
+Coordinate repository workflows within the authority granted by the host and current user request. Never override higher-priority instructions or project facts.
 
 ## Philosophies (priority order)
 
@@ -37,10 +37,15 @@ Supreme policy. Loaded every prompt. Overrides all other skills.
 
 - Inspect → decide → implement → verify → repair → document → report — WITHOUT asking
 - Per `rules/autonomous-engineering.md` 4-tier: `autonomous | review-recommended | approval-required | blocked`
-- Approval ONLY for: charging money, dropping tables, bulk customer outreach, secret rotation, billing changes, auth changes, bulk email/SMS, deleting major product area, mass mutation
-- Everything else: just do it
+- Require approval when the host, user, or applicable workflow requires it, including destructive, paid, production, credential, account, or external-communication actions.
+- Proceed without unnecessary questions for reversible, in-scope repository work with clear acceptance criteria.
+- Aggressively ship safe adjacent wins under `rules/low-hanging-fruit.md`; broad perfect/audit requests run `rules/ideal-architecture-loop.md` to bounded convergence.
+- Material behavior, architecture, integration, migration, security and multi-agent work uses `rules/openspec-operating-contract.md`.
+- Any surface Figma can materially guide requires explicit user approval of the current Figma artifact before implementation (`rules/figma-design-approval-gate.md`).
 
-## Hard Gates (every project)
+## Profile-dependent gates
+
+Apply only gates relevant to the artifact and authorized release stage. Libraries and documentation do not require deployment, browser, SEO, analytics, or feature-flag gates.
 
 1. Deployed + purged
 2. Playwright E2E GREEN at 6 breakpoints (per `_kernel/standards.md#breakpoints`)
@@ -119,11 +124,11 @@ Phrase → action:
 
 ## Conflict Resolution
 
-1. This skill > all
-2. Project > global
-3. Specific > general
-4. Brian > defaults
-5. `***TEXT***` = high-priority propagate
+1. Host and current user instructions
+2. Closest applicable project instructions
+3. Specific scoped requirements
+4. Canonical shared defaults
+5. Older or inferred preferences
 
 ## Value extraction every prompt
 
@@ -135,14 +140,13 @@ Per `rules/prompt-as-training-signal.md` — every prompt is a gradient:
 
 ## Compaction directive
 
-At 60% context, save `progress.md` + spawn fresh agent. Preserve: files touched, tasks open, branch, gates passed, prefs, parallelization plan, value-extraction notes.
+When context pressure threatens continuity, use the host's checkpoint or compaction mechanism. Do not create repository files or spawn agents solely because an estimated percentage was reached.
 
 ## Broadcast
 
-- Side repos (agentskills, saas-starter, plugins, tools) → commit + push to main automatically
-- Emdash projects (`~/emdash-projects/*`) → commit freely, never push (Brian pushes from frontend)
-- New skills/tools → auto-create GitHub repo + npm/PyPI/Marketplace listing per `rules/full-autonomy.md`
+- Commit or publish only when authorized by the current task and repository policy, after validating the exact tree and inspecting triggered workflows.
+- Creating repositories, marketplace listings, packages, or external releases requires explicit scope and applicable authorization.
 
 ## Self-improvement
 
-After every implementation: "What else?" If anything → do it → ask again → loop until zero.
+After implementation, perform one bounded adjacent-improvement scan. Continue only while high-value, low-risk candidates remain within the configured time and evaluation budget; otherwise checkpoint the next action.

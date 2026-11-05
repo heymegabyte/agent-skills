@@ -11,10 +11,16 @@ Turn this Ubuntu VM into the persistent control plane and worker for my autonomo
 - GitHub Actions as the scheduler and canonical run history.
 - One central 15-minute portfolio tick.
 - Every enabled repository launched on every tick for now.
-- OpenClaw as the project/system orchestrator and primary UI/runtime.
+- **Paperclip** is the fleet management/governance plane *above* OpenClaw (tasks · budgets · approval gates) — recommended per `rules/agent-provider-policy.md` § Fleet management plane. Adapters drive subscription CLIs via `with-subscription-cli.sh`/`claude-pool`, never API keys.
+- OpenClaw as the per-machine project/system gateway + primary runtime (managed by Paperclip).
 - Codex as the preferred system/setup agent on this Ubuntu host.
 - Three Claude Code subscription accounts pooled through Claw Router using usage-aware routing.
 - OpenCode using the DeepSeek API directly from DEEPSEEK_API_KEY, never through Cloudflare AI Gateway locally.
+- On supported machines with at least 16 GiB RAM, offer Cua Spaces as the isolated desktop/computer-use substrate. Require explicit approval before installation or desktop permissions; dry-run first, exclude the unsandboxed Linux AppImage path, default MCP to `spaces:readonly`, and verify with `cua runtime doctor` per `rules/cua-spaces-integration.md`.
+- Install/verify the current browse CLI as the default browser-automation rail. Configure named local/remote sessions and persistent contexts; escalate only failed/native/authenticated-desktop work to Cua Driver.
+- Install Cua Driver and expose exactly one active-desktop writer through `bin/cua-singleton.sh`; headless Claude×3, Codex×1, OpenCode×1 and future Gemini work continues independently.
+- Install Bitwarden CLI for the dedicated secret broker. Keep it logged in if operationally appropriate, but never export `BW_SESSION` to agent processes; require the broker/approval path for item-field resolution, admin-key capture and Infisical/get-secret persistence.
+- Install the weekly Paperclip routine from `config/paperclip-routines/portfolio-architecture.json` and verify a real tracked routine run, approval creation and evidence artifact.
 - heymegabyte/agent-skills as the canonical global skills/rules/commands source.
 - agent.megabyte.space as the polished UI/control plane for anything that benefits from a UI.
 - Git-backed/file-backed state as the source of truth; Cloudflare AI Search/R2/D1 may provide derived indexes/search/control-plane acceleration where useful.

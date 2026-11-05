@@ -44,7 +44,7 @@ const MANAGED = [
     // apps — never Angular-only. Payments trio: Square accept / Stripe Billing / Connect.
     pattern: /CF Workers.*?PostHog\s*\|\s*Sentry/g,
     canonical:
-      'CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1-rc | Clerk | Stripe + Link (default) · Square on request | Inngest | Amazon SES | Bun | Playwright v1.63+ | PostHog | Sentry',
+      'CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1-rc | Better Auth | Stripe + Link (default) · Square on request | Inngest | Amazon SES | Bun | Playwright v1.63+ | PostHog | Sentry',
   },
   {
     name: 'counts-line',
@@ -66,8 +66,8 @@ const MANAGED = [
     // The compact stack descriptor inside those same frontmatter descriptions.
     // Alternation matches both the legacy Angular/Stripe-only form and the canonical.
     pattern:
-      /CF Workers\+Hono, (?:Angular|React 19\+Vite \/ Angular 22\+Spartan), D1, Drizzle, Clerk, (?:Stripe|Square\/Stripe)\./g,
-    canonical: 'CF Workers+Hono, React 19+Vite / Angular 22+Spartan, D1, Drizzle, Clerk, Square/Stripe.',
+      /CF Workers\+Hono, (?:Angular|React 19\+Vite \/ Angular 22\+Spartan), D1, Drizzle, Better Auth, (?:Stripe|Square\/Stripe)\./g,
+    canonical: 'CF Workers+Hono, React 19+Vite / Angular 22+Spartan, D1, Drizzle, Better Auth, Square/Stripe.',
   },
   {
     name: 'lint-line',

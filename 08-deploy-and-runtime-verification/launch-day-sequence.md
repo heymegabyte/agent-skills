@@ -2,7 +2,7 @@
 name: "Launch Day Sequence"
 version: "1.1.0"
 updated: "2026-04-23"
-description: "Go-live checklist: sitemap → GSC, robots.txt unblock, Postiz social, Resend launch email, full quality gate, uptime monitoring setup. Nothing forgotten."
+description: "Go-live checklist: sitemap → GSC, robots.txt unblock, Postiz social, Amazon SES launch email, full quality gate, uptime monitoring setup. Nothing forgotten."
 ---
 
 # Launch Day Sequence
@@ -91,7 +91,7 @@ curl -X POST "https://postiz.megabyte.space/api/posts" \
 
 ### Step 7: Launch Email (09/email-templates)
 
-Send branded launch announcement via Resend to newsletter subscribers (if Listmonk is set up).
+Send branded launch announcement via Amazon SES to newsletter subscribers (if Listmonk is set up).
 
 ### Step 8: Production E2E Suite
 

@@ -15,7 +15,7 @@ export const requireAuth = createMiddleware<{ Bindings: Env; Variables: { userId
     const token = c.req.header('Authorization')?.replace('Bearer ', '');
     if (!token) return c.json({ error: 'Unauthorized' }, 401);
     try {
-      const payload = await verify(token, c.env.CLERK_JWT_KEY);
+      const payload = await verify(token, c.env.BETTER_AUTH_SECRET);
       c.set('userId', payload.sub);
       await next();
     } catch {

@@ -142,7 +142,7 @@ app.post('/api/webhooks/square', async (req, env) => {
   if (!(await verifySquareSignature(req, env))) return new Response('Forbidden', { status: 403 });
   const event = await req.json();
   switch (event.type) {
-    case 'payment.created':       /* record + send receipt via Resend */ break;
+    case 'payment.created':       /* record + send receipt via Amazon SES */ break;
     case 'payment.updated':       /* status changed APPROVED → COMPLETED */ break;
     case 'refund.created':        /* notify donor + update DB */ break;
     case 'subscription.created':  /* recurring donor activated */ break;
@@ -221,7 +221,7 @@ img-src 'self' https://*.squarecdn.com https://*.squareup.com data:
 ### Post-Donation Flow
 
 1. Success page with confetti (06/easter-eggs) + animated impact statement
-2. Receipt email via Resend: thank you + tax-deductible language + Square receipt URL + "donate again" CTA
+2. Receipt email via Amazon SES: thank you + tax-deductible language + Square receipt URL + "donate again" CTA
 3. PostHog event: `donation_complete` with `{ amountCents, frequency, paymentMethod }`
 4. Sentry breadcrumb: `donation.completed` with `paymentId` tag
 5. GA4 event: `purchase` with full e-commerce schema
@@ -271,7 +271,7 @@ img-src 'self' https://*.squarecdn.com https://*.squareup.com data:
 - Show `"Powered by Square"` security badge; progress indicator for multi-step forms
 - Guest checkout default; show total prominently before final submit
 
-## Receipt Email Template (Resend)
+## Receipt Email Template (Amazon SES)
 
 ```
 Subject: Thank you, {{firstName}} — your donation to {{orgName}} confirmed

@@ -40,7 +40,7 @@ Drive recurring donations, volunteer sign-ups, and program awareness. Trust + tr
 - Toggle: `In honor of` / `In memory of`
 - Toggle: `Anonymous`
 - Show `Your $25 covers <concrete-outcome>` next to each tier
-- After donation: auto-email tax receipt + Resend drip (week 1: thank-you story; week 4: impact update; month 6: invite to next campaign)
+- After donation: auto-email tax receipt + Amazon SES drip (week 1: thank-you story; week 4: impact update; month 6: invite to next campaign)
 
 ## Trust scaffolding (mandatory)
 

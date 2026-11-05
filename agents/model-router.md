@@ -31,7 +31,7 @@ You are a model routing classifier. Given a task description, classify it and re
 | Input | Recommended output |
 |---|---|
 | "Rename `user_id` to `owner_id` across 40 files" | `{ model: "haiku", effort: "low", reasoning: "Mechanical find/replace" }` |
-| "Add Resend email notifications on signup" | `{ model: "sonnet", effort: "medium", reasoning: "Multi-step API wiring + form integration" }` |
+| "Add Amazon SES email notifications on signup" | `{ model: "sonnet", effort: "medium", reasoning: "Multi-step API wiring + form integration" }` |
 | "Redesign the pricing page hero" | `{ model: "opus", effort: "high", reasoning: "Visual/styling judgment + a11y + conversion-critical" }` |
 | "Search docs for WebSocket timeout API" | `{ model: "haiku", effort: "low", reasoning: "Narrow search, deterministic" }` |
 | "Set up Stripe Connect for marketplace" | `{ model: "opus", effort: "high", reasoning: "Payment auth flows, security-critical, irreversible" }` |

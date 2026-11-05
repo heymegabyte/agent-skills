@@ -81,7 +81,7 @@ Build `/review` page: "How was your experience?" → 5-star rating. ≥4 stars: 
 
 Generate `_review_automation.md` with setup instructions for:
 
-- **Email** — Resend template triggered 24hr after appointment/purchase. Subject: "How was your visit to `{business_name}`?" CTA links to Google review URL.
+- **Email** — Amazon SES template triggered 24hr after appointment/purchase. Subject: "How was your visit to `{business_name}`?" CTA links to Google review URL.
 - **SMS** — Twilio template (if phone collected). Same timing, shorter copy.
 - **In-store** — Printable QR card PDF for counter/receipt.
 

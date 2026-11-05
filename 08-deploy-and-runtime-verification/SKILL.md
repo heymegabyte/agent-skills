@@ -1,6 +1,6 @@
 ---
 name: "deploy-and-runtime-verification"
-description: "MANDATORY deploy after every code change. Typecheck → deploy → purge CDN → E2E on production → visual verify → fix-forward loop. Workers Builds native CI/CD, D1 Time Travel PIT recovery, D1→R2 long-term backups, wrangler rollback, wrangler secrets management, structured observability, cross-browser smoke tests, rollback procedures, and GitHub auto-configuration."
+description: "Deploys and verifies authorized releases with build, rollout, live checks, observability, rollback, and recovery evidence. Use when deployment is requested or the project workflow explicitly includes release; do not deploy ordinary local edits automatically."
 metadata:
   version: "2.1.0"
   updated: "2026-10-04"
@@ -35,29 +35,29 @@ paths:
 
 # 08 — Deploy and Runtime Verification
 
-Enforce the mandatory typecheck→deploy→CDN-purge→prod-E2E→visual-verify loop after every code change; never mark done without a live PROD assertion.
+Run the release verification loop only when deployment is in scope and authorized. Report local verification separately from release status.
 
-## Mandatory deploy loop (every code change)
+## Authorized deploy loop
 
 1. Build + typecheck
-2. `wrangler deploy` (or platform equivalent)
-3. Purge CDN (`wrangler cache purge` or `curl -X POST https://api.cloudflare.com/client/v4/zones/{id}/purge_cache`)
+2. Confirm target environment, migration and rollback plan, and authorization
+3. Deploy through the project's approved workflow; purge only affected cache when required
 4. Fetch each changed route on PROD URL via curl + Playwright
 5. Assert new content / headers / JSON-LD / status live
 6. AI vision QA at 6 viewports (per `_kernel/standards.md#breakpoints`)
 7. Fix-forward (max 3 redeploys) — never silently fail
 8. Only then mark DONE
 
-"Local typecheck + build pass" is NOT done. Per `rules/verification-loop.md`.
+Local verification can complete a local implementation task, but it is not evidence of a production release. Label the distinction explicitly.
 
 ## Auth fallback chain
 
-- `CLOUDFLARE_API_TOKEN` from `/Users/Apple/.local/bin/get-secret`
+- Obtain narrowly scoped credentials through the configured `get-secret` interface when release is authorized
 - On 401: `CLOUDFLARE_API_KEY` + `CLOUDFLARE_EMAIL`
-- Both stale: prompt `! npx wrangler login`, resume deploy once fresh
+- If authorization is unavailable, stop before mutation and report the blocker
 - NEVER silently skip deploy because creds missing — surface as blocker
 - **An unset env var is NOT "no creds."** You MUST run `get-secret <KEY>` (the broker is the source of truth, and it HOLDS the CF creds) before writing BLOCKED_EXTERNAL for any credential. "I checked `env` and it was empty" is not evidence — the broker check is.
-- **Greenfield is not exempt.** A brand-new repo with no `*.workers.dev` URL yet still deploys a skeleton on the FIRST pass: `wrangler d1 create` → apply migrations `--remote` → `wrangler deploy` → curl live `/health`. Deterministically reminded by `~/.claude/hooks/enforce-cloudflare-deploy.py` on every `wrangler.*` write.
+- Greenfield setup does not imply permission to create remote resources; prepare and validate locally until deployment is authorized.
 
 ## Cloudflare `cf` CLI transition (beta — doctrine stays wrangler-first)
 

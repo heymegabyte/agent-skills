@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import os
 import re
 import sqlite3
@@ -35,14 +36,21 @@ from pathlib import Path
 from urllib.error import URLError
 from urllib.request import Request, urlopen
 
+try:
+    import yaml
+except ImportError as exc:  # fail clearly; do not silently fall back to divergent YAML
+    raise SystemExit("skill-router requires PyYAML>=6; install requirements-router.txt") from exc
+
 # -----------------------------------------------------------------------------
 # Paths
 # -----------------------------------------------------------------------------
 HOME = Path.home()
-CLAUDE_DIR = HOME / ".claude"
-PLUGIN_DIR = CLAUDE_DIR / "plugins" / "heymegabyte-agent-skills"
-DATA_DIR = CLAUDE_DIR / "data"
-PROJECTS_DIR = CLAUDE_DIR / "projects"
+CLAUDE_DIR = Path(os.environ.get("EMDASH_CLAUDE_DIR", HOME / ".claude")).resolve()
+PLUGIN_DIR = Path(os.environ.get(
+    "EMDASH_SKILLS_ROOT", CLAUDE_DIR / "plugins" / "heymegabyte-agent-skills"
+)).resolve()
+DATA_DIR = Path(os.environ.get("EMDASH_ROUTER_DATA_DIR", CLAUDE_DIR / "data")).resolve()
+PROJECTS_DIR = Path(os.environ.get("EMDASH_ROUTER_PROJECTS_DIR", CLAUDE_DIR / "projects")).resolve()
 PACKS_DIR = PLUGIN_DIR / "_packs"
 DB_PATH = DATA_DIR / "skills.db"
 
@@ -88,8 +96,27 @@ def get_secret(key: str) -> str | None:
 # -----------------------------------------------------------------------------
 # Frontmatter parser
 # -----------------------------------------------------------------------------
+class _UniqueKeyLoader(yaml.SafeLoader):
+    """Safe YAML loader that rejects duplicate mapping keys."""
+
+
+def _construct_unique_mapping(loader, node, deep=False):
+    mapping = {}
+    for key_node, value_node in node.value:
+        key = loader.construct_object(key_node, deep=deep)
+        if key in mapping:
+            raise ValueError(f"duplicate YAML key: {key}")
+        mapping[key] = loader.construct_object(value_node, deep=deep)
+    return mapping
+
+
+_UniqueKeyLoader.add_constructor(
+    yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, _construct_unique_mapping
+)
+
+
 def parse_frontmatter(text: str) -> tuple[dict, str]:
-    """Return (frontmatter_dict, body)."""
+    """Return validated YAML frontmatter and body."""
     if not text.startswith("---\n"):
         return {}, text
     end = text.find("\n---\n", 4)
@@ -97,29 +124,18 @@ def parse_frontmatter(text: str) -> tuple[dict, str]:
         return {}, text
     fm_block = text[4:end]
     body = text[end + 5:]
-    # Minimal YAML — only what we use
-    fm: dict = {}
-    current_list = None
-    for line in fm_block.split("\n"):
-        if not line.strip() or line.lstrip().startswith("#"):
-            continue
-        if line.startswith("  - "):
-            if current_list is not None:
-                current_list.append(line[4:].strip().strip('"\''))
-            continue
-        if ":" not in line:
-            continue
-        key, _, val = line.partition(":")
-        key = key.strip()
-        val = val.strip().strip('"\'')
-        if not val:
-            # Could be a list start
-            current_list = []
-            fm[key] = current_list
-        else:
-            current_list = None
-            # Strip enclosing quotes from val
-            fm[key] = val
+    try:
+        fm = yaml.load(fm_block, Loader=_UniqueKeyLoader)
+    except (yaml.YAMLError, ValueError) as exc:
+        raise ValueError(f"invalid frontmatter: {exc}") from exc
+    if fm is None:
+        fm = {}
+    if not isinstance(fm, dict):
+        raise ValueError("frontmatter must be a mapping")
+    for key in ("triggers", "paths", "submodules"):
+        if key in fm and fm[key] is not None:
+            if not isinstance(fm[key], list) or not all(isinstance(v, str) for v in fm[key]):
+                raise ValueError(f"frontmatter '{key}' must be a list of strings")
     return fm, body
 
 
@@ -142,8 +158,8 @@ def discover_skills() -> list[dict]:
     for skill_md in sorted(PLUGIN_DIR.glob("*/SKILL.md")):
         try:
             text = skill_md.read_text()
-        except OSError:
-            continue
+        except OSError as exc:
+            raise RuntimeError(f"cannot read skill source {skill_md}: {exc}") from exc
         fm, body = parse_frontmatter(text)
         skill_id = skill_md.parent.name
         out.append({
@@ -162,8 +178,8 @@ def discover_skills() -> list[dict]:
     for rule_md in sorted((PLUGIN_DIR / "rules").glob("*.md")):
         try:
             text = rule_md.read_text()
-        except OSError:
-            continue
+        except OSError as exc:
+            raise RuntimeError(f"cannot read rule source {rule_md}: {exc}") from exc
         fm, body = parse_frontmatter(text)
         rid = "rules/" + rule_md.stem
         out.append({
@@ -230,6 +246,10 @@ CREATE TABLE IF NOT EXISTS skills (
   paths TEXT NOT NULL DEFAULT '[]',
   pack TEXT NOT NULL DEFAULT '',
   body_hash TEXT NOT NULL,
+  metadata_hash TEXT NOT NULL DEFAULT '',
+  embedding_input_hash TEXT NOT NULL DEFAULT '',
+  embedding_model TEXT NOT NULL DEFAULT '',
+  embedding_dimensions INTEGER NOT NULL DEFAULT 0,
   embedding TEXT,
   tokens INTEGER NOT NULL DEFAULT 0,
   updated_at INTEGER NOT NULL
@@ -242,11 +262,32 @@ def db_open() -> sqlite3.Connection:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     conn.executescript(SCHEMA)
+    columns = {row[1] for row in conn.execute("PRAGMA table_info(skills)")}
+    migrations = {
+        "metadata_hash": "ALTER TABLE skills ADD COLUMN metadata_hash TEXT NOT NULL DEFAULT ''",
+        "embedding_input_hash": "ALTER TABLE skills ADD COLUMN embedding_input_hash TEXT NOT NULL DEFAULT ''",
+        "embedding_model": "ALTER TABLE skills ADD COLUMN embedding_model TEXT NOT NULL DEFAULT ''",
+        "embedding_dimensions": "ALTER TABLE skills ADD COLUMN embedding_dimensions INTEGER NOT NULL DEFAULT 0",
+    }
+    for name, statement in migrations.items():
+        if name not in columns:
+            conn.execute(statement)
     return conn
 
 
 def body_hash(body: str) -> str:
     return hashlib.sha256(body.encode()).hexdigest()
+
+
+def metadata_hash(skill: dict) -> str:
+    payload = {k: skill[k] for k in (
+        "id", "type", "path", "name", "description", "priority", "triggers", "paths", "pack"
+    )}
+    return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+
+
+def embedding_input(skill: dict) -> str:
+    return f"{skill['name']}\n{skill['description']}\n{skill['body'][:4000]}"
 
 
 def estimate_tokens(s: str) -> int:
@@ -269,29 +310,42 @@ def cmd_sync_metadata():
     rule write (hook) + manually; full `rebuild-index` still owns embeddings."""
     conn = db_open()
     skills = discover_skills()
-    n = 0
-    for sk in skills:
-        cur = conn.execute("SELECT id FROM skills WHERE id=?", (sk["id"],))
-        if cur.fetchone():
+    now = int(time.time())
+    source_ids = {sk["id"] for sk in skills}
+    with conn:
+        for sk in skills:
+            emb_hash = body_hash(embedding_input(sk))
+            existing = conn.execute(
+                "SELECT embedding_input_hash, embedding FROM skills WHERE id=?", (sk["id"],)
+            ).fetchone()
+            keep_embedding = bool(existing and existing[0] == emb_hash and existing[1])
             conn.execute(
-                """UPDATE skills SET priority=?, triggers=?, paths=?, pack=?, tokens=?, updated_at=?
-                   WHERE id=?""",
-                (sk["priority"], json.dumps(sk["triggers"]), json.dumps(sk["paths"]),
-                 sk["pack"], estimate_tokens(sk["body"]), int(time.time()), sk["id"]),
-            )
-        else:
-            conn.execute(
-                """INSERT INTO skills (id,type,path,name,description,priority,triggers,paths,pack,body_hash,embedding,tokens,updated_at)
-                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                """INSERT INTO skills
+                   (id,type,path,name,description,priority,triggers,paths,pack,body_hash,metadata_hash,
+                    embedding_input_hash,embedding_model,embedding_dimensions,embedding,tokens,updated_at)
+                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                   ON CONFLICT(id) DO UPDATE SET
+                     type=excluded.type,path=excluded.path,name=excluded.name,description=excluded.description,
+                     priority=excluded.priority,triggers=excluded.triggers,paths=excluded.paths,pack=excluded.pack,
+                     body_hash=excluded.body_hash,metadata_hash=excluded.metadata_hash,
+                     embedding_input_hash=excluded.embedding_input_hash,
+                     embedding=CASE WHEN ? THEN skills.embedding ELSE NULL END,
+                     embedding_model=CASE WHEN ? THEN skills.embedding_model ELSE '' END,
+                     embedding_dimensions=CASE WHEN ? THEN skills.embedding_dimensions ELSE 0 END,
+                     tokens=excluded.tokens,updated_at=excluded.updated_at""",
                 (sk["id"], sk["type"], sk["path"], sk["name"], sk["description"], sk["priority"],
-                 json.dumps(sk["triggers"]), json.dumps(sk["paths"]), sk["pack"],
-                 body_hash(sk["body"]), None, estimate_tokens(sk["body"]), int(time.time())),
+                 json.dumps(sk["triggers"]), json.dumps(sk["paths"]), sk["pack"], body_hash(sk["body"]),
+                 metadata_hash(sk), emb_hash, "", 0, None, estimate_tokens(sk["body"]), now,
+                 keep_embedding, keep_embedding, keep_embedding),
             )
-        n += 1
-    conn.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('last_metadata_sync', ?)", (str(int(time.time())),))
-    conn.commit()
+        if source_ids:
+            placeholders = ",".join("?" for _ in source_ids)
+            conn.execute(f"DELETE FROM skills WHERE id NOT IN ({placeholders})", tuple(sorted(source_ids)))
+        else:
+            conn.execute("DELETE FROM skills")
+        conn.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('last_metadata_sync', ?)", (str(now),))
     conn.close()
-    print(f"[skill-router] metadata synced for {n} skills/rules (keyless, no embeddings)")
+    print(f"[skill-router] metadata synced for {len(skills)} skills/rules (keyless, no embeddings)")
 
 
 def cmd_rebuild_index():
@@ -307,30 +361,41 @@ def cmd_rebuild_index():
     skipped = 0
     for s in skills:
         h = body_hash(s["body"])
-        cur = conn.execute("SELECT body_hash FROM skills WHERE id=?", (s["id"],))
+        emb_input = embedding_input(s)
+        emb_hash = body_hash(emb_input)
+        cur = conn.execute(
+            "SELECT embedding_input_hash,embedding,embedding_model,embedding_dimensions FROM skills WHERE id=?",
+            (s["id"],),
+        )
         row = cur.fetchone()
-        if row and row[0] == h:
-            skipped += 1
-            continue
-        # Build embedding input: description + first 4000 chars of body
-        embed_input = f"{s['name']}\n{s['description']}\n{s['body'][:4000]}"
+        if row and row[0] == emb_hash and row[1] and row[2] == CF_EMBED_MODEL and row[3] == EMBED_DIM:
+            try:
+                vector = json.loads(row[1])
+                if len(vector) == EMBED_DIM and all(math.isfinite(float(v)) for v in vector):
+                    skipped += 1
+                    continue
+            except (ValueError, TypeError, json.JSONDecodeError):
+                pass
         try:
-            emb = embed_text(embed_input, api_key)
+            emb = embed_text(emb_input, api_key)
         except URLError as e:
             print(f"[skill-router] embed failed for {s['id']}: {e}", file=sys.stderr)
             continue
+        if len(emb) != EMBED_DIM or not all(math.isfinite(float(v)) for v in emb):
+            print(f"[skill-router] invalid embedding for {s['id']}", file=sys.stderr)
+            continue
         conn.execute(
             """INSERT OR REPLACE INTO skills
-               (id, type, path, name, description, priority, triggers, paths, pack,
-                body_hash, embedding, tokens, updated_at)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+               (id,type,path,name,description,priority,triggers,paths,pack,body_hash,metadata_hash,
+                embedding_input_hash,embedding_model,embedding_dimensions,embedding,tokens,updated_at)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             (
                 s["id"], s["type"], s["path"], s["name"], s["description"],
                 s["priority"],
                 json.dumps(s["triggers"]),
                 json.dumps(s["paths"]),
                 s["pack"],
-                h,
+                h, metadata_hash(s), emb_hash, CF_EMBED_MODEL, EMBED_DIM,
                 json.dumps(emb),
                 estimate_tokens(s["body"]),
                 int(time.time()),
@@ -403,7 +468,7 @@ def cmd_fingerprint(cwd: str | None = None) -> dict:
             if "@anthropic-ai/sdk" in deps or "openai" in deps:
                 fp["has_ai"] = True
                 fp["concerns"].append("ai-features")
-            if "@clerk/clerk-sdk-node" in deps or "@clerk/backend" in deps:
+            if "better-auth" in deps:
                 fp["has_auth"] = True
                 fp["concerns"].append("auth")
             if "@hono/zod-validator" in deps or "drizzle-orm" in deps:
@@ -474,15 +539,21 @@ def cmd_fingerprint(cwd: str | None = None) -> dict:
     return fp
 
 
+def project_identity(cwd: str) -> str:
+    canonical = str(Path(cwd).resolve())
+    return hashlib.sha256(canonical.encode()).hexdigest()[:24]
+
+
 def fingerprint_path(cwd: str) -> Path:
     """Cached fingerprint path per encoded cwd."""
-    encoded = cwd.replace("/", "-").lstrip("-")
-    return PROJECTS_DIR / encoded / "fingerprint.json"
+    return PROJECTS_DIR / project_identity(cwd) / "fingerprint.json"
 
 
-def session_cache_path(cwd: str, session_id: str = "default") -> Path:
-    encoded = cwd.replace("/", "-").lstrip("-")
-    return PROJECTS_DIR / encoded / f"active-skills-{session_id}.json"
+def session_cache_path(cwd: str, session_id: str) -> Path:
+    if not session_id:
+        raise ValueError("a real session_id is required for session cache state")
+    session_key = hashlib.sha256(session_id.encode()).hexdigest()[:24]
+    return PROJECTS_DIR / project_identity(cwd) / f"active-skills-{session_key}.json"
 
 
 # -----------------------------------------------------------------------------
@@ -581,8 +652,9 @@ def match_triggers(prompt: str, conn: sqlite3.Connection) -> list[str]:
             continue
         for trig in triggers:
             t = trig.lower()
-            # Support {placeholder} = wildcard
-            pattern = re.escape(t).replace(r"\{[^}]+\}", r"[^\s]+")
+            # Defined grammar: non-empty {identifier} placeholders match one non-space token.
+            parts = re.split(r"(\{[a-z_][a-z0-9_-]*\})", t)
+            pattern = "".join(r"[^\s]+" if p.startswith("{") else re.escape(p) for p in parts)
             if re.search(pattern, prompt_lower):
                 out.append(sid)
                 break
@@ -594,6 +666,8 @@ def match_triggers(prompt: str, conn: sqlite3.Connection) -> list[str]:
 # -----------------------------------------------------------------------------
 def embedding_topk(prompt: str, conn: sqlite3.Connection, k: int = 8) -> list[tuple[str, float]]:
     """Return [(skill_id, similarity)] sorted desc."""
+    if os.environ.get("EMDASH_DISABLE_EMBEDDINGS") == "1":
+        return []
     api_key = get_secret("CLOUDFLARE_API_KEY")
     if not api_key:
         return []
@@ -640,11 +714,11 @@ def reason_priority(reason: str, base_priority: int) -> float:
 
 
 def apply_budget(selections: list[tuple[str, str]], conn: sqlite3.Connection,
-                 budget_tokens: int = DEFAULT_BUDGET_TOKENS) -> list[str]:
+                 budget_tokens: int = DEFAULT_BUDGET_TOKENS) -> dict:
     """Filter skill set to fit under budget; sort by (reason-adjusted) priority asc.
     selections = [(skill_id, reason)]"""
     if not selections:
-        return []
+        return {"selected": [], "used_tokens": 0, "unsatisfied_required": []}
     skill_ids = [s[0] for s in selections]
     reason_map = dict(selections)
     cur = conn.execute(
@@ -657,21 +731,37 @@ def apply_budget(selections: list[tuple[str, str]], conn: sqlite3.Connection,
         rows.append((sid, eff_pri, toks))
     # Sort by effective priority asc, then size asc (load smaller first within tier to fit more)
     rows.sort(key=lambda r: (r[1], r[2]))
+    required = [r for r in rows if reason_map.get(r[0]) == "tier-1 always"]
+    optional = [r for r in rows if reason_map.get(r[0]) != "tier-1 always"]
     out = []
     used = 0
-    for sid, _eff, toks in rows:
+    unsatisfied = []
+    for sid, _eff, toks in required:
+        if used + toks > budget_tokens:
+            unsatisfied.append(sid)
+            continue
+        out.append(sid)
+        used += toks
+    if unsatisfied:
+        return {"selected": out, "used_tokens": used, "unsatisfied_required": unsatisfied}
+    for sid, _eff, toks in optional:
         if used + toks > budget_tokens:
             continue
         out.append(sid)
         used += toks
-    return out
+    return {"selected": out, "used_tokens": used, "unsatisfied_required": []}
 
 
 # -----------------------------------------------------------------------------
 # Path matching (#2 applies fingerprint to skill `paths`)
 # -----------------------------------------------------------------------------
 def path_match(skill_paths: list[str], fingerprint: dict) -> bool:
-    """Return True if skill's paths constraint allows this project."""
+    """Return True for a positive project match.
+
+    A bare `*` means globally eligible, not globally selected. Treating it as a
+    positive match loaded nearly every rule before intent routing and defeated
+    progressive disclosure.
+    """
     if not skill_paths:
         return True
     cwd = fingerprint.get("cwd", "")
@@ -689,7 +779,7 @@ def path_match(skill_paths: list[str], fingerprint: dict) -> bool:
         elif pattern in cwd:
             return True
         elif pattern == "*":
-            return True
+            continue
     return False
 
 
@@ -697,7 +787,7 @@ def path_match(skill_paths: list[str], fingerprint: dict) -> bool:
 # Main router — unified route command
 # -----------------------------------------------------------------------------
 def cmd_route(prompt: str, cwd: str | None = None, cache_only: bool = False,
-              tool: str = "", command: str = "") -> dict:
+              tool: str = "", command: str = "", session_id: str = "") -> dict:
     """
     Return {selected_skills, fingerprint, reasons, total_tokens}.
     Selection order:
@@ -751,11 +841,12 @@ def cmd_route(prompt: str, cwd: str | None = None, cache_only: bool = False,
             selected[sid] = f"path-match {paths}"
 
     # 3. Session cache
-    cache_p = session_cache_path(cwd)
-    if cache_p.exists():
+    cache_p = session_cache_path(cwd, session_id) if session_id else None
+    if cache_p and cache_p.exists():
         try:
             cache = json.loads(cache_p.read_text())
-            for sid in cache.get("active", []):
+            fresh = int(time.time()) - int(cache.get("updated_at", 0)) <= 86400
+            for sid in cache.get("active", []) if fresh else []:
                 if sid not in selected:
                     selected[sid] = "session-cache"
         except json.JSONDecodeError:
@@ -824,7 +915,8 @@ def cmd_route(prompt: str, cwd: str | None = None, cache_only: bool = False,
             pass
 
     # Apply tier budget — reason-aware priority bumps
-    final = apply_budget(list(selected.items()), conn, DEFAULT_BUDGET_TOKENS)
+    budget_result = apply_budget(list(selected.items()), conn, DEFAULT_BUDGET_TOKENS)
+    final = budget_result["selected"]
     final_set = set(final)
     dropped = [sid for sid in selected if sid not in final_set]
 
@@ -859,15 +951,19 @@ def cmd_route(prompt: str, cwd: str | None = None, cache_only: bool = False,
         "fingerprint": fp,
         "total_tokens": total,
         "budget": DEFAULT_BUDGET_TOKENS,
+        "unsatisfied_required": budget_result["unsatisfied_required"],
+        "status": "unsatisfied-budget" if budget_result["unsatisfied_required"] else "ok",
     }
 
 
 # -----------------------------------------------------------------------------
 # Track skill usage (#9)
 # -----------------------------------------------------------------------------
-def cmd_track(skill_id: str, cwd: str | None = None) -> None:
+def cmd_track(skill_id: str, cwd: str | None = None, session_id: str = "") -> None:
     cwd = cwd or os.getcwd()
-    p = session_cache_path(cwd)
+    if not session_id:
+        raise ValueError("track requires --session-id or EMDASH_SESSION_ID")
+    p = session_cache_path(cwd, session_id)
     p.parent.mkdir(parents=True, exist_ok=True)
     if p.exists():
         try:
@@ -879,7 +975,11 @@ def cmd_track(skill_id: str, cwd: str | None = None) -> None:
     if skill_id not in data["active"]:
         data["active"].append(skill_id)
     data["updated_at"] = int(time.time())
-    p.write_text(json.dumps(data, indent=2))
+    data["project_id"] = project_identity(cwd)
+    data["schema_version"] = 1
+    tmp = p.with_suffix(f".tmp-{os.getpid()}")
+    tmp.write_text(json.dumps(data, indent=2))
+    os.replace(tmp, p)
 
 
 # -----------------------------------------------------------------------------
@@ -1019,6 +1119,7 @@ def main(argv: list[str]) -> int:
         cwd = None
         tool = ""
         command = ""
+        session_id = os.environ.get("EMDASH_SESSION_ID", "")
         for i, arg in enumerate(argv[3:], start=3):
             if arg == "--cwd" and i + 1 < len(argv):
                 cwd = argv[i + 1]
@@ -1026,7 +1127,9 @@ def main(argv: list[str]) -> int:
                 tool = argv[i + 1]
             elif arg == "--command" and i + 1 < len(argv):
                 command = argv[i + 1]
-        result = cmd_route(prompt, cwd=cwd, tool=tool, command=command)
+            elif arg == "--session-id" and i + 1 < len(argv):
+                session_id = argv[i + 1]
+        result = cmd_route(prompt, cwd=cwd, tool=tool, command=command, session_id=session_id)
         print(json.dumps(result, indent=2))
         return 0
     if cmd == "track":
@@ -1034,9 +1137,12 @@ def main(argv: list[str]) -> int:
             print("usage: track <skill_id> [--cwd PATH]", file=sys.stderr)
             return 1
         cwd = None
+        session_id = os.environ.get("EMDASH_SESSION_ID", "")
         if "--cwd" in argv:
             cwd = argv[argv.index("--cwd") + 1]
-        cmd_track(argv[2], cwd)
+        if "--session-id" in argv:
+            session_id = argv[argv.index("--session-id") + 1]
+        cmd_track(argv[2], cwd, session_id)
         return 0
     if cmd == "index":
         cmd_index(as_json="--json" in argv)

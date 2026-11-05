@@ -209,6 +209,7 @@ Deploy at `workers.megabyte.space/mcp-healthcheck` — runs as a Cron Trigger at
 
 ```typescript
 // workers/mcp-healthcheck/index.ts
+import { AwsClient } from 'aws4fetch'
 import registry from '../../mcp-registry.json'
 
 interface McpStatus { id: string; status: 'healthy' | 'degraded' | 'unreachable'; latency_ms: number; error?: string }
@@ -360,19 +361,23 @@ async function sendAlerts(env: Env, degraded: McpStatus[]) {
     }),
   })
 
-  // Email via Resend (load-bearing degradation only)
+  // Email via Amazon SES (load-bearing degradation only)
   const loadBearingDown = degraded.filter(s =>
     registry.servers.find(r => r.id === s.id)?.tier === 'load-bearing'
   )
   if (loadBearingDown.length > 0) {
-    await fetch('https://api.resend.com/emails', {
+    const region = env.SES_REGION ?? 'us-east-1'
+    const aws = new AwsClient({ accessKeyId: env.AWS_ACCESS_KEY_ID, secretAccessKey: env.AWS_SECRET_ACCESS_KEY, region, service: 'ses' })
+    await aws.fetch(`https://email.${region}.amazonaws.com/v2/email/outbound-emails`, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        from: 'alerts@megabyte.space',
-        to: 'brian@megabyte.space',
-        subject: `URGENT: Load-bearing MCP servers down (${loadBearingDown.map(s => s.id).join(', ')})`,
-        html: `<pre>${lines}</pre>`,
+        FromEmailAddress: env.EMAIL_FROM,
+        Destination: { ToAddresses: ['brian@megabyte.space'] },
+        Content: { Simple: {
+          Subject: { Data: `URGENT: Load-bearing MCP servers down (${loadBearingDown.map(s => s.id).join(', ')})` },
+          Body: { Html: { Data: `<pre>${lines}</pre>` } },
+        } },
       }),
     })
   }

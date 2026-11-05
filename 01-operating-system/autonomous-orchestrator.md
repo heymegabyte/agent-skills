@@ -16,6 +16,8 @@ updated: "2026-04-23"
 5. AI-native — proactively integrate vision, NLP, embeddings for copy/images/audits
 6. Full tool access — use EVERY available MCP, API, Computer Use, and Browser tool; never self-restrict
 7. Creative orchestration — chain tools across systems (Figma→code, Airtable→D1, Slack→notify, Computer Use→native app config); the orchestrator decides HOW, not IF
+8. Tiered delegation — whether the lead is Codex, Claude, or Gemini, send every bounded throughput-safe unit to OpenCode + DeepSeek; retain premium models for frontier judgment, integration, and acceptance
+9. DeepSeek-maximal swarms — dispatch two or more independent OpenCode-safe slices in parallel without a minimum time threshold; premium-capacity savings count as value. Use disjoint ownership, bounded waves, one fold, and one complete verification pass
 
 ## Tool Inventory (Use Aggressively)
 
@@ -27,7 +29,7 @@ updated: "2026-04-23"
 | Code | GitHub MCP, Bash | PRs, issues, CI, any shell command |
 | Design | Figma MCP | Extract designs, generate diagrams, screenshots |
 | Data | Airtable MCP, Notion MCP, Plane MCP | Project tracking, content, task management |
-| Communication | Slack MCP, Resend API | Notifications, alerts, team updates |
+| Communication | Slack MCP, Amazon SES | Notifications, alerts, team updates |
 | Payments | Stripe MCP | Customers, subscriptions, invoices, products |
 | Content | WordPress MCP, Firecrawl MCP | CMS, web scraping, content extraction |
 | Automation | IFTTT MCP | Cross-service workflows, triggers, applets |
@@ -60,11 +62,11 @@ Run `01/architecture-thought-loop.md` (30-point checklist):
 
 ### 2. PLAN
 
-Group into parallel streams, identify dependencies, create execution order.
+Group into parallel streams, identify dependencies, create execution order. Label each unit `frontier-required` or `throughput-safe`; route the latter to OpenCode rather than leaving routine execution on Codex, Claude, or Gemini.
 
 ### 3. EXECUTE (parallel)
 
-Spawn agents, build completely, make creative decisions inline, deploy continuously.
+Launch OpenCode + DeepSeek workers for every bounded unit they can handle correctly. With two or more independent slices, launch a swarm within the global pool even when the main benefit is conserving premium quota or context; use up to 3–4 workers when that much real work exists. Serialize dependency chains and shared hot files. The premium lead resolves ambiguity and folds the results. Build completely, make creative decisions inline, and deploy continuously.
 
 ### 4. VERIFY
 
@@ -116,8 +118,9 @@ Update CLAUDE.md, skills, memories. Descriptive commits.
 ## Team Structure
 
 ```
-Team Lead (claude-opus-4-6) — plans, coordinates
-├── Frontend Agent (claude-sonnet-4-6) — UI, design, motion, a11y
+Premium Lead (Codex / Claude / Gemini) — architecture, contracts, integration, acceptance
+├── OpenCode + DeepSeek worker(s) — routine implementation, tests, migrations, docs
+├── Premium specialist — only for frontier-required judgment
 ├── Backend Agent (claude-sonnet-4-6) — API, DB, auth, webhooks
 ├── Quality Agent (claude-sonnet-4-6) — tests, security, perf
 ├── Content Agent (claude-haiku-4-5-20251001) — copy, SEO, media, docs
@@ -162,7 +165,7 @@ Custom agents from `~/.agentskills/agents/`: deploy-verifier, security-reviewer,
 
 - Decompose → parallel phases → agents complete + return (ephemeral, not persistent) → master merges → next phase
 - Context >60% → `progress.md` → fresh agent
-- 3x critical fail → alert brian@megabyte.space via Resend
+- 3x critical fail → alert brian@megabyte.space via Amazon SES
 - DONE when all Hard Gates pass + zero recommendations
 
 **Worktree isolation** — each parallel agent gets isolated git worktree (`git worktree add ../worktree-frontend emdash/feat-xxx`). Agents cannot clobber each other's files. Merge after phase completion.

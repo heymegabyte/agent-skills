@@ -21,7 +21,7 @@ Per `[[monitor-orchestration]]` + `[[source-site-enhancement]]` § Parallel-agen
 | Agent | Role |
 |---|---|
 | `architect` | Project structure, file inventory, DO/D1/KV/R2/Vectorize decisions per `[[05-architecture-and-stack]]` |
-| `auth-implementer` | Better Auth or Clerk wiring with D1 schema, social providers, magic links, session storage |
+| `auth-implementer` | Better Auth or Better Auth wiring with D1 schema, social providers, magic links, session storage |
 | `payments-implementer` | Stripe + Link (DEFAULT, all money flows; Billing for SaaS) / Square only on prompt request, per `[[payments]]`, webhook handlers, idempotency |
 | `feature-builder` (×3) | Per-domain features — one agent per domain (auth, billing, core feature) |
 | `frontend-builder` | React 19 + Vite + TanStack Router + Tailwind v4 + shadcn/ui; SSR via vite-ssg or TanStack Start |
@@ -35,15 +35,15 @@ Per `[[cloudflare-lock-in-is-leverage]]`:
 
 - **Edge**: Workers + Hono
 - **DB**: D1 with Drizzle v1 RQBv2 + Zod schemas (per `[[zod-everywhere]]`)
-- **Auth**: Better Auth (D1 adapter) or Clerk (M2M JWT)
+- **Auth**: Better Auth (D1 adapter) or Better Auth (M2M JWT)
 - **Payments**: Square (accept) + Stripe Connect (payouts) per `[[payments]]`
 - **AI**: Workers AI (Llama 4 Scout free first-pass) + Anthropic via AI Gateway for polish per `[[model-routing]]`
 - **State**: Durable Objects per tenant (sql\`\`-backed), KV for hot config, R2 for files
 - **Workflows**: CF Workflows for durable multi-step (NOT Inngest unless explicit)
 - **Vector**: Vectorize for RAG when AI search needed
-- **Email**: Resend via @hono/resend or Workers binding
+- **Email**: Amazon SES v2 via aws4fetch on Workers (sole send rail)
 - **Observability**: PostHog (cookie-free) + Workers Tracing + Sentry @sentry/cloudflare v9 + AI Gateway logs
-- **Forms**: Turnstile (invisible) + Zod + Resend
+- **Forms**: Turnstile (invisible) + Zod + Amazon SES
 
 NO: Vercel, AWS, Supabase, PlanetScale, Inngest (unless explicit), Prisma. Per `[[cloudflare-lock-in-is-leverage]]`.
 
@@ -62,7 +62,7 @@ SaaS jewels: `/changelog`, `/security`, `/status`, `/customers`, `/roadmap`, `/a
 3. PWA Kit — manifest with screenshots/shortcuts/share_target
 4. Structured Data — 5+ JSON-LD per route (accurate, never padded)
 5. SEO + GEO — title 50-60ch, desc 120-156ch, robots AI-crawler explicit
-6. Integrations — Stripe/Square/Resend/Clerk/Turnstile/Workers AI all configured
+6. Integrations — Stripe/Square/Amazon SES/Better Auth/Turnstile/Workers AI all configured
 7. Performance — LCP ≤2.0s, CLS ≤0.05, INP ≤100ms
 8. A11y — WCAG 2.2 AA, axe 0 violations × 6bp
 9. Testing — Playwright 6bp + Vitest + Lighthouse + AI vision QA ≥9/10

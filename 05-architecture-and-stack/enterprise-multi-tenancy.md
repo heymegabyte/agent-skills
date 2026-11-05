@@ -1,6 +1,6 @@
 ---
 name: "Enterprise Multi-Tenancy"
-description: "DB-per-tenant D1, RBAC/ABAC authorization (Cerbos/OPA), audit logging (R2 WORM), SSO/SCIM (Clerk Enterprise Connections), data residency (D1 jurisdiction), per-tenant rate limiting (CF RateLimit binding), white-labeling (CF for SaaS), admin impersonation, data portability (EU Data Act)."
+description: "DB-per-tenant D1, RBAC/ABAC authorization (Cerbos/OPA), audit logging (R2 WORM), SSO/SCIM (Better Auth Enterprise Connections), data residency (D1 jurisdiction), per-tenant rate limiting (CF RateLimit binding), white-labeling (CF for SaaS), admin impersonation, data portability (EU Data Act)."
 updated: "2026-04-23"
 ---
 
@@ -29,9 +29,9 @@ updated: "2026-04-23"
 
 ## Authorization (RBAC + ABAC)
 
-- **Clerk Organizations** — built-in org membership, roles (admin/member/viewer), permissions. `auth().orgRole` in middleware.
+- **Better Auth Organizations** — built-in org membership, roles (admin/member/viewer), permissions. `auth().orgRole` in middleware.
 - **Complex policies** — Cerbos (policy-as-code, sidecar on CF Container) or OPA (Rego policies, compile to WASM for Workers)
-- **Pattern** — Clerk authenticates → org context → Cerbos/OPA authorizes per-resource
+- **Pattern** — Better Auth authenticates → org context → Cerbos/OPA authorizes per-resource
 
 ### Default Roles
 
@@ -40,7 +40,7 @@ updated: "2026-04-23"
 - **member** — CRUD own resources
 - **viewer** — read-only
 - **billing** — billing-only
-- Custom roles via Clerk Dashboard or API
+- Custom roles via Better Auth Dashboard or API
 
 ### ABAC Attributes
 
@@ -62,12 +62,12 @@ updated: "2026-04-23"
 - R2 lifecycle rules for auto-archival
 - Sentry breadcrumbs for real-time error context
 
-## SSO/SCIM (Clerk Enterprise Connections)
+## SSO/SCIM (Better Auth Enterprise Connections)
 
-- **Clerk Enterprise Connections** — SAML/OIDC SSO, SCIM provisioning
+- **Better Auth Enterprise Connections** — SAML/OIDC SSO, SCIM provisioning
 - Per-org SSO config via dashboard or API
 - **SCIM endpoints** — auto-sync user create/update/deactivate from IdP (Okta/Azure AD/OneLogin)
-- **JIT provisioning** — first SSO login auto-creates Clerk user + org membership
+- **JIT provisioning** — first SSO login auto-creates Better Auth user + org membership
 - **Enterprise plan gate** — SSO/SCIM features behind `enterprise` plan check via Stripe Entitlements API. Show "Contact Sales" on pricing page.
 
 ## Data Residency (D1 Jurisdiction)
@@ -91,11 +91,11 @@ updated: "2026-04-23"
 - `PUT /zones/{zone_id}/custom_hostnames` to register
 - SSL auto-provisioned
 - Workers routes match custom hostname → resolve tenant → serve branded experience
-- Per-tenant — logo, colors, favicon, email templates (Resend per-domain)
+- Per-tenant — logo, colors, favicon, email templates (Amazon SES per-domain verified identity)
 
 ## Admin Impersonation
 
-- Clerk `impersonate()` — admin logs in as any user within their org
+- Better Auth `impersonate()` — admin logs in as any user within their org
 - Audit-logged (impersonator ID stored)
 - **Visual indicator** — persistent banner "Acting as [user]"
 - Auto-expire after 1hr
@@ -115,11 +115,11 @@ updated: "2026-04-23"
 
 - Enterprise customers — restrict API access to approved IP ranges
 - Store per-org in D1 (`org_ip_allowlist` table)
-- Check in auth middleware after Clerk JWT verification
+- Check in auth middleware after Better Auth JWT verification
 - `CF-Connecting-IP` header for real client IP (CF proxied)
 - Return 403 for non-allowlisted IPs
 - **Admin UI** — org settings → Security → IP Allowlist (add/remove CIDR ranges)
-- Bypass for Clerk webhook IPs and health endpoints
+- Bypass for Better Auth webhook IPs and health endpoints
 
 ## Compliance Certification Display
 
@@ -130,7 +130,7 @@ updated: "2026-04-23"
 
 ## Zero-Human-Loop Automation
 
-- **Tenant creation** — Clerk org webhook → D1 create → Stripe customer create → welcome email (Resend) → PostHog identify. All automated.
+- **Tenant creation** — Better Auth org webhook → D1 create → Stripe customer create → welcome email (Amazon SES) → PostHog identify. All automated.
 - **Tenant deletion** — grace period webhook → data export to R2 → D1 delete → Stripe cancel → purge confirmation
 - **Plan upgrades** — Stripe webhook → Entitlements check → feature unlock → notification
 - No manual provisioning at any step

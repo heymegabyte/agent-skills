@@ -157,7 +157,7 @@ run_provider() { # run_provider <provider> <prompt> <model> <timeout> <outfile> 
   case "$p" in
     claude) ${timeout_bin} "$sub" claude -p "$prompt" >"$out" 2>>"${out}.err" ;;
     codex) ${timeout_bin} "$sub" codex exec "$prompt" >"$out" 2>>"${out}.err" ;;
-    opencode) ${timeout_bin} "$oc" run -m "${model:-deepseek/deepseek-reasoner}" "$prompt" >"$out" 2>>"${out}.err" ;;
+    opencode) ${timeout_bin} "$oc" run -m "${model:-deepseek/deepseek-v4-pro}" "$prompt" >"$out" 2>>"${out}.err" ;;
     *) return 2 ;;
   esac
 }

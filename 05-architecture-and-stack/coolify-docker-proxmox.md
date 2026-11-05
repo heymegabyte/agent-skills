@@ -81,7 +81,7 @@ All follow `{service}.megabyte.space`. Discoverable via Coolify API.
 ### Authentication
 
 ```bash
-COOLIFY_TOKEN=$(cat ~/.config/emdash/coolify-token)
+COOLIFY_TOKEN="<your-coolify-api-token>"   # load from your secret store (e.g. get-secret COOLIFY_TOKEN); never commit it
 COOLIFY_URL="https://coolify.megabyte.space/api/v1"
 ```
 

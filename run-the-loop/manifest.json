@@ -5,6 +5,7 @@
   "targetDir": ".claude/run-the-loop",
   "shared": [
     "CONSTITUTION.md",
+    "CONVERGENCE-PROTOCOL.md",
     "OPERATING-PRINCIPLES.md",
     "RUNNER-AND-CRITICS.md",
     "GENOME.md",
@@ -12,7 +13,7 @@
     "CF-RELEASES.md",
     "ULTIMATE-REQUIREMENTS.md"
   ],
-  "templates": ["README.md", "NEXT-SESSION-BOOTSTRAP.md", "ARCHITECTURE.md"],
+  "templates": ["README.md", "NEXT-SESSION-BOOTSTRAP.md", "ARCHITECTURE.md", "CONVERGENCE.md"],
   "projectOwned": [
     "BACKLOG.md",
     "LEDGER.md",

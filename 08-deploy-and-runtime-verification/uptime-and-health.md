@@ -2,7 +2,7 @@
 name: "Uptime and Health"
 version: "1.2.0"
 updated: "2026-04-23"
-description: "Health endpoints on every Worker (/health + /health/deep), external monitoring (UptimeRobot, Better Stack), /status page, cron self-check with Resend alert escalation."
+description: "Health endpoints on every Worker (/health + /health/deep), external monitoring (UptimeRobot, Better Stack), /status page, cron self-check with Amazon SES alert escalation."
 ---
 
 # Uptime and Health
@@ -85,16 +85,22 @@ Simple status page showing:
 
 ```typescript
 // wrangler.toml: [triggers] crons = ["*/5 * * * *"]
+import { AwsClient } from 'aws4fetch';
+
 export default {
   async scheduled(event, env, ctx) {
     const res = await fetch(`https://${env.DOMAIN}/health`);
     if (!res.ok) {
-      // Alert via Resend
-      await new Resend(env.RESEND_API_KEY).emails.send({
-        from: 'Monitor <alerts@megabyte.space>',
-        to: ['brian@megabyte.space'],
-        subject: `⚠️ ${env.DOMAIN} is down`,
-        html: `Health check failed with status ${res.status}`,
+      // Alert via Amazon SES (SES v2 via aws4fetch — see deskl.ink workers/api/src/email/ses.ts)
+      const region = env.SES_REGION ?? 'us-east-1';
+      const aws = new AwsClient({ accessKeyId: env.AWS_ACCESS_KEY_ID, secretAccessKey: env.AWS_SECRET_ACCESS_KEY, region, service: 'ses' });
+      await aws.fetch(`https://email.${region}.amazonaws.com/v2/email/outbound-emails`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          FromEmailAddress: env.EMAIL_FROM ?? 'Monitor <alerts@megabyte.space>',
+          Destination: { ToAddresses: ['brian@megabyte.space'] },
+          Content: { Simple: { Subject: { Data: `⚠️ ${env.DOMAIN} is down` }, Body: { Html: { Data: `Health check failed with status ${res.status}` } } } },
+        }),
       });
     }
   },
@@ -169,7 +175,7 @@ Cloudflare Workers (site, API)
 ```
 Every 5 min: Worker cron hits /health
   → OK: log to KV (increment uptime counter)
-  → FAIL: send Resend alert + log to KV
+  → FAIL: send Amazon SES alert + log to KV
   → 3 consecutive FAILs: escalate (post to Slack via mcp__claude_ai_Slack__slack_send_message)
 ```
 
@@ -190,6 +196,6 @@ Best used during: incident investigation, post-deploy verification, weekly healt
 3. `/health/deep` checks all dependencies — response `checks` object has keys for every bound resource (D1, KV, R2)
 4. 503 returned when any dependency is down — kill a dependency, confirm status flips to `degraded` and HTTP 503
 5. Cron self-check fires every 5 minutes — check KV uptime counter increments every 5 min
-6. Alert email sent on failure — simulate failure, confirm Resend email arrives within 5 minutes
+6. Alert email sent on failure — simulate failure, confirm Amazon SES email arrives within 5 minutes
 7. External monitor configured — UptimeRobot or Better Stack has an active monitor for `/health`
 8. Status page renders correctly — Playwright screenshot of `/status` shows current health, no errors

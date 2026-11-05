@@ -8,6 +8,7 @@
 - Shared skills: heymegabyte/agent-skills. Repository-local skills may extend or override shared skills.
 - Normal working branch: main. Feature branches are exceptional (conflicting concurrent work, experimental work, or intentional isolation). Never force-push main.
 - GitHub owns recurring scheduling and the canonical run ledger. Schedule each enabled project at `2,17,32,47 * * * *`; each tick fires its loop once. Do not schedule agent-skills itself.
+- Management plane: **Paperclip** governs the fleet (tasks · org chart · budgets · approval gates) over OpenClaw; adapters use subscription CLIs via `with-subscription-cli.sh`/`claude-pool`, never API keys. SSOT: `rules/agent-provider-policy.md` § Fleet management plane.
 - Target orchestration: GitHub Actions → persistent self-hosted runner → repository /run-the-loop → OpenClaw → dennisonbertram/claw-router → official Claude Code / official Codex.
 - Throughput path: OpenClaw → OpenCode → DeepSeek API directly with DEEPSEEK_API_KEY, obtained through get-secret when available.
 - Official CLIs own subscription OAuth. Preserve existing Codex authentication. Prepare three isolated persistent Claude account profiles; login remains interactive.
@@ -77,3 +78,21 @@ Claw Router documents isolated Claude profiles, Linux support, provider-specific
 ## Outstanding prerequisite
 
 The current execution session restricts local network and systemd access. Installation, cloning, runner registration, service startup and live provider tests require a host-capable session. GitHub connector access is available but does not confer local CLI authentication or host-service control. Never mark this machine operational from this inventory alone.
+
+## Cloudflare Mesh (connector) — provisioned 2026-10-10
+
+Reached live this session via `ssh ubuntu.megabyte.space` (user `professormanhattan`). Observed: `ens18 10.0.0.156/24`, `ip_forward=1` already set, `docker` usable WITHOUT sudo, `warp-cli` NOT installed, **passwordless sudo unavailable**.
+
+- **ZT side DONE (reversible):** WARP Connector object `mesh-ubuntu-primary` = `6d1b8aab-7faa-4f2a-9c75-d119d0f3c67f` created via API. No route added on purpose (see hazard).
+- **Design = node Mesh-IP, NOT a LAN CIDR route.** Do NOT add a `10.0.0.0/24` mesh route: it would overlap the existing `10.0.0.156/32` SSH route (tunnel `73347a40…`, default vnet) and could sever owner SSH. The connector's auto-assigned Mesh IP (100.96/12) gives identity-based reach to this box from any enrolled device, with zero routing conflict. Add scoped LAN routes later only in a DEDICATED vnet if other lab hosts are needed.
+- **This Mac is ON the same LAN (`10.0.0.138/24`).** Therefore do NOT modify the Mac's WARP split-tunnel for `10.0.0.0/24` (would route local LAN through Cloudflare and break local access + this SSH path). Mesh's payoff is reaching this box by Mesh IP when the Mac is OFF-LAN.
+- **Remaining step = one privileged action (needs root; no official WARP container image → do NOT run an unofficial privileged container on prod).** Run on the VM:
+  ```sh
+  curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg | sudo gpg --yes --dearmor -o /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
+  echo "deb [signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
+  sudo apt-get update && sudo apt-get install -y cloudflare-warp   # if 26.04 codename 404s, use the nearest supported
+  warp-cli --accept-tos connector new "<TOKEN from dash: Zero Trust → Networks → Tunnels → mesh-ubuntu-primary>"
+  warp-cli --accept-tos connect && warp-cli --accept-tos status   # expect Connected, connector mode
+  ```
+- **Verify (from the Mac):** the VM's Mesh IP appears in Zero Trust → My Team → Devices; `ssh <mesh-ip>` / ping reaches the box independent of LAN.
+- **Rollback:** `warp-cli disconnect && sudo apt-get remove -y cloudflare-warp`; `DELETE /accounts/<acct>/warp_connector/6d1b8aab-7faa-4f2a-9c75-d119d0f3c67f`.

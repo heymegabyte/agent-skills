@@ -5,12 +5,12 @@ Sourced on demand by rules/email-deliverability-implementation.md.
 ## SPF — DNS record examples
 
 ```dns
-; Minimal Resend-only sender (1 lookup)
-megabyte.space.  TXT  "v=spf1 include:_spf.resend.com ~all"
+; Minimal SES-only sender (1 lookup)
+megabyte.space.  TXT  "v=spf1 include:amazonses.com ~all"
 
 ; Multi-vendor chain (common SaaS stack — count your lookups)
 megabyte.space.  TXT  "v=spf1
-  include:_spf.resend.com          ; 1 — transactional (Resend)
+  include:amazonses.com            ; 1 — transactional (Amazon SES)
   include:sendgrid.net             ; 2 — marketing (SendGrid fallback)
   include:_spf.google.com          ; 3 — G Suite / Workspace
   ip4:104.18.0.0/16                ; 0 — CF IP, counts as ip4 (not a lookup)
@@ -18,18 +18,34 @@ megabyte.space.  TXT  "v=spf1
 ; Total: 3 lookups. Budget: 7 remaining.
 ```
 
-## SPF — Resend domain provision + CF DNS push
+## SPF — SES domain provision + CF DNS push
 
 ```ts
-// scripts/provision-resend-dns.ts
-const domain = await fetch('https://api.resend.com/domains', {
+// scripts/provision-ses-dns.ts
+import { AwsClient } from 'aws4fetch'
+
+const region = SES_REGION ?? 'us-east-1'
+const aws = new AwsClient({ accessKeyId: AWS_ACCESS_KEY_ID, secretAccessKey: AWS_SECRET_ACCESS_KEY, region, service: 'ses' })
+
+// Create the SES email identity — returns 3 EasyDKIM CNAME tokens
+const identity = await aws.fetch(`https://email.${region}.amazonaws.com/v2/email/identities`, {
   method: 'POST',
-  headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-  body: JSON.stringify({ name: 'megabyte.space', region: 'us-east-1' }),
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ EmailIdentity: 'megabyte.space' }),
 }).then(r => r.json())
 
-// domain.records contains SPF, DKIM1, DKIM2 → push to CF Zones API
-for (const record of domain.records) {
+// identity.DkimAttributes.Tokens = 3 tokens → each is a CNAME:
+//   <token>._domainkey.megabyte.space  CNAME  <token>.dkim.amazonses.com
+// plus SPF (include:amazonses.com) → push all to CF Zones API
+const records = [
+  { type: 'TXT', name: 'megabyte.space', value: 'v=spf1 include:amazonses.com ~all' },
+  ...identity.DkimAttributes.Tokens.map((t: string) => ({
+    type: 'CNAME',
+    name: `${t}._domainkey.megabyte.space`,
+    value: `${t}.dkim.amazonses.com`,
+  })),
+]
+for (const record of records) {
   await fetch(`https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/dns_records`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${CF_API_TOKEN}`, 'Content-Type': 'application/json' },
@@ -38,38 +54,34 @@ for (const record of domain.records) {
 }
 ```
 
-## DKIM — key generation + DNS record
+## DKIM — SES EasyDKIM (3 CNAME tokens, SES-managed keys)
 
 ```bash
-# 1. Generate new 2048-bit RSA key pair (minimum; 4096 if provider supports it)
-openssl genrsa -out dkim-private-new.pem 2048
-openssl rsa -in dkim-private-new.pem -pubout -out dkim-public-new.pem
-
-# 2. Format the public key for the DNS TXT record
-# Remove headers, join lines:
-PUBLIC_KEY=$(openssl rsa -in dkim-private-new.pem -pubout 2>/dev/null \
-  | grep -v '^-' | tr -d '\n')
-
-# 3. Add NEW selector to DNS BEFORE switching traffic
-# Convention: selector = YYYYMM of rotation (e.g. rs202607)
-# megabyte.space: rs202607._domainkey.megabyte.space
+# SES EasyDKIM mints + rotates the 2048-bit keys for you — no local openssl.
+# create-email-identity returns 3 DKIM tokens; each becomes a CNAME delegation.
+aws sesv2 create-email-identity --email-identity megabyte.space \
+  --query 'DkimAttributes.Tokens' --output text
+# → token1  token2  token3
 ```
 
-DNS record for new selector:
+DNS records for the 3 EasyDKIM tokens (CNAME delegation, not a published TXT key):
 
 ```dns
-rs202607._domainkey.megabyte.space.  TXT  "v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ..."
+token1._domainkey.megabyte.space.  CNAME  token1.dkim.amazonses.com.
+token2._domainkey.megabyte.space.  CNAME  token2.dkim.amazonses.com.
+token3._domainkey.megabyte.space.  CNAME  token3.dkim.amazonses.com.
 ```
 
-Resend selector update after new key upload:
+SES key rotation (SES-managed — no manual selector swap):
 
 ```ts
-// Update the signing selector on the Resend domain
-await fetch(`https://api.resend.com/domains/${domainId}/verify`, {
-  method: 'POST',
-  headers: { Authorization: `Bearer ${RESEND_API_KEY}` },
+// EasyDKIM rotates keys on SES's schedule; force the next signing key manually:
+await aws.fetch(`https://email.${region}.amazonaws.com/v2/email/identities/megabyte.space/dkim`, {
+  method: 'PUT',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ SigningAttributes: { NextSigningKeyLength: 'RSA_2048_BIT' } }),
 })
-// Then re-provision the CNAME records for the new selector
+// The 3 CNAMEs stay valid — SES rotates the key behind them, no DNS change needed.
 ```
 
 ## DMARC — DNS records for each phase
@@ -112,22 +124,30 @@ default._bimi.megabyte.space.  TXT  "v=BIMI1; l=https://megabyte.space/.well-kno
 
 `a=` is the hosted VMC PEM (certificate chain from Entrust/DigiCert). Without `a=`, only Yahoo shows the logo; Gmail requires VMC.
 
-## One-click unsubscribe — Resend send headers
+## One-click unsubscribe — SES v2 send headers
 
 ```ts
-// Resend send with unsubscribe headers (marketing sends only)
-await fetch('https://api.resend.com/emails', {
+// SES v2 SendEmail with unsubscribe headers (marketing sends only)
+import { AwsClient } from 'aws4fetch'
+const region = env.SES_REGION ?? 'us-east-1'
+const aws = new AwsClient({ accessKeyId: env.AWS_ACCESS_KEY_ID, secretAccessKey: env.AWS_SECRET_ACCESS_KEY, region, service: 'ses' })
+
+await aws.fetch(`https://email.${region}.amazonaws.com/v2/email/outbound-emails`, {
   method: 'POST',
-  headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+  headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    from: 'Brian <brian@megabyte.space>',
-    to: recipientEmail,
-    subject: 'Your weekly digest',
-    html: emailHtml,
-    headers: {
-      'List-Unsubscribe': `<https://${DOMAIN}/api/unsubscribe?token=${hmacToken}>`,
-      'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
-      'X-Category': 'marketing', // internal classification; not sent to recipient
+    FromEmailAddress: 'Brian <brian@megabyte.space>',
+    Destination: { ToAddresses: [recipientEmail] },
+    Content: {
+      Simple: {
+        Subject: { Data: 'Your weekly digest' },
+        Body: { Html: { Data: emailHtml } },
+        Headers: [
+          { Name: 'List-Unsubscribe', Value: `<https://${DOMAIN}/api/unsubscribe?token=${hmacToken}>` },
+          { Name: 'List-Unsubscribe-Post', Value: 'List-Unsubscribe=One-Click' },
+          { Name: 'X-Category', Value: 'marketing' }, // internal classification; not shown to recipient
+        ],
+      },
     },
   }),
 })
@@ -176,10 +196,10 @@ app.post('/api/unsubscribe', async (c) => {
   const parsed = await verifyUnsubscribeToken(token, c.env)
   if (!parsed) return c.text('Invalid or expired token', 400)
 
-  // Remove from Resend audience
+  // Remove from the Listmonk/suppression list
   await fetch(
-    `https://api.resend.com/audiences/${parsed.audienceId}/contacts/${encodeURIComponent(parsed.email)}`,
-    { method: 'DELETE', headers: { Authorization: `Bearer ${c.env.RESEND_API_KEY}` } }
+    `${c.env.LISTMONK_URL}/api/subscribers/${encodeURIComponent(parsed.email)}/lists/${parsed.audienceId}`,
+    { method: 'DELETE', headers: { Authorization: `Basic ${c.env.LISTMONK_AUTH}` } }
   )
 
   // Record in D1 suppression list (avoid re-adding on list import)
@@ -204,16 +224,18 @@ const domain = process.env.SENDING_DOMAIN ?? 'megabyte.space'
 const spf = await resolveTxt(domain)
 const spfRecord = spf.flat().find(r => r.startsWith('v=spf1'))
 if (!spfRecord) throw new Error('SPF record missing')
-if (!spfRecord.includes('include:_spf.resend.com')) console.warn('Resend SPF include missing')
+if (!spfRecord.includes('include:amazonses.com')) console.warn('Amazon SES SPF include missing')
 
-// DKIM (check Resend's default selectors: resend._domainkey, rs1._domainkey)
-for (const selector of ['resend', 'rs1']) {
+// DKIM — SES EasyDKIM delegates via 3 CNAMEs (<token>._domainkey → <token>.dkim.amazonses.com),
+// so resolve the CNAME target rather than a published TXT key.
+import { resolveCname } from 'node:dns/promises'
+for (const token of (process.env.SES_DKIM_TOKENS ?? '').split(',').filter(Boolean)) {
   try {
-    const dkim = await resolveTxt(`${selector}._domainkey.${domain}`)
-    if (!dkim.flat().join('').includes('v=DKIM1')) throw new Error()
-    console.log(`✓ DKIM selector ${selector} valid`)
+    const target = await resolveCname(`${token}._domainkey.${domain}`)
+    if (!target.some(t => t.endsWith('.dkim.amazonses.com'))) throw new Error()
+    console.log(`✓ SES DKIM CNAME ${token} delegated`)
   } catch {
-    console.warn(`DKIM selector ${selector} not found (may be using CNAME delegation)`)
+    console.warn(`SES DKIM CNAME ${token} not found (re-run create-email-identity + push CNAMEs)`)
   }
 }
 

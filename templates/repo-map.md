@@ -13,7 +13,7 @@
 | Domain | `example.com` |
 | Type | SaaS / Marketing Site / Internal Tool |
 | Stack | Hono + Cloudflare Workers + D1 |
-| Auth | Clerk |
+| Auth | Better Auth |
 | Payments | Stripe |
 | Deployed at | `https://example.com` |
 | Workers name | `example-worker` |
@@ -27,10 +27,10 @@ project-root/
 │   ├── routes/
 │   │   ├── api/
 │   │   │   ├── health.ts     # GET /health — status, version, timestamp
-│   │   │   ├── contact.ts    # POST /api/contact — Turnstile + Zod + Resend
+│   │   │   ├── contact.ts    # POST /api/contact — Turnstile + Zod + Amazon SES
 │   │   │   └── [entity].ts   # CRUD for primary entities
 │   │   ├── auth/
-│   │   │   └── webhook.ts    # Clerk webhook handler
+│   │   │   └── webhook.ts    # Better Auth webhook handler
 │   │   ├── billing/
 │   │   │   ├── checkout.ts   # POST /billing/checkout — Stripe session
 │   │   │   └── webhook.ts    # Stripe webhook handler
@@ -47,11 +47,11 @@ project-root/
 │   │   ├── migrations/       # SQL migration files
 │   │   └── seed.ts           # Development seed data
 │   ├── middleware/
-│   │   ├── auth.ts           # Clerk JWT verification
+│   │   ├── auth.ts           # Better Auth JWT verification
 │   │   ├── cors.ts           # CORS configuration
 │   │   └── rate-limit.ts     # KV-based rate limiting
 │   ├── lib/
-│   │   ├── email.ts          # Resend email helpers
+│   │   ├── email.ts          # Amazon SES email helpers
 │   │   ├── stripe.ts         # Stripe client and helpers
 │   │   └── turnstile.ts      # Cloudflare Turnstile verification
 │   └── types/
@@ -94,7 +94,7 @@ project-root/
 | GET | `/pricing` | `pages/pricing.ts` | No | Pricing page |
 | GET | `/health` | `api/health.ts` | No | Health check endpoint |
 | POST | `/api/contact` | `api/contact.ts` | No | Contact form submission |
-| POST | `/api/auth/webhook` | `auth/webhook.ts` | Clerk signature | Clerk user sync |
+| POST | `/api/auth/webhook` | `auth/webhook.ts` | Better Auth signature | Better Auth user sync |
 | POST | `/billing/checkout` | `billing/checkout.ts` | Yes | Create Stripe checkout |
 | POST | `/billing/webhook` | `billing/webhook.ts` | Stripe signature | Payment events |
 | GET | `/admin` | `pages/admin.ts` | Yes (admin) | Admin dashboard |
@@ -108,7 +108,7 @@ project-root/
 │   users     │──1:N──│  [entities]  │──N:1──│ categories  │
 ├─────────────┤       ├──────────────┤       ├─────────────┤
 │ id (PK)     │       │ id (PK)      │       │ id (PK)     │
-│ clerk_id    │       │ user_id (FK) │       │ name        │
+│ user_id    │       │ user_id (FK) │       │ name        │
 │ email       │       │ category_id  │       │ slug        │
 │ name        │       │ title        │       └─────────────┘
 │ plan        │       │ created_at   │
@@ -124,9 +124,9 @@ project-root/
 |---------|---------|-------|
 | `hono` | HTTP framework | Runs on Workers runtime |
 | `drizzle-orm` | Database ORM | Schema in `src/db/schema.ts` |
-| `@clerk/backend` | Auth verification | Webhook + JWT middleware |
+| `better-auth` | Auth verification | Webhook + JWT middleware |
 | `stripe` | Payments | Webhook requires raw body |
-| `resend` | Email delivery | API key in secrets |
+| `aws4fetch` | Email delivery (Amazon SES v2) | AWS creds in secrets |
 | `zod` | Validation | Schemas define both runtime validation and TS types |
 
 ## External Services
@@ -136,9 +136,9 @@ project-root/
 | Service | Purpose | Config Location | Dashboard |
 |---------|---------|----------------|-----------|
 | Cloudflare | Hosting + CDN | `wrangler.toml` | dash.cloudflare.com |
-| Clerk | Authentication | env `CLERK_SECRET_KEY` | dashboard.clerk.com |
+| Better Auth | Authentication | env `BETTER_AUTH_SECRET` | dashboard.better-auth.com |
 | Stripe | Payments | env `STRIPE_SECRET_KEY` | dashboard.stripe.com |
-| Resend | Email | env `RESEND_API_KEY` | resend.com/emails |
+| Amazon SES | Email | env `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY` + `SES_REGION` + `EMAIL_FROM` | console.aws.amazon.com/ses |
 | PostHog | Analytics | env `POSTHOG_API_KEY` | app.posthog.com |
 | Sentry | Error tracking | env `SENTRY_DSN` | sentry.io |
 | GA4 | Web analytics | GTM container | analytics.google.com |
@@ -148,11 +148,14 @@ project-root/
 <!-- All required secrets (names only, never values) -->
 
 ```
-CLERK_SECRET_KEY        # Clerk backend API key
-CLERK_WEBHOOK_SECRET    # Clerk webhook signing secret
+BETTER_AUTH_SECRET        # Better Auth backend API key
+BETTER_AUTH_SECRET    # Better Auth webhook signing secret
 STRIPE_SECRET_KEY       # Stripe API key
 STRIPE_WEBHOOK_SECRET   # Stripe webhook signing secret
-RESEND_API_KEY          # Resend email delivery
+AWS_ACCESS_KEY_ID       # Amazon SES email delivery
+AWS_SECRET_ACCESS_KEY   # Amazon SES email delivery
+SES_REGION              # Amazon SES region (e.g. us-east-1)
+EMAIL_FROM              # Verified SES sender on the project's own domain
 TURNSTILE_SECRET_KEY    # Cloudflare Turnstile server key
 POSTHOG_API_KEY         # PostHog project API key
 SENTRY_DSN              # Sentry error tracking DSN
@@ -173,7 +176,7 @@ DATABASE_ID             # D1 database binding (in wrangler.toml)
 
 - D1 has 10ms CPU time limit per query (batch writes for bulk operations)
 - Workers have 128MB memory limit (stream large responses)
-- Clerk free tier: 10K monthly active users
+- Better Auth free tier: 10K monthly active users
 - Stripe test mode: use card `4242 4242 4242 4242`
 
 ## Development Commands

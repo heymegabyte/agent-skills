@@ -156,11 +156,11 @@ export async function handleSquareDispute(
 
 ---
 
-## Resend refund receipt (non-blocking)
+## Amazon SES refund receipt (non-blocking)
 
 ```ts
 // worker/lib/refund-receipt.ts
-import { Resend } from 'resend';
+import { AwsClient } from 'aws4fetch';
 
 export async function sendRefundReceipt(
   ctx: ExecutionContext,
@@ -173,19 +173,27 @@ export async function sendRefundReceipt(
     reason: string;
   },
 ): Promise<void> {
-  const resend = new Resend(env.RESEND_API_KEY);
+  const region = env.SES_REGION ?? 'us-east-1';
+  const aws = new AwsClient({ accessKeyId: env.AWS_ACCESS_KEY_ID, secretAccessKey: env.AWS_SECRET_ACCESS_KEY, region, service: 'ses' });
   const formatted = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: opts.currency.toUpperCase(),
   }).format(opts.refundAmount / 100);
 
+  const subject = `Refund of ${formatted} processed`;
+  const html = `<p>Your refund of ${formatted} has been processed. Original charge: ${opts.originalChargeDate}. Reason: ${opts.reason}. Allow 5–10 business days to appear on your statement.</p>`;
+  const text = `Your refund of ${formatted} has been processed. Original charge: ${opts.originalChargeDate}. Reason: ${opts.reason}. Allow 5-10 business days to appear on your statement.`;
+
   // non-blocking — receipt does not delay the API response
   ctx.waitUntil(
-    resend.emails.send({
-      from: 'billing@megabyte.space',
-      to: opts.to,
-      subject: `Refund of ${formatted} processed`,
-      html: `<p>Your refund of ${formatted} has been processed. Original charge: ${opts.originalChargeDate}. Reason: ${opts.reason}. Allow 5–10 business days to appear on your statement.</p>`,
+    aws.fetch(`https://email.${region}.amazonaws.com/v2/email/outbound-emails`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        FromEmailAddress: env.EMAIL_FROM ?? 'billing@megabyte.space',
+        Destination: { ToAddresses: [opts.to] },
+        Content: { Simple: { Subject: { Data: subject }, Body: { Html: { Data: html }, Text: { Data: text } } } },
+      }),
     }),
   );
 }

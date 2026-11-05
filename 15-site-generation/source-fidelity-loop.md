@@ -117,7 +117,7 @@ Generate `_source_fidelity_report.html` with:
 - Raw `_brand.json` + extracted-from-source palette + extracted-from-rebuild palette
 - Suggested manual interventions (top 3)
 
-Email to operator via Resend (skill 13 notifications) with subject `Source-fidelity gate failed after 3 attempts: {slug}`. Build state moves from `building` → `error` with `audit_logs.reason='source_fidelity_3x_fail'`. Site stays unpublished — better unshipped than shipped wrong.
+Email to operator via Amazon SES (skill 13 notifications) with subject `Source-fidelity gate failed after 3 attempts: {slug}`. Build state moves from `building` → `error` with `audit_logs.reason='source_fidelity_3x_fail'`. Site stays unpublished — better unshipped than shipped wrong.
 
 ## Anti-patterns (***NEVER***)
 

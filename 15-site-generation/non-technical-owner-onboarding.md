@@ -39,7 +39,7 @@ Owner is NEVER asked:
 - **Domain** — free `{slug}.projectsites.dev` default + optional $12/yr via Cloudflare Registrar
 - **Hosting/CMS choice**
 - **Analytics** — PostHog + GA4 + Sentry wired by default
-- **Email** — Resend by default
+- **Email** — Amazon SES
 - **Payments** — Stripe Standard, KYC only when owner activates booking/donation
 - **Logo** — Ideogram generates from name + business type; owner replaces later
 - **Colors** — extracted from primary photo via GPT Image 2 vision
@@ -53,7 +53,7 @@ Owner is NEVER asked:
 
 ## Magic-Link Admin (`/admin`)
 
-Owner clicks admin link → Clerk magic-link validates → `/admin` SPA. Four cards:
+Owner clicks admin link → Better Auth magic-link validates → `/admin` SPA. Four cards:
 
 ### Card 1: Update business info
 
@@ -82,7 +82,7 @@ Owner clicks admin link → Clerk magic-link validates → `/admin` SPA. Four ca
 
 ## Reply-by-Email Editing (***DEFAULT INTERFACE***)
 
-- **Inbound mailbox**: `edits@projectsites.dev` (Resend inbound webhook → Inngest job)
+- **Inbound mailbox**: `edits@projectsites.dev` (Cloudflare Email Routing → Inngest job; SES is the send rail)
 - AI parses request, identifies affected files, makes change, runs validators, deploys to staging, runs source-fidelity loop, deploys to production, replies with screenshot diff + "live now"
 
 ### Examples that work end-to-end
@@ -108,7 +108,7 @@ Owner never sees an API key. Platform-level keys for all owner sites:
 - `OPENAI_API_KEY` — image gen, vision, embeddings (billed to platform, included in plan)
 - `ANTHROPIC_API_KEY` — build pipeline
 - `GOOGLE_PLACES_API_KEY` + `GOOGLE_MAPS_API_KEY` — domain-restricted to `*.projectsites.dev` + verified custom domains
-- `RESEND_API_KEY` — `noreply@projectsites.dev`, reply-to set to owner email
+- `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY` + `SES_REGION` + `EMAIL_FROM` — Amazon SES, `EMAIL_FROM=noreply@projectsites.dev`, reply-to set to owner email
 - `IDEOGRAM_API_KEY` — logo gen
 - `CLOUDFLARE_*` — deploy + DNS
 - `STRIPE_*` — owner connects their own Stripe Standard at admin time; never asked at onboarding

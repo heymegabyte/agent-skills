@@ -94,6 +94,8 @@ See `reference/blast-radius-minimization.md` for the correct and incorrect SQL p
 
 ## Destructive-capability fixes: independent adversarial review before merge
 
+<!-- grow-ok: +34 lines captures the fire-773 asymmetric-data-loss incident (projectsites.dev editor) as a durable rule + reference incident — a new failure class, not restated content. -->
+
 A fix for a COMPLETENESS bug can introduce a DESTRUCTIVE regression — the highest-blast-radius
 failure (silent data loss, not a crash). The classic trap: the **delete-set source ≠ the
 preserve-set source.** When a "commit all changes" / "sync" / "reconcile" fix computes what to

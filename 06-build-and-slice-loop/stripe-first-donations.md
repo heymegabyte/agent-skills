@@ -140,11 +140,11 @@ app.post('/api/donate/intent', zValidator('json', donateBody), async (c) => {
 4. Webhook `account.updated` with `charges_enabled=true` and `details_submitted=true` flips `orgs.stripe_connect_status='live'` in D1
 5. Donation widget hides until `stripe_connect_status='live'`. Until then, show `"Donations open soon — sign up for alerts"` + email capture.
 
-## Receipt Email (Resend)
+## Receipt Email (Amazon SES)
 
 - Triggered by webhook `payment_intent.succeeded` (one-time) or `invoice.payment_succeeded` (recurring)
 - Template includes — org name + 501(c)(3) EIN + donation amount + date + payment method last4 + tax-deductible language + monthly cancel link (recurring only)
-- Send via Resend with `from: "donations@{org-domain}"` (verified)
+- Send via Amazon SES with `FromEmailAddress: "donations@{org-domain}"` (verified)
 - Subject — `"Your $50 donation to {OrgName} — receipt"`
 
 ## Secondary Rails (NEVER PRIMARY)

@@ -65,7 +65,7 @@ Every step must exist. Every transition must be designed. Dead ends = churn.
 
 For every entity, trace: enter → store → transform → display → export → delete
 
-- Example: User → Clerk webhook → D1 `users` table → API `/me` → UI profile → CSV export → account deletion
+- Example: User → Better Auth webhook → D1 `users` table → API `/me` → UI profile → CSV export → account deletion
 - Any unclear step = architecture hole.
 
 ### 10. State Machine Modeling
@@ -128,7 +128,7 @@ For every new package:
 - Framework (Angular) — ~100KB
 - UI library (PrimeNG) — ~50KB
 - Your code — ~30KB
-- Third-party (Clerk, Stripe, PostHog) — ~20KB
+- Third-party (Better Auth, Stripe, PostHog) — ~20KB
 
 Feature busting the budget → lazy load, server-side, or remove.
 
@@ -178,7 +178,7 @@ Use cost-estimator agent. Exceeds free tier at 1000 users → redesign.
 
 | Service | What if down? | Fallback | Recovery |
 |---------|--------------|----------|----------|
-| Clerk | Auth fails | Cached session + retry | Auto-reconnect |
+| Better Auth | Auth fails | Cached session + retry | Auto-reconnect |
 | Stripe | Payment fails | Queue + retry via Inngest | Webhook reconciliation |
 | D1 | DB unavailable | KV cache fallback | Auto-retry |
 | R2 | Storage unavailable | Serve cached version | Retry upload |
@@ -189,13 +189,13 @@ Design for today, document the escape hatch:
 
 - **D1 → Neon** — when >3 table JOINs or >500MB
 - **KV → Upstash Redis** — when need atomic ops or pub/sub
-- **Clerk → self-hosted Authentik** — when ≫50K MRU (Clerk free covers 50K retained since 2026-02) or SSO-cost pressure
+- **Better Auth → self-hosted Authentik** — when ≫50K MRU (Better Auth free covers 50K retained since 2026-02) or SSO-cost pressure
 - **Stripe → LemonSqueezy** — when need MoR for international tax
 
 ### 27. Integration Point Mapping
 
 - List every external system; each is a failure point, a rate limit, and a cost.
-- Example: Clerk → Stripe → D1 → R2 → Resend → PostHog → Sentry → CF Workers
+- Example: Better Auth → Stripe → D1 → R2 → Amazon SES → PostHog → Sentry → CF Workers
 
 ## Phase 6: Meta-Thinking
 

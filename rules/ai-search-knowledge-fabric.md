@@ -121,6 +121,14 @@ Expose AI Search through Worker bindings for Cloudflare-hosted agents, AI Search
 - Weak retrieval → use live source search rather than guess.
 - Measure retrieval hit rate, useful-context ratio, stale-hit rate, answer quality and token savings.
 
+## Serving + measuring for AI search (GEO, site-side)
+
+The complement to the agent-retrieval fabric above: how OUR shipped sites get read + cited by AI engines (added 2026-10-25, estate-upgrade audit — `[[estate-upgrade-audit]]`). Pairs with `[[website-build-doctrine]]` GEO + `[[seo-keyword-research]]`.
+
+- **CF Markdown-for-Agents (edge content-negotiation) — prefer over static `llms.txt`.** Serve clean Markdown when a client sends `Accept: text/markdown`; Cloudflare converts HTML→MD at the edge (~80% fewer agent tokens), no per-page `.md` files, no `/llms-full.txt` to regenerate. CF-native, zero template churn. Keep a minimal `llms.txt` as a cheap, low-confidence experiment (studies show ~0.1% of AI-bot hits target it, and its main consumer is coding agents, not answer engines) — don't invest heavily in it.
+- **Structure for extraction:** lead each section with a **40–80-word direct answer**; lists/quotes/stats correlate with 30–40% higher AI-answer visibility; attach a source+date+number to every claim; cover **query fan-out** (the sub-queries an engine decomposes into); own in-category "best-of"/comparison pages.
+- **MEASURE GEO, don't just optimize:** track **AI Citation Rate** (pages cited ÷ tracked), **Response Inclusion Rate**, **Share-of-Voice** across AI platforms, citation sentiment, and **AI-referred traffic** (GA4 attribution). Feed to `[[qualified-traffic-attribution]]`. Traditional rank tools miss these signals.
+
 ## Never index
 
 Secrets/tokens/passwords/private keys/cookie jars, OAuth tokens, unnecessary customer PII, hidden chain-of-thought, raw sensitive logs, or speculation presented as fact.

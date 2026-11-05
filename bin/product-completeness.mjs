@@ -349,7 +349,7 @@ function extractCounts(data) {
 function scanIntegrations(projectDir, specFiles) {
   // A small, extensible catalog of integrations this estate commonly wires.
   const catalog = [
-    'stripe', 'clerk', 'better-auth', 'betterauth', 'sentry', 'posthog', 'resend',
+    'stripe', 'better-auth', 'better-auth', 'betterauth', 'sentry', 'posthog', 'resend',
     'ses', 'd1', 'r2', 'kv', 'vectorize', 'workers ai', 'ai gateway', 'openai',
     'anthropic', 'deepseek', 'turnstile', 'cloudflare', 'drizzle', 'neon',
     'upstash', 'inngest', 'calendly', 'cal.com', 'twilio', 'github', 'google',

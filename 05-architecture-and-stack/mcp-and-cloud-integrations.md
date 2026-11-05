@@ -36,7 +36,7 @@ updated: "2026-10-06"
 | 3 | Stripe | Customers, subscriptions, invoices | Connected | Free |
 | 4 | GitHub | Repos, PRs, issues, Actions | Auto | Free |
 | 5 | Neon Postgres | Projects, branches, SQL | When DB needed | Free tier |
-| 6 | Resend | Send emails, contacts, domains | Auto | Free (3K/mo) |
+| 6 | Amazon SES | Send rail — transactional email (SES v2 via aws4fetch) | Auto | Pay-as-you-go |
 | 7 | PostHog | Analytics, feature flags | Auto | Free (1M/mo) |
 | 8 | Sentry | Issues, events, stack traces | Auto | Free (5K/mo) |
 | 9 | Google Analytics | GA4 reports, dimensions | When GA4 set up | Free |
@@ -123,8 +123,8 @@ Autonomous M2M agents use service-token/Access policy only when the server's aut
 | Cloud | `CLOUDFLARE_API_TOKEN`, `CF_ZONE_ID` |
 | Payments (Square — on-request rail) | `SQUARE_ACCESS_TOKEN`, `SQUARE_LOCATION_ID`, `SQUARE_APPLICATION_ID`, `SQUARE_ENVIRONMENT`, `SQUARE_WEBHOOK_SIGNATURE_KEY` |
 | Payments (SaaS subs / enterprise) | `STRIPE_API_KEY`, `STRIPE_WEBHOOK_SECRET` |
-| Email | `RESEND_API_KEY` |
-| Auth | `CLERK_SECRET_KEY` |
+| Email (Amazon SES — sole send rail) | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `SES_REGION`, `EMAIL_FROM` |
+| Auth | `BETTER_AUTH_SECRET` |
 | Analytics | `POSTHOG_API_KEY`, `SENTRY_DSN`, `GA4_MEASUREMENT_ID` |
 | Communication | `SLACK_WEBHOOK_URL`, `DISCORD_WEBHOOK_URL`, `TWILIO_AUTH_TOKEN` |
 | Automation | `ZAPIER_WEBHOOK_URL`, `N8N_API_KEY` |

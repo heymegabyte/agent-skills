@@ -38,8 +38,14 @@ for path in sorted(root.rglob("*.md")):
         lines = text.splitlines()
         # Forge-generated API skills under skills/ legitimately exceed 500 lines (full
         # endpoint reference). TODO: split via progressive disclosure in forge-skill-from-openapi.
-        is_forge_skill = path.relative_to(root).parts[0] == "skills"
-        if len(lines) > 500 and not is_forge_skill:
+        rel_parts = path.relative_to(root).parts
+        is_forge_skill = rel_parts[0] == "skills"
+        # OpenSpec owns and regenerates these harness adapters. Validate them with
+        # `openspec validate/update`; do not rewrite vendor-managed workflow text.
+        is_openspec_generated = len(rel_parts) >= 3 and rel_parts[0] in {
+            ".agents", ".claude", ".gemini", ".opencode"
+        } and rel_parts[-2].startswith("openspec-")
+        if len(lines) > 500 and not (is_forge_skill or is_openspec_generated):
             fail(f"{path.relative_to(root)}: {len(lines)} lines (keep SKILL.md under 500)")
 
     if "templates" in path.parts:
@@ -94,3 +100,5 @@ if failures:
 
 print("Skill validation passed.")
 PY
+
+python3 "$ROOT/bin/validate-portable-skills.py"

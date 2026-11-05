@@ -1,6 +1,15 @@
 name: core
 description: Always-loaded essentials. Tier-1 priority. ~12k tokens.
 members:
+  - rules/agent-provider-policy
+  - rules/claude-cloud-first
+  - rules/figma-design-approval-gate
+  - rules/low-hanging-fruit
+  - rules/mcp-fleet
+  - rules/openspec-operating-contract
+  - rules/paperclip-openclaw-fleet-doctrine
+  - rules/prompt-ingestion
+  - rules/improvement-audit
   - 01-operating-system
   - 04-preference-and-memory
   - 06-build-and-slice-loop

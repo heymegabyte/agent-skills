@@ -54,9 +54,20 @@ Per `[[web-platform-capabilities]]` (the 30-capability super-boost catalog), pre
 - **#3 native `<dialog>`** backs `dialog`/`sheet` (auto-inert + `::backdrop`); **#6 style queries** drive variant theming from `--` tokens; **#18 `field-sizing`** auto-grows `textarea`.
 - Radix/shadcn still own focus-trap + ARIA where the native primitive doesn't — layer them, and keep every enhancement `@supports`-guarded.
 
+## Generative UI — the AI assembles from THIS catalog (data, NOT code)
+
+When an AI-native surface's next output is unpredictable (an agent result, an adaptive dashboard, a chat answer that needs a widget), let the model ASSEMBLE the interface from the shadcn catalog — the third AI-native-UX pillar alongside the agentic-UX pattern set (`[[first-time-excellence]]` §C) + MCP Apps (`[[ai-abundance-maximalism]]`). (Added 2026-10-25, estate-upgrade audit — `[[estate-upgrade-audit]]`.)
+
+- **The one safety law — data, not code.** The model returns a STRUCTURED JSON spec (component + props + position), NEVER executable HTML/CSS/JS. Validate every spec against a CLOSED shadcn component allowlist + a **Zod schema** before rendering — schema-constrained generation defeats hallucinated components, with zero XSS / CSS-bleed; keep authorization OUTSIDE the model and treat its output as untrusted input (`[[zod-everywhere]]` + `[[ai-agent-security]]`).
+- **The catalog IS the guardrail.** shadcn's owns-the-code `src/components/ui/*` is already perfect: register the renderable subset + their Zod prop schemas; the AI arranges/combines them freely but CANNOT escape the set (creativity within approved bounds — "safe like data, expressive like code").
+- **Climb the ladder; start low:** **Static** (AI picks a prebuilt component, props streamed in — the default; fidelity guaranteed by construction) → **Declarative** (AI emits a JSON component-tree the renderer walks from the catalog — the pragmatic WINNER for adaptive dashboards / secondary flows / the long tail) → **Fully-generated** raw HTML (build-time OR a sandboxed iframe ONLY — that sandboxed case is what MCP Apps covers). More model freedom = more guardrail investment.
+- **Stack (React+Vite):** prefer catalog-selection/declarative. AI SDK UI (`useChat`) for production — **AI SDK RSC `streamUI` is EXPERIMENTAL (Vercel's own guidance: prototypes only)**; Tambo / assistant-ui (Radix headless, Vite, no RSC) for a typed component registry; A2UI / AG-UI (declarative JSONL/SSE, adopted by Google/LangChain/MS) when streaming agent→UI across clients. **Stream = filter to COMPLETE elements** (mid-stream nodes lack type/props).
+- **Roll out on ONE high-context surface first** (a dashboard, an agent output, onboarding), prove it, then expand — never make the whole product adaptive in one push.
+
 ## Anti-patterns (build-fail)
 
 - Installing `@shadcn/ui` as a runtime dep (it is NOT a package — it is a CLI that copies code).
+- **Generative UI that emits raw HTML/CSS/JS to render at RUNTIME** (XSS + layout fragility) — return a Zod-validated JSON spec against the closed shadcn catalog instead; raw generation is build-time or sandboxed-iframe (MCP App) only.
 - Mixing a second component kit (MUI/Chakra) into the same app.
 - Editing nothing — shipping raw shadcn defaults with no brand-token theming (same "raw default widget" trap as the booking embed).
 - Hand-rolling a Dialog/Combobox/Select instead of the Radix-backed shadcn one (re-introduces a11y bugs Radix already solved).
