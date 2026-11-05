@@ -17,14 +17,14 @@ across EVERY category the product belongs to — until it is a full-featured, se
 (Brian directive, browse.tools 2026-10-30.) This is the stronger, operational form of [[expand-context-always]]
 + [[first-time-excellence]] + [[improvement-audit]] + [[predictive-completeness]].
 
-## The core correction — AUTO-IMPLEMENT the full Top-30 cohort end-to-end
+## The core correction — any idea the AI thinks is recommendable MUST be implemented
 
-- **Never present AI feature or improvement ideas as a passive Rec list and ask "which should I build?"** Brian is in favor of almost all (~90–95%+) of the ideas in any Top 30 list (calibration anchors: `browse.tools` 15/15 accepted; `legion.megabyte.space` 29/30 accepted, excluding only `Superset` and `onlykey`/`fido2`).
-- **Auto-implement the full aligned cohort (~25–30 of 30) in the same turn**:
-  - For **workstations, servers, CLI tooling, and infrastructure**: implement all safe, non-blocklisted items end-to-end in the same turn (using Eager-Minimum + Lazy-Everywhere shims via `cnf-build-shims` for optional CLIs so zero bloat is added) and sync reusable configs to `heymegabyte/install.doctor`.
-  - For **applications, SaaS dashboards, and websites**: implement all safe features end-to-end (behind feature flags per [[feature-flags]] when experimental) and scaffold any remaining visual surfaces as gorgeous interactive prototypes per [[progressive-screen-scaffold-approval]].
-  - Parallelize implementation across `~/.agentskills/bin/opencode-swarm.mjs` so shipping 25–30 items completes in a single turn.
-- **What is excluded**: ONLY items on the explicit negative blocklist (`Superset`, `onlykey`, `fido2`, `Biome`, `Resend`, isolated XFCE desktop replacements) or genuinely destructive/irreversible actions (`approval-required` tier in `autonomous-engineering.md`).
+- **Core Mandate (Brian 2026-11-04):** **Any of the ideas that the AI thinks are recommendable should be implemented.** Never present recommendable AI feature or improvement ideas as a passive Rec list and ask "which should I build?", and never cap implementation at a subset.
+- **Implement every recommendable idea in the same turn**:
+  - For **workstations, servers, CLI tooling, and infrastructure**: implement every recommendable item end-to-end in the same turn (using Eager-Minimum + Lazy-Everywhere shims via `cnf-build-shims` for optional CLIs so zero bloat is added) and sync reusable configs to `heymegabyte/install.doctor`.
+  - For **applications, SaaS dashboards, and websites**: implement every recommendable feature end-to-end (behind feature flags per [[feature-flags]] when experimental) and scaffold any remaining visual surfaces as gorgeous interactive prototypes per [[progressive-screen-scaffold-approval]].
+  - Parallelize implementation across `~/.agentskills/bin/opencode-swarm.mjs` so shipping all recommendable items completes in a single turn.
+- **What is excluded**: ONLY ideas that are not genuinely recommendable, items on the explicit negative blocklist (`Superset`, `onlykey`, `fido2`, `Biome`, `Resend`, isolated XFCE desktop replacements), or genuinely destructive/irreversible actions (`approval-required` tier in `autonomous-engineering.md`).
 
 ## Always expand to every "generally recommendable" feature
 

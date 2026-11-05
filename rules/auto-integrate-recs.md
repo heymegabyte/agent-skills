@@ -26,13 +26,11 @@ Ship improvements inline instead of listing them as recommendations. Anything un
 3. **>2h but no design call needed?** → ship anyway; compounding value justifies the cost.
 4. **Requires design conversation / external blocker / irreversible decision?** → THIS is a Rec. Surface with cost/value pitch + concrete next-prompt language.
 
-## Top-N / Top-30 Full-Cohort Implementation Rule (90–100% Ship Rate, Never Cap at 4–6)
+## Top-N / Top-30 Rule — Implement Every Idea the AI Thinks Is Recommendable
 
-- **User preference calibration (Brian 2026-11-04):** Brian is in favor of **almost all (~90–95%+)** of the ideas in any "Top 30" / "Top N" list. Older guidance to "pick only the best 4–6" or "ship only the top 30%" is **RETIRED** because it leaves ~20+ wanted features unbuilt and forces unnecessary follow-up prompts.
-- **Default disposition — Implement the ENTIRE safe cohort (~25–30 of 30) in the same turn:**
-  1. **When a task involves building, auditing, or provisioning a surface/host**: proactively generate the Top 30 missing/improvement items internally and **implement ALL safe, aligned items in the same turn** before finishing.
-  2. **When the user explicitly asks for a "Top 30" / "Top N" list**: generate the 30 evidence-backed items, **filter out only explicit negative-blocklist items** (`Superset`, `onlykey`, `fido2`, `Biome`, `Resend`, isolated XFCE desktop replacements) **and genuinely destructive/irreversible items** (`approval-required` tier), and **implement the entire remaining cohort in the same turn** (fanning out independent units via `~/.agentskills/bin/opencode-swarm.mjs`, using feature flags or lazy CLI shims `cnf-build-shims` where appropriate so there is zero bloat).
-- NEVER print a passive list of 30 ideas with 0 implementations when the items are safe and reversible to ship.
+- **Core Mandate (Brian 2026-11-04):** **Any of the ideas that the AI thinks are recommendable should be implemented.** Older guidance to "pick only the best 4–6" or "ship only the top 30%" is **RETIRED**.
+- If the AI thinks an idea is worth recommending at all, **implement it in the same turn** rather than listing it as a recommendation. If an idea is not worth implementing (or violates a negative blocklist like `Superset`, `onlykey`, `fido2`, `Biome`, `Resend`, or isolated XFCE desktop replacements), do not recommend it.
+- Fan out independent implementation units across `~/.agentskills/bin/opencode-swarm.mjs`, use feature flags (`[[feature-flags]]`) for experimental product surfaces, and use lazy CLI shims (`cnf-build-shims`) for optional workstation tools so every recommendable idea ships immediately with zero bloat.
 
 ## Post-"Top X" Selection Root-Cause & Pre-Emptive Skill Upgrade
 

@@ -10,15 +10,15 @@ license: "Rutgers"
 compatibility:
   claude-code: ">=2.0.0"
   agentskills: ">=1.0.0"
-stage: beta
 priority: 3
-pack: "core"
+pack: "polish"
+stage: beta
 triggers:
   - "what else"
   - "ideas"
   - "co-founder"
 paths:
-  - "*"
+  - "org:website_build"
 ---
 
 # 14 — Independent Idea Engine
@@ -50,13 +50,13 @@ Every idea passes through:
 
 Output: `_ideas.md` w/ accepted + rejected + reasons.
 
-## Auto-implement threshold (Full-Cohort Default — Brian 2026-11-04)
+## Auto-implement threshold — implement every idea the AI thinks is recommendable (Brian 2026-11-04)
 
-- **Brian wants ~90–95%+ of Top 30 lists implemented automatically.** Do not cap auto-implementation at a small "top 4–6" subset or wait for human confirmation on safe ideas.
-- **Confidence ≥0.65 AND aligned AND not destructive/irreversible (`approval-required`) AND not on the negative blocklist (`Superset`, `onlykey`, `fido2`, `Biome`, `Resend`) → AUTO-IMPLEMENT in the same turn** per `rules/auto-integrate-recs.md` and `rules/improvement-audit.md`.
+- **Core Mandate:** **Any of the ideas that the AI thinks are recommendable should be implemented.** Do not cap auto-implementation at a small "top 4–6" or "30%" subset, and do not leave recommendable ideas unbuilt in a proposals list.
+- If an idea passes the self-critique filter (serves the goal, evidence-backed, aligned with `rules/brian-preferences.md`, not on the negative blocklist `Superset`/`onlykey`/`fido2`/`Biome`/`Resend`, and not genuinely destructive/irreversible `approval-required`), **AUTO-IMPLEMENT it in the same turn** per `rules/auto-integrate-recs.md` and `rules/improvement-audit.md`.
 - Fan out independent implementation tasks across `~/.agentskills/bin/opencode-swarm.mjs`, use feature flags (`rules/feature-flags.md`) for experimental product surfaces, and use lazy CLI shims (`cnf-build-shims`) for optional workstation tools.
 - Immediately sync reusable patterns upstream to `heymegabyte/agent-skills`, `heymegabyte/install.doctor`, or `template.projectsites.dev` in the same turn so future projects/hosts inherit them on pass 1 before a Top 30 list is ever needed.
-- Confidence <0.65 OR genuinely destructive/irreversible (`approval-required`) OR blocked on a vendor-minted secret → surface in `Recs` / `🚫 Rejected` with one-line rationale.
+- Ideas that fail the self-critique filter are rejected (`🚫`) — not recommended. Only genuinely destructive/irreversible actions (`approval-required`) or items blocked on a missing vendor-minted secret wait for user input.
 
 ## Evaluation dimensions
 
@@ -97,7 +97,7 @@ Ideas serving higher pursuits get +0.1 confidence boost.
 3. Filter through self-critique
 4. Score on evaluation dimensions
 5. Sort by confidence × impact
-6. Auto-implement top tier
+6. Auto-implement only safe, authorized, budgeted top-tier items
 7. Propose middle tier
 8. Reject bottom tier with reason
 
@@ -117,6 +117,6 @@ Ideas serving higher pursuits get +0.1 confidence boost.
 
 ## Cadence
 
-- After every implementation: "What else?" loop until zero remain
+- After implementation, run one adjacent-opportunity pass; continue only while the bounded loop budget and acceptance criteria permit
 - Per `~/.claude/CLAUDE.md` § Self-Improvement
-- Per `rules/brian-preferences.md` "How to improve? always find 50 more things, explore every branch, never cap effort"
+- Preserve deferred ideas with reopening conditions rather than expanding effort without a bound

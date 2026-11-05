@@ -1,12 +1,16 @@
 ---
 name: "improvement-audit"
+priority: 2
+pack: "core"
+triggers:
+  - "improvement audit"
+  - "audit the dimension"
+  - "30 ideas"
+  - "what else"
+  - "exhaust the ideas"
+  - "horizons"
 last_reviewed: 2026-10-08
 superseded_by: null
-priority: 3
-pack: "misc"
-triggers: []
-paths:
-  - "*"
 ---
 
 # Improvement Audit
@@ -55,16 +59,16 @@ Score each candidate 0-10 on all ten; record the vector, not just the mean.
 - **Dedupe + combine BEFORE ranking.** Fold near-duplicates into one; merge small ideas that are only valuable together into one stronger candidate. The merged idea is re-scored.
 - Rank by composite with a veto: any candidate scoring 0 on **Security** or **Architectural fit** is rejected outright regardless of composite.
 
-## Ship rule — implement the FULL aligned cohort (~90–100%), never stop at 30%
+## Ship rule — implement every idea the AI thinks is recommendable
 
-- **Brian calibration (2026-11-04):** Brian wants **almost all (~90–95%+)** of any Top 30 improvement list implemented. Stopping at "30%" (9 of 30) or "top 4–6" is an under-delivery failure mode.
-- **Ship EVERY safe, aligned survivor across all three horizons** ( typically ~25–30 of 30 candidates): if an idea passes the 10-factor rubric (no 0 on Security or Architectural fit), does not violate an explicit negative blocklist (`Superset`, `onlykey`, `fido2`, `Biome`, `Resend`), and is not genuinely destructive/irreversible (`approval-required` tier), **SHIP IT in the same turn**.
-- **How to ship 25–30 items in one turn without bloat or wall-clock blowup:**
+- **Core Mandate (Brian 2026-11-04):** **Any of the ideas that the AI thinks are recommendable should be implemented.** Never stop at "top 30%" or "top 4–6", and never withhold recommendable ideas as passive recommendations.
+- If the AI judges a candidate idea to be recommendable (it genuinely improves the surface, passes the 10-factor rubric without a 0 on Security or Architectural fit, and does not violate an explicit negative blocklist such as `Superset`, `onlykey`, `fido2`, `Biome`, or `Resend`), **implement it in the same turn**. If an idea is not worth implementing, reject it (`🚫`) — do not recommend it.
+- **How to implement every recommendable idea in the same turn:**
   1. **Parallel Swarm Offload**: Decompose independent implementation units into a manifest and execute via `~/.agentskills/bin/opencode-swarm.mjs --tasks <manifest.json>` (scaling up to 200 parallel workers).
   2. **Eager-Minimum + Lazy-Everywhere for CLIs/Tools**: Provision core daemons/harnesses eagerly and wire optional CLIs, linters, cloud tools, and TUIs as zero-cost lazy shims (`cnf-build-shims` + `not-found-hook.sh` backed by the 3-tier `megabyte-local-proxy`).
-  3. **Feature Flags for Product Capabilities**: Ship ambitious UI/backend features behind dark-launch feature flags (`[[feature-flags]]`) so 100% of the cohort lands safely in code without production risk.
-- Only three things defer an aligned idea: (1) genuinely destructive/irreversible (`approval-required`), (2) blocked on a missing vendor-minted third-party secret, or (3) explicitly blocklisted by user preference.
-- Mark every candidate: ✅ shipped · ⏸ blocked (with exact external blocker) · 🚫 rejected (with rubric/blocklist reason).
+  3. **Feature Flags for Product Capabilities**: Ship ambitious UI/backend features behind dark-launch feature flags (`[[feature-flags]]`) so every recommendable idea lands in code safely.
+- Only genuine external blockers (`approval-required` destructive/irreversible actions or missing vendor-minted third-party credentials) pause implementation.
+- Mark every candidate: ✅ implemented · ⏸ blocked (with exact external blocker) · 🚫 rejected (not recommendable, with reason).
 
 ## Three horizons (sort every survivor)
 
@@ -79,7 +83,7 @@ Every survivor lands in exactly one horizon; horizons set sequencing, not whethe
 
 ## Promote winners → OpenSpec + backlog (SAME TURN)
 
-- Every shipped durable idea archives an **OpenSpec change** per [[website-build-doctrine]] § OpenSpec: `/opsx:propose "<idea>"` → review → `/opsx:apply` → `/opsx:verify` → `/opsx:sync` → `/opsx:archive`; link the archived change from the loop LEDGER row (traceability). No durable tweak bypasses it.
+- Every shipped non-trivial idea archives an **OpenSpec change** per [[website-build-doctrine]] § OpenSpec: `/opsx:propose "<idea>"` → review → `/opsx:apply` → `/opsx:sync` → `/opsx:archive`; link the archived change from the loop LEDGER row (traceability). Trivial tweaks skip it.
 - Every ⏸ Rec (design-blocked / prereq-blocked / differentiation-deferred) is written to the project `BACKLOG.md` as a frontier item with its score vector + horizon + the one-line next-prompt language — never left only in chat.
 - Essential + premium-parity survivors that can't ship this turn jump the backlog queue ahead of differentiation items.
 - Fold any generalizable pattern the audit surfaced back into the owning rule the SAME TURN ([[prompt-as-training-signal]]).
@@ -100,7 +104,7 @@ Every survivor lands in exactly one horizon; horizons set sequencing, not whethe
 - Every candidate scored on all 10 factors; dedupe + combine done before ranking.
 - ≥ top-30% shipped AND every clearly-justified idea shipped (only design/irreversible/blocked items deferred).
 - Every survivor sorted into Essential / premium-parity / differentiation; no Essential left unshipped.
-- Shipped durable ideas promoted to OpenSpec; deferred ideas written to `BACKLOG.md`; generalizable patterns folded into the owning rule — all SAME TURN.
+- Shipped non-trivial ideas promoted to OpenSpec; deferred ideas written to `BACKLOG.md`; generalizable patterns folded into the owning rule — all SAME TURN.
 
 ## Composes with
 
