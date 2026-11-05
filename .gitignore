@@ -10,3 +10,6 @@ node_modules/
 *.pyc
 __pycache__/
 /skills/
+
+# Built index cache for mcp-servers/skills-gateway-mcp
+.skills-gateway-index.json

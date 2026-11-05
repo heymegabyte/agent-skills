@@ -1,0 +1,83 @@
+{
+  "server": "skills-gateway-mcp",
+  "_comment": "Golden tests for the skills-gateway-mcp MCP server. This server is pure-local: it indexes the plugin directory, so every test runs live with no API key and no mock. Run via /run-mcp-evals skills-gateway-mcp. Scoring tiers follow commands/run-mcp-evals.md § Step 4.",
+  "tests": [
+    {
+      "id": "list-tools-presence",
+      "_comment": "__meta_ prefix = MCP list_tools call, no tool invocation. The gateway must advertise exactly 3 meta-tools — that constraint is the whole point of the design.",
+      "tool": "__meta_list_tools",
+      "expected_tool_count_min": 3,
+      "expected_tool_count_max": 3,
+      "expected_tool_names_include": ["search_skills", "load_skill", "find_rule"],
+      "scoring": "__meta_list_tools"
+    },
+    {
+      "id": "search-skills-happy-path",
+      "_comment": "Natural-language capability query returns ranked hits whose names can be passed straight to load_skill.",
+      "tool": "search_skills",
+      "input": { "query": "deploy to cloudflare workers", "max_results": 5 },
+      "expected_contains": ["deploy-and-runtime-verification", "path:", "load_skill"],
+      "scoring": "exact-match-keys"
+    },
+    {
+      "id": "search-skills-skill-name-resolves",
+      "_comment": "A directory slug resolves to that skill's own SKILL.md, not a reference doc beside it.",
+      "tool": "search_skills",
+      "input": { "query": "05-architecture-and-stack", "max_results": 3 },
+      "expected_contains": ["architecture-and-stack", "05-architecture-and-stack/SKILL.md"],
+      "scoring": "exact-match-keys"
+    },
+    {
+      "id": "search-skills-empty-is-not-an-error",
+      "_comment": "A miss is a normal result: isError must be false so the client can retry with broader words.",
+      "tool": "search_skills",
+      "input": { "query": "zzzznothingzzzz" },
+      "expected_is_error": false,
+      "expected_contains": ["No matches"],
+      "scoring": "error-shape"
+    },
+    {
+      "id": "load-skill-section-slice",
+      "_comment": "load_skill with sections returns only the requested heading — the token-cheap path.",
+      "tool": "load_skill",
+      "input": { "name": "architecture-and-stack", "sections": ["Default config (`wrangler.jsonc`)"] },
+      "expected_contains": ["Default config"],
+      "expected_not_contains": ["Cloudflare-first decision tree"],
+      "scoring": "exact-match-keys"
+    },
+    {
+      "id": "load-skill-unknown-name-is-an-error",
+      "_comment": "An unknown name must fail loudly (isError true) so the agent does not hallucinate content.",
+      "tool": "load_skill",
+      "input": { "name": "does-not-exist-anywhere" },
+      "expected_is_error": true,
+      "expected_contains": ["No entry named"],
+      "scoring": "error-shape"
+    },
+    {
+      "id": "find-rule-happy-path",
+      "_comment": "find_rule returns the authoritative rule body for a doctrine topic.",
+      "tool": "find_rule",
+      "input": { "topic": "feature flags", "max_results": 2 },
+      "expected_contains": ["rules/feature-flags.md", "Feature Flags"],
+      "scoring": "exact-match-keys"
+    },
+    {
+      "id": "find-rule-only-returns-rules",
+      "_comment": "find_rule must never return a skill or agent — that is search_skills' job.",
+      "tool": "find_rule",
+      "input": { "topic": "accessibility", "max_results": 3 },
+      "expected_contains": ["rule(s) for"],
+      "expected_not_contains": ["(skill)", "(agent)"],
+      "scoring": "exact-match-keys"
+    },
+    {
+      "id": "argument-validation-rejects-unknown-keys",
+      "_comment": "Schemas are strict: a stray key is an error, not silently ignored.",
+      "tool": "search_skills",
+      "input": { "query": "deploy", "bogus_option": true },
+      "expected_is_error": true,
+      "scoring": "error-shape"
+    }
+  ]
+}
