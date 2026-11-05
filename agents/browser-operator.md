@@ -1,8 +1,9 @@
 ---
 name: browser-operator
 description: Drives real browsers to verify deployments and operate web products. Emulates real user flows, audits console/network logs, and validates visual layout.
-tools: Bash, Read, mcp__stagehand__*, mcp__browserbase__*, mcp__playwright__*, mcp__chrome-devtools__*
+tools: Bash, Read, mcp__cua-driver__*
 model: "sonnet"
+context: fork
 permissionMode: default
 maxTurns: 30
 effort: high

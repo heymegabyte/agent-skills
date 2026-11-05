@@ -4,6 +4,7 @@ description: Head of people and agent operations. Governs agent fleet hierarchy,
 tools: Read, Write, Edit, Glob, Grep, Bash
 allowed-tools: Read Write Edit Glob Grep Bash(paperclipai:*) Bash(cr:*) Bash(git:*) Bash(curl:*)
 model: "sonnet"
+context: fork
 permissionMode: default
 maxTurns: 30
 effort: medium
