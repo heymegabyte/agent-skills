@@ -87,7 +87,7 @@ export class FleetBlackboard {
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1]?.endsWith('fleet-blackboard.ts') || import.meta.main) {
   console.log('--- Fleet Blackboard Self-Test ---');
   FleetBlackboard.post('api:auth:endpoint', '/api/v1/auth/session', 'Architect', 'STRAT-01');
   const val = FleetBlackboard.get('api:auth:endpoint');
