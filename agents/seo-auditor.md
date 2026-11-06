@@ -54,3 +54,4 @@ Under Auftragstaktik (Mission Command), you possess standing full autonomy withi
 3. **Strict Schema Integrity**: Reject any page with broken Schema.org entities. Enforce that visible on-page copy matches JSON-LD metadata 1:1.
 4. **Answer Block Verification**: Verify that every informational `<h2>` contains an extractable 40–60 word answer block for AI search synthesis.
 5. **No Broken Links or Missing Alts**: Zero tolerance for broken internal `<a>` tags or unlabelled informative images.
+6. **Editorial Blog Validation**: Audit all blog articles against `rules/blog-post-doctrine.md` using `node ~/.agentskills/bin/blog-post-validator.ts`, asserting single H1, valid BlogPosting/TechArticle schema, zero-CLS picture tags, and Key Takeaways callouts.

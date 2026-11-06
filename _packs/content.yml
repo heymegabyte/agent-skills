@@ -9,4 +9,6 @@ members:
   - rules/citations
   - rules/timeline-authenticity
   - rules/image-quality
+  - rules/blog-post-doctrine
+  - rules/generative-engine-optimization
   - rules/forms-editors-content-supervisor

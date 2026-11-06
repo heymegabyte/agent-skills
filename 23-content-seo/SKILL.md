@@ -123,7 +123,43 @@ Structured data removes all semantic ambiguity for both traditional search crawl
 
 ---
 
-## 7. Machine-Readable AI Manifests: `llms.txt` & `llms-full.txt`
+## 7. Editorial Blog Posts & Multimedia Architecture (`@theme.tools/blog`)
+
+Every editorial article, thought-leadership piece, and developer deep-dive must satisfy the Fleet Blog Post Doctrine:
+
+1. **Semantic HTML5 Skeleton**:
+   - Encapsulated in `<article class="tt-blog-article">` with max-width 768px.
+   - Header containing category pill badge, benefit-first H1, author info, published `<time datetime="...">`, and estimated reading time.
+   - Hero picture preloaded with `fetchpriority="high"` in an aspect-ratio bounding box (1200×630).
+   - `.tt-lead-paragraph`: Standalone 30–70 word direct answer to search intent.
+   - `<aside class="tt-callout tt-callout-key-takeaways">`: Executive summary bulleted grid.
+   - `<nav class="tt-toc">`: Hierarchical Table of Contents with deep anchor links.
+   - `<main class="tt-article-body">`: Structured body with tables, interactive code blocks, and media.
+   - Native `<details name="blog-faq">` exclusive accordions for FAQs.
+   - `<footer class="tt-citations-footer">`: Numbered primary source citations (`rel="noopener noreferrer" target="_blank"`).
+
+2. **Zero Layout Shift (CLS = 0) Multimedia**:
+   - **Responsive Pictures**: `<picture>` with AVIF + WebP sources, explicit `width`, `height`, and inline CSS `aspect-ratio` bounding box.
+   - **Cloudflare Stream Video**: Responsive 16:9 wrapper paired with `VideoObject` Schema.org JSON-LD and collapsible transcript in `<details class="tt-video-transcript">`.
+   - **Interactive Code Blocks**: Filename header, language badge, and accessible contrast on deep space canvas (`#060610`).
+
+3. **Complete JSON-LD Schema (`BlogPosting` / `TechArticle`)**:
+   - `headline`, `description`, `image`, `datePublished`, `dateModified`.
+   - `author`: `Person` with `name`, `jobTitle`, `url`, and `sameAs` entity links.
+   - `publisher`: `Organization` with `name` and `logo`.
+   - `speakable`: CSS selectors for voice assistants (`.tt-lead-paragraph`, `.tt-key-takeaways`).
+   - `citation`: Array of verifiable primary reference URLs.
+   - `hasPart`: Video chapter Key Moments clips.
+
+4. **Programmatic Validation**:
+   Audit any article before publish:
+   ```bash
+   node ~/.agentskills/bin/blog-post-validator.ts --file path/to/article.html
+   ```
+
+---
+
+## 8. Machine-Readable AI Manifests: `llms.txt` & `llms-full.txt`
 
 In addition to human-facing pages, provide clean, token-efficient Markdown manifests for AI agents and coding tools:
 
@@ -140,7 +176,7 @@ In addition to human-facing pages, provide clean, token-efficient Markdown manif
 
 ---
 
-## 8. Automated Crawl Directives & Instant Indexing
+## 9. Automated Crawl Directives & Instant Indexing
 
 ### Robots.txt AI Policy
 Explicitly declare permissions for legitimate AI search engines while maintaining control over training scrapers:
@@ -172,7 +208,7 @@ Sitemap: https://example.com/sitemap.xml
 
 ---
 
-## 9. Programmatic SEO (pSEO) at Scale
+## 10. Programmatic SEO (pSEO) at Scale
 
 Scalable programmatic page generation (e.g. `{Integration} × {Use-Case}`, `{Service} in {City}`):
 - **Unique Value Floor**: Every programmatic page must contain ≥800 unique words, customized data tables, ≥1 unique infographic/diagram, and localized/contextualized FAQs.
@@ -181,7 +217,7 @@ Scalable programmatic page generation (e.g. `{Integration} × {Use-Case}`, `{Ser
 
 ---
 
-## 10. Automated Pre-Flight SEO & GEO Verification Gate
+## 11. Automated Pre-Flight SEO & GEO Verification Gate
 
 No website or web service may be deployed without passing the automated audit:
 ```bash
