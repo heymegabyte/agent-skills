@@ -1,63 +1,197 @@
 ---
 name: "content-seo"
-description: "Copy + discoverability requirements every delivered app must meet — real-brand extraction, anti-slop voice, per-page SEO/JSON-LD, pSEO, GEO/AI-search, truth/citations, competitor floor, i18n, trust surfaces."
+description: "Comprehensive SEO, GEO (Generative Engine Optimization), and Content Architecture standard — brand extraction, anti-slop voice, per-page technical SEO, Schema.org JSON-LD, programmatic SEO (pSEO), llms.txt B2A indexing, IndexNow instant submission, Core Web Vitals (INP/LCP/CLS), and Information Gain E-E-A-T."
 triggers:
   - "content"
   - "copy"
   - "seo"
+  - "geo"
   - "brand"
   - "blog"
-priority: 2
+  - "sitemap"
+  - "robots.txt"
+  - "llms.txt"
+  - "schema.org"
+  - "json-ld"
+  - "indexnow"
+priority: 1
 pack: "content"
 stage: stable
 ---
 
-# Content & SEO — every app's copy + discoverability must satisfy
+# Content & Discoverability Prime Directive (SEO + GEO 2026)
 
-## Brand extraction (rebuilds / clients)
+Every delivered application and website must achieve dual-engine search dominance:
+1. **Traditional Algorithmic SEO**: High-ranking SERP placement, technical crawler health, perfect Core Web Vitals, and keyword intent match.
+2. **Generative Engine Optimization (GEO)**: Maximum citation share, entity grounding, and zero-click extraction in conversational LLMs (Perplexity, ChatGPT Search, Claude, Google AI Overviews, Gemini).
 
-- Extract the REAL brand (logo, colors, fonts, tone; Wayback if the source is down). NEVER invent colors, never use Emdash defaults for clients, never infer from category.
-- Colors derive from the logo (hue-distance verified). Logo luminance + source-site theme decide light/dark. Every logo render contrasts its container ≥4.5:1. Exactly ONE logo asset per container.
+---
 
-## Anti-AI-slop (mandatory scan)
+## 1. Brand Extraction & Visual Authenticity
 
-- Banned words: delve, leverage, unleash, revolutionize, seamless, robust, synergy, elevate, empower, transformative, best-in-class, cutting-edge, discover, innovative.
-- Banned patterns: "Welcome to", "Discover [product]", vague aspirational headlines, hedging ("may help"), generic superlatives. Test: "Would the founder actually say this?" — no → rewrite.
+- Extract the REAL brand (logo, colors, typography, voice tone; consult Wayback Machine if source is down). Never invent placeholder brand assets or colors.
+- Color derivation: Brand primary derives directly from logo hue-distance analysis. Logo luminance + source theme dictates dark/light mode default.
+- Container contrast: Every logo rendering must achieve ≥4.5:1 WCAG contrast against its backdrop. Exactly ONE logo asset per header container.
 
-## Copy
+---
 
-- Headlines benefit-first, specific, ≤8 words. Subheads 15-25 words. Body one idea/paragraph, active, concrete. Max sentence 25 words. Flesch ≥60 (microcopy ≥70).
-- CTAs: action-verb-first, ≤3 words preferred; never "Click here" / "Submit" / "Learn more". Above fold + page end.
-- Microcopy: errors = [what happened] + [what to do]; empty states suggest the first action; toasts past-tense success / present in-progress.
+## 2. Anti-AI-Slop Voice (Mandatory Verification)
 
-## SEO — every page
+- **Banned Words**: delve, leverage, unleash, revolutionize, seamless, robust, synergy, elevate, empower, transformative, best-in-class, cutting-edge, discover, innovative, game-changer, tapestry, beacon, testament.
+- **Banned Sentence Patterns**:
+  - "Welcome to [Platform]..."
+  - "In today's fast-paced digital world..."
+  - "Discover how [Product] can elevate your..."
+  - Vague aspirational headlines with zero concrete nouns.
+  - Hedging predicates ("may help", "is designed to potentially").
+- **Operator Litmus Test**: *"Would the technical founder or lead architect actually say this to a peer?"* If no → rewrite with active verbs and specific numbers.
 
-- **Research evidence first** — SEO-targeted pages require a scored opportunity + brief from the `keyword-researcher` capability (`agents/keyword-researcher.md` → `keyword-briefs.json`); volume/difficulty/intent come from DataForSEO/GSC/Trends, never hand-invented (`rules/seo-keyword-research.md`).
-- Title 50-60 chars keyphrase-first · meta description 120-156 · canonical · OG image 1200×630 · exactly one H1 in prerendered HTML.
-- JSON-LD: WebPage floor; Org/BreadcrumbList/FAQPage/Person/Product/Service ONLY when the entity is real — never pad (FAQPage only with real FAQs).
-- sitemap.xml (+lastmod) · robots.txt · llms.txt · humans.txt · security.txt.
+---
 
-## pSEO (when used)
+## 3. Benefit-First High-Velocity Copywriting
 
-- 5 page types: integration · comparison · use-case · template · location. Each: unique H1 + meta + 800+ unique words + ≥1 unique image + ≥3 internal links + ≥1 outbound citation. Never templatize verbatim.
+- **Headings**: H1 benefit-first, specific, ≤8 words. Subheads 15–25 words explaining the mechanism.
+- **Body Rhythm**: One core concept per paragraph. Active voice (>90%). Maximum sentence length 25 words. Flesch Reading Ease ≥60 (Microcopy ≥70).
+- **Call-to-Action (CTA)**: Action-verb first, ≤3 words preferred (`Deploy Cluster`, `Start Free`, `Read Spec`). Never use "Click here", "Submit", or "Learn more". Place above the fold and at section terminals.
+- **Microcopy**:
+  - Errors: State `[What happened]` + `[Exact corrective action]`.
+  - Empty states: Explain what will live here + render the primary creation action button.
+  - Toasts: Past-tense for completed operations, present participle for background tasks.
 
-## GEO / AI search
+---
 
-- Quotable answer blocks (40-60 words). FAQPage schema. Every JSON-LD fact also appears as visible HTML. Lead paragraph answers the query in <40 words. EEAT: author bio + Person schema + `sameAs` + dated revisions + ownership.
+## 4. Per-Page Technical SEO Architecture
 
-## Native content primitives
+Every public indexable page must satisfy the following checklist before build approval:
 
-- Per `[[web-platform-capabilities]]`: render FAQ blocks with **#19 `<details name>`** exclusive accordions (native single-open, no JS, pairs with `FAQPage` JSON-LD); keep long collapsed content as **#20 `hidden=until-found`** so it stays Ctrl-F-findable + deep-linkable (indexable, never hidden from crawlers/AI).
+### Metadata & Head Elements
+- **Title**: 50–60 characters. Format: `{Primary Keyphrase} — {Supporting Value} | {Brand}`. Primary keyphrase within the first 30 characters.
+- **Meta Description**: 120–156 characters. Includes the primary keyphrase, a quantifiable benefit, and an action trigger.
+- **Canonical URL**: Self-referential lowercase canonical tag (`<link rel="canonical" href="https://example.com/slug" />`). Strip tracking query parameters.
+- **OpenGraph & Twitter Cards**:
+  - `og:title`, `og:description`, `og:url`, `og:type` (`website` or `article`).
+  - `og:image`: High-contrast 1200×630px image with OKLCH brand palette (#060610 background, #00E5FF accent).
+  - `twitter:card`: `summary_large_image`.
+- **Headings Structure**: Exactly ONE `<h1>` in prerendered HTML. Logical `<h2>` and `<h3>` nesting without skipped levels.
 
-## Truth & citations
+### Core Web Vitals (2026 Standards)
+- **Interaction to Next Paint (INP)**: <200ms (strict threshold; eliminate main-thread blocking scripts).
+- **Largest Contentful Paint (LCP)**: <2.0s on 4G mobile emulation. Preload hero images with `fetchpriority="high"`.
+- **Cumulative Layout Shift (CLS)**: <0.05. Explicit `width` and `height` on all media and embeds.
 
-- Every factual claim APA-cited to a real source. Never fabricate people, stats, timelines, or testimonials. Testimonials carry verifiable attribution.
+---
 
-## Reach
+## 5. Generative Engine Optimization (GEO) & AI Search
 
-- Competitor floor: outscore the top 5-10 peer sites on every rubric dimension by ≥15% before "done".
-- i18n by demographics: any community ≥10% local share (ACS B16001) gets a `/{locale}/*` mirror + hreflang.
+Optimizing for LLM retrieval-augmented generation (RAG) and direct citation:
 
-## Required pages
+```mermaid
+flowchart LR
+    A["Raw Page Content"] --> B["Self-Contained Answer Block<br/>(40-60 words under H2)"]
+    A --> C["Structured Contrast Table<br/>(Data/Feature Grid)"]
+    A --> D["JSON-LD Schema Entity Graph"]
+    B --> E["RAG Vector / Citation Extraction"]
+    C --> E
+    D --> E
+    E --> F["AI Search Answer<br/>(Perplexity / ChatGPT / Gemini)"]
+```
 
-- `/privacy` · `/terms` · `/accessibility` · About/Team with real bios.
+1. **Standalone 40–60 Word Quotable Answer Blocks**: Place a direct, concise answer block immediately under major `<h2>` and `<h3>` question headings. LLMs favor complete, extractable definitions that require no surrounding context.
+2. **Tabular Comparison Grids**: Render structured HTML tables with explicit column headers (`✓`, `✗`, numeric benchmarks, pricing tiers). AI models synthesize comparison tables over flowing prose.
+3. **Information Gain & Proprietary Data**: Google Core Updates and LLM crawlers heavily reward original data, benchmarks, code samples, and firsthand measurements. Eliminate boilerplate paraphrasing.
+4. **Author E-E-A-T Grounding**: Every technical guide or blog post must cite a verifiable author with `Person` JSON-LD schema, `sameAs` social profiles, and clear publication/update timestamps.
+5. **Native HTML Disclosure Primitives**:
+   - Render FAQ blocks using native `<details name="faq-group">` exclusive accordions (zero JS overhead, instantly accessible).
+   - Use `hidden="until-found"` for collapsed content so in-page text remains search-indexed and Ctrl+F discoverable.
+
+---
+
+## 6. Type-Safe Schema.org JSON-LD Entities
+
+Structured data removes all semantic ambiguity for both traditional search crawlers and AI agents.
+
+- **Strict Entity Rule**: Only generate JSON-LD for entities that genuinely exist on the page. Never pad empty schemas.
+- **Universal Baseline**:
+  - `Organization`: Name, URL, Logo, SameAs links, ContactPoint.
+  - `WebSite`: Name, URL, PotentialAction (`SearchAction` targeting `/search?q={search_term_string}`).
+  - `WebPage`: Name, Description, BreadcrumbList, DatePublished, DateModified.
+- **Domain-Specific Types**:
+  - `FAQPage`: Strictly paired with visible on-page FAQs.
+  - `TechArticle` / `BlogPosting`: Author (`Person`), Publisher (`Organization`), Headline, Image, DateModified.
+  - `SoftwareApplication`: ApplicationCategory, OperatingSystem, Offers (`Price`, `PriceCurrency`).
+  - `LocalBusiness`: Address (`PostalAddress`), GeoCoordinates, OpeningHoursSpecification, AreaServed.
+
+---
+
+## 7. Machine-Readable AI Manifests: `llms.txt` & `llms-full.txt`
+
+In addition to human-facing pages, provide clean, token-efficient Markdown manifests for AI agents and coding tools:
+
+- **`/llms.txt`**: Standardized Markdown table of contents at the domain root:
+  ```markdown
+  # Project / Company Name
+  > One-sentence mission statement and technical summary.
+
+  ## Core Documentation
+  - [Architecture](/docs/architecture.md): System architecture and data flow.
+  - [API Reference](/docs/api.md): Endpoints, authentication, and schemas.
+  ```
+- **`/llms-full.txt`**: Comprehensive single-file Markdown bundle aggregating all core technical documentation for single-fetch agent ingestion.
+
+---
+
+## 8. Automated Crawl Directives & Instant Indexing
+
+### Robots.txt AI Policy
+Explicitly declare permissions for legitimate AI search engines while maintaining control over training scrapers:
+```txt
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /private/
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://example.com/sitemap.xml
+```
+
+### Instant Search Indexing via IndexNow
+- Expose the verification key at `/{INDEXNOW_KEY}.txt`.
+- Trigger automated POST pings to `https://api.indexnow.org/indexnow` upon page publication or deployment.
+- Sync with Cloudflare Crawler Hints to immediately notify Bing, Yandex, Naver, and Seznam.
+
+---
+
+## 9. Programmatic SEO (pSEO) at Scale
+
+Scalable programmatic page generation (e.g. `{Integration} × {Use-Case}`, `{Service} in {City}`):
+- **Unique Value Floor**: Every programmatic page must contain ≥800 unique words, customized data tables, ≥1 unique infographic/diagram, and localized/contextualized FAQs.
+- **Canonical Discipline**: Prevent index bloat. Canonicalize duplicate parameter variations to root slugs.
+- **Internal Linking Web**: Link parents to children, siblings to related siblings, and terminal pages back to primary hubs. Never leave orphan pages.
+
+---
+
+## 10. Automated Pre-Flight SEO & GEO Verification Gate
+
+No website or web service may be deployed without passing the automated audit:
+```bash
+node ~/.agentskills/bin/seo-auditor.ts --url https://example.com
+```
+Must pass 100% of checks:
+- Title (50–60 chars) & Meta Description (120–156 chars) present.
+- Exactly one `<h1>` tag in static SSR HTML.
+- Valid JSON-LD Schema without parse errors.
+- Dynamic 1200×630 OG image returns HTTP 200.
+- `robots.txt`, `sitemap.xml`, and `llms.txt` return HTTP 200.
+- Zero broken internal `<a>` links.
+- Image `alt` tags present on all informative images.
