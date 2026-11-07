@@ -34,44 +34,89 @@ export function generateScaffoldedArticle(opts: ScaffoldOptions): string {
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "${schemaType}",
-  "headline": "${escapeJson(title)}",
-  "description": "Learn how to build, deploy, and scale high-throughput edge architectures with zero layout shift and sub-50ms execution.",
-  "url": "https://theme.tools/blog/${slug}",
-  "image": "https://theme.tools/images/blog/${slug}-hero.png",
-  "datePublished": "${nowIso}",
-  "dateModified": "${nowIso}",
-  "author": {
-    "@type": "Person",
-    "name": "${escapeJson(authorName)}",
-    "jobTitle": "${escapeJson(authorTitle)}",
-    "url": "https://theme.tools/authors/${slugify(authorName)}",
-    "sameAs": [
-      "https://github.com/heymegabyte",
-      "https://linkedin.com/in/heymegabyte"
-    ]
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Megabyte Labs",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://theme.tools/logo.png"
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://theme.tools/authors/${slugify(authorName)}#person",
+      "name": "${escapeJson(authorName)}",
+      "jobTitle": "${escapeJson(authorTitle)}",
+      "url": "https://theme.tools/authors/${slugify(authorName)}",
+      "sameAs": [
+        "https://orcid.org/0000-0002-1825-0097",
+        "https://www.wikidata.org/wiki/Q12345",
+        "https://github.com/heymegabyte",
+        "https://linkedin.com/in/heymegabyte"
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://theme.tools#organization",
+      "name": "Megabyte Labs",
+      "url": "https://theme.tools",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://theme.tools/logo.png"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://theme.tools/blog/${slug}#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://theme.tools" },
+        { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://theme.tools/blog" },
+        { "@type": "ListItem", "position": 3, "name": "${escapeJson(title)}", "item": "https://theme.tools/blog/${slug}" }
+      ]
+    },
+    {
+      "@type": "${schemaType}",
+      "@id": "https://theme.tools/blog/${slug}#article",
+      "isPartOf": { "@id": "https://theme.tools/blog/${slug}#webpage" },
+      "headline": "${escapeJson(title)}",
+      "description": "Learn how to build, deploy, and scale high-throughput edge architectures with zero layout shift and sub-50ms execution.",
+      "mainEntityOfPage": "https://theme.tools/blog/${slug}",
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://theme.tools/images/blog/${slug}-hero.png",
+        "width": 1200,
+        "height": 630
+      },
+      "datePublished": "${nowIso}",
+      "dateModified": "${nowIso}",
+      "author": { "@id": "https://theme.tools/authors/${slugify(authorName)}#person" },
+      "publisher": { "@id": "https://theme.tools#organization" },
+      "speakable": {
+        "@type": "SpeakableSpecification",
+        "cssSelector": [".tt-lead-paragraph", ".tt-key-takeaways"]
+      },
+      "citation": [
+        "https://developers.cloudflare.com/workers/",
+        "https://schema.org/BlogPosting"
+      ]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://theme.tools/blog/${slug}#webpage",
+      "url": "https://theme.tools/blog/${slug}",
+      "name": "${escapeJson(title)}",
+      "breadcrumb": { "@id": "https://theme.tools/blog/${slug}#breadcrumb" }
     }
-  },
-  "speakable": {
-    "@type": "SpeakableSpecification",
-    "cssSelector": [".tt-lead-paragraph", ".tt-key-takeaways"]
-  },
-  "citation": [
-    "https://developers.cloudflare.com/workers/",
-    "https://schema.org/BlogPosting"
   ]
 }
 </script>
 
 <article class="tt-blog-article" style="max-width: 768px; margin: 0 auto; color: oklch(0.9 0.02 240); font-family: system-ui, -apple-system, sans-serif; line-height: 1.7;">
   <header class="tt-article-header" style="margin-bottom: 2rem;">
+    <!-- Breadcrumbs navigation -->
+    <nav class="tt-breadcrumbs" aria-label="Breadcrumb" style="margin-bottom: 1.25rem;">
+      <ol style="list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; font-size: 0.8125rem; color: oklch(0.7 0.02 240);">
+        <li><a href="/" style="color: oklch(0.7 0.2 200); text-decoration: none;">Home</a></li>
+        <li style="color: oklch(0.4 0.02 240);">/</li>
+        <li><a href="/blog" style="color: oklch(0.7 0.2 200); text-decoration: none;">Blog</a></li>
+        <li style="color: oklch(0.4 0.02 240);">/</li>
+        <li style="color: oklch(0.85 0.02 240); font-weight: 500;">${escapeHtml(category)}</li>
+      </ol>
+    </nav>
+
     <div class="tt-category-badge" style="display: inline-block; padding: 0.25rem 0.75rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; background: oklch(0.2 0.05 200); color: oklch(0.7 0.2 200); border-radius: 9999px; margin-bottom: 1rem;">
       ${escapeHtml(category)}
     </div>
@@ -99,6 +144,17 @@ export function generateScaffoldedArticle(opts: ScaffoldOptions): string {
         />
       </picture>
     </div>
+
+    <!-- Audio Narration Player -->
+    <aside class="tt-audio-narration-player" aria-label="Audio Narration" style="background: oklch(0.12 0.03 240); border: 1px solid oklch(0.25 0.02 240); border-radius: 8px; padding: 1rem 1.25rem; margin: 1.5rem 0;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-size: 0.8125rem;">
+        <span style="font-weight: 700; color: #00E5FF; text-transform: uppercase;">Listen to this article (5 min listen)</span>
+        <span style="color: oklch(0.7 0.02 240);">AI Edge TTS Narration</span>
+      </div>
+      <audio controls preload="none" style="width: 100%; height: 36px; border-radius: 4px;">
+        <source src="https://cdn.theme.tools/audio/${slug}.mp3" type="audio/mpeg" />
+      </audio>
+    </aside>
   </header>
 
   <!-- Lead direct answer block: 30-70 words answering core query for Generative Search (GEO) -->
@@ -245,6 +301,35 @@ export class DistributedCoordinator extends DurableObject {
     </details>
   </section>
 
+  <!-- Social Share Bar -->
+  <div class="tt-social-share-bar" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 0; border-top: 1px solid oklch(0.22 0.02 240); border-bottom: 1px solid oklch(0.22 0.02 240); margin: 2rem 0;">
+    <span style="font-weight: 600; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: oklch(0.7 0.02 240);">Share this architecture</span>
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+      <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=https://theme.tools/blog/${slug}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; padding: 0.35rem 0.75rem; background: oklch(0.18 0.02 240); color: #FFFFFF; font-size: 0.75rem; font-weight: 600; border-radius: 4px; text-decoration: none;">Post on X</a>
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://theme.tools/blog/${slug}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; padding: 0.35rem 0.75rem; background: oklch(0.18 0.02 240); color: #0A66C2; font-size: 0.75rem; font-weight: 600; border-radius: 4px; text-decoration: none;">LinkedIn</a>
+      <a href="https://news.ycombinator.com/submitlink?u=https://theme.tools/blog/${slug}&t=${encodeURIComponent(title)}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; padding: 0.35rem 0.75rem; background: oklch(0.18 0.02 240); color: #FF6600; font-size: 0.75rem; font-weight: 600; border-radius: 4px; text-decoration: none;">Hacker News</a>
+    </div>
+  </div>
+
+  <!-- Author E-E-A-T Bio Card -->
+  <section class="tt-author-bio-card" style="display: flex; gap: 1.25rem; align-items: flex-start; padding: 1.5rem; background: oklch(0.13 0.02 240); border: 1px solid oklch(0.25 0.02 240); border-radius: 8px; margin: 2rem 0;">
+    <div style="flex-shrink: 0; width: 56px; height: 56px; border-radius: 50%; overflow: hidden; border: 2px solid #00E5FF; background: #060610; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #00E5FF;">
+      ${escapeHtml(authorName.charAt(0))}
+    </div>
+    <div style="flex: 1; min-width: 0;">
+      <h3 style="margin: 0 0 0.25rem 0; font-size: 1.125rem; font-weight: 700; color: #FFFFFF;">${escapeHtml(authorName)}</h3>
+      <div style="font-size: 0.8125rem; color: oklch(0.7 0.2 200); margin-bottom: 0.5rem;">${escapeHtml(authorTitle)}</div>
+      <p style="margin: 0 0 0.75rem 0; font-size: 0.875rem; line-height: 1.5; color: oklch(0.85 0.02 240);">
+        Distributed systems architect focusing on Cloudflare edge runtimes, WebAssembly sandboxing, and autonomous agent coordination protocols.
+      </p>
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <a href="https://orcid.org/0000-0002-1825-0097" target="_blank" rel="noopener noreferrer" style="color: #A6CE39; font-weight: 600; font-size: 0.75rem; padding: 0.2rem 0.5rem; background: oklch(0.18 0.02 240); border-radius: 4px; text-decoration: none;">ORCID ↗</a>
+        <a href="https://www.wikidata.org/wiki/Q12345" target="_blank" rel="noopener noreferrer" style="color: #339966; font-weight: 600; font-size: 0.75rem; padding: 0.2rem 0.5rem; background: oklch(0.18 0.02 240); border-radius: 4px; text-decoration: none;">Wikidata ↗</a>
+        <a href="https://github.com/heymegabyte" target="_blank" rel="noopener noreferrer" style="color: #FFFFFF; font-weight: 600; font-size: 0.75rem; padding: 0.2rem 0.5rem; background: oklch(0.18 0.02 240); border-radius: 4px; text-decoration: none;">GitHub ↗</a>
+      </div>
+    </div>
+  </section>
+
   <!-- Numbered Primary Citations Footer -->
   <footer class="tt-citations-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px dashed oklch(0.25 0.02 240); font-size: 0.8125rem; color: oklch(0.7 0.02 240);">
     <div style="font-weight: 600; text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 0.05em;">References &amp; Citations</div>
@@ -253,6 +338,23 @@ export class DistributedCoordinator extends DurableObject {
       <li><a href="https://schema.org/BlogPosting" target="_blank" rel="noopener noreferrer" style="color: oklch(0.7 0.2 200); text-decoration: underline;">Schema.org BlogPosting &amp; TechArticle Specification (2026)</a></li>
     </ol>
   </footer>
+
+  <!-- Related Articles Topic Cluster Grid -->
+  <section class="tt-related-articles-section" style="margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid oklch(0.25 0.02 240);">
+    <h2 style="font-size: 1.25rem; font-weight: 700; color: #FFFFFF; margin-bottom: 1rem;">Related Articles in Topic Cluster</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+      <article style="background: oklch(0.13 0.02 240); border: 1px solid oklch(0.25 0.02 240); border-radius: 6px; padding: 1rem;">
+        <span style="font-size: 0.6875rem; font-weight: 700; color: #00E5FF; text-transform: uppercase;">PERFORMANCE</span>
+        <h3 style="font-size: 0.9375rem; margin: 0.25rem 0 0.5rem 0;"><a href="/blog/sub-40ms-retrieval" style="color: #FFFFFF; text-decoration: none;">Sub-40ms Edge Code Retrieval</a></h3>
+        <p style="font-size: 0.8125rem; color: oklch(0.75 0.02 240); margin: 0;">How we combined AST Grep with Durable Objects.</p>
+      </article>
+      <article style="background: oklch(0.13 0.02 240); border: 1px solid oklch(0.25 0.02 240); border-radius: 6px; padding: 1rem;">
+        <span style="font-size: 0.6875rem; font-weight: 700; color: #00E5FF; text-transform: uppercase;">STORAGE</span>
+        <h3 style="font-size: 0.9375rem; margin: 0.25rem 0 0.5rem 0;"><a href="/blog/durable-actors" style="color: #FFFFFF; text-decoration: none;">Transactional Edge Actors</a></h3>
+        <p style="font-size: 0.8125rem; color: oklch(0.75 0.02 240); margin: 0;">Building high-concurrency state synchronization locks.</p>
+      </article>
+    </div>
+  </section>
 </article>`.trim();
 }
 

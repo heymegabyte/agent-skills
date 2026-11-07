@@ -170,27 +170,42 @@ export function auditBlogPost(content: string, targetName = 'Blog Post'): BlogAu
     message: hasToc ? 'Interactive Table of Contents navigation present.' : 'Missing Table of Contents (<nav class="tt-toc">).',
   });
 
-  // 6. Schema.org JSON-LD (BlogPosting or TechArticle)
+  // 6. Schema.org JSON-LD (BlogPosting, TechArticle, or Unified @graph)
   const jsonLdMatch = content.match(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/i);
   if (jsonLdMatch) {
     try {
       const parsed = JSON.parse(jsonLdMatch[1].trim());
-      const isArticleType = parsed['@type'] === 'BlogPosting' || parsed['@type'] === 'TechArticle' || parsed['@type'] === 'Article';
-      const hasAuthor = !!parsed.author && (typeof parsed.author === 'object' || typeof parsed.author === 'string');
+      let isArticleType = false;
+      let hasAuthor = false;
+      let schemaTypeName = parsed['@type'] || 'unknown';
+
+      if (Array.isArray(parsed['@graph'])) {
+        const articleNode = parsed['@graph'].find(
+          (n: Record<string, unknown>) => n['@type'] === 'BlogPosting' || n['@type'] === 'TechArticle' || n['@type'] === 'Article',
+        );
+        if (articleNode) {
+          isArticleType = true;
+          schemaTypeName = `@graph -> ${articleNode['@type']}`;
+          hasAuthor = !!articleNode.author || parsed['@graph'].some((n: Record<string, unknown>) => n['@type'] === 'Person');
+        }
+      } else {
+        isArticleType = parsed['@type'] === 'BlogPosting' || parsed['@type'] === 'TechArticle' || parsed['@type'] === 'Article';
+        hasAuthor = !!parsed.author && (typeof parsed.author === 'object' || typeof parsed.author === 'string');
+      }
 
       if (isArticleType && hasAuthor) {
         checks.push({
           id: 'SCHEMA_JSON_LD',
           category: 'SCHEMA',
           severity: 'PASS',
-          message: `Valid Schema.org ${parsed['@type']} JSON-LD with verified author entity.`,
+          message: `Valid Schema.org ${schemaTypeName} JSON-LD with verified author entity.`,
         });
       } else {
         checks.push({
           id: 'SCHEMA_JSON_LD',
           category: 'SCHEMA',
           severity: 'WARNING',
-          message: `JSON-LD found but type is ${parsed['@type'] || 'unknown'} or missing author Person.`,
+          message: `JSON-LD found but type is ${schemaTypeName} or missing author Person.`,
         });
       }
     } catch {
@@ -300,6 +315,24 @@ export function auditBlogPost(content: string, targetName = 'Blog Post'): BlogAu
     message: `External citations: ${extLinks.length} primary references found (Target ≥ 2).`,
   });
 
+  // 12. Breadcrumb Navigation Trail
+  const hasBreadcrumbs = /tt-breadcrumbs/i.test(content) || /BreadcrumbList/i.test(content) || /breadcrumb/i.test(content);
+  checks.push({
+    id: 'BREADCRUMBS',
+    category: 'STRUCTURE',
+    severity: hasBreadcrumbs ? 'PASS' : 'WARNING',
+    message: hasBreadcrumbs ? 'Breadcrumb navigation trail detected.' : 'Recommend adding <nav class="tt-breadcrumbs"> or BreadcrumbList schema.',
+  });
+
+  // 13. Author E-E-A-T Entity Graph
+  const hasAuthorBio = /tt-author-bio-card/i.test(content) || /sameAs/i.test(content) || /orcid\.org/i.test(content) || /wikidata\.org/i.test(content);
+  checks.push({
+    id: 'AUTHOR_EEAT',
+    category: 'GEO_VOICE',
+    severity: hasAuthorBio ? 'PASS' : 'WARNING',
+    message: hasAuthorBio ? 'Author E-E-A-T entity graph / bio profile verified.' : 'Missing verified author E-E-A-T entity links (sameAs).',
+  });
+
   // Calculate score
   const total = checks.length;
   const passed = checks.filter((c) => c.severity === 'PASS').length;
@@ -362,6 +395,9 @@ if (process.argv[1]?.endsWith('blog-post-validator.ts') || import.meta.main) {
       </script>
       <article class="tt-blog-article">
         <header class="tt-article-header">
+          <nav class="tt-breadcrumbs" aria-label="Breadcrumb">
+            <ol><li><a href="/">Home</a></li><li><span>Engineering</span></li></ol>
+          </nav>
           <h1>Building Sub-40ms Semantic Retrieval on Cloudflare Workers</h1>
         </header>
         <p class="tt-lead-paragraph">
@@ -382,6 +418,11 @@ if (process.argv[1]?.endsWith('blog-post-validator.ts') || import.meta.main) {
             <img src="/arch.png" alt="Architecture flow diagram" width="1200" height="630" style="aspect-ratio: 1200 / 630;" />
           </picture>
         </main>
+        <section class="tt-author-bio-card">
+          <h3>Sarah Connor</h3>
+          <p>Staff Systems Engineer.</p>
+          <a href="https://orcid.org/0000-0002-1825-0097">ORCID</a>
+        </section>
         <section class="tt-faq-section">
           <h2>Frequently Asked Questions</h2>
           <details name="blog-faq">

@@ -38,31 +38,40 @@ Generic paraphrasing of existing SERP summaries is strictly banned by Google Cor
 
 ---
 
-## 2. Semantic HTML5 DOM Layout
+## 2. Semantic HTML5 DOM Layout & The 15 Golden Post Mandates
 
 Articles must be structured using clean, semantic HTML5 elements without div-soup:
 
 ```mermaid
 flowchart TD
-    A["&lt;article class='tt-blog-article'&gt;"] --> B["&lt;header class='tt-article-header'&gt;<br/>Category Badge + H1 + Meta (Author, Time, Reading Min) + Hero Picture"]
+    A["&lt;article class='tt-blog-article'&gt;"] --> B["&lt;header class='tt-article-header'&gt;<br/>Breadcrumbs + Category Badge + H1 + Meta (Author, Time, Reading Min) + Hero Picture + Audio Player"]
     A --> C["&lt;p class='tt-lead-paragraph'&gt;<br/>30-70 Word Direct Answer to Search Intent"]
     A --> D["&lt;aside class='tt-callout tt-callout-key-takeaways'&gt;<br/>Executive Summary & Key Takeaways Bulleted Grid"]
     A --> E["&lt;nav class='tt-toc'&gt;<br/>Table of Contents with Deep Anchors"]
     A --> F["&lt;main class='tt-article-body'&gt;<br/>Structured Sections + Comparison Tables + Interactive Code + Cloudflare Stream"]
-    A --> G["&lt;section class='tt-faq-section'&gt;<br/>Native &lt;details name='blog-faq'&gt; Exclusive Accordions"]
-    A --> H["&lt;footer class='tt-citations-footer'&gt;<br/>Numbered Verifiable References"]
+    A --> G["&lt;div class='tt-social-share-bar'&gt;<br/>Native Web Share API + X, LinkedIn, HN"]
+    A --> H["&lt;section class='tt-author-bio-card'&gt;<br/>E-E-A-T Verified Person Card (ORCID, Wikidata, GitHub)"]
+    A --> I["&lt;section class='tt-faq-section'&gt;<br/>Native &lt;details name='blog-faq'&gt; Exclusive Accordions"]
+    A --> J["&lt;footer class='tt-citations-footer'&gt;<br/>Numbered Verifiable References"]
+    A --> K["&lt;section class='tt-related-articles-section'&gt;<br/>Topic Cluster Internal Linking Grid"]
 ```
 
-1. **Root Wrapper**: `<article class="tt-blog-article">` with max-width 768px for optimal reading line length (60–75 characters per line).
-2. **Article Header**:
-   - Distinctive category badge pill with OKLCH theme colors.
-   - Exactly ONE `<h1>` title (benefit-first, specific, ≤12 words).
-   - Author avatar, name, publication date wrapped in `<time datetime="YYYY-MM-DD">`, and reading time estimate.
-   - Hero picture with explicit 1200×630 aspect ratio and `fetchpriority="high"`.
-3. **Direct-Answer Lead Paragraph**: First paragraph (`.tt-lead-paragraph`) directly and concisely answers the core query in 30–70 words.
-4. **Executive Key Takeaways Callout**: `<aside class="tt-callout tt-callout-key-takeaways">` summarizing 3–5 core insights.
-5. **Interactive Table of Contents**: `<nav class="tt-toc">` with clean anchor links matching `slugify(h2/h3)`.
-6. **Native FAQ Accordions**: Render FAQs using native `<details name="blog-faq">` exclusive accordions (zero JavaScript overhead, keyboard-accessible, SEO crawlable).
+### The 15 Golden Post Mandates
+1. **Semantic Container**: `<article class="tt-blog-article">` with max-width 768px for optimal reading line length (60–75 characters per line).
+2. **Single Canonical `<h1>` Title**: Benefit-first, specific, front-loaded with primary keyword (30–65 characters).
+3. **Breadcrumb Trail**: `<nav class="tt-breadcrumbs" aria-label="Breadcrumb">` matching `BreadcrumbList` schema.
+4. **Direct-Answer Lead Paragraph**: First paragraph (`.tt-lead-paragraph`) directly answers the query in 30–70 words for GEO and Google AI Overviews.
+5. **Executive Key Takeaways Callout**: `<aside class="tt-callout tt-callout-key-takeaways">` with 3–5 bulleted insights.
+6. **Dynamic Table of Contents**: `<nav class="tt-toc">` with clean anchor links matching `slugify(h2/h3)`.
+7. **Audio Narration Player**: `<aside class="tt-audio-narration-player">` with zero layout shift, HTML5 audio controls, narrator attribution, and transcript link.
+8. **Zero-CLS Multimedia Bounding Boxes**: Explicit CSS `aspect-ratio` and width/height on all `<picture>`, `<img>`, and `<iframe>` wrappers.
+9. **Interactive Syntax-Highlighted Code Blocks**: File header, language badge, copy button, and high-contrast styling.
+10. **Native FAQ Accordions**: Render FAQs using native `<details name="blog-faq">` exclusive accordions (zero JS, crawlable, `FAQPage` schema sync).
+11. **Social Share Bar**: Progressive enhancement share bar with Web Share API, X, LinkedIn, and copy-link button.
+12. **Author E-E-A-T Bio Card**: Author bio with avatar, job title, and verified entity links (ORCID, Wikidata, GitHub, LinkedIn).
+13. **Primary Citations Footer**: Numbered list of verifiable external links in `<footer class="tt-citations-footer">`.
+14. **Related Articles Topic Cluster**: Responsive grid of related posts preserving internal linking graph equity.
+15. **Unified `@graph` Schema.org JSON-LD**: Single JSON-LD script connecting Article, Author, Publisher, Breadcrumbs, Audio, and FAQs.
 
 ---
 
@@ -94,6 +103,12 @@ Embed videos using [`renderCloudflareStreamEmbed`](file:///Users/Apple/emdash/re
 - Paired `VideoObject` Schema.org JSON-LD with thumbnail, upload date, duration (`PTxMxS`), and `hasPart` chapter clips.
 - Full transcript disclosure rendered in `<details class="tt-video-transcript">` for deep search indexing.
 
+### Audio Narration & Voice SEO
+Embed audio using [`renderAudioNarrationPlayer`](file:///Users/Apple/emdash/repositories/theme.tools/packages/blog/src/multimedia.ts):
+- Semantic HTML5 `<audio>` container with duration badge and narrator credit.
+- Linked `AudioObject` schema for podcast and audio search discovery.
+- `SpeakableSpecification` targeting `.tt-lead-paragraph` and `.tt-key-takeaways` for voice search and TTS.
+
 ### Interactive Syntax-Highlighted Code Blocks
 Use [`renderInteractiveCodeBlock`](file:///Users/Apple/emdash/repositories/theme.tools/packages/blog/src/multimedia.ts):
 - Header displaying the file path/filename and language badge.
@@ -104,25 +119,24 @@ Use [`renderInteractiveCodeBlock`](file:///Users/Apple/emdash/repositories/theme
 ## 4. Generative Engine Optimization (GEO) Standards
 
 To ensure conversational AI agents (Perplexity, ChatGPT, Claude, Gemini) cite the post:
-1. **Quotable Answer Blocks**: Place a self-contained 30–70 word declarative answer block immediately under every informational `<h2>` heading.
-2. **Comparison Tables**: Convert narrative feature or performance comparisons into structured HTML tables with explicit column headers and binary `✓`/`✗` marks.
-3. **Operational Step-by-Step Sequences**: Format instructions into numbered lists (`<ol>`) with bold action verbs.
-4. **Anti-AI-Slop Voice**: Zero occurrences of banned buzzwords (`delve`, `leverage`, `seamless`, `robust`, `synergy`, `elevate`, `cutting-edge`). Maintain Flesch Reading Ease ≥60.
+1. **Fact-Density & Quantitative Statements**: Replace qualitative phrases (*"fast speed"*) with exact numbers (*"sub-40ms P99 latency, 14.8x faster"*).
+2. **Quotable Answer Blocks**: Place a self-contained 30–70 word declarative answer block immediately under every informational `<h2>` heading.
+3. **Comparison Tables**: Convert narrative feature or performance comparisons into structured HTML tables with explicit column headers and binary `✓`/`✗` marks.
+4. **Authoritative Source Citing**: Outbound links to primary RFCs, GitHub repositories, and research papers signal membership in the verified graph of truth.
+5. **Anti-AI-Slop Voice**: Zero occurrences of banned buzzwords (`delve`, `leverage`, `seamless`, `robust`, `synergy`, `elevate`, `cutting-edge`, `beacon`, `tapestry`). Maintain Flesch Reading Ease ≥55 (≥35 for `TechArticle`).
 
 ---
 
-## 5. Machine-Readable Schema.org JSON-LD
+## 5. Machine-Readable Unified `@graph` Schema.org JSON-LD
 
-Every blog post must render a single, validated JSON-LD block:
-- **`BlogPosting`** for thought leadership, analysis, and product essays.
-- **`TechArticle`** for developer tutorials, engineering deep-dives, and code walkthroughs.
-- Mandatory fields:
-  - `headline`, `description`, `image`, `datePublished`, `dateModified`.
-  - `author`: `Person` with `name`, `url`, and `sameAs`.
-  - `publisher`: `Organization` with `name` and `logo`.
-  - `speakable`: CSS selectors for voice assistants (`.tt-lead-paragraph`, `.tt-key-takeaways`).
-  - `citation`: Array of primary external sources.
-  - `hasPart`: Embedded clips or chapters for attached videos.
+Every blog post must render a single, connected JSON-LD `@graph` block via [`buildUnifiedBlogGraphSchema`](file:///Users/Apple/emdash/repositories/theme.tools/packages/blog/src/schema.ts):
+- **`BlogPosting`** or **`TechArticle`** with canonical `@id` linking to `#article`.
+- **`Person`** with persistent `@id` linking to `#person` and `sameAs` entity links to ORCID, Wikidata, and GitHub.
+- **`Organization`** with `@id` linking to `#organization` and logo ImageObject.
+- **`BreadcrumbList`** with `@id` linking to `#breadcrumb` and hierarchical ListItems.
+- **`SpeakableSpecification`** targeting `.tt-lead-paragraph` and `.tt-key-takeaways`.
+- **`VideoObject`** and **`AudioObject`** with durations, thumbnails, and stream URLs.
+- **`FAQPage`** mapping all native `<details>` accordions to Question/Answer pairs.
 
 ---
 

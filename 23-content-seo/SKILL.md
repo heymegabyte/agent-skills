@@ -75,9 +75,9 @@ Every public indexable page must satisfy the following checklist before build ap
 - **Headings Structure**: Exactly ONE `<h1>` in prerendered HTML. Logical `<h2>` and `<h3>` nesting without skipped levels.
 
 ### Core Web Vitals (2026 Standards)
-- **Interaction to Next Paint (INP)**: <200ms (strict threshold; eliminate main-thread blocking scripts).
-- **Largest Contentful Paint (LCP)**: <2.0s on 4G mobile emulation. Preload hero images with `fetchpriority="high"`.
-- **Cumulative Layout Shift (CLS)**: <0.05. Explicit `width` and `height` on all media and embeds.
+- **Interaction to Next Paint (INP)**: <150ms (strict threshold; eliminate main-thread blocking scripts; CSS-only scroll progress; native `<details>` accordions).
+- **Largest Contentful Paint (LCP)**: <1.8s on 4G mobile emulation. Preload hero pictures with `fetchpriority="high"` and AVIF + WebP fallbacks.
+- **Cumulative Layout Shift (CLS)**: Exactly 0.00. Explicit CSS `aspect-ratio: 1200 / 630` or `16 / 9` and width/height on all media wrappers before hydration.
 
 ---
 
@@ -87,22 +87,25 @@ Optimizing for LLM retrieval-augmented generation (RAG) and direct citation:
 
 ```mermaid
 flowchart LR
-    A["Raw Page Content"] --> B["Self-Contained Answer Block<br/>(40-60 words under H2)"]
+    A["Raw Page Content"] --> B["Self-Contained Answer Block<br/>(30-70 words under H2)"]
     A --> C["Structured Contrast Table<br/>(Data/Feature Grid)"]
-    A --> D["JSON-LD Schema Entity Graph"]
+    A --> D["Unified @graph JSON-LD Entity Fabric"]
     B --> E["RAG Vector / Citation Extraction"]
     C --> E
     D --> E
     E --> F["AI Search Answer<br/>(Perplexity / ChatGPT / Gemini)"]
 ```
 
-1. **Standalone 40–60 Word Quotable Answer Blocks**: Place a direct, concise answer block immediately under major `<h2>` and `<h3>` question headings. LLMs favor complete, extractable definitions that require no surrounding context.
+1. **Standalone 30–70 Word Quotable Answer Blocks**: Place a direct, concise answer block immediately under major `<h2>` and `<h3>` question headings. LLMs favor complete, extractable definitions that require no surrounding context.
 2. **Tabular Comparison Grids**: Render structured HTML tables with explicit column headers (`✓`, `✗`, numeric benchmarks, pricing tiers). AI models synthesize comparison tables over flowing prose.
 3. **Information Gain & Proprietary Data**: Google Core Updates and LLM crawlers heavily reward original data, benchmarks, code samples, and firsthand measurements. Eliminate boilerplate paraphrasing.
-4. **Author E-E-A-T Grounding**: Every technical guide or blog post must cite a verifiable author with `Person` JSON-LD schema, `sameAs` social profiles, and clear publication/update timestamps.
+4. **Author E-E-A-T Grounding**: Every technical guide or blog post must cite a verifiable author with `Person` JSON-LD schema, `sameAs` links to **ORCID**, **Wikidata**, GitHub, and LinkedIn.
 5. **Native HTML Disclosure Primitives**:
    - Render FAQ blocks using native `<details name="faq-group">` exclusive accordions (zero JS overhead, instantly accessible).
    - Use `hidden="until-found"` for collapsed content so in-page text remains search-indexed and Ctrl+F discoverable.
+6. **Voice & Audio SEO**:
+   - Deploy `SpeakableSpecification` targeting `.tt-lead-paragraph` and `.tt-key-takeaways` so voice assistants and AI summary engines extract spoken snippets.
+   - Provide an embedded audio narration player (`<aside class="tt-audio-narration-player">`) linked to an `AudioObject` schema for podcast and audio search discovery.
 
 ---
 
