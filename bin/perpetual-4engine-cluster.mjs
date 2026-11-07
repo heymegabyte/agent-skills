@@ -30,6 +30,7 @@ function getArg(flag, fallback) {
 }
 
 const workspacePath = resolve(getArg('--workspace', process.cwd()));
+const stayOpenAfterDone = args.includes('--stay-open-after-done');
 const isDaemon = args.includes('--daemon') || args.includes('--watch');
 const untilDone = args.includes('--until-done') || args.includes('--continuous') || isDaemon;
 const maxRounds = Number(getArg('--max-rounds', isDaemon ? 1000000 : untilDone ? 50 : 1));
@@ -477,12 +478,13 @@ async function main() {
 
     const openSpecCheck = countUncheckedOpenSpecTasks(workspacePath);
 
-    // Whenever 0 recommended ideas remain (all 999 shallow modules have been deepened and 245/245 OpenSpec tasks are checked),
-    // in --daemon mode we MUST NOT dirty git-tracked .agents/*.json files on no-op guardian rounds!
-    if (isDaemon && latestWaveSummary.recommendedIdeasImplementedThisCycle === 0 && openSpecCheck.unchecked === 0) {
+    // Whenever 0 recommended ideas remain (all 999 shallow modules have been deepened and 1035/1035 OpenSpec tasks are checked),
+    // close the process cleanly (exit 0) so the parent process knows convergence is 100% complete and can proceed
+    // (unless --stay-open-after-done was explicitly requested).
+    if (isDaemon && latestWaveSummary.recommendedIdeasImplementedThisCycle === 0 && latestWaveSummary.shallowModulesRemainingCount === 0 && openSpecCheck.unchecked === 0) {
       const hb = {
         pid: process.pid,
-        status: 'INFINITE_NEXT_50_RECOMMENDABILITY_GATE_ACTIVE',
+        status: 'COMPLETELY_DONE_PROCESS_CLOSED',
         selfInterrogationPrompt:
           'What are the next 50 things I should do to completely finish this project? And then do those 50 things (ONLY if recommended)',
         roundNumber: round,
@@ -496,11 +498,17 @@ async function main() {
         unrecommendedIdeasRejectedAndSkippedThisCycle: latestWaveSummary.unrecommendedIdeasRejectedThisCycle,
         unrecommendedIdeasImplemented: 0,
         lastHeartbeatAt: new Date().toISOString(),
-        nextWaveInSeconds: intervalSec,
-        completelyDone: latestWaveSummary.shallowModulesRemainingCount === 0,
+        completelyDone: true,
+        processClosedCleanly: !stayOpenAfterDone,
       };
       writeFileSync('/tmp/theme-tools-cluster-daemon-heartbeat.json', JSON.stringify(hb, null, 2) + '\n', 'utf8');
       console.log(JSON.stringify(hb, null, 2));
+      if (!stayOpenAfterDone) {
+        console.log(
+          `[CONVERGED] All ${latestWaveSummary.cumulativeRecommendedTasksImplemented} recommended tasks across ${latestWaveSummary.canonicalWavesCompleted} waves are 100% complete (0 shallow modules remaining, 50/50 unrecommended candidates rejected). Closing process (exit 0) so parent process can proceed.`,
+        );
+        process.exit(0);
+      }
       await sleepMs(intervalSec * 1000);
       continue;
     }
@@ -561,8 +569,11 @@ async function main() {
 
     console.log(JSON.stringify(clusterReceipt, null, 2));
 
-    if (!isDaemon && untilDone && postScan.remainingGapCount === 0 && postBacklog.pendingTasksCount === 0) {
-      break;
+    if (!stayOpenAfterDone && untilDone && postScan.remainingGapCount === 0 && postBacklog.pendingTasksCount === 0) {
+      console.log(
+        `[CONVERGED] All ${latestWaveSummary.cumulativeRecommendedTasksImplemented} recommended tasks across ${latestWaveSummary.canonicalWavesCompleted} waves are 100% complete (0 remaining). Closing process (exit 0) so parent process can proceed.`,
+      );
+      process.exit(0);
     }
 
     if (isDaemon) {
