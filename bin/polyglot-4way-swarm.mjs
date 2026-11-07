@@ -126,16 +126,20 @@ async function main() {
   const upstreamCompatTests = CURATED_40_LIBRARIES.map((lib) =>
     join(workspacePath, 'packages', lib, 'test', 'upstream-compat.test.ts'),
   );
+  const bespokeProtocolTests = CURATED_40_LIBRARIES.map((lib) =>
+    join(workspacePath, 'packages', lib, 'test', 'bespoke-protocol-engine.test.ts'),
+  );
   const sdkTest = join(workspacePath, 'packages', 'sdk', 'test', 'sdk-conformance.test.ts');
   if (existsSync(sdkTest)) {
     conformanceTests.push(sdkTest);
   }
 
-  // Execute the 3 test suite categories + 4 engine CLI pools + 40 OpenCode library inspectors in parallel
+  // Execute the 4 test suite categories + 4 engine CLI pools + 40 OpenCode library inspectors in parallel
   const [
     conformanceResult,
     originalUpstreamResult,
     upstreamCompatResult,
+    bespokeProtocolResult,
     claudeCliPool,
     codexCliPool,
     geminiCliPool,
@@ -144,6 +148,7 @@ async function main() {
     runTestBatch(conformanceTests),
     runTestBatch(originalUpstreamTests),
     runTestBatch(upstreamCompatTests),
+    runTestBatch(bespokeProtocolTests),
     Promise.all(
       claudeShards.map((shard, idx) =>
         spawnBoundedCli(
@@ -208,6 +213,7 @@ async function main() {
     conformanceResult.passed &&
     originalUpstreamResult.passed &&
     upstreamCompatResult.passed &&
+    bespokeProtocolResult.passed &&
     opencodeResults.every((r) => r.shardTestsPassed);
 
   let headCommit = 'unknown';
@@ -251,13 +257,18 @@ async function main() {
       pruned70ReposExcluded: true,
       excluded28NonCfNativeReposExcluded: true,
       packageTestSuitesTotal:
-        conformanceResult.count + originalUpstreamResult.count + upstreamCompatResult.count,
+        conformanceResult.count +
+        originalUpstreamResult.count +
+        upstreamCompatResult.count +
+        bespokeProtocolResult.count,
       originalUpstreamRepoTestSuites: originalUpstreamResult.count,
+      bespokeProtocolEngineTestSuites: bespokeProtocolResult.count,
       retrofittedUpstreamTestFiles: 291,
       totalAssertionsVerified: 4284,
       conformancePassed: conformanceResult.passed,
       originalUpstreamRepoPassed: originalUpstreamResult.passed,
       upstreamCompatPassed: upstreamCompatResult.passed,
+      bespokeProtocolPassed: bespokeProtocolResult.passed,
       allShardsPassed,
     },
     durationMs: Date.now() - startedAt,
