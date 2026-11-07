@@ -206,7 +206,7 @@ function check40LibraryMultiFileDepthGate(ws) {
 // ── 1. PRE-TOOL-USE ──────────────────────────────────────────────────────────
 if (eventType === 'pre-tool') {
   const toolCall = payload.toolCall || {};
-  const toolName = toolCall.name || '';
+  const toolName = String(toolCall.name || '').replace(/^.*:/, '');
   const args = toolCall.args || {};
 
   // Reset consecutive stop emission counter whenever code is edited or written
@@ -385,11 +385,11 @@ if (eventType === 'stop') {
           stdio: ['pipe', 'pipe', 'ignore']
         }).trim();
 
-        // Check if there are modified or untracked source files
+        // Check if there are modified or untracked source files (ignoring transient .claude/.worktree-pool)
         const dirtyLines = status
           .split('\n')
           .map(l => l.trim())
-          .filter(Boolean);
+          .filter(l => l && !l.includes('.claude/.worktree-pool'));
 
         if (dirtyLines.length > 0) {
           resetEmissionCounter();
