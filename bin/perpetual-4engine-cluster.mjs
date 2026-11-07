@@ -75,6 +75,7 @@ function countFilesAndLines(dir) {
         exportsCount += (content.match(/\bexport\s+(const|function|interface|class|type)\b/g) || []).length;
         if (
           full.includes('/src/') &&
+          entry.name.endsWith('.ts') &&
           entry.name !== 'index.ts' &&
           entry.name !== 'wave-evolution-ledger.ts' &&
           lc < 110 &&
