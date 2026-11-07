@@ -53,4 +53,6 @@ The repository hosts 24 canonical paramilitary agent roles operating under **Auf
   - `bin/self-healing-runbook.ts`: Automated error diagnosis and recovery engine.
   - `bin/agent-circuit-breaker.ts`: Circuit breaker for retry loops.
   - `bin/polyglot-4way-swarm.mjs` & `rules/polyglot-4way-parallel-swarm-and-auto-goal.md`: Mandatory 4-engine massive parallel polyglot swarm (`12` Claude + `16` Codex + `8` Gemini + `40` OpenCode = `76` concurrent workers) and automatic end-of-round `/goal` execution enforced by `bin/antigravity-hook.mjs`.
+  - `rules/principal-architect-nomenclature.md`: Principal Architect ("Nincy-Nancy Architect") Nomenclature & Anti-Scaffolding Discipline — bans generator tags (`deep-domain-v2`, `*DeepDomainSpec`), wave/task codes in source (`M613`, `Wave 13`), and numeric count identifiers (`*_16_VISUAL_STATES`), enforcing semantic architectural naming (`*ModuleSpecification`, `*_MODULE_SPECIFICATION`, `verify*ModuleInvariants`, `InteractionStateToken`, `INTERACTION_STATE_TOKENS`, `*_INTERACTION_STATE_TOKENS`, `COMPONENT_INTERACTION_STATES`).
+
 

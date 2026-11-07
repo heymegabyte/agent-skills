@@ -80,7 +80,7 @@ function countFilesAndLines(dir) {
           entry.name !== 'index.ts' &&
           entry.name !== 'wave-evolution-ledger.ts' &&
           lc < 110 &&
-          !content.includes('// @theme.tools/deep-domain-v2')
+          !content.includes('// Architectural Specification & Runtime Invariants')
         ) {
           shallowNonBarrelFiles++;
         }
