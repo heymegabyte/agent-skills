@@ -517,20 +517,6 @@ async function main() {
       latestWaveSummary,
     );
 
-    // Auto-commit and push each wave of 50 recommended module upgrades so git progress is persisted after every wave!
-    if (untilDone && (round === 1 || latestWaveSummary.recommendedIdeasImplementedThisCycle > 0)) {
-      try {
-        const dirty = execSync('git status --porcelain', { cwd: workspacePath, encoding: 'utf8' }).trim();
-        if (dirty) {
-          const msg = `feat(infinite-next-50): Wave ${latestWaveSummary.canonicalWavesCompleted} (${latestWaveSummary.latestTaskRange}) — deepen ${latestWaveSummary.recommendedIdeasImplementedThisCycle} recommended modules (${latestWaveSummary.shallowModulesUpgradedCount} upgraded, ${latestWaveSummary.shallowModulesRemainingCount} remaining, 0 unrecommended)`;
-          execSync(
-            `git add -A && git commit -m "${msg}" && git push origin HEAD:main && git push origin HEAD:emdash/initial-9jdm9`,
-            { cwd: workspacePath, stdio: 'ignore' },
-          );
-        }
-      } catch (_) {}
-    }
-
     const hb = {
       pid: process.pid,
       status: isDaemon
@@ -558,6 +544,21 @@ async function main() {
       convergenceMetrics: clusterReceipt.convergenceMetrics,
     };
     writeFileSync(join(agentsDir, 'cluster-daemon-heartbeat.json'), JSON.stringify(hb, null, 2) + '\n', 'utf8');
+
+    // Auto-commit and push each wave of 50 recommended module upgrades (including cluster-daemon-heartbeat.json) so git working tree is 100% clean!
+    if (untilDone && (round === 1 || latestWaveSummary.recommendedIdeasImplementedThisCycle > 0)) {
+      try {
+        const dirty = execSync('git status --porcelain', { cwd: workspacePath, encoding: 'utf8' }).trim();
+        if (dirty) {
+          const msg = `feat(infinite-next-50): Wave ${latestWaveSummary.canonicalWavesCompleted} (${latestWaveSummary.latestTaskRange}) — deepen ${latestWaveSummary.recommendedIdeasImplementedThisCycle} recommended modules (${latestWaveSummary.shallowModulesUpgradedCount} upgraded, ${latestWaveSummary.shallowModulesRemainingCount} remaining, 0 unrecommended)`;
+          execSync(
+            `git add -A && git commit -m "${msg}" && git push origin HEAD:main && git push origin HEAD:emdash/initial-9jdm9`,
+            { cwd: workspacePath, stdio: 'ignore' },
+          );
+        }
+      } catch (_) {}
+    }
+
     console.log(JSON.stringify(clusterReceipt, null, 2));
 
     if (!isDaemon && untilDone && postScan.remainingGapCount === 0 && postBacklog.pendingTasksCount === 0) {
