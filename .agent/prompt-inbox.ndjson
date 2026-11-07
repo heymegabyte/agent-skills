@@ -1,0 +1,5 @@
+{"ts": "2026-10-08T23:05:28+00:00", "cwd": "/tmp/x", "session_id": "sess-123", "prompt": "adversarial verify sample é \"quoted\""}
+{"ts": "2026-10-08T23:05:37+00:00", "cwd": "/Users/Apple/.claude/plugins/heymegabyte-agent-skills", "session_id": null, "prompt": "second prompt"}
+{"ts": "2026-10-08T23:05:51+00:00", "cwd": "/tmp", "session_id": null, "prompt": "net-isolation probe"}
+{"ts": "2026-10-08T23:06:03+00:00", "cwd": "/Users/Apple/.claude/plugins/heymegabyte-agent-skills", "session_id": null, "prompt": "not json at all {{{"}
+{"ts": "2026-10-28T00:50:41+00:00", "cwd": "/tmp", "session_id": null, "source": "claude-user-prompt", "content_sha256": "88ec7ffe141921629c63a4cd5642c3e6f458ed2a3d7ed0dbb39b541a447ad69c", "decision": "discard-secret", "prompt": null}

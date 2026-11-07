@@ -43,12 +43,11 @@ Use the native generated commands/skills; do not duplicate or hand-edit them. A 
 
 Enable the expanded profile for complex work (`openspec config profile`, then `openspec update`). Treat `openspec/specs/` as durable truth and `openspec/changes/` as in-flight deltas. Every design must cover observable acceptance, security/permissions, telemetry, rollout, rollback and operational ownership when applicable. Run strict validation and verification before archive. After upgrading OpenSpec, run `openspec update` and review its diff.
 
-## Explicit Architect-Role Mandate (frontier harnesses only; NEVER `opencode`)
+## Frontier Architect Mandate (`claude` / `codex` / `antigravity` ONLY — NEVER `opencode`)
 
-- Only an agent **explicitly assigned the `architect` role for the change** may author or modify OpenSpec architectural artifacts (`proposal.md`, `design.md`, `tasks.md`, and `specs/<capability>/spec.md`). A model name, provider, harness, capability, or frontier label alone is insufficient authorization.
-- The assigned architect must use **Claude Code (`claude`) with a fully-loaded, informative hydrated context**, **`codex`**, **`antigravity`**, or another expressly approved frontier harness. The orchestrator must make the role assignment before authorship begins; an implementation worker may not self-assign or infer it.
+- **Claude Code (`claude`) with a fully-loaded, informative hydrated context** (or **`codex`** / **`antigravity`** when operating in those frontier harnesses) is the **Architect** who authors OpenSpec specifications (`proposal.md`, `design.md`, `tasks.md`, and `specs/<capability>/spec.md`).
 - **NEVER spell out the architectural, business-rule, or application details of an OpenSpec with `opencode` (DeepSeek).** Always prefer `claude` (with full hydrated context), `codex`, or `antigravity` to author OpenSpec artifacts. `opencode` is strictly reserved for bounded mechanical execution *after* the Frontier Architect has authored and locked the OpenSpec contract.
-- Include both `> **Architect:** <frontier-harness>` and `> **Architect Role:** assigned` in `proposal.md` and `design.md`. The verifier rejects missing, inconsistent, worker-role, or OpenCode metadata. This attestation records the orchestrator's assignment; it does not permit self-authorization.
+- Include `> **Architect:** claude | codex | antigravity` in `proposal.md` / `design.md` so automated verifiers (`~/.agentskills/bin/openspec-paperclip-sync.ts`) can enforce frontier authorship.
 
 ## Parallel Triad OpenSpec & Paperclip Registration Mandate
 

@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent.megabyte.space/schemas/repomix-context-summary.v1.schema.json",
+  "title": "Repomix Context Summary v1",
+  "description": "Compact parent-safe result of repository analysis performed over a Repomix pack.",
+  "type": "object",
+  "required": ["schema_version", "kind", "status", "task", "executive_summary", "findings", "changes", "risks", "verification", "next_actions", "provenance", "hydration", "compatibility", "extensions"],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^1\\.[0-9]+\\.[0-9]+$" },
+    "kind": { "const": "repomix_context_summary" },
+    "status": { "enum": ["complete", "partial", "blocked", "failed"] },
+    "task": { "type": "string", "minLength": 1, "maxLength": 2000 },
+    "executive_summary": { "type": "string", "minLength": 1, "maxLength": 8000 },
+    "findings": { "type": "array", "items": { "$ref": "#/$defs/finding" }, "maxItems": 100 },
+    "changes": { "type": "array", "items": { "$ref": "#/$defs/change" }, "maxItems": 100 },
+    "risks": { "type": "array", "items": { "$ref": "#/$defs/risk" }, "maxItems": 50 },
+    "verification": { "type": "array", "items": { "$ref": "#/$defs/verification" }, "maxItems": 100 },
+    "next_actions": { "type": "array", "items": { "$ref": "#/$defs/action" }, "maxItems": 50 },
+    "provenance": { "$ref": "#/$defs/provenance" },
+    "hydration": { "$ref": "#/$defs/hydration" },
+    "compatibility": { "$ref": "#/$defs/compatibility" },
+    "extensions": { "type": "object", "additionalProperties": true }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "evidence": {
+      "type": "object", "required": ["path"],
+      "properties": { "path": { "type": "string", "minLength": 1 }, "line": { "type": "integer", "minimum": 1 }, "symbol": { "type": "string" }, "note": { "type": "string", "maxLength": 1000 } },
+      "additionalProperties": true
+    },
+    "finding": {
+      "type": "object", "required": ["id", "severity", "title", "detail", "evidence"],
+      "properties": { "id": { "type": "string" }, "severity": { "enum": ["info", "low", "medium", "high", "critical"] }, "title": { "type": "string" }, "detail": { "type": "string", "maxLength": 4000 }, "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" }, "maxItems": 20 } },
+      "additionalProperties": true
+    },
+    "change": {
+      "type": "object", "required": ["path", "summary"],
+      "properties": { "path": { "type": "string" }, "summary": { "type": "string", "maxLength": 2000 }, "verification": { "type": "string", "maxLength": 1000 } },
+      "additionalProperties": true
+    },
+    "risk": {
+      "type": "object", "required": ["severity", "description", "mitigation"],
+      "properties": { "severity": { "enum": ["low", "medium", "high", "critical"] }, "description": { "type": "string" }, "mitigation": { "type": "string" } },
+      "additionalProperties": true
+    },
+    "verification": {
+      "type": "object", "required": ["command", "status", "detail"],
+      "properties": { "command": { "type": "string" }, "status": { "enum": ["passed", "failed", "skipped"] }, "detail": { "type": "string" } },
+      "additionalProperties": true
+    },
+    "action": {
+      "type": "object", "required": ["priority", "action"],
+      "properties": { "priority": { "enum": ["now", "next", "later"] }, "action": { "type": "string" }, "reason": { "type": "string" } },
+      "additionalProperties": true
+    },
+    "provenance": {
+      "type": "object", "required": ["repository", "revision", "repomix_tokens", "sources"],
+      "properties": { "repository": { "type": "string" }, "revision": { "type": "string" }, "repomix_tokens": { "type": "integer", "minimum": 0 }, "sources": { "type": "array", "items": { "type": "string" }, "maxItems": 500 } },
+      "additionalProperties": true
+    },
+    "hydration": {
+      "type": "object", "required": ["estimated_input_tokens", "omitted", "unavailable"],
+      "properties": { "estimated_input_tokens": { "type": "integer", "minimum": 0 }, "omitted": { "type": "array", "items": { "type": "string" } }, "unavailable": { "type": "array", "items": { "type": "string" } } },
+      "additionalProperties": true
+    },
+    "compatibility": {
+      "type": "object", "required": ["minimum_consumer_version", "producer"],
+      "properties": { "minimum_consumer_version": { "type": "string", "pattern": "^1\\.[0-9]+\\.[0-9]+$" }, "producer": { "type": "string" } },
+      "additionalProperties": true
+    }
+  }
+}

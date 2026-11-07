@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agent.megabyte.space/schemas/task-ledger.json",
+  "title": "Task Ledger Record",
+  "description": "One record per task in the persistent per-repo ledger (.claude/run-the-loop/ledger.ndjson, append-only). Governed by rules/worker-pool-and-task-ledger.md.",
+  "type": "object",
+  "required": ["id", "project", "category", "task_type", "priority", "status", "acceptance_criteria", "idempotency_key"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "description": "Stable task id" },
+    "project": { "type": "string" },
+    "category": { "type": "integer", "minimum": 1, "maximum": 50, "description": "token-allocation category id" },
+    "skill": { "type": "string", "description": "owning skill or rule" },
+    "task_type": { "type": "string" },
+    "origin": { "type": "string", "description": "what surfaced it + supporting evidence/link" },
+    "priority": { "type": "integer", "minimum": 0, "maximum": 5 },
+    "dependencies": { "type": "array", "items": { "type": "string" } },
+    "due": { "type": ["string", "null"], "description": "ISO date or null" },
+    "recurrence": { "type": ["string", "null"], "description": "cron or every/daily/weekly/monthly or null" },
+    "est_tokens": { "type": ["number", "null"] },
+    "est_cost_usd": { "type": ["number", "null"] },
+    "actual_tokens": { "type": ["number", "null"] },
+    "actual_cost_usd": { "type": ["number", "null"] },
+    "assigned_worker": { "type": ["string", "null"] },
+    "lease": {
+      "type": ["object", "null"],
+      "properties": {
+        "owner": { "type": "string" },
+        "pid": { "type": ["integer", "null"] },
+        "heartbeat_ts": { "type": "string" },
+        "expires_ts": { "type": "string" }
+      }
+    },
+    "status": { "type": "string", "enum": ["backlog", "ready", "claimed", "in_progress", "blocked", "verifying", "done", "abandoned"] },
+    "artifacts": { "type": "array", "items": { "type": "string" }, "description": "paths / commit SHAs / code refs" },
+    "acceptance_criteria": { "type": "string" },
+    "verification_evidence": { "type": ["string", "null"], "description": "command output / prod URL / screenshot path" },
+    "measured_outcomes": { "type": ["string", "null"] },
+    "idempotency_key": { "type": "string", "description": "dedupe key; MUST be checked before any outward action (publish/submit/account) to prevent duplicate-on-retry" },
+    "next_action": { "type": ["string", "null"] }
+  }
+}

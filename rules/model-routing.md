@@ -19,8 +19,6 @@ paths:
 
 Select the correct model tier by task complexity and cost — Claude tiers plus approved alternates; never use a deep-reasoning model for tasks a fast one can handle.
 
-**Parent-harness invariant:** whether the active premium session is Gemini, Claude, OpenAI/Codex, or any other paid model service, route every unit OpenCode can complete effectively through LiteLLM-backed local Ollama or DeepSeek. The premium parent plans, supplies acceptance criteria, reviews, integrates, and verifies. Assess swarm fan-out on every OpenCode use; dispatch every genuinely independent safe slice in parallel at the highest useful width under `parallel-subagent-economy`. Do not parallelize dependent work or shared files.
-
 > **Internal agent-orchestration provider policy → [[agent-provider-policy]] (canonical SSOT).**
 > Internal dev / research / agent work uses SUBSCRIPTION CLIs (`claude` / `codex`) +
 > DeepSeek-via-OpenCode — NEVER `OPENAI_API_KEY` / `ANTHROPIC_API_KEY`. The tiers below pick
@@ -81,31 +79,11 @@ Rules (enforce in agent frontmatter + settings):
 - Secrets via `apiKeyHelper` (→ `get-secret DEEPSEEK_API_KEY`), never a hardcoded `ANTHROPIC_AUTH_TOKEN`/`ANTHROPIC_API_KEY` on disk. **Gotcha:** `apiKeyHelper` has LOWER precedence than those two env vars — a hardcoded token silently disables the helper (it "isn't used"), so REMOVE the token for the helper to take effect. `apiKeyHelper` DOES work with a custom `ANTHROPIC_BASE_URL` (its output is sent as `Authorization: Bearer`, which is what DeepSeek's endpoint expects).
 - Current DeepSeek IDs (per DeepSeek's official Claude Code docs, Sep 2026): `deepseek-flash` / `deepseek-flash[1m]`. `deepseek-v4-flash` is undocumented ON THIS RAIL — prefer `deepseek-flash`. (The OpenCode/Zen rail below uses a DIFFERENT namespace where `deepseek-v4-*` IS canonical — never copy IDs across rails.)
 
-## OpenCode harness — LiteLLM DeepSeek rotation by default; direct DeepSeek is the fallback; Zen is an optional separate rail
+## OpenCode harness — direct DeepSeek for local development
 
-Internal throughput defaults to the **LiteLLM rotation gateway** (`[[litellm-gateway]]`): the global
-`~/.config/opencode/opencode.jsonc` sets `model: litellm/deepseek-v4-pro` (reasoning) + `small_model:
-litellm/deepseek-flash` (fast/vision) against `https://llm.megabyte.space/v1` with `apiKey:
-{env:LITELLM_API_KEY}`. The gateway rotates the 4-key DeepSeek pool (`simple-shuffle`) + cross-provider
-fallback + Langfuse tracing, so a swarm of parallel OpenCode workers survives the per-key 429s that a
-single raw key hits — which is exactly why it is the default. Launchers export `LITELLM_API_KEY` from
-`get-secret`; a GUI launch without it, or a gateway outage, falls back to the **direct** `deepseek/*`
-provider (`api.deepseek.com`, native OpenCode credential). Use `bin/opencode-deepseek.sh` for CLI work
-and `bin/opencode-deepseek-doctor.sh` for diagnosis. Do not mix `deepseek/*` / `litellm/*` IDs with the
-`opencode/*` Zen namespace.
+Routine/high-volume local work runs through `bin/opencode-deepseek.sh` with `DEEPSEEK_API_KEY` directly against `https://api.deepseek.com/v1`. The environment key takes precedence over `get-secret`. Provider references use the `deepseek/` namespace; verify the current provider catalog before selecting a model. The primary host currently configures `deepseek/deepseek-chat` as its routine default.
 
-OpenCode is the default execution child of **Gemini, Claude, OpenAI/Codex, and every other premium model service** whenever it can complete a unit effectively. This includes small bounded units even when delegation is not faster. Assess swarm decomposition for every handoff, fan out safe independent units, and escalate only an ambiguous, sensitive, unsupported, or repeatedly failed slice back to the premium parent with evidence.
-
-OpenCode's **Zen** gateway is an optional unified pay-per-use billing rail (one account key via `/connect` → `opencode.ai/auth`); **Go** is its flat-rate subscription twin. Verified 2026-10-04 against `dev.opencode.ai/docs/zen`. Catalog + prices churn weekly — treat the figures below as last-verified, not pinned; re-check at integration.
-
-- **Config**: `opencode.json` references models as `opencode/<model-id>` — never raw provider endpoints while on unified billing. Secrets stay in `get-secret` (`OPENCODE_API_KEY`), never inline.
-- **Tier mapping** (the Reasoning / Balanced / Fast tiers → Zen IDs):
-  - **Reasoning (opus-tier)** → `opencode/deepseek-v4-pro` (MoE, GA 2026-08-13, 1M ctx, reasoning-effort high/xhigh) — Zen dashboard still lists $1.74/$3.48 per MTok but the direct DeepSeek API + `opencode-go` config now show **$0.435/$0.87** (dropped); VERIFY at use. Architecture, security review, hard debugging.
-  - **Balanced (sonnet-tier)** → `opencode/minimax-m2.7` or `opencode/minimax-m3` ($0.30/$1.20) — this IS the "MiniMax OpenCode" rail; `opencode/deepseek-v4.1-flash` ($0.30/$1.20) is the DeepSeek-flavored equivalent. Implementation, tests, migration.
-  - **Fast (haiku-tier)** → `opencode/deepseek-v4-flash` — $0.14/$0.28 (a `deepseek-v4-flash-free` variant exists; `-vision-exp` adds image input at the same price). Changelogs, renames, formatting, transcription.
-- **Deprecations**: `minimax-m2.5` deprecated 2026-08-05 and `minimax-m2.1` 2026-03-15 — route MiniMax work to `m2.7`/`m3` only.
-- **Rail discipline**: three distinct ID namespaces now exist — Anthropic (`opus`/`sonnet`/`haiku` aliases), DeepSeek-direct for Claude Code (`deepseek-flash`), and OpenCode/Zen (`opencode/deepseek-v4-*`, `opencode/minimax-*`). Config carries TIER ALIASES; only the per-harness adapter layer resolves to a rail's IDs (per `[[agent-neutrality]]`).
-- **Vision routing**: `deepseek-v4-pro` is **text-only** (`modalities.input: ["text"]`), `deepseek-flash` is **multimodal** (`["text","image"]`). Any agent/skill that ingests screenshots or images (visual-qa, computer-use-operator, browser-operator, media-orchestrator, video-* QA, browser-control-mastery) MUST run on the **flash** tier (`litellm/deepseek-flash` default rail, or `deepseek/deepseek-flash` direct fallback) — never pro. The generated OpenCode agents in `~/.config/opencode/agents/` encode this (vision agents pinned to flash by `bin/gen-opencode-harness.mjs`).
+Do not route local CLI compute through Cloudflare AI Gateway, OpenCode Zen/Go or another hosted billing gateway. Claude and Codex use official subscription CLIs routed by Claw Router. Cloudflare-hosted product AI is a separate deployment concern. See [the fleet policy](../control-plane/FLEET.md) and `agent-provider-policy.md`.
 
 ## Retired models (requests error)
 
@@ -125,7 +103,7 @@ OpenCode's **Zen** gateway is an optional unified pay-per-use billing rail (one 
 
 - **Opus** — architect, completeness-checker, computer-use-operator, incident-responder, meta-orchestrator, performance-profiler, security-reviewer, visual-qa (each has `model_fallback: claude-sonnet-4-6` + `effort_fallback: high` per `opus-quota-fallback`)
 - **Burst capacity until 2026-11-04**: claimed Claude cloud-session credits run OUTSIDE plan limits — route round-sweeps / fan-outs / unattended batches to `claude --cloud` first, per `account-entitlements`.
-- **Sonnet** — accessibility-auditor, browser-operator, content-writer, deploy-verifier, keyword-researcher, media-orchestrator, migration-agent, motion-choreographer, resource-broker, seo-auditor, test-writer
+- **Sonnet** — accessibility-auditor, browser-operator, content-writer, deploy-verifier, media-orchestrator, migration-agent, motion-choreographer, resource-broker, seo-auditor, test-writer
 - **Haiku** — changelog-drafter, changelog-generator, code-simplifier, cost-estimator, dead-code-remover, dependency-auditor, formatter, model-router, renamer, transcriber
 
 ## Quota-aware routing
@@ -165,7 +143,7 @@ OpenCode's **Zen** gateway is an optional unified pay-per-use billing rail (one 
 
 Standing routing policy for APPLICATION LLM calls + agent build pipelines — a DIFFERENT axis from the Claude-altitude orchestration tiers (which picks which *Claude* model runs a loop phase; this picks which *vendor* serves an app/build call). Brian's directive 2026-06-17.
 
-- **Premium — Anthropic (Claude) / OpenAI (ChatGPT).** ⚠️ **Axis split per [[agent-provider-policy]]:** for INTERNAL dev/research/agent orchestration, premium judgment runs on the SUBSCRIPTION CLIs (`claude`/`codex`), NEVER `ANTHROPIC_API_KEY`/`OPENAI_API_KEY`. For PRODUCT application LLM calls (customer features) Anthropic/OpenAI via the AI Gateway is preserved. Higher-order research, architecture + planning, security/payment/auth decisions, and all vision work (DeepSeek direct rail has NO vision on `deepseek-v4-pro`; `deepseek-flash` has image input but is a throughput tier — use a premium harness for judgment-grade vision). Reserve for judgment, not volume.
+- **Premium — Anthropic (Claude) / OpenAI (ChatGPT).** ⚠️ **Axis split per [[agent-provider-policy]]:** for INTERNAL dev/research/agent orchestration, premium judgment runs on the SUBSCRIPTION CLIs (`claude`/`codex`), NEVER `ANTHROPIC_API_KEY`/`OPENAI_API_KEY`. For PRODUCT application LLM calls (customer features) Anthropic/OpenAI via the AI Gateway is preserved. Higher-order research, architecture + planning, security/payment/auth decisions, and ALL vision (DeepSeek has none). Reserve for judgment, not volume.
 - **Mid-grade — DeepSeek** (`deepseek-chat`; `deepseek-reasoner` for higher-order). The DEFAULT for most generation/implementation/build work, AND the primary provider for headless **Claude Code build agents** via DeepSeek's Anthropic-compatible endpoint: `ANTHROPIC_BASE_URL=https://api.deepseek.com/anthropic` + `ANTHROPIC_AUTH_TOKEN=$DEEPSEEK_API_KEY` + `ANTHROPIC_MODEL=deepseek-chat` (internal/build agents fall back to **Workers-AI**, NOT an `ANTHROPIC_API_KEY` — that bills Anthropic for internal work, forbidden per [[agent-provider-policy]]; `BUILD_LLM_PROVIDER=anthropic` is product-runtime-only, never an internal default). API base `https://api.deepseek.com`; key `DEEPSEEK_API_KEY` is ALWAYS a `wrangler secret` / get-secret entry — never committed.
 - **Instant — Cloudflare Workers AI** (`env.AI.run` `@cf/meta/llama-*`, free, edge). Pre-routing, classification, moderation, embeddings — sub-ms latency default for reflex-speed work.
 - **End state:** collapse everything toward Workers AI as it catches up. Until then — premium for judgment, DeepSeek for volume, Workers AI for reflexes.
@@ -181,12 +159,6 @@ Hierarchical compounds gains over flat fanout. Sub-agent prompts 100–300 words
 
 Spawned specialists for batch test/feature work run on the standing `CLAUDE_CODE_SUBAGENT_MODEL=claude-sonnet-4-6` default per `parallel-subagent-economy` — Opus orchestrates, Sonnet builds. Opus-pinned reviewers (architect/security/visual-qa/meta-orchestrator) override that default with an explicit `model: opus` on the spawn; the call-level model param takes precedence over the env default.
 
-
-## Subscription Quota Headroom Accounting (5h Session vs 7d Weekly)
-
-- Headroom is constrained by the MOST restrictive window: `headroom = Math.max(0, 100 - Math.max(sessionUsage, weeklyUsage))`.
-- When an account reaches $\ge 95\%$ on its 7-day weekly quota (or $\ge 80\%$ under claw-router `exhaustedAtPct`), effective headroom is **0%** (exhausted) even if the 5-hour session window has completely rolled over.
-- When all primary accounts (e.g. all 3 Claude subscriptions) hit weekly ceilings, the fleet router must fail-forward to the next available frontier tier (e.g. Codex Pro subscription) and offload bulk routine implementation to OpenCode/DeepSeek until weekly reset windows arrive.
 
 ## Cloudflare AI Gateway Dynamic Routes (product runtime)
 

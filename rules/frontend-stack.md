@@ -160,17 +160,6 @@ Never write hand-rolled HTML files for any user-facing surface.
 - View Transitions API + Speculation Rules + `<picture>` AVIF + WebP fallback.
 - Single shared layout component for auth-aware header + footer.
 
-## Web-platform capabilities (super-boost catalog)
-
-Both stacks compose native platform primitives before reaching for a JS library — the full set + copy-paste examples live in `rules/web-platform-capabilities.md` (trigger table). Highest-leverage for the frontend layer:
-
-- **#2 Popover + #15 CSS Anchor Positioning + #16 Invoker Commands** → tooltips/menus/dropdowns with no Floating-UI/Popper dependency (shadcn + Spartan compose these natively).
-- **#3 native `<dialog>` + `showModal()`** → auto-inert modals; **#18 `field-sizing: content`** → auto-grow inputs/textarea (drop the JS auto-grow util).
-- **#5 Navigation API** → simpler SPA routing under TanStack Router / Angular Router (feature-detect → History API fallback).
-- **#6 container/style queries** for component-owned breakpoints; **#1 View Transitions** + Speculation Rules (already listed above).
-
-All progressive-enhancement + `@supports`/feature-detect guarded; Chromium-only items non-load-bearing.
-
 ## Existing project audit
 
 - Hand-rolled `public/*.html` for user-facing → refactor backlog. Don't add MORE hand-rolled HTML. Refactor to canonical stack OR mark for sunset.

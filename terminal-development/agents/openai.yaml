@@ -1,0 +1,4 @@
+interface:
+  display_name: "Terminal Development"
+  short_description: "Build polished Go CLIs and terminal UIs"
+  default_prompt: "Use $terminal-development to build or improve this Go CLI or terminal UI."

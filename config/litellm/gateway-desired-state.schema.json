@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "service", "secrets", "routes", "callerPolicy", "access", "observability"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "const": 1 },
+    "service": {
+      "type": "object",
+      "required": ["uuid", "endpoint", "image", "release", "rollbackImage", "deniedReleases"],
+      "properties": {
+        "uuid": { "type": "string", "minLength": 1 },
+        "endpoint": { "type": "string", "format": "uri" },
+        "image": { "type": "string", "pattern": "@sha256:[a-f0-9]{64}$" },
+        "release": { "type": "string" },
+        "rollbackImage": { "type": "string", "pattern": "@sha256:[a-f0-9]{64}$" },
+        "deniedReleases": { "type": "array", "contains": { "const": "1.107.0" } }
+      }
+    },
+    "secrets": {
+      "type": "object",
+      "required": ["required", "provider", "valuesCommitted"],
+      "properties": {
+        "required": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "provider": { "const": "get-secret" },
+        "valuesCommitted": { "const": false }
+      }
+    },
+    "routes": {
+      "type": "object",
+      "required": ["required", "local", "fallbacks"],
+      "properties": {
+        "required": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string" } },
+        "local": {
+          "type": "object",
+          "required": ["alias", "providerModel", "apiBase", "fallback", "maxRpm"],
+          "properties": { "maxRpm": { "type": "integer", "minimum": 1 } }
+        },
+        "fallbacks": { "type": "object", "minProperties": 1 }
+      }
+    },
+    "callerPolicy": {
+      "type": "object",
+      "required": ["keyAlias", "maxBudgetUsd", "budgetDuration", "rpmLimit", "tpmLimit", "maxParallelRequests", "allowedRoutes"],
+      "properties": {
+        "maxBudgetUsd": { "type": "number", "exclusiveMinimum": 0 },
+        "rpmLimit": { "type": "integer", "minimum": 1 },
+        "tpmLimit": { "type": "integer", "minimum": 1 },
+        "maxParallelRequests": { "type": "integer", "minimum": 1 },
+        "allowedRoutes": { "const": ["llm_api_routes"] }
+      }
+    },
+    "access": {
+      "type": "object",
+      "required": ["cloudflareAccessPaths", "apiRemainsVirtualKeyAuthenticated"]
+    },
+    "observability": {
+      "type": "object",
+      "required": ["callbacks", "requiredAlerts"],
+      "properties": {
+        "requiredAlerts": { "type": "array", "minItems": 6, "uniqueItems": true, "items": { "type": "string" } }
+      }
+    }
+  }
+}

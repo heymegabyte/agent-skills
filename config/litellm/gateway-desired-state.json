@@ -1,0 +1,76 @@
+{
+  "$schema": "./gateway-desired-state.schema.json",
+  "schemaVersion": 1,
+  "service": {
+    "uuid": "l1fxqlugpg7iyt9mnoxogwqz",
+    "endpoint": "https://llm.megabyte.space",
+    "image": "ghcr.io/berriai/litellm-database@sha256:7ef0e78fe00ad5ea7ea45666cc1d1f02cb7076aee69091543bf397de52db33ce",
+    "release": "1.106.6",
+    "rollbackImage": "ghcr.io/berriai/litellm-database@sha256:db36453d25e76c9eb689d7d51b8e5fa48843243d7a86ed1284cf574ce0107b3f",
+    "deniedReleases": ["1.107.0"]
+  },
+  "secrets": {
+    "required": [
+      "LITELLM_MASTER_KEY",
+      "LITELLM_API_KEY",
+      "LITELLM_METRICS_API_KEY",
+      "LITELLM_SALT_KEY",
+      "LANGFUSE_PUBLIC_KEY",
+      "LANGFUSE_SECRET_KEY",
+      "DEEPSEEK_API_KEY",
+      "DEEPSEEK_API_KEY_2",
+      "DEEPSEEK_API_KEY_3",
+      "DEEPSEEK_API_KEY_4"
+    ],
+    "provider": "get-secret",
+    "valuesCommitted": false
+  },
+  "routes": {
+    "required": [
+      "local-general",
+      "deepseek-chat",
+      "deepseek-reasoner",
+      "deepseek-v4-pro",
+      "deepseek-flash",
+      "gpt-4o",
+      "gpt-4o-mini"
+    ],
+    "local": {
+      "alias": "local-general",
+      "providerModel": "ollama_chat/qwen2.5:7b-instruct",
+      "apiBase": "http://ollama:11434",
+      "fallback": "deepseek-flash",
+      "maxRpm": 30
+    },
+    "fallbacks": {
+      "deepseek-chat": "gpt-4o-mini",
+      "deepseek-reasoner": "gpt-4o",
+      "deepseek-v4-pro": "deepseek-reasoner",
+      "deepseek-flash": "deepseek-chat"
+    }
+  },
+  "callerPolicy": {
+    "keyAlias": "agent-skills-dev",
+    "maxBudgetUsd": 200,
+    "budgetDuration": "30d",
+    "rpmLimit": 240,
+    "tpmLimit": 2000000,
+    "maxParallelRequests": 40,
+    "allowedRoutes": ["llm_api_routes"]
+  },
+  "access": {
+    "cloudflareAccessPaths": ["llm.megabyte.space/ui/*"],
+    "apiRemainsVirtualKeyAuthenticated": true
+  },
+  "observability": {
+    "callbacks": ["prometheus", "langfuse"],
+    "requiredAlerts": [
+      "LiteLLMGatewayDown",
+      "LiteLLMHighErrorRate",
+      "LiteLLMDeploymentUnhealthy",
+      "LiteLLMFallbackSpike",
+      "LiteLLMSaturationHigh",
+      "LiteLLMSpendLogsStale"
+    ]
+  }
+}

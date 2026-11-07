@@ -5,6 +5,8 @@ Load CONVENTIONS.md for stack defaults. Load _router.md for skill routing.
 
 Route substantial tasks through `bin/skill-router.py`; load selected skills progressively. Apply `rules/low-hanging-fruit.md`, use OpenSpec for material changes, and run `bin/run-perfect-loop.mjs` before claiming repository-wide convergence.
 
+Only an agent explicitly assigned the `architect` role for the specific change may author or modify OpenSpec architectural artifacts. Codex identity alone is insufficient. Record `**Architect Role:** assigned` in proposal and design, and never delegate OpenSpec architecture to OpenCode.
+
 Require explicit user approval of the current Figma artifact before implementing any surface Figma can materially guide; store the approval reference in OpenSpec.
 
 ## Stack

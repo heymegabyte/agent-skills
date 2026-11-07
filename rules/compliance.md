@@ -54,24 +54,6 @@ projectsites.dev Postiz (AGPL social scheduler) at `social.projectsites.dev` —
 - `vendor-risk-tiering` — load-bearing vs replaceable classification
 - `package-preference-registry` — OSS license gate at install time
 
-## Web Compliance 2026 — AI Act + Accessibility Law + Cookie Consent
-
-Time-sensitive 2026 legal obligations every public site/app must meet (added 2026-10-25 from the estate-upgrade audit, `[[estate-upgrade-audit]]`). These are LAW, not UX nice-to-haves; retrofitting costs 3–5× building-in.
-
-### EU AI Act (full enforcement Aug 2 2026)
-
-- Any AI feature touching EU users (chatbot, recommender, personalized pricing, content moderation) → maintain an **AI-system inventory + risk classification**, **disclose** AI interaction to users, and add **AI-governance clauses to vendor contracts**. Pairs with `[[ai-agent-security]]` + `[[contract-first-ai]]`.
-
-### Accessibility is now LAW (not just a quality gate)
-
-- **EU Accessibility Act** (in force since Jun 28 2025): WCAG 2.2 AA (via EN 301 549) for ANY business selling to EU consumers, wherever based. **ADA Title II**: WCAG 2.1 AA for public bodies by Apr 2026; US private-sector lawsuits climb yearly (DOJ uses WCAG 2.1 AA as the benchmark).
-- **The overlay TRAP:** one-click "accessibility overlay" widgets do NOT deliver compliance — they're a **litigation target** + a regulator red flag. Never ship one. The estate's real axe-clean + WCAG-2.2-AA work (`[[quality-metrics]]`, `[[text-contrast]]`) IS the compliance path; a manual audit with real assistive tech catches the ~⅔ scanners miss.
-- Ship a real **accessibility statement** page; encode WCAG contrast ratios in design tokens so every component inherits compliance.
-
-### Cookie consent (2026 rules)
-
-- **Block non-essential cookies until affirmative opt-in** (no pre-ticked boxes); offer granular category choice; **one-click reject with EQUAL prominence to accept** (EU); **recognize GPC / universal-opt-out signals** (8+ US states mandate) without a second action; log consent for audit; easy withdrawal. It's consent GOVERNANCE (synced across systems), not just a banner. Ties to `[[pii-handling-discipline]]`.
-
 ## Right to Deletion — GDPR Art. 17 + CCPA + LGPD Cascade
 
 Every project storing PII MUST implement automated deletion via CF Workflows v2. Manual deletion is a compliance liability.
@@ -98,7 +80,7 @@ Every project storing PII MUST implement automated deletion via CF Workflows v2.
 
 - Hono route `POST /account/delete` with `DeletionRequestSchema` (`email`, optional `reason`, `turnstileToken`).
 - Verify Turnstile before touching any user data — prevents abuse.
-- Verify Better Auth session ownership; if no session, send a signed email-confirmation token instead.
+- Verify Clerk session ownership; if no session, send a signed email-confirmation token instead.
 - On verified request: create CF Workflow instance immediately (durable from that moment) + write `deletion_audit` row with `status='pending'`.
 
 See `reference/right-to-deletion.md` for the full implementation.
@@ -118,7 +100,7 @@ See `reference/right-to-deletion.md` for the full implementation.
 ### Cascade entities (ordered by dependency)
 
 ```
-1. Better Auth session invalidation → delete the user's `session` rows in D1 (Better Auth keeps sessions in our DB — a local DELETE, not an external call)
+1. Clerk session invalidation → revoke all sessions for email
 2. KV cache purge           → namespace:user:{id}:*
 3. D1 application rows      → FK-ordered batch delete (sessions → oauth_accounts → notifications → feature_flag_overrides → users)
 4. Vectorize embeddings     → by external_id = user.id

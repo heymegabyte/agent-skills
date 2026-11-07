@@ -1,0 +1,188 @@
+{
+  "schema_version": 2,
+  "run_id": "e451d334-5f0b-4c95-82d2-7ec771ed0329",
+  "repository": "https://github.com/heymegabyte/agent-skills.git",
+  "root": "/Users/Apple/.claude/plugins/heymegabyte-agent-skills",
+  "base_commit": "1eaa6b885856ca2dfe1f61244fd2704eedba2e77",
+  "branch": "master",
+  "dirty_state_hash": "057ae804aae22a51af72358b605f5653adc9a8fb97e5b0f75eb0683bc24cb9da",
+  "budgets": {
+    "max_passes": 3,
+    "max_minutes": 90
+  },
+  "started_at": "2026-10-29T02:26:58.324Z",
+  "finished_at": "2026-10-29T02:27:01.661Z",
+  "stop_reason": "local-validation-converged",
+  "converged": true,
+  "scope_note": "Local deterministic validation convergence only; not universal quality convergence.",
+  "passes": [
+    {
+      "pass": 1,
+      "at": "2026-10-29T02:26:58.324Z",
+      "checks": [
+        {
+          "name": "skill-validation",
+          "required": true,
+          "status": "PASS",
+          "reason": "",
+          "command": "bash scripts/validate-skills.sh",
+          "exit_code": 0,
+          "duration_ms": 863,
+          "stdout": "Skill validation passed.\nPortable skill validation passed (24 skills).\n",
+          "stderr": ""
+        },
+        {
+          "name": "pack-validation",
+          "required": true,
+          "status": "PASS",
+          "reason": "",
+          "command": "node scripts/validate-packs.mjs",
+          "exit_code": 0,
+          "duration_ms": 78,
+          "stdout": "✓ pack integrity clean — 20 packs, 207 rules, 23 skill dirs, 1 warnings, 6 ignored\n",
+          "stderr": "⚠ 1 pack warning(s):\n  · rules/payments.md: in 3 packs (backend.yml, ecommerce.yml, payments.yml) — consider whether the rule is too broad\n  (silence specific slugs via .validate-packs-ignore)\n\n"
+        },
+        {
+          "name": "router-regressions",
+          "required": true,
+          "status": "PASS",
+          "reason": "",
+          "command": "python3 -m unittest bin/__tests__/skill_router_test.py -v",
+          "exit_code": 0,
+          "duration_ms": 144,
+          "stdout": "[skill-router] metadata synced for 1 skills/rules (keyless, no embeddings)\n[skill-router] metadata synced for 1 skills/rules (keyless, no embeddings)\n[skill-router] indexing 1 skills/rules\n[skill-router] done — 1 updated, 0 skipped\n[skill-router] metadata synced for 1 skills/rules (keyless, no embeddings)\n[skill-router] metadata synced for 1 skills/rules (keyless, no embeddings)\n[skill-router] metadata synced for 0 skills/rules (keyless, no embeddings)\n",
+          "stderr": "test_placeholder_trigger_matches_one_token (bin.__tests__.skill_router_test.RouterTest) ... ok\ntest_project_and_session_cache_keys_do_not_collide (bin.__tests__.skill_router_test.RouterTest) ... ok\ntest_rebuild_repairs_missing_embedding_after_metadata_sync (bin.__tests__.skill_router_test.RouterTest) ...   [1/1] 01-demo\nok\ntest_required_budget_reports_unsatisfied (bin.__tests__.skill_router_test.RouterTest) ... ok\ntest_sync_reconciles_metadata_and_deletions (bin.__tests__.skill_router_test.RouterTest) ... ok\ntest_yaml_inline_block_multiline_and_duplicate_keys (bin.__tests__.skill_router_test.RouterTest) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.029s\n\nOK\n"
+        },
+        {
+          "name": "route-health",
+          "required": true,
+          "status": "PASS",
+          "reason": "",
+          "command": "node bin/check-route-health.mjs",
+          "exit_code": 0,
+          "duration_ms": 795,
+          "stdout": "PASS website build\nPASS placeholder trigger\nPASS unrelated simple task abstains from website profile\nPASS route-health (3 offline cases, checkout router, temporary state)\n",
+          "stderr": ""
+        },
+        {
+          "name": "portable-generation",
+          "required": true,
+          "status": "PASS",
+          "reason": "",
+          "command": "node bin/gen-codex-skills.mjs --check",
+          "exit_code": 0,
+          "duration_ms": 104,
+          "stdout": "✓ gen-codex-skills: .agents/skills in sync (24 skills with Codex metadata).\n",
+          "stderr": ""
+        },
+        {
+          "name": "package-closure",
+          "required": true,
+          "status": "PASS",
+          "reason": "",
+          "command": "node bin/check-package-closure.mjs",
+          "exit_code": 0,
+          "duration_ms": 1167,
+          "stdout": "PASS package closure (876 files, 5518703 unpacked bytes, 11 required paths)\n",
+          "stderr": "npm notice\nnpm notice New major version of npm available! 11.14.1 -> 12.2.1\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1\nnpm notice To update run: npm install -g npm@12.2.1\nnpm notice\n"
+        },
+        {
+          "name": "openspec",
+          "required": false,
+          "status": "PASS",
+          "reason": "",
+          "command": "openspec validate --all --strict",
+          "exit_code": 0,
+          "duration_ms": 229,
+          "stdout": "No items found to validate.\n",
+          "stderr": ""
+        }
+      ],
+      "signature": "9642026b5be96b123493c243e56fa35ce60875e4548981c7e74740814a787502"
+    },
+    {
+      "pass": 2,
+      "at": "2026-10-29T02:27:01.555Z",
+      "checks": [
+        {
+          "name": "skill-validation",
+          "required": true,
+          "status": "PASS",
+          "reason": "",
+          "command": "bash scripts/validate-skills.sh",
+          "exit_code": 0,
+          "duration_ms": 874,
+          "stdout": "Skill validation passed.\nPortable skill validation passed (24 skills).\n",
+          "stderr": ""
+        },
+        {
+          "name": "pack-validation",
+          "required": true,
+          "status": "PASS",
+          "reason": "",
+          "command": "node scripts/validate-packs.mjs",
+          "exit_code": 0,
+          "duration_ms": 84,
+          "stdout": "✓ pack integrity clean — 20 packs, 207 rules, 23 skill dirs, 1 warnings, 6 ignored\n",
+          "stderr": "⚠ 1 pack warning(s):\n  · rules/payments.md: in 3 packs (backend.yml, ecommerce.yml, payments.yml) — consider whether the rule is too broad\n  (silence specific slugs via .validate-packs-ignore)\n\n"
+        },
+        {
+          "name": "router-regressions",
+          "required": true,
+          "status": "PASS",
+          "reason": "",
+          "command": "python3 -m unittest bin/__tests__/skill_router_test.py -v",
+          "exit_code": 0,
+          "duration_ms": 133,
+          "stdout": "[skill-router] metadata synced for 1 skills/rules (keyless, no embeddings)\n[skill-router] metadata synced for 1 skills/rules (keyless, no embeddings)\n[skill-router] indexing 1 skills/rules\n[skill-router] done — 1 updated, 0 skipped\n[skill-router] metadata synced for 1 skills/rules (keyless, no embeddings)\n[skill-router] metadata synced for 1 skills/rules (keyless, no embeddings)\n[skill-router] metadata synced for 0 skills/rules (keyless, no embeddings)\n",
+          "stderr": "test_placeholder_trigger_matches_one_token (bin.__tests__.skill_router_test.RouterTest) ... ok\ntest_project_and_session_cache_keys_do_not_collide (bin.__tests__.skill_router_test.RouterTest) ... ok\ntest_rebuild_repairs_missing_embedding_after_metadata_sync (bin.__tests__.skill_router_test.RouterTest) ...   [1/1] 01-demo\nok\ntest_required_budget_reports_unsatisfied (bin.__tests__.skill_router_test.RouterTest) ... ok\ntest_sync_reconciles_metadata_and_deletions (bin.__tests__.skill_router_test.RouterTest) ... ok\ntest_yaml_inline_block_multiline_and_duplicate_keys (bin.__tests__.skill_router_test.RouterTest) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.027s\n\nOK\n"
+        },
+        {
+          "name": "route-health",
+          "required": true,
+          "status": "PASS",
+          "reason": "",
+          "command": "node bin/check-route-health.mjs",
+          "exit_code": 0,
+          "duration_ms": 786,
+          "stdout": "PASS website build\nPASS placeholder trigger\nPASS unrelated simple task abstains from website profile\nPASS route-health (3 offline cases, checkout router, temporary state)\n",
+          "stderr": ""
+        },
+        {
+          "name": "portable-generation",
+          "required": true,
+          "status": "PASS",
+          "reason": "",
+          "command": "node bin/gen-codex-skills.mjs --check",
+          "exit_code": 0,
+          "duration_ms": 109,
+          "stdout": "✓ gen-codex-skills: .agents/skills in sync (24 skills with Codex metadata).\n",
+          "stderr": ""
+        },
+        {
+          "name": "package-closure",
+          "required": true,
+          "status": "PASS",
+          "reason": "",
+          "command": "node bin/check-package-closure.mjs",
+          "exit_code": 0,
+          "duration_ms": 1064,
+          "stdout": "PASS package closure (876 files, 5518703 unpacked bytes, 11 required paths)\n",
+          "stderr": "npm notice\nnpm notice New major version of npm available! 11.14.1 -> 12.2.1\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1\nnpm notice To update run: npm install -g npm@12.2.1\nnpm notice\n"
+        },
+        {
+          "name": "openspec",
+          "required": false,
+          "status": "PASS",
+          "reason": "",
+          "command": "openspec validate --all --strict",
+          "exit_code": 0,
+          "duration_ms": 180,
+          "stdout": "No items found to validate.\n",
+          "stderr": ""
+        }
+      ],
+      "signature": "9642026b5be96b123493c243e56fa35ce60875e4548981c7e74740814a787502"
+    }
+  ]
+}

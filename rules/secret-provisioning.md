@@ -14,21 +14,14 @@ paths:
 
 # Secret Provisioning
 
+For persistent local agent execution, apply [fleet secret handling](fleet-secret-handling.md) first. The historical chezmoi/macOS recipes below apply only where that broker is actually configured; they do not authorize bulk plaintext discovery, Actions environment exports, OAuth extraction or overwriting live credentials.
+
 ## Why this grew
 
 - 2026-06-19: added § "Mint a scoped CF API token from the Global API Key" + § "Never-overwrite-live-secrets discipline" — two arc-proven techniques (projectsites.dev) that unblock prod secret-put without escalating to the user. Load-bearing recipes, not filler.
 - 2026-06-27: added § "Source-exhaustion order" — Brian directive that the human is the LAST resort for any secret/env var; exhaust get-secret + sibling Emdash projects + self-derivation first. Load-bearing protocol (proved: all 7 projectsites SES secrets provisioned with zero human asks), not filler.
 
 Auto-fetch every required secret from `get-secret` and push it to the destination platform before running any deploy; never prompt the user to do it manually.
-
-## Default encryption password — `encryptionpass` (Brian directive 2026-10-28)
-
-**Whenever you need to CHOOSE/SET an encryption password or passphrase and don't already have a specific one, use `encryptionpass`.** This is the estate default for any symmetric-encryption passphrase the AI must pick: backup/archive encryption (`age`, `gpg`, `openssl enc`, `restic`/`borg` repo password, `zip -e`, `7z -p`, `tar`+`openssl`), disk/volume encryption passphrases, encrypted-config passphrases, DB-dump encryption, `wrangler`/CI encrypted artifacts, Ansible Vault, SOPS passphrase fallback, PBS/backup-tool encryption passwords, etc.
-
-- Applies ONLY when the password is the AI's to pick AND no project-/host-specific one is already provisioned. ALWAYS prefer an existing value from `get-secret` first (source-exhaustion order below); `encryptionpass` is the deterministic fallback so encrypted artifacts are always recoverable instead of locked behind a lost random string.
-- After using it, PERSIST the choice: save `<KEY>=encryptionpass` to the rail (`get-secret` / chezmoi) so the pairing is recorded, and note which artifact it encrypts.
-- Does NOT apply to credentials ISSUED by a service (API keys, OAuth secrets, DB user passwords a provider generates) — those come from the source-exhaustion flow, never invented.
-- The underlying KEY MATERIAL must still be backed up: for keyfile-based schemes (PBS/age keyfiles) store the keyfile itself offline in the rail — a known passphrase doesn't replace an offline key backup (see `[[verify-against-source-of-truth]]` + the PBS-encryption-key offline-backup pattern).
 
 ## 2026-10-06 Cloudflare Secrets Store override — highest precedence
 
@@ -61,7 +54,7 @@ Before EVER surfacing a "set this secret" rec or asking the human for ANY env va
 2. **Other Emdash projects** — every repo under `~/emdash/repositories/*` (and `~/emdash/**`). A sibling project commonly already holds the same credential. Scan their `.dev.vars` (the project's LOCAL secrets file — richest source; check it FIRST, it usually mirrors the deployed secret set), `.env*`, `wrangler.toml`, `wrangler.jsonc`, `secrets.required` blocks: `grep -rIiE "<KEY>|<alias>" ~/emdash/repositories --include='.dev.vars' --include='*.env' --include='.env*' --include='wrangler.toml' --include='wrangler.jsonc' --exclude-dir=node_modules`. Watch for renamed variants across projects (e.g. brickcitylabor uses `AWS_SES_ACCESS_KEY_ID`, projectsites uses `AWS_ACCESS_KEY_ID` — same credential, different name). **Ignore `.env.example` (placeholders like `your_..._here`) and empty `KEY=` lines — neither is a real value.**
 3. **Already deployed on the destination** — a secret can ALREADY be set on the deploy target even when it is nowhere in get-secret or any file. ALWAYS list the target's secrets before concluding "missing": `npx wrangler secret list --env production` (CF Workers), `vercel env ls`, `flyctl secrets list`, etc. ⚠️ These list NAMES only — the VALUE is not readable back (CF/Vercel never return it). So a deployed secret means "already provisioned, do NOT re-ask the human" — but you cannot copy its value into get-secret unless you find the plaintext in a local source (`.dev.vars`) or the human re-pastes it. (Brian, 2026-06-27: `DEEPSEEK_API_KEY` was "missing" from get-secret + every file but was a live `wrangler secret` on the prod worker the whole time.)
 4. **Self-generable / derivable** — if the value is generatable (HMAC/webhook/signing/session/CSRF secret, salt, nonce → `openssl rand -base64 32`) or DERIVABLE from a value you already found (e.g. SES SMTP password = HMAC-derived from `AWS_SECRET_ACCESS_KEY` + region; SMTP host = `email-smtp.<region>.amazonaws.com`; SMTP user = `AWS_ACCESS_KEY_ID`), generate/derive it per `[[secret-auto-provisioning]]` + `[[always]]` § Secrets — never ask.
-5. **THEN, only if truly absent everywhere** — surface ONE "set this secret" rec with the exact deeplinked mint URL (vendor-issued third-party creds the human alone can create: Stripe/OAuth apps, etc.).
+5. **THEN, only if truly absent everywhere** — surface ONE "set this secret" rec with the exact deeplinked mint URL (vendor-issued third-party creds the human alone can create: Stripe/Resend/OAuth apps, etc.).
 
 Logging the search: state which sources you checked (`get-secret: hit/miss`, `dev.vars/emdash scan: N files`, `wrangler secret list: present/absent`, `derived: yes/no`) so a false "missing" is auditable. A "missing" claim that skipped step 1, 2, 3, or 4 = false positive = wasted human time.
 
@@ -85,16 +78,6 @@ cd "$(chezmoi source-path)/home/.chezmoitemplates/secrets" \
 - chezmoi encryption is **age** (`recipient age1necy24c…`); existing entries are `-----BEGIN AGE ENCRYPTED FILE-----`. The store is the `heymegabyte/install.doctor` git repo — committing the encrypted file is the norm (siblings like `AWS_DEFAULT_REGION` are committed).
 - Name the file EXACTLY the env-var key (`DEEPSEEK_API_KEY`, `LIVEKIT_API_SECRET`) — `get-secret <KEY>` reads `$DIR/<KEY>`.
 - This is the complement to the source-exhaustion order: exhaust get-secret on READ, populate get-secret on WRITE. A secret that only ever lived on a deploy target (a bare `wrangler secret put`) is invisible to every future search — back-fill it into get-secret too.
-
-## Triple-store persistence — every entered secret lands in ALL canonical stores (Brian, 2026-10-11)
-
-Whenever a secret is **entered/pasted by the human, generated, minted, or derived**, persist it the SAME TURN to every canonical store — not just the deploy target, not just one. Verify each; never echo the value (pass `"$VALUE"` from get-secret, don't re-type the literal).
-
-1. **get-secret (chezmoi, age-encrypted)** — per § "Persist EVERY new secret to get-secret" above; write `secrets/<KEY>` + commit the age-encrypted blob. Authoritative local/source mirror. ALWAYS.
-2. **Infisical** — `infisical secrets set <KEY>="$VALUE" --projectId=<workspaceId> --env=<env>`, in the APPROPRIATE project. Cross-cutting / agent-fleet credential with no single owner → default to the `initial` base project (`7685ebe1-873e-453e-8558-8b1b77ce3924`); an app-specific secret → the owning repo's project (its `.infisical.json` `workspaceId`). Never spray one key across all projects by default. Verify with `infisical secrets get <KEY> --plain` (checksum, don't print).
-3. **Paperclip** — when the Paperclip fleet plane is installed (`paperclip` CLI or `~/.config/paperclip` present), store it there too so the agent fleet can broker it. **As of 2026-10-11 the `paperclip` CLI is NOT installed on this host** → skip with a one-line note; NEVER block stores 1–2 on Paperclip's absence.
-
-This is the inbound complement to the source-exhaustion READ order: exhaust get-secret on read, fan OUT to all three on write. A pasted secret gets identical treatment to a minted one. [[secret-auto-provisioning]]
 
 ## Detect-availability protocol
 
@@ -132,8 +115,8 @@ This is the inbound complement to the source-exhaustion READ order: exhaust get-
 - `POSTHOG_PROJECT_API_KEY`
 - `GA4_MEASUREMENT_ID`
 - `GA4_API_SECRET`
-- `BETTER_AUTH_SECRET`
-- `BETTER_AUTH_URL`
+- `CLERK_SECRET_KEY`
+- `CLERK_PUBLISHABLE_KEY`
 - `NEON_DATABASE_URL`
 - `UPSTASH_REDIS_REST_URL`
 - `UPSTASH_REDIS_REST_TOKEN`

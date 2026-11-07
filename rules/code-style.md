@@ -5,7 +5,7 @@ pack: "core"
 triggers: []
 paths:
   - "*"
-last_reviewed: 2026-06-29
+last_reviewed: 2026-10-26
 superseded_by: null
 ---
 
@@ -15,18 +15,9 @@ Enforce TS 7.0 strict mode, Google TS Style, ESM-only imports, and Cloudflare Wo
 
 ## Language selection order
 
-- **TWO PRIMARY languages, reach for first:** **TypeScript** (all app/service/tool/CLI logic) + **Bash** (system scripts, glue, host + CI automation, systemd/cron jobs, exporters, anything that shells out). Full order: **TS ≈ Bash > Rust > Go > Python > C# > others** — drop below the two primaries only for a concrete reason (platform · perf/systems-critical · a library only available lower · an existing codebase). SSOT + rationale: [[brian-preferences]] § Language preference.
-- **Python is NOT a default** — only genuine ML/data/science or a library that exists *only* there. A host exporter / parser / glue script / systemd job is **Bash** (or TS), NEVER Python for convenience (reference incident: a Proxmox SMART exporter written in Python → rewritten to Bash, 2026-10-31).
+- **Prefer TypeScript over Python — TWO PRIMARY languages, reach for first:** **TypeScript** (all app/service/tool/CLI/verifier/test logic via Node 24 native strip-types or Bun) + **Bash** (system scripts, glue, host + CI automation, systemd/cron jobs, anything that shells out). Full order: **TS ≈ Bash > Rust > Go > Python > C# > others** — drop below the two primaries only for a concrete reason (platform · perf/systems-critical · a library only available lower · an existing codebase). SSOT + rationale: `[[brian-preferences]]` § Language preference.
+- **Python is NOT a default** — only genuine ML/data/science or a library that exists *only* there. A host exporter, verifier, parser, glue script, or systemd job is **TypeScript** or **Bash**, NEVER Python for convenience.
 - Queries stay **SQL**.
-
-## Discipline — simplicity-first + surgical (Karpathy)
-
-Folded from [multica-ai/andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills) (`karpathy-guidelines`, MIT) — the LLM-coding failure modes it names, reconciled with estate doctrine (NOT the upstream plugin — [[vendored-skill-compression]]):
-
-- **Maximalist on SCOPE, minimal + surgical on CODE.** Predict the full arc of WHAT to build ([[predictive-completeness]], `first-time-excellence`) — then implement each piece with the LEAST code that solves it. No speculative features, no abstraction for single-use code, no unrequested "flexibility"/config, no error-handling for impossible states. Maximalism governs scope — never a license to over-engineer the implementation.
-- **Surgical changes.** Touch only what the task needs; preserve surrounding style; make NO orthogonal edits (don't refactor unrelated code mid-task — `code-simplifier`/`dead-code-remover` clean separately).
-- **Never SILENTLY assume** — Karpathy's core pitfall: "the model makes wrong assumptions on your behalf and runs along without checking." Decide-and-proceed over stalling, BUT state the assumption you proceeded on so it's visible + correctable; ask only when genuinely blocked, never reflexively.
-- Goal-driven (verifiable success criteria + loop-until-met) already lives in [[verification-loop]] + [[e2e-testing]] (TDD-first) — not restated here.
 
 ## TypeScript (Google TS Style)
 
@@ -38,7 +29,7 @@ Folded from [multica-ai/andrej-karpathy-skills](https://github.com/multica-ai/an
 
 ### Runtime
 
-- **Node 24 LTS native TS strip-types** — no ts-node/tsx/nodemon; use `node --watch` + `node --run`.
+- **Node 24 LTS** pinned `v24.16.0` (`.nvmrc` = `24`, `engines.node` = `>=24.16`, `node-version` = `24` in CI) — native TS strip-types, no ts-node/tsx/nodemon; use `node --watch` + `node --run`.
 - **Bun 1.4+** for build-tool workloads (~125k req/s, 8ms cold start).
 - `wrangler types` against compatibility_date + bindings (not just `@cloudflare/workers-types`).
 
@@ -156,7 +147,7 @@ Pre-commit via **lefthook** (not husky). CI runs same checks (lint gates test).
 
 - `@hono/zod-validator`, `@hono/zod-openapi`, `hc`
 - `drizzle-orm` (v1 RQBv2), `drizzle-kit`
-- `better-auth`, `zod`
+- `@clerk/backend`, `zod`
 - `@editorjs/editorjs`, `@uppy/core`, `ag-grid`, `copilotkit`
 - `eslint`, `prettier`, `typescript-eslint`, `angular-eslint`, `eslint-plugin-perfectionist`, `eslint-plugin-security`
 - `oxlint`, `knip`, `jscpd`, `dependency-cruiser`, `lefthook`

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["governance", "runtime", "team", "routing", "swarm", "monthly", "work_item_authority"],
+  "properties": {
+    "governance": {"const":"paperclip"}, "runtime": {"const":"openclaw"},
+    "team": {"type":"object"}, "routing": {"type":"object"}, "swarm": {"type":"object"},
+    "monthly": {"type":"object"}, "work_item_authority": {"enum":["paperclip","github"]},
+    "github_sync": {"type":"string"}
+  },
+  "additionalProperties": false
+}

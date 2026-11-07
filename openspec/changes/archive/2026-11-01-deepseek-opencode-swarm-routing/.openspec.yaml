@@ -1,0 +1,4 @@
+schema: spec-driven
+created: 2026-11-01
+goal: Deterministic cross-harness DeepSeek offload with safe high-concurrency
+  execution and verifiable routing.

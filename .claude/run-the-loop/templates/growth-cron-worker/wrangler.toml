@@ -1,0 +1,17 @@
+# Growth cron — session-independent scheduler for ST-1 (daily article) + ST-2 (opportunity discovery).
+# Deploy once per product. Triggers the OpenClaw/run-the-loop runner over a webhook; the Worker itself
+# does NO generation (keeps it a lightweight deterministic scheduler, not an AI worker slot).
+name = "growth-cron"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+
+# CF cron is UTC. 12:00 UTC ≈ 08:00 America/New_York during EDT (13:00 UTC during EST —
+# the handler re-checks local time so it fires ~08:00 ET year-round). Off-:00 minute to avoid fleet pileup.
+[triggers]
+crons = ["7 12 * * *", "23 13 * * 1"]   # daily ~08:07 ET article · weekly Mon ~09:23 ET discovery
+
+[vars]
+PRODUCT = "gitlink"
+TZ = "America/New_York"
+# GROWTH_RUNNER_URL + GROWTH_RUNNER_TOKEN are SECRETS: `wrangler secret put GROWTH_RUNNER_URL` etc.
+# GROWTH_RUNNER_URL = OpenClaw gateway webhook (or a Queue producer) that runs the actual slice.

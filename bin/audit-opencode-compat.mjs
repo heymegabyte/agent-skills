@@ -23,7 +23,7 @@
  *   node bin/audit-opencode-compat.mjs --check   # exit 1 if any hard check fails
  */
 
-import { readdirSync, readFileSync, existsSync, lstatSync } from 'node:fs'
+import { readdirSync, readFileSync, existsSync, lstatSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 
 const H = process.env.HOME
@@ -49,10 +49,12 @@ const seen = new Map()
 function walk(dir, depth) {
   if (depth > 5) return
   let e
-  try { e = readdirSync(dir, { withFileTypes: true }) } catch { return }
-  for (const x of e) {
-    const p = join(dir, x.name)
-    if (x.isDirectory()) {
+  try { e = readdirSync(dir) } catch { return }
+  for (const name of e) {
+    const p = join(dir, name)
+    let isDir = false
+    try { isDir = statSync(p).isDirectory() } catch { continue }
+    if (isDir) {
       if (depth >= 1 && existsSync(join(p, 'SKILL.md'))) register(p)
       else walk(p, depth + 1)
     }

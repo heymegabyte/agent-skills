@@ -33,21 +33,6 @@ All THREE are required — missing any one fails as a misleading `Authentication
 
 **Unified Billing covers only OpenAI/Anthropic/Google/xAI/Groq** — DeepSeek, Ideogram, etc. are routeable but BYO-key (see `[[logo-generation]]`). Reference: ask.megabyte.space session, 2026-10-04 (`projectsites-dev` + `megabyte-space`).
 
-<!-- growth 2026-10-27: R2 S3 credential minting recipe (grafana.megabyte.space off-site backup) -->
-
-## R2 S3 credentials (for rclone / aws-cli / any S3 client) — mint via CF API (grafana.megabyte.space, 2026-10-27)
-
-R2's S3 API needs an **Access Key ID + Secret Access Key** — NOT the global key, NOT a bearer token. Mint them from a CF API token with the global key:
-
-1. **Permission group — use the BROAD one.** `Workers R2 Storage Write` (`bf7481a1826f439697cb59a20b22293e`) + `Workers R2 Storage Read` (`b4992e1108244f5d8bfbd5744320c2e1`). ⚠️ `Workers R2 Storage **Bucket Item** Write` (`2efd5506…`) **403s on PutObject/multipart** — it authenticates (not 401) but can't write objects. Fetch current ids: `GET /user/tokens/permission_groups?per_page=200` (grep R2).
-2. **Mint:** `POST /user/tokens {"name":"<proj>-r2","policies":[{"effect":"allow","resources":{"com.cloudflare.api.account.<ACCT>":"*"},"permission_groups":[{"id":"bf7481a1…"},{"id":"b4992e11…"}]}]}` → `{result:{id,value}}`.
-3. **DERIVE the S3 creds** (the non-obvious part): **Access Key ID = the token `id`** (32 hex); **Secret Access Key = `sha256(value)` hex** (`printf '%s' "$value" | sha256sum | cut -d' ' -f1`). This is why an existing `R2_ACCESS_KEY_ID` is 32 hex and `R2_SECRET_ACCESS_KEY` is 64 hex — same derivation.
-4. **Endpoint:** `https://<ACCOUNT_ID>.r2.cloudflarestorage.com` (the CF account id IS the R2 account id). rclone env: `RCLONE_CONFIG_R2_{TYPE=s3,PROVIDER=Cloudflare,REGION=auto,ACCESS_KEY_ID,SECRET_ACCESS_KEY,ENDPOINT}`.
-5. **Persist project-scoped** (`<PROJ>_R2_ACCESS_KEY_ID` / `_SECRET_ACCESS_KEY`) — `printf '%s' "$v" | chezmoi encrypt > ~/.local/share/chezmoi/home/.chezmoitemplates/secrets/<KEY>` (round-trip-verify via `get-secret <KEY>`). NEVER overwrite the shared `R2_*` keys (other projects use them; they may also be revoked).
-6. **Create the bucket + test before relying on it** (propagation ~5-10s): `POST /accounts/{acct}/r2/buckets {"name":"<domain-dashed>-backups"}`, then `rclone copy f R2:<bucket>/_selftest/ && rclone ls R2:<bucket>/ && rclone delete R2:<bucket>/_selftest/`.
-
-Note: inherited `R2_ACCESS_KEY_ID`/`R2_SECRET_ACCESS_KEY` in get-secret may be REVOKED (401) — mint fresh rather than debug the old ones.
-
 ## Turnstile (CAPTCHA) — keys are CF-minted, retrieve via API (njsk.org, 2026-06-27)
 
 - **Create a widget** → returns the **sitekey** (public, → build var e.g. `VITE_TURNSTILE_SITEKEY`) AND the **secret** (→ `wrangler secret put TURNSTILE_SECRET_KEY`):
@@ -62,25 +47,6 @@ Note: inherited `R2_ACCESS_KEY_ID`/`R2_SECRET_ACCESS_KEY` in get-secret may be R
 - **ALWAYS add `workers_dev = true` in the same edit that adds `routes`** when the custom-domain zone is still pending. Custom domains stay staged and activate on NS flip; workers.dev keeps serving meanwhile.
 - **HTTP-verify the LIVE URL after ANY routing/wrangler.toml change** — not just the deploy "Success" line or an API check. `curl -s -o /dev/null -w '%{http_code}' https://<worker>.workers.dev/` MUST be 200. A deploy that succeeds can still 404 the whole site (incident: njsk.org ran dark across ~3 deploys because only the CF-API custom-domain attach was verified, never an HTTP GET of workers.dev).
 - Recovery: add `workers_dev = true` → `wrangler deploy` → site 200 in seconds (`wrangler rollback` also works).
-
-## ⚠️ Workers Static Assets: `run_worker_first` gates whether the Worker even SEES a path (questionl.ink, 2026-10-07)
-
-With `[assets]` + a Worker, the ASSETS layer serves requests FIRST by default — and when
-`run_worker_first` is a PATH LIST (e.g. `["/api/*"]`), ONLY those paths hit the Worker. Any Worker
-route — or HTMLRewriter meta-injection — on a path NOT in the list silently never runs: with
-`not_found_handling: "single-page-application"` the asset layer returns `index.html` instead.
-**Symptom: your new route 200s but with `content-type: text/html` (the SPA shell), not your output.**
-
-- Dynamic routes at ARBITRARY top-level paths (per-entity OG cards at `/og/:slug` via
-  **workers-og** satori/resvg; per-page OG/meta injection on `/:slug` via **HTMLRewriter**) can't be
-  globbed → set **`run_worker_first: true`** (Worker runs first for EVERY request). The Worker's
-  `notFound` must then serve every static asset via `env.ASSETS.fetch(c.req.raw)`, and the dynamic
-  branch MUST guard against asset paths (skip anything containing a `.` or `/`) so `/assets/x.js`,
-  `/favicon.ico` fall straight through. Correctness then holds for every path.
-- Use a negative-glob list (`["/*","!/assets/*","!*.png",…]`) only to keep static assets edge-served
-  without the Worker hop; `true` is simpler and the notFound fallback makes it correct regardless.
-- **HTTP-verify the content-TYPE, not just the status** — a route that returns `200 text/html` when
-  you expected `image/png` means the Worker never ran (it was the asset layer's SPA fallback).
 
 ## DNS zones + records + Worker custom domains — all API
 

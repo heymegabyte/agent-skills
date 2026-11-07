@@ -1,0 +1,8 @@
+{
+  "id": "fleet-cli",
+  "name": "Megabyte Fleet CLI",
+  "description": "Official subscription CLIs through Claw Router; direct DeepSeek through OpenCode",
+  "cliBackends": ["fleet-cli"],
+  "setup": {"cliBackends": ["fleet-cli"], "requiresRuntime": false},
+  "configSchema": {"type": "object", "additionalProperties": false}
+}

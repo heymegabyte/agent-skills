@@ -1,0 +1,17 @@
+[
+  {
+    "id": "gateway-policy-audit",
+    "cwd": "/Users/Apple/.claude/plugins/heymegabyte-agent-skills",
+    "task": "READ-ONLY AUDIT. Do not edit files. Inspect config/litellm/gateway-desired-state.json, bin/validate-litellm-desired-state.mjs, bin/reconcile-litellm-gateway.mjs, rules/litellm-gateway.md, reference/litellm-gateway.md, and the active OpenSpec change. Report contradictions, missing safety checks, or claims not supported by the artifacts. Be concise and evidence-based."
+  },
+  {
+    "id": "monitoring-audit",
+    "cwd": "/Users/Apple/emdash/repositories/grafana.megabyte.space",
+    "task": "READ-ONLY AUDIT. Do not edit files. Inspect the LiteLLM scrape in prometheus/prometheus.yml, the prometheus network/mounts in docker-compose.yml, deploy secret rendering, and LiteLLM alert rules. Report configuration, PromQL, secret-handling, or alert-semantics defects with file references."
+  },
+  {
+    "id": "projectsites-naming-audit",
+    "cwd": "/Users/Apple/emdash/repositories/projectsites.dev/apps/project-sites/infra/litellm",
+    "task": "READ-ONLY AUDIT. Do not edit files. Verify Cloudflare Workers AI is consistently named workers-ai rather than Ollama across config.yaml, projectsites_arbiter.py, projectsites_hooks.py, and worker.ts. Check that the rename preserves behavior and report any residual semantic mismatch."
+  }
+]

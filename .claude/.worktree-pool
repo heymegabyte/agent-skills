@@ -1,0 +1,38 @@
+{
+  "pool-1": {
+    "status": "free",
+    "path": ".claude/worktrees/pool-1",
+    "branch": "worktree-pool-1-1793152936",
+    "created": "2026-10-28T02:02:16Z"
+  },
+  "pool-2": {
+    "status": "free",
+    "path": ".claude/worktrees/pool-2",
+    "branch": "worktree-pool-2-1793152936",
+    "created": "2026-10-28T02:02:17Z"
+  },
+  "pool-3": {
+    "status": "free",
+    "path": ".claude/worktrees/pool-3",
+    "branch": "worktree-pool-3-1793152937",
+    "created": "2026-10-28T02:02:17Z"
+  },
+  "pool-4": {
+    "status": "free",
+    "path": ".claude/worktrees/pool-4",
+    "branch": "worktree-pool-4-1793152937",
+    "created": "2026-10-28T02:02:17Z"
+  },
+  "pool-5": {
+    "status": "free",
+    "path": ".claude/worktrees/pool-5",
+    "branch": "worktree-pool-5-1793152937",
+    "created": "2026-10-28T02:02:18Z"
+  },
+  "pool-6": {
+    "status": "free",
+    "path": ".claude/worktrees/pool-6",
+    "branch": "worktree-pool-6-1793152938",
+    "created": "2026-10-28T02:02:18Z"
+  }
+}

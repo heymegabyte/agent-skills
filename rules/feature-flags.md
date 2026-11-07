@@ -35,15 +35,6 @@ Every feature beyond a trivial one-file edit ships behind a flag. Default: `enab
 >   add the `[[flagship]]` binding to `wrangler.toml`.
 > Docs: https://developers.cloudflare.com/flagship/ · https://blog.cloudflare.com/flagship/
 
-## OpenFeature provider nuances (every provider, incl. Flagship + PostHog — spec-verified 2026-10-29)
-
-- A flag is NOT authorization or a paid entitlement — enforce those independently. Evaluate server-only flags on the SERVER; keep provider secrets server-side.
-- Keep targeting context tenant/request-scoped; clear it on identity change; use stable approved IDs + safe default values; keep request-specific context OUT of a shared mutable global singleton.
-- **Client/web = STATIC-context paradigm** (flags evaluated once against a cached common context per user/session) vs **server = DYNAMIC context** (targetingKey + context per evaluation) — not interchangeable (verified: openfeature.dev spec).
-- **Tracking can be a no-op** — if a provider doesn't implement `track`, the call silently does nothing (verified: openfeature.dev). ASSERT real destination delivery before relying on OpenFeature exposure/experiment data.
-- A provider CHANGE is not a free migration of targeting rules, assignment algorithms, or experiment history — re-validate decisions + fallback defaults + context isolation + shutdown on any swap.
-- **PostHog provider:** browser identity follows posthog-js `identify`/`reset` — changing `targetingKey` alone does NOT switch the browser user; the server provider uses per-evaluation `targetingKey` as `distinctId` and is async. Dedupe exposure events when the native PostHog SDK + the OpenFeature provider coexist; separate Node/browser packages do NOT prove Workers compatibility (feature-detect). Source: posthog.com/docs/feature-flags/installation/openfeature-js.
-
 ## Architecture (D1 fallback engine — kept as admin SoT + governance layer)
 
 Three D1 tables:
@@ -98,22 +89,9 @@ Admin UI (`src/pages/admin/feature-flags.tsx`):
 
 Promotion = button in admin UI (`Promote → beta`); rule is policy, not mechanism.
 
-## Experimentation discipline (a flag at partial rollout IS an A/B test — run it honestly)
-
-When a flag's `rollout_percent` is set to MEASURE impact (not just dark-launch), it's an experiment — run it with discipline, not vibes. Most of this is decided BEFORE you dial rollout up. (Added 2026-10-25, estate-upgrade audit — `[[estate-upgrade-audit]]`.)
-
-- **Design before launch (the pre-registration):** a falsifiable hypothesis → ONE **primary metric / OEC** fixed up front (stops cherry-picking a metric that moved by chance) → **1–2 guardrail metrics** (non-inferiority, independent of the primary, measurable in-window, tied to a real cost — power decays `0.8^G`, so cap at ~2) → an **MDE** = the smallest lift worth SHIPPING (never whatever makes the sample convenient; a 2% MDE needs ~25× a 10% MDE's sample) → **sample size + end-date** from a power analysis (α=0.05, power=80%) → fixed randomization unit → the analysis plan.
-- **Don't PEEK.** Continuously eyeballing a fixed-horizon test inflates the false-positive rate to 20–40% (the #1 statistical sin). Either hold to the pre-set sample + end-date, OR use **sequential testing** (always-valid confidence sequences / O'Brien-Fleming group-sequential, ~20–30% more sample) that makes peeking valid. Run a **sample-ratio-mismatch (SRM)** check during — an off split invalidates the result.
-- **Expect to LOSE — that's the point.** ~10% of experiments win at scale (Netflix/Google/Booking ≈10%, Airbnb Search ≈8%, Microsoft ≈33%); ~1 in 3 show meaningful lift for a young product; at a 10% base rate ~1 in 5 "wins" are false positives. Be skeptical of a HUGE win (Twyman's law — usually an SRM / logging bug, not a breakthrough). Velocity beats cleverness: more honest tests → more of the rare real wins.
-- **Holdouts for DURABLE gains, selectively:** short tests catch a novelty mirage (week-1 lift → week-6 flatline); use a long-term holdout only with a clear objective (burn-in / slow discovery), not as a reflex — cumulative real impact is almost always < the sum of the point estimates.
-- **Ship / kill / iterate:** shipping FLAT is an error ("not significantly worse" ≠ safe to ship); killing is normal — celebrate **learning**, not shipping; a losing variant may be poor EXECUTION not a bad idea → iterate. Record every result (institutional memory); a winner that never gets implemented is the #1 program-failure mode. Decide on the **revenue/business OEC**, never a proxy.
-- **Vehicle vs analysis:** the flag's `stage`/`rollout_percent` delivers the split; the primary + guardrail metrics live in analytics (PostHog/GA per `[[production-observability-default-on]]`). Pairs with `[[autonomous-growth-orchestrator]]`'s measure→improve loop.
-
 ## Anti-patterns
 
 - Hardcoding feature on at launch
-- **Peeking at a fixed-horizon experiment + stopping when it looks significant** (→ 20–40% false positives) — hold the pre-set sample, or switch to sequential testing
-- **Shipping a flat / "not significantly worse" result as a win**, or deciding on a proxy metric instead of the revenue/business OEC
 - Hiding feature behind ENV var (env vars don't audit, don't roll out per user, don't surface to admin — ENV is for SECRETS, flags for FEATURES)
 - Multiple flags for one feature (sub-toggles via overrides, not new keys)
 - Flag without admin entry

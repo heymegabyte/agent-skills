@@ -385,11 +385,11 @@ if (eventType === 'stop') {
           stdio: ['pipe', 'pipe', 'ignore']
         }).trim();
 
-        // Check if there are modified or untracked source files (ignoring transient .claude/.worktree-pool)
+        // Check if there are modified or untracked source files (ignoring transient .claude/.worktree-pool and daemon heartbeat)
         const dirtyLines = status
           .split('\n')
           .map(l => l.trim())
-          .filter(l => l && !l.includes('.claude/.worktree-pool'));
+          .filter(l => l && !l.includes('.claude/.worktree-pool') && !l.includes('.agents/cluster-daemon-heartbeat.json'));
 
         if (dirtyLines.length > 0) {
           resetEmissionCounter();

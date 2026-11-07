@@ -134,14 +134,6 @@ The mandate is stack-agnostic; the behavior contracts above apply IDENTICALLY. O
 - Implement count-up + reveal in a `useEffect` + `useRef`; guard `typeof window` for SSR/SSG (snap to final).
 - Never `<Reveal>` a live-filtered list root (same "list disappears" trap) — reveal the container once, not per-filter-result.
 
-## Web-platform capabilities (super-boost catalog)
-
-Beyond the `<app-rolling-counter>` / `appReveal` component mandate, reach for the native primitives in `rules/web-platform-capabilities.md` (examples + trigger table) whenever they fit a projectsites.dev surface:
-
-- **#1 View Transitions** for route/state swaps · **#17 scroll-driven animations** for reveals/parallax/progress (compositor-thread, INP-safe) · **#8 `@property`** for animated gradients/rings.
-- **#2 Popover + #15 Anchor Positioning + #16 Invoker Commands** for every tooltip/menu/popover — deletes Floating-UI and sidesteps the z-index "stacking-context trap" (`gorgeous-by-default.md`).
-- All progressive-enhancement + `prefers-reduced-motion`-gated; the catalog carries each fallback.
-
 ## Component checklist (every Angular OR React component on projectsites.dev)
 
 - Numeric stat → `<app-rolling-counter>` (not raw `{{ value }}`)

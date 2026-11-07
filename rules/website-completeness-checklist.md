@@ -97,7 +97,7 @@ The flat, scannable "is it actually finished?" gate every one-line site build ru
 51. ≥ 1 primary CTA above the fold on every page; every page has an unmistakable next action.
 52. Every service/product/program named in nav has its OWN dedicated ≥ 800-word page — never a list item with no destination.
 53. ≥ 5 real FAQ Q&A on the homepage + each service page, with FAQPage JSON-LD (real questions only, never fabricated).
-54. ≥ 3 real, attributed testimonials/proof points if any social proof is claimed — zero invented quotes. PLACE trust signals at the ANXIETY points, never clustered in the footer: payment-logo + secure-checkout + guarantee at every checkout step AND a micro-guarantee/star-rating immediately below the primary CTA (near-CTA beats footer ~40–60%); a real-count rating ("4.8 from 1,400+ reviews", never a bare "5.0") near price/CTA; aggregate ratings + client/media logos above the homepage fold, minimal. Payment logos (Visa/Stripe/Apple Pay) out-convert third-party seals; remove any stale/expired badge (stale signals HARM trust).
+54. ≥ 3 real, attributed testimonials/proof points if any social proof is claimed — zero invented quotes.
 55. No orphan pages — every route reachable from the global nav or footer within 2 clicks.
 56. Content/blog seeded with ≥ 3 real posts (≥ 800 words each, longtail-keyphrase-targeted) when the org type warrants content marketing.
 57. Every page targets ONE primary keyphrase (in title + H1 + first 100 words + URL); no two pages cannibalize the same keyphrase.

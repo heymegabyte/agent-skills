@@ -1,0 +1,60 @@
+--- litellm-config.yaml
++++ litellm-config.yaml
+@@ -7,11 +7,17 @@
+     max_budget: 10
+     models:
+-    - deepseek-chat
++    - local-general
++    - deepseek-flash
++    - deepseek-chat
+     duration: 30d
++    rpm_limit: 240
++    tpm_limit: 2000000
++    max_parallel_requests: 40
+   upperbound_key_generate_params:
+     max_budget: 200
+     duration: 90d
+     rpm_limit: 2000
++    max_parallel_requests: 80
+ router_settings:
+   redis_host: os.environ/REDIS_HOST
+   redis_port: os.environ/REDIS_PORT
+@@ -19,4 +25,3 @@
+-  enable_pre_call_check: true
+   routing_strategy: simple-shuffle
+   num_retries: 3
+   allowed_fails: 2
+@@ -38,4 +43,6 @@
+   json_logs: true
+   log_raw_request_response: false
++  turn_off_message_logging: true
++  redact_user_api_key_info: true
+   service_callback:
+   - prometheus_system
+@@ -65,8 +72,26 @@
+   - deepseek-reasoner:
+     - gpt-4o
++  - deepseek-v4-pro:
++    - deepseek-reasoner
++  - deepseek-flash:
++    - deepseek-chat
++  - local-general:
++    - deepseek-flash
+   context_window_fallbacks:
+   - deepseek-chat:
+     - gpt-4o-mini
++  - local-general:
++    - deepseek-flash
+ model_list:
++- model_name: local-general
++  litellm_params:
++    model: ollama_chat/qwen2.5:7b-instruct
++    api_base: http://ollama:11434
++    rpm: 30
++    timeout: 180
++    stream_timeout: 180
++  model_info:
++    id: ollama-qwen2.5-7b-instruct-local
++    description: Private ROCm Ollama route for effective internal throughput work
+ - model_name: gpt-4
+   litellm_params:

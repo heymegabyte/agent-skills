@@ -19,7 +19,7 @@ triggers:
   - "wow factor"
   - "excellent"
   - "gorgeous"
-last_reviewed: 2026-10-07
+last_reviewed: 2026-10-05
 superseded_by: null
 ---
 
@@ -54,14 +54,8 @@ superseded_by: null
    *finish*. One or two complete, delightful things beat many half-built ones.
 6. **Minimum LOVABLE, never a skeleton.** Zero placeholders / stubs / TODOs / "polish
    later." A rough version tests burnt pizza, not pizza. Design the intended emotion.
-7. **Integrate to spec — everything relevant, nothing stubbed.** Wire EVERY API, SDK, component,
-   primitive, and platform capability the surface implies, each to its PUBLISHED spec (auth,
-   pagination, webhooks, errors, edges) — not a happy-path slice. The identity/social/meta/PWA floor
-   (full favicon + SVG mark + OG/Twitter + dynamic per-entity cards + complete manifest + JSON-LD) is
-   BASELINE, never "extra-mile" (see [[extra-mile]] § floor-is-not-the-extra-mile). "Complete" is
-   measured against the full spec of what the surface makes possible, not a minimal viable slice.
-8. **De-risk before "done":** value, usability, feasibility, viability.
-9. **Taste gate (§D) before shipping.**
+7. **De-risk before "done":** value, usability, feasibility, viability.
+8. **Taste gate (§D) before shipping.**
 
 ## B) The "It" Factor — first 5 seconds (apply to EVERY build)
 
@@ -89,37 +83,9 @@ superseded_by: null
   View Transitions (0 KB) over JS. No animation-for-its-own-sake.
 - **Every state designed:** empty states orient + offer one easy next action; errors
   give cause + ID + Retry/Learn-more; distinguish loading / empty / unauth / 5xx.
-- **An auto-retry / self-heal MASKS the missing error state — when retries are exhausted
-  the failure goes SILENT unless a TERMINAL user-facing state catches it.** Transparent
-  retry (reload the resource, re-fetch, reconnect) is great UX — but it tricks you into
-  thinking the error is "handled" when you've only DEFERRED a silent dead-stop: the Nth
-  failure returns quietly and the surface just freezes (a stuck player, a spinner that
-  never resolves, a blank panel) with no message + no way out. Every retry needs a
-  terminal branch: on exhaustion, surface the error (cause + recovery) AND take an
-  auto-recovery action that keeps the flow alive (skip the broken item, serve stale, fall
-  back) — with a consecutive-failure CAP so a real outage stops cleanly ("check your
-  connection") instead of racing the whole list, and reset the streak on the next success.
-  Ref: bz.rocks 2026-10-25 — the audio engine self-healed ONE transient retry (CF
-  cold-start 503) but a persistently-broken track then dead-stopped the player silently;
-  added `onTrackError` → toast + auto-skip (nextTrack), 3-failure cap → "check your
-  connection" + pause, reset on `playing`. Cross-links `[[error-recovery]]`, `[[embarrassingly-easy-to-use]]`.
 - **Keyboard-first:** ⌘K palette; arrows navigate; focus discipline.
 - **AI-native:** stream tokens, optimistic echo, skeleton before first token, render
-  answers as widgets not walls of text — and make those widgets ACTIONABLE: wire a
-  result card to the real in-app action (play / open / apply / add) IN-CONTEXT via
-  the host-command bridge, so the user stays in the conversation (recommends → tap →
-  it happens), never a link that navigates away. Keep a modifier/middle-click escape
-  that still opens the full page. Per-feature kill-switch.
-- **Agentic UX (when the surface DRIVES an agent, not just streams an answer).** Balance autonomy with
-  oversight across the agent's lifecycle: (1) **intent preview** before it acts — show the planned steps +
-  offer three choices, not two: **Proceed / Edit / Handle it myself**; (2) an **autonomy dial** earned over
-  time — Preview (confirm each step) → Supervised (auto-run low-stakes, ask on high-stakes) → Autonomous
-  (checkpoints only); (3) explicit **capability boundaries** (what it can do / needs approval for / can't
-  touch); (4) a **progress FEED** narrating activity in plain language — never a spinner/bar for a
-  40-tool-call run; (5) **Review → Adjust → Approve** (no chained modals); (6) 3-part errors (what / why /
-  what-to-try-next). User understands why, can intervene, has a safety net → the agent is a tool, not a
-  black box. Generalizes the estate's `[[computer-use-mastery]]` safety gate into product UX; sits beneath
-  `[[cinematic-hud-standard]]`.
+  answers as widgets not walls of text; per-feature kill-switch.
 - **Perf + a11y as craft:** INP ≤200ms (target <150 mobile), tabular-nums to kill
   shift; global `prefers-reduced-motion` (reduce, don't strip); box-shadow focus rings
   that respect radius; `@media (hover:hover)`; 16px+ inputs; icon-only → `aria-label`.

@@ -25,14 +25,6 @@ Classify failures (transient/code/config/deploy/data/auth) and apply the matchin
 - **Architecture mismatch** — stop → reassess → propose
 - **External down** — status → fallback → note
 
-## What NOT to retry (narrow-retry discipline)
-
-- Retry ONLY transient errors (429, select 5xx, network timeout) with capped exponential backoff + **jitter**. **Never retry auth failures, policy/permission denials, or deterministic validation errors** — and never retry them through a succession of new IPs/proxies (that reads as abuse/account-takeover and gets you banned, not unblocked).
-- Preserve **idempotency keys** on retried writes; cap attempts per task; a loop that rotates identity/IP per attempt is an anti-pattern.
-- Every retry has a **terminal branch**: on exhaustion surface a real error + a recovery action (skip / serve-stale / fallback / human handoff) — never fabricate a result (the auto-retry-masks-the-error trap, per `first-time-excellence`).
-- **Replaying/retrying a TERMINAL unit mints a FRESH attempt — it NEVER un-terminalizes the original.** When you add a replay/retry surface for an already-failed/dead-lettered/cancelled unit (a DLQ replay, a "retry this job", a re-run button), create a NEW attempt (new run/job/record id) from the stored input and leave the ORIGINAL in its terminal state as the audit trail — don't re-drive the failed record through the success path (it muddies the lifecycle: a terminal run shouldn't flip back to running). Make it idempotent with a "already-replayed" guard (a `replayed_at` stamp / a replay-of link), and reuse the normal producer/enqueue path so the fresh attempt flows through the standard pipeline. The fresh id is the operator's handle to track the retry. Ref: browse.tools C14.13 dead-letter replay (2026-10-30) — `POST /broker/dead-letters/:runId/replay` mints a fresh `queued` Run from the stored job + re-enqueues; the original stays `failed`; 2nd replay → `already_replayed`.
-- **Browser/web agents** — escalate scrape/HTTP → headless browser (JS + cookies) → human; separate INFRA failures (proxy/anti-bot → alt config) from REASONING failures (wrong element → re-ground). Full playbook: `[[browser-control-mastery]]`.
-
 ## Self-heal protocol
 
 - Read FULL error + stack trace

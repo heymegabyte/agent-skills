@@ -41,7 +41,7 @@ Every parallel fan-out assigns each work unit to the most-specialized agent. Nev
 ### Architecture (map to `architect` / `meta-orchestrator` + CF/Angular/Hono/Zod brief)
 
 - **cloudflare-architect** — CF-primitive selection (Workers/D1/R2/KV/DO/Queues) · new edge surface · NOT impl · ADR+binding plan · drift-detection → `architect`+CF
-- **angular-ssr-architect** — Angular 22+Nx 23+SSR-on-Workers · new app/feature shell · NOT styling · route+hydration plan · typecheck → `architect`+Angular
+- **angular-ssr-architect** — Angular21+Nx+SSR-on-Workers · new app/feature shell · NOT styling · route+hydration plan · typecheck → `architect`+Angular
 - **saas-platform-architect** — tenancy/entitlements/flags topology · new SaaS area · NOT UI · platform ADR · drift-detection → `architect`
 - **multi-tenant-systems-architect** — isolation + RBAC boundaries · cross-tenant data · NOT auth-impl · isolation plan → `meta-orchestrator`
 - **api-contract-architect** — Hono+Zod+OpenAPI contracts · new endpoint family · NOT handlers · typed contract · zod-validate → `architect`+Hono/Zod (`contract-first-ai.md`)
@@ -54,7 +54,7 @@ Every parallel fan-out assigns each work unit to the most-specialized agent. Nev
 - **worker-runtime-builder** — Worker/DO/Queue/Workflow · edge runtime · NOT UI · runtime+test · typecheck → `general-purpose`+brief
 - **integration-builder** — Stripe/Amazon SES/PostHog/MCP wiring · external service · NOT core logic · adapter+test · vitest → `general-purpose`+brief
 - **forms-and-automation-builder** — Zod forms + Turnstile + jobs · new form/automation · NOT design · form+validation · Playwright → `general-purpose`+brief
-- **auth-billing-builder** — Better Auth/Stripe Link flows · auth/billing surface · NOT pricing policy · flow+test · E2E+approval → `general-purpose`+brief
+- **auth-billing-builder** — Clerk/Stripe Link flows · auth/billing surface · NOT pricing policy · flow+test · E2E+approval → `general-purpose`+brief
 - **dashboard-builder** — admin/data dashboards · new admin view · NOT data model · view+spec · Playwright → `general-purpose`+brief
 
 ### Quality

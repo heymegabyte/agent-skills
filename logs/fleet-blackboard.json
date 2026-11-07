@@ -1,0 +1,9 @@
+{
+  "api:auth:endpoint": {
+    "key": "api:auth:endpoint",
+    "value": "/api/v1/auth/session",
+    "author": "Architect",
+    "callSign": "STRAT-01",
+    "updatedAt": "2026-11-06T01:44:26.092Z"
+  }
+}

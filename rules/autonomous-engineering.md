@@ -15,7 +15,7 @@ Work autonomously by default. For normal engineering — instructions, docs, tem
 
 ## Autonomous by default
 
-- Pick one safe path when the choice is inferable, execute, and report. Silence never authorizes destructive, paid, production, credential, account, or external-communication actions.
+- Silence = approval (`brian-preferences`). Pick ONE path, execute, report — never offer a menu and wait.
 - Asking permission for normal work is the failure mode.
 - Use `AskUserQuestion` only when blocked on a decision genuinely the user's and unresolvable from context — not for "should I proceed?".
 - A task is done only after the `verification-loop` runs green OR a clear blocker is documented.

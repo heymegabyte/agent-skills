@@ -19,15 +19,9 @@ paths:
 
 # Browser Automation Routing
 
-Standing preference for EVERY agent-driven browser task — navigate, click, fill, extract, screenshot, scrape, or verify. Default to the **browse CLI / browse.tools** with an explicit named session. Escalate to **Cua Driver** only when browse cannot operate the target, a native application is required, or the active authenticated desktop is the only viable state holder. Cua access must run through `bin/cua-singleton.sh` so one actor owns a desktop at a time.
+Standing preference for EVERY agent-driven browser task — navigate, click, fill, extract, screenshot, scrape, or verify a deployed page. Default to a **Cloudflare Browser Run** instance driven by **Stagehand**; fall back to the **user's own Chrome** when cookies / a logged-in session must persist. Brian directive 2026-09-20.
 
-Cross-links: `[[computer-use-safety]]` `[[computer-use-mastery]]` `[[browser-control-mastery]]` `[[fetch-defaults]]` `[[crawling-testing-browser-supervisor]]` `[[cloudflare-lock-in-is-leverage]]` `[[god-tier-engineering]]` `[[verification-loop]]`
-
-This rule governs the CF-native BROWSER rail. For the full cross-PROVIDER Computer-Use playbook — driving
-OpenAI / Claude / OpenCode / OpenClaw / Paperclip, the capability ladder (**API > DOM/accessibility-tree >
-vision CU**), and the grounding/cost/safety laws — see `[[computer-use-mastery]]`. Both agree on the core
-move: **the accessibility tree beats screenshots** (Stagehand `act`/`observe` here; Playwright-MCP a11y
-there), and vision Computer Use is the last rung, not the first.
+Cross-links: `[[computer-use-safety]]` `[[fetch-defaults]]` `[[crawling-testing-browser-supervisor]]` `[[stagehand-ai-testing]]` `[[cloudflare-lock-in-is-leverage]]` `[[god-tier-engineering]]` `[[verification-loop]]`
 
 ## HARD RULE — NEVER open a visible Chrome to TEST or MEASURE (headless / Browser Run only). Brian directive 2026-10-03.
 
@@ -41,27 +35,25 @@ The brickcitylabor loop measured `/book` CLS by opening the chrome-devtools MCP 
 
 ## The routing chain (in order)
 
-1. **DEFAULT — browse CLI.** Use `browse open ... --session <task> --local|--remote`, inspect with `browse snapshot`, interact by refreshed refs, and verify after every state change. Use `--auto-connect` only when explicitly attaching to a debuggable logged-in Chrome. Search Browse.sh for a site-specific skill before hand-rolling common portal automation.
-2. **Managed browser backends.** Let browse use Browserbase remote contexts when persistence/proxies/verified mode are needed. Cloudflare Browser Run/Stagehand remains available for product test infrastructure and existing CF-native suites, but direct agent browser work goes through browse.
-3. **Cua Driver escalation.** Use Cua for native apps, an authenticated active desktop that browse cannot attach to, inaccessible canvas/OS UI, or repeated browse failure after diagnosis. Prefer background window/element actions; use foreground only for the smallest necessary step. Always acquire `bin/cua-singleton.sh` and capture before/after state.
+1. **DEFAULT — Cloudflare Browser Run + Stagehand.** Launch a headless browser on CF Browser Run (Workers Browser binding + `@cloudflare/playwright`, or the REST API for one-shots) and drive it with Stagehand's AI `act`/`observe`/`extract`/`agent` on the a11y tree. CF-native (per `cloudflare-lock-in-is-leverage`), zero local resource cost, reproducible. Point Stagehand at the CF session's CDP endpoint instead of spinning a Browserbase-managed session whenever CF Browser is available.
+2. **FALLBACK — the user's provided/local Chrome instance.** Drive the real local Chrome (the user's profile) via Chrome DevTools MCP (`mcp__chrome-devtools__*`) or Playwright `connectOverCDP` to a `--remote-debugging-port` Chrome. Use when **cookies / an existing logged-in session / the user's real profile must persist**, when CF Browser + Stagehand is unavailable, or when a human is mid-flow and state must carry across steps.
 
 ## When each is right (routing is by state, not just availability)
 
-- **Cookies / auth / logged-in state REQUIRED** → browse persistent remote context, `--auto-connect`, or an explicitly configured profile first; Cua only if browse cannot reach that state.
+- **Cookies / auth / logged-in state REQUIRED** (SSO dashboards, a session the user already opened) → go STRAIGHT to the **user's Chrome**. A fresh cloud browser has no cookies — here the "fallback" is the correct FIRST choice.
 - **Stateless automation** (public pages, scraping, post-deploy verification, screenshots, extraction) → **CF Browser + Stagehand** default.
 - **Bot-detected / Cloudflare-challenged target** → Stagehand-managed session (a11y-tree `act` evades brittle selectors) per `crawling-testing-browser-supervisor`; escalate proxies per `fetch-defaults` § Escalation only if still blocked.
 
 ## Tool mapping
 
-- **CF Browser Run** — Workers Browser binding (`env.BROWSER`) + `@cloudflare/playwright` `launch()/connect()`; REST `/accounts/{id}/browser-rendering/{screenshot,content,snapshot,scrape,pdf,links,json}` for one-shots (per `god-tier-engineering` #9: REST > binding for single ops). **(2026):** also a direct **CDP endpoint** — point Stagehand / Playwright / any CDP client at it with a one-line config; **120 concurrent browsers** (paid, 4× after the Containers rebuild); **Live View + Human-in-the-Loop** interrupts + session recordings; persist login via `storageState` → Workers KV (the fork has no persistent contexts); optional **Kitesurf** agent-browser on the CDP endpoint (3–7× less mem/CPU).
-- **Stagehand** — `mcp__stagehand__*` (`browserbase_stagehand_act/observe/extract/navigate/agent`); the REQUIRED interface for AI interaction — never drive a managed/cloud session with raw CDP clicks. Full Stagehand mastery — **observe-then-act + cache + self-heal**, atomic `act()`, Zod-schema `extract()`, the escape-hatch to raw Playwright/CDP, and the v4 unified **deep Locator** (nested/out-of-process iframes + closed Shadow DOM) — plus the grounding **ladder** (API > a11y/DOM > Set-of-Mark vision > raw pixels) and the read→scrape split: `[[browser-control-mastery]]`.
+- **CF Browser Run** — Workers Browser binding (`env.BROWSER`) + `@cloudflare/playwright` `launch()/connect()`; REST `/accounts/{id}/browser-rendering/{screenshot,content,snapshot,scrape,pdf,links,json}` for one-shots (per `god-tier-engineering` #9: REST > binding for single ops).
+- **Stagehand** — `mcp__stagehand__*` (`browserbase_stagehand_act/observe/extract/navigate/agent`); the REQUIRED interface for AI interaction — never drive a managed/cloud session with raw CDP clicks.
 - **User Chrome** — `mcp__chrome-devtools__*` (attaches to the running Chrome) OR Playwright `connectOverCDP('http://localhost:9222')`. The ONLY tier where the user's cookies persist.
 - **Playwright MCP (`mcp__playwright__*`)** — its own bundled Chromium; acceptable for a quick stateless check, but NOT the default here (no CF-native benefit, no cookie persistence). Prefer CF Browser for cloud, user Chrome for stateful.
 
 ## Guardrails (unchanged)
 
 - Session-bound / auth / payment flows still require explicit user confirmation per `computer-use-safety`.
-- Organization conversion, subscription/reward activation, billing changes, credential minting and secret transfer require a Paperclip approval ID before the consequential action. Read-only verification is autonomous.
 - Never submit real payment cards from an agent-driven session — test cards live in the E2E suite only.
 - Playwright TEST SUITES (`e2e-tdd-organization`, `verification-loop`) keep their own runner + PROD target; this rule governs AGENT-DRIVEN interaction. Those suites MAY use CF Browser Run as the launch backend.
 

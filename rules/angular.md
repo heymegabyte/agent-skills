@@ -25,6 +25,7 @@ The complete Angular doctrine (fires when `stack-selector`/`frontend-stack` pick
 Build inside an **Nx monorepo running Angular 22** with **Angular CLI MCP**. Standalone only. Signals only. No NgModules.
 
 - **Angular 22** pinned `22.x` in `package.json` + `angular.json`. **Nx 23** wrapper (Angular-22 support landed Nx 23.1; Nx 22 can't build Ng22); `nx.json` at root; apps under `apps/`, libs under `libs/`.
+- **Node 24 LTS** pinned `v24.16.0` (`.nvmrc` = `24`, `engines.node` = `>=24.16`, `node-version` = `24` in CI) — Nx 23 + native TS executors require it; no ts-node/tsx/nodemon shims.
 - **Standalone components** ONLY (NgModules banned). `provideRouter` / `provideHttpClient` / `provideAnimationsAsync` in `app.config.ts`.
 - **Signals** (`signal`, `computed`, `effect`, `linkedSignal`, `resource`) for state. NO RxJS subjects for component state.
 - **Typed Reactive Forms** (`FormGroup<T>`, `FormControl<T>`) + **NGX Formly** for schema-driven forms, Zod-backed (`zod-to-json-schema`). No template-driven forms.
@@ -51,7 +52,7 @@ Build inside an **Nx monorepo running Angular 22** with **Angular CLI MCP**. Sta
 
 - ❌ NgModules · template-driven forms · RxJS subjects for component state (use signals)
 - ❌ Any UI kit other than Spartan + CDK + Floating UI · ngx-translate / Transloco (use `@angular/localize`)
-- ❌ ts-node / nodemon (Node 24 native TS + Nx executors) · Karma+Jasmine (Vitest) · Protractor (Playwright)
+- ❌ ts-node / nodemon (Node 24 LTS native TS + Nx executors) · Karma+Jasmine (Vitest) · Protractor (Playwright)
 - ❌ `[ngStyle]` / `[ngClass]` for static bindings · `[(ngModel)]` in Reactive-Forms context
 
 ## RxJS-First at Every Backend Edge
@@ -87,7 +88,7 @@ Every backend interaction is an **RxJS observable stream**, never a one-shot pro
 **Spartan UI** (the shadcn-for-Angular port) is THE Angular UI component library — admin AND marketing, one kit. **NO PrimeNG / Material / Taiga / NG-ZORRO / Kendo / Syncfusion / Ionic-as-UI. Mixing kits = build fail.** (Reversed 2026-05-29 from the prior "PrimeNG for admin" split — two design systems doubled bundle + upgrade + theme surface.) OSS, owns-the-code (copied into `libs/ui/`, not black-boxed), Tailwind-composed, Angular CDK + Floating UI underneath. React-stack counterpart: `[[shadcn-design-system]]`.
 
 - Pair with **Angular CDK** (overlays, drag-drop, virtual-scroll, a11y) + **Floating UI** (tooltip/popover positioning); **Tippy.js** only where it beats Floating UI ergonomics.
-- **When Spartan lacks a primitive**, compose from CDK + Floating UI + Tailwind tokens FIRST. Allowed heavy fallbacks (each gets a `package-preference-registry.md` row): **AG Grid Community** (100k+ row grids only; TanStack Table+Virtual for normal lists) · **FullCalendar** · **Embla Carousel** · **PhotoSwipe** · **Apache ECharts / Unovis / @visx**.
+- **When Spartan lacks a primitive**, compose from CDK + Floating UI + Tailwind tokens FIRST. Allowed heavy fallbacks (each gets a `package-decision-matrix.md` row): **AG Grid Community** (100k+ row grids only; TanStack Table+Virtual for normal lists) · **FullCalendar** · **Embla Carousel** · **PhotoSwipe** · **Apache ECharts / Unovis / @visx**.
 
 ### Design direction (ProjectSites cockpit)
 

@@ -66,7 +66,7 @@ Dark theme FIRST. Purple for cosmic/space only.
 - **Database** — D1 / Neon
 - **ORM** — Drizzle v1-rc (rc.4; NOT GA as of 2026-10 — production-proven, no stable tag/down-migrations yet)
 - **Validation** — Zod 4
-- **Auth** — Better Auth Core 3 (SaaS) / Authentik (self-hosted)
+- **Auth** — Clerk Core 3 (SaaS) / Authentik (self-hosted)
 - **Payments** — Stripe + Link DEFAULT for all money flows (Billing for SaaS, pin `2026-09-30.endive` — stripe-node 23.0.0, verified 2026-10-05; endive = new breaking major after dahlia; Connect payouts; IBP 2.6%+30¢) / Square only on prompt request
 - **Email** — Amazon SES (sole transactional rail) + Listmonk (bulk); SendGrid break-glass
 - **Jobs** — Inngest v4 / CF Workflows v2
@@ -75,8 +75,12 @@ Dark theme FIRST. Purple for cosmic/space only.
 - **E2E** — Playwright v1.63+
 - **Unit** — Vitest 5
 - **Lint** — oxlint + ESLint + Prettier (never Biome)
-- **Observability** — Sentry (server-side `@sentry/cloudflare`) on every Worker = estate baseline (Brian 2026-10-04) + PostHog + Workers Tracing (solo); enterprise adds GA4/GTM + Axiom
+- **Observability** — Sentry (server-side `@sentry/cloudflare`) on every Worker = estate baseline (Brian 2026-10-04) + PostHog + Workers Tracing (solo); enterprise adds GA4/GTM + Axiom + **Langfuse Cloud (`2500ms` fail-open circuit breaker via `@theme.tools/telemetry` / `langfuse-safe.ts`)**
   - **Sentry project naming: slug = repo folder name with dots → dashes** (one project per app, org `megabyte-labs`). `deskl.ink` → `deskl-ink`; `projectsites.dev` → `projectsites-dev`; `pdf.megabyte.space` → `pdf-megabyte-space`. Never drop the TLD, never use a custom alias.
+- **Shared Utilities & Cross-Site Engines Home** — `@theme.tools` (`heymegabyte/theme.tools`) is the **single canonical home for ALL shared utilities, UI components, themes, and Cloudflare-native cross-site engines**. Always name `@theme.tools/*` packages by **what they are** (capability/domain noun), never after an upstream vendor brand. Never duplicate reusable logic per site; always import from or upstream into the **28 Default `@theme.tools` Libraries** (`rules/theme-tools-canonical-components.md`):
+  - **Tier 1 — Core Workspace Packages (5)**: `@theme.tools/themes` (OKLCH DTCG tokens), `@theme.tools/ui` (`ui.theme.tools` 575+ components & `<tt-*>` elements), `@theme.tools/blog` (DataForSEO v3 + APA citation ledger + PlateJS), `@theme.tools/catalog` (SHA-256 compatibility manifests), `@theme.tools/testing` (16-state Visual State Matrix + 10-lens Micro-Critique verifier).
+  - **Tier 2 — CF-Native Absorbed Open-Source Engines (15)**: `@theme.tools/workflows` (workflow automation + trigger/action pieces + React Flow DAG), `@theme.tools/integrations` (unified OAuth2/PKCE connectors + DO refresh locks + 2-way sync), `@theme.tools/social` (multi-network social media scheduler & thread splitter), `@theme.tools/scheduling` (edge calendar booking & availability solver), `@theme.tools/signing` (WebCrypto PDF e-signature & audit seal), `@theme.tools/forms` (conversational multi-step forms & micro-surveys), `@theme.tools/links` (`<5ms` KV shortlinks, QR & attribution), `@theme.tools/keys` (scoped API keys & DO sliding-window ratelimit), `@theme.tools/notifications` (in-app notification bell + SES/Listmonk router), `@theme.tools/crm` (edge CRM & kanban deal/donor pipeline), `@theme.tools/inbox` (`Cloudflare Agents` + Email Routing support helpdesk), `@theme.tools/billing` (integer micro-USD usage metering & DO credit wallet), `@theme.tools/status` (synthetic probes & `/status` badges), `@theme.tools/kb` (AI Search `/docs` & `/changelog`), `@theme.tools/dataplane` (watermarked PDF data rooms).
+  - **Tier 3 — Foundational Cross-Site Utility Libraries (8)**: `@theme.tools/telemetry` (7-rail observability + Langfuse `2500ms` fail-open), `@theme.tools/auth` (Better Auth + Infisical Agent Vault + RBAC), `@theme.tools/flags` (D1/KV `feature_flags` + `isFlagOn()`), `@theme.tools/agent-ui` (`Cloudflare Agents` + `AG-UI` + `json-render` + `MCP Apps`), `@theme.tools/seo-geo` (dynamic OG images, JSON-LD, `sitemap.xml`/`llms.txt`), `@theme.tools/media-video` (Remotion storyboards + CF Containers render), `@theme.tools/crawl-research` (SSRF-safe scraper + DataForSEO + Form 990/Wayback), `@theme.tools/i18n-a11y` (ACS B16001 locale + WCAG 2.2 AA contrast & `0.333s` motion).
 
 ## Angular Version Changes
 
@@ -566,24 +570,24 @@ JSON-LD boosts LLM accuracy 16% → 54% (AI search visibility for ChatGPT / Perp
 - **`Bun.redis`** — 7.9x faster than ioredis. 66 commands. Auto-reconnect, command timeouts, message queuing. Replaces `ioredis` / `redis` npm packages.
 - **`Bun.s3`** — built-in S3 client with backpressure handling. Replaces `@aws-sdk/client-s3`. Note: CF Workers use R2 binding directly, not S3 client.
 
-## Better Auth Core 3 (Mar 2026 — Breaking)
+## Clerk Core 3 (Mar 2026 — Breaking)
 
 ### Breaking changes
 
-- `better-auth` → `better-auth`
-- `better-auth` → `better-auth`
+- `@clerk/clerk-react` → `@clerk/react`
+- `@clerk/clerk-expo` → `@clerk/expo`
 - `<Protect>` / `<SignedIn>` / `<SignedOut>` → unified `<Show when="signed-in|signed-out" />`
-- `getToken()` now throws `BetterAuthSessionError` (was null)
-- `better-auth` deprecated (import from SDK packages)
+- `getToken()` now throws `ClerkOfflineError` (was null)
+- `@clerk/types` deprecated (import from SDK packages)
 - ~50KB gzipped bundle reduction
-- Upgrade: `npx better-auth` codemod, requires Node 20.9+
+- Upgrade: `npx @clerk/upgrade` codemod, requires Node 20.9+
 
-### Better Auth CLI (Apr 22 2026)
+### Clerk CLI (Apr 22 2026)
 
-- `better-auth init` — framework detect + scaffold
-- `better-auth config` — auth settings
-- `better-auth api` — BAPI access
-- `better-auth deploy` — coming
+- `clerk init` — framework detect + scaffold
+- `clerk config` — auth settings
+- `clerk api` — BAPI access
+- `clerk deploy` — coming
 
 ### API Keys GA (Apr 17 2026)
 

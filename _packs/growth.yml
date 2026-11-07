@@ -1,0 +1,9 @@
+name: growth
+description: Autonomous growth + the orchestration/allocation that governs it
+members:
+  - rules/customer-support-doctrine
+  - 13-observability-and-growth
+  - rules/autonomous-growth-orchestrator
+  - rules/token-allocation-policy
+  - rules/worker-pool-and-task-ledger
+  - rules/qualified-traffic-attribution

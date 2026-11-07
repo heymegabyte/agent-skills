@@ -123,12 +123,6 @@ Define Hono-on-Workers API patterns including RPC mode, WorkerEntrypoint binding
 - Use `@hono/zod-validator` (or `hono-openapi`'s own resolver) for per-route input validation; Zod remains the SSOT per `[[zod-everywhere]]`.
 - `@hono/zod-openapi` is **superseded** for new OpenAPI work — use `hono-openapi` + `zod-to-openapi` instead.
 
-## TypeSpec authoritative contract (pilot — single source, emit OpenAPI)
-
-- **Where a surface wants ONE authoritative API contract above the runtime**, author it in TypeSpec and EMIT OpenAPI 3.1 — `tsp compile . --emit=@typespec/openapi3` (or `tspconfig.yaml` `emit: ["@typespec/openapi3"]`, `openapi-versions: [3.1.0]`; verified 2026-11-04 via Context7 `/microsoft/typespec`). The emitted OpenAPI is a GENERATED artifact — never hand-edit it; regenerate + drift-check (committed == emitted).
-- **Do NOT adopt TypeSpec's client/server code generators** (`@typespec/http-server-js`, `http-server-csharp`, client emitters). The OpenAPI document is the deliverable; **Hono + Zod stay the runtime**, validated against the emitted contract — collapsing the hand-OpenAPI / route-code / Zod triple-source drift into one.
-- This is a **pilot** on one surface before any fleet-wide move. Full proposal/design/spec: `openspec/changes/pilot-typespec-authoritative-api-contract/` (§21). The Zod-derived `hono-openapi` path above stays the DEFAULT for surfaces not in the pilot.
-
 ## CF 2026 primitives (Agents/Dev Week — reach for these before rolling your own)
 
 - **Flagship** — native CF feature-flag service (KV + DO, sub-ms eval). Evaluate before the custom D1 flag tables in `feature-flags.md` for new builds.

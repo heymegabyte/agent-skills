@@ -12,6 +12,13 @@ import { auditCodeDiff } from '../bin/evaluator-critic.ts';
 import { verifyImportedSymbols } from '../bin/verify-ast-symbols.ts';
 import { FleetBlackboard } from '../bin/fleet-blackboard.ts';
 import { evaluateRigor } from '../bin/rigor-scorer.ts';
+import { runAgentEvals } from '../bin/agent-eval-runner.ts';
+import { generateTddTest } from '../bin/tdd-scaffold.ts';
+import { auditContextInflation } from '../bin/token-inflation-sentinel.ts';
+import { validateCommitMessage } from '../bin/lint-commits.ts';
+import { auditBundleBudget } from '../bin/bundle-diff.ts';
+import { sanitizeText } from '../bin/sanitize-secrets.ts';
+import { runFleetSelfAudit } from '../bin/fleet-self-improvement-audit.ts';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DOCS_AGENTS_DIR = resolve(__dirname, '..', 'docs', 'agents');
@@ -178,5 +185,61 @@ describe('Fleet Autonomous Tooling & DAG Execution', () => {
 
     assert.ok(scoreReport.score >= 90);
     assert.ok(['A+', 'A'].includes(scoreReport.grade));
+  });
+
+  it('executes automated domain competency evals with 100% pass rate', () => {
+    const summary = runAgentEvals();
+    assert.equal(summary.passed, summary.total);
+    assert.ok(summary.total >= 4);
+  });
+
+  it('scaffolds TDD initial failing unit test', () => {
+    const testCode = generateTddTest({
+      featureName: 'Session Auth',
+      targetModule: './auth.ts',
+      expectedFunction: 'verifyToken'
+    });
+    assert.ok(testCode.includes('verifyToken'));
+    assert.ok(testCode.includes('RED PHASE'));
+  });
+
+  it('detects prompt context inflation when exceeding 65% of context window', () => {
+    const normal = auditContextInflation('Small prompt', 200000);
+    assert.equal(normal.inflated, false);
+
+    const huge = auditContextInflation('X'.repeat(600000), 200000);
+    assert.equal(huge.inflated, true);
+    assert.ok(huge.recommendation.includes('Context inflated'));
+  });
+
+  it('validates Conventional Commits and rejects unformatted messages', () => {
+    const valid = validateCommitMessage('feat(fleet): implement RigorBench trajectory discipline');
+    assert.equal(valid.valid, true);
+    assert.equal(valid.type, 'feat');
+
+    const invalid = validateCommitMessage('broken commit');
+    assert.equal(invalid.valid, false);
+  });
+
+  it('audits client bundle budget against 150KB limit', () => {
+    const passReport = auditBundleBudget([{ name: 'app.js', sizeBytes: 100 * 1024 }], 150);
+    assert.equal(passReport.passed, true);
+
+    const failReport = auditBundleBudget([{ name: 'app.js', sizeBytes: 200 * 1024 }], 150);
+    assert.equal(failReport.passed, false);
+  });
+
+  it('sanitizes Anthropic, OpenAI, and GitHub secrets from log strings', () => {
+    const dirty = 'sk-ant-api03-abcdef1234567890abcdef1234567890 and ghp_123456789012345678901234567890123456';
+    const clean = sanitizeText(dirty);
+    assert.ok(!clean.includes('sk-ant-api03'));
+    assert.ok(!clean.includes('ghp_1234'));
+    assert.ok(clean.includes('***REDACTED***'));
+  });
+
+  it('runs autonomous fleet self-improvement audit with 100% convergence rating', () => {
+    const audit = runFleetSelfAudit();
+    assert.equal(audit.allChecksPassed, true);
+    assert.equal(audit.convergencePercent, 100);
   });
 });

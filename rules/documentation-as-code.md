@@ -31,7 +31,7 @@ paths:
 ## One-way door decisions (ADR required)
 
 - DB schema changes affecting existing data (column type, normalization, FK structure)
-- Auth provider selection or change (Better Auth)
+- Auth provider selection or change (Clerk)
 - Payment rail selection or change (Square vs Stripe)
 - CF region/jurisdiction for D1 or R2 (EU vs US)
 - Monolith Worker → multi-service architecture

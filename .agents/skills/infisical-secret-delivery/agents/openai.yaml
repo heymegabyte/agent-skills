@@ -1,0 +1,4 @@
+interface:
+  display_name: "Infisical Secret Delivery"
+  short_description: "Least-privilege Infisical runtime secret delivery"
+  default_prompt: "Integrate Infisical for this workload with the minimum required environment variables and prove denied access."

@@ -27,10 +27,12 @@ nothing. This is the host sibling of `[[domain-named-project-dns]]` (which makes
 - **The split test:** "would another estate machine want this verbatim?" yes → install.doctor
   (universal, reusable); no → the home repo (unique to this box's fleet role / services / `/etc` /
   tunnel hostnames). Recovery order is always **install.doctor FIRST, then the home repo's runbook**.
+- **Same-Turn Install Doctor Upstream Sync:** Whenever you update dotfiles, package-manager configs (`npm`, `pnpm`, `yarn`, `bun`, `pip`, `uv`, `cargo`, `go`, `maven`, `gradle`, `nuget`, `docker`), shell exports, LaunchAgents/systemd units, or reusable `/etc` files on a host or in a host repo (`legion.megabyte.space`, `ubuntu.megabyte.space`, `macbook-pro`), you **MUST update `heymegabyte/install.doctor` in the same turn** (`home/` Chezmoi templates + `home/dot_local/bin/post-installx/`) whenever the configuration belongs in the bootstrap project. See `[[workstation-shared-provisioning-policy]]`.
 - **Dual role of the home domain:** the git repo is the machine's **config source-of-truth**, and —
   where the host serves a browser surface — the live domain is also the **access portal** to the
-  machine (e.g. `ubuntu.megabyte.space` is BOTH the config SoT *and* the KasmVNC web-desktop portal,
-  per `[[remote-desktop-webtop]]`). Keep both roles intact on every change.
+  machine (e.g. `ubuntu.megabyte.space` is BOTH the config SoT *and* the native KasmVNC remote-desktop
+  portal sharing the host's live Ubuntu GNOME session, per `[[remote-desktop-webtop]]` and
+  `[[linux-desktop-gnome-preference]]`). Keep both roles intact on every change.
 
 ## The mandate
 
@@ -57,11 +59,14 @@ nothing. This is the host sibling of `[[domain-named-project-dns]]` (which makes
   guest-agent for clean snapshots). The home-repo steps below all run AFTER install.doctor completes.
 - **Every service** as a deploy dir (`<service>/` with compose + idempotent `setup.sh`): the app, its
   DB, the web/desktop surface, the telemetry agent (Alloy/Netdata) — none "assumed to already exist".
-- **System config** via one generator (sysctl, zram/swap, journald caps, firewall default-deny,
+- **System config** via one generator (sysctl, zram/swap, journald caps, enabled firewall default-deny inbound,
   fail2ban, **docker `daemon.json`** — easy to forget; it decides whether ports bind loopback or LAN).
 - **systemd units** (user + system) + **crontab** + `/etc/cron.d` captured and restored.
 - **Network/edge**: the tunnel + every ingress rule + the Access apps reproducible from a provisioning
-  script (needs the CF API key from `get-secret`), not just one hostname.
+  script (needs the CF API key from `get-secret`), not just one hostname. Restore `cloudflared` as the
+  default front door and persist every narrowly scoped firewall exception per `[[server-ingress-firewall]]`.
+  Install Doctor supplies the connector/firewall mechanism; this repo owns the machine-specific desired
+  state and reconciles it into Cloudflare and the host. Dashboard-only configuration is drift.
 - **The secret rail itself** (`get-secret` + its importer) restored before anything that needs a secret.
 
 ## Verify it actually resurrects (don't assume)
@@ -86,4 +91,5 @@ in any runbook) — all closed the same turn.
 `[[domain-named-project-dns]]` (website→domain; this is host→resurrection) · `[[drift-detection]]`
 (orphan config = merge-blocker) · `[[verify-against-source-of-truth]]` (prove the restore, don't assume) ·
 `[[secret-provisioning]]` / `[[secrets-portable-resolution]]` (the excluded-but-documented secret rail) ·
-`[[healthchecks-job-monitoring]]` (the snapshot/backup timers are dead-man's-switch jobs).
+`[[healthchecks-job-monitoring]]` (the snapshot/backup timers are dead-man's-switch jobs) ·
+`[[server-ingress-firewall]]` (Tunnel-first ingress + enabled default-deny host firewall).

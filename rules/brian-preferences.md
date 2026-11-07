@@ -15,7 +15,7 @@ paths:
 
 - "Hey" not "Hi". No preamble/postamble/hedging.
 - Pick ONE answer, never offer options. Never ask permission. Just do it.
-- Avoid unnecessary confirmation for safe reversible work; silence is not authorization for consequential actions.
+- Silence = approval.
 
 ## Text output
 
@@ -40,7 +40,9 @@ Open-source only.
 
 ## Language preference (when choosing an implementation language)
 
-**TWO PRIMARY LANGUAGES — reach for these FIRST (Brian 2026-10-31):** **TypeScript** for all app/service/tool/CLI logic; **Bash** for system scripts / glue / systemd / cron / CI / anything that shells out (ShellCheck + shfmt + `emdash_*`). **Python is NOT a default** — only genuine ML/data/science or a Python-only library; a host exporter / parser / glue / systemd job is Bash (or TS), **never Python for convenience** (catch yourself writing `*.py` for system work → rewrite in Bash). Fallback when TS/Bash genuinely don't fit (concrete reason only — platform · perf/systems-critical · a lower-only library · an existing codebase): **TS ≈ Bash > Rust > Go > Python(ML/data only) > C# > others**; queries stay **SQL**. Full order + the reference incident: [[code-style]] § Language selection order.
+- **Prefer TypeScript over Python** (`[[code-style]]` § Language selection order): reach for **TypeScript** (Node 24 native strip-types / Bun) for all app, service, tool, CLI, verifier, and test logic, and **Bash** for system scripts, glue, systemd, cron, and CI (`ShellCheck` + `shfmt` + `emdash_*`).
+- **Python is NOT a default** — use Python only for genuine ML/data-science workloads or a Python-only library; never write `*.py` for convenience on host exporters, verifiers, parsers, or automation.
+- Fallback order when TS/Bash genuinely do not fit: **TS ≈ Bash > Rust > Go > Python (ML/data only) > C# > others**; queries stay **SQL**.
 
 ## Command vocabulary
 
@@ -99,7 +101,7 @@ Every URL clickable, every URL specific.
 - **ALWAYS auto-push — never hold work, never emit "NEEDS BRIAN" for a `git push`.** Commit AND `git push` to the remote automatically, same turn, for EVERY Brian repo: side repos (agentskills, saas-starter, plugins, tools) AND project repos under `~/emdash/repositories/*` (njsk.org, etc.). A push is autonomous infrastructure, never a human-gated step. (Brian directive 2026-06-19 — corrected the old "never push emdash projects" stance after it stranded 229 commits + a "NEEDS BRIAN: push" line.)
 - **Deploy = build + `wrangler deploy` + push, autonomously.** "Deploy latest" / any deploy means ship it AND push the source — don't ask, don't defer.
 - **Only `~/emdash-projects/*`** (the legacy frontend-managed tree, if any) stays Brian-pushed-from-PR. Everything in `~/emdash/repositories/*` is auto-push.
-- `How to improve?` → search broadly, rank ideas, and implement the strongest candidates within the active budget and authorization.
+- `How to improve?` → always find 50 more things, explore every branch, never cap effort.
 
 ## Skill/Rule File Format
 

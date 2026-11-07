@@ -174,4 +174,3 @@ Define `--text-bg-light` + apply via `.text-bg--light` for future light surface 
 - Ship static brand color for body text on light theme below 4.5:1
 - Rely on `text-shadow` alone for contrast (defensive layer, not primary)
 - `mix-blend-mode: difference` for "guaranteed" contrast (breaks under prefers-contrast-high, looks broken on most palettes)
-- CSS `contrast-color()` for "guaranteed-legible" text — still *Emerging* (NOT Baseline), unreliable across palettes. Keep the `color-mix(in oklch, …)` / `oklch(from …)` token logic above. Per `[[web-platform-capabilities]]` #9 + its AVOID list (adversarially refuted, 0-3).

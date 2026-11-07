@@ -1,0 +1,22 @@
+{
+  "name": "portfolio-architecture-and-entitlements",
+  "schedule": "0 5 * * 0",
+  "timezone": "America/New_York",
+  "concurrencyPolicy": "forbid",
+  "catchUpPolicy": "one",
+  "owner": "portfolio-architect",
+  "runtime": "openclaw",
+  "reviewer": "codex-local",
+  "workItemAuthority": "paperclip",
+  "steps": [
+    "Inventory every active product, repository, deployment, service, dependency, integration, protocol, data store, network boundary, security control, observability rail, cost center, entitlement and known risk.",
+    "Update the portfolio architecture graph and OpenSpec gaps using authoritative runtime, repository, MCP and web evidence.",
+    "Dispatch independent headless coding and research work to OpenCode/DeepSeek and claimed Claude cloud sessions; reserve Codex/Claude local for synthesis and review.",
+    "Use browse CLI named sessions for browser work. Escalate to the cua-singleton desktop lane only when browser automation cannot complete the task or an authenticated native desktop is required.",
+    "Create approval requests for organization conversion, subscription/reward activation, billing changes, credential creation, or irreversible account mutations. Attach current state, exact proposed click, financial effect and screenshots.",
+    "After approval, verify the resulting dashboard state; broker newly created admin credentials directly into Infisical/get-secret and the authorized Paperclip secret reference without logging or chat exposure.",
+    "Run an independent evidence review and publish changes, unresolved blockers, expiring entitlements and next highest-value actions."
+  ],
+  "requiredEvidence": ["architecture-diff", "runtime-health", "browser-or-cua-action-log", "approval-id-for-consequential-actions", "secret-destination-reference-no-value", "independent-review"],
+  "budgets": {"maxDesktopWriters": 1, "maxCloudSessions": 5, "maxHeadlessAgents": 5, "maxRuntimeMinutes": 180}
+}

@@ -1,0 +1,98 @@
+---
+name: terminal-development
+description: Build, improve, review, or debug Go command-line applications and terminal user interfaces. Use for Go apps, CLI commands, subcommands, flags, configuration, interactive terminal workflows, dashboards, forms, tables, custom terminal widgets, shell completion, or files using Cobra, Viper, Bubble Tea, Lip Gloss, tview, or tcell.
+priority: 3
+pack: "misc"
+triggers: []
+paths:
+  - "*"
+---
+
+# Terminal Development
+
+Build polished, automation-friendly Go applications with a deliberate CLI and terminal UI architecture. Prefer the established libraries below when their capability is needed; do not install all six by default.
+
+Apply `rules/go-application-policy.md` before adding imports or changing `go.mod`. The Go standard library and its approved third-party allowlist are permitted; any new direct third-party module requires explicit HITL approval before file changes.
+
+## Select the stack
+
+1. Use **Cobra** for non-trivial command trees, subcommands, flags, help, validation, and shell completion.
+2. Use **Viper** when the application needs layered configuration from flags, environment variables, files, or defaults. Instantiate `viper.New()` and inject it; avoid the global singleton.
+3. For an interactive TUI, choose one primary runtime:
+   - Use **Bubble Tea + Lip Gloss** for custom, responsive, state-machine-driven interfaces and asynchronous workflows.
+   - Use **tview + tcell** for widget-heavy forms, grids, tables, trees, modals, and direct terminal primitives.
+4. Use **tcell directly** only for custom primitives, input behavior, or rendering that tview cannot provide cleanly.
+5. Keep a plain, non-interactive path. Do not require a TUI for scripting, CI, pipes, accessibility, or remote automation.
+
+Do not combine Bubble Tea and tview in the same event loop without a documented integration boundary and a demonstrated requirement. Cobra and Viper may front either UI stack.
+
+Read [references/library-map.md](references/library-map.md) when selecting libraries, designing architecture, or reviewing implementation details.
+
+## Design the command contract first
+
+Before implementation, define:
+
+- commands, arguments, flags, exit codes, examples, and error behavior;
+- configuration keys and precedence;
+- human output versus stable machine output such as `--json`;
+- interactive versus non-interactive behavior;
+- cancellation, timeout, and signal behavior.
+
+Treat command output as a public API. Write data to stdout, diagnostics to stderr, and return meaningful non-zero exit codes. Preserve backward compatibility unless the user approves a breaking change.
+
+## Structure the application
+
+Use a small composition root and keep framework code at the edges. A useful default is:
+
+```text
+cmd/<app>/main.go          process entrypoint
+internal/command/          Cobra commands and flag binding
+internal/config/           typed config loading and validation
+internal/app/              domain services and use cases
+internal/tui/              Bubble Tea models or tview screens
+internal/ui/theme/         Lip Gloss or tview theme tokens
+```
+
+Pass `context.Context`, dependencies, configuration, and writers explicitly. Keep business logic independent of Cobra commands and terminal rendering so it can be unit-tested and reused by JSON, batch, or service modes.
+
+## Implement configuration safely
+
+- Define typed configuration and validate it once after resolution.
+- Use precedence: explicit flags, environment, config file, then defaults.
+- Bind only intentional flags and environment variables; document their names.
+- Do not silently treat malformed config as absent.
+- Never print secrets in help, errors, debug dumps, or generated config.
+- Store secrets in environment variables or a secret manager, not ordinary config files.
+- Make the effective non-secret configuration inspectable with a command such as `config show` when useful.
+
+## Build resilient terminal interfaces
+
+- Handle terminal resize and very small viewports.
+- Provide discoverable keyboard help, predictable focus, escape/back behavior, and `Ctrl+C` cancellation.
+- Respect `NO_COLOR`, `TERM=dumb`, redirected output, and non-TTY environments.
+- Centralize colors, spacing, borders, and semantic styles; never scatter raw ANSI escape sequences.
+- Avoid relying on color alone. Use labels, icons, or shape as redundant status signals.
+- Keep long-running work asynchronous and cancellable. Never block an event loop with network or disk work.
+- Restore terminal state on success, error, panic, cancellation, and signals.
+- Send logs to a file or a separate writer so they never corrupt the rendered UI.
+
+## Verify the full contract
+
+At minimum:
+
+1. Run `go test ./...`, `go vet ./...`, and the repository's formatter/linter.
+2. Test commands through injected writers and arguments, not process-global state.
+3. Test config precedence, malformed input, missing files, and secret redaction.
+4. Test model/update logic or widget handlers without a real terminal where possible.
+5. Exercise narrow and wide viewports, resize, cancellation, non-TTY output, `NO_COLOR`, and `TERM=dumb`.
+6. Run `go test -race ./...` for concurrent or asynchronous applications.
+7. Verify completion generation and stable `--json` output when exposed.
+
+Use golden tests only for intentionally stable output. Normalize dynamic values and review diffs rather than blindly updating snapshots.
+
+## Delivery rules
+
+- Pin and tidy dependencies with Go modules.
+- Include `--version`, useful `--help`, examples, and shell completion for distributable CLIs.
+- Prefer reproducible releases with checksums and cross-platform builds when the app is shipped externally.
+- Document any departure from the preferred libraries and the concrete reason it is better for this application.

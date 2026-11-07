@@ -43,4 +43,3 @@ Choose deliberately by SIZE + LIFESPAN of the product — not familiarity or nov
 - Don't build a 50-view admin in React-with-bolted-on-state (under-engineering).
 - Angular UI = **Spartan UI ONLY** + Angular CDK + Floating UI. No PrimeNG/Material/Ionic-as-UI per `angular-nx-monorepo`.
 - Angular i18n = built-in `@angular/localize`, not ngx-translate/Transloco.
-- **Language** (orthogonal to framework) — prefer **TypeScript > Rust > Go > Python > C# > others** for any backend/service/tool; SSOT [[brian-preferences]] § Language preference.

@@ -1,0 +1,22 @@
+{
+  "$schema": "../schemas/agent-fleet-routing.schema.json",
+  "governance": "paperclip",
+  "runtime": "openclaw",
+  "team": {
+    "frontier_judgment": ["codex-subscription", "claude-subscription-1", "claude-subscription-2", "claude-subscription-3", "claude-cloud-credit", "gemini-subscription"],
+    "throughput": ["opencode-deepseek-flash", "opencode-deepseek-v4-pro"]
+  },
+  "routing": {
+    "premium_parent_harnesses": ["codex-subscription", "claude-subscription", "gemini-subscription"],
+    "premium_parents_delegate_throughput_to": "opencode-deepseek",
+    "mechanical_research_tests_docs_low_risk_code": "opencode-deepseek-flash",
+    "complex_implementation": "opencode-deepseek-v4-pro",
+    "architecture_security_synthesis_adversarial_review": "frontier_judgment",
+    "unattended_github_work_until_2026_11_04": "claude-cloud-credit",
+    "reviewer_must_differ_from_author": true
+  },
+  "swarm": { "defaultWidth": "adaptive", "preferredWidthMax": 200, "hardMaxOpenCodeWorkers": 200, "minimumIndependentSlices": 2, "noMinimumTimeSavingRequired": true, "premiumCapacitySavingsCountAsBenefit": true, "defaultToOpenCodeWhenExpectedCorrect": true, "maxParallelPremiumAgents": 6, "maxNestedDepth": 2, "maxDesktopWriters": 1, "requireIndependentSlices": true, "requireDisjointWriteOwnership": true, "parentMustFoldAndVerify": true, "transport": "opencode-litellm-deepseek", "browserFirst": "browse", "desktopEscalation": "cua-driver" },
+  "monthly": { "exercise_every_enabled_lane": true, "required_checks": ["auth", "live_canary", "routing", "permissions", "telemetry", "cost", "evals", "failover"] },
+  "work_item_authority": "paperclip",
+  "github_sync": "one-way-from-paperclip-with-origin-id"
+}

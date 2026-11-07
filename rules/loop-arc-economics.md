@@ -96,6 +96,38 @@ files of infrastructure that eliminates ad-hoc prompt churn for weeks. Break-eve
 roughly: if the arc saves ≥10 future prompts that each would have consumed 280K tokens,
 the arc paid for itself in tokens alone — before counting the time saved.
 
+## Standing cron on a CONVERGED surface — verify the tail, then HOLD (don't manufacture)
+<!-- grow-ok: adds the recurring-cron-on-a-converged-surface discipline (the inverse of arc-start) + the projectsites 846-880 reference arc; a genuine gap this rule lacked, not churn -->
+
+A recurring cron that fires a *converged* surface is the inverse of starting an arc: the danger is
+**manufacturing churn to look productive**, which degrades a mature artifact (`[[monitor-orchestration]]`
+healthy-iteration #4). Two disciplines, in order:
+
+1. **A convergence DECLARATION is not final — verify the small-gate TAIL before holding.** After an
+   audit declares a surface converged, real small-gate slices often REMAIN that the audit didn't
+   enumerate (a drift, a missing regression-lock, a built-but-unwired orphan, an icon/label bug). Keep
+   finding + shipping those genuine slices — ONE verified slice per fire — until the tail is honestly dry.
+   "Converged" ≠ "nothing left"; it means "no FEATURE-sized slice left," not "no slice."
+2. **Once the tail IS drained, HOLD honestly — the cron is an OPERATOR problem, not a prompt to invent work.**
+   A standing cron on a drained surface keeps firing; the correct output is a convergence-verify fire
+   (fresh evidence from a NEW angle each time — liveness, then standards, then live-data reconcile) + a
+   SHARP surfacing of the specific operator unblock (retire the subsumed cron · grant Figma approval · run
+   the gated fan-out · supply the vendor secret). Never fabricate a cosmetic change; a no-product-change
+   fire is CORRECT here.
+
+Distinguish the two with evidence, not feel: re-scan the arc (standards, orphans, drift, test gaps) from an
+angle you have not checked; if that scan is clean, you are in state 2 (hold), not state 1 (keep shipping).
+
+**Reference arc (projectsites.dev, fires 846-880):** fire-846 declared the inline frontier converged — yet
+fires **861-865** still shipped FIVE genuine small-gate slices the audit missed (an MCP 10th tool · a
+de-scoped-KV demo removal · a `connection` type + a real `iconForKind('durable_object')`→cloud-glyph bug · an
+R2-invariant partway/concurrent regression-lock · a client↔worker secret-parity guard), and **879-880** added
+two more (a routing-decision lock + a diff-stat "not-reversed" lock). fires **866-878** then held or
+live-verified (§2/§3/§4 against the real site) with NO product change, each SHARPLY surfacing the one operator
+unblock (retire the subsumed crons). That is the full cycle: ship the tail, then hold + surface — never
+manufacture. Cross-links `[[monitor-orchestration]]` §healthy-iteration, `[[verify-against-source-of-truth]]`,
+`[[split-work-into-ledger]]`.
+
 ## Post-arc checklist
 
 Run these AFTER every arc closes:

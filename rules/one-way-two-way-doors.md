@@ -38,7 +38,7 @@ Examples: adding a D1 column (with default), adding a Hono route, wrapping a fea
 
 Undoing requires coordinated migration, data loss risk, public announcement, or >1 sprint. Write the self-argument. Proceed with explicit intent.
 
-Examples: dropping a D1 column (data loss), choosing an auth provider (Better Auth → migration = weeks), defining a public API surface, choosing a database engine, choosing a data model encoding a business assumption, migrating CF jurisdictions (GDPR), deleting an R2 bucket, changing a URL structure without redirect strategy, Stripe vs Square choice, adding a non-nullable column without default.
+Examples: dropping a D1 column (data loss), choosing an auth provider (Clerk → migration = weeks), defining a public API surface, choosing a database engine, choosing a data model encoding a business assumption, migrating CF jurisdictions (GDPR), deleting an R2 bucket, changing a URL structure without redirect strategy, Stripe vs Square choice, adding a non-nullable column without default.
 
 ## Decision protocol
 
@@ -53,7 +53,7 @@ Examples: dropping a D1 column (data loss), choosing an auth provider (Better Au
 - **Drop D1 column** — one-way (data loss; cannot recover from git history)
 - **Add feature flag** — two-way (deleted in a single row delete)
 - **Change public REST route** — one-way (consumers exist; requires deprecation + redirect)
-- **Switch Better Auth to Auth0** — one-way (user session migration = weeks; JWKs change)
+- **Switch Clerk to Auth0** — one-way (user session migration = weeks; JWKs change)
 - **Add new R2 bucket** — two-way (empty bucket deleted in seconds)
 - **Delete R2 bucket with data** — one-way (permanent data loss)
 - **Add `UNIQUE` constraint to D1** — one-way (fails if duplicates exist; requires backfill)

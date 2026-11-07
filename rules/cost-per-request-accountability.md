@@ -101,14 +101,6 @@ Agent({ subagent_type: 'cost-estimator', prompt: 'Estimate monthly cost for work
 
 The agent reads `wrangler.toml`, counts bindings, estimates usage, and warns on free tier breaches.
 
-## Provisioning budget guardrails — a HARD cap before any billable resource (verified 2026-10-25)
-
-Before autonomously creating ANY billable resource (Neon project, Upstash DB, Fly machine, Coolify service, a paid API), verify a PROVIDER-SIDE ENFORCED cap exists. **An email alert is NOT a cap.** No enforced cap → free-tier-only, a quota/suspension fallback, or don't create it autonomously (never an unbounded billable resource). Budgets below are **aggregate per project**, not per-DB (one Neon project holds ~100 DBs per `[[neon-database-conservation]]`).
-
-- **Neon — $10/project. The dollar "spending limit" is EMAIL-ONLY** (org auto-suspend was still "coming soon" at 2026-10-25) → do NOT treat it as a cap. The ENFORCED hard-stop is a **per-project consumption QUOTA set via the Create/Update Project API** (`quota.compute_time_seconds` / `active_time_seconds` / `written_data_bytes` / `data_transfer_bytes` / `logical_size_bytes`) → when hit, ALL project computes SUSPEND until the next billing period. Translate $10 → a `compute_time_seconds` quota at the plan CU-hr rate (Launch $0.106, Scale $0.222 → ~94 / ~45 CU-hr/mo), AND set `autoscaling_limit_max_cu` (cap burst size) + scale-to-zero (kill idle; watch health-check/auth-introspection keep-awake). Quota is the cap; max-CU + scale-to-zero shape the curve.
-- **Upstash — $10/DB. The pay-as-you-go per-database budget IS enforced** (DB gets rate-limited at the ceiling; cost won't exceed) → set ≤ $10 (Usage → Change Budget, or audit via `GET /v2/redis/databases`). Caveats: per-DB only (NO account-wide roll-up — sum them yourself), default is NO ceiling (must set it), **QStash min budget is $20 (> $10 → can't hit the target; prefer CF Queues, or accept $20)**, Vector per-DB budget unconfirmed → verify or free-tier-only.
-- **General:** discover existing spend first; choose the lowest plan; estimate incremental cost; confirm the aggregate project budget still holds; record the resource in the cost inventory; prefer free tiers + reuse existing capacity. Cross-estate: Neon databases co-locate in shared projects (`[[neon-database-conservation]]`) — the $10 guards the PROJECT, so a per-DB quota is the project-budget ÷ active DBs.
-
 ## Cross-links
 
 - **[[cloudflare-lock-in-is-leverage]]** — CF request-based billing model; no idle server cost

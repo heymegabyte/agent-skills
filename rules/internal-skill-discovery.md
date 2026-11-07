@@ -58,5 +58,5 @@ Pattern: vercel-labs/skills (`SKILL.md` frontmatter, `metadata.internal: true`, 
 ## See
 
 - `01-operating-system/SKILL.md` — only current internal skill
-- `spec/SKILL.md` — full frontmatter schema including `metadata` field
+- `spec/AUTHORING.md` — full frontmatter schema including `metadata` field
 - `rules/repo-folder-hygiene.md` — keep skill count scannable (≤10 per folder)

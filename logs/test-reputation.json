@@ -1,0 +1,11 @@
+[
+  {
+    "agentRole": "QA-Verification",
+    "totalMissions": 24,
+    "successfulMissions": 24,
+    "totalStepsUsed": 168,
+    "rollbacksTriggered": 0,
+    "reputationScore": 93,
+    "grantedRoeTier": "GREEN"
+  }
+]
