@@ -104,39 +104,6 @@ flowchart TD
   - Feed documentation content into Pagefind for instantaneous client-side search.
   - Maintain welcoming, explicit `CONTRIBUTING.md` guides for open-source contributors.
 
-### Top 30 Converged Tactical Capabilities & Elite Upgrades
-
-1. **Documentation-as-Code Git Workflows**: Maintain all technical documentation as markdown files version-controlled in git.
-2. **Interactive OpenAPI & Scalar References**: Generate interactive, testable API reference documentation from OpenAPI schemas.
-3. **Step-by-Step Developer Quickstart Guides**: Author friction-free onboarding tutorials guiding developers from zero to first API call.
-4. **Multi-Language Code Example Snippets**: Provide verified code snippets in TypeScript, Python, Go, and cURL for all API endpoints.
-5. **Mermaid.js Architectural Diagrams**: Illustrate system topologies, data flows, and state transitions using embedded Mermaid diagrams.
-6. **Self-Hosting & Deployment Runbooks**: Document clear, copy-pasteable instructions for deploying applications via Docker and Kubernetes.
-7. **Changelog Authoring & Release Publishing**: Author engaging release notes highlighting user value, new features, and bug fixes.
-8. **Domain Terminology Glossary & Consistency**: Maintain a canonical glossary to ensure consistent naming across docs and UI.
-9. **Troubleshooting Guides with Error Code Tables**: Document solutions for every known error code and failure symptom in the platform.
-10. **Contribution Guides & Code of Conduct**: Write clear guidelines detailing how open-source contributors can submit pull requests.
-11. **Algolia / Typesense Documentation Search**: Configure instant, typo-tolerant search across all technical documentation pages.
-12. **SDK Method Signatures & Type References**: Document every exported SDK function, parameter type, and return value completely.
-13. **CLI Command --help & Man Page Generation**: Generate accurate CLI command descriptions and usage flags directly from code definitions.
-14. **Automated Dead-Link & Freshness Audits**: Run continuous CI checks to detect broken internal links and outdated code snippets.
-15. **Video Tutorial Script Writing**: Author structured, engaging scripts for technical screencasts and developer product demos.
-16. **Interactive Documentation Sandboxes**: Embed runnable WebContainer code playgrounds directly inside documentation pages.
-17. **Step-by-Step Version Migration Guides**: Write detailed upgrade walkthroughs detailing code adjustments required for major releases.
-18. **FAQ Curation & Search Optimization**: Maintain a comprehensive FAQ answering common technical and architectural questions.
-19. **Technical Writing Style Guide Enforcement**: Enforce Microsoft Technical Style Guide standards for clear, concise, active prose.
-20. **Internal Engineering Wiki Organization**: Organize internal architecture documentation, onboarding guides, and team playbooks.
-21. **Documentation Feedback Widget Integration**: Embed helpfulness rating buttons and comment fields on all documentation pages.
-22. **Technical SEO Optimization for Developer Docs**: Optimize documentation titles, meta descriptions, and structured data for search.
-23. **Code Comment & Error Message Copy-Editing**: Review code comments and user-facing error strings for clarity, tone, and grammar.
-24. **Multi-Version Documentation Archival**: Maintain separate documentation versions for current, LTS, and deprecated software releases.
-25. **Documentation Accessibility Compliance**: Ensure all documentation pages, code blocks, and diagrams meet WCAG AA standards.
-26. **Localization & Translation Coordination**: Coordinate translation of core developer documentation into Japanese, Spanish, and German.
-27. **New Developer Onboarding Walkthroughs**: Maintain step-by-step checklists guiding new team members through local environment setup.
-28. **Post-Mortem Incident Documentation**: Document technical post-mortems clearly for transparent public status communication.
-29. **Interactive API Playgrounds Configuration**: Configure Swagger/Scalar playgrounds allowing users to execute live API calls.
-30. **Continuous Documentation Deployment Pipelines**: Automate documentation builds and deployments to edge hosting on git push.
-
 ---
 
 ## 4. Standard Operating Procedure (Kinetic Execution Loop)
