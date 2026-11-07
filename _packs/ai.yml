@@ -24,4 +24,5 @@ members:
   - rules/agent-selection
   - rules/agent-neutrality
   - rules/account-entitlements
+  - rules/polyglot-4way-parallel-swarm-and-auto-goal
   - rules/trace-driven-self-evolution

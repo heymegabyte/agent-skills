@@ -211,20 +211,88 @@ Sitemap: https://example.com/sitemap.xml
 
 ---
 
-## 10. Programmatic SEO (pSEO) at Scale
+## 10. Programmatic SEO (pSEO) Quality Gates & Anti-Abuse Architecture
 
-Scalable programmatic page generation (e.g. `{Integration} × {Use-Case}`, `{Service} in {City}`):
-- **Unique Value Floor**: Every programmatic page must contain ≥800 unique words, customized data tables, ≥1 unique infographic/diagram, and localized/contextualized FAQs.
-- **Canonical Discipline**: Prevent index bloat. Canonicalize duplicate parameter variations to root slugs.
-- **Internal Linking Web**: Link parents to children, siblings to related siblings, and terminal pages back to primary hubs. Never leave orphan pages.
+Scalable programmatic page generation (e.g. `{Integration} × {Use-Case}`, `{Currency} Live Spreads & Settlement Rates`) must strictly satisfy the **7 Programmatic Quality Gates** (`rules/programmatic-seo-doctrine.md`) to prevent algorithmic devaluation under Google's Scaled Content Abuse policy:
+
+1. **Proprietary Data Depth**: Every programmatic page must be anchored by a database row with $\ge 4$ unique factual, numeric, or benchmark attributes (`pricing`, `latencyMs`, `marketDepth`, `uptime`). "Keyword-swapping" boilerplate prose without unique data is strictly prohibited.
+2. **Information Gain Ratio**: Document vocabulary dissimilarity (Jaccard distance) between any two programmatic instances must be $\ge 35\%$.
+3. **Interactive Utility Component**: Every page must mount at least one functional tool, calculator, live comparison matrix, or real-time SVG chart (not static text alone).
+4. **Structured Contrast Grid**: Render an entity-level comparison table with explicit benchmark metrics.
+5. **Schema Parity**: Deploy domain-specific structured data (`Dataset`, `SoftwareApplication`, `Table`, `FAQPage`) reflecting real data fields.
+6. **Hub-and-Spoke Semantic Architecture**: Strict bidirectional hierarchy (Directory Index $\leftrightarrow$ Sub-hub $\leftrightarrow$ Programmatic Leaf). Zero orphan leaves.
+7. **Automated Batch Verification**:
+   ```bash
+   node ~/.agentskills/bin/pseo-quality-gate.ts --dataset=path/to/pseo-dataset.json
+   ```
 
 ---
 
-## 11. Automated Pre-Flight SEO & GEO Verification Gate
+## 11. Internationalization & Multilingual Hreflang Canonical Architecture
 
-No website or web service may be deployed without passing the automated audit:
+For cross-border reach across global markets, implement Google & Bing compliant multilingual canonicalization via `@theme.tools/seo-geo`:
+
+1. **ISO-639-1 & ISO-3166-1 Strict Tagging**: Use valid 2-letter language codes (`en`, `es`, `ja`) or language-country combinations (`en-US`, `es-MX`).
+2. **Mandatory Self-Referencing Tag**: Every localized variant must include an `<link rel="alternate" hreflang="..." href="...">` pointing to itself.
+3. **Mandatory `x-default` Fallback**: Always designate a language-agnostic international selector page or default locale (typically English root) as `hreflang="x-default"`.
+4. **Reciprocal Bidirectional Links**: If Page A in Spanish declares Page B in English as an alternate, Page B MUST declare Page A in Spanish as an alternate. Unidirectional links are dropped by search engines.
+5. **Automated Verification**:
+   ```bash
+   node ~/.agentskills/bin/hreflang-auditor.ts --manifest path/to/locales.json
+   ```
+
+---
+
+## 12. Edge Dynamic SEO & HTML Rewriting (Sub-2ms Overhead)
+
+Leverage Cloudflare Workers and `@theme.tools/seo-geo` (`transformHtmlForEdgeSeo`) to inject real-time OpenGraph tags, canonicals, and Schema.org JSON-LD at the edge before content reaches the crawler:
+
+```typescript
+import { transformHtmlForEdgeSeo } from '@theme.tools/seo-geo';
+
+export default {
+  async fetch(request: Request, env: Env): Promise<Response> {
+    const response = await fetch(request);
+    const html = await response.text();
+
+    const transformedHtml = transformHtmlForEdgeSeo(html, {
+      title: 'Real-Time Pricing & Latency | SwarmLink',
+      description: 'Zero-latency multi-agent orchestration infrastructure.',
+      canonicalUrl: new URL(request.url).pathname,
+      ogImageUrl: 'https://swarml.ink/og/live-metrics.png',
+      schemaJsonLd: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'TechArticle',
+          headline: 'Real-Time Pricing & Latency',
+        },
+      ],
+    });
+
+    return new Response(transformedHtml, {
+      headers: response.headers,
+    });
+  },
+};
+```
+
+---
+
+## 13. Automated Pre-Flight SEO & GEO Verification Gate
+
+No website or web service may be deployed without passing the automated audit suite:
 ```bash
+# 1. Full-Site SEO & GEO Health
 node ~/.agentskills/bin/seo-auditor.ts --url https://example.com
+
+# 2. Editorial Blog Post & Multimedia Standard (100/100 required)
+node ~/.agentskills/bin/blog-post-validator.ts --file path/to/article.html
+
+# 3. Programmatic SEO Quality Gates
+node ~/.agentskills/bin/pseo-quality-gate.ts --dataset path/to/dataset.json
+
+# 4. Multilingual Hreflang Canonical Auditor
+node ~/.agentskills/bin/hreflang-auditor.ts --manifest path/to/manifest.json
 ```
 Must pass 100% of checks:
 - Title (50–60 chars) & Meta Description (120–156 chars) present.
@@ -234,3 +302,4 @@ Must pass 100% of checks:
 - `robots.txt`, `sitemap.xml`, and `llms.txt` return HTTP 200.
 - Zero broken internal `<a>` links.
 - Image `alt` tags present on all informative images.
+- Information gain score $\ge 35\%$ and zero ungrounded paraphrased slop.

@@ -78,14 +78,21 @@ Paid competition (CPC / Ads) is a business signal — kept SEPARATE from organic
 
 Hero 80+ | Body 50-65 | Technical docs 40-50 | Legal 50+ | Errors 70+ | CTAs 80+
 
-## Programmatic SEO
+## Programmatic SEO (Database-Backed & Quality-Gated)
+
+Legacy city/variable swaps without localized data are banned under Google's Scaled Content Abuse policy. Modern pSEO must be anchored by proprietary, structured database attributes and pass the 7 Programmatic Quality Gates (`rules/programmatic-seo-doctrine.md`):
 
 ```typescript
-// Dynamic pages: "Docker hosting in [city]"
-const cities = ['New York', 'San Francisco', 'London'];
-for (const city of cities) {
-  // slug, title, h1, metaDescription all include city + keyword
+// Data-backed pSEO: requires >=4 proprietary attributes per page + utility tools
+interface EngineComparisonRecord {
+  pair: string;
+  measuredLatencyP99: number;
+  throughputCap: number;
+  memoryFootprintMb: number;
+  failoverSupport: boolean;
+  benchmarkLogUrl: string;
 }
+// Every programmatic template must verify >=35% Information Gain and schema parity
 ```
 
 ### Internal Linking Strategy

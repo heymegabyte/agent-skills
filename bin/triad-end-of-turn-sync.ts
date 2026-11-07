@@ -64,7 +64,7 @@ export async function runParallelTriadSync(
   );
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1]?.endsWith('triad-end-of-turn-sync.ts') || (import.meta as { main?: boolean }).main) {
   const dryRun = process.argv.includes('--dry-run');
   runParallelTriadSync(DEFAULT_TRIAD_TARGETS, { dryRun })
     .then((results) => {

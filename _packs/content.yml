@@ -11,4 +11,6 @@ members:
   - rules/image-quality
   - rules/blog-post-doctrine
   - rules/generative-engine-optimization
+  - rules/programmatic-seo-doctrine
+  - rules/information-gain-doctrine
   - rules/forms-editors-content-supervisor
