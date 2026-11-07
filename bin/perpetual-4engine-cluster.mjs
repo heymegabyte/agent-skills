@@ -476,9 +476,9 @@ async function main() {
 
     const openSpecCheck = countUncheckedOpenSpecTasks(workspacePath);
 
-    // If on daemon round > 1 there are 0 recommended ideas left (all shallow modules have been deepened!),
-    // update the heartbeat without dirtying git-tracked files.
-    if (isDaemon && round > 1 && latestWaveSummary.recommendedIdeasImplementedThisCycle === 0 && openSpecCheck.unchecked === 0) {
+    // Whenever 0 recommended ideas remain (all 999 shallow modules have been deepened and 245/245 OpenSpec tasks are checked),
+    // in --daemon mode we MUST NOT dirty git-tracked .agents/*.json files on no-op guardian rounds!
+    if (isDaemon && latestWaveSummary.recommendedIdeasImplementedThisCycle === 0 && openSpecCheck.unchecked === 0) {
       const hb = {
         pid: process.pid,
         status: 'INFINITE_NEXT_50_RECOMMENDABILITY_GATE_ACTIVE',
@@ -498,7 +498,8 @@ async function main() {
         nextWaveInSeconds: intervalSec,
         completelyDone: latestWaveSummary.shallowModulesRemainingCount === 0,
       };
-      writeFileSync(join(agentsDir, 'cluster-daemon-heartbeat.json'), JSON.stringify(hb, null, 2) + '\n', 'utf8');
+      writeFileSync('/tmp/theme-tools-cluster-daemon-heartbeat.json', JSON.stringify(hb, null, 2) + '\n', 'utf8');
+      console.log(JSON.stringify(hb, null, 2));
       await sleepMs(intervalSec * 1000);
       continue;
     }
