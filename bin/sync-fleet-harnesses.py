@@ -11,8 +11,16 @@ HOME = Path.home()
 # 0. Fix local macos opencode.jsonc cua-driver MCP + machine.json + global rules + CF ZT CA
 local_oc_jsonc = HOME / ".config/opencode/opencode.jsonc"
 if local_oc_jsonc.exists():
-    # Use python to ensure cua-driver is in mcp of opencode.jsonc
-    pass
+    try:
+        oc_data = json.loads(local_oc_jsonc.read_text())
+        oc_data.setdefault("mcp", {})["cua-driver"] = {
+            "type": "local",
+            "command": [str(HOME / ".local/bin/cua-driver"), "mcp"],
+            "enabled": True,
+        }
+        local_oc_jsonc.write_text(json.dumps(oc_data, indent=2) + "\n")
+    except Exception:
+        pass
 
 # Read gh token from local macOS
 gh_token = subprocess.run(["gh", "auth", "token"], capture_output=True, text=True, check=True).stdout.strip()
