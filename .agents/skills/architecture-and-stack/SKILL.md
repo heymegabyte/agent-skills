@@ -13,6 +13,8 @@ Default stack: `_kernel/standards.md#stack`. Override conditions below.
 
 ## Cloudflare-first decision tree
 
+**Server ingress**: every VM, bare-metal host, and self-hosted service defaults to `cloudflared`; origins bind privately and the host firewall stays enabled with default-deny inbound. Direct exposure requires a narrow, documented per-case rule. See `rules/server-ingress-firewall.md`.
+
 **Compute**: Workers (default, every HTTP/cron/queue) · Pages (static-only marketing, rare) · Containers (non-JS runtimes: Playwright headful, ffmpeg, Python ML, build orchestration) · Sandbox SDK (generated/risky code before live promotion)
 
 **State**: D1 (default relational, ≤10GB/db, Sessions API read-replicas, Time Travel 30-day PIT) · KV (eventually-consistent, cache/sessions/feature-flags) · R2 (object storage, lifecycle Standard→IA after 30d) · Durable Objects (coordination + strongly-consistent SQLite storage since Apr 2025, chat rooms/builder sessions/rate-limiting) · Hyperdrive (front external Postgres/MySQL) · Vectorize (semantic search/RAG, 5M dim/index, topK 100, 10 metadata indexes)

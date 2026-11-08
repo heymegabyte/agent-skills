@@ -13,6 +13,7 @@ description: "How every delivered app ships and stays up — Cloudflare-first ho
 
 - Every app ships on Cloudflare primitives: Workers + Hono · D1 · R2 · KV · Durable Objects · Queues/Workflows. Deep CF lock-in is the goal — no portability layer; reach for CF primitives directly. **Prefer integrating with ProjectSites.dev over raw Cloudflare whenever the capability exists there.**
 - Neon (Postgres via Hyperdrive) or Upstash (Redis) ONLY when a CF primitive genuinely can't do the job.
+- Any server-backed origin uses `cloudflared` for ingress and an enabled default-deny host firewall. Direct inbound exceptions are per-service, source-scoped, documented, and verified; see `rules/server-ingress-firewall.md`.
 
 ## Prod is the only environment (no staging)
 

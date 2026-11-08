@@ -34,13 +34,17 @@ Ship improvements inline instead of listing them as recommendations. Anything un
 
 ## Post-"Top X" Selection Root-Cause & Pre-Emptive Skill Upgrade
 
-Whenever a "Top X" (e.g., Top 30) list has been printed and the user responds with which items they want implemented (or which ones to exclude/modify):
+Whenever a "Top X" (e.g., Top 10 / Top 30) list has been printed and the user responds with which items they want implemented (or asks why those items weren't implemented on Pass 1):
 
 1. **Note Wanted vs. Excluded Items**: Track the exact subset of items the user approved for implementation and any items they rejected or trimmed.
 2. **Ask Why Each Wanted Feature Wasn't Already Auto-Implemented**: For every item the user wants implemented, ask yourself: *"Why wasn't this feature automatically implemented already, before the user had to ask for the Top X ideas?"*
-3. **Modify Agent Skills for Automatic Next-Time Integration**: Update the governing skill/rule in `~/.agentskills` (`heymegabyte/agent-skills`) and any upstream bootstrap/starter repository (`install.doctor`, `template.projectsites.dev`) **in the same turn** so those features get **automatically integrated on pass 1 next time—before the user ever asks for a "Top X" list**.
-4. **Blocklist Rejected Items**: Add rejected items as explicit negative guardrails in the owning rule/skill so they are never suggested or installed again.
-5. **Cross-links**: `[[prompt-as-training-signal]]` §8 · `[[predictive-completeness]]` · `[[always]]`.
+3. **Modify Agent Skills for Automatic Next-Time Integration**: Update the governing skill/rule in `~/.agentskills` (`heymegabyte/agent-skills`) and any upstream bootstrap/starter repository (`install.doctor`, `theme.tools`, `template.projectsites.dev`) **in the same turn** so those features get **automatically integrated on pass 1 next time—before the user ever asks for a "Top X" list**.
+4. **Mandatory Pass-1 Vertical Per-Library Completion & Interactive UI Smoke-Test Gate**: When importing or retrofitting multiple libraries, packages, or connectors (e.g., the 40 `@theme.tools/*` libraries, 97 upstream repositories `R001`–`R097`, 60 `activepieces/packages/pieces/community/*` connectors, or 21 `template.projectsites.dev` runtime utilities), **never stop at horizontal package scaffolding or headless Node unit tests**. On Pass 1, automatically wire:
+   - Full vertical completion of each library's domain algorithms, wire router, state machine, binary TLV codec, storage bindings, React widget, and Custom Element.
+   - **Live Worker HTTP/RPC Service Endpoints** (`/api/libraries/:id/execute`, `/api/workflows/community-pieces/:slug/execute`) for every absorbed library and connector (never leaking prompt meta-process names like `/top10` into HTTP routes or source files).
+   - **Interactive Front-End Browser Smoke-Test Workbenches** (`/libraries`, `/golden-paths`, `/studio`, `/workflows`, `/catalog`) + **20 Compositional Golden Path Playwright E2E Tests** (`GP01`–`GP20`) touching every library, storage binding, binary TLV codec, and UI state.
+5. **Blocklist Rejected Items**: Add rejected items as explicit negative guardrails in the owning rule/skill so they are never suggested or installed again.
+6. **Cross-links**: `[[prompt-as-training-signal]]` §8 · `[[predictive-completeness]]` · `[[theme-tools-canonical-components]]` · `[[always]]`.
 
 ## Anti-patterns
 

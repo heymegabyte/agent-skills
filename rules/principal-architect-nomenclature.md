@@ -48,3 +48,14 @@ Never leak internal generator tags, wave numbers, prompt task IDs, version suffi
     `COMPONENT_INTERACTION_STATES`
   - Verifier Return Property:
     `verifiedInteractionStateCount` (never `verifiedVisualStates`)
+
+---
+
+## 3. Never Turn Prompt Meta-Workflows ("Top-10 Loop", "Next 10 Actions") into Product Endpoints or Source Files
+
+- **FORBIDDEN**:
+  - Creating HTTP API endpoints named after the agent's prompt workflow (e.g., `/api/libraries/:id/top10`, `/api/sdk/per-library-top10`, `/api/sdk/infinite-top10`).
+  - Creating library source files or UI panels named after the prompt loop (`packages/*/src/top10-library-actions.ts`, `per-library-top10-loop.ts`, `infinite-top10-convergence-engine.ts`).
+- **REQUIRED**:
+  - When asked to "ask yourself the next 10 actions and implement them" (globally or per library), treat that strictly as the **agent's engineering loop in the chat console** (and `RUNNING_LIST.md` if requested).
+  - Every action implemented by the loop must be a **genuine domain feature, real library method, real service endpoint, or real test** with semantic Principal Architect naming—never a meta-endpoint or meta-module describing the loop itself.

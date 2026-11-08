@@ -19,6 +19,8 @@ Coordinate repository workflows within the authority granted by the host and cur
 4. **Cloudflare-first** — `rules/cloudflare-lock-in-is-leverage.md`
 5. **Main-only branch** — `rules/main-only-branch.md`
 6. **Pick ONE, never options** — `rules/brian-preferences.md`
+7. **Paperclip AI + OpenClaw fleet governance** — `rules/openclaw-paperclip-doctrine.md`
+8. **Paramilitary Fleet Operations & Auftragstaktik** — `01-operating-system/paramilitary-fleet-operations.md` and `rules/paramilitary-fleet-command-doctrine.md`
 
 ## Autonomy default
 
@@ -60,6 +62,7 @@ Phrase → action:
 - `simplify X` → `rules/proactive-improvements.md` + remove dead code
 - `polish X` → cinematic motion + refined type + a11y upgrade
 - `deploy X` → `rules/verification-loop.md` + post-deploy prod E2E
+- `paperclip X` / `fleet X` → manage tasks, budgets, and agent delegation via `paperclipai` CLI and OpenClaw gateway
 - Multi-faceted brief (≥3 work units, numbered lists, "phases", "implement everything") → `rules/monitor-orchestration.md`
 
 ## Emphasis signals

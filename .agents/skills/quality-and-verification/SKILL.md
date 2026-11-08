@@ -111,4 +111,4 @@ After every deploy: browser console must show 0 CSP violations, 0 JS errors, 0 f
 - `e2e/COVERAGE.yml` — feature→spec map; CI fails on any feature without entry/test
 - Pre-commit lint: new component without matching `e2e/<feature>/` warns
 
-## See submodules: ai-vision-qa.md, multi-agent-testing.md, visual-regression.md.
+## See submodules: tdd-discipline.md (450-ID 15-family TDD & selective CI gate), families/F01..F15, ai-vision-qa.md, multi-agent-testing.md, visual-regression.md.
