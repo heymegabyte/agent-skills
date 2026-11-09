@@ -1,8 +1,8 @@
 ---
-last_reviewed: 2026-10-29
+last_reviewed: 2026-11-09
 superseded_by: null
 name: backup-transfer-recovery
-description: restic for versioned encrypted backups + rclone for object-storage transfers — with the discipline that a transfer is not a backup and an untested restore is not recovery
+description: restic for versioned encrypted backups + rclone for object-storage transfers + Proxmox VE / PBS / GitOps backup invariants — with the discipline that a transfer is not a backup and an untested restore is not recovery
 pack: "infra"
 priority: 3
 triggers:
@@ -11,6 +11,9 @@ triggers:
   - "recovery"
   - "restic"
   - "rclone"
+  - "vzdump"
+  - "proxmox backup"
+  - "pbs"
   - "snapshot"
   - "r2 sync"
   - "object storage transfer"
@@ -43,6 +46,14 @@ When work involves backups, recovery, exports, data relocation, artifact transfe
 - Verify with `rclone check` (compares size + hash, alters nothing); an object ETag is not universally a full-file checksum — use `--download`/`--checksum` per backend capability.
 - Keep remote credentials in `get-secret`/Infisical; `rclone obscure` is NOT secret protection. A `sync` mirror is not a versioned backup, and an unverified mirror is not disaster recovery.
 - Official: <https://rclone.org/commands/rclone_copy/> · <https://rclone.org/commands/rclone_sync/> · <https://rclone.org/commands/rclone_check/>
+
+## Proxmox VE, PBS & GitOps Backup Invariants
+
+- **Stopped VFIO VMs in PCIe `D3cold` vs `vzdump`**: On Proxmox VE, `vzdump` launches a minimal `kvm -S` backup helper even for **stopped** QEMU VMs, which attempts to bind any configured `hostpci*` VFIO device. If a passed-through GPU sits in PCIe `D3cold` (`0xff` config space, `invalid PCI interrupt pin 255`), `vzdump` aborts the guest backup and poisons nightly dead-man's-switch checks. Always set `options vfio_pci disable_idle_d3=1` (`/etc/modprobe.d/vfio-d3cold.conf`) AND guard `/usr/local/bin/vzdump-hc-hook.sh` (`job-init` / `job-end` / `job-abort`, pure Bash) to temporarily stash `D3cold` `hostpci*` lines on stopped VMs before `PVE::Cluster::cfs_update()` and restore them on completion.
+- **Never clobber `/etc/vzdump.conf` hook scripts**: When writing thermal I/O caps (`bwlimit`, `ionice`, `zstd`) to `/etc/vzdump.conf`, always preserve `script: /usr/local/bin/vzdump-hc-hook.sh` so Healthchecks `pve-vzdump` telemetry continues firing.
+- **PBS S3/R2 ownerless group directories**: Empty `<datastore>/{vm,ct,host}/<id>` directories lacking an `owner` file cause PBS garbage collection to fail with missing-owner errors; prune empty ownerless group directories idempotently during convergence (`fleet-proxmox-pbs-converge`).
+- **GitOps state capture (`capture-state.sh`)**: Always run `git pull --rebase --autostash -X theirs origin main` **before** regenerating `state/*` snapshots so multi-host commits never wedge nightly state-capture timers in rebase conflicts, and pass `--retry 3 --retry-delay 3 --retry-all-errors` on Healthchecks `curl` pings.
+- **Non-interactive SSH jump/proxy helpers (`proxmox-ssh-proxy.sh`)**: Always pass `-o IdentityAgent=none -o IdentitiesOnly=yes -i ~/.ssh/id_ed25519` inside proxy jump helpers so forwarded hardware FIDO2/YubiKey (`ED25519-SK`) keys never block automation waiting for physical touch, and probe upstream `SSH-` banners (`</dev/null`) rather than raw TCP port open.
 
 ## Runtime + loop integration
 
