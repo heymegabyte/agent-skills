@@ -114,3 +114,5 @@ members:
   - rules/total-convergence-and-openspec-handoff
   - rules/trajectory-discipline-and-evaluator-gate
   - rules/workstation-shared-provisioning-policy
+  - rules/principal-architect-nomenclature
+  - rules/ai-finops-mission-control-dashboards
