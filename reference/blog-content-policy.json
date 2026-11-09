@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "id": "megabyte.blog-content-policy",
+  "version": "1.0.0",
+  "updated": "2026-11-08",
+  "summary": "Canonical, machine-readable blog content contract. Generators, validators, editors, and publishing gates MUST load this before writing or shipping an article. Deterministic validation against structured content + rendered output — never a self-declared `compliant:true` flag.",
+  "supersedes": {
+    "wordFloor": { "was": 1500, "cornerstoneWas": 1800, "source": "blog-autopublish SKILL.md", "now": "2000-3000 band" },
+    "imageCount": { "was": "1 hero + 8 inline + 1 infographic (10)", "now": "min 10 distinct, de-duplicated" },
+    "note": "Brian 2026-11-08 — word-count + image-count supersede older targets; ALL other documented requirements are preserved."
+  },
+  "length": {
+    "minWords": 2000,
+    "maxWords": 3000,
+    "counts": "substantive editorial prose only",
+    "excludeFromCount": [
+      "frontmatter", "navigation", "metadata", "imports", "code listings",
+      "image alt text", "figure captions", "widget labels", "repeated component labels",
+      "hidden content", "boilerplate", "table-of-contents", "footnote markers"
+    ]
+  },
+  "antiInflation": {
+    "noHiddenText": true,
+    "noDuplicatePassages": true,
+    "maxRepeatedSentenceRatio": 0.02,
+    "minUniqueSentenceRatio": 0.9,
+    "forbidMechanicalExpansion": true
+  },
+  "research": {
+    "provider": "dataforseo",
+    "required": true,
+    "recordPath": "research/<slug>.json",
+    "requiredFields": [
+      "slug", "primaryKeyword", "secondaryKeywords", "location", "language",
+      "intent", "researchedAt", "metrics", "providerResponseRef", "rationale"
+    ],
+    "intentEnum": ["informational", "commercial", "transactional", "navigational"],
+    "metricsRequired": ["searchVolume", "keywordDifficulty"],
+    "noFabrication": true,
+    "keywordInTitle": true,
+    "keywordInIntro": true,
+    "keywordInHeadings": true,
+    "keywordDensity": { "min": 0.005, "max": 0.03 }
+  },
+  "images": {
+    "minDistinct": 10,
+    "hero": 1,
+    "supportingMin": 9,
+    "dedupeVariants": true,
+    "dedupeBy": "assetId",
+    "mustExist": true,
+    "mustLoad": true,
+    "mustAppearInArticle": true,
+    "provenanceRequired": ["prompt", "provider", "assetId"],
+    "provenanceOptional": ["model", "seed"],
+    "altRequired": true,
+    "altMaxChars": 125,
+    "captionRequired": true,
+    "preferredFormats": ["avif", "webp"],
+    "lazyBelowFold": true,
+    "reservedDimensions": true,
+    "notCounted": ["prompt", "placeholder", "unresolved-url", "planned", "duplicate-variant", "crop", "thumbnail", "responsive-variant"],
+    "factualImageryHonesty": "Illustrative AI imagery must not masquerade as a screenshot, chart, or factual evidence."
+  },
+  "widgets": {
+    "minInstances": 8,
+    "minTypes": 5,
+    "package": "@theme.tools/blog",
+    "widgetsExport": "@theme.tools/blog/widgets",
+    "countableTypes": [
+      "comparison-table", "decision-matrix", "timeline", "step-guide", "checklist",
+      "key-takeaways", "glossary", "faq", "callout", "stat-cards", "pros-cons",
+      "video-facade", "audio-narration", "code-demo", "toc", "annotated-figure"
+    ],
+    "excludeFromCount": ["basic typography", "navigation", "empty wrapper", "repeated generic widget"],
+    "emptyWidgetsRejected": true,
+    "inventedImportsRejected": true
+  },
+  "structure": {
+    "singleH1": true,
+    "answerCapsule": { "required": true, "minWords": 40, "maxWords": 80, "underFirstH2": true },
+    "questionHeadingRatio": 0.4,
+    "statCadencePer1000Words": 5,
+    "faqRequired": true,
+    "faqMinQuestions": 2,
+    "comparisonTableMin": 1,
+    "maxWordsPerSection": 350,
+    "objectiveVoice": true,
+    "forbidEpistemicHedges": ["i think", "we believe", "arguably", "in our opinion", "it seems"]
+  },
+  "links": {
+    "internalMin": 1,
+    "internalEarlyWithinWords": 200,
+    "externalMin": 1,
+    "descriptiveAnchors": true,
+    "forbidExactKeyphraseAnchor": true,
+    "forbidClickHere": true
+  },
+  "citations": {
+    "required": true,
+    "everyStatCited": true,
+    "sourceHierarchy": ["peer-reviewed", ".gov/.edu", "primary-data", "industry-research", "vendor-docs"],
+    "bannedSources": ["ai-summaries", "content-farms", "undated", "studies-show-no-source"],
+    "noFabricatedPeopleOrQuotes": true
+  },
+  "metadata": {
+    "titleChars": { "min": 50, "max": 60 },
+    "titleNeedsNumberOrYear": true,
+    "descChars": { "min": 120, "max": 156 },
+    "canonicalSingle": true,
+    "jsonLd": ["BlogPosting", "Person", "Organization", "BreadcrumbList"],
+    "ogImageRequired": true,
+    "robotsIndexable": true,
+    "sitemapLastmod": true,
+    "authorRequired": true,
+    "datePublishedRequired": true,
+    "dateModifiedTruthful": true
+  },
+  "productionCopy": {
+    "forbidPlaceholders": ["TODO", "FIXME", "lorem ipsum", "PLACEHOLDER", "$XXXX", "coming soon", "tbd"],
+    "forbidBannedSlop": ["unleash", "leverage", "welcome to", "in today's world", "game-changer", "revolutionize"]
+  },
+  "gate": {
+    "rejectOnFail": true,
+    "revalidateOnChange": true,
+    "ciSafe": "CI validates completed research records + generated assets; paid generation runs in the content workflow, not CI.",
+    "grandfather": []
+  }
+}
