@@ -24,7 +24,7 @@ Audit of principles absent from Brian's plugin as of 2026-06-18 — and the inci
 
 Before ANY architectural decision, classify it: **two-way door** (reversible within a sprint — schema add, new feature flag, new route) or **one-way door** (irreversible or painful to undo — DB engine switch, auth provider migration, public API surface, GDPR data model). Two-way doors ship autonomously; one-way doors get a 5-minute written self-argument before proceeding. The cost of slowing down on two-way doors is wasted caution; the cost of not slowing down on one-way doors is weeks of repair.
 
-Concretely: adding a D1 column is two-way. Dropping one is one-way. Picking Clerk over Auth0 is one-way (migration cost). Picking a new Workers route pattern is two-way.
+Concretely: adding a D1 column is two-way. Dropping one is one-way. Picking an auth library/session model (e.g. Better Auth) is one-way (migration cost). Picking a new Workers route pattern is two-way.
 
 - **[[autonomous-engineering]]** — approval tiers already exist; this principle names the underlying reason
 - **[[no-staging-doctrine]]** — prod-only means one-way door mistakes hurt real users immediately
@@ -105,7 +105,7 @@ This pattern eliminates the perceived latency of D1 writes (20–80ms) and queue
 
 ## 7. Vendor Risk Tiering (Load-Bearing vs Replaceable)
 
-Every third-party service is classified: **load-bearing** (CF, Clerk, Stripe, Resend — replacing any requires a multi-week migration) or **replaceable** (PostHog, Sentry, Upstash — equivalent alternatives exist, migration is days). Load-bearing vendors get: contract review, documented replacement plan in `ARCHITECTURE.md`, secret rotation schedule ≤90 days, and no single-point-of-failure usage (always wrap in an abstraction layer). Replaceable vendors get none of that overhead.
+Every third-party service is classified: **load-bearing** (CF, Better Auth, Stripe, Resend — replacing any requires a multi-week migration) or **replaceable** (PostHog, Sentry, Upstash — equivalent alternatives exist, migration is days). Load-bearing vendors get: contract review, documented replacement plan in `ARCHITECTURE.md`, secret rotation schedule ≤90 days, and no single-point-of-failure usage (always wrap in an abstraction layer). Replaceable vendors get none of that overhead.
 
 CF lock-in is the declared exception: CF primitives are load-bearing BY DESIGN (`cloudflare-lock-in-is-leverage`). All other load-bearing dependencies need justification.
 

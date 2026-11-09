@@ -119,7 +119,7 @@ Scope:
 - **DB** — D1 (read-replicas, Sessions API) / Neon
 - **Cache** — Upstash
 - **ORM** — Drizzle v1-rc RQBv2 + Zod 4
-- **Auth** — Clerk (M2M JWT)
+- **Auth** — Better Auth (CF-native on Hono; D1/KV sessions; M2M JWT; self-hosted OSS — avoid Clerk wherever possible)
 - **Payments**: **Stripe DEFAULT for all money flows, Link enabled everywhere** (Payment Element `automatic_payment_methods`; Instant Bank Payments 2.6%+30¢; agentic/ACP-ready)
   - Recurring SaaS → **Stripe Billing** · Payouts → **Stripe Connect Express** · In-person (no Square ask) → **Stripe Terminal**
   - **Square ONLY when the prompt requests it** (`emdash.square_requested: true`)

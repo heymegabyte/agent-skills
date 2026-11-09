@@ -93,4 +93,4 @@ Mandate Medusa.js as the headless commerce backend for every e-commerce surface;
 - React+Vite or Angular+Ionic for the storefront frontend
 - Square or Stripe Medusa plugin per `payments-routing`
 - Neon Postgres + Upstash Redis + R2 storage triplet
-- Admin dashboard served as a static build, gated by Clerk M2M JWT for staff access
+- Admin dashboard served as a static build, gated by Better Auth M2M JWT (CF-native) for staff access

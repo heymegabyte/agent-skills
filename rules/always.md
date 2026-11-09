@@ -35,7 +35,7 @@ paths:
 ## Secrets — auto-populate everything self-generable
 
 - **Any missing secret you CAN generate, generate + set automatically — never ask, never Rec, never leave a placeholder.** HMAC/webhook/signing keys, session/CSRF/JWT secrets, salts, nonces, bypass tokens, your-own-service API keys → `openssl rand -base64 32` / `-hex 32` (or `crypto.randomUUID`), stored locally AND pushed to the deploy target, same turn.
-- Only exceptions: data-at-rest `*_ENCRYPTION_KEY` (auto-gen destroys persisted data — detect only) and vendor-minted third-party creds (Stripe/Clerk/OAuth). Full tiers + one-liners: `secret-auto-provisioning.md`.
+- Only exceptions: data-at-rest `*_ENCRYPTION_KEY` (auto-gen destroys persisted data — detect only) and vendor-minted third-party creds (Stripe/OAuth provider keys). Full tiers + one-liners: `secret-auto-provisioning.md`.
 
 ## Post-work & End-of-Turn Parallel Triad Convergence
 

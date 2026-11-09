@@ -62,7 +62,7 @@
       "@theme.tools/i18n-a11y"
     ]
   },
-  "supersedesInScope": {"builder": "VibeSDK", "knowledge": "QMD", "authenticationDefault": "Clerk"},
+  "supersedesInScope": {"builder": "VibeSDK", "knowledge": "QMD", "authenticationDefault": "Better Auth"},
   "catalog": {"components": "ui.theme.tools", "themes": "theme.tools", "sharedUtilities": "@theme.tools", "immutableVersions": true, "consumerForks": false},
   "observability": ["Cloudflare", "PostHog", "Sentry", "Google Analytics 4", "Google Tag Manager", "Langfuse Cloud (2500ms fail-open)", "Promptfoo"],
   "requiredGates": ["explicit-figma-approval", "server-side-authorization", "tenant-isolation", "license-review", "supported-runtime", "approved-budget", "contract-tests", "real-journey-evidence", "vendor-delivery-evidence", "rollback", "consumer-sync-acknowledgement"],

@@ -80,7 +80,7 @@ Every project storing PII MUST implement automated deletion via CF Workflows v2.
 
 - Hono route `POST /account/delete` with `DeletionRequestSchema` (`email`, optional `reason`, `turnstileToken`).
 - Verify Turnstile before touching any user data — prevents abuse.
-- Verify Clerk session ownership; if no session, send a signed email-confirmation token instead.
+- Verify the Better Auth session ownership; if no session, send a signed email-confirmation token instead.
 - On verified request: create CF Workflow instance immediately (durable from that moment) + write `deletion_audit` row with `status='pending'`.
 
 See `reference/right-to-deletion.md` for the full implementation.
@@ -100,7 +100,7 @@ See `reference/right-to-deletion.md` for the full implementation.
 ### Cascade entities (ordered by dependency)
 
 ```
-1. Clerk session invalidation → revoke all sessions for email
+1. Better Auth session invalidation → revoke all sessions for email
 2. KV cache purge           → namespace:user:{id}:*
 3. D1 application rows      → FK-ordered batch delete (sessions → oauth_accounts → notifications → feature_flag_overrides → users)
 4. Vectorize embeddings     → by external_id = user.id

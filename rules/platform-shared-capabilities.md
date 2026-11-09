@@ -74,7 +74,7 @@ Read [agent/UI contracts](platform-agent-ui.md), [knowledge/auth/integrations](p
 ## Apply during /run-the-loop
 
 1. Resolve the actual repository, deployed surface, shared-skill revision and package versions; inspect existing code/tests/CI and prior receipts. Never infer migration completion from a product name.
-2. Load this policy and relevant modules; reconcile older Clerk/VibeSDK/QMD/editor defaults explicitly. Preserve behavior until tested replacement cutover.
+2. Load this policy and relevant modules; reconcile older auth (Clerk→Better Auth)/VibeSDK/QMD/editor defaults explicitly. Preserve behavior until tested replacement cutover.
 3. Maintain a capability-by-product matrix with owner, evidence, dependencies, approval, license, budget, runtime, next test and status: not-started, specified, implemented, wired, verified, deployed, or blocked.
 4. Research only material uncertainties against primary sources. Rank ideas by user value, security/reliability, cross-product reuse, latency/cost gain, and implementation risk. Implement the highest-value ready vertical slice.
 5. Test contracts and real user journeys, inspect telemetry, repair regressions, then reassess adjacent improvements. Reject speculative frameworks, duplicate planes and cosmetic churn.

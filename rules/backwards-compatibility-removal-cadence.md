@@ -88,7 +88,7 @@ Only bump major when the **external contract** (response shape, required params,
 
 ## migration-agent invocation
 
-For any removal affecting an external caller (public API, webhook endpoint, Clerk user attributes), spawn `migration-agent` per `[[autonomous-engineering]]` approval tier `review-recommended`.
+For any removal affecting an external caller (public API, webhook endpoint, auth/user attributes), spawn `migration-agent` per `[[autonomous-engineering]]` approval tier `review-recommended`.
 
 See `reference/backwards-compatibility-removal-cadence.md` for the Agent invocation template.
 

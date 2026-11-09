@@ -115,8 +115,8 @@ cd "$(chezmoi source-path)/home/.chezmoitemplates/secrets" \
 - `POSTHOG_PROJECT_API_KEY`
 - `GA4_MEASUREMENT_ID`
 - `GA4_API_SECRET`
-- `CLERK_SECRET_KEY`
-- `CLERK_PUBLISHABLE_KEY`
+- `BETTER_AUTH_SECRET` (self-generated — `openssl rand -base64 32`, not vendor-minted)
+- `BETTER_AUTH_URL`
 - `NEON_DATABASE_URL`
 - `UPSTASH_REDIS_REST_URL`
 - `UPSTASH_REDIS_REST_TOKEN`

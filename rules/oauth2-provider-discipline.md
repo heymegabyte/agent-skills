@@ -7,6 +7,8 @@ triggers:
   - "OAuth2"
   - "oauth"
   - "which auth provider"
+  - "Better Auth"
+  - "Clerk"
   - "Bitwarden token"
   - "Auth0"
   - "Okta"
@@ -22,7 +24,7 @@ paths:
 # OAuth2 Provider Discipline
 
 Decision tree for picking the right OAuth2 provider per use-case. Never hand-roll
-OAuth2 — use Clerk + Better Auth + the listed providers. Every provider has a matching
+OAuth2 — use Better Auth + the listed providers. Every provider has a matching
 typed helper in `template/utils/`.
 
 ## Provider quick-reference
@@ -34,12 +36,13 @@ typed helper in `template/utils/`.
 | **Okta**       | Enterprise IT / workforce auth, HR provisioning   | client_credentials  | `okta-token-cache.ts`                  |
 | **Cognito**    | AWS-tenant apps, AWS-native service federation    | client_credentials  | `cognito-token-cache.ts`               |
 | **PKCE flow**  | Any user-facing OAuth2 (browser redirect)         | authorization_code + PKCE | `oauth2-pkce-cache.ts`           |
-| **Clerk**      | User auth for all Brian-owned consumer/SaaS apps  | managed (Clerk SDK) | Clerk SDK — no custom token util       |
+| **Better Auth** | User auth for all Brian-owned consumer/SaaS apps (CF-native: Hono + D1/KV) | sessions + JWT/OIDC plugins | Better Auth handler — self-hosted, no SaaS |
 
 See `reference/oauth2-provider-discipline.md` for the full decision tree and per-provider usage snippets.
 
 ## Provider profiles
 
+- **Better Auth (default user auth)** — self-hosted OSS on CF Workers + Hono; sessions in D1/KV; email+password, social, magic-link, passkeys, 2FA, orgs via plugins; JWT/bearer plugins for M2M. `BETTER_AUTH_SECRET` self-generated. Not a SaaS — no per-MAU billing. Prefer over Clerk/Auth0 for Brian-owned apps.
 - **Bitwarden** — vault secrets, internal Worker auth, CLI tools, cron secrets. NOT user-facing auth or customer-tenant M2M.
 - **Auth0** — B2B SaaS multi-tenant, social login aggregation, SAML federation. 25K MAU free (2026); M2M tokens limited to 1k/month on free plan.
 - **Okta** — Okta-shop enterprise clients, SCIM provisioning, HR-integrated lifecycle. Free Developer org: up to 100 MAU (prototyping).
@@ -48,6 +51,7 @@ See `reference/oauth2-provider-discipline.md` for the full decision tree and per
 
 ## Hard rules
 
+- **Better Auth (self-hosted, CF-native on Hono, D1/KV) is the DEFAULT for user auth** — avoid Clerk and other hosted auth SaaS wherever possible (Brian 2026-11-09). A full IdP (SCIM/SAML) → self-hosted Authentik over the HTTP boundary, still not a hosted auth SaaS.
 - NEVER hand-roll OAuth2 (token generation, PKCE, refresh logic).
 - NEVER store client secrets in source code — always from `env.*` via Zod-validated env schema.
 - ALWAYS use the matching typed util — raw fetch to a token endpoint is a drift violation.

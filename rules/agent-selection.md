@@ -54,7 +54,7 @@ Every parallel fan-out assigns each work unit to the most-specialized agent. Nev
 - **worker-runtime-builder** — Worker/DO/Queue/Workflow · edge runtime · NOT UI · runtime+test · typecheck → `general-purpose`+brief
 - **integration-builder** — Stripe/Amazon SES/PostHog/MCP wiring · external service · NOT core logic · adapter+test · vitest → `general-purpose`+brief
 - **forms-and-automation-builder** — Zod forms + Turnstile + jobs · new form/automation · NOT design · form+validation · Playwright → `general-purpose`+brief
-- **auth-billing-builder** — Clerk/Stripe Link flows · auth/billing surface · NOT pricing policy · flow+test · E2E+approval → `general-purpose`+brief
+- **auth-billing-builder** — Better Auth/Stripe Link flows · auth/billing surface · NOT pricing policy · flow+test · E2E+approval → `general-purpose`+brief
 - **dashboard-builder** — admin/data dashboards · new admin view · NOT data model · view+spec · Playwright → `general-purpose`+brief
 
 ### Quality

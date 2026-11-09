@@ -1,6 +1,6 @@
 # Public Front Door — Auth Walls Never Sit on `/`
 
-The apex of any Brian product domain is a PUBLIC, gorgeous marketing surface. An identity wall (Cloudflare Access login, Clerk sign-in, HTTP auth) as the FIRST thing a visitor sees at `/` is a defect — even for internal tools. The app lives behind `/login`; the homepage sells what's behind it.
+The apex of any Brian product domain is a PUBLIC, gorgeous marketing surface. An identity wall (Cloudflare Access login, a Better Auth sign-in, HTTP auth) as the FIRST thing a visitor sees at `/` is a defect — even for internal tools. The app lives behind `/login`; the homepage sells what's behind it.
 
 ## The rule
 

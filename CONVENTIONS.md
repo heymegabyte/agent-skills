@@ -66,7 +66,7 @@ Dark theme FIRST. Purple for cosmic/space only.
 - **Database** — D1 / Neon
 - **ORM** — Drizzle v1-rc (rc.4; NOT GA as of 2026-10 — production-proven, no stable tag/down-migrations yet)
 - **Validation** — Zod 4
-- **Auth** — Clerk Core 3 (SaaS) / Authentik (self-hosted)
+- **Auth** — Better Auth (CF-native on Hono; D1/KV sessions; self-hosted OSS) / Authentik (full self-hosted IdP when needed) — avoid Clerk wherever possible
 - **Payments** — Stripe + Link DEFAULT for all money flows (Billing for SaaS, pin `2026-09-30.endive` — stripe-node 23.0.0, verified 2026-10-05; endive = new breaking major after dahlia; Connect payouts; IBP 2.6%+30¢) / Square only on prompt request
 - **Email** — Amazon SES (sole transactional rail) + Listmonk (bulk); SendGrid break-glass
 - **Jobs** — Inngest v4 / CF Workflows v2
@@ -570,35 +570,16 @@ JSON-LD boosts LLM accuracy 16% → 54% (AI search visibility for ChatGPT / Perp
 - **`Bun.redis`** — 7.9x faster than ioredis. 66 commands. Auto-reconnect, command timeouts, message queuing. Replaces `ioredis` / `redis` npm packages.
 - **`Bun.s3`** — built-in S3 client with backpressure handling. Replaces `@aws-sdk/client-s3`. Note: CF Workers use R2 binding directly, not S3 client.
 
-## Clerk Core 3 (Mar 2026 — Breaking)
+## Better Auth (CF-native auth — the default; avoid Clerk)
 
-### Breaking changes
+Self-hosted, open-source, TypeScript-first auth. The estate default for user auth — avoid Clerk and
+other hosted auth SaaS wherever possible (Brian 2026-11-09).
 
-- `@clerk/clerk-react` → `@clerk/react`
-- `@clerk/clerk-expo` → `@clerk/expo`
-- `<Protect>` / `<SignedIn>` / `<SignedOut>` → unified `<Show when="signed-in|signed-out" />`
-- `getToken()` now throws `ClerkOfflineError` (was null)
-- `@clerk/types` deprecated (import from SDK packages)
-- ~50KB gzipped bundle reduction
-- Upgrade: `npx @clerk/upgrade` codemod, requires Node 20.9+
-
-### Clerk CLI (Apr 22 2026)
-
-- `clerk init` — framework detect + scaffold
-- `clerk config` — auth settings
-- `clerk api` — BAPI access
-- `clerk deploy` — coming
-
-### API Keys GA (Apr 17 2026)
-
-Machine auth — users create delegated API keys for programmatic access. Billing active.
-
-### SCIM / Directory Sync GA (Apr 16 2026)
-
-- Auto user create / update / deactivate from IdP
-- Custom attribute mapping (beta) into `publicMetadata`
-- Role assignment from IdP groups
-- No extra charge with enterprise connection
+- **Runtime** — mount Better Auth's handler in **Hono on CF Workers**; sessions in **D1** (Drizzle/Kysely adapter) or KV. No per-MAU billing.
+- **Methods (plugins)** — email+password, social OAuth, magic link, passkeys/WebAuthn, 2FA/TOTP, organizations/teams.
+- **M2M / edge** — the JWT + bearer plugins issue short-lived JWTs for service-to-service identity; verify against Better Auth's JWKS for networkless, zero-RTT edge checks (prefer over static API keys between Workers). The OIDC-provider plugin lets it BE an IdP.
+- **Secrets** — `BETTER_AUTH_SECRET` is SELF-GENERATED (`openssl rand -base64 32`, per `[[secret-auto-provisioning]]`), never vendor-minted; plus `BETTER_AUTH_URL` + each social provider's client id/secret.
+- **Full IdP** (SCIM/SAML/directory-sync at enterprise scale) → self-hosted **Authentik** over the HTTP boundary — still not a hosted auth SaaS.
 
 ## Stripe (Versioned Releases)
 

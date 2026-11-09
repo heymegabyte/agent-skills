@@ -62,7 +62,6 @@ Deviations:
 - **GitHub** — `skills/github-webhooks/` — HMAC-SHA256 — `GITHUB_WEBHOOK_SECRET`
 - **Resend** — `skills/resend-webhooks/` — Svix — `RESEND_WEBHOOK_SECRET`
 - **Twilio** — `skills/twilio-webhooks/` — HMAC-SHA256 of URL+params — `TWILIO_AUTH_TOKEN`
-- **Clerk** — `skills/clerk-webhooks/` — Svix — `CLERK_WEBHOOK_SECRET`
 - **SendGrid** — `skills/sendgrid-webhooks/` — ECDSA P-256 — `SENDGRID_WEBHOOK_PUBLIC_KEY`
 - **PostHog** — `skills/posthog-webhooks/` — none (IP allowlist) — —
 - **Inngest** — `skills/inngest-webhooks/` — HMAC-SHA256 — `INNGEST_SIGNING_KEY`
@@ -107,7 +106,7 @@ Integration is NOT DONE until all three pass against the live URL.
 
 - Use `schemas.ts` Zod types, not provider SDK types — Zod gives runtime validation; SDK types do not.
 - `z.infer<typeof Schema>` produces the TS type — no duplication.
-- When provider ships a TS SDK (Stripe, Clerk), wrap it: `z.object({ type: z.literal('payment_intent.succeeded'), data: z.object({ object: StripePaymentIntentSchema }) })`.
+- When provider ships a TS SDK (Stripe, etc.), wrap it: `z.object({ type: z.literal('payment_intent.succeeded'), data: z.object({ object: StripePaymentIntentSchema }) })`.
 
 ## Idempotency is not optional
 

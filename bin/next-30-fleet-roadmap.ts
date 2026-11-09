@@ -223,7 +223,7 @@ export const NEXT_30_ROADMAP: RoadmapItem[] = [
     title: 'Tier 3 Foundational Utilities: Telemetry, Auth & Flags',
     command: 'node ~/.agentskills/bin/sitrep-telemetry.ts',
     status: 'VERIFIED',
-    description: 'Unifies OpenTelemetry, Langfuse, Sentry, and Clerk authentication.'
+    description: 'Unifies OpenTelemetry, Langfuse, Sentry, and Better Auth authentication.'
   },
   {
     id: 25,

@@ -36,7 +36,7 @@ Assign each route a tier at design time. Record it in the route module's `manife
 | Route type | Default SLO | Max monthly downtime | Rationale |
 |---|---|---|---|
 | Donation / checkout (`/donate`, `/api/checkout`) | 99.9% | 43 min | Revenue-critical; donor trust is fragile |
-| Auth (`/api/auth/**`, Clerk webhooks) | 99.9% | 43 min | Locked-out users = 0% conversion |
+| Auth (`/api/auth/**`, Better Auth session/callbacks) | 99.9% | 43 min | Locked-out users = 0% conversion |
 | Admin / internal (`/admin/**`) | 99.5% | 3.6 hr | Brian can absorb brief outage; not user-facing |
 | Marketing / static (`/`, `/about`, `/pricing`) | 99.5% | 3.6 hr | CF edge CDN already ≥99.99%; app failures are only source |
 | Background / async (cron, queue consumers) | 99.0% | 7.3 hr | Retryable; eventual delivery acceptable |
