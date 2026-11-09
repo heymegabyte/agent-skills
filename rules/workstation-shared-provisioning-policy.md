@@ -24,7 +24,7 @@ triggers: ["install.doctor", "dotfiles", "package manager config", "system confi
   - **Local Proxy & System Units**: `home/dot_local/bin/executable_megabyte-local-proxy`, `home/Library/LaunchAgents/space.megabyte.local-proxy.plist.tmpl`, `home/dot_config/systemd/user/megabyte-local-proxy.service.tmpl`, `home/dot_config/system/etc/systemd/system/megabyte-local-proxy.service.tmpl`, and `home/dot_config/system/etc/apt/`
 - **Ownership Split**:
   - **Install Doctor (`heymegabyte/install.doctor`)**: Declarative Chezmoi templates (`home/`), capability detection (`scripts/lib/detect_os.sh`), package/service hooks (`home/dot_local/bin/post-installx/`), and universal lifecycle scripts (`home/.chezmoiscripts/universal/`).
-  - **Host Repository (`heymegabyte/legion.megabyte.space`, `heymegabyte/ubuntu.megabyte.space`)**: Host-specific hardware inventory, `snapshots/desired-state.json`, `ENVIRONMENT.md`, `RECOVERY.md`, `BACKUP-RECOVERY.md`, `ZFS-MIGRATION.md`, and verification harnesses.
+  - **Host Repository (`heymegabyte/legion.megabyte.space`, `ProfessorManhattan/ubuntu.megabyte.space`, `heymegabyte/omen.megabyte.space`, `heymegabyte/zen.megabyte.space`)**: Host-specific hardware inventory, `snapshots/desired-state.json`, `SYSTEM-POSTURE.md`, `ENVIRONMENT.md`, `RECOVERY.md`, `BACKUP-RECOVERY.md`, `ZFS-MIGRATION.md`, and verification harnesses.
   - **Central Infrastructure (`heymegabyte/coolify.megabyte.space`)**: Central hosted services on Coolify (`llm.megabyte.space` LiteLLM, `nexus.megabyte.space` / `registry.megabyte.space` Sonatype Nexus).
   - **Agent Skills (`heymegabyte/agent-skills`)**: Durable operational policies, scope boundaries, and agent routing doctrine.
 
@@ -65,7 +65,7 @@ triggers: ["install.doctor", "dotfiles", "package manager config", "system confi
 ## 7. Eager-Minimum vs. Lazy-Everywhere CLI Policy & Legion/Omen Host Role Matrix
 
 1. **Eager-Minimum + Lazy-Everywhere CLI Architecture**:
-   - **Eagerly Preloaded (`_preload: true` / `executable_post-legion-workstation.sh`)**:
+   - **Eagerly Preloaded (`_preload: true` / `executable_post-workstation.sh`)**:
      - **CNF Lazy-Install Substrates**: `node`/`npm`, `bun`, `deno`, `go`, `rust`/`cargo`, `python3`, `uv`/`uvx`, `mise`, `chezmoi`, `task`, `zsh`, `git`, `curl`, `jq`, `yq`, `gum`.
      - **AI Coding Agents & LSP Core**: `claude` (`@anthropic-ai/claude-code`), `opencode` (`opencode-ai`), `gemini` (`@google/gemini-cli`), `codex`, `cua-driver`, `emdash` (**never install Superset**; remove `superset` if present), `~/.agentskills` + `~/.claude` doctrine, and core LSPs (`typescript-language-server`, `pyright`, `bash-language-server`, `vscode-langservers-extracted`, `yaml-language-server`).
      - **Secrets & Encryption Stack**: `infisical`, `age`, `sops` (do not install `onlykey` or `fido2` tools unless explicitly requested).

@@ -129,9 +129,11 @@ async function main() {
   const bespokeProtocolTests = CURATED_40_LIBRARIES.map((lib) =>
     join(workspacePath, 'packages', lib, 'test', 'bespoke-protocol-engine.test.ts'),
   );
-  const sdkTest = join(workspacePath, 'packages', 'sdk', 'test', 'sdk-conformance.test.ts');
-  if (existsSync(sdkTest)) {
-    conformanceTests.push(sdkTest);
+  for (const extraPkg of ['sdk', 'code-studio', 'site-delivery']) {
+    const extraTest = join(workspacePath, 'packages', extraPkg, 'test', `${extraPkg}-conformance.test.ts`);
+    if (existsSync(extraTest)) {
+      conformanceTests.push(extraTest);
+    }
   }
 
   // Execute the 4 test suite categories + 4 engine CLI pools + 40 OpenCode library inspectors in parallel

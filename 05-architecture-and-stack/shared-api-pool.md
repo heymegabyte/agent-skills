@@ -139,7 +139,7 @@ Active project `.env.local` (check `$CLAUDE_ENV_FILE` when set)
 
 ### Infrastructure/VPN (10+ keys)
 
-- `TAILSCALE_AUTH_KEY`, `NGROK_AUTH_TOKEN`
+- `NGROK_AUTH_TOKEN` (note: cross-node mesh uses Cloudflare Zero Trust Tunnels exclusively; Tailscale is retired)
 - `NORDVPN_*`, `PROTONVPN_*`
 - `PROXMOX_ROOT_PASSWORD`
 - `RESTIC_PASSWORD` (backups)

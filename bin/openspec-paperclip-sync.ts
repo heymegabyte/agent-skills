@@ -60,6 +60,11 @@ export const CANONICAL_PROJECT_MAP: Record<string, PaperclipProjectMapping> = {
     githubRepo: 'heymegabyte/legion.megabyte.space',
     defaultBranch: 'main',
   },
+  'ubuntu.megabyte.space': {
+    projectId: '029cff3f-2ceb-4795-b55d-5bd8d0b6cf29',
+    githubRepo: 'ProfessorManhattan/ubuntu.megabyte.space',
+    defaultBranch: 'main',
+  },
   'coolify.megabyte.space': {
     projectId: '748ffb9c-d8fb-4143-afe7-80c5a1e2e716',
     githubRepo: 'heymegabyte/coolify.megabyte.space',
