@@ -1,9 +1,15 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "id": "megabyte.blog-content-policy",
-  "version": "1.0.0",
-  "updated": "2026-11-08",
-  "summary": "Canonical, machine-readable blog content contract. Generators, validators, editors, and publishing gates MUST load this before writing or shipping an article. Deterministic validation against structured content + rendered output — never a self-declared `compliant:true` flag.",
+  "version": "1.1.0",
+  "updated": "2026-11-09",
+  "summary": "Canonical, machine-readable blog content contract. Generators, validators, editors, and publishing gates MUST load this before writing or shipping an article. Deterministic validation against structured content + rendered output — never a self-declared `compliant:true` flag. v1.1.0 (Brian 2026-11-09): every post is an IMMACULATE piece of art that supersedes competitor articles — a gorgeous featured image (= thumbnail + OG), real-photography-preferred imagery, a tabbed video browser (incl. our own channels periodically), and heavy theme.tools component use.",
+  "editorialBar": {
+    "standard": "immaculate — must visibly supersede the best competitor article on the topic",
+    "imageryStyle": "custom brand graphics or real photography; NEVER generic/cheesy stock",
+    "everySentenceEarnsItsPlace": true,
+    "noGenericStock": true
+  },
   "supersedes": {
     "wordFloor": { "was": 1500, "cornerstoneWas": 1800, "source": "blog-autopublish SKILL.md", "now": "2000-3000 band" },
     "imageCount": { "was": "1 hero + 8 inline + 1 infographic (10)", "now": "min 10 distinct, de-duplicated" },
@@ -45,6 +51,11 @@
   "images": {
     "minDistinct": 10,
     "hero": 1,
+    "featuredRequired": true,
+    "featuredIsThumbnailAndOg": true,
+    "featuredMinWidth": 1200,
+    "sourcePreference": ["real-photography", "web-retrieved-licensed-with-attribution", "ai-generated", "deterministic-brand-graphic"],
+    "preferRealPhotographyAiFallback": true,
     "supportingMin": 9,
     "dedupeVariants": true,
     "dedupeBy": "assetId",
@@ -63,18 +74,37 @@
     "factualImageryHonesty": "Illustrative AI imagery must not masquerade as a screenshot, chart, or factual evidence."
   },
   "widgets": {
-    "minInstances": 8,
-    "minTypes": 5,
+    "minInstances": 10,
+    "minTypes": 6,
     "package": "@theme.tools/blog",
     "widgetsExport": "@theme.tools/blog/widgets",
+    "mediaExport": "@theme.tools/blog/media",
     "countableTypes": [
       "comparison-table", "decision-matrix", "timeline", "step-guide", "checklist",
       "key-takeaways", "glossary", "faq", "callout", "stat-cards", "pros-cons",
+      "featured-image", "image-gallery", "video-browser",
       "video-facade", "audio-narration", "code-demo", "toc", "annotated-figure"
     ],
     "excludeFromCount": ["basic typography", "navigation", "empty wrapper", "repeated generic widget"],
     "emptyWidgetsRejected": true,
     "inventedImportsRejected": true
+  },
+  "media": {
+    "featuredImage": { "required": true, "doubleAsThumbnailAndOg": true, "minWidth": 1200, "appearsInArticle": true },
+    "gallery": { "recommended": true, "minImagesWhenPresent": 3, "export": "@theme.tools/blog/media renderGallery" },
+    "videoBrowser": {
+      "required": true,
+      "export": "@theme.tools/blog/media renderVideoBrowser",
+      "minTabs": 2,
+      "minVideos": 4,
+      "includeOwnChannelPeriodically": true,
+      "ownChannels": ["Open-Source Wizardry / Install Doctor", "bZ", "Megabyte Labs"],
+      "realVerifiedIdsOnly": true,
+      "verifyVia": "youtube oembed (https://www.youtube.com/oembed?url=…) — 200 = real; NO API key needed",
+      "privacyFacade": true,
+      "noAutoload": true,
+      "noFabrication": true
+    }
   },
   "structure": {
     "singleH1": true,

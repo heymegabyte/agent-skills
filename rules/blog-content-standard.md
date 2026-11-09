@@ -46,6 +46,25 @@ Validation is deterministic, against structured content + rendered output + side
 - **Anti-inflation** — no hidden text, no duplicate passages (unique-sentence ratio ≥0.9), no
   placeholders/slop, no fabricated people/quotes.
 
+## v1.1.0 additions (Brian 2026-11-09) — immaculate art · featured image · video browser · tons of components
+
+- **Immaculate bar** — every post must visibly SUPERSEDE the best competitor article on the topic. Custom
+  brand graphics or real photography, NEVER generic/cheesy stock. Every sentence earns its place.
+- **Featured image** — a gorgeous featured image that DOUBLES as the blog-index thumbnail + the OG image
+  (≥1200px wide) and also appears in the article. It is one of the ≥10 images.
+- **Image source preference** — prefer TONS of relevant REAL photography / licensed web imagery; fall back
+  to AI-generated; custom deterministic brand graphics (SVG) are first-class where superior to stock (the
+  Linear/Stripe approach for technical content). Never generic stock, never fabricated/unlicensed hotlinks.
+  No image-gen/stock/photo credential available → use custom brand graphics + report the exact unblock.
+- **Tabbed video browser** — a `@theme.tools/blog/media` `renderVideoBrowser` with ≥2 tabs × ≥4 real videos,
+  privacy-facade (poster → click → youtube-nocookie, no autoload, no tracking). **REAL oembed-verified IDs
+  ONLY** (`https://www.youtube.com/oembed?url=…` returns 200 for a real video — NO API key needed); INCLUDE
+  our own channels periodically (Open-Source Wizardry / Install Doctor · bZ · Megabyte Labs). No verifiable
+  video → omit, never fake.
+- **Tons of components** — **≥10 widget instances across ≥6 types** (was ≥8/≥5) from `@theme.tools/blog`
+  (`/widgets` + `/media`): comparison · timeline · steps · stat-cards · pros-cons · glossary · callout ·
+  takeaways · featured-image · image-gallery · video-browser · …
+
 ## Supersedes (older conflicting targets — RETIRED)
 
 - `blog-autopublish` 1500-word floor / 1800 cornerstone → **2000–3000** band.
