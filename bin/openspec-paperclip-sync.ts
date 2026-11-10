@@ -65,6 +65,31 @@ export const CANONICAL_PROJECT_MAP: Record<string, PaperclipProjectMapping> = {
     githubRepo: 'ProfessorManhattan/ubuntu.megabyte.space',
     defaultBranch: 'main',
   },
+  'proxmox.megabyte.space': {
+    projectId: '74cd0675-8f2b-4498-a180-2db650e3f92f',
+    githubRepo: 'heymegabyte/proxmox.megabyte.space',
+    defaultBranch: 'main',
+  },
+  'omen.megabyte.space': {
+    projectId: '8684ed28-427b-46e2-a93a-dda84d1df397',
+    githubRepo: 'heymegabyte/omen.megabyte.space',
+    defaultBranch: 'main',
+  },
+  'zen.megabyte.space': {
+    projectId: '3059aed5-f730-422e-917e-ce21e2868f08',
+    githubRepo: 'heymegabyte/zen.megabyte.space',
+    defaultBranch: 'main',
+  },
+  'grafana.megabyte.space': {
+    projectId: '4f71e260-2d37-4ab2-8455-831b129ee4d1',
+    githubRepo: 'heymegabyte/grafana.megabyte.space',
+    defaultBranch: 'main',
+  },
+  'swarml.ink': {
+    projectId: 'd41a3978-110c-4526-bbe4-8660d7c539f7',
+    githubRepo: 'heymegabyte/swarml.ink',
+    defaultBranch: 'main',
+  },
   'coolify.megabyte.space': {
     projectId: '748ffb9c-d8fb-4143-afe7-80c5a1e2e716',
     githubRepo: 'heymegabyte/coolify.megabyte.space',
