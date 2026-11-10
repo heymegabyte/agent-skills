@@ -1,7 +1,7 @@
 ---
 name: workstation-shared-provisioning-policy
 description: Canonical ownership, 3-tier pass-through Nexus caching, and Install Doctor source-of-truth mandate for workstations, servers, dotfiles, package managers, and system configurations.
-triggers: ["install.doctor", "dotfiles", "package manager config", "system config", "nexus", "pass-through proxy", "workstation provisioning", "legion.megabyte.space", "ubuntu.megabyte.space", "chezmoi"]
+triggers: ["install.doctor", "dotfiles", "package manager config", "system config", "nexus", "pass-through proxy", "workstation provisioning", "legion.megabyte.space", "ubuntu.megabyte.space", "chezmoi", "megabyte-local-proxy", "strip-types", "ollama-auth-proxy", "workstation-hw-exporter", "macos-obs-relay", "post-workstation", "langfuse-spool-drain", "agent-skills-sync", "autotrim", "swappiness", "swapon", "apport", "whoopsie", "fail2ban", "crowdsec", "pbs-workstation-backup"]
 ---
 
 # Workstation & Shared Provisioning Operational Policy
@@ -74,4 +74,34 @@ triggers: ["install.doctor", "dotfiles", "package manager config", "system confi
      - All convenience TUIs, DevSecOps linters, cloud CLIs, and specialized tools (`lazygit`, `lazydocker`, `dive`, `zellij`, `starship`, `zoxide`, `eza`, `delta`, `glow`, `atuin`, `shellcheck`, `shfmt`, `actionlint`, `yamllint`, `semgrep`, `trivy`, `gitleaks`, `hadolint`, `syft`, `grype`, `aws`, `gcloud`, `flyctl`, `kubectl`, `helm`, `k9s`, `terraform`, `tofu`, `ansible`, `rclone`, `hyperfine`, `duf`, `dust`, `procs`) lazy-load on first invocation via `~/.config/shell/not-found-hook.sh` (interactive shells) and tail-of-`PATH` `~/.cache/cnf/shims` (`executable_cnf-build-shims`, for non-interactive AI agent subshells), backed by the 3-tier `megabyte-local-proxy` (`127.0.0.1:4880` $\rightarrow$ `https://nexus.megabyte.space`).
 2. **Legion (`legion.megabyte.space`) vs. Omen (`omen.megabyte.space`) Host Matrix**:
    - **Both `legion.megabyte.space` AND `omen.megabyte.space`**: AI coding agents (`claude`, `opencode`, `gemini`, `codex`, `cua-driver`, `emdash`), `~/.agentskills` + `~/.claude`, CNF substrates & lazy shims (`mise`, `node`, `bun`, `deno`, `uv`, `go`, `rust`, `chezmoi`, `task`, `not-found-hook.sh`, `~/.cache/cnf/shims`), secrets (`infisical`, `age`, `sops`), 3-tier `megabyte-local-proxy` (`127.0.0.1:4880`), ZFS `sanoid` snapshots + monthly `zpool scrub` + `atime=off`, GPU monitors (`nvtop`, `btop`), `zsh` + `tmux` + `rg` + `fd` + `fzf` + Nerd Fonts, `code` + `nvim` + `vim`, `flatpak` + GNOME Clipboard Indicator, and `bbr` + `vm.swappiness=10` sysctl tuning.
-   - **Strictly `legion.megabyte.space` Only**: Lenovo `ideapad_acpi` Battery Conservation Mode (`conservation_mode=1` via `legion-conservation-mode.service`), Lenovo Legion 9i (`16IRX9`) EC/WMI control (`legion-ec-ctl`), TI `TAS2781` smart-amplifier speaker initialization (`legion-tas2781-init.service` + `snd_soc_avs` blacklist), dedicated `rpool/ai-models` (`recordsize=1M`) dataset, RTX 4090 Ollama models (`qwen2.5:7b-instruct`, `qwen2.5-coder:14b`, `nomic-embed-text`), 3 GitHub Actions runners (`legion-runner-1..3`), and orphaned `xfce4-*` package cleanup.
+    - **Strictly `legion.megabyte.space` Only**: Lenovo `ideapad_acpi` Battery Conservation Mode (`conservation_mode=1` via `legion-conservation-mode.service`), Lenovo Legion 9i (`16IRX9`) EC/WMI control (`legion-ec-ctl`), TI `TAS2781` smart-amplifier speaker initialization (`legion-tas2781-init.service` + `snd_soc_avs` blacklist), dedicated `rpool/ai-models` (`recordsize=1M`) dataset, RTX 4090 Ollama models (`qwen2.5:7b-instruct`, `qwen2.5-coder:14b`, `nomic-embed-text`), 3 GitHub Actions runners (`legion-runner-1..3`), and orphaned `xfce4-*` package cleanup.
+
+## 8. Fleet-Verified Pass-1 Workstation Invariants (Never Regress)
+
+These invariants were proven on live fleet hosts in pass 1. Each one silently regressed a shipped host the moment a later change "cleaned it up." Treat any diff that violates them as a build-fail; re-verify after every `install.doctor` re-run.
+
+### 8.1 Node strip-types daemons, `.ts` extensions, POSIX exec launchers, and the macOS LAN-relay exception
+
+- **`.ts` filename stays**: Every Node daemon launched with `--experimental-strip-types` — `megabyte-local-proxy.ts`, `ollama-auth-proxy.ts`, `workstation-hw-exporter.ts` — MUST keep its real `.ts` filename in the LaunchAgent `ProgramArguments`/`systemd` `ExecStart`. Never strip the extension to fake an extensionless command; Node module resolution fails and the daemon dies (or silently reloads the wrong target).
+- **Extensionless CLI name → POSIX `exec` launcher**: When an extensionless command name is expected on `PATH` (`megabyte-local-proxy`, `ollama-auth-proxy`, `workstation-hw-exporter`), ship a thin `#!/bin/sh` launcher that `exec`s `node --experimental-strip-types <abs>/<name>.ts "$@"`. The launcher is extensionless; the target keeps `.ts`. Never make the `.ts` file itself execute as a script, and never rename the target to a bare name.
+- **macOS LAN-relay exception — Apple-signed `/usr/bin/python3` only**: `macos-obs-relay.py` (LAN relay to `10.0.0.155`) runs as a LaunchAgent that opens local-network connections. On macOS Tahoe, LaunchAgent Local Network access is gated by TCC and granted only to Apple-signed interpreters; Homebrew `python3`, `uv`, and `python.org` builds are denied. Pin `ProgramArguments[0]` to `/usr/bin/python3`, keep the `.py` extension, and never swap in a venv/Homebrew interpreter — the agent can no longer reach the LAN.
+
+### 8.2 Darwin blocks in `executable_post-workstation.sh` must precede any non-Linux `exit 0`
+
+- `executable_post-workstation.sh` runs on both Linux and Darwin. Any non-Linux `exit 0` guard MUST appear **after** every Darwin block, never before it.
+- The Darwin section installs/loads `space.megabyte.agent-skills-sync.plist`, installs/loads `space.megabyte.langfuse-spool-drain.plist`, and binds Netdata to `127.0.0.1`. A non-Linux `exit 0` placed above these silently skips all three on macOS: agent-skills sync, Langfuse spool drain, and Netdata loopback binding never install — with no error and an all-green run.
+- Ordering rule: Linux-only blocks → Darwin-only blocks → per-OS `exit 0`. Verify by re-running on macOS and confirming all three launchd units load and Netdata listens only on `127.0.0.1`.
+
+### 8.3 Hardware & kernel guards — never undo fleet-verified state
+
+- **Samsung SM951 NVMe (`MZHPV512HDGL`) keeps `autotrim=off`**: This controller mishandles queued TRIM. Never overwrite the pool property to `autotrim=on`; preserve `autotrim=off` on any pool backed by `MZHPV512HDGL` and gate `autotrim=on` behind a device-model check that excludes it.
+- **Detect swap with `swapon --show`, not `[ -b /dev/zram0 ]`**: Swap may be a swapfile (or a device other than `zram0`). The `/dev/zram0` block-device test falsely reports "no swap" and mis-tunes the host. Only set `vm.swappiness=100` after `swapon --show` confirms at least one active swap entry.
+- **Mask `apport.service` + `whoopsie.service` so `fs.suid_dumpable = 0` persists**: If apport re-enables core dumps it reverts `fs.suid_dumpable` on the next crash/boot. Mask both units (`systemctl mask apport.service whoopsie.service`) alongside the sysctl so the kernel hardening survives reboots.
+- **Disable Netdata `go.d:fail2ban` when fail2ban is masked for CrowdSec**: When `fail2ban.service` is masked in favor of CrowdSec + `crowdsec-firewall-bouncer-nftables`, set the Netdata go.d `fail2ban` collector to disabled (`fail2ban: false`). Otherwise Netdata pages a permanent "collector failed" because no fail2ban socket exists.
+- **`pbs-workstation-backup.sh` fails loud on missing credentials**: Never `exit 0` silently when backup credentials are absent. Print an explicit error and exit non-zero so a missing-credential run can never masquerade as a successful backup.
+
+#### Invariant verification
+
+- [MUST] Daemons: on macOS and Linux, confirm each daemon's `ExecStart`/`ProgramArguments` points at a `.ts` file (launchers `exec` it) and the service is active; confirm `macos-obs-relay.py` runs under `/usr/bin/python3`.
+- [MUST] Post-workstation: on macOS, confirm `agent-skills-sync` + `langfuse-spool-drain` launchd units load and Netdata binds only to `127.0.0.1`.
+- [MUST] Hardware/kernel: confirm `zpool get autotrim` still `off` on the SM951 pool, `swapon --show` non-empty before swappiness, `apport`/`whoopsie` masked, `fail2ban` collector disabled, and a credential-less `pbs-workstation-backup.sh` exits non-zero.

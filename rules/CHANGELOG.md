@@ -6,6 +6,12 @@ superseded_by: null
 
 # Rules Changelog — auto-maintained by the router-reconcile hook.
 
+## 2026-11-09
+
+- **automated-alert-hygiene-and-hysteresis** — feat(rules): fleet-wide alert false-positive + hysteresis doctrine from 30-day incident remediation — macOS active+wired+compressor memory, APFS Data-volume/mount-label filtering, QEMU SMBIOS DIMM silence, Exos X16 smartd `-I 190 -W 4,55,60`, IPv4-only Postfix + authenticated SES relay, mandatory trigger/clear hold windows across Netdata/Pulse/Grafana/@theme.tools/status; added to core + infra packs
+- **workstation-shared-provisioning-policy** — feat(rules): codify fleet-verified pass-1 workstation invariants (§8) — `.ts` extensions for `--experimental-strip-types` daemons + POSIX `exec` launchers, Apple-signed `/usr/bin/python3` for `macos-obs-relay.py` LAN relay (Tahoe TCC), Darwin blocks before non-Linux `exit 0` in `executable_post-workstation.sh`, SM951 `autotrim=off`, `swapon --show` swap detection before `vm.swappiness=100`, masked `apport`/`whoopsie`, Netdata `go.d:fail2ban` off under CrowdSec, and loud-fail backup credentials in `pbs-workstation-backup.sh`
+
+
 ## 2026-09-20
 
 - **browser-automation-routing** — feat(rules): new rule — default CF Browser Rendering + Stagehand for browser automation, fall back to the user's Chrome for cookie/session persistence; cross-linked into computer-use-safety + fetch-defaults + crawling-testing-browser-supervisor; added to infra pack + prompt-cache load order (Brian directive)

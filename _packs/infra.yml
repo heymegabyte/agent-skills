@@ -14,5 +14,6 @@ members:
   - rules/email-deliverability-implementation
   - rules/cloudflare-native-provisioning
   - rules/machine-recovery-repo
+  - rules/automated-alert-hygiene-and-hysteresis
   - rules/workstation-shared-provisioning-policy
   - rules/terminal-styling
