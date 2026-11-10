@@ -105,3 +105,18 @@ These invariants were proven on live fleet hosts in pass 1. Each one silently re
 - [MUST] Daemons: on macOS and Linux, confirm each daemon's `ExecStart`/`ProgramArguments` points at a `.ts` file (launchers `exec` it) and the service is active; confirm `macos-obs-relay.py` runs under `/usr/bin/python3`.
 - [MUST] Post-workstation: on macOS, confirm `agent-skills-sync` + `langfuse-spool-drain` launchd units load and Netdata binds only to `127.0.0.1`.
 - [MUST] Hardware/kernel: confirm `zpool get autotrim` still `off` on the SM951 pool, `swapon --show` non-empty before swappiness, `apport`/`whoopsie` masked, `fail2ban` collector disabled, and a credential-less `pbs-workstation-backup.sh` exits non-zero.
+
+## 9. Canonical Cross-Fleet Recursive Convergence `/goal` & Pass-2 Invariants
+
+1. **PBS Backup & Restore Root-Runner + User Secret Resolution**:
+   - `pbs-workstation-backup.sh` and `pbs-restore-host.sh` run as `root` (to read `/etc` and `/run/pbs-backup.key`), while resolving `PBS_REPOSITORY`, `PBS_PASSWORD`, `PBS_FINGERPRINT`, and `PBS_ENCRYPTION_KEY` via `runuser -u "$TARGET_USER" -- env PATH="$USER_HOME/.local/share/mise/shims:$USER_HOME/.local/bin:/usr/local/bin:/usr/bin:/bin" "$GET_SEC" <KEY>`. Never wrap `proxmox-backup-client` itself in `runuser -u ubuntu` while passing a `0600 root:root` keyfile in `/run/pbs-backup.key`.
+2. **Chrony IPv4-Only + Cloudflare NTS Clock Discipline**:
+   - On Linux hosts without a working IPv6 default route, set `DAEMON_OPTS="-4 -F 1"` in `/etc/default/chrony` and configure `/etc/chrony/sources.d/cloudflare-nts.sources` (`pool time.cloudflare.com iburst maxsources 2 nts prefer`) so `chronyd` never stalls on IPv6 NTP blackholes.
+3. **Tier-1 Artifact Proxy (`megabyte-local-proxy.ts`) Metadata Extensions & Log Directory**:
+   - Store mutable registry metadata payloads in `~/.cache/megabyte/local-proxy/meta/<shard>/<digest>.body.json` alongside `<digest>.hdr.json`, prune any legacy non-`.json` files in `meta/` on startup, and ensure `~/.cache/megabyte/local-proxy/logs` exists before binding so macOS `launchd` `StandardOutPath`/`StandardErrorPath` never fail to open.
+4. **Canonical Cross-Fleet `/goal` Loop**:
+   - When executing a cross-fleet convergence `/goal` across `macOS`, `zen.megabyte.space`, `omen.megabyte.space`, `legion.megabyte.space`, `ubuntu.megabyte.space`, and `install.doctor`, loop through:
+     1. Parallel 5-host `workstation-doctor --strict --json` + repo verification (`npm test`, `verify:drift -- --strict`, `verify:posture`, `doctor -- --strict`, `dr-drill.sh`).
+     2. Top-10 high-confidence gap synthesis across live hosts, host recovery repos, `install.doctor`, and `agent-skills`.
+     3. Same-turn implementation across live hosts + host repos + `install.doctor` (`executable_post-workstation.sh`, `executable_workstation-doctor.ts`, `executable_megabyte-local-proxy.ts`) + Triad repos.
+     4. Snapshot refresh, test suite + file ledger verification, and git push until zero confident recommendations remain.
