@@ -65,6 +65,42 @@ Validation is deterministic, against structured content + rendered output + side
   (`/widgets` + `/media`): comparison · timeline · steps · stat-cards · pros-cons · glossary · callout ·
   takeaways · featured-image · image-gallery · video-browser · …
 
+<!-- grow-ok: v1.2.0 adds the multimedia sourcing ladder + 6–8 visual floor (Brian directive 2026-11-10) -->
+
+## v1.2.0 additions (Brian 2026-11-10) — more multimedia, a 6–8 visual FLOOR + a sourcing LADDER
+
+- **Every article carries MORE multimedia.** The floor is **≥6–8 distinct visuals on EVERY article**
+  (not only flagship features); flagship features + substantial evergreen guides still target **≥10**.
+  A thin 1-image post is below standard — bring it to the floor.
+- **Sourcing LADDER (prefer high up; fill down; honesty-gated at every rung):**
+  1. **High-relevance licensed REAL imagery from web search** — prefer genuinely-depictive photos/
+     imagery (the "90%+ relevance" bar: it actually shows the subject). HARD gates: only CC0 /
+     public-domain / royalty-free / explicitly-licensed-for-use; **download + self-host** it (never
+     hotlink); record license + source URL + author + date as provenance; attribute where the license
+     requires. An image whose license you cannot verify is NOT usable — drop it.
+  2. **AI-GENERATED via an authorized creation API** — fill to the floor when real imagery is thin.
+     Preferred generator = **Cloudflare Workers AI image models** (`@cf/black-forest-labs/flux-1-schnell`
+     / `flux-2-dev`) via the CF global key — CF-native, no third-party key, always available WHEN the CF
+     key is present. **OpenAI GPT Image 1.5** (OpenAI's current image model) only where an `OPENAI_API_KEY` is genuinely authorized
+     for this product (a platform-billed product feature, never an internal-dev key). Label AI output as
+     illustration; it must NEVER masquerade as a screenshot/chart/benchmark/factual evidence.
+  3. **Deterministic brand SVG diagrams / infographics** — FIRST-CLASS and often PREFERRED for technical
+     / data / conceptual content (the Linear/Stripe approach): the three-layer model, a 3-2-1 rule, a
+     recovery matrix, a flow. Authored as code, no credential, perfectly crisp, honest (a diagram, not a
+     fake screenshot). These COUNT toward the 6–8 floor. For a technical how-to, several precise brand
+     diagrams beat stock photos.
+- **Honesty (non-negotiable, every rung):** each visual is real + resolves + renders + has alt + a
+  caption + recorded provenance; dedupe variants to one. **No generic/cheesy stock. No unlicensed
+  hotlink. No fabricated/placeholder/unresolved URL. No AI-as-screenshot.** If a REQUIRED generation has
+  **no credential**, that article's image gate is **`blocked`** with the exact missing key — never a
+  fake success, never an invented asset. (Reference: desktop.management, 2026-11-10 — no image-gen
+  credential in-env, so a backup guide was brought to 7 visuals with deterministic brand SVG diagrams,
+  and the ladder was recorded here for when web/AI sourcing is credentialed.)
+- **Per-format floors (reconciles the numbers above):** feature / evergreen guide **≥10**; standard
+  article / how-to guide **≥6–8**; brief / software-profile / glossary = their own concise contract (do
+  NOT pad a brief to feature length — the floor is a quality bar for substantive articles, not a quota
+  for reference entries).
+
 ## Supersedes (older conflicting targets — RETIRED)
 
 - `blog-autopublish` 1500-word floor / 1800 cornerstone → **2000–3000** band.
