@@ -36,6 +36,27 @@ def main():
                 'GITHUB_TOKEN', 'GH_TOKEN', 'ACTIONS_RUNTIME_TOKEN', 'ACTIONS_ID_TOKEN_REQUEST_TOKEN', 'GITHUB_ACTIONS'):
         env.pop(key, None)
     workspace = env.get('AI_RUN_WORKSPACE', os.getcwd())
+    for pc_match in re.finditer(r'^(PAPERCLIP_[A-Z0-9_]+)=([^\r\n]+)$', prompt, re.MULTILINE):
+        pc_key, pc_val = pc_match.group(1), pc_match.group(2).strip()
+        if pc_key != 'PAPERCLIP_API_KEY' and pc_val and not pc_val.startswith('<'):
+            env[pc_key] = pc_val
+    if env.get('PAPERCLIP_RUN_ID'):
+        if not env.get('PAPERCLIP_API_URL') or 'swarml.ink' in env.get('PAPERCLIP_API_URL', ''):
+            env['PAPERCLIP_API_URL'] = 'http://127.0.0.1:3100'
+        for key_candidate in (
+            home / '.openclaw/workspace' / f"paperclip-claimed-api-key-{env['PAPERCLIP_RUN_ID']}.json",
+            home / '.openclaw/workspace/paperclip-claimed-api-key.json',
+            home / 'ai/workspace/paperclip-claimed-api-key.json',
+        ):
+            if key_candidate.is_file():
+                try:
+                    key_payload = json.loads(key_candidate.read_text())
+                    token_val = key_payload.get('token') or key_payload.get('apiKey') or key_payload.get('PAPERCLIP_API_KEY')
+                    if isinstance(token_val, str) and token_val.strip():
+                        env['PAPERCLIP_API_KEY'] = token_val.strip()
+                        break
+                except (OSError, ValueError):
+                    pass
     timeout = 3600.0
     context = re.search(r'<fleet-run>([^\n]+)</fleet-run>', prompt)
     if context:
@@ -75,7 +96,7 @@ def main():
     logdir = Path(env.get('AI_RUN_LOG_DIR', home / 'ai/logs/manual'))
     logdir.mkdir(parents=True, exist_ok=True, mode=0o700)
     trace = logdir / ('compute-' + str(time.time_ns()) + '.json')
-    events, parts = [], []
+    events, parts, post_command_parts = [], [], []
     session = None
     failures = []
     child = None
@@ -139,7 +160,11 @@ def main():
                 if kind == 'item.completed':
                     record = item.get('item', {})
                     if record.get('type') == 'agent_message':
-                        parts.append(str(record.get('text', ''))[:MAX_TEXT])
+                        msg_text = str(record.get('text', ''))[:MAX_TEXT]
+                        parts.append(msg_text)
+                        post_command_parts.append(msg_text)
+                    if record.get('type') in ('command_execution', 'mcp_tool_call', 'web_search', 'file_change'):
+                        post_command_parts.clear()
                     if record.get('type') == 'command_execution' and len(events) < MAX_EVENTS:
                         # Command strings can contain runtime-fetched secrets; publish metadata only.
                         events.append({'command': '[native command; contents private]', 'exitCode': record.get('exit_code')})
@@ -185,7 +210,10 @@ def main():
     if code:
         print(f'{a.provider_model} exited {code}; private diagnostics: {logdir}', file=sys.stderr)
         return code
-    print(json.dumps({'result': '\n'.join(parts), 'session_id': session}))
+    final_parts = [pt for pt in post_command_parts if pt.strip()] or [pt for pt in parts if pt.strip()][-1:]
+    if len(final_parts) > 1 and re.match(r"^(i['\u2019]ll\b|let me\b|i am going to\b|i'm going to\b)", final_parts[0].strip(), re.I):
+        final_parts = final_parts[-1:]
+    print(json.dumps({'result': '\n'.join(final_parts), 'session_id': session}))
     return 0
 
 
