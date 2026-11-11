@@ -29,15 +29,20 @@ Cross-links: `[[theme-tools-canonical-components]]` · `[[blog-content-standard]
   WIRES it; it never forks it (`[[theme-tools-canonical-components]]`, `[[drift-detection]]` reusable-code rule).
 - **This is the DEFAULT for ALL blogs** unless a specific project explicitly states a different model.
 
-## Open decisions (being finalized with the owner — do not hard-code until answered)
+## Resolved decisions (owner, 2026-11-10) — the estate default
 
-- **Who may publish after sign-in** — public OAuth lets anyone authenticate, so sign-in ≠ publish-rights.
-  Default recommendation: an **owner allowlist** edits/publishes; a signed-in non-owner may only SUBMIT
-  (a PR / the `#34` tip queue), never auto-publish.
-- **Save mechanism** — direct commit to `main` (fast, 1-click) vs open a PR + preview deploy (review gate).
-- **Magic-email delivery** — magic-link needs an email provider (estate rail = Amazon SES). GitHub + Google
-  work with NO email; magic-email is BLOCKED until a sending credential for the domain is authorized (`#31`-class).
-- **Image uploads** — R2 bucket vs commit into the repo `public/` (content-as-code) vs deterministic SVG-only.
+- **Publish rights = OWNER ALLOWLIST.** Public OAuth lets anyone authenticate, so sign-in ≠ publish.
+  Only allowlisted identities open the editor / publish; a signed-in non-owner sees "request access" and
+  may only SUBMIT via the public tip/PR queue (`#34`), never auto-publish. (`authenticate ≠ authorize`.)
+- **Save = DIRECT COMMIT to `main`** → auto-deploy (fast, true 1-click; fits solo + main-only). Contributor
+  submissions are the PR path; the owner's own edits commit directly.
+- **Social sign-in SHIPS FIRST (GitHub + Google); magic-email is deferred** until an authorized email
+  sending credential for the domain exists (estate rail = Amazon SES) — GitHub/Google need no email, so
+  they are never blocked; magic-email is a specific, recorded blocker, never a faked success.
+- **Images = Cloudflare R2** (CF-native bucket + CDN URL; repo stays lean) with alt text + provenance
+  REQUIRED on every upload. Not committed into the repo.
+- **Auth lib = Better Auth** + a small **D1 session store scoped to the editor surface**; the public blog
+  stays stateless (no runtime store on the read path).
 
 ## Anti-patterns
 
