@@ -21,3 +21,4 @@ members:
   - rules/agent-selection
   - rules/agent-neutrality
   - rules/account-entitlements
+  - rules/agent-readable-by-default

@@ -79,4 +79,8 @@ members:
   - rules/projectsites-recommended-stack
   - rules/emdash-fleet
   - rules/supremacy-wars
+  - rules/subtraction-first
+  - rules/one-canonical-seam
+  - rules/dual-reader-artifacts
+  - rules/determinism-ratchet
   - rules/CHANGELOG
