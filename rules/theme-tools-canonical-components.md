@@ -39,6 +39,19 @@ User directive, 2026-10-31. This rule supersedes older instructions that make dr
 - Publish primitives, sections, layouts, editor controls, charts, overlays, loading states, and app-specific compositions with explicit exports, peer dependencies, changelogs, migration notes, and supported runtime metadata.
 - Pin consumer versions. Test affected consumers before upgrades; deploy with rollback support. A library release must never silently mutate already-published customer sites.
 
+## Build naturally SELECTS the full catalog (never a hand-picked handful)
+
+- **Every consuming project wires the FULL `@theme.tools/blog` catalog so the build auto-selects the right component for a need — never hand-wire a few.** `@theme.tools/blog` exposes **~100 components** (widgets + media + multimedia render fns + the component registry), NOT ~14 — the catalog is large; rotate/leverage it fully in blog content AND chrome.
+- **Config pattern (do this per consumer):** add the tsconfig `paths` alias for `@theme.tools/blog/*` (mirror in vitest `resolve.alias` + esbuild honors it) AND import the **component registry** — `renderComponent` / `COMPONENT_TYPES` / `ALL_BLOG_CSS` — so all components are available by default, not a curated subset. The build picks by type; you don't hand-import each one.
+- **Anti-pattern (kill on sight):** "using only a handful of the available components." Using ≤a few when ~100 exist is DRIFT — a re-prompt to "use theme.tools more" means the catalog was under-leveraged.
+- OnePrompt-preview payload discipline (don't ship the whole catalog into every *live preview iframe*, § OnePrompt) is a RUNTIME concern, orthogonal to this BUILD-time availability — both hold.
+
+## Edit `@theme.tools` FREELY to improve it (compose AND contribute)
+
+- **Standing license: do NOT shy away from EDITING `@theme.tools`.** When an upgrade improves the shared library, author/modify it IN `@theme.tools` (`heymegabyte/theme.tools`) — not locally. Editing the shared library to improve it is ENCOURAGED, not avoided.
+- A reusable component, widget, nav element, media primitive, or util belongs in `@theme.tools` the **same turn** it's needed — compose FROM the catalog and contribute BACK to it, both binding. Hand-rolling locally what belongs upstream is the drift this kills.
+- Per git hygiene: `theme.tools` is a shared tree with concurrent agents — `git fetch && rebase origin/main` (or a worktree), never `pull --rebase --autostash` on a push rejection.
+
 ---
 
 ## The 28 Default `@theme.tools` Libraries (Situation → Package Routing Matrix)
