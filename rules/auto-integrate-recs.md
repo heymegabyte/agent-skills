@@ -40,7 +40,11 @@ Whenever a "Top X" (e.g., Top 30) list has been printed and the user responds wi
 2. **Ask Why Each Wanted Feature Wasn't Already Auto-Implemented**: For every item the user wants implemented, ask yourself: *"Why wasn't this feature automatically implemented already, before the user had to ask for the Top X ideas?"*
 3. **Modify Agent Skills for Automatic Next-Time Integration**: Update the governing skill/rule in `~/.agentskills` (`heymegabyte/agent-skills`) and any upstream bootstrap/starter repository (`install.doctor`, `template.projectsites.dev`) **in the same turn** so those features get **automatically integrated on pass 1 next time—before the user ever asks for a "Top X" list**.
 4. **Blocklist Rejected Items**: Add rejected items as explicit negative guardrails in the owning rule/skill so they are never suggested or installed again.
-5. **Cross-links**: `[[prompt-as-training-signal]]` §8 · `[[predictive-completeness]]` · `[[always]]`.
+5. **Pass-1 FinOps Multi-Key Unbundling & Modality Capacity Rule**:
+   - Never collapse sibling secret environment variables (`REPLICATE_API_TOKEN || REPLICATE_API_KEY`, `DEEPGRAM_ADMIN_API_KEY || DEEPGRAM_API_KEY`) without first verifying whether both hold distinct credentials/accounts (e.g., organization vs. personal user); unbundle every distinct credential into its own FOCUS 1.5 billing row and profile entry on Pass 1.
+   - Whenever an API wallet carries a promotional or prepaid dollar credit balance (e.g., Deepgram `$189.39`, Exa `$1,109.89`, DigitalOcean `$11.30`), automatically compute and surface modality-specific unit capacities (Aura-2 TTS characters, Nova-3 STT minutes, Exa `auto` vs. `deep-reasoning` queries, zero-out-of-pocket video production pathways, and ephemeral GPU burst hours) on Pass 1.
+   - Always pair autonomous Paperclip control planes with PostgreSQL auto-triage/reopen triggers (`trg_paperclip_auto_populate_issue_meta`, `trg_paperclip_auto_attach_issue_labels`, `trg_paperclip_reopen_on_human_comment`) and a stale-`in_progress` heartbeat watchdog (`fn_paperclip_watchdog_heal_stalled_issues`).
+6. **Cross-links**: `[[prompt-as-training-signal]]` §8 · `[[predictive-completeness]]` · `[[always]]`.
 
 ## Anti-patterns
 
