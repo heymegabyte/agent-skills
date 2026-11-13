@@ -49,6 +49,8 @@ export const PAPERCLIP_SPECIALIST_AGENTS = {
   finOps: '9e11de6b-c27d-4159-86dd-487be0c51e1c',
   appSec: '59f8d581-168e-4013-92a2-53f6288d3bcd',
   qaVerification: 'f299bd09-55b8-46b2-bcf0-0cd832a20591',
+  a11yAuditor: 'f75dd55c-e2c0-491f-981b-85e3947f5960',
+  sre: '4ac23ce6-e37f-473d-834e-48b6bf824f3f',
   swarmDispatcher: '60c08948-5f59-4ffe-bde3-19dc26074404',
 } as const;
 
@@ -199,7 +201,11 @@ export function validateOpenSpecChange(
   changeId: string,
   repoNameOverride?: string,
 ): OpenSpecValidationResult {
-  const repoName = repoNameOverride ?? path.basename(path.resolve(repoPath));
+  const rawBaseName = repoNameOverride ?? path.basename(path.resolve(repoPath));
+  const repoName =
+    rawBaseName === 'heymegabyte-agent-skills' || rawBaseName === '.agentskills'
+      ? 'agent-skills'
+      : rawBaseName;
   const mapping = CANONICAL_PROJECT_MAP[repoName] ?? {
     projectId: '',
     githubRepo: `heymegabyte/${repoName}`,
@@ -301,7 +307,7 @@ export function validateOpenSpecChange(
 }
 
 /**
- * Formats the Paperclip issue title and markdown body with OpenSpec deep links.
+ * Formats the Paperclip issue title, governance fields, and markdown body with OpenSpec deep links.
  */
 export function buildPaperclipIssuePayload(result: OpenSpecValidationResult): {
   marker: string;
@@ -309,6 +315,10 @@ export function buildPaperclipIssuePayload(result: OpenSpecValidationResult): {
   description: string;
   status: 'todo' | 'in_progress' | 'done';
   assigneeAgentId: string;
+  reviewPolicy: 'not_creator';
+  reviewerAgentIds: readonly string[];
+  approverAgentIds: readonly string[];
+  watchdogAgentId: string;
 } {
   const marker = `[openspec:${result.repoName}:${result.changeId}]`;
   const cleanHeading = result.title.replace(/^Proposal:\s*/i, '').trim();
@@ -318,6 +328,20 @@ export function buildPaperclipIssuePayload(result: OpenSpecValidationResult): {
       ? 'done'
       : 'todo';
   const assigneeAgentId = resolveSpecialistAssigneeAgentId(result);
+  const reviewerAgentIds = [
+    PAPERCLIP_SPECIALIST_AGENTS.qaVerification,
+    PAPERCLIP_SPECIALIST_AGENTS.appSec,
+    PAPERCLIP_SPECIALIST_AGENTS.a11yAuditor,
+  ].filter((id) => id !== assigneeAgentId);
+  const approverAgentIds = [
+    PAPERCLIP_SPECIALIST_AGENTS.architect,
+    PAPERCLIP_SPECIALIST_AGENTS.releaseManager,
+    PAPERCLIP_SPECIALIST_AGENTS.ceo,
+  ].filter((id) => id !== assigneeAgentId);
+  const watchdogAgentId =
+    assigneeAgentId === PAPERCLIP_SPECIALIST_AGENTS.sre
+      ? PAPERCLIP_SPECIALIST_AGENTS.swarmDispatcher
+      : PAPERCLIP_SPECIALIST_AGENTS.sre;
 
   const description = [
     `## OpenSpec Convergence Task — \`${result.repoName}\``,
@@ -325,20 +349,36 @@ export function buildPaperclipIssuePayload(result: OpenSpecValidationResult): {
     `- **Change ID:** \`${result.changeId}\``,
     `- **Frontier Architect:** \`${result.architect}\` (verified non-OpenCode spec authorship)`,
     `- **Assigned Specialist Agent:** \`${assigneeAgentId}\``,
+    `- **Reviewers (\`review_policy = not_creator\`):** \`${reviewerAgentIds.join('`, `')}\``,
+    `- **Approvers:** \`${approverAgentIds.join('`, `')}\``,
+    `- **Watchdog:** \`${watchdogAgentId}\``,
     `- **Task Progress:** **${result.completedTasks} / ${result.totalTasks}** tasks completed`,
     `- **OpenSpec Directory:** [${result.repoName}/openspec/changes/${result.changeId}](${result.deepLinks.folderUrl})`,
     `- **Proposal:** [proposal.md](${result.deepLinks.proposalUrl})`,
     `- **Architecture Design:** [design.md](${result.deepLinks.designUrl})`,
     `- **Implementation Tasks:** [tasks.md](${result.deepLinks.tasksUrl})`,
     '',
-    '### Convergence & Trunk-Based Production Deployment Contract',
+    '### Convergence, Sub-Tasks, Governance Fields & Trunk-Based Production Deployment Contract',
     '1. Every UI widget and sub-feature must converge through the Micro Loop (`CREATE → RENDER → EXPERIENCE → CRITIQUE → MODIFY → COMPARE`) across all 16 visual states and `0.333s` OKLCH transitions.',
     '2. Langfuse observability must remain enabled with graceful timeout fallback (`LANGFUSE_TIMEOUT_MS=2500`).',
     '3. Reconcile reusable patterns in parallel across `agent-skills`, `install.doctor`, and `theme.tools`.',
-    '4. **Autonomous Trunk-Based Execution (`main`) & Production Rollout:** Always work toward `main` (`shared_workspace`), create AND **merge** the PR into `main` (`gh pr create` + `gh pr merge --merge --delete-branch`), deploy to production (Cloudflare Workers / Nexus registry / Coolify / systemd + CDN cache purge), respond on-thread to all messages, and post empirical verification on this Paperclip issue.',
+    '4. **Sub-Tasks (`parent_id`) & Graph Relations (`Parent`, `Blocking`, `Blocked by`):** Decompose multi-part or cross-specialist deliverables into child sub-tasks (`parentId`) whenever appropriate, and wire prerequisite dependencies via `blockedByIssueIds` (`issue_relations` `type = blocks`) so downstream tasks auto-wake on completion.',
+    '5. **Reviewers, Approvers, Monitor & Watchdog:** Maintain populated **Reviewers** (`QA-Verification`, `AppSec`, `A11y-Auditor`), **Approvers** (`Architect`, `Release-Manager`, `CEO`), **Monitor** (`monitor_next_check_at`, `monitor_notes`, `monitor_scheduled_by = assignee` while `in_progress`/`in_review`), and **Watchdog** (`issue_watchdogs` active `SRE`/`Swarm-Dispatcher`).',
+    '6. **Decisions (`/MEG/decisions`) — Clarifying Questions, Recommendations & Scope Expansions Only:** Use Paperclip Decisions (`issue_thread_interactions` `kind = ask_user_questions`) strictly to ask the user genuine questions to clarify instructions or provide high-leverage recommendations and scope expansions (with a `(Recommended)` option). Never create non-question status blurbs or bureaucratic handoffs in Decisions.',
+    '7. **Autonomous Trunk-Based Execution (`main`) & Production Rollout:** Always work toward `main` (`shared_workspace`), create AND **merge** the PR into `main` (`gh pr create` + `gh pr merge --merge --delete-branch`), deploy to production (Cloudflare Workers / Nexus registry / Coolify / systemd + CDN cache purge), respond on-thread to all messages, and post empirical verification on this Paperclip issue.',
   ].join('\n');
 
-  return { marker, title, description, status, assigneeAgentId };
+  return {
+    marker,
+    title,
+    description,
+    status,
+    assigneeAgentId,
+    reviewPolicy: 'not_creator',
+    reviewerAgentIds,
+    approverAgentIds,
+    watchdogAgentId,
+  };
 }
 
 export interface ExistingPaperclipIssueItem {

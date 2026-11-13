@@ -94,6 +94,12 @@ Whenever the agent evaluates at the end of a prompt pass what updates can be inf
 - Whenever inferred work is saved or queued in `agent-skills`, `install.doctor`, `theme.tools`, or any other project:
   1. Properly create or update an **OpenSpec** change directory (`openspec/changes/<change-id>/` containing `proposal.md`, `design.md`, `tasks.md`, and `specs/<capability>/spec.md`) in each respective repository.
   2. Create or update the corresponding **Paperclip issue/task** in each respective Paperclip project (`agent-skills`, `install.doctor`, `theme.tools`, etc.) containing a **direct deep link to the OpenSpec files** via `~/.agentskills/bin/openspec-paperclip-sync.ts` (or Paperclip MCP / `paperclipai issue create`).
+  3. **Leverage Sub-Tasks, Reviewers, Approvers, Monitor, Watchdog & Graph Relations (`Parent`, `Blocking`, `Blocked by`)**:
+     - Decompose multi-part epics or cross-domain work into **Sub-tasks (`parent_id` / `parentId`)** whenever appropriate.
+     - Wire **Parent** (`parent_id`), **Blocking** (`blocks`), and **Blocked by** (`blockedBy` / `blockedByIssueIds` in `issue_relations`) so downstream tasks auto-wake when prerequisites complete.
+     - Populate **Reviewers** (`execution_policy.stages` `type = 'review'`: `QA-Verification`, `AppSec`, `A11y-Auditor` + `review_policy = 'not_creator'`), **Approvers** (`execution_policy.stages` `type = 'approval'`: `Architect`, `Release-Manager`, `CEO`), **Monitor** (`execution_policy.monitor` + `monitor_next_check_at`, `monitor_notes`, `monitor_scheduled_by = 'assignee'` on `in_progress`/`in_review` issues), and **Watchdog** (`issue_watchdogs`: `SRE` or `Swarm-Dispatcher`).
+  4. **Paperclip Decisions (`/MEG/decisions`) — Clarifying Questions, Recommendations & Scope Expansions Only**:
+     - Use Paperclip **Decisions** (`issue_thread_interactions` with `kind = 'ask_user_questions'`) strictly to ask the user genuine questions to clarify instructions or provide architectural/product recommendations and scope expansions (with a `(Recommended)` option and free-text support). Never use Decisions for non-question status blurbs, bureaucratic handoffs, or routine PR merge notifications.
 
 ---
 

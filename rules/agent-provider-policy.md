@@ -81,6 +81,7 @@ When two or more independent throughput-safe slices exist, launch an **OpenCode 
 - **Governance maps onto existing doctrine:** Paperclip approval gates = the `autonomous-engineering`
   tiers (autonomous | review-recommended | approval-required | blocked); its budgets = `cost-estimator`
   discipline; its task/comment records pair with `/run-the-loop` + `.claude/run-the-loop/CONVERGENCE.md`.
+  Every Paperclip issue leverages **Sub-tasks (`parent_id`)** whenever appropriate, wires **Parent** (`parent_id`), **Blocking** (`blocks`), and **Blocked by** (`blockedByIssueIds` / `issue_relations`), populates **Reviewers** (`QA-Verification`, `AppSec`, `A11y-Auditor` + `review_policy = 'not_creator'`), **Approvers** (`Architect`, `Release-Manager`, `CEO`), **Monitor** (`monitor_next_check_at`, `monitor_notes`, `monitor_scheduled_by = 'assignee'`), and **Watchdog** (`issue_watchdogs`: `SRE` or `Swarm-Dispatcher`), and reserves **Decisions** (`/MEG/decisions`, `issue_thread_interactions` `kind = 'ask_user_questions'`) strictly for asking the user questions to clarify instructions or providing recommendations and scope expansions.
 - **Run it CF-native + safe:** self-host only — never expose the raw Gateway/Control UI; gate behind
   **Cloudflare Access** (as with the OpenClaw Gateway). Embedded Postgres locally → external **Neon**
   in prod. Install `npx paperclipai@latest onboard --yes` (Node ≥24.11; Docker ok); creds via

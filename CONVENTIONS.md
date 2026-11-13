@@ -996,3 +996,17 @@ New default transport (spec 2025-03-26), replaces deprecated HTTP+SSE.
 - `perf`
 - `ci`
 - `chore`
+
+## Paperclip (`swarml.ink`) Governance, Sub-Tasks, Reviewers/Approvers/Monitor/Watchdog, Graph Relations & Decisions
+
+- **Sub-Tasks (`parent_id` / `parentId`)**: Decompose epics, multi-package changes, and multi-stage workflows into child sub-tasks linked via `parent_id` (`parentId` in the REST API) whenever work spans distinct specialist roles, parallel workstreams, or independent verification gates.
+- **Graph Relations (`Parent`, `Blocking`, `Blocked by`)**: Always wire `parent_id` (**Parent**) and `issue_relations` (`type = 'blocks'`, configured via `blockedByIssueIds` on the dependent issue, which surfaces both **Blocking** and **Blocked by** in Paperclip) whenever tasks have prerequisite ordering so Paperclip auto-wakes downstream issues (`issue_blockers_resolved`) when blockers reach `done` and wakes parents (`issue_children_completed`) when all sub-tasks finish.
+- **Reviewers, Approvers, Monitor & Watchdog Fields**:
+  - **Reviewers** (`execution_policy.stages` stage `type: "review"` + `review_policy: "not_creator"`): Populate specialist reviewers (`QA-Verification`, `AppSec`, `A11y-Auditor`) on every active issue.
+  - **Approvers** (`execution_policy.stages` stage `type: "approval"`): Populate release/architecture approvers (`Architect`, `Release-Manager`, `CEO`) on every active issue.
+  - **Monitor** (`execution_policy.monitor` + `monitor_next_check_at`, `monitor_notes`, `monitor_scheduled_by: "assignee"`): Schedule an active monitor on every `in_progress` / `in_review` agent-owned issue so `tickDueIssueMonitors` automatically wakes the assignee (`issue_monitor_due`).
+  - **Watchdog** (`issue_watchdogs` table: `watchdog_agent_id`, `instructions`, `status: "active"`): Attach an active watchdog (`SRE` or `Swarm-Dispatcher`) to every open issue to detect stalled runs and enforce trunk-based `main` convergence.
+- **Decisions (`/MEG/decisions`) — Strictly User Clarification Questions, Recommendations & Scope Expansions**:
+  - Paperclip **Decisions** (`/MEG/decisions`, backed by `issue_thread_interactions` with `kind = 'ask_user_questions'` and `decision_queues` / `decision_retention`) are **strictly used to ask the user genuine questions to clarify instructions or provide high-leverage recommendations and scope expansions** (with a `(Recommended)` option and custom free-text support).
+  - Never use Decisions for non-question status updates, bureaucratic role handoffs, PR merge requests, or routine internal agent coordination (`trg_paperclip_decisions_questions_only` and `trg_paperclip_sync_interaction_decision_retention` automatically archive non-question items).
+- **Trunk-Based `main` PR Creation, Auto-Merge & Production Deployment**: Operate in `shared_workspace` mode on `main`, open a GitHub PR targeting `main` (`gh pr create --base main`), **automatically merge the PR into `main`** (`gh pr merge --merge --delete-branch`), deploy to production, and post live verification proof on the Paperclip issue before marking `done`.

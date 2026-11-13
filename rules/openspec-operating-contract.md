@@ -54,8 +54,11 @@ Enable the expanded profile for complex work (`openspec config profile`, then `o
 1. **Parallel End-of-Turn Triad (`agent-skills` + `install.doctor` + `theme.tools` + Touched Projects)**:
    - At the end of every prompt pass, infer reusable updates across `heymegabyte/agent-skills`, `heymegabyte/install.doctor`, and `heymegabyte/theme.tools` (`ui.theme.tools`) in parallel, plus any other touched project.
    - Save in-flight or follow-up work via OpenSpec (`openspec/changes/<change-id>/{proposal.md,design.md,tasks.md,specs/}`) in each respective repository.
-2. **Mandatory Paperclip Issue Linkage**:
+2. **Mandatory Paperclip Issue Linkage, Sub-Tasks, Governance Fields & Decisions Contract**:
    - Every repository where an OpenSpec definition is added or updated MUST have a corresponding task/issue created or updated in its **Paperclip** project (`agent-skills`, `install.doctor`, `theme.tools`, `legion.megabyte.space`, etc.) containing a **direct deep link to the OpenSpec files** (via `~/.agentskills/bin/openspec-paperclip-sync.ts`, Paperclip MCP, or `paperclipai issue create`).
+   - Use **Sub-tasks (`parent_id`)** whenever appropriate to decompose multi-deliverable changes, and wire **Parent** (`parent_id`), **Blocking** (`blocks`), and **Blocked by** (`blockedByIssueIds` / `issue_relations`) whenever appropriate.
+   - Populate **Reviewers** (`QA-Verification`, `AppSec`, `A11y-Auditor`), **Approvers** (`Architect`, `Release-Manager`, `CEO`), **Monitor** (`monitor_next_check_at`), and **Watchdog** (`issue_watchdogs`) on Paperclip issues.
+   - Reserve Paperclip **Decisions** (`/MEG/decisions`, `ask_user_questions`) strictly for asking the user questions to clarify instructions or presenting recommendations and scope expansions.
 3. **Huge-Prompt Triage, Unfinished Sub-Features ("Give-Up" Boundary) & Recommendations**:
    - When a huge prompt arrives, finish programming everything possible in the current pass (Wave 1), and use `claude`, `codex`, or `antigravity` to author the OpenSpec for the remaining scope (Wave 2) and post it to Paperclip MCP/API.
    - Whenever an agent stops pursuing remaining sub-features ("gives up" due to context/budget) OR surfaces any recommendation or next step at the end of a prompt, it MUST write the OpenSpec change and file the linked Paperclip issue so Paperclip automatically tends to it. Cross-link: `[[total-convergence-and-openspec-handoff]]`.

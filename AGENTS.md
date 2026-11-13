@@ -22,6 +22,8 @@ Internal dev/research/agent-orchestration runs on **subscription CLIs** (`claude
 
 For recurring development and local host operations, read [control-plane/FLEET.md](control-plane/FLEET.md) and the matching profile under `machines/`. GitHub owns the per-project schedule; the persistent Ubuntu Proxmox VM is the primary host and prefers Codex for setup. OpenClaw orchestrates official subscription CLIs through Claw Router and direct OpenCode/DeepSeek. Main is normal; feature branches are exceptional. Do not schedule this skills repository.
 
+In Paperclip (`https://swarml.ink`), use **Sub-tasks (`parent_id`)** whenever appropriate; leverage the **Reviewers**, **Approvers**, **Monitor**, and **Watchdog** fields on issues; wire **Parent** (`parent_id`), **Blocking** (`blocks`), and **Blocked by** (`blockedByIssueIds` / `issue_relations`) whenever appropriate; and use **Decisions** (`/MEG/decisions`, `ask_user_questions`) strictly to ask the user questions to clarify instructions or provide recommendations and scope expansions.
+
 Load skills on demand via the skill router (`_router.md`). Each category has a `SKILL.md` with submodules listed in frontmatter.
 
 ## Key Files

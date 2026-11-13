@@ -736,6 +736,9 @@ function buildSoulMarkdown(item) {
     '',
     '- **Execute with Auftragstaktik (Mission-Type Tactics):** Understand Commander Intent, take decisive action within your sector, and deliver verified outcomes without narration filler.',
     '- **Autonomous Paperclip Issue Lifecycle & Metadata Ownership:** On every Paperclip issue (`MEG-*` at `https://swarml.ink/MEG/issues/*`), ensure all metadata (`assignee_agent_id`, `assignee_user_id`, `responsible_user_id`, `project_id`, `project_workspace_id`, `goal_id`, `billing_code`, and `issue_labels`) is populated, and respond directly on-thread to every user message or comment.',
+    '- **Sub-Tasks (`parent_id`) & Graph Relations (`Parent`, `Blocking`, `Blocked by`):** Decompose multi-step epics or cross-domain initiatives into child sub-tasks (`parentId` / `parent_id`) whenever appropriate, and wire prerequisite dependencies via `blockedByIssueIds` (`issue_relations` `type = blocks`) so downstream issues auto-wake (`issue_blockers_resolved`) when blockers finish and parent issues auto-wake (`issue_children_completed`) when all sub-tasks complete.',
+    '- **Reviewers, Approvers, Monitor & Watchdog Fields:** Ensure every issue leverages **Reviewers** (`execution_policy.stages` `type = review`: `QA-Verification`, `AppSec`, `A11y-Auditor` + `review_policy = not_creator`), **Approvers** (`execution_policy.stages` `type = approval`: `Architect`, `Release-Manager`, `CEO`), **Monitor** (`execution_policy.monitor` + `monitor_next_check_at`, `monitor_notes`, `monitor_scheduled_by = assignee` while `in_progress`/`in_review`), and **Watchdog** (`issue_watchdogs`: active `SRE` or `Swarm-Dispatcher`).',
+    '- **Decisions (`/MEG/decisions`) — User Clarification Questions, Recommendations & Scope Expansions Only:** Use Paperclip Decisions (`issue_thread_interactions` with `kind = ask_user_questions`) strictly to ask the user genuine questions to clarify instructions or provide architectural/product recommendations and scope expansions (with a `(Recommended)` option and free-text support). Never use Decisions for non-question status blurbs, bureaucratic handoffs, or routine PR merge rituals.',
     '- **Trunk-Based `main` PR Creation, Auto-Merge & Production Deployment:** Operate in `shared_workspace` mode on `main`. For every issue, pull latest `origin/main`, implement and test all OpenSpec tasks, open a GitHub Pull Request targeting `main` (`gh pr create`), **immediately merge that PR into `main`** (`gh pr merge --merge --delete-branch`), deploy to production (Cloudflare Workers/Pages + CDN purge, Nexus registry publish, Coolify, or host systemd service), verify live production health, and post the merged PR URL, `main` commit SHA, and production verification proof on the Paperclip issue before marking `done`.',
     '- **Zero-Defect Verification:** Never claim completion without empirical proof of life (passing tests, live HTTP/DOM checks, or SQL verification).',
     '- **Strict Chain of Command:** Respect supervision boundaries, token budgets, and security perimeters at all times.',
@@ -752,10 +755,12 @@ const CANONICAL_USER_MD = [
   '',
   '## Directives',
   '',
-  '<!-- observed: 2026-11-12 | status: active -->',
+  '<!-- observed: 2026-11-13 | status: active -->',
   '',
   '- Prefer TypeScript over Python (Node 24 native strip-types / Bun + Bash for system glue).',
   '- Automatically handle all Paperclip (`swarml.ink`) issues end-to-end: auto-assign a specialist agent and owner user, populate all metadata (`project_id`, `project_workspace_id`, `goal_id`, `billing_code`, `labels`), respond on-thread to every comment, create AND merge Pull Requests directly into `main` (`shared_workspace`), and automatically deploy to production.',
+  '- Use Paperclip **Sub-tasks (`parent_id`)** whenever appropriate; populate and leverage **Reviewers** (`QA-Verification`, `AppSec`, `A11y-Auditor`), **Approvers** (`Architect`, `Release-Manager`, `CEO`), **Monitor** (`monitor_next_check_at`), and **Watchdog** (`issue_watchdogs`); and wire **Parent** (`parent_id`), **Blocking** (`blocks`), and **Blocked by** (`blockedByIssueIds` / `issue_relations`) whenever appropriate.',
+  '- Use Paperclip **Decisions** (`/MEG/decisions`, `issue_thread_interactions` `kind = ask_user_questions`) strictly to ask the user genuine questions to clarify instructions or provide recommendations and scope expansions (with `(Recommended)` options) — never leave non-question noise in Decisions.',
   '- Always execute actionable work in the same turn and verify with deterministic tests before reporting completion.',
   '- Never print or expose raw secrets, tokens, or credentials in logs or comments.',
   ''
@@ -763,12 +768,15 @@ const CANONICAL_USER_MD = [
 
 const AUTONOMOUS_MAIN_MERGE_CONTRACT_MD = [
   '',
-  '## Paperclip (`swarml.ink`) Autonomous Issue, Trunk-Based `main` Merge & Production Deployment Contract',
+  '## Paperclip (`swarml.ink`) Autonomous Issue, Sub-Tasks, Governance Fields, Decisions & Trunk-Based `main` Deployment Contract',
   '',
   '1. **Automatic Triage & Metadata Completion**: Every issue on `https://swarml.ink` must have `assignee_agent_id`, `assignee_user_id`, `responsible_user_id`, `project_id`, `project_workspace_id`, `goal_id`, `billing_code`, and `issue_labels` populated.',
-  '2. **Mandatory On-Thread Comment Response**: Whenever a user posts a message or comment on an issue (`issue_comment.created`), immediately inspect the thread, execute any requested or remaining work, and post a comprehensive status reply on the issue.',
-  '3. **Trunk-Based `main` Execution (`shared_workspace`) — Create AND Merge PR into `main`**: Work in the canonical repository workspace on `main`, create a short-lived branch or PR (`gh pr create --base main`), and **merge it into `main`** (`gh pr merge --merge --delete-branch`) once tests pass.',
-  '4. **Automatic Production Deployment**: Immediately deploy merged `main` changes to production (`wrangler deploy` + CDN cache purge, `npm publish` to `registry.megabyte.space`, Coolify deploy, or systemd service reload on `ubuntu.megabyte.space`) and post live production verification proof on the Paperclip issue before marking `done`.',
+  '2. **Sub-Tasks (`parent_id`) & Graph Relations (`Parent`, `Blocking`, `Blocked by`)**: Use **Sub-tasks (`parentId` / `parent_id`)** whenever an epic or multi-stage initiative splits into distinct specialist deliverables or parallel workstreams, and wire prerequisite edges via `blockedByIssueIds` (`issue_relations` `type = blocks`) so downstream work auto-wakes when blockers reach `done`.',
+  '3. **Reviewers, Approvers, Monitor & Watchdog Fields**: Populate and honor **Reviewers** (`execution_policy.stages` `type = review`: `QA-Verification`, `AppSec`, `A11y-Auditor` + `review_policy = not_creator`), **Approvers** (`execution_policy.stages` `type = approval`: `Architect`, `Release-Manager`, `CEO`), **Monitor** (`execution_policy.monitor` + `monitor_next_check_at`, `monitor_notes`, `monitor_scheduled_by = assignee` while `in_progress`/`in_review`), and **Watchdog** (`issue_watchdogs`: active `SRE` or `Swarm-Dispatcher`).',
+  '4. **Decisions (`/MEG/decisions`) — User Clarification Questions, Recommendations & Scope Expansions Only**: Use Paperclip **Decisions** (`issue_thread_interactions` with `kind = ask_user_questions`) strictly to ask the user genuine questions to clarify instructions or present architectural/product recommendations and scope expansions (with a `(Recommended)` option and free-text support). Never use Decisions for non-question status blurbs, bureaucratic handoffs, or routine PR merge rituals.',
+  '5. **Mandatory On-Thread Comment Response**: Whenever a user posts a message or comment on an issue (`issue_comment.created`), immediately inspect the thread, execute any requested or remaining work, and post a comprehensive status reply on the issue.',
+  '6. **Trunk-Based `main` Execution (`shared_workspace`) — Create AND Merge PR into `main`**: Work in the canonical repository workspace on `main`, create a short-lived branch or PR (`gh pr create --base main`), and **merge it into `main`** (`gh pr merge --merge --delete-branch`) once tests pass.',
+  '7. **Automatic Production Deployment**: Immediately deploy merged `main` changes to production (`wrangler deploy` + CDN cache purge, `npm publish` to `registry.megabyte.space`, Coolify deploy, or systemd service reload on `ubuntu.megabyte.space`) and post live production verification proof on the Paperclip issue before marking `done`.',
   ''
 ].join('\n');
 
@@ -939,9 +947,11 @@ for (const agent of CANONICAL_FLEET) {
   }
 
   const rawContent = readFileSync(filePath, 'utf8');
-  const content = rawContent.includes('Autonomous Issue, Trunk-Based `main` Merge & Production Deployment Contract')
-    ? rawContent
-    : `${rawContent.trimEnd()}\n${AUTONOMOUS_MAIN_MERGE_CONTRACT_MD}`;
+  const strippedContent = rawContent.replace(
+    /\n*## Paperclip \(`swarml\.ink`\) Autonomous Issue[\s\S]*$/,
+    '',
+  );
+  const content = `${strippedContent.trimEnd()}\n${AUTONOMOUS_MAIN_MERGE_CONTRACT_MD}`;
   const contentBase64 = Buffer.from(content, 'utf8').toString('base64');
   const contentHash = createHash('sha256').update(content, 'utf8').digest('hex');
   const byteLength = Buffer.byteLength(content, 'utf8');
@@ -952,7 +962,8 @@ for (const agent of CANONICAL_FLEET) {
     'openclaw-integration',
     'emdash-skills',
     'paperclip',
-    'paperclip-board'
+    'paperclip-board',
+    'paperclip-converting-plans-to-tasks'
   ]);
   if (['browser', 'qa', 'a11y', 'ui-designer'].includes(agent.openclawId)) {
     desiredSkillSlugs.add('agent-browser');
