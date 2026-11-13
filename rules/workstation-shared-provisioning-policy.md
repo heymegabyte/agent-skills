@@ -120,3 +120,17 @@ These invariants were proven on live fleet hosts in pass 1. Each one silently re
      2. Top-10 high-confidence gap synthesis across live hosts, host recovery repos, `install.doctor`, and `agent-skills`.
      3. Same-turn implementation across live hosts + host repos + `install.doctor` (`executable_post-workstation.sh`, `executable_workstation-doctor.ts`, `executable_megabyte-local-proxy.ts`) + Triad repos.
      4. Snapshot refresh, test suite + file ledger verification, and git push until zero confident recommendations remain.
+
+
+## 10. Recommended High-ROI Workstation Capabilities (Auto-Integrated on Pass 1) vs. Heavy-Infra Guardrails
+
+1. **Always Auto-Integrate the 12 High-ROI, Zero-Regression Workstation Capabilities**:
+   - **Perceptual Framebuffer & Latency Verification (`EPIC-05`)**: Measure `frameDeliveryLatencyMs`, `spatialEntropyBits`, and `edgeGradientScore` in `verifyRfbWebSocketFramebuffer()` while strictly preserving the `gnome-remote-desktop (:5900) -> xtigervncviewer -> Xkasmvnc (:20)` bridge (`-AcceptSetDesktopSize 0 -RemoteResize=0`).
+   - **Weibull/Cox SMART 30-Day Survival Probability & Scrape Burst Cache (`EPIC-18`, `EPIC-41`)**: Export `smart_survival_probability_30d` and serve `/metrics` on `127.0.0.1:9835` via a `2000ms` TTL buffer so concurrent scrapes trigger zero extra subprocess spawns.
+   - **Closed-Loop Linux PSI + MGLRU + OpenZFS ARC Autonomic QoS (`EPIC-20`, `EPIC-43`)**: Dynamically balance `zfs_arc_max` (`512 MiB`–`3.5 GiB`) and `background-agents.slice` weights via `workstation-psi-governor.ts`.
+   - **Shared-Heatpipe Intel RAPL + GPU Thermal PID Guard (`EPIC-44`)**: Step down RAPL `constraint_0_power_limit_uw` (`47W -> 37W -> 28W`) before `95°C` PROCHOT throttling (`zen-asus-ctl thermal-guard` / `evaluateAdaptiveThermalBudget()`).
+   - **Cross-Tier SHA-256 Backup Merkle Manifest & Syncoid ZFS Readiness (`EPIC-32`, `EPIC-33`)**: Verify deterministic SHA-256 Merkle roots across tracked snapshots (`computeBackupMerkleManifest()`) before `backup_sync.ts`.
+   - **Turborepo Remote Cache (`/v8/artifacts/:hash`) & Action CAS (`/cas/v1/blobs/:sha256`) in `megabyte-local-proxy.ts` (`EPIC-36`)**: Serve local build artifact caching on `127.0.0.1:4880` alongside registry tarballs.
+   - **Guarded Chaos Drill & OpenTelemetry GenAI Langfuse Spool Drainer (`EPIC-48`, `EPIC-49`, `EPIC-50`)**: Verify 3-strike circuit-breaker trip + `drainSpool()` recovery, `gen_ai.*` semantic attributes, and 7-scenario `chaos-drill.ts` in `dr-drill.sh`.
+2. **Never Recommend Blocklisted or Over-Engineered Heavy Daemons on Workstations**:
+   - Never recommend `fido2`/`onlykey` interactive hardware-key prompts (which break unattended SSH/agent automation), non-Cloudflare VPN overlays (`WireGuard`/`Tailscale`), encrypted root ZFS pools that block unattended reboots, or replacing the live `gnome-remote-desktop -> Xkasmvnc` physical session bridge.

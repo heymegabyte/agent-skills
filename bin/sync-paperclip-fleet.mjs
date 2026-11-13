@@ -735,6 +735,8 @@ function buildSoulMarkdown(item) {
     '## Core Truths',
     '',
     '- **Execute with Auftragstaktik (Mission-Type Tactics):** Understand Commander Intent, take decisive action within your sector, and deliver verified outcomes without narration filler.',
+    '- **Autonomous Paperclip Issue Lifecycle & Metadata Ownership:** On every Paperclip issue (`MEG-*` at `https://swarml.ink/MEG/issues/*`), ensure all metadata (`assignee_agent_id`, `assignee_user_id`, `responsible_user_id`, `project_id`, `project_workspace_id`, `goal_id`, `billing_code`, and `issue_labels`) is populated, and respond directly on-thread to every user message or comment.',
+    '- **Trunk-Based `main` PR Creation, Auto-Merge & Production Deployment:** Operate in `shared_workspace` mode on `main`. For every issue, pull latest `origin/main`, implement and test all OpenSpec tasks, open a GitHub Pull Request targeting `main` (`gh pr create`), **immediately merge that PR into `main`** (`gh pr merge --merge --delete-branch`), deploy to production (Cloudflare Workers/Pages + CDN purge, Nexus registry publish, Coolify, or host systemd service), verify live production health, and post the merged PR URL, `main` commit SHA, and production verification proof on the Paperclip issue before marking `done`.',
     '- **Zero-Defect Verification:** Never claim completion without empirical proof of life (passing tests, live HTTP/DOM checks, or SQL verification).',
     '- **Strict Chain of Command:** Respect supervision boundaries, token budgets, and security perimeters at all times.',
     '',
@@ -750,11 +752,23 @@ const CANONICAL_USER_MD = [
   '',
   '## Directives',
   '',
-  '<!-- observed: 2026-11-11 | status: active -->',
+  '<!-- observed: 2026-11-12 | status: active -->',
   '',
   '- Prefer TypeScript over Python (Node 24 native strip-types / Bun + Bash for system glue).',
+  '- Automatically handle all Paperclip (`swarml.ink`) issues end-to-end: auto-assign a specialist agent and owner user, populate all metadata (`project_id`, `project_workspace_id`, `goal_id`, `billing_code`, `labels`), respond on-thread to every comment, create AND merge Pull Requests directly into `main` (`shared_workspace`), and automatically deploy to production.',
   '- Always execute actionable work in the same turn and verify with deterministic tests before reporting completion.',
   '- Never print or expose raw secrets, tokens, or credentials in logs or comments.',
+  ''
+].join('\n');
+
+const AUTONOMOUS_MAIN_MERGE_CONTRACT_MD = [
+  '',
+  '## Paperclip (`swarml.ink`) Autonomous Issue, Trunk-Based `main` Merge & Production Deployment Contract',
+  '',
+  '1. **Automatic Triage & Metadata Completion**: Every issue on `https://swarml.ink` must have `assignee_agent_id`, `assignee_user_id`, `responsible_user_id`, `project_id`, `project_workspace_id`, `goal_id`, `billing_code`, and `issue_labels` populated.',
+  '2. **Mandatory On-Thread Comment Response**: Whenever a user posts a message or comment on an issue (`issue_comment.created`), immediately inspect the thread, execute any requested or remaining work, and post a comprehensive status reply on the issue.',
+  '3. **Trunk-Based `main` Execution (`shared_workspace`) — Create AND Merge PR into `main`**: Work in the canonical repository workspace on `main`, create a short-lived branch or PR (`gh pr create --base main`), and **merge it into `main`** (`gh pr merge --merge --delete-branch`) once tests pass.',
+  '4. **Automatic Production Deployment**: Immediately deploy merged `main` changes to production (`wrangler deploy` + CDN cache purge, `npm publish` to `registry.megabyte.space`, Coolify deploy, or systemd service reload on `ubuntu.megabyte.space`) and post live production verification proof on the Paperclip issue before marking `done`.',
   ''
 ].join('\n');
 
@@ -924,7 +938,10 @@ for (const agent of CANONICAL_FLEET) {
     process.exit(1);
   }
 
-  const content = readFileSync(filePath, 'utf8');
+  const rawContent = readFileSync(filePath, 'utf8');
+  const content = rawContent.includes('Autonomous Issue, Trunk-Based `main` Merge & Production Deployment Contract')
+    ? rawContent
+    : `${rawContent.trimEnd()}\n${AUTONOMOUS_MAIN_MERGE_CONTRACT_MD}`;
   const contentBase64 = Buffer.from(content, 'utf8').toString('base64');
   const contentHash = createHash('sha256').update(content, 'utf8').digest('hex');
   const byteLength = Buffer.byteLength(content, 'utf8');
