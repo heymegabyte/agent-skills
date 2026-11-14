@@ -9,7 +9,7 @@
  *   4. OpenClaw per-agent workspaces (`~/.openclaw/workspaces/<openclawId>/` with `AGENTS.md`, `IDENTITY.md`, `SOUL.md`, `USER.md`, and symlinked `paperclip-claimed-api-key.json`)
  */
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync, symlinkSync, unlinkSync, lstatSync, readdirSync, copyFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, symlinkSync, unlinkSync, lstatSync, readdirSync, copyFileSync, chmodSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { homedir } from 'node:os';
 import { createHash, randomUUID } from 'node:crypto';
@@ -1086,10 +1086,27 @@ function reconcileCompanySkills() {
     if (sourceType === 'github' && currentVersionId) {
       sourceDir = `/home/professormanhattan/.paperclip/instances/default/skills/${COMPANY_ID}/__versions__/${skillId}/${currentVersionId}`;
       mkdirSync(sourceDir, { recursive: true });
+      try { chmodSync(sourceDir, 0o755); } catch { /* ignore */ }
       const mdPath = resolve(sourceDir, 'SKILL.md');
-      if (!existsSync(mdPath) || ['content-seo', 'brand-and-content-system', 'site-generation'].includes(slug)) {
+      if (!existsSync(mdPath) || ['blog-publishing', 'content-seo', 'brand-and-content-system', 'site-generation'].includes(slug)) {
         const mdText = runSql(`SELECT markdown FROM company_skills WHERE id = '${skillId}';`);
-        if (mdText) writeFileSync(mdPath, mdText + '\n', 'utf8');
+        if (mdText) {
+          try { chmodSync(mdPath, 0o644); } catch { /* ignore */ }
+          try { if (existsSync(mdPath)) unlinkSync(mdPath); } catch { /* ignore */ }
+          writeFileSync(mdPath, mdText + '\n', 'utf8');
+        }
+      }
+      if (slug === 'blog-publishing') {
+        const refSrc = resolve(HOME, 'ai/repos/agent-skills/skills/blog-publishing/references/editorial-writing.md');
+        const refDir = resolve(sourceDir, 'references');
+        const refDst = resolve(refDir, 'editorial-writing.md');
+        if (existsSync(refSrc)) {
+          mkdirSync(refDir, { recursive: true });
+          try { chmodSync(refDir, 0o755); } catch { /* ignore */ }
+          try { chmodSync(refDst, 0o644); } catch { /* ignore */ }
+          try { if (existsSync(refDst)) unlinkSync(refDst); } catch { /* ignore */ }
+          copyFileSync(refSrc, refDst);
+        }
       }
     }
     keyToRuntimeSpec.set(key, { slug, key, runtimeName, sourceDir });

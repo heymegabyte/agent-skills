@@ -146,7 +146,8 @@ Gate every third-party widget on env var: `{import.meta.env.VITE_TURNSTILE_SITEK
 
 ### Content
 
-- Word count MATCH OR EXCEED original — never ship less content; 5000+ words minimum
+- Word count MATCH OR EXCEED original — never ship less content; 5000+ words minimum across site
+- **Blog & Reference Articles (`skills/blog-publishing/SKILL.md` / `@theme-tools/blog`)**: Every newly authored or generated blog post MUST contain **2,000–3,000+ substantive editorial words** (`computeSubstantiveWordCount >= 2000` — never 600–900 words), ~12 substantive visual placements (`E01–E30`), DataForSEO v3 brief, inline `CitationNode` (`[n]`) + `BibliographyWidget`, and pass the 12-check `runQualityAndReleaseGate`
 - Migrate ALL blog posts, news, events, team bios from scraped content
 - About page 2000+ words | every claim factually accurate from research
 - Blog → individual routes per post with RSS feed

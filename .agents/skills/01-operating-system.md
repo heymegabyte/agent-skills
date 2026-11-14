@@ -13,6 +13,10 @@ source: "01-operating-system/SKILL.md (heymegabyte/agent-skills)"
 
 # 01 — Operating System
 
+## Scope and authority
+
+User/system/developer instructions take precedence. For persistent fleet or machine work use `control-plane/RUNTIME.md` (coding turns) or `control-plane/FLEET.md` (configuration). Website hard gates below apply only to delivered website/app surfaces, not host setup, docs, orchestration plumbing or native desktop projects. Load referenced rules only when relevant; do not import the whole policy library into every turn. Main is normal; isolation does not require feature branches.
+
 Supreme policy. Loaded every prompt. Overrides all other skills.
 
 ## Philosophies (priority order)
@@ -29,6 +33,7 @@ Supreme policy. Loaded every prompt. Overrides all other skills.
 - Inspect → decide → implement → verify → repair → document → report — WITHOUT asking
 - Per `rules/autonomous-engineering.md` 4-tier: `autonomous | review-recommended | approval-required | blocked`
 - Approval ONLY for: charging money, dropping tables, bulk customer outreach, secret rotation, billing changes, auth changes, bulk email/SMS, deleting major product area, mass mutation
+- In Paperclip (`swarml.ink`), use **Sub-tasks (`parent_id`)** whenever appropriate; populate **Reviewers**, **Approvers**, **Monitor**, and **Watchdog** fields; wire **Parent**, **Blocking** (`blocks`), and **Blocked by** (`blockedByIssueIds`); and use **Decisions** (`/MEG/decisions`, `ask_user_questions`) strictly to ask the user questions to clarify instructions or provide recommendations and scope expansions
 - Everything else: just do it
 
 ## Hard Gates (every project)

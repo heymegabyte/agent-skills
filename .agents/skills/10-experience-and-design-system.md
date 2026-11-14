@@ -107,6 +107,13 @@ Build anti-AI-slop premium interfaces: dark-first OKLCH color, fluid `clamp()` t
 - Atomic docs: context-rich units per component with states, variants, props, constraints, a11y, rationale
 - MCP servers (Figma Dev Mode MCP) for programmatic access
 
+### Shared components and live build presentation
+
+- Reuse the canonical **Storybook** components and approved tokens/themes across OnePrompt and draftl.ink. Define stable section slots and typed content/asset contracts so agents can work independently without duplicating component systems.
+- Show the cached/precompiled theme shell immediately, then update the isolated preview iframe with accepted granular patches. Keep research/build state visible and truthful; preserve the host editor's framework-owned DOM and use the generated site's renderer/HMR. Existing React/Tailwind/shadcn site templates and the Angular administration surface remain distinct.
+- Prefer native CSS/Web Animations/View Transitions for the reveal. Respect reduced motion and keyboard focus; never delay real build work to stage an animation. WASM/SWC belongs in a browser worker only if measured transform savings justify it.
+- The assembly, ordering and reconnect contract lives in `rules/event-sourced-build-progress.md`; completion lives in `06-build-and-slice-loop/SKILL.md`.
+
 ## Layout
 
 - Container 1140px (wide 1400, narrow 720), padding `clamp(1rem,3vw,3rem)`
