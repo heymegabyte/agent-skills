@@ -374,7 +374,7 @@ When source site links a PDF (CV, resume, brochure, menu, whitepaper, annual rep
 2. REWRITE each post for quality — fix grammar, sharpen headlines (4-8 words), punch up first paragraphs (Flesch ≥60), add internal links — NEVER alter facts/dates/quotes/sources
 3. Re-extract ALL media from each source post + supplement with GPT Image 2 per-slot prompts + Pexels Video for hero sections
 4. Homepage becomes magazine-style blog index (featured post hero, category filter row, 3-column grid, pagination, sidebar with top tags + search)
-5. Every post gets: unique title/meta/H1, 600+ words, featured image (R2-hosted), FAQPage JSON-LD, author byline, publish date, reading time, ≥3 related-posts links, share buttons, category+tag chips
+5. Every newly authored or generated blog post MUST satisfy `skills/blog-publishing/SKILL.md` (`@theme-tools/blog`): unique title/meta/H1, **2,000–3,000+ substantive editorial words** (`computeSubstantiveWordCount >= 2000` — never settle for 600–900 word thin posts; historical imported source posts preserve or expand original length per `H28`), ~12 substantive visual placements (`E01–E30`, featured image + diagrams/charts/tables, R2-hosted), live DataForSEO v3 brief (`B01–B30`), inline `CitationNode` (`[n]`) + `BibliographyWidget` (`C01–C30`), `BlogPosting` + `FAQPage` JSON-LD, author byline, publish date, reading time, ≥3 related-posts links, share buttons, category+tag chips, and pass all 12 checks in `runQualityAndReleaseGate`
 
 ### Validator (`validate-blog-site-type.mjs`)
 

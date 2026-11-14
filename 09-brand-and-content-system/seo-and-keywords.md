@@ -52,7 +52,7 @@ async function getAutocompleteSuggestions(seed: string): Promise<string[]> {
 - **Meta description** — 120-156 chars, contains keyword, includes CTA, unique per page
 - **URL** — short, readable, keyword-rich, lowercase, hyphens. Good: `/docker-hosting`
 - **Headings** — one H1 with keyword; H2s with longtail/semantic variations; logical hierarchy; no skipped levels
-- **Content** — keyword in first 100 words; density 0.5-3% (natural); min 300 words (600+ preferred); Flesch ≥60; short paragraphs (2-4 sentences); subheadings every 200-300 words; transition words ≥30% of sentences
+- **Content** — keyword in first 100 words; density 0.4-2.2% (natural diagnostic, never stuffed); **2,000–3,000+ substantive editorial words for blog & reference articles** (per `skills/blog-publishing/SKILL.md` — never 600–900 word thin posts; `1,500–2,000+` words for pSEO/landing pages); Flesch ≥60; short paragraphs (2-4 sentences); subheadings every 200-300 words; transition words ≥30% of sentences
 - **Images** — alt text with keyword (natural); descriptive filename; width/height set; lazy load below-fold; WebP <200KB
 - **Internal links** — 2-3+ per page, descriptive anchors
 - **External links** — 1-2 outbound to authoritative sources, `target="_blank" rel="noopener"`

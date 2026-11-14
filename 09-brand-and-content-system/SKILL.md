@@ -143,10 +143,15 @@ Fix: ask "Would the founder actually say this?" No → rewrite.
 - OG image 1200×630 branded card | one H1 in prerendered HTML
 - JSON-LD: WebPage floor; Org/BreadcrumbList/FAQPage/Person/Product/Service only when real entities
 
+### Blog & Reference Editorial Publishing (`@theme-tools/blog` — `skills/blog-publishing/SKILL.md`)
+
+- **2,000–3,000+ Substantive Editorial Words (`D01–D03`, NON-NEGOTIABLE)**: Every newly authored or generated blog / reference article MUST contain **>= 2,000 substantive editorial words** (target **2,000–3,000+ words** via `computeSubstantiveWordCount`, excluding navigation, bibliography, table cells, captions, code blocks, and boilerplate). **Never settle for 600–900 word blog posts.**
+- **~12 Substantive Visual Placements (`E01–E30`)**, live DataForSEO v3 capture (`isFixture: false`), claim-level inline `CitationNode` (`[n]`) + `BibliographyWidget`, 3 daily publishing slots (`09:00`, `14:00`, `19:00` ET), and the 12-check `runQualityAndReleaseGate`. Always load `~/.agentskills/skills/blog-publishing/SKILL.md` for blog work.
+
 ### pSEO 5 page types
 
 - Integration (`/integrations/{tool}`) | Comparison (`/compare/{a}-vs-{b}`) | Use-case (`/for/{audience}`) | Template (`/templates/{type}`) | Location (`/{city}-{service}`)
-- Each: unique H1 + meta desc + 800+ unique words + 1 unique image + 3+ internal links + 1+ outbound citation. Never templatize verbatim.
+- Each: unique H1 + meta desc + 1,500–2,000+ unique words + 1 unique image + 3+ internal links + 1+ outbound citation. Never templatize verbatim.
 
 ### GEO / AI search
 

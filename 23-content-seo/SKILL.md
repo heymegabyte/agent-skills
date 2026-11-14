@@ -36,9 +36,15 @@ stage: stable
 - JSON-LD: WebPage floor; Org/BreadcrumbList/FAQPage/Person/Product/Service ONLY when the entity is real — never pad (FAQPage only with real FAQs).
 - sitemap.xml (+lastmod) · robots.txt · llms.txt · humans.txt · security.txt.
 
+## Blog & Reference Editorial Publishing (`@theme-tools/blog` — `skills/blog-publishing/SKILL.md`)
+
+- **2,000+ Substantive Editorial Words (`D01–D03`, NON-NEGOTIABLE)**: Every newly authored or generated blog / reference article MUST contain **at least 2,000 substantive editorial words** (target range **2,000–3,000+ words**; navigation, bibliography, table cells, captions, code blocks, alt text, and boilerplate are excluded from `computeSubstantiveWordCount`). **Never settle for 600–900 word thin posts.** Historical imported articles preserve or expand their original length (`H28`).
+- **8-Stage Editorial Pipeline & 12-Point Release Gate (`runQualityAndReleaseGate`)**: Topic Discovery (`15-idea topic strategy`) → Live DataForSEO v3 Brief (`isFixture: false`) → SSRF-Safe Evidence & Source Ledger (`SourceVersion` + `EvidenceReference`) → Argument Architecture & Outline → 2,000–3,000+ Word Plate/Slate Draft (`ValidatedPlateDocument`) → ~12 Substantive Visual Placements (`E01–E30`: custom images, deterministic SVG charts, comparison tables, interactive calculators, product captures) → Inline Claim-Level Citations (`CitationNode` `[n]` + bottom `BibliographyWidget`) → 12-Point Quality & Release Gate (`runQualityAndReleaseGate`) + 3 Daily Publishing Slots (`09:00`, `14:00`, `19:00` `America/New_York`).
+- Always load and follow `~/.agentskills/skills/blog-publishing/SKILL.md` (and `references/editorial-writing.md`, `references/visual-production.md`, `references/dataforseo.md`, `requirement-manifest.json`) whenever planning, writing, auditing, or building `/blog` and `/blog/:slug`.
+
 ## pSEO (when used)
 
-- 5 page types: integration · comparison · use-case · template · location. Each: unique H1 + meta + 800+ unique words + ≥1 unique image + ≥3 internal links + ≥1 outbound citation. Never templatize verbatim.
+- 5 page types: integration · comparison · use-case · template · location. Each: unique H1 + meta + 1,500–2,000+ unique words + ≥1 unique image + ≥3 internal links + ≥1 outbound citation. Never templatize verbatim.
 
 ## GEO / AI search
 

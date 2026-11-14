@@ -1,0 +1,1242 @@
+---
+name: github
+description: "GitHub v3 REST API API skill — auto-forged from OpenAPI 1.1.4. GitHub's v3 REST API."
+triggers: ["github API", "working with GitHub v3 REST API"]
+version: 1.0.0
+forged-from: openapi
+api-title: GitHub v3 REST API
+api-version: 1.1.4
+---
+
+# GitHub v3 REST API API Skill
+
+<!-- commands-collapsed -->
+> **Per-endpoint pages collapsed.** The 1178 `commands/*.md` files (one per endpoint) were removed to cut file count — they were forge-generated, unrouted, and reproduce what Context7 (live API docs) and the typed `client.ts` already provide (some integrations also expose a live MCP server). The **Slash Commands** inventory below is retained.
+> Restore full offline curl/param detail any time: `node bin/forge-skill-from-openapi.mjs <spec-url> skills/github --name github`.
+
+
+Auto-forged from the GitHub v3 REST API OpenAPI spec (v1.1.4).
+
+## What this skill provides
+
+- **1191 slash commands** — one per API endpoint, with curl examples and typed guidance
+- **`types.ts`** — TypeScript types auto-generated from OpenAPI schemas
+- **`client.ts`** — Typed fetch-based API client (zero deps, Workers-compatible)
+
+## Slash Commands
+
+- `/get-` — GitHub API Root
+- `/get-advisories` — List global security advisories
+- `/get-advisories-ghsa-id` — Get a global security advisory
+- `/get-agents-repos-owner-repo-tasks` — List tasks for repository
+- `/post-agents-repos-owner-repo-tasks` — Start a task
+- `/get-agents-repos-owner-repo-tasks-task-id` — Get a task by repo
+- `/get-agents-tasks` — List tasks
+- `/get-agents-tasks-task-id` — Get a task by ID
+- `/get-app` — Get the authenticated app
+- `/post-app-manifests-code-conversions` — Create a GitHub App from a manifest
+- `/get-app-hook-config` — Get a webhook configuration for an app
+- `/patch-app-hook-config` — Update a webhook configuration for an app
+- `/get-app-hook-deliveries` — List deliveries for an app webhook
+- `/get-app-hook-deliveries-delivery-id` — Get a delivery for an app webhook
+- `/post-app-hook-deliveries-delivery-id-attempts` — Redeliver a delivery for an app webhook
+- `/get-app-installation-requests` — List installation requests for the authenticated app
+- `/get-app-installations` — List installations for the authenticated app
+- `/get-app-installations-installation-id` — Get an installation for the authenticated app
+- `/delete-app-installations-installation-id` — Delete an installation for the authenticated app
+- `/post-app-installations-installation-id-access-tokens` — Create an installation access token for an app
+- `/put-app-installations-installation-id-suspended` — Suspend an app installation
+- `/delete-app-installations-installation-id-suspended` — Unsuspend an app installation
+- `/delete-applications-client-id-grant` — Delete an app authorization
+- `/post-applications-client-id-token` — Check a token
+- `/patch-applications-client-id-token` — Reset a token
+- `/delete-applications-client-id-token` — Delete an app token
+- `/post-applications-client-id-token-scoped` — Create a scoped access token
+- `/get-apps-app-slug` — Get an app
+- `/get-assignments-assignment-id` — Get an assignment
+- `/get-assignments-assignment-id-accepted-assignments` — List accepted assignments for an assignment
+- `/get-assignments-assignment-id-grades` — Get assignment grades
+- `/get-classrooms` — List classrooms
+- `/get-classrooms-classroom-id` — Get a classroom
+- `/get-classrooms-classroom-id-assignments` — List assignments for a classroom
+- `/get-codes-of-conduct` — Get all codes of conduct
+- `/get-codes-of-conduct-key` — Get a code of conduct
+- `/post-credentials-revoke` — Revoke a list of credentials
+- `/get-emojis` — Get emojis
+- `/get-enterprises-enterprise-actions-cache-retention-limit` — Get GitHub Actions cache retention limit for an enterprise
+- `/put-enterprises-enterprise-actions-cache-retention-limit` — Set GitHub Actions cache retention limit for an enterprise
+- `/get-enterprises-enterprise-actions-cache-storage-limit` — Get GitHub Actions cache storage limit for an enterprise
+- `/put-enterprises-enterprise-actions-cache-storage-limit` — Set GitHub Actions cache storage limit for an enterprise
+- `/get-enterprises-enterprise-actions-oidc-customization-properties` — List OIDC custom property inclusions for an enterprise
+- `/post-enterprises-enterprise-actions-oidc-customization-properties` — Create an OIDC custom property inclusion for an enterprise
+- `/delete-enterprises-enterprise-actions-oidc-customization-properties` — Delete an OIDC custom property inclusion for an enterprise
+- `/get-enterprises-enterprise-code-security-configurations` — Get code security configurations for an enterprise
+- `/post-enterprises-enterprise-code-security-configurations` — Create a code security configuration for an enterprise
+- `/get-enterprises-enterprise-code-security-configurations-defaults` — Get default code security configurations for an enterprise
+- `/get-enterprises-enterprise-code-security-configurations-configur` — Retrieve a code security configuration of an enterprise
+- `/patch-enterprises-enterprise-code-security-configurations-configur` — Update a custom code security configuration for an enterprise
+- `/delete-enterprises-enterprise-code-security-configurations-configur` — Delete a code security configuration for an enterprise
+- `/post-enterprises-enterprise-code-security-configurations-configur` — Attach an enterprise configuration to repositories
+- `/put-enterprises-enterprise-code-security-configurations-configur` — Set a code security configuration as a default for an enterprise
+- `/get-enterprises-enterprise-code-security-configurations-configur` — Get repositories associated with an enterprise code security configuration
+- `/get-enterprises-enterprise-copilot-metrics-reports-enterprise-1-` — Get Copilot enterprise usage metrics for a specific day
+- `/get-enterprises-enterprise-copilot-metrics-reports-enterprise-28` — Get Copilot enterprise usage metrics
+- `/get-enterprises-enterprise-copilot-metrics-reports-user-teams-1-` — Get Copilot enterprise user-teams report for a specific day
+- `/get-enterprises-enterprise-copilot-metrics-reports-users-1-day` — Get Copilot users usage metrics for a specific day
+- `/get-enterprises-enterprise-copilot-metrics-reports-users-28-day-` — Get Copilot users usage metrics
+- `/put-enterprises-enterprise-copilot-policies-coding-agent` — Set the coding agent policy for an enterprise
+- `/post-enterprises-enterprise-copilot-policies-coding-agent-organiz` — Add organizations to the enterprise coding agent policy
+- `/delete-enterprises-enterprise-copilot-policies-coding-agent-organiz` — Remove organizations from the enterprise coding agent policy
+- `/get-enterprises-enterprise-dependabot-alerts` — List Dependabot alerts for an enterprise
+- `/get-enterprises-enterprise-dependabot-repository-access` — Lists the repositories Dependabot can access in an enterprise
+- `/patch-enterprises-enterprise-dependabot-repository-access` — Updates Dependabot's repository access list for an enterprise
+- `/put-enterprises-enterprise-dependabot-repository-access-default-` — Set the default repository access level for Dependabot in an enterprise
+- `/get-enterprises-enterprise-teams` — List enterprise teams
+- `/post-enterprises-enterprise-teams` — Create an enterprise team
+- `/get-enterprises-enterprise-teams-enterprise-team-memberships` — List members in an enterprise team
+- `/post-enterprises-enterprise-teams-enterprise-team-memberships-add` — Bulk add team members
+- `/post-enterprises-enterprise-teams-enterprise-team-memberships-rem` — Bulk remove team members
+- `/get-enterprises-enterprise-teams-enterprise-team-memberships-use` — Get enterprise team membership
+- `/put-enterprises-enterprise-teams-enterprise-team-memberships-use` — Add team member
+- `/delete-enterprises-enterprise-teams-enterprise-team-memberships-use` — Remove team membership
+- `/get-enterprises-enterprise-teams-enterprise-team-organizations` — Get organization assignments
+- `/post-enterprises-enterprise-teams-enterprise-team-organizations-a` — Add organization assignments
+- `/post-enterprises-enterprise-teams-enterprise-team-organizations-r` — Remove organization assignments
+- `/get-enterprises-enterprise-teams-enterprise-team-organizations-o` — Get organization assignment
+- `/put-enterprises-enterprise-teams-enterprise-team-organizations-o` — Add an organization assignment
+- `/delete-enterprises-enterprise-teams-enterprise-team-organizations-o` — Delete an organization assignment
+- `/get-enterprises-enterprise-teams-team-slug` — Get an enterprise team
+- `/patch-enterprises-enterprise-teams-team-slug` — Update an enterprise team
+- `/delete-enterprises-enterprise-teams-team-slug` — Delete an enterprise team
+- `/get-events` — List public events
+- `/get-feeds` — Get feeds
+- `/get-gists` — List gists for the authenticated user
+- `/post-gists` — Create a gist
+- `/get-gists-public` — List public gists
+- `/get-gists-starred` — List starred gists
+- `/get-gists-gist-id` — Get a gist
+- `/patch-gists-gist-id` — Update a gist
+- `/delete-gists-gist-id` — Delete a gist
+- `/get-gists-gist-id-comments` — List gist comments
+- `/post-gists-gist-id-comments` — Create a gist comment
+- `/get-gists-gist-id-comments-comment-id` — Get a gist comment
+- `/patch-gists-gist-id-comments-comment-id` — Update a gist comment
+- `/delete-gists-gist-id-comments-comment-id` — Delete a gist comment
+- `/get-gists-gist-id-commits` — List gist commits
+- `/get-gists-gist-id-forks` — List gist forks
+- `/post-gists-gist-id-forks` — Fork a gist
+- `/get-gists-gist-id-star` — Check if a gist is starred
+- `/put-gists-gist-id-star` — Star a gist
+- `/delete-gists-gist-id-star` — Unstar a gist
+- `/get-gists-gist-id-sha` — Get a gist revision
+- `/get-gitignore-templates` — Get all gitignore templates
+- `/get-gitignore-templates-name` — Get a gitignore template
+- `/get-installation-repositories` — List repositories accessible to the app installation
+- `/delete-installation-token` — Revoke an installation access token
+- `/get-issues` — List issues assigned to the authenticated user
+- `/get-licenses` — Get all commonly used licenses
+- `/get-licenses-license` — Get a license
+- `/post-markdown` — Render a Markdown document
+- `/post-markdown-raw` — Render a Markdown document in raw mode
+- `/get-marketplace-listing-accounts-account-id` — Get a subscription plan for an account
+- `/get-marketplace-listing-plans` — List plans
+- `/get-marketplace-listing-plans-plan-id-accounts` — List accounts for a plan
+- `/get-marketplace-listing-stubbed-accounts-account-id` — Get a subscription plan for an account (stubbed)
+- `/get-marketplace-listing-stubbed-plans` — List plans (stubbed)
+- `/get-marketplace-listing-stubbed-plans-plan-id-accounts` — List accounts for a plan (stubbed)
+- `/get-meta` — Get GitHub meta information
+- `/get-networks-owner-repo-events` — List public events for a network of repositories
+- `/get-notifications` — List notifications for the authenticated user
+- `/put-notifications` — Mark notifications as read
+- `/get-notifications-threads-thread-id` — Get a thread
+- `/patch-notifications-threads-thread-id` — Mark a thread as read
+- `/delete-notifications-threads-thread-id` — Mark a thread as done
+- `/get-notifications-threads-thread-id-subscription` — Get a thread subscription for the authenticated user
+- `/put-notifications-threads-thread-id-subscription` — Set a thread subscription
+- `/delete-notifications-threads-thread-id-subscription` — Delete a thread subscription
+- `/get-octocat` — Get Octocat
+- `/get-organizations` — List organizations
+- `/get-organizations-org-actions-cache-retention-limit` — Get GitHub Actions cache retention limit for an organization
+- `/put-organizations-org-actions-cache-retention-limit` — Set GitHub Actions cache retention limit for an organization
+- `/get-organizations-org-actions-cache-storage-limit` — Get GitHub Actions cache storage limit for an organization
+- `/put-organizations-org-actions-cache-storage-limit` — Set GitHub Actions cache storage limit for an organization
+- `/get-organizations-org-settings-billing-ai-credit-usage` — Get billing AI credit usage report for an organization
+- `/get-organizations-org-settings-billing-budgets` — Get all budgets for an organization
+- `/post-organizations-org-settings-billing-budgets` — Create a budget for an organization
+- `/get-organizations-org-settings-billing-budgets-budget-id` — Get a budget by ID for an organization
+- `/patch-organizations-org-settings-billing-budgets-budget-id` — Update a budget for an organization
+- `/delete-organizations-org-settings-billing-budgets-budget-id` — Delete a budget for an organization
+- `/get-organizations-org-settings-billing-premium-request-usage` — Get billing premium request usage report for an organization
+- `/get-organizations-org-settings-billing-usage` — Get billing usage report for an organization
+- `/get-organizations-org-settings-billing-usage-summary` — Get billing usage summary for an organization
+- `/get-orgs-org` — Get an organization
+- `/patch-orgs-org` — Update an organization
+- `/delete-orgs-org` — Delete an organization
+- `/get-orgs-org-actions-cache-usage` — Get GitHub Actions cache usage for an organization
+- `/get-orgs-org-actions-cache-usage-by-repository` — List repositories with GitHub Actions cache usage for an organization
+- `/get-orgs-org-actions-hosted-runners` — List GitHub-hosted runners for an organization
+- `/post-orgs-org-actions-hosted-runners` — Create a GitHub-hosted runner for an organization
+- `/get-orgs-org-actions-hosted-runners-images-custom` — List custom images for an organization
+- `/get-orgs-org-actions-hosted-runners-images-custom-image-definiti` — Get a custom image definition for GitHub Actions Hosted Runners
+- `/delete-orgs-org-actions-hosted-runners-images-custom-image-definiti` — Delete a custom image from the organization
+- `/get-orgs-org-actions-hosted-runners-images-custom-image-definiti` — List image versions of a custom image for an organization
+- `/get-orgs-org-actions-hosted-runners-images-custom-image-definiti` — Get an image version of a custom image for GitHub Actions Hosted Runners
+- `/delete-orgs-org-actions-hosted-runners-images-custom-image-definiti` — Delete an image version of custom image from the organization
+- `/get-orgs-org-actions-hosted-runners-images-github-owned` — Get GitHub-owned images for GitHub-hosted runners in an organization
+- `/get-orgs-org-actions-hosted-runners-images-partner` — Get partner images for GitHub-hosted runners in an organization
+- `/get-orgs-org-actions-hosted-runners-limits` — Get limits on GitHub-hosted runners for an organization
+- `/get-orgs-org-actions-hosted-runners-machine-sizes` — Get GitHub-hosted runners machine specs for an organization
+- `/get-orgs-org-actions-hosted-runners-platforms` — Get platforms for GitHub-hosted runners in an organization
+- `/get-orgs-org-actions-hosted-runners-hosted-runner-id` — Get a GitHub-hosted runner for an organization
+- `/patch-orgs-org-actions-hosted-runners-hosted-runner-id` — Update a GitHub-hosted runner for an organization
+- `/delete-orgs-org-actions-hosted-runners-hosted-runner-id` — Delete a GitHub-hosted runner for an organization
+- `/get-orgs-org-actions-oidc-customization-properties-repo` — List OIDC custom property inclusions for an organization
+- `/post-orgs-org-actions-oidc-customization-properties-repo` — Create an OIDC custom property inclusion for an organization
+- `/delete-orgs-org-actions-oidc-customization-properties-repo-custom-p` — Delete an OIDC custom property inclusion for an organization
+- `/get-orgs-org-actions-oidc-customization-sub` — Get the customization template for an OIDC subject claim for an organization
+- `/put-orgs-org-actions-oidc-customization-sub` — Set the customization template for an OIDC subject claim for an organization
+- `/get-orgs-org-actions-permissions` — Get GitHub Actions permissions for an organization
+- `/put-orgs-org-actions-permissions` — Set GitHub Actions permissions for an organization
+- `/get-orgs-org-actions-permissions-artifact-and-log-retention` — Get artifact and log retention settings for an organization
+- `/put-orgs-org-actions-permissions-artifact-and-log-retention` — Set artifact and log retention settings for an organization
+- `/get-orgs-org-actions-permissions-fork-pr-contributor-approval` — Get fork PR contributor approval permissions for an organization
+- `/put-orgs-org-actions-permissions-fork-pr-contributor-approval` — Set fork PR contributor approval permissions for an organization
+- `/get-orgs-org-actions-permissions-fork-pr-workflows-private-repos` — Get private repo fork PR workflow settings for an organization
+- `/put-orgs-org-actions-permissions-fork-pr-workflows-private-repos` — Set private repo fork PR workflow settings for an organization
+- `/get-orgs-org-actions-permissions-repositories` — List selected repositories enabled for GitHub Actions in an organization
+- `/put-orgs-org-actions-permissions-repositories` — Set selected repositories enabled for GitHub Actions in an organization
+- `/put-orgs-org-actions-permissions-repositories-repository-id` — Enable a selected repository for GitHub Actions in an organization
+- `/delete-orgs-org-actions-permissions-repositories-repository-id` — Disable a selected repository for GitHub Actions in an organization
+- `/get-orgs-org-actions-permissions-selected-actions` — Get allowed actions and reusable workflows for an organization
+- `/put-orgs-org-actions-permissions-selected-actions` — Set allowed actions and reusable workflows for an organization
+- `/get-orgs-org-actions-permissions-self-hosted-runners` — Get self-hosted runners settings for an organization
+- `/put-orgs-org-actions-permissions-self-hosted-runners` — Set self-hosted runners settings for an organization
+- `/get-orgs-org-actions-permissions-self-hosted-runners-repositorie` — List repositories allowed to use self-hosted runners in an organization
+- `/put-orgs-org-actions-permissions-self-hosted-runners-repositorie` — Set repositories allowed to use self-hosted runners in an organization
+- `/put-orgs-org-actions-permissions-self-hosted-runners-repositorie` — Add a repository to the list of repositories allowed to use self-hosted runners in an organization
+- `/delete-orgs-org-actions-permissions-self-hosted-runners-repositorie` — Remove a repository from the list of repositories allowed to use self-hosted runners in an organization
+- `/get-orgs-org-actions-permissions-workflow` — Get default workflow permissions for an organization
+- `/put-orgs-org-actions-permissions-workflow` — Set default workflow permissions for an organization
+- `/get-orgs-org-actions-runner-groups` — List self-hosted runner groups for an organization
+- `/post-orgs-org-actions-runner-groups` — Create a self-hosted runner group for an organization
+- `/get-orgs-org-actions-runner-groups-runner-group-id` — Get a self-hosted runner group for an organization
+- `/patch-orgs-org-actions-runner-groups-runner-group-id` — Update a self-hosted runner group for an organization
+- `/delete-orgs-org-actions-runner-groups-runner-group-id` — Delete a self-hosted runner group from an organization
+- `/get-orgs-org-actions-runner-groups-runner-group-id-hosted-runner` — List GitHub-hosted runners in a group for an organization
+- `/get-orgs-org-actions-runner-groups-runner-group-id-repositories` — List repository access to a self-hosted runner group in an organization
+- `/put-orgs-org-actions-runner-groups-runner-group-id-repositories` — Set repository access for a self-hosted runner group in an organization
+- `/put-orgs-org-actions-runner-groups-runner-group-id-repositories-` — Add repository access to a self-hosted runner group in an organization
+- `/delete-orgs-org-actions-runner-groups-runner-group-id-repositories-` — Remove repository access to a self-hosted runner group in an organization
+- `/get-orgs-org-actions-runner-groups-runner-group-id-runners` — List self-hosted runners in a group for an organization
+- `/put-orgs-org-actions-runner-groups-runner-group-id-runners` — Set self-hosted runners in a group for an organization
+- `/put-orgs-org-actions-runner-groups-runner-group-id-runners-runne` — Add a self-hosted runner to a group for an organization
+- `/delete-orgs-org-actions-runner-groups-runner-group-id-runners-runne` — Remove a self-hosted runner from a group for an organization
+- `/get-orgs-org-actions-runners` — List self-hosted runners for an organization
+- `/get-orgs-org-actions-runners-downloads` — List runner applications for an organization
+- `/post-orgs-org-actions-runners-generate-jitconfig` — Create configuration for a just-in-time runner for an organization
+- `/post-orgs-org-actions-runners-registration-token` — Create a registration token for an organization
+- `/post-orgs-org-actions-runners-remove-token` — Create a remove token for an organization
+- `/get-orgs-org-actions-runners-runner-id` — Get a self-hosted runner for an organization
+- `/delete-orgs-org-actions-runners-runner-id` — Delete a self-hosted runner from an organization
+- `/get-orgs-org-actions-runners-runner-id-labels` — List labels for a self-hosted runner for an organization
+- `/post-orgs-org-actions-runners-runner-id-labels` — Add custom labels to a self-hosted runner for an organization
+- `/put-orgs-org-actions-runners-runner-id-labels` — Set custom labels for a self-hosted runner for an organization
+- `/delete-orgs-org-actions-runners-runner-id-labels` — Remove all custom labels from a self-hosted runner for an organization
+- `/delete-orgs-org-actions-runners-runner-id-labels-name` — Remove a custom label from a self-hosted runner for an organization
+- `/get-orgs-org-actions-secrets` — List organization secrets
+- `/get-orgs-org-actions-secrets-public-key` — Get an organization public key
+- `/get-orgs-org-actions-secrets-secret-name` — Get an organization secret
+- `/put-orgs-org-actions-secrets-secret-name` — Create or update an organization secret
+- `/delete-orgs-org-actions-secrets-secret-name` — Delete an organization secret
+- `/get-orgs-org-actions-secrets-secret-name-repositories` — List selected repositories for an organization secret
+- `/put-orgs-org-actions-secrets-secret-name-repositories` — Set selected repositories for an organization secret
+- `/put-orgs-org-actions-secrets-secret-name-repositories-repository` — Add selected repository to an organization secret
+- `/delete-orgs-org-actions-secrets-secret-name-repositories-repository` — Remove selected repository from an organization secret
+- `/get-orgs-org-actions-variables` — List organization variables
+- `/post-orgs-org-actions-variables` — Create an organization variable
+- `/get-orgs-org-actions-variables-name` — Get an organization variable
+- `/patch-orgs-org-actions-variables-name` — Update an organization variable
+- `/delete-orgs-org-actions-variables-name` — Delete an organization variable
+- `/get-orgs-org-actions-variables-name-repositories` — List selected repositories for an organization variable
+- `/put-orgs-org-actions-variables-name-repositories` — Set selected repositories for an organization variable
+- `/put-orgs-org-actions-variables-name-repositories-repository-id` — Add selected repository to an organization variable
+- `/delete-orgs-org-actions-variables-name-repositories-repository-id` — Remove selected repository from an organization variable
+- `/get-orgs-org-agents-secrets` — List organization secrets
+- `/get-orgs-org-agents-secrets-public-key` — Get an organization public key
+- `/get-orgs-org-agents-secrets-secret-name` — Get an organization secret
+- `/put-orgs-org-agents-secrets-secret-name` — Create or update an organization secret
+- `/delete-orgs-org-agents-secrets-secret-name` — Delete an organization secret
+- `/get-orgs-org-agents-secrets-secret-name-repositories` — List selected repositories for an organization secret
+- `/put-orgs-org-agents-secrets-secret-name-repositories` — Set selected repositories for an organization secret
+- `/put-orgs-org-agents-secrets-secret-name-repositories-repository-` — Add selected repository to an organization secret
+- `/delete-orgs-org-agents-secrets-secret-name-repositories-repository-` — Remove selected repository from an organization secret
+- `/get-orgs-org-agents-variables` — List organization variables
+- `/post-orgs-org-agents-variables` — Create an organization variable
+- `/get-orgs-org-agents-variables-name` — Get an organization variable
+- `/patch-orgs-org-agents-variables-name` — Update an organization variable
+- `/delete-orgs-org-agents-variables-name` — Delete an organization variable
+- `/get-orgs-org-agents-variables-name-repositories` — List selected repositories for an organization variable
+- `/put-orgs-org-agents-variables-name-repositories` — Set selected repositories for an organization variable
+- `/put-orgs-org-agents-variables-name-repositories-repository-id` — Add selected repository to an organization variable
+- `/delete-orgs-org-agents-variables-name-repositories-repository-id` — Remove selected repository from an organization variable
+- `/post-orgs-org-artifacts-metadata-deployment-record` — Create an artifact deployment record
+- `/post-orgs-org-artifacts-metadata-deployment-record-cluster-cluste` — Set cluster deployment records
+- `/post-orgs-org-artifacts-metadata-storage-record` — Create artifact metadata storage record
+- `/get-orgs-org-artifacts-subject-digest-metadata-deployment-record` — List artifact deployment records
+- `/get-orgs-org-artifacts-subject-digest-metadata-storage-records` — List artifact storage records
+- `/post-orgs-org-attestations-bulk-list` — List attestations by bulk subject digests
+- `/post-orgs-org-attestations-delete-request` — Delete attestations in bulk
+- `/delete-orgs-org-attestations-digest-subject-digest` — Delete attestations by subject digest
+- `/get-orgs-org-attestations-repositories` — List attestation repositories
+- `/delete-orgs-org-attestations-attestation-id` — Delete attestations by ID
+- `/get-orgs-org-attestations-subject-digest` — List attestations
+- `/get-orgs-org-blocks` — List users blocked by an organization
+- `/get-orgs-org-blocks-username` — Check if a user is blocked by an organization
+- `/put-orgs-org-blocks-username` — Block a user from an organization
+- `/delete-orgs-org-blocks-username` — Unblock a user from an organization
+- `/get-orgs-org-campaigns` — List campaigns for an organization
+- `/post-orgs-org-campaigns` — Create a campaign for an organization
+- `/get-orgs-org-campaigns-campaign-number` — Get a campaign for an organization
+- `/patch-orgs-org-campaigns-campaign-number` — Update a campaign
+- `/delete-orgs-org-campaigns-campaign-number` — Delete a campaign for an organization
+- `/get-orgs-org-code-scanning-alerts` — List code scanning alerts for an organization
+- `/get-orgs-org-code-security-configurations` — Get code security configurations for an organization
+- `/post-orgs-org-code-security-configurations` — Create a code security configuration
+- `/get-orgs-org-code-security-configurations-defaults` — Get default code security configurations
+- `/delete-orgs-org-code-security-configurations-detach` — Detach configurations from repositories
+- `/get-orgs-org-code-security-configurations-configuration-id` — Get a code security configuration
+- `/patch-orgs-org-code-security-configurations-configuration-id` — Update a code security configuration
+- `/delete-orgs-org-code-security-configurations-configuration-id` — Delete a code security configuration
+- `/post-orgs-org-code-security-configurations-configuration-id-attac` — Attach a configuration to repositories
+- `/put-orgs-org-code-security-configurations-configuration-id-defau` — Set a code security configuration as a default for an organization
+- `/get-orgs-org-code-security-configurations-configuration-id-repos` — Get repositories associated with a code security configuration
+- `/get-orgs-org-codespaces` — List codespaces for the organization
+- `/put-orgs-org-codespaces-access` — Manage access control for organization codespaces
+- `/post-orgs-org-codespaces-access-selected-users` — Add users to Codespaces access for an organization
+- `/delete-orgs-org-codespaces-access-selected-users` — Remove users from Codespaces access for an organization
+- `/get-orgs-org-codespaces-secrets` — List organization secrets
+- `/get-orgs-org-codespaces-secrets-public-key` — Get an organization public key
+- `/get-orgs-org-codespaces-secrets-secret-name` — Get an organization secret
+- `/put-orgs-org-codespaces-secrets-secret-name` — Create or update an organization secret
+- `/delete-orgs-org-codespaces-secrets-secret-name` — Delete an organization secret
+- `/get-orgs-org-codespaces-secrets-secret-name-repositories` — List selected repositories for an organization secret
+- `/put-orgs-org-codespaces-secrets-secret-name-repositories` — Set selected repositories for an organization secret
+- `/put-orgs-org-codespaces-secrets-secret-name-repositories-reposit` — Add selected repository to an organization secret
+- `/delete-orgs-org-codespaces-secrets-secret-name-repositories-reposit` — Remove selected repository from an organization secret
+- `/get-orgs-org-copilot-spaces` — List organization Copilot Spaces
+- `/post-orgs-org-copilot-spaces` — Create an organization Copilot Space
+- `/get-orgs-org-copilot-spaces-space-number` — Get an organization Copilot Space
+- `/put-orgs-org-copilot-spaces-space-number` — Set an organization Copilot Space
+- `/delete-orgs-org-copilot-spaces-space-number` — Delete an organization Copilot Space
+- `/get-orgs-org-copilot-spaces-space-number-collaborators` — List collaborators for an organization Copilot Space
+- `/post-orgs-org-copilot-spaces-space-number-collaborators` — Add a collaborator to an organization Copilot Space
+- `/put-orgs-org-copilot-spaces-space-number-collaborators-actor-typ` — Set a collaborator role for an organization Copilot Space
+- `/delete-orgs-org-copilot-spaces-space-number-collaborators-actor-typ` — Remove a collaborator from an organization Copilot Space
+- `/get-orgs-org-copilot-spaces-space-number-resources` — List resources for an organization Copilot Space
+- `/post-orgs-org-copilot-spaces-space-number-resources` — Create a resource for an organization Copilot Space
+- `/get-orgs-org-copilot-spaces-space-number-resources-space-resourc` — Get a resource for an organization Copilot Space
+- `/put-orgs-org-copilot-spaces-space-number-resources-space-resourc` — Set a resource for an organization Copilot Space
+- `/delete-orgs-org-copilot-spaces-space-number-resources-space-resourc` — Delete a resource from an organization Copilot Space
+- `/get-orgs-org-copilot-billing` — Get Copilot seat information and settings for an organization
+- `/get-orgs-org-copilot-billing-seats` — List all Copilot seat assignments for an organization
+- `/post-orgs-org-copilot-billing-selected-teams` — Add teams to the Copilot subscription for an organization
+- `/delete-orgs-org-copilot-billing-selected-teams` — Remove teams from the Copilot subscription for an organization
+- `/post-orgs-org-copilot-billing-selected-users` — Add users to the Copilot subscription for an organization
+- `/delete-orgs-org-copilot-billing-selected-users` — Remove users from the Copilot subscription for an organization
+- `/get-orgs-org-copilot-coding-agent-permissions` — Get Copilot cloud agent permissions for an organization
+- `/put-orgs-org-copilot-coding-agent-permissions` — Set Copilot cloud agent permissions for an organization
+- `/get-orgs-org-copilot-coding-agent-permissions-repositories` — List repositories enabled for Copilot cloud agent in an organization
+- `/put-orgs-org-copilot-coding-agent-permissions-repositories` — Set selected repositories for Copilot cloud agent in an organization
+- `/put-orgs-org-copilot-coding-agent-permissions-repositories-repos` — Enable a repository for Copilot cloud agent in an organization
+- `/delete-orgs-org-copilot-coding-agent-permissions-repositories-repos` — Disable a repository for Copilot cloud agent in an organization
+- `/get-orgs-org-copilot-content-exclusion` — Get Copilot content exclusion rules for an organization
+- `/put-orgs-org-copilot-content-exclusion` — Set Copilot content exclusion rules for an organization
+- `/get-orgs-org-copilot-metrics` — Get Copilot metrics for an organization
+- `/get-orgs-org-copilot-metrics-reports-organization-1-day` — Get Copilot organization usage metrics for a specific day
+- `/get-orgs-org-copilot-metrics-reports-organization-28-day-latest` — Get Copilot organization usage metrics
+- `/get-orgs-org-copilot-metrics-reports-user-teams-1-day` — Get Copilot organization user-teams report for a specific day
+- `/get-orgs-org-copilot-metrics-reports-users-1-day` — Get Copilot organization users usage metrics for a specific day
+- `/get-orgs-org-copilot-metrics-reports-users-28-day-latest` — Get Copilot organization users usage metrics
+- `/get-orgs-org-dependabot-alerts` — List Dependabot alerts for an organization
+- `/get-orgs-org-dependabot-repository-access` — Lists the repositories Dependabot can access in an organization
+- `/patch-orgs-org-dependabot-repository-access` — Updates Dependabot's repository access list for an organization
+- `/put-orgs-org-dependabot-repository-access-default-level` — Set the default repository access level for Dependabot
+- `/get-orgs-org-dependabot-secrets` — List organization secrets
+- `/get-orgs-org-dependabot-secrets-public-key` — Get an organization public key
+- `/get-orgs-org-dependabot-secrets-secret-name` — Get an organization secret
+- `/put-orgs-org-dependabot-secrets-secret-name` — Create or update an organization secret
+- `/delete-orgs-org-dependabot-secrets-secret-name` — Delete an organization secret
+- `/get-orgs-org-dependabot-secrets-secret-name-repositories` — List selected repositories for an organization secret
+- `/put-orgs-org-dependabot-secrets-secret-name-repositories` — Set selected repositories for an organization secret
+- `/put-orgs-org-dependabot-secrets-secret-name-repositories-reposit` — Add selected repository to an organization secret
+- `/delete-orgs-org-dependabot-secrets-secret-name-repositories-reposit` — Remove selected repository from an organization secret
+- `/get-orgs-org-docker-conflicts` — Get list of conflicting packages during Docker migration for organization
+- `/get-orgs-org-events` — List public organization events
+- `/get-orgs-org-failed-invitations` — List failed organization invitations
+- `/get-orgs-org-hooks` — List organization webhooks
+- `/post-orgs-org-hooks` — Create an organization webhook
+- `/get-orgs-org-hooks-hook-id` — Get an organization webhook
+- `/patch-orgs-org-hooks-hook-id` — Update an organization webhook
+- `/delete-orgs-org-hooks-hook-id` — Delete an organization webhook
+- `/get-orgs-org-hooks-hook-id-config` — Get a webhook configuration for an organization
+- `/patch-orgs-org-hooks-hook-id-config` — Update a webhook configuration for an organization
+- `/get-orgs-org-hooks-hook-id-deliveries` — List deliveries for an organization webhook
+- `/get-orgs-org-hooks-hook-id-deliveries-delivery-id` — Get a webhook delivery for an organization webhook
+- `/post-orgs-org-hooks-hook-id-deliveries-delivery-id-attempts` — Redeliver a delivery for an organization webhook
+- `/post-orgs-org-hooks-hook-id-pings` — Ping an organization webhook
+- `/get-orgs-org-insights-api-route-stats-actor-type-actor-id` — Get route stats by actor
+- `/get-orgs-org-insights-api-subject-stats` — Get subject stats
+- `/get-orgs-org-insights-api-summary-stats` — Get summary stats
+- `/get-orgs-org-insights-api-summary-stats-users-user-id` — Get summary stats by user
+- `/get-orgs-org-insights-api-summary-stats-actor-type-actor-id` — Get summary stats by actor
+- `/get-orgs-org-insights-api-time-stats` — Get time stats
+- `/get-orgs-org-insights-api-time-stats-users-user-id` — Get time stats by user
+- `/get-orgs-org-insights-api-time-stats-actor-type-actor-id` — Get time stats by actor
+- `/get-orgs-org-insights-api-user-stats-user-id` — Get user stats
+- `/get-orgs-org-installation` — Get an organization installation for the authenticated app
+- `/get-orgs-org-installations` — List app installations for an organization
+- `/get-orgs-org-interaction-limits` — Get interaction restrictions for an organization
+- `/put-orgs-org-interaction-limits` — Set interaction restrictions for an organization
+- `/delete-orgs-org-interaction-limits` — Remove interaction restrictions for an organization
+- `/get-orgs-org-invitations` — List pending organization invitations
+- `/post-orgs-org-invitations` — Create an organization invitation
+- `/delete-orgs-org-invitations-invitation-id` — Cancel an organization invitation
+- `/get-orgs-org-invitations-invitation-id-teams` — List organization invitation teams
+- `/get-orgs-org-issue-fields` — List issue fields for an organization
+- `/post-orgs-org-issue-fields` — Create issue field for an organization
+- `/patch-orgs-org-issue-fields-issue-field-id` — Update issue field for an organization
+- `/delete-orgs-org-issue-fields-issue-field-id` — Delete issue field for an organization
+- `/get-orgs-org-issue-types` — List issue types for an organization
+- `/post-orgs-org-issue-types` — Create issue type for an organization
+- `/put-orgs-org-issue-types-issue-type-id` — Update issue type for an organization
+- `/delete-orgs-org-issue-types-issue-type-id` — Delete issue type for an organization
+- `/get-orgs-org-issues` — List organization issues assigned to the authenticated user
+- `/get-orgs-org-members` — List organization members
+- `/get-orgs-org-members-username` — Check organization membership for a user
+- `/delete-orgs-org-members-username` — Remove an organization member
+- `/get-orgs-org-members-username-codespaces` — List codespaces for a user in organization
+- `/delete-orgs-org-members-username-codespaces-codespace-name` — Delete a codespace from the organization
+- `/post-orgs-org-members-username-codespaces-codespace-name-stop` — Stop a codespace for an organization user
+- `/get-orgs-org-members-username-copilot` — Get Copilot seat assignment details for a user
+- `/get-orgs-org-memberships-username` — Get organization membership for a user
+- `/put-orgs-org-memberships-username` — Set organization membership for a user
+- `/delete-orgs-org-memberships-username` — Remove organization membership for a user
+- `/get-orgs-org-migrations` — List organization migrations
+- `/post-orgs-org-migrations` — Start an organization migration
+- `/get-orgs-org-migrations-migration-id` — Get an organization migration status
+- `/get-orgs-org-migrations-migration-id-archive` — Download an organization migration archive
+- `/delete-orgs-org-migrations-migration-id-archive` — Delete an organization migration archive
+- `/delete-orgs-org-migrations-migration-id-repos-repo-name-lock` — Unlock an organization repository
+- `/get-orgs-org-migrations-migration-id-repositories` — List repositories in an organization migration
+- `/get-orgs-org-organization-roles` — Get all organization roles for an organization
+- `/delete-orgs-org-organization-roles-teams-team-slug` — Remove all organization roles for a team
+- `/put-orgs-org-organization-roles-teams-team-slug-role-id` — Assign an organization role to a team
+- `/delete-orgs-org-organization-roles-teams-team-slug-role-id` — Remove an organization role from a team
+- `/delete-orgs-org-organization-roles-users-username` — Remove all organization roles for a user
+- `/put-orgs-org-organization-roles-users-username-role-id` — Assign an organization role to a user
+- `/delete-orgs-org-organization-roles-users-username-role-id` — Remove an organization role from a user
+- `/get-orgs-org-organization-roles-role-id` — Get an organization role
+- `/get-orgs-org-organization-roles-role-id-teams` — List teams that are assigned to an organization role
+- `/get-orgs-org-organization-roles-role-id-users` — List users that are assigned to an organization role
+- `/get-orgs-org-outside-collaborators` — List outside collaborators for an organization
+- `/put-orgs-org-outside-collaborators-username` — Convert an organization member to outside collaborator
+- `/delete-orgs-org-outside-collaborators-username` — Remove outside collaborator from an organization
+- `/get-orgs-org-packages` — List packages for an organization
+- `/get-orgs-org-packages-package-type-package-name` — Get a package for an organization
+- `/delete-orgs-org-packages-package-type-package-name` — Delete a package for an organization
+- `/post-orgs-org-packages-package-type-package-name-restore` — Restore a package for an organization
+- `/get-orgs-org-packages-package-type-package-name-versions` — List package versions for a package owned by an organization
+- `/get-orgs-org-packages-package-type-package-name-versions-package` — Get a package version for an organization
+- `/delete-orgs-org-packages-package-type-package-name-versions-package` — Delete package version for an organization
+- `/post-orgs-org-packages-package-type-package-name-versions-package` — Restore package version for an organization
+- `/get-orgs-org-personal-access-token-requests` — List requests to access organization resources with fine-grained personal access tokens
+- `/post-orgs-org-personal-access-token-requests` — Review requests to access organization resources with fine-grained personal access tokens
+- `/post-orgs-org-personal-access-token-requests-pat-request-id` — Review a request to access organization resources with a fine-grained personal access token
+- `/get-orgs-org-personal-access-token-requests-pat-request-id-repos` — List repositories requested to be accessed by a fine-grained personal access token
+- `/get-orgs-org-personal-access-tokens` — List fine-grained personal access tokens with access to organization resources
+- `/post-orgs-org-personal-access-tokens` — Update the access to organization resources via fine-grained personal access tokens
+- `/post-orgs-org-personal-access-tokens-pat-id` — Update the access a fine-grained personal access token has to organization resources
+- `/get-orgs-org-personal-access-tokens-pat-id-repositories` — List repositories a fine-grained personal access token has access to
+- `/get-orgs-org-private-registries` — List private registries for an organization
+- `/post-orgs-org-private-registries` — Create a private registry for an organization
+- `/get-orgs-org-private-registries-public-key` — Get private registries public key for an organization
+- `/get-orgs-org-private-registries-secret-name` — Get a private registry for an organization
+- `/patch-orgs-org-private-registries-secret-name` — Update a private registry for an organization
+- `/delete-orgs-org-private-registries-secret-name` — Delete a private registry for an organization
+- `/get-orgs-org-projectsv2` — List projects for organization
+- `/get-orgs-org-projectsv2-project-number` — Get project for organization
+- `/post-orgs-org-projectsv2-project-number-drafts` — Create draft item for organization owned project
+- `/get-orgs-org-projectsv2-project-number-fields` — List project fields for organization
+- `/post-orgs-org-projectsv2-project-number-fields` — Add a field to an organization-owned project.
+- `/get-orgs-org-projectsv2-project-number-fields-field-id` — Get project field for organization
+- `/get-orgs-org-projectsv2-project-number-items` — List items for an organization owned project
+- `/post-orgs-org-projectsv2-project-number-items` — Add item to organization owned project
+- `/get-orgs-org-projectsv2-project-number-items-item-id` — Get an item for an organization owned project
+- `/patch-orgs-org-projectsv2-project-number-items-item-id` — Update project item for organization
+- `/delete-orgs-org-projectsv2-project-number-items-item-id` — Delete project item for organization
+- `/post-orgs-org-projectsv2-project-number-views` — Create a view for an organization-owned project
+- `/get-orgs-org-projectsv2-project-number-views-view-number-items` — List items for an organization project view
+- `/get-orgs-org-properties-schema` — Get all custom properties for an organization
+- `/patch-orgs-org-properties-schema` — Create or update custom properties for an organization
+- `/get-orgs-org-properties-schema-custom-property-name` — Get a custom property for an organization
+- `/put-orgs-org-properties-schema-custom-property-name` — Create or update a custom property for an organization
+- `/delete-orgs-org-properties-schema-custom-property-name` — Remove a custom property for an organization
+- `/get-orgs-org-properties-values` — List custom property values for organization repositories
+- `/patch-orgs-org-properties-values` — Create or update custom property values for organization repositories
+- `/get-orgs-org-public-members` — List public organization members
+- `/get-orgs-org-public-members-username` — Check public organization membership for a user
+- `/put-orgs-org-public-members-username` — Set public organization membership for the authenticated user
+- `/delete-orgs-org-public-members-username` — Remove public organization membership for the authenticated user
+- `/get-orgs-org-repos` — List organization repositories
+- `/post-orgs-org-repos` — Create an organization repository
+- `/get-orgs-org-rulesets` — Get all organization repository rulesets
+- `/post-orgs-org-rulesets` — Create an organization repository ruleset
+- `/get-orgs-org-rulesets-rule-suites` — List organization rule suites
+- `/get-orgs-org-rulesets-rule-suites-rule-suite-id` — Get an organization rule suite
+- `/get-orgs-org-rulesets-ruleset-id` — Get an organization repository ruleset
+- `/put-orgs-org-rulesets-ruleset-id` — Update an organization repository ruleset
+- `/delete-orgs-org-rulesets-ruleset-id` — Delete an organization repository ruleset
+- `/get-orgs-org-rulesets-ruleset-id-history` — Get organization ruleset history
+- `/get-orgs-org-rulesets-ruleset-id-history-version-id` — Get organization ruleset version
+- `/get-orgs-org-secret-scanning-alerts` — List secret scanning alerts for an organization
+- `/get-orgs-org-secret-scanning-pattern-configurations` — List organization pattern configurations
+- `/patch-orgs-org-secret-scanning-pattern-configurations` — Update organization pattern configurations
+- `/get-orgs-org-security-advisories` — List repository security advisories for an organization
+- `/get-orgs-org-security-managers` — List security manager teams
+- `/put-orgs-org-security-managers-teams-team-slug` — Add a security manager team
+- `/delete-orgs-org-security-managers-teams-team-slug` — Remove a security manager team
+- `/get-orgs-org-settings-immutable-releases` — Get immutable releases settings for an organization
+- `/put-orgs-org-settings-immutable-releases` — Set immutable releases settings for an organization
+- `/get-orgs-org-settings-immutable-releases-repositories` — List selected repositories for immutable releases enforcement
+- `/put-orgs-org-settings-immutable-releases-repositories` — Set selected repositories for immutable releases enforcement
+- `/put-orgs-org-settings-immutable-releases-repositories-repository` — Enable a selected repository for immutable releases in an organization
+- `/delete-orgs-org-settings-immutable-releases-repositories-repository` — Disable a selected repository for immutable releases in an organization
+- `/get-orgs-org-settings-network-configurations` — List hosted compute network configurations for an organization
+- `/post-orgs-org-settings-network-configurations` — Create a hosted compute network configuration for an organization
+- `/get-orgs-org-settings-network-configurations-network-configurati` — Get a hosted compute network configuration for an organization
+- `/patch-orgs-org-settings-network-configurations-network-configurati` — Update a hosted compute network configuration for an organization
+- `/delete-orgs-org-settings-network-configurations-network-configurati` — Delete a hosted compute network configuration from an organization
+- `/get-orgs-org-settings-network-settings-network-settings-id` — Get a hosted compute network settings resource for an organization
+- `/get-orgs-org-team-team-slug-copilot-metrics` — Get Copilot metrics for a team
+- `/get-orgs-org-teams` — List teams
+- `/post-orgs-org-teams` — Create a team
+- `/get-orgs-org-teams-team-slug` — Get a team by name
+- `/patch-orgs-org-teams-team-slug` — Update a team
+- `/delete-orgs-org-teams-team-slug` — Delete a team
+- `/get-orgs-org-teams-team-slug-invitations` — List pending team invitations
+- `/get-orgs-org-teams-team-slug-members` — List team members
+- `/get-orgs-org-teams-team-slug-memberships-username` — Get team membership for a user
+- `/put-orgs-org-teams-team-slug-memberships-username` — Add or update team membership for a user
+- `/delete-orgs-org-teams-team-slug-memberships-username` — Remove team membership for a user
+- `/get-orgs-org-teams-team-slug-repos` — List team repositories
+- `/get-orgs-org-teams-team-slug-repos-owner-repo` — Check team permissions for a repository
+- `/put-orgs-org-teams-team-slug-repos-owner-repo` — Add or update team repository permissions
+- `/delete-orgs-org-teams-team-slug-repos-owner-repo` — Remove a repository from a team
+- `/get-orgs-org-teams-team-slug-teams` — List child teams
+- `/post-orgs-org-security-product-enablement` — Enable or disable a security feature for an organization
+- `/get-rate-limit` — Get rate limit status for the authenticated user
+- `/get-repos-owner-repo` — Get a repository
+- `/patch-repos-owner-repo` — Update a repository
+- `/delete-repos-owner-repo` — Delete a repository
+- `/get-repos-owner-repo-actions-artifacts` — List artifacts for a repository
+- `/get-repos-owner-repo-actions-artifacts-artifact-id` — Get an artifact
+- `/delete-repos-owner-repo-actions-artifacts-artifact-id` — Delete an artifact
+- `/get-repos-owner-repo-actions-artifacts-artifact-id-archive-forma` — Download an artifact
+- `/get-repos-owner-repo-actions-cache-retention-limit` — Get GitHub Actions cache retention limit for a repository
+- `/put-repos-owner-repo-actions-cache-retention-limit` — Set GitHub Actions cache retention limit for a repository
+- `/get-repos-owner-repo-actions-cache-storage-limit` — Get GitHub Actions cache storage limit for a repository
+- `/put-repos-owner-repo-actions-cache-storage-limit` — Set GitHub Actions cache storage limit for a repository
+- `/get-repos-owner-repo-actions-cache-usage` — Get GitHub Actions cache usage for a repository
+- `/get-repos-owner-repo-actions-caches` — List GitHub Actions caches for a repository
+- `/delete-repos-owner-repo-actions-caches` — Delete GitHub Actions caches for a repository (using a cache key)
+- `/delete-repos-owner-repo-actions-caches-cache-id` — Delete a GitHub Actions cache for a repository (using a cache ID)
+- `/get-repos-owner-repo-actions-concurrency-groups` — List concurrency groups for a repository
+- `/get-repos-owner-repo-actions-concurrency-groups-concurrency-grou` — Get a concurrency group for a repository
+- `/get-repos-owner-repo-actions-jobs-job-id` — Get a job for a workflow run
+- `/get-repos-owner-repo-actions-jobs-job-id-logs` — Download job logs for a workflow run
+- `/post-repos-owner-repo-actions-jobs-job-id-rerun` — Re-run a job from a workflow run
+- `/get-repos-owner-repo-actions-oidc-customization-sub` — Get the customization template for an OIDC subject claim for a repository
+- `/put-repos-owner-repo-actions-oidc-customization-sub` — Set the customization template for an OIDC subject claim for a repository
+- `/get-repos-owner-repo-actions-organization-secrets` — List repository organization secrets
+- `/get-repos-owner-repo-actions-organization-variables` — List repository organization variables
+- `/get-repos-owner-repo-actions-permissions` — Get GitHub Actions permissions for a repository
+- `/put-repos-owner-repo-actions-permissions` — Set GitHub Actions permissions for a repository
+- `/get-repos-owner-repo-actions-permissions-access` — Get the level of access for workflows outside of the repository
+- `/put-repos-owner-repo-actions-permissions-access` — Set the level of access for workflows outside of the repository
+- `/get-repos-owner-repo-actions-permissions-artifact-and-log-retent` — Get artifact and log retention settings for a repository
+- `/put-repos-owner-repo-actions-permissions-artifact-and-log-retent` — Set artifact and log retention settings for a repository
+- `/get-repos-owner-repo-actions-permissions-fork-pr-contributor-app` — Get fork PR contributor approval permissions for a repository
+- `/put-repos-owner-repo-actions-permissions-fork-pr-contributor-app` — Set fork PR contributor approval permissions for a repository
+- `/get-repos-owner-repo-actions-permissions-fork-pr-workflows-priva` — Get private repo fork PR workflow settings for a repository
+- `/put-repos-owner-repo-actions-permissions-fork-pr-workflows-priva` — Set private repo fork PR workflow settings for a repository
+- `/get-repos-owner-repo-actions-permissions-selected-actions` — Get allowed actions and reusable workflows for a repository
+- `/put-repos-owner-repo-actions-permissions-selected-actions` — Set allowed actions and reusable workflows for a repository
+- `/get-repos-owner-repo-actions-permissions-workflow` — Get default workflow permissions for a repository
+- `/put-repos-owner-repo-actions-permissions-workflow` — Set default workflow permissions for a repository
+- `/get-repos-owner-repo-actions-runners` — List self-hosted runners for a repository
+- `/get-repos-owner-repo-actions-runners-downloads` — List runner applications for a repository
+- `/post-repos-owner-repo-actions-runners-generate-jitconfig` — Create configuration for a just-in-time runner for a repository
+- `/post-repos-owner-repo-actions-runners-registration-token` — Create a registration token for a repository
+- `/post-repos-owner-repo-actions-runners-remove-token` — Create a remove token for a repository
+- `/get-repos-owner-repo-actions-runners-runner-id` — Get a self-hosted runner for a repository
+- `/delete-repos-owner-repo-actions-runners-runner-id` — Delete a self-hosted runner from a repository
+- `/get-repos-owner-repo-actions-runners-runner-id-labels` — List labels for a self-hosted runner for a repository
+- `/post-repos-owner-repo-actions-runners-runner-id-labels` — Add custom labels to a self-hosted runner for a repository
+- `/put-repos-owner-repo-actions-runners-runner-id-labels` — Set custom labels for a self-hosted runner for a repository
+- `/delete-repos-owner-repo-actions-runners-runner-id-labels` — Remove all custom labels from a self-hosted runner for a repository
+- `/delete-repos-owner-repo-actions-runners-runner-id-labels-name` — Remove a custom label from a self-hosted runner for a repository
+- `/get-repos-owner-repo-actions-runs` — List workflow runs for a repository
+- `/get-repos-owner-repo-actions-runs-run-id` — Get a workflow run
+- `/delete-repos-owner-repo-actions-runs-run-id` — Delete a workflow run
+- `/get-repos-owner-repo-actions-runs-run-id-approvals` — Get the review history for a workflow run
+- `/post-repos-owner-repo-actions-runs-run-id-approve` — Approve a workflow run for a fork pull request
+- `/get-repos-owner-repo-actions-runs-run-id-artifacts` — List workflow run artifacts
+- `/get-repos-owner-repo-actions-runs-run-id-attempts-attempt-number` — Get a workflow run attempt
+- `/get-repos-owner-repo-actions-runs-run-id-attempts-attempt-number` — List jobs for a workflow run attempt
+- `/get-repos-owner-repo-actions-runs-run-id-attempts-attempt-number` — Download workflow run attempt logs
+- `/post-repos-owner-repo-actions-runs-run-id-cancel` — Cancel a workflow run
+- `/get-repos-owner-repo-actions-runs-run-id-concurrency-groups` — List concurrency groups for a workflow run
+- `/post-repos-owner-repo-actions-runs-run-id-deployment-protection-r` — Review custom deployment protection rules for a workflow run
+- `/post-repos-owner-repo-actions-runs-run-id-force-cancel` — Force cancel a workflow run
+- `/get-repos-owner-repo-actions-runs-run-id-jobs` — List jobs for a workflow run
+- `/get-repos-owner-repo-actions-runs-run-id-logs` — Download workflow run logs
+- `/delete-repos-owner-repo-actions-runs-run-id-logs` — Delete workflow run logs
+- `/get-repos-owner-repo-actions-runs-run-id-pending-deployments` — Get pending deployments for a workflow run
+- `/post-repos-owner-repo-actions-runs-run-id-pending-deployments` — Review pending deployments for a workflow run
+- `/post-repos-owner-repo-actions-runs-run-id-rerun` — Re-run a workflow
+- `/post-repos-owner-repo-actions-runs-run-id-rerun-failed-jobs` — Re-run failed jobs from a workflow run
+- `/get-repos-owner-repo-actions-runs-run-id-timing` — Get workflow run usage
+- `/get-repos-owner-repo-actions-secrets` — List repository secrets
+- `/get-repos-owner-repo-actions-secrets-public-key` — Get a repository public key
+- `/get-repos-owner-repo-actions-secrets-secret-name` — Get a repository secret
+- `/put-repos-owner-repo-actions-secrets-secret-name` — Create or update a repository secret
+- `/delete-repos-owner-repo-actions-secrets-secret-name` — Delete a repository secret
+- `/get-repos-owner-repo-actions-variables` — List repository variables
+- `/post-repos-owner-repo-actions-variables` — Create a repository variable
+- `/get-repos-owner-repo-actions-variables-name` — Get a repository variable
+- `/patch-repos-owner-repo-actions-variables-name` — Update a repository variable
+- `/delete-repos-owner-repo-actions-variables-name` — Delete a repository variable
+- `/get-repos-owner-repo-actions-workflows` — List repository workflows
+- `/get-repos-owner-repo-actions-workflows-workflow-id` — Get a workflow
+- `/put-repos-owner-repo-actions-workflows-workflow-id-disable` — Disable a workflow
+- `/post-repos-owner-repo-actions-workflows-workflow-id-dispatches` — Create a workflow dispatch event
+- `/put-repos-owner-repo-actions-workflows-workflow-id-enable` — Enable a workflow
+- `/get-repos-owner-repo-actions-workflows-workflow-id-runs` — List workflow runs for a workflow
+- `/get-repos-owner-repo-actions-workflows-workflow-id-timing` — Get workflow usage
+- `/get-repos-owner-repo-activity` — List repository activities
+- `/get-repos-owner-repo-agents-organization-secrets` — List repository organization secrets
+- `/get-repos-owner-repo-agents-organization-variables` — List repository organization variables
+- `/get-repos-owner-repo-agents-secrets` — List repository secrets
+- `/get-repos-owner-repo-agents-secrets-public-key` — Get a repository public key
+- `/get-repos-owner-repo-agents-secrets-secret-name` — Get a repository secret
+- `/put-repos-owner-repo-agents-secrets-secret-name` — Create or update a repository secret
+- `/delete-repos-owner-repo-agents-secrets-secret-name` — Delete a repository secret
+- `/get-repos-owner-repo-agents-variables` — List repository variables
+- `/post-repos-owner-repo-agents-variables` — Create a repository variable
+- `/get-repos-owner-repo-agents-variables-name` — Get a repository variable
+- `/patch-repos-owner-repo-agents-variables-name` — Update a repository variable
+- `/delete-repos-owner-repo-agents-variables-name` — Delete a repository variable
+- `/get-repos-owner-repo-assignees` — List assignees
+- `/get-repos-owner-repo-assignees-assignee` — Check if a user can be assigned
+- `/post-repos-owner-repo-attestations` — Create an attestation
+- `/get-repos-owner-repo-attestations-subject-digest` — List attestations
+- `/get-repos-owner-repo-autolinks` — Get all autolinks of a repository
+- `/post-repos-owner-repo-autolinks` — Create an autolink reference for a repository
+- `/get-repos-owner-repo-autolinks-autolink-id` — Get an autolink reference of a repository
+- `/delete-repos-owner-repo-autolinks-autolink-id` — Delete an autolink reference from a repository
+- `/get-repos-owner-repo-automated-security-fixes` — Check if Dependabot security updates are enabled for a repository
+- `/put-repos-owner-repo-automated-security-fixes` — Enable Dependabot security updates
+- `/delete-repos-owner-repo-automated-security-fixes` — Disable Dependabot security updates
+- `/get-repos-owner-repo-branches` — List branches
+- `/get-repos-owner-repo-branches-branch` — Get a branch
+- `/get-repos-owner-repo-branches-branch-protection` — Get branch protection
+- `/put-repos-owner-repo-branches-branch-protection` — Update branch protection
+- `/delete-repos-owner-repo-branches-branch-protection` — Delete branch protection
+- `/get-repos-owner-repo-branches-branch-protection-enforce-admins` — Get admin branch protection
+- `/post-repos-owner-repo-branches-branch-protection-enforce-admins` — Set admin branch protection
+- `/delete-repos-owner-repo-branches-branch-protection-enforce-admins` — Delete admin branch protection
+- `/get-repos-owner-repo-branches-branch-protection-required-pull-re` — Get pull request review protection
+- `/patch-repos-owner-repo-branches-branch-protection-required-pull-re` — Update pull request review protection
+- `/delete-repos-owner-repo-branches-branch-protection-required-pull-re` — Delete pull request review protection
+- `/get-repos-owner-repo-branches-branch-protection-required-signatu` — Get commit signature protection
+- `/post-repos-owner-repo-branches-branch-protection-required-signatu` — Create commit signature protection
+- `/delete-repos-owner-repo-branches-branch-protection-required-signatu` — Delete commit signature protection
+- `/get-repos-owner-repo-branches-branch-protection-required-status-` — Get status checks protection
+- `/patch-repos-owner-repo-branches-branch-protection-required-status-` — Update status check protection
+- `/delete-repos-owner-repo-branches-branch-protection-required-status-` — Remove status check protection
+- `/get-repos-owner-repo-branches-branch-protection-required-status-` — Get all status check contexts
+- `/post-repos-owner-repo-branches-branch-protection-required-status-` — Add status check contexts
+- `/put-repos-owner-repo-branches-branch-protection-required-status-` — Set status check contexts
+- `/delete-repos-owner-repo-branches-branch-protection-required-status-` — Remove status check contexts
+- `/get-repos-owner-repo-branches-branch-protection-restrictions` — Get access restrictions
+- `/delete-repos-owner-repo-branches-branch-protection-restrictions` — Delete access restrictions
+- `/get-repos-owner-repo-branches-branch-protection-restrictions-app` — Get apps with access to the protected branch
+- `/post-repos-owner-repo-branches-branch-protection-restrictions-app` — Add app access restrictions
+- `/put-repos-owner-repo-branches-branch-protection-restrictions-app` — Set app access restrictions
+- `/delete-repos-owner-repo-branches-branch-protection-restrictions-app` — Remove app access restrictions
+- `/get-repos-owner-repo-branches-branch-protection-restrictions-tea` — Get teams with access to the protected branch
+- `/post-repos-owner-repo-branches-branch-protection-restrictions-tea` — Add team access restrictions
+- `/put-repos-owner-repo-branches-branch-protection-restrictions-tea` — Set team access restrictions
+- `/delete-repos-owner-repo-branches-branch-protection-restrictions-tea` — Remove team access restrictions
+- `/get-repos-owner-repo-branches-branch-protection-restrictions-use` — Get users with access to the protected branch
+- `/post-repos-owner-repo-branches-branch-protection-restrictions-use` — Add user access restrictions
+- `/put-repos-owner-repo-branches-branch-protection-restrictions-use` — Set user access restrictions
+- `/delete-repos-owner-repo-branches-branch-protection-restrictions-use` — Remove user access restrictions
+- `/post-repos-owner-repo-branches-branch-rename` — Rename a branch
+- `/post-repos-owner-repo-check-runs` — Create a check run
+- `/get-repos-owner-repo-check-runs-check-run-id` — Get a check run
+- `/patch-repos-owner-repo-check-runs-check-run-id` — Update a check run
+- `/get-repos-owner-repo-check-runs-check-run-id-annotations` — List check run annotations
+- `/post-repos-owner-repo-check-runs-check-run-id-rerequest` — Rerequest a check run
+- `/post-repos-owner-repo-check-suites` — Create a check suite
+- `/patch-repos-owner-repo-check-suites-preferences` — Update repository preferences for check suites
+- `/get-repos-owner-repo-check-suites-check-suite-id` — Get a check suite
+- `/get-repos-owner-repo-check-suites-check-suite-id-check-runs` — List check runs in a check suite
+- `/post-repos-owner-repo-check-suites-check-suite-id-rerequest` — Rerequest a check suite
+- `/get-repos-owner-repo-code-quality-setup` — Get a code quality setup configuration
+- `/patch-repos-owner-repo-code-quality-setup` — Update a code quality setup configuration
+- `/get-repos-owner-repo-code-scanning-alerts` — List code scanning alerts for a repository
+- `/get-repos-owner-repo-code-scanning-alerts-alert-number` — Get a code scanning alert
+- `/patch-repos-owner-repo-code-scanning-alerts-alert-number` — Update a code scanning alert
+- `/get-repos-owner-repo-code-scanning-alerts-alert-number-autofix` — Get the status of an autofix for a code scanning alert
+- `/post-repos-owner-repo-code-scanning-alerts-alert-number-autofix` — Create an autofix for a code scanning alert
+- `/post-repos-owner-repo-code-scanning-alerts-alert-number-autofix-c` — Commit an autofix for a code scanning alert
+- `/get-repos-owner-repo-code-scanning-alerts-alert-number-instances` — List instances of a code scanning alert
+- `/get-repos-owner-repo-code-scanning-analyses` — List code scanning analyses for a repository
+- `/get-repos-owner-repo-code-scanning-analyses-analysis-id` — Get a code scanning analysis for a repository
+- `/delete-repos-owner-repo-code-scanning-analyses-analysis-id` — Delete a code scanning analysis from a repository
+- `/get-repos-owner-repo-code-scanning-codeql-databases` — List CodeQL databases for a repository
+- `/get-repos-owner-repo-code-scanning-codeql-databases-language` — Get a CodeQL database for a repository
+- `/delete-repos-owner-repo-code-scanning-codeql-databases-language` — Delete a CodeQL database
+- `/post-repos-owner-repo-code-scanning-codeql-variant-analyses` — Create a CodeQL variant analysis
+- `/get-repos-owner-repo-code-scanning-codeql-variant-analyses-codeq` — Get the summary of a CodeQL variant analysis
+- `/get-repos-owner-repo-code-scanning-codeql-variant-analyses-codeq` — Get the analysis status of a repository in a CodeQL variant analysis
+- `/get-repos-owner-repo-code-scanning-default-setup` — Get a code scanning default setup configuration
+- `/patch-repos-owner-repo-code-scanning-default-setup` — Update a code scanning default setup configuration
+- `/post-repos-owner-repo-code-scanning-sarifs` — Upload an analysis as SARIF data
+- `/get-repos-owner-repo-code-scanning-sarifs-sarif-id` — Get information about a SARIF upload
+- `/get-repos-owner-repo-code-security-configuration` — Get the code security configuration associated with a repository
+- `/get-repos-owner-repo-codeowners-errors` — List CODEOWNERS errors
+- `/get-repos-owner-repo-codespaces` — List codespaces in a repository for the authenticated user
+- `/post-repos-owner-repo-codespaces` — Create a codespace in a repository
+- `/get-repos-owner-repo-codespaces-devcontainers` — List devcontainer configurations in a repository for the authenticated user
+- `/get-repos-owner-repo-codespaces-machines` — List available machine types for a repository
+- `/get-repos-owner-repo-codespaces-new` — Get default attributes for a codespace
+- `/get-repos-owner-repo-codespaces-permissions-check` — Check if permissions defined by a devcontainer have been accepted by the authenticated user
+- `/get-repos-owner-repo-codespaces-secrets` — List repository secrets
+- `/get-repos-owner-repo-codespaces-secrets-public-key` — Get a repository public key
+- `/get-repos-owner-repo-codespaces-secrets-secret-name` — Get a repository secret
+- `/put-repos-owner-repo-codespaces-secrets-secret-name` — Create or update a repository secret
+- `/delete-repos-owner-repo-codespaces-secrets-secret-name` — Delete a repository secret
+- `/get-repos-owner-repo-collaborators` — List repository collaborators
+- `/get-repos-owner-repo-collaborators-username` — Check if a user is a repository collaborator
+- `/put-repos-owner-repo-collaborators-username` — Add a repository collaborator
+- `/delete-repos-owner-repo-collaborators-username` — Remove a repository collaborator
+- `/get-repos-owner-repo-collaborators-username-permission` — Get repository permissions for a user
+- `/get-repos-owner-repo-comments` — List commit comments for a repository
+- `/get-repos-owner-repo-comments-comment-id` — Get a commit comment
+- `/patch-repos-owner-repo-comments-comment-id` — Update a commit comment
+- `/delete-repos-owner-repo-comments-comment-id` — Delete a commit comment
+- `/get-repos-owner-repo-comments-comment-id-reactions` — List reactions for a commit comment
+- `/post-repos-owner-repo-comments-comment-id-reactions` — Create reaction for a commit comment
+- `/delete-repos-owner-repo-comments-comment-id-reactions-reaction-id` — Delete a commit comment reaction
+- `/get-repos-owner-repo-commits` — List commits
+- `/get-repos-owner-repo-commits-commit-sha-branches-where-head` — List branches for HEAD commit
+- `/get-repos-owner-repo-commits-commit-sha-comments` — List commit comments
+- `/post-repos-owner-repo-commits-commit-sha-comments` — Create a commit comment
+- `/get-repos-owner-repo-commits-commit-sha-pulls` — List pull requests associated with a commit
+- `/get-repos-owner-repo-commits-ref` — Get a commit
+- `/get-repos-owner-repo-commits-ref-check-runs` — List check runs for a Git reference
+- `/get-repos-owner-repo-commits-ref-check-suites` — List check suites for a Git reference
+- `/get-repos-owner-repo-commits-ref-status` — Get the combined status for a specific reference
+- `/get-repos-owner-repo-commits-ref-statuses` — List commit statuses for a reference
+- `/get-repos-owner-repo-community-profile` — Get community profile metrics
+- `/get-repos-owner-repo-compare-basehead` — Compare two commits
+- `/get-repos-owner-repo-contents-path` — Get repository content
+- `/put-repos-owner-repo-contents-path` — Create or update file contents
+- `/delete-repos-owner-repo-contents-path` — Delete a file
+- `/get-repos-owner-repo-contributors` — List repository contributors
+- `/get-repos-owner-repo-copilot-cloud-agent-configuration` — Get Copilot cloud agent configuration for a repository
+- `/get-repos-owner-repo-dependabot-alerts` — List Dependabot alerts for a repository
+- `/get-repos-owner-repo-dependabot-alerts-alert-number` — Get a Dependabot alert
+- `/patch-repos-owner-repo-dependabot-alerts-alert-number` — Update a Dependabot alert
+- `/get-repos-owner-repo-dependabot-secrets` — List repository secrets
+- `/get-repos-owner-repo-dependabot-secrets-public-key` — Get a repository public key
+- `/get-repos-owner-repo-dependabot-secrets-secret-name` — Get a repository secret
+- `/put-repos-owner-repo-dependabot-secrets-secret-name` — Create or update a repository secret
+- `/delete-repos-owner-repo-dependabot-secrets-secret-name` — Delete a repository secret
+- `/get-repos-owner-repo-dependency-graph-compare-basehead` — Get a diff of the dependencies between commits
+- `/get-repos-owner-repo-dependency-graph-sbom` — Export a software bill of materials (SBOM) for a repository.
+- `/get-repos-owner-repo-dependency-graph-sbom-fetch-report-sbom-uui` — Fetch a software bill of materials (SBOM) for a repository.
+- `/get-repos-owner-repo-dependency-graph-sbom-generate-report` — Request generation of a software bill of materials (SBOM) for a repository.
+- `/post-repos-owner-repo-dependency-graph-snapshots` — Create a snapshot of dependencies for a repository
+- `/get-repos-owner-repo-deployments` — List deployments
+- `/post-repos-owner-repo-deployments` — Create a deployment
+- `/get-repos-owner-repo-deployments-deployment-id` — Get a deployment
+- `/delete-repos-owner-repo-deployments-deployment-id` — Delete a deployment
+- `/get-repos-owner-repo-deployments-deployment-id-statuses` — List deployment statuses
+- `/post-repos-owner-repo-deployments-deployment-id-statuses` — Create a deployment status
+- `/get-repos-owner-repo-deployments-deployment-id-statuses-status-i` — Get a deployment status
+- `/post-repos-owner-repo-dispatches` — Create a repository dispatch event
+- `/get-repos-owner-repo-environments` — List environments
+- `/get-repos-owner-repo-environments-environment-name` — Get an environment
+- `/put-repos-owner-repo-environments-environment-name` — Create or update an environment
+- `/delete-repos-owner-repo-environments-environment-name` — Delete an environment
+- `/get-repos-owner-repo-environments-environment-name-deployment-br` — List deployment branch policies
+- `/post-repos-owner-repo-environments-environment-name-deployment-br` — Create a deployment branch policy
+- `/get-repos-owner-repo-environments-environment-name-deployment-br` — Get a deployment branch policy
+- `/put-repos-owner-repo-environments-environment-name-deployment-br` — Update a deployment branch policy
+- `/delete-repos-owner-repo-environments-environment-name-deployment-br` — Delete a deployment branch policy
+- `/get-repos-owner-repo-environments-environment-name-deployment-pr` — Get all deployment protection rules for an environment
+- `/post-repos-owner-repo-environments-environment-name-deployment-pr` — Create a custom deployment protection rule on an environment
+- `/get-repos-owner-repo-environments-environment-name-deployment-pr` — List custom deployment rule integrations available for an environment
+- `/get-repos-owner-repo-environments-environment-name-deployment-pr` — Get a custom deployment protection rule
+- `/delete-repos-owner-repo-environments-environment-name-deployment-pr` — Disable a custom protection rule for an environment
+- `/get-repos-owner-repo-environments-environment-name-secrets` — List environment secrets
+- `/get-repos-owner-repo-environments-environment-name-secrets-publi` — Get an environment public key
+- `/get-repos-owner-repo-environments-environment-name-secrets-secre` — Get an environment secret
+- `/put-repos-owner-repo-environments-environment-name-secrets-secre` — Create or update an environment secret
+- `/delete-repos-owner-repo-environments-environment-name-secrets-secre` — Delete an environment secret
+- `/get-repos-owner-repo-environments-environment-name-variables` — List environment variables
+- `/post-repos-owner-repo-environments-environment-name-variables` — Create an environment variable
+- `/get-repos-owner-repo-environments-environment-name-variables-nam` — Get an environment variable
+- `/patch-repos-owner-repo-environments-environment-name-variables-nam` — Update an environment variable
+- `/delete-repos-owner-repo-environments-environment-name-variables-nam` — Delete an environment variable
+- `/get-repos-owner-repo-events` — List repository events
+- `/get-repos-owner-repo-forks` — List forks
+- `/post-repos-owner-repo-forks` — Create a fork
+- `/post-repos-owner-repo-git-blobs` — Create a blob
+- `/get-repos-owner-repo-git-blobs-file-sha` — Get a blob
+- `/post-repos-owner-repo-git-commits` — Create a commit
+- `/get-repos-owner-repo-git-commits-commit-sha` — Get a commit object
+- `/get-repos-owner-repo-git-matching-refs-ref` — List matching references
+- `/get-repos-owner-repo-git-ref-ref` — Get a reference
+- `/post-repos-owner-repo-git-refs` — Create a reference
+- `/patch-repos-owner-repo-git-refs-ref` — Update a reference
+- `/delete-repos-owner-repo-git-refs-ref` — Delete a reference
+- `/post-repos-owner-repo-git-tags` — Create a tag object
+- `/get-repos-owner-repo-git-tags-tag-sha` — Get a tag
+- `/post-repos-owner-repo-git-trees` — Create a tree
+- `/get-repos-owner-repo-git-trees-tree-sha` — Get a tree
+- `/get-repos-owner-repo-hash-algorithm` — Get the hash algorithm for a repository
+- `/get-repos-owner-repo-hooks` — List repository webhooks
+- `/post-repos-owner-repo-hooks` — Create a repository webhook
+- `/get-repos-owner-repo-hooks-hook-id` — Get a repository webhook
+- `/patch-repos-owner-repo-hooks-hook-id` — Update a repository webhook
+- `/delete-repos-owner-repo-hooks-hook-id` — Delete a repository webhook
+- `/get-repos-owner-repo-hooks-hook-id-config` — Get a webhook configuration for a repository
+- `/patch-repos-owner-repo-hooks-hook-id-config` — Update a webhook configuration for a repository
+- `/get-repos-owner-repo-hooks-hook-id-deliveries` — List deliveries for a repository webhook
+- `/get-repos-owner-repo-hooks-hook-id-deliveries-delivery-id` — Get a delivery for a repository webhook
+- `/post-repos-owner-repo-hooks-hook-id-deliveries-delivery-id-attemp` — Redeliver a delivery for a repository webhook
+- `/post-repos-owner-repo-hooks-hook-id-pings` — Ping a repository webhook
+- `/post-repos-owner-repo-hooks-hook-id-tests` — Test the push repository webhook
+- `/get-repos-owner-repo-immutable-releases` — Check if immutable releases are enabled for a repository
+- `/put-repos-owner-repo-immutable-releases` — Enable immutable releases
+- `/delete-repos-owner-repo-immutable-releases` — Disable immutable releases
+- `/get-repos-owner-repo-import` — Get an import status
+- `/put-repos-owner-repo-import` — Start an import
+- `/patch-repos-owner-repo-import` — Update an import
+- `/delete-repos-owner-repo-import` — Cancel an import
+- `/get-repos-owner-repo-import-authors` — Get commit authors
+- `/patch-repos-owner-repo-import-authors-author-id` — Map a commit author
+- `/get-repos-owner-repo-import-large-files` — Get large files
+- `/patch-repos-owner-repo-import-lfs` — Update Git LFS preference
+- `/get-repos-owner-repo-installation` — Get a repository installation for the authenticated app
+- `/get-repos-owner-repo-interaction-limits` — Get interaction restrictions for a repository
+- `/put-repos-owner-repo-interaction-limits` — Set interaction restrictions for a repository
+- `/delete-repos-owner-repo-interaction-limits` — Remove interaction restrictions for a repository
+- `/get-repos-owner-repo-invitations` — List repository invitations
+- `/patch-repos-owner-repo-invitations-invitation-id` — Update a repository invitation
+- `/delete-repos-owner-repo-invitations-invitation-id` — Delete a repository invitation
+- `/get-repos-owner-repo-issue-types` — List issue types for a repository
+- `/get-repos-owner-repo-issues` — List repository issues
+- `/post-repos-owner-repo-issues` — Create an issue
+- `/get-repos-owner-repo-issues-comments` — List issue comments for a repository
+- `/get-repos-owner-repo-issues-comments-comment-id` — Get an issue comment
+- `/patch-repos-owner-repo-issues-comments-comment-id` — Update an issue comment
+- `/delete-repos-owner-repo-issues-comments-comment-id` — Delete an issue comment
+- `/put-repos-owner-repo-issues-comments-comment-id-pin` — Pin an issue comment
+- `/delete-repos-owner-repo-issues-comments-comment-id-pin` — Unpin an issue comment
+- `/get-repos-owner-repo-issues-comments-comment-id-reactions` — List reactions for an issue comment
+- `/post-repos-owner-repo-issues-comments-comment-id-reactions` — Create reaction for an issue comment
+- `/delete-repos-owner-repo-issues-comments-comment-id-reactions-reacti` — Delete an issue comment reaction
+- `/get-repos-owner-repo-issues-events` — List issue events for a repository
+- `/get-repos-owner-repo-issues-events-event-id` — Get an issue event
+- `/get-repos-owner-repo-issues-issue-number` — Get an issue
+- `/patch-repos-owner-repo-issues-issue-number` — Update an issue
+- `/post-repos-owner-repo-issues-issue-number-assignees` — Add assignees to an issue
+- `/delete-repos-owner-repo-issues-issue-number-assignees` — Remove assignees from an issue
+- `/get-repos-owner-repo-issues-issue-number-assignees-assignee` — Check if a user can be assigned to a issue
+- `/get-repos-owner-repo-issues-issue-number-comments` — List issue comments
+- `/post-repos-owner-repo-issues-issue-number-comments` — Create an issue comment
+- `/get-repos-owner-repo-issues-issue-number-dependencies-blocked-by` — List dependencies an issue is blocked by
+- `/post-repos-owner-repo-issues-issue-number-dependencies-blocked-by` — Add a dependency an issue is blocked by
+- `/delete-repos-owner-repo-issues-issue-number-dependencies-blocked-by` — Remove dependency an issue is blocked by
+- `/get-repos-owner-repo-issues-issue-number-dependencies-blocking` — List dependencies an issue is blocking
+- `/get-repos-owner-repo-issues-issue-number-events` — List issue events
+- `/get-repos-owner-repo-issues-issue-number-issue-field-values` — List issue field values for an issue
+- `/post-repos-owner-repo-issues-issue-number-issue-field-values` — Add issue field values to an issue
+- `/put-repos-owner-repo-issues-issue-number-issue-field-values` — Set issue field values for an issue
+- `/delete-repos-owner-repo-issues-issue-number-issue-field-values-issu` — Delete an issue field value from an issue
+- `/get-repos-owner-repo-issues-issue-number-labels` — List labels for an issue
+- `/post-repos-owner-repo-issues-issue-number-labels` — Add labels to an issue
+- `/put-repos-owner-repo-issues-issue-number-labels` — Set labels for an issue
+- `/delete-repos-owner-repo-issues-issue-number-labels` — Remove all labels from an issue
+- `/delete-repos-owner-repo-issues-issue-number-labels-name` — Remove a label from an issue
+- `/put-repos-owner-repo-issues-issue-number-lock` — Lock an issue
+- `/delete-repos-owner-repo-issues-issue-number-lock` — Unlock an issue
+- `/get-repos-owner-repo-issues-issue-number-parent` — Get parent issue
+- `/get-repos-owner-repo-issues-issue-number-reactions` — List reactions for an issue
+- `/post-repos-owner-repo-issues-issue-number-reactions` — Create reaction for an issue
+- `/delete-repos-owner-repo-issues-issue-number-reactions-reaction-id` — Delete an issue reaction
+- `/delete-repos-owner-repo-issues-issue-number-sub-issue` — Remove sub-issue
+- `/get-repos-owner-repo-issues-issue-number-sub-issues` — List sub-issues
+- `/post-repos-owner-repo-issues-issue-number-sub-issues` — Add sub-issue
+- `/patch-repos-owner-repo-issues-issue-number-sub-issues-priority` — Reprioritize sub-issue
+- `/get-repos-owner-repo-issues-issue-number-timeline` — List timeline events for an issue
+- `/get-repos-owner-repo-keys` — List deploy keys
+- `/post-repos-owner-repo-keys` — Create a deploy key
+- `/get-repos-owner-repo-keys-key-id` — Get a deploy key
+- `/delete-repos-owner-repo-keys-key-id` — Delete a deploy key
+- `/get-repos-owner-repo-labels` — List labels for a repository
+- `/post-repos-owner-repo-labels` — Create a label
+- `/get-repos-owner-repo-labels-name` — Get a label
+- `/patch-repos-owner-repo-labels-name` — Update a label
+- `/delete-repos-owner-repo-labels-name` — Delete a label
+- `/get-repos-owner-repo-languages` — List repository languages
+- `/get-repos-owner-repo-license` — Get the license for a repository
+- `/post-repos-owner-repo-merge-upstream` — Sync a fork branch with the upstream repository
+- `/post-repos-owner-repo-merges` — Merge a branch
+- `/get-repos-owner-repo-milestones` — List milestones
+- `/post-repos-owner-repo-milestones` — Create a milestone
+- `/get-repos-owner-repo-milestones-milestone-number` — Get a milestone
+- `/patch-repos-owner-repo-milestones-milestone-number` — Update a milestone
+- `/delete-repos-owner-repo-milestones-milestone-number` — Delete a milestone
+- `/get-repos-owner-repo-milestones-milestone-number-labels` — List labels for issues in a milestone
+- `/get-repos-owner-repo-notifications` — List repository notifications for the authenticated user
+- `/put-repos-owner-repo-notifications` — Mark repository notifications as read
+- `/get-repos-owner-repo-pages` — Get a GitHub Pages site
+- `/post-repos-owner-repo-pages` — Create a GitHub Pages site
+- `/put-repos-owner-repo-pages` — Update information about a GitHub Pages site
+- `/delete-repos-owner-repo-pages` — Delete a GitHub Pages site
+- `/get-repos-owner-repo-pages-builds` — List GitHub Pages builds
+- `/post-repos-owner-repo-pages-builds` — Request a GitHub Pages build
+- `/get-repos-owner-repo-pages-builds-latest` — Get latest Pages build
+- `/get-repos-owner-repo-pages-builds-build-id` — Get GitHub Pages build
+- `/post-repos-owner-repo-pages-deployments` — Create a GitHub Pages deployment
+- `/get-repos-owner-repo-pages-deployments-pages-deployment-id` — Get the status of a GitHub Pages deployment
+- `/post-repos-owner-repo-pages-deployments-pages-deployment-id-cance` — Cancel a GitHub Pages deployment
+- `/get-repos-owner-repo-pages-health` — Get a DNS health check for GitHub Pages
+- `/get-repos-owner-repo-private-vulnerability-reporting` — Check if private vulnerability reporting is enabled for a repository
+- `/put-repos-owner-repo-private-vulnerability-reporting` — Enable private vulnerability reporting for a repository
+- `/delete-repos-owner-repo-private-vulnerability-reporting` — Disable private vulnerability reporting for a repository
+- `/get-repos-owner-repo-properties-values` — Get all custom property values for a repository
+- `/patch-repos-owner-repo-properties-values` — Create or update custom property values for a repository
+- `/get-repos-owner-repo-pulls` — List pull requests
+- `/post-repos-owner-repo-pulls` — Create a pull request
+- `/get-repos-owner-repo-pulls-comments` — List review comments in a repository
+- `/get-repos-owner-repo-pulls-comments-comment-id` — Get a review comment for a pull request
+- `/patch-repos-owner-repo-pulls-comments-comment-id` — Update a review comment for a pull request
+- `/delete-repos-owner-repo-pulls-comments-comment-id` — Delete a review comment for a pull request
+- `/get-repos-owner-repo-pulls-comments-comment-id-reactions` — List reactions for a pull request review comment
+- `/post-repos-owner-repo-pulls-comments-comment-id-reactions` — Create reaction for a pull request review comment
+- `/delete-repos-owner-repo-pulls-comments-comment-id-reactions-reactio` — Delete a pull request comment reaction
+- `/get-repos-owner-repo-pulls-pull-number` — Get a pull request
+- `/patch-repos-owner-repo-pulls-pull-number` — Update a pull request
+- `/post-repos-owner-repo-pulls-pull-number-codespaces` — Create a codespace from a pull request
+- `/get-repos-owner-repo-pulls-pull-number-comments` — List review comments on a pull request
+- `/post-repos-owner-repo-pulls-pull-number-comments` — Create a review comment for a pull request
+- `/post-repos-owner-repo-pulls-pull-number-comments-comment-id-repli` — Create a reply for a review comment
+- `/get-repos-owner-repo-pulls-pull-number-commits` — List commits on a pull request
+- `/get-repos-owner-repo-pulls-pull-number-files` — List pull requests files
+- `/get-repos-owner-repo-pulls-pull-number-merge` — Check if a pull request has been merged
+- `/put-repos-owner-repo-pulls-pull-number-merge` — Merge a pull request
+- `/get-repos-owner-repo-pulls-pull-number-requested-reviewers` — Get all requested reviewers for a pull request
+- `/post-repos-owner-repo-pulls-pull-number-requested-reviewers` — Request reviewers for a pull request
+- `/delete-repos-owner-repo-pulls-pull-number-requested-reviewers` — Remove requested reviewers from a pull request
+- `/get-repos-owner-repo-pulls-pull-number-reviews` — List reviews for a pull request
+- `/post-repos-owner-repo-pulls-pull-number-reviews` — Create a review for a pull request
+- `/get-repos-owner-repo-pulls-pull-number-reviews-review-id` — Get a review for a pull request
+- `/put-repos-owner-repo-pulls-pull-number-reviews-review-id` — Update a review for a pull request
+- `/delete-repos-owner-repo-pulls-pull-number-reviews-review-id` — Delete a pending review for a pull request
+- `/get-repos-owner-repo-pulls-pull-number-reviews-review-id-comment` — List comments for a pull request review
+- `/put-repos-owner-repo-pulls-pull-number-reviews-review-id-dismiss` — Dismiss a review for a pull request
+- `/post-repos-owner-repo-pulls-pull-number-reviews-review-id-events` — Submit a review for a pull request
+- `/put-repos-owner-repo-pulls-pull-number-update-branch` — Update a pull request branch
+- `/get-repos-owner-repo-readme` — Get a repository README
+- `/get-repos-owner-repo-readme-dir` — Get a repository README for a directory
+- `/get-repos-owner-repo-releases` — List releases
+- `/post-repos-owner-repo-releases` — Create a release
+- `/get-repos-owner-repo-releases-assets-asset-id` — Get a release asset
+- `/patch-repos-owner-repo-releases-assets-asset-id` — Update a release asset
+- `/delete-repos-owner-repo-releases-assets-asset-id` — Delete a release asset
+- `/post-repos-owner-repo-releases-generate-notes` — Generate release notes content for a release
+- `/get-repos-owner-repo-releases-latest` — Get the latest release
+- `/get-repos-owner-repo-releases-tags-tag` — Get a release by tag name
+- `/get-repos-owner-repo-releases-release-id` — Get a release
+- `/patch-repos-owner-repo-releases-release-id` — Update a release
+- `/delete-repos-owner-repo-releases-release-id` — Delete a release
+- `/get-repos-owner-repo-releases-release-id-assets` — List release assets
+- `/post-repos-owner-repo-releases-release-id-assets` — Upload a release asset
+- `/get-repos-owner-repo-releases-release-id-reactions` — List reactions for a release
+- `/post-repos-owner-repo-releases-release-id-reactions` — Create reaction for a release
+- `/delete-repos-owner-repo-releases-release-id-reactions-reaction-id` — Delete a release reaction
+- `/get-repos-owner-repo-rules-branches-branch` — Get rules for a branch
+- `/get-repos-owner-repo-rulesets` — Get all repository rulesets
+- `/post-repos-owner-repo-rulesets` — Create a repository ruleset
+- `/get-repos-owner-repo-rulesets-rule-suites` — List repository rule suites
+- `/get-repos-owner-repo-rulesets-rule-suites-rule-suite-id` — Get a repository rule suite
+- `/get-repos-owner-repo-rulesets-ruleset-id` — Get a repository ruleset
+- `/put-repos-owner-repo-rulesets-ruleset-id` — Update a repository ruleset
+- `/delete-repos-owner-repo-rulesets-ruleset-id` — Delete a repository ruleset
+- `/get-repos-owner-repo-rulesets-ruleset-id-history` — Get repository ruleset history
+- `/get-repos-owner-repo-rulesets-ruleset-id-history-version-id` — Get repository ruleset version
+- `/get-repos-owner-repo-secret-scanning-alerts` — List secret scanning alerts for a repository
+- `/get-repos-owner-repo-secret-scanning-alerts-alert-number` — Get a secret scanning alert
+- `/patch-repos-owner-repo-secret-scanning-alerts-alert-number` — Update a secret scanning alert
+- `/get-repos-owner-repo-secret-scanning-alerts-alert-number-locatio` — List locations for a secret scanning alert
+- `/post-repos-owner-repo-secret-scanning-push-protection-bypasses` — Create a push protection bypass
+- `/get-repos-owner-repo-secret-scanning-scan-history` — Get secret scanning scan history for a repository
+- `/get-repos-owner-repo-security-advisories` — List repository security advisories
+- `/post-repos-owner-repo-security-advisories` — Create a repository security advisory
+- `/post-repos-owner-repo-security-advisories-reports` — Privately report a security vulnerability
+- `/get-repos-owner-repo-security-advisories-ghsa-id` — Get a repository security advisory
+- `/patch-repos-owner-repo-security-advisories-ghsa-id` — Update a repository security advisory
+- `/post-repos-owner-repo-security-advisories-ghsa-id-cve` — Request a CVE for a repository security advisory
+- `/post-repos-owner-repo-security-advisories-ghsa-id-forks` — Create a temporary private fork
+- `/get-repos-owner-repo-stargazers` — List stargazers
+- `/get-repos-owner-repo-stats-code-frequency` — Get the weekly commit activity
+- `/get-repos-owner-repo-stats-commit-activity` — Get the last year of commit activity
+- `/get-repos-owner-repo-stats-contributors` — Get all contributor commit activity
+- `/get-repos-owner-repo-stats-participation` — Get the weekly commit count
+- `/get-repos-owner-repo-stats-punch-card` — Get the hourly commit count for each day
+- `/post-repos-owner-repo-statuses-sha` — Create a commit status
+- `/get-repos-owner-repo-subscribers` — List watchers
+- `/get-repos-owner-repo-subscription` — Get a repository subscription
+- `/put-repos-owner-repo-subscription` — Set a repository subscription
+- `/delete-repos-owner-repo-subscription` — Delete a repository subscription
+- `/get-repos-owner-repo-tags` — List repository tags
+- `/get-repos-owner-repo-tarball-ref` — Download a repository archive (tar)
+- `/get-repos-owner-repo-teams` — List repository teams
+- `/get-repos-owner-repo-topics` — Get all repository topics
+- `/put-repos-owner-repo-topics` — Replace all repository topics
+- `/get-repos-owner-repo-traffic-clones` — Get repository clones
+- `/get-repos-owner-repo-traffic-popular-paths` — Get top referral paths
+- `/get-repos-owner-repo-traffic-popular-referrers` — Get top referral sources
+- `/get-repos-owner-repo-traffic-views` — Get page views
+- `/post-repos-owner-repo-transfer` — Transfer a repository
+- `/get-repos-owner-repo-vulnerability-alerts` — Check if vulnerability alerts are enabled for a repository
+- `/put-repos-owner-repo-vulnerability-alerts` — Enable vulnerability alerts
+- `/delete-repos-owner-repo-vulnerability-alerts` — Disable vulnerability alerts
+- `/get-repos-owner-repo-zipball-ref` — Download a repository archive (zip)
+- `/post-repos-template-owner-template-repo-generate` — Create a repository using a template
+- `/get-repositories` — List public repositories
+- `/get-search-code` — Search code
+- `/get-search-commits` — Search commits
+- `/get-search-issues` — Search issues and pull requests
+- `/get-search-labels` — Search labels
+- `/get-search-repositories` — Search repositories
+- `/get-search-topics` — Search topics
+- `/get-search-users` — Search users
+- `/get-teams-team-id` — Get a team (Legacy)
+- `/patch-teams-team-id` — Update a team (Legacy)
+- `/delete-teams-team-id` — Delete a team (Legacy)
+- `/get-teams-team-id-invitations` — List pending team invitations (Legacy)
+- `/get-teams-team-id-members` — List team members (Legacy)
+- `/get-teams-team-id-members-username` — Get team member (Legacy)
+- `/put-teams-team-id-members-username` — Add team member (Legacy)
+- `/delete-teams-team-id-members-username` — Remove team member (Legacy)
+- `/get-teams-team-id-memberships-username` — Get team membership for a user (Legacy)
+- `/put-teams-team-id-memberships-username` — Add or update team membership for a user (Legacy)
+- `/delete-teams-team-id-memberships-username` — Remove team membership for a user (Legacy)
+- `/get-teams-team-id-repos` — List team repositories (Legacy)
+- `/get-teams-team-id-repos-owner-repo` — Check team permissions for a repository (Legacy)
+- `/put-teams-team-id-repos-owner-repo` — Add or update team repository permissions (Legacy)
+- `/delete-teams-team-id-repos-owner-repo` — Remove a repository from a team (Legacy)
+- `/get-teams-team-id-teams` — List child teams (Legacy)
+- `/get-user` — Get the authenticated user
+- `/patch-user` — Update the authenticated user
+- `/get-user-blocks` — List users blocked by the authenticated user
+- `/get-user-blocks-username` — Check if a user is blocked by the authenticated user
+- `/put-user-blocks-username` — Block a user
+- `/delete-user-blocks-username` — Unblock a user
+- `/get-user-codespaces` — List codespaces for the authenticated user
+- `/post-user-codespaces` — Create a codespace for the authenticated user
+- `/get-user-codespaces-secrets` — List secrets for the authenticated user
+- `/get-user-codespaces-secrets-public-key` — Get public key for the authenticated user
+- `/get-user-codespaces-secrets-secret-name` — Get a secret for the authenticated user
+- `/put-user-codespaces-secrets-secret-name` — Create or update a secret for the authenticated user
+- `/delete-user-codespaces-secrets-secret-name` — Delete a secret for the authenticated user
+- `/get-user-codespaces-secrets-secret-name-repositories` — List selected repositories for a user secret
+- `/put-user-codespaces-secrets-secret-name-repositories` — Set selected repositories for a user secret
+- `/put-user-codespaces-secrets-secret-name-repositories-repository-` — Add a selected repository to a user secret
+- `/delete-user-codespaces-secrets-secret-name-repositories-repository-` — Remove a selected repository from a user secret
+- `/get-user-codespaces-codespace-name` — Get a codespace for the authenticated user
+- `/patch-user-codespaces-codespace-name` — Update a codespace for the authenticated user
+- `/delete-user-codespaces-codespace-name` — Delete a codespace for the authenticated user
+- `/post-user-codespaces-codespace-name-exports` — Export a codespace for the authenticated user
+- `/get-user-codespaces-codespace-name-exports-export-id` — Get details about a codespace export
+- `/get-user-codespaces-codespace-name-machines` — List machine types for a codespace
+- `/post-user-codespaces-codespace-name-publish` — Create a repository from an unpublished codespace
+- `/post-user-codespaces-codespace-name-start` — Start a codespace for the authenticated user
+- `/post-user-codespaces-codespace-name-stop` — Stop a codespace for the authenticated user
+- `/get-user-docker-conflicts` — Get list of conflicting packages during Docker migration for authenticated-user
+- `/patch-user-email-visibility` — Set primary email visibility for the authenticated user
+- `/get-user-emails` — List email addresses for the authenticated user
+- `/post-user-emails` — Add an email address for the authenticated user
+- `/delete-user-emails` — Delete an email address for the authenticated user
+- `/get-user-followers` — List followers of the authenticated user
+- `/get-user-following` — List the people the authenticated user follows
+- `/get-user-following-username` — Check if a person is followed by the authenticated user
+- `/put-user-following-username` — Follow a user
+- `/delete-user-following-username` — Unfollow a user
+- `/get-user-gpg-keys` — List GPG keys for the authenticated user
+- `/post-user-gpg-keys` — Create a GPG key for the authenticated user
+- `/get-user-gpg-keys-gpg-key-id` — Get a GPG key for the authenticated user
+- `/delete-user-gpg-keys-gpg-key-id` — Delete a GPG key for the authenticated user
+- `/get-user-installations` — List app installations accessible to the user access token
+- `/get-user-installations-installation-id-repositories` — List repositories accessible to the user access token
+- `/put-user-installations-installation-id-repositories-repository-i` — Add a repository to an app installation
+- `/delete-user-installations-installation-id-repositories-repository-i` — Remove a repository from an app installation
+- `/get-user-interaction-limits` — Get interaction restrictions for your public repositories
+- `/put-user-interaction-limits` — Set interaction restrictions for your public repositories
+- `/delete-user-interaction-limits` — Remove interaction restrictions from your public repositories
+- `/get-user-issues` — List user account issues assigned to the authenticated user
+- `/get-user-keys` — List public SSH keys for the authenticated user
+- `/post-user-keys` — Create a public SSH key for the authenticated user
+- `/get-user-keys-key-id` — Get a public SSH key for the authenticated user
+- `/delete-user-keys-key-id` — Delete a public SSH key for the authenticated user
+- `/get-user-marketplace-purchases` — List subscriptions for the authenticated user
+- `/get-user-marketplace-purchases-stubbed` — List subscriptions for the authenticated user (stubbed)
+- `/get-user-memberships-orgs` — List organization memberships for the authenticated user
+- `/get-user-memberships-orgs-org` — Get an organization membership for the authenticated user
+- `/patch-user-memberships-orgs-org` — Update an organization membership for the authenticated user
+- `/get-user-migrations` — List user migrations
+- `/post-user-migrations` — Start a user migration
+- `/get-user-migrations-migration-id` — Get a user migration status
+- `/get-user-migrations-migration-id-archive` — Download a user migration archive
+- `/delete-user-migrations-migration-id-archive` — Delete a user migration archive
+- `/delete-user-migrations-migration-id-repos-repo-name-lock` — Unlock a user repository
+- `/get-user-migrations-migration-id-repositories` — List repositories for a user migration
+- `/get-user-orgs` — List organizations for the authenticated user
+- `/get-user-packages` — List packages for the authenticated user's namespace
+- `/get-user-packages-package-type-package-name` — Get a package for the authenticated user
+- `/delete-user-packages-package-type-package-name` — Delete a package for the authenticated user
+- `/post-user-packages-package-type-package-name-restore` — Restore a package for the authenticated user
+- `/get-user-packages-package-type-package-name-versions` — List package versions for a package owned by the authenticated user
+- `/get-user-packages-package-type-package-name-versions-package-ver` — Get a package version for the authenticated user
+- `/delete-user-packages-package-type-package-name-versions-package-ver` — Delete a package version for the authenticated user
+- `/post-user-packages-package-type-package-name-versions-package-ver` — Restore a package version for the authenticated user
+- `/get-user-public-emails` — List public email addresses for the authenticated user
+- `/get-user-repos` — List repositories for the authenticated user
+- `/post-user-repos` — Create a repository for the authenticated user
+- `/get-user-repository-invitations` — List repository invitations for the authenticated user
+- `/patch-user-repository-invitations-invitation-id` — Accept a repository invitation
+- `/delete-user-repository-invitations-invitation-id` — Decline a repository invitation
+- `/get-user-social-accounts` — List social accounts for the authenticated user
+- `/post-user-social-accounts` — Add social accounts for the authenticated user
+- `/delete-user-social-accounts` — Delete social accounts for the authenticated user
+- `/get-user-ssh-signing-keys` — List SSH signing keys for the authenticated user
+- `/post-user-ssh-signing-keys` — Create a SSH signing key for the authenticated user
+- `/get-user-ssh-signing-keys-ssh-signing-key-id` — Get an SSH signing key for the authenticated user
+- `/delete-user-ssh-signing-keys-ssh-signing-key-id` — Delete an SSH signing key for the authenticated user
+- `/get-user-starred` — List repositories starred by the authenticated user
+- `/get-user-starred-owner-repo` — Check if a repository is starred by the authenticated user
+- `/put-user-starred-owner-repo` — Star a repository for the authenticated user
+- `/delete-user-starred-owner-repo` — Unstar a repository for the authenticated user
+- `/get-user-subscriptions` — List repositories watched by the authenticated user
+- `/get-user-teams` — List teams for the authenticated user
+- `/get-user-account-id` — Get a user using their ID
+- `/post-user-user-id-projectsv2-project-number-drafts` — Create draft item for user owned project
+- `/get-users` — List users
+- `/post-users-user-id-projectsv2-project-number-views` — Create a view for a user-owned project
+- `/get-users-username` — Get a user
+- `/post-users-username-attestations-bulk-list` — List attestations by bulk subject digests
+- `/post-users-username-attestations-delete-request` — Delete attestations in bulk
+- `/delete-users-username-attestations-digest-subject-digest` — Delete attestations by subject digest
+- `/delete-users-username-attestations-attestation-id` — Delete attestations by ID
+- `/get-users-username-attestations-subject-digest` — List attestations
+- `/get-users-username-copilot-spaces` — List Copilot Spaces for a user
+- `/post-users-username-copilot-spaces` — Create a Copilot Space for a user
+- `/get-users-username-copilot-spaces-space-number` — Get a Copilot Space for a user
+- `/put-users-username-copilot-spaces-space-number` — Set a Copilot Space for a user
+- `/delete-users-username-copilot-spaces-space-number` — Delete a Copilot Space for a user
+- `/get-users-username-copilot-spaces-space-number-collaborators` — List collaborators for a Copilot Space for a user
+- `/post-users-username-copilot-spaces-space-number-collaborators` — Add a collaborator to a Copilot Space for a user
+- `/put-users-username-copilot-spaces-space-number-collaborators-act` — Set a collaborator role for a Copilot Space for a user
+- `/delete-users-username-copilot-spaces-space-number-collaborators-act` — Remove a collaborator from a Copilot Space for a user
+- `/get-users-username-copilot-spaces-space-number-resources` — List resources for a Copilot Space for a user
+- `/post-users-username-copilot-spaces-space-number-resources` — Create a resource for a Copilot Space for a user
+- `/get-users-username-copilot-spaces-space-number-resources-space-r` — Get a resource for a Copilot Space for a user
+- `/put-users-username-copilot-spaces-space-number-resources-space-r` — Set a resource for a Copilot Space for a user
+- `/delete-users-username-copilot-spaces-space-number-resources-space-r` — Delete a resource from a Copilot Space for a user
+- `/get-users-username-docker-conflicts` — Get list of conflicting packages during Docker migration for user
+- `/get-users-username-events` — List events for the authenticated user
+- `/get-users-username-events-orgs-org` — List organization events for the authenticated user
+- `/get-users-username-events-public` — List public events for a user
+- `/get-users-username-followers` — List followers of a user
+- `/get-users-username-following` — List the people a user follows
+- `/get-users-username-following-target-user` — Check if a user follows another user
+- `/get-users-username-gists` — List gists for a user
+- `/get-users-username-gpg-keys` — List GPG keys for a user
+- `/get-users-username-hovercard` — Get contextual information for a user
+- `/get-users-username-installation` — Get a user installation for the authenticated app
+- `/get-users-username-keys` — List public keys for a user
+- `/get-users-username-orgs` — List organizations for a user
+- `/get-users-username-packages` — List packages for a user
+- `/get-users-username-packages-package-type-package-name` — Get a package for a user
+- `/delete-users-username-packages-package-type-package-name` — Delete a package for a user
+- `/post-users-username-packages-package-type-package-name-restore` — Restore a package for a user
+- `/get-users-username-packages-package-type-package-name-versions` — List package versions for a package owned by a user
+- `/get-users-username-packages-package-type-package-name-versions-p` — Get a package version for a user
+- `/delete-users-username-packages-package-type-package-name-versions-p` — Delete package version for a user
+- `/post-users-username-packages-package-type-package-name-versions-p` — Restore package version for a user
+- `/get-users-username-projectsv2` — List projects for user
+- `/get-users-username-projectsv2-project-number` — Get project for user
+- `/get-users-username-projectsv2-project-number-fields` — List project fields for user
+- `/post-users-username-projectsv2-project-number-fields` — Add field to user owned project
+- `/get-users-username-projectsv2-project-number-fields-field-id` — Get project field for user
+- `/get-users-username-projectsv2-project-number-items` — List items for a user owned project
+- `/post-users-username-projectsv2-project-number-items` — Add item to user owned project
+- `/get-users-username-projectsv2-project-number-items-item-id` — Get an item for a user owned project
+- `/patch-users-username-projectsv2-project-number-items-item-id` — Update project item for user
+- `/delete-users-username-projectsv2-project-number-items-item-id` — Delete project item for user
+- `/get-users-username-projectsv2-project-number-views-view-number-i` — List items for a user project view
+- `/get-users-username-received-events` — List events received by the authenticated user
+- `/get-users-username-received-events-public` — List public events received by a user
+- `/get-users-username-repos` — List repositories for a user
+- `/get-users-username-settings-billing-ai-credit-usage` — Get billing AI credit usage report for a user
+- `/get-users-username-settings-billing-premium-request-usage` — Get billing premium request usage report for a user
+- `/get-users-username-settings-billing-usage` — Get billing usage report for a user
+- `/get-users-username-settings-billing-usage-summary` — Get billing usage summary for a user
+- `/get-users-username-social-accounts` — List social accounts for a user
+- `/get-users-username-ssh-signing-keys` — List SSH signing keys for a user
+- `/get-users-username-starred` — List repositories starred by a user
+- `/get-users-username-subscriptions` — List repositories watched by a user
+- `/get-versions` — Get all API versions
+- `/get-zen` — Get the Zen of GitHub
+
+## Usage
+
+```ts
+import { GithubClient } from './github/client.js';
+
+const client = new GithubClient(process.env.GITHUB_API_TOKEN!);
+```
+
+## Auth pattern
+
+Set `API_TOKEN` (or the env var specific to this API) before running any command.
+All generated curl examples use `-H "Authorization: Bearer $API_TOKEN"`.
+
+## Maintenance
+
+- **Re-forge**: `node ~/.agentskills/bin/forge-skill-from-openapi.mjs <spec-url> skills/github --name github`
+- **Hand-edit**: add examples, tweak descriptions, add business-context to commands.
+- **Spec drift**: re-running forge overwrites generated files; custom edits in `commands/*.md` survive if you rename the file.
+
+## Source
+
+Generated 2026-06-18 by forge-skill-from-openapi.
+Spec: https://api.github.com

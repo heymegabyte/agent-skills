@@ -1,0 +1,3242 @@
+[
+  {
+    "id": "A01",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Machine-readable SiteEditorialCharterSchema with audience, positioning, pillars, locale, timezone, brand tokens, and daily quota",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A02",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Mandatory Stage 2 generation of 15 distinct candidate blog article ideas before drafting",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A03",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Weighted 100-point editorial scoring rubric (25 intent, 25 reader value, 20 originality, 15 evidence, 10 visual, 5 business alignment)",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A04",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Strict candidate overlap evaluation against published, draft, scheduled, and active topic reservations",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A05",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Sequential fallback evaluation from Candidate #1 to #2..#15 when semantic or SERP overlap is detected",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A06",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Refresh/consolidation recommendation when all 15 candidates overlap with existing inventory",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A07",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Atomic topic reservation with expiring lease before expensive DataForSEO or model execution",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A08",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Editorial pillar balance enforcement across consecutive scheduled slots",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A09",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Search intent classification mapping (informational, commercial, transactional, navigational) to page recipe",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A10",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Reader persona and technical seniority calibration per candidate idea",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A11",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Original contribution requirement (benchmark, interactive calculator, decision matrix, or primary synthesis) per candidate",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A12",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Pre-draft evidence availability check requiring primary specifications, docs, or empirical benchmarks",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A13",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Pre-draft visual opportunity mapping requiring concrete visual applications from E01–E30",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A14",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Persisted concise decision record explaining why the winning idea beat the other 14 candidates",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A15",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Rejection of hidden chain-of-thought storage in favor of structured auditable rationale",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A16",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Support for user-supplied seed ideas, campaign seeds, and automated backlog seeds",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A17",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Topic cluster and hub-and-spoke internal linking plan generation at ideation time",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A18",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Seasonal and specification-release timeliness weighting in candidate ranking",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A19",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Negative topic exclusion list per site charter to prevent off-brand content",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A20",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Competitor content gap identification without copying competitor outlines",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A21",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Explicit target word-count range planning (2,000–3,000+ words) justified by topic breadth",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A22",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Automatic rejection of thin topics that would require fluff or padding to reach 2,000 words",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A23",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Canonical slug generation and collision avoidance at topic reservation time",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A24",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Multi-tenant isolation of topic reservations and editorial calendars by siteId",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A25",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Stale reservation lease reaping and automatic recovery for crashed workflows",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A26",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Campaign tag and product feature linkage for contextual callouts",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A27",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Historical article inventory indexing for fast lexical and SERP overlap checks",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A28",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Editorial calendar horizon planning across the 6-article ready buffer",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A29",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Audit trail of rejected candidate ideas to avoid re-proposing weak ideas in subsequent runs",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "A30",
+    "category": "A",
+    "categoryTitle": "Topic Strategy, Ideation, and Editorial Calendar",
+    "summary": "Deterministic serialization of all 15 IdeaCandidate records on ArticleRevision.candidateSlate",
+    "implementationModule": "packages/blog/src/topic-strategy.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Topic Strategy & 15-Idea Slate)",
+    "status": "implemented"
+  },
+  {
+    "id": "B01",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Production release gate requiring a genuine, fresh DataForSEO KeywordBrief (cached live response allowed; fixtures blocked)",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B02",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Typed DataForSEO Labs v3 request builders for keyword_suggestions, keyword_ideas, related_keywords, and bulk_keyword_difficulty",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B03",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Strict DataForSeoSearchIntentRequestSchema forbidding location_code/location_name per live DataForSEO endpoint contract [S35]",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B04",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Live SERP Organic Advanced v3 inspection capturing top organic results, people_also_ask, and SERP features",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B05",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Explicit integer micro-USD cost estimation before every DataForSEO API call",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B06",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Lexical & semantic relevance filtering of high-volume false positives (e.g. rejecting css profile, peak design, ballard design)",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B07",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Persisted rejectedHighVolumeKeywords audit trail with rejection reasons on KeywordBrief",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B08",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "SERP URL overlap clustering (3+ shared top-10 organic URLs grouped into one article; <3 split into separate articles)",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B09",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Google redirect unwrapping and URL canonicalization via breadcrumb fallback for SERP organic items",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B10",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "DataForSEO response envelope validation checking both outer status_code === 20000 and task status_code === 20000",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B11",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Credential resolution via Infisical / get-secret with strict secret redaction in logs and errors",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B12",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Deterministic request payload hashing for content-addressed DataForSEO response caching",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B13",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "TTL-based cache freshness verification (default 14 days for SERP/keyword briefs)",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B14",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Task-ID ledger and idempotent task recovery for standard/live DataForSEO operations",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B15",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Primary keyword selection balancing search volume, keyword difficulty, and site pillar relevance",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B16",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Secondary keyword cluster selection with intent probability and monthly search volume",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B17",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "People Also Ask and reader question extraction for FAQ and section subheading coverage",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B18",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "SERP feature opportunity detection (featured snippet, AI overview, comparison tables, images)",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B19",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Editorial keyword density diagnostic (natural phrasing without fixed repetition targets or unnatural ratios) [S02, S03]",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B20",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Explicit providerMode marking (live | cached | fixture) and isFixture boolean on every KeywordBrief",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B21",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Rate-limit and concurrency backoff handling for DataForSEO v3 HTTP calls",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B22",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Actual cost reconciliation from DataForSEO response cost field into integer micro-USD",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B23",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Support for locale-specific location_code and language_code configuration per site charter",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B24",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Competitive SERP depth and structural gap analysis from top 10 organic results",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B25",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Automatic expiration timestamp (expiresAt) enforcement on KeywordBrief before publication",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B26",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Zero-volume / emerging technical term fallback handling when documented by primary specs",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B27",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Batching of up to 1,000 keywords in search_intent and bulk_keyword_difficulty requests",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B28",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Raw provider capture archival with SHA-256 integrity hash for reproducibility",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B29",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Graceful offline/missing-credential fallback for local draft development while blocking production release",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "B30",
+    "category": "B",
+    "categoryTitle": "DataForSEO Keyword, SERP, Intent, and Competitive Intelligence",
+    "summary": "Verification test suite exercising both real captured DataForSEO responses and adversarial fixture rejection",
+    "implementationModule": "packages/blog/src/dataforseo.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (DataForSEO v3 Contracts & Live Capture)",
+    "status": "implemented"
+  },
+  {
+    "id": "C01",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Traceability of every externally verifiable factual claim to an inspected SourceVersion and EvidenceReference",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C02",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Separation of normalized SourceRecord identity from immutable fetched SourceVersion snapshots",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C03",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "EvidenceReference locator precision (section heading, paragraph/line range, or table cell) and quotation excerpt",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C04",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "ClaimRecord ledger with claimType, verificationStatus, evidenceIds,citationIds, and freshnessDays",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C05",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Inline CitationNode placement near factual claims linking to bottom BibliographyWidget",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C06",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Deterministic sequential numbering [1]..[N] of citations in document reading order",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C07",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Bidirectional anchor linking between inline [n] markers and #source-N bibliography entries",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C08",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Primary source preference hierarchy (official specs/RFCs, peer-reviewed papers, vendor benchmarks, primary code)",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C09",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Rejection of model assertions, search snippets, or tangential links as factual evidence",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C10",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Explicit labeling of worked examples, estimates, hypotheses, and editorial recommendations",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C11",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Deterministic evaluator for calculated metrics (evaluateRecordedCalculation) with recorded formula and inputs",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C12",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "URL canonicalization stripping tracking parameters (utm_*, fbclid, gclid) and normalizing fragments",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C13",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "SSRF protection blocking localhost, RFC1918 private IPs, link-local, metadata endpoints, and non-HTTPS schemes",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C14",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Redirect-chain validation verifying every hop in an HTTP redirect chain against SSRF rules",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C15",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Prompt-injection sanitization stripping hidden instructions and system-prompt overrides from retrieved web passages",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C16",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Source content SHA-256 hashing and R2 snapshot storage key tracking",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C17",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Freshness window enforcement (freshnessDays) comparing source retrieval/publication date against article publication",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C18",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Detection and blocking of broken, orphan, or unresolved CitationNode references",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C19",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Detection and blocking of verified claims that lack supporting EvidenceReference records",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C20",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Support for multiple corroborating EvidenceReferences on high-stakes comparative claims",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C21",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Publication date vs retrieval date distinction in SourceRecord and bibliography rendering",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C22",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Author, publisher, and license metadata capture on SourceRecord",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C23",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Deduplication of repeated citations to the same SourceRecord into a single numbered bibliography entry",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C24",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Hover/focus accessible citation preview and click-to-scroll behavior",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C25",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Automated link health and HTTP status verification during research and pre-publish gates",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C26",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Quarantine and flagging of retracted, deprecated, or superseded technical specifications",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C27",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Support for code-repository commit/permalink citations with exact SHA pin",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C28",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Support for empirical benchmark environment disclosure alongside benchmark claims",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C29",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Exportable citation ledger for human reviewers and compliance audits",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "C30",
+    "category": "C",
+    "categoryTitle": "Deep Web Research, Evidence Capture, and Citation Architecture",
+    "summary": "Zero-tolerance release blocker when any factual claim is unverified or stale",
+    "implementationModule": "packages/blog/src/evidence.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Evidence, Citations & SSRF/Injection Safety)",
+    "status": "implemented"
+  },
+  {
+    "id": "D01",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Minimum 2,000 substantive editorial words for new generated articles (normally 2,000–3,000+, exceeding 3,000 when warranted) [S01]",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D02",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Substantive word counter excluding navigation, bibliography, table data, captions, repeated labels, code, alt text, and boilerplate",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D03",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Answer-first opening lead delivering the core architectural thesis and conclusion in the first two paragraphs",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D04",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Preservation of shorter historical articles during migration without artificial padding (isHistoricalImport flag)",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D05",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Structured H2/H3 hierarchy with at least 4 substantive H2 sections and descriptive technical headings",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D06",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Wall-of-text prevention auditing maximum consecutive prose words without a subheading, table, or visual",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D07",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Page recipe selection (technical-deep-dive, benchmark-comparison, migration-playbook, architecture-reference)",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D08",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Concrete code and configuration examples that are syntactically valid and production-realistic",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D09",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Explicit scope and methodology disclosure explaining how measurements or comparisons were performed",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D10",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Quantitative comparative analysis using structured tables and finite charts rather than vague adjectives",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D11",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Mandatory coverage of trade-offs, edge cases, failure modes, and operational caveats",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D12",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Decision framework or migration sequence helping practitioners apply the guidance immediately",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D13",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Consistent technical terminology and entity accuracy aligned with official specifications (W3C DTCG, CSS Color 4, etc.)",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D14",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Natural incorporation of primary and secondary keywords without mechanical repetition",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D15",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Internal linking to relevant platform tools, sibling articles, and documentation",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D16",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Clear distinction between normative specification requirements and opinionated Megabyte Labs conventions",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D17",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Automated AI-slop phrase detector rejecting empty throat-clearing clichés and filler transitions",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D18",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Varied sentence cadence and paragraph length optimized for technical scanning and deep reading",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D19",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Actionable summary callouts and step-by-step sequences for implementation teams",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D20",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Accessible mathematical and algorithmic explanations with worked numerical examples",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D21",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Explicit version pinning for libraries, specifications, and browser compatibility claims",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D22",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Progressive disclosure blocks for secondary proofs, raw logs, or extended edge-case tables",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D23",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Author attribution, reviewer attribution, and last-verified timestamp metadata",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D24",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Estimated reading time calculation derived from substantive word count and visual complexity",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D25",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Executive summary / key takeaways synthesis for rapid engineering triage",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D26",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Anti-plagiarism and paraphrase originality check against retrieved source excerpts",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D27",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Consistent voice and tone aligned with the adopting site charter (rigorous, concise, zero hype)",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D28",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Support for multipart series linkage and prerequisite knowledge declarations",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D29",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "Glossary / inline definition support for domain-specific acronyms and color-science terms",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "D30",
+    "category": "D",
+    "categoryTitle": "Long-Form Editorial Craft, Structure, and Originality",
+    "summary": "End-to-end editorial quality report persisted on every ArticleRevision",
+    "implementationModule": "packages/blog/src/workflow.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Substantive Word Count & Writing Audit)",
+    "status": "implemented"
+  },
+  {
+    "id": "E01",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Concept Hero Illustration (E01) establishing the article core thesis without text clutter",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E02",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "System Architecture Topology (E02) showing data flow, boundaries, and state ownership",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E03",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Process Sequence Diagram (E03) depicting ordered stages, gates, and handoffs",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E04",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Before / After Transformation Split (E04) contrasting legacy vs improved output",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E05",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Decision Tree Flowchart (E05) mapping concrete engineering branching criteria",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E06",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Annotated Authentic Interface Capture (E06) with numbered callout pins",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E07",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Quantitative Benchmark Bar Chart (E07) with explicit units, zero baseline, and non-color patterns",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E08",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Multi-Option Comparison Matrix (E08) with sortable criteria and missing-value policy",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E09",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Anatomical Component Breakdown (E09) labeling internal layers and token slots",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E10",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Timeline / Evolution Horizon (E10) plotting specification milestones and deprecations",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E11",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Spatial / Geographic Distribution Map (E11) for regional latency or edge PoP coverage",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E12",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Data Lifecycle & Lineage Graph (E12) tracing immutable artifacts from ingestion to edge cache",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E13",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Color & Perceptual Contrast Swatch Specimen (E13) demonstrating OKLCH lightness and WCAG/APCA contrast",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E14",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Typography & Hierarchy Scale Specimen (E14) showing fluid type scales and measure",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E15",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Interactive Parameter Calculator Widget (E15) for live reader formula exploration",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E16",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Code-to-Output Side-by-Side Diff (E16) pairing source transformations with rendered results",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E17",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Security Threat & Trust Boundary Diagram (E17) highlighting SSRF, RBAC, and sanitization perimeters",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E18",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Cost & Unit Economics Breakdown Chart (E18) visualizing micro-USD spend across tiers",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E19",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Latency & Percentile Distribution Plot (E19) showing p50/p95/p99 performance envelopes",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E20",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "State Machine Transition Diagram (E20) illustrating revision and slot lifecycle states",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E21",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Schema & Entity Relationship Diagram (E21) mapping foreign keys and digests across contracts",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E22",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Failure Mode & Recovery Playbook Visual (E22) detailing rollback and circuit-breaker paths",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E23",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Hardware / Edge Topology Illustration (E23) showing Workers, R2, D1, Queues, and Durable Objects",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E24",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Protocol Handshake Sequence (E24) detailing OAuth PKCE, CSRF, and atomic lease exchanges",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E25",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Accessibility & Non-Color Encoding Specimen (E25) proving monochrome/deuteranopia legibility",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E26",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Migration Readiness Checklist Graphic (E26) summarizing release gate prerequisites",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E27",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Caching & Invalidation Cascade Diagram (E27) tracing pointer switches to edge purge",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E28",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Prompt & Context Hydration Map (E28) illustrating token budgets and grounding inputs",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E29",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Observability & Telemetry Funnel (E29) connecting reader engagement to refresh queues",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "E30",
+    "category": "E",
+    "categoryTitle": "Visual Direction, Image Generation, Diagrams, and Media Pipeline",
+    "summary": "Editorial Synthesis Reference Card (E30) providing a high-density printable takeaway summary",
+    "implementationModule": "packages/blog/src/visuals.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Visual Pipeline E01-E30 & Chart/Badge Rules)",
+    "status": "implemented"
+  },
+  {
+    "id": "F01",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "Theme token integration consuming @theme-tools/themes CSS variables without hardcoded brand lock-in",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F02",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "Dark and light mode contrast compliance across prose, code, tables, charts, and callouts",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F03",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "Four editorial page recipes (technical-deep-dive, benchmark-comparison, migration-playbook, architecture-reference)",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F04",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "Versioned BLOG_BLOCK_REGISTRY mapping block types to schema versions, categories, and Storybook IDs",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F05",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "CitationReference inline component with accessible aria-label and bidirectional #source-N link",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F06",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "BibliographyWidget bottom component rendering source metadata, retrieval dates, and return links",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F07",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "VisualAuthenticityBadge component clearly labeling authentic_capture, deterministic_diagram, or ai_generated_illustration",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F08",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "FigureFrame component enforcing explicit width/height, lazy/eager priority, caption, and authenticity badge",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F09",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "FiniteChart SVG component with zero baseline, explicit units, and SVG hatch/dot/stripe patterns for non-color encoding",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F10",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "Accessible companion data table inside every FiniteChart for screen readers and keyboard users",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F11",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "ComparisonTable interactive sortable component with explicit missing-value policy (N/A — not supported)",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F12",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "CalculatorBlock interactive deterministic widget with range sliders and real-time formula output",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F13",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "EditorialCallout component for methodology, warning, tip, and decision notes",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F14",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "SequenceSteps numbered workflow component with verification criteria per step",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F15",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "ProgressiveDisclosure collapsible details/summary block keeping content indexable and accessible",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F16",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "CodeBlock figure with language badge, filename header, and copy-ready formatting",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F17",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "LeadParagraph component styling the answer-first opening synthesis",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F18",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "TableOfContents sticky navigation component generated from H2/H3 section anchors",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F19",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "AuthorAndReviewByline component displaying author, review mode, revision sha256, and reading metrics",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F20",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "BlogHomepageNewArticleButton prominent + New article button rendered exclusively for authorized editors",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F21",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "EditorialAuthToolbar component showing session identity, role badge, and sign-in/edit actions",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F22",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "Storybook stories in ui.theme.tools (apps/ui/stories/BlogComponents.stories.tsx) for all shared blog components",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F23",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "Adversarial Storybook fixture testing long unbroken tokens, CJK/RTL scripts, and missing table values",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F24",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "Adversarial Storybook fixture testing dense citation clusters and 50+ bibliography entries",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F25",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "Responsive layout adaptation from 320px mobile viewports to ultrawide desktop reference grids",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F26",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "Print stylesheet compatibility for long-form reference articles and tables",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F27",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "Zero layout shift (CLS = 0) via intrinsic aspect-ratio and width/height attributes on all figures",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F28",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "Keyboard navigation and focus-ring visibility across all interactive widgets (tables, calculators, citations)",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F29",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "Strict separation of public display components from heavy editor dependencies",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "F30",
+    "category": "F",
+    "categoryTitle": "Shared Blog Components, Interactive Widgets, and Storybook",
+    "summary": "Export of shared components via @theme-tools/blog/components and @theme-tools/blog/renderer",
+    "implementationModule": "packages/blog/src/components.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Shared Blog Components & Storybook Coverage)",
+    "status": "implemented"
+  },
+  {
+    "id": "G01",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Single validated, versioned PlateNode[] document as the canonical representation for both rendering and editing",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G02",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Zero-editor-runtime static HTML rendering for anonymous readers (Plate editor lazy-loaded only for editors)",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G03",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "In-place front-end Plate/Slate authoring shell activated directly on the article route for authorized roles",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G04",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Prominent + New article button on the blog homepage for authorized author/editor/publisher/owner roles",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G05",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Immutability of published revisions: editing creates a new draft revision and never mutates live content in place",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G06",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Deterministic normalizePlateDocument pass repairing missing IDs, empty text leaves, and invalid nestings",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G07",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Slash-command block insertion menu (/callout, /chart, /table, /calculator, /citation, /steps)",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G08",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Inline citation inspector allowing editors to bind claims to SourceRecords and verify status",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G09",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Live substantive word count and editorial keyword density diagnostic in the authoring status bar",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G10",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Optimistic concurrency control (CAS) on draft save comparing expectedRevisionId and expectedContentHash",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G11",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Non-destructive conflict resolution dialog (Reload remote | Keep local draft | Fork revision) on 409 conflict",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G12",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Identifier remapping (remapDocumentIdentifiersOnDuplicate) when duplicating an article or block subtree",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G13",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Legacy Markdown/HTML importer (importLegacyContentToPlate) stripping executable scripts and quarantining unknown MDX",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G14",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Tenant- and user-scoped local offline draft recovery buffer cleared immediately on sign-out",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G15",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Revision history drawer displaying immutable revision timeline, digests, and authors",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G16",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Non-destructive revision restore creating a new revision number from a historical snapshot",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G17",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "AI-assisted section rewrite and fact-check proposals presented as explicit accept/reject diffs",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G18",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Preservation of existing CitationNodes and ClaimRecords during AI-assisted prose edits",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G19",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Figure and visual asset inspector enforcing alt text, caption, and authenticity badge before save",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G20",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Schedule slot picker allowing editors/publishers to assign a reviewed revision to an open daily slot",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G21",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Publish-now action restricted to publisher/owner roles with pre-flight release gate verification",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G22",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Read-only preview toggle inside the authoring shell showing exact public rendering",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G23",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Keyboard shortcut support for formatting, saving draft, and opening the block command palette",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G24",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Paste sanitization stripping external inline styles, tracking pixels, and unsafe HTML attributes",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G25",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Collaborative presence indicator and integration with DurableYjsRoomAuthority",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G26",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Explicit read-only Access Denied banner when a signed-in visitor without site membership attempts to edit",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G27",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Autosave status indicator (idle, saving, saved, conflict, offline_buffered)",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G28",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Validation of all custom blog blocks (figure, chart, comparison-table, calculator, callout, sequence-steps) in Plate",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G29",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Export of canonical Plate JSON snapshot for backup and cross-environment fixture testing",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "G30",
+    "category": "G",
+    "categoryTitle": "Canonical Plate Document Model and Inline Front-End Authoring",
+    "summary": "Strict bundle boundary ensuring @theme-tools/blog/renderer never imports @theme-tools/blog/editor",
+    "implementationModule": "packages/blog/src/editor.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Plate Document Model, Editor RBAC & Conflict Handling)",
+    "status": "implemented"
+  },
+  {
+    "id": "H01",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Complete semantic HTML5 article rendering (<article>, <header>, <nav>, <section>, <figure>, <aside>, <footer>)",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H02",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Zero client-side editor JavaScript shipped to anonymous public readers",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H03",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Server-side / worker-rendered HTML response for /blog and /blog/:slug with full prose and bibliography",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H04",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Schema.org BlogPosting JSON-LD structured data matching visible headline, dates, author, and wordCount",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H05",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Canonical URL (<link rel=\"canonical\">), Open Graph, and Twitter Card metadata on every article page",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H06",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Table of contents with deterministic #section-* anchor IDs for deep linking",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H07",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Hero image fetchpriority=\"high\" / loading=\"eager\" and below-the-fold loading=\"lazy\" / decoding=\"async\"",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H08",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Explicit width and height attributes on all rendered images and SVG containers to guarantee CLS = 0",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H09",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "SEO title length validation (15–110 chars) and meta description validation (50–220 chars)",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H10",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Clean, human-readable URL slugs under /blog/:slug without query parameters or session IDs",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H11",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Automated XML sitemap generation (/sitemap-blog.xml) linked from root /sitemap.xml",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H12",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Automated RSS 2.0 syndication feed (/blog/rss.xml) with canonical links and publication dates",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H13",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "WCAG AA color contrast compliance across light and dark themes",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H14",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Non-color visual encoding in charts (SVG hatch/dot/stripe patterns + accessible companion <table>)",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H15",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Descriptive alt text requirement on every substantive visual placement",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H16",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Semantic heading hierarchy (single H1 title followed by properly nested H2/H3/H4 sections)",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H17",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Keyboard-accessible interactive tables, calculators, progressive disclosures, and citation links",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H18",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Screen-reader friendly aria-label attributes on citation references and return links",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H19",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Strict Content-Security-Policy compatibility (no unsafe-eval; Zod v4 jitless mode enabled)",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H20",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Fast Time-to-First-Byte (TTFB) via Cloudflare Worker static/edge rendering",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H21",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Visible datePublished and dateModified timestamps in both human-readable header and ISO datetime attributes",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H22",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Breadcrumb navigation (/ -> /blog -> /blog/:slug) for reader orientation and crawlability",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H23",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Safe external link attributes (rel=\"noopener noreferrer\") on outbound bibliography links",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H24",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Code block horizontal scroll containment preventing mobile viewport overflow",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H25",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Responsive table wrapper preventing horizontal page breakage on small screens",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H26",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Reduced-motion respect (prefers-reduced-motion) across interactive transitions",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H27",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Proper HTTP 200 status for published articles and HTTP 404 for unknown or unpublished slugs",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H28",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Noindex protection on draft preview routes so unfinished revisions never leak into search indexes",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H29",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Visible visual authenticity badges distinguishing authentic captures, deterministic diagrams, and AI illustrations",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "H30",
+    "category": "H",
+    "categoryTitle": "Public Rendering, Performance, Accessibility, and Technical SEO",
+    "summary": "Verified substantive word count badge and revision SHA-256 provenance footer on rendered articles",
+    "implementationModule": "packages/blog/src/renderer.tsx",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Static Semantic HTML, JSON-LD, Sitemap & RSS)",
+    "status": "implemented"
+  },
+  {
+    "id": "I01",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Three daily publishing slots (09:00, 14:00, 19:00 America/New_York) for the explicitly configured site",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I02",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "IANA timezone conversion (resolveLocalSlotToUtc) handling EDT (UTC-4) and EST (UTC-5) transitions",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I03",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Exact UTC scheduling verification across spring-forward and fall-back DST boundary dates",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I04",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Unique (siteId, localDate, slotName) slot identity with atomic lease claims preventing double publication",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I05",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Configurable slot times per site charter without hardcoded UTC cron drift",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I06",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Mandatory ReviewRecord approval check before any scheduled slot can publish an article",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I07",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Support for human_batch_review, automation_assisted_review, and authorized_auto_publish review modes",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I08",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Truthful review provenance recording (never labeling an automated check as human review) [S03]",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I09",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Release gate enforcement blocking slot execution if QualityReport.releaseEligible is false",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I10",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Six-article ready buffer target (2 days of 3 daily slots) with deficit monitoring",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I11",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Clean slot skip with alert reason when ready queue is empty (never publishing unreviewed drafts to fill a slot)",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I12",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Gradual outage catch-up across future open slots without burst-flooding missed posts at once",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I13",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Separation of heavy article generation workflows from lightweight slot release execution",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I14",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Atomic publish pointer switch updating publishedRevisionId only after artifact and review verification",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I15",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Post-commit cache invalidation for /blog/:slug, /blog, /blog/rss.xml, and /sitemap-blog.xml",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I16",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Post-publish HTTP smoke check verifying live route returns HTTP 200 and expected title",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I17",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Stage-level workflow checkpointing and idempotent resume without re-billing completed paid provider calls",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I18",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "ProviderOperation ledger tracking estimated vs actual cost in integer micro-USD",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I19",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Per-site daily and monthly budget caps in integer micro-USD with pre-call reservation",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I20",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Actual spend reconciliation releasing unused reserved micro-USD after provider completion",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I21",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Tiered image generation routing (free/low-cost draft previews vs approved final model tier)",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I22",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Strict configured-site guard preventing silent multiplication of 3/day publishing across unconfigured domains",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I23",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Portfolio-wide daily spend cap protecting shared provider accounts across all adopting sites",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I24",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Dead-letter and failure reason recording on PublicationSlot for operational visibility",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I25",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Idempotency key enforcement across DataForSEO, AI Gateway, and image generation operations",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I26",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Manual slot override and emergency unpublish/rollback support for publisher/owner roles",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I27",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Automatic publish pointer rollback if post-publish smoke check fails",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I28",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Queue fan-out and concurrency pacing to respect upstream provider rate limits",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I29",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "Langfuse / Cloudflare AI Gateway trace correlation on model and provider operations",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "I30",
+    "category": "I",
+    "categoryTitle": "Scheduling, Three-Per-Day Cadence, Workflow Orchestration, and Budgets",
+    "summary": "End-to-end simulation test proving 3 daily slots release 3 distinct eligible articles in one local day",
+    "implementationModule": "packages/blog/src/publishing.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (3-Slot Daily Scheduler, DST, Ready Buffer & Budgets)",
+    "status": "implemented"
+  },
+  {
+    "id": "J01",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Search Console performance snapshot ingestion (impressions, clicks, average position, CTR)",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J02",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Comparison of DataForSEO predicted search volume against actual Search Console impressions",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J03",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Pillar-level and article-level organic performance aggregation",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J04",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Versioned EditorialAnalyticsEventSchema (2026-11-03) for PostHog and GA4",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J05",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Reader engagement events (engaged read threshold, TOC clicks, citation inspections, calculator usage)",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J06",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Privacy and consent-mode enforcement (granted, cookieless_anonymous, denied) dropping events when denied",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J07",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Idempotent eventId deduplication preventing duplicate analytics firing across client and server",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J08",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Citation click-through tracking identifying which primary sources readers inspect most",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J09",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Low-CTR opportunity detector flagging high-impression top-10 articles below benchmark CTR for title/meta experiments",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J10",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Title and meta description experiment tracking with before/after revision linkage",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J11",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Keyword cannibalization detector identifying multiple site articles competing for the same query",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J12",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Content refresh priority scoring combining stale citations, age, striking-distance rankings, and engagement",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J13",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Automated refresh trigger when cited SourceRecords exceed their freshnessDays window",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J14",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Prioritization of high-leverage article refreshes over net-new topics when refresh urgency is high",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J15",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Non-destructive refresh workflow creating a new ArticleRevision while preserving canonical URL and history",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J16",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Consolidation and 301 redirect workflow recommendation for cannibalizing articles",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J17",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Interactive widget engagement rate tracking (ComparisonTable sorts, CalculatorBlock adjustments)",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J18",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Code snippet copy event tracking to measure developer utility",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J19",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "CTA conversion attribution linking blog readers to product sign-ups or tool usage",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J20",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Authoring telemetry tracking draft save latency, conflict frequency, and gate pass rates",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J21",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Cost-per-published-article and cost-per-thousand-engaged-reads unit economics calculation",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J22",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Zero-impression / indexing lag detector for newly published articles after 14 days",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J23",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "SERP intent drift detection when organic query mix shifts away from original KeywordBrief",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J24",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Broken outbound link monitor scheduled across published bibliography entries",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J25",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Historical import upgrade recommender identifying legacy articles worth expanding to 2,000+ words",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J26",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Visible last-updated / last-verified timestamp updates only when substantive changes occur",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J27",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Segmented performance reporting by page recipe (deep-dive vs benchmark vs migration playbook)",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J28",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Visual placement effectiveness correlation with scroll depth and engaged read rate",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J29",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Exportable JSON/Markdown analytics summaries for editorial planning stages",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "J30",
+    "category": "J",
+    "categoryTitle": "Analytics, Search Console Feedback Loop, and Content Refresh Lifecycle",
+    "summary": "Weekly Operations & Editorial Health Dashboard generator (generateWeeklyOperationsDashboard)",
+    "implementationModule": "packages/blog/src/analytics.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (Analytics Events, CTR/Cannibalization & Refresh Queue)",
+    "status": "implemented"
+  },
+  {
+    "id": "K01",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Strict separation of authentication (identity) from authorization (site membership + editorial role)",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K02",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Six-tier RBAC matrix (owner, publisher, editor, author, reviewer, viewer) enforced server-side",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K03",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Server-side authorization check (authorizeEditorialAction) on every draft, review, schedule, and publish endpoint",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K04",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Google OAuth sign-in support with PKCE, state verification, and redirect URI allowlist",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K05",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "GitHub OAuth sign-in support with PKCE, state verification, and redirect URI allowlist",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K06",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "OAuthFlowGuard rejecting mismatched state, invalid PKCE verifier, expired state, or unapproved redirect URIs",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K07",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "MagicLinkTokenStore with SHA-256 hashed single-use tokens, 15-minute TTL, rate limiting, and log redaction",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K08",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Session expiration enforcement rejecting expired session contexts on all non-public actions",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K09",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "CSRF double-submit cookie/header verification and Origin allowlist enforcement on state-changing requests",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K10",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Cloudflare Access service-token / zero-trust header compatibility for internal automation workers",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K11",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Invitation-only SiteMembershipRegistry ensuring OAuth/magic-link sign-in never auto-grants write access",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K12",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Multi-tenant role isolation ensuring editor rights on Site A never grant write access on Site B",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K13",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Append-only hash-chained EditorialAuditLog recording actor, role, action, and revision digests",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K14",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Content sanitization on legacy imports and pasted HTML blocking <script>, inline handlers, and javascript: URIs",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K15",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Upload magic-byte validator (validateUploadMagicBytes) for PNG, JPEG, WebP, AVIF, and sanitized static SVG",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K16",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Outbound SSRF guard blocking private IPv4/IPv6 ranges, localhost, and cloud metadata IPs during research fetches",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K17",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Prompt-injection defense isolating retrieved web quotes as untrusted data and stripping override directives",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K18",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Secret redaction ensuring DataForSEO credentials, magic-link tokens, and API keys never appear in logs or client bundles",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K19",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Explicit client/server package export boundaries preventing server secrets from entering browser bundles",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K20",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "DurableYjsRoomAuthority for live collaborative editing state and incremental binary update frames",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K21",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Explicit conversion of collaborative Yjs state into an immutable Plate ArticleRevision snapshot before review/publish",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K22",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "R2 immutable artifact verification before switching the relational publishedRevisionId pointer",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K23",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Atomic slot claim lease preventing concurrent worker instances from double-publishing a slot",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K24",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Pre-publish claim verification gate blocking any revision with unverified or broken claims",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K25",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Pre-publish visual license and provenance gate blocking unapproved or unlicensed media assets",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K26",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Cryptographic SHA-256 revision digest binding between ReviewRecord.reviewedRevisionDigest and ArticleRevision.sha256",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K27",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Production environment gate blocking fixture DataForSEO briefs from satisfying release eligibility",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K28",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Tenant-scoped client localStorage draft recovery keys purged immediately on session sign-out",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K29",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Pre-execution micro-USD budget reservation and circuit-breaker pause when site or portfolio caps are reached",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "K30",
+    "category": "K",
+    "categoryTitle": "Authentication, Authorization, Security, Storage, and Resilience",
+    "summary": "Post-publish HTTP smoke verification and automatic pointer rollback on rendering failure",
+    "implementationModule": "packages/blog/src/auth.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (RBAC, OAuth PKCE, Magic Links, Uploads & Storage)",
+    "status": "implemented"
+  },
+  {
+    "id": "L01",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Canonical skills/blog-publishing/SKILL.md under 300 lines with clear activation triggers and workflow stages",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L02",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Focused reference: skills/blog-publishing/references/topic-selection.md (15-idea slate & overlap rules)",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L03",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Focused reference: skills/blog-publishing/references/dataforseo.md (endpoints, search_intent gotcha, cost & caching)",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L04",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Focused reference: skills/blog-publishing/references/evidence-and-citations.md (claims, SSRF, bibliography)",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L05",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Focused reference: skills/blog-publishing/references/editorial-writing.md (2,000+ words, recipes, anti-slop)",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L06",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Focused reference: skills/blog-publishing/references/visual-production.md (E01–E30 catalog, FLUX/Imagen tiers, charts)",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L07",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Focused reference: skills/blog-publishing/references/plate-authoring.md (canonical Plate model, inline editor, RBAC)",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L08",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Focused reference: skills/blog-publishing/references/publishing-operations.md (3 daily slots, DST, budgets, rollback)",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L09",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Focused reference: skills/blog-publishing/references/examples.md (good vs bad concrete examples)",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L10",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Storybook documentation and interactive component stories in ui.theme.tools (apps/ui)",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L11",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Adversarial edge-case fixtures in Storybook and unit tests (long tokens, missing values, dense citations)",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L12",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Cross-references from existing skills (23-content-seo, 06-build-and-slice-loop, 09-brand, 10-experience, 15-site-generation)",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L13",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Synchronization of skills/blog-publishing across canonical agent-skills repository and local ~/.agentskills checkout",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L14",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Complete 360-item A01–L30 programmatic requirement manifest with implementation and test mappings",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L15",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Comprehensive Guide 1: docs/blog-publishing/01-research-dataforseo-writing-and-citations.md",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L16",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Comprehensive Guide 2: docs/blog-publishing/02-shared-components-visual-recipes-and-plate-authoring.md",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L17",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Comprehensive Guide 3: docs/blog-publishing/03-scheduling-authentication-budgets-observability-and-recovery.md",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L18",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "OpenSpec change proposal, architecture design, and task checklist in openspec/changes/add-shared-blog-publishing",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L19",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Automated unit and integration test suite in packages/blog/test/blog-system.test.ts covering all 16 Acceptance Criteria",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L20",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "End-to-end Playwright verification of /blog index, + New article button, static article view, and inline Plate authoring",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L21",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Deterministic calculation verification tests proving numbers in prose, tables, and charts match recorded formulas",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L22",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Historical content migration tests verifying legacy Markdown/HTML imports preserve word count without padding",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L23",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Client/server bundle boundary verification ensuring server adapters stay out of public reader bundles",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L24",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Live DataForSEO capture verification proving real provider responses were fetched and cached with micro-USD accounting",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L25",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Complete flagship reference article (>= 2,000 substantive words, 12 visuals, verified citations) published on theme.tools",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L26",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Three eligible reference articles queued/published to prove the 3-slot daily schedule in America/New_York",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L27",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Clear operational distinction between completed code, cached live provider runs, and optional external bindings",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L28",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Zero duplicate widget or package proliferation (consolidated cleanly in @theme-tools/blog)",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L29",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Strict TypeScript typecheck and workspace build verification across @theme-tools/blog, apps/ui, and apps/web",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  },
+  {
+    "id": "L30",
+    "category": "L",
+    "categoryTitle": "Agent Skills, Documentation, Testing, Rollout, and Governance",
+    "summary": "Traceable final verification report linking every acceptance criterion and requirement category to concrete files and tests",
+    "implementationModule": "packages/blog/src/requirement-manifest.ts",
+    "verificationTest": "packages/blog/test/blog-system.test.ts (360-Item A01-L30 Manifest & Acceptance Suite)",
+    "status": "implemented"
+  }
+]

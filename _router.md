@@ -27,6 +27,7 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 - **26 — Platform and Delivery** — —
 - **27 — Trust and Compliance** — —
 - **28 — CF Integrations Reference** — —
+- **Specialized Domain & Integration Skills (`skills/*`)** — `skills/blog-publishing` (**@theme-tools/blog: 2,000–3,000+ substantive editorial words**, 8-stage pipeline, ~12 visuals `E01–E30`, live DataForSEO v3, inline `CitationNode` + `BibliographyWidget`, 3 daily slots `09:00`/`14:00`/`19:00` ET, 12-check `runQualityAndReleaseGate`), `skills/tdd-and-verification`, `skills/tri-harness-deepseek-ollama-routing`, `skills/stripe`, `skills/square`, `skills/posthog`, `skills/resend`, `skills/twilio`, `skills/github`, `skills/openai`, `skills/bitwarden`, `skills/paperclip`
 
 ## Task Routing
 
@@ -39,7 +40,7 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 - **Debug / CI failure** → `07`, `08` — especially `gh-fix-ci`, `spec-driven-development`
 - **Deploy / launch** → `08`, `26` — add `09` if SEO/content changed
 - **Design / frontend polish** → `09`, `10`, `11`, `12`, `22`
-- **SEO / copy** → `09`, `23` — add `06/blog-and-content-engine` or `13/analytics-configuration` when relevant
+- **SEO / copy / blog publishing** → `skills/blog-publishing` (**mandatory for all blog/reference articles: 2,000–3,000+ substantive words**, `@theme-tools/blog`, `references/editorial-writing.md`), `09`, `23` — add `06/blog-and-content-engine` or `13/analytics-configuration` when relevant
 - **Billing / auth** → `05/auth-and-session-management`, `05/enterprise-multi-tenancy`, `06/webhook-system`, `13/stripe-billing`
 - **File uploads / admin / data grids** → `06/file-uploads-and-storage`, `admin-dashboard`, `data-tables`
 - **Realtime / AI features** → `05/ai-technology-integration`, `06/realtime-and-websockets`, `ai-chat-widget`, `copilot-and-ai-features`
@@ -75,7 +76,7 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 - `.github/workflows/**` → `08/ci-cd-pipeline`, `gh-fix-ci`
 - `*.spec.ts`, `*.test.ts` → `07`
 - `*.css`, `*.scss` → `10`, `11`
-- `blog/**`, `posts/**` → `06/blog-and-content-engine`, `09/seo-and-keywords`
+- `blog/**`, `posts/**`, `articles/**` → `skills/blog-publishing` (`SKILL.md` + `references/editorial-writing.md` — **2,000–3,000+ substantive words**, `@theme-tools/blog`), `06/blog-and-content-engine`, `09/seo-and-keywords`, `23`
 - `api/webhooks/**` → `06/webhook-system`
 - `api/stripe*` → `13/stripe-billing`
 - `api/uploads/**` → `06/file-uploads-and-storage`

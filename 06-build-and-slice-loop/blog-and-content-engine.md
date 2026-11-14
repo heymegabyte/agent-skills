@@ -5,7 +5,17 @@ updated: "2026-04-23"
 description: "SEO-driven blog system on Cloudflare Workers: markdown-to-HTML rendering, RSS feed, reading time, social sharing, related posts, categories, pagination. Every post targets a longtail keyword. Generates 3-5 seed posts on first build for immediate SEO value. Stored in D1 or as static markdown files."
 ---
 
-# Blog and Content Engine
+# Blog and Content Engine (`@theme-tools/blog` — `skills/blog-publishing/SKILL.md`)
+
+> [!IMPORTANT]
+> **Canonical Blog Publishing Contract (`skills/blog-publishing/SKILL.md` + `references/editorial-writing.md`)**:
+> Every newly generated or authored blog / reference article across the Megabyte Labs ecosystem MUST satisfy `@theme-tools/blog`:
+> 1. **2,000–3,000+ Substantive Editorial Words (`D01–D03`, NON-NEGOTIABLE)**: `computeSubstantiveWordCount >= 2000` (excluding navigation, bibliography, table cells, captions, code blocks, alt text, and boilerplate). **Never settle for 600–900 word thin blog posts.**
+> 2. **~12 Substantive Visual Placements (`E01–E30`)**: 8–12 custom images plus deterministic SVG charts, comparison tables, interactive calculators, and product captures.
+> 3. **Live or Valid Cached DataForSEO v3 Brief (`B01–B30`)** (`isFixture: false` required for production release).
+> 4. **Claim-Level Citations (`C01–C30`)**: Inline `CitationNode` (`[n]`) mapped to `SourceVersion` + `EvidenceReference` and rendered in the bottom `BibliographyWidget`.
+> 5. **3 Daily Publishing Slots (`09:00`, `14:00`, `19:00` `America/New_York`)** & **12-Check Release Gate (`runQualityAndReleaseGate`)**.
+> Always load `~/.agentskills/skills/blog-publishing/SKILL.md` alongside this file!
 
 ## Architecture
 

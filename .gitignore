@@ -9,7 +9,5 @@ node_modules/
 .claude/scheduled_tasks.lock
 *.pyc
 __pycache__/
-/skills/
-
 # Built index cache for mcp-servers/skills-gateway-mcp
 .skills-gateway-index.json

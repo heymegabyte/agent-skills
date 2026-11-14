@@ -9,7 +9,7 @@ cross-links: [i18n-by-demographics, page-set-expansion, dynamic-sitemap-from-d1]
 
 - **Title**: `{Service} in {City}, {State} — [Brand] | Free Quote`
 - **H1**: `{Service} in {City}: Trusted Local Experts`
-- **Min words**: 900
+- **Min words**: 1500 (Blog & reference articles require **2,000–3,000+ substantive editorial words** per `skills/blog-publishing/SKILL.md`)
 
 ### Body Skeleton
 
@@ -237,7 +237,8 @@ cross-links: [i18n-by-demographics, page-set-expansion, dynamic-sitemap-from-d1]
 
 ## Thin-Content Avoidance Rules (All Types)
 
-- 800 words = absolute floor; 900+ local, 1100+ connector, 1400+ competitive
+- **Blog & Reference Articles (`skills/blog-publishing/SKILL.md`)**: **2,000–3,000+ substantive editorial words** (`>= 2,000` excluding navigation, tables, code blocks, captions, and bibliography — never 600–900 words) + ~12 substantive visuals (`E01–E30`) + claim-level `CitationNode` + `BibliographyWidget`
+- **pSEO Pages**: 1,500–2,000+ words recommended (1,200+ local/connector, 1,500+ competitive/intent)
 - Every page: 1 unique image (not stock), 1 citable data point, 1 internal link pointing TO it (no orphans)
 - Never emit JSON-LD fields from template variables without verifying values exist — fake structured data triggers Google manual actions
 - Date-stamp all pricing and comparison data; D1 refresh cron regenerates pages when source data changes (hash-check first)

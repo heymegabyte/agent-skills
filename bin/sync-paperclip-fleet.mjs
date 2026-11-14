@@ -9,7 +9,7 @@
  *   4. OpenClaw per-agent workspaces (`~/.openclaw/workspaces/<openclawId>/` with `AGENTS.md`, `IDENTITY.md`, `SOUL.md`, `USER.md`, and symlinked `paperclip-claimed-api-key.json`)
  */
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync, symlinkSync, unlinkSync, lstatSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, symlinkSync, unlinkSync, lstatSync, readdirSync, copyFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { homedir } from 'node:os';
 import { createHash, randomUUID } from 'node:crypto';
@@ -593,15 +593,15 @@ export const CANONICAL_FLEET = [
     callsign: 'SCRIBE-01',
     role: 'general',
     title: 'Editorial & Narrative Specialist (SCRIBE-01)',
-    model: 'fleet-cli/deepseek',
-    fallbacks: DEEPSEEK_PACE_FALLBACKS,
+    model: 'fleet-cli/claude',
+    fallbacks: CLAUDE_PACE_FALLBACKS,
     icon: 'pen-tool',
     paletteId: 'coral-current',
-    budgetMonthlyCents: 6000,
+    budgetMonthlyCents: 8000,
     canAssignTasks: false,
     supervisorRole: 'Growth-Strategist',
     cwd: '/home/professormanhattan/ai/workspace',
-    capabilities: 'Editorial and narrative warfare specialist. Authors high-converting landing page copy, technical blog posts, launch announcements, case studies, and GEO-optimized brand narratives.'
+    capabilities: 'Editorial and narrative warfare specialist. Authors 2,000–3,000+ substantive word reference blog articles (@theme-tools/blog / blog-publishing skill with ~12 visuals E01-E30, live DataForSEO v3 briefs, inline CitationNode [n] + BibliographyWidget, and 12-check release gate), high-converting landing page copy, launch announcements, and GEO-optimized brand narratives.'
   },
   {
     file: 'swarm-dispatcher.md',
@@ -793,21 +793,66 @@ const CANONICAL_TOOLS_MD = [
   '   - DeepSeek V4 Pro (4-key rotated via LiteLLM): `~/.agentskills/bin/opencode-deepseek.sh run --format json -m litellm/deepseek-v4-pro "<prompt>"`',
   '   - DeepSeek V4.1 Flash (fast triage/SITREPs): `~/.agentskills/bin/opencode-deepseek.sh run --format json -m litellm/deepseek-flash "<prompt>"`',
   '   - Local Ollama Hybrid Coder (`qwen2.5-coder:14b` + DeepSeek fallback): `~/.agentskills/bin/opencode-deepseek.sh run --format json -m litellm/hybrid-coder "<prompt>"`',
+  '',
+  '## Global Master Skill Catalog & Dynamic On-Demand Skill Loading Protocol',
+  '',
+  'Every agent has its role-specific primary skills pre-installed in `~/.openclaw/workspaces/<openclawId>/skills/` AND has dynamic read access to **all 48 canonical Emdash & Paperclip skills** via `~/.agentskills/skills/<slug>/SKILL.md`. Whenever a task touches a domain outside your pre-loaded role skills, **dynamically read `~/.agentskills/skills/<slug>/SKILL.md` (and any `references/*.md` in that directory) before executing**:',
+  '',
+  '- **Editorial, Blog Publishing, Brand & SEO**: `blog-publishing` (**NON-NEGOTIABLE: 2,000–3,000+ substantive editorial words** via `computeSubstantiveWordCount >= 2000`, 8-stage pipeline, ~12 substantive visuals `E01–E30`, live DataForSEO v3 capture `isFixture: false`, claim-level `CitationNode` `[n]` + `BibliographyWidget`, 3 daily slots `09:00`/`14:00`/`19:00` ET, and 12-check `runQualityAndReleaseGate` — **never settle for 600–900 word thin blog posts**), `content-seo`, `brand-and-content-system`, `site-generation`, `release-announcement`',
+  '- **Architecture, App Foundation & Platform Delivery**: `architecture-and-stack`, `app-foundation`, `functional`, `build-and-slice-loop`, `platform-delivery`, `cf-integrations-reference`, `independent-idea-engine`',
+  '- **Visual Experience, Design Systems, Motion & Media**: `experience-and-design-system`, `motion-and-interaction-system`, `visual-experience`, `cinematic-website-prime-directive`, `media-orchestration`',
+  '- **Quality, TDD, Runtime Verification, Security & Browser/GUI**: `quality-and-verification`, `tdd-and-verification`, `deploy-and-runtime-verification`, `quality-performance`, `trust-compliance`, `agent-browser`, `cua-driver`',
+  '- **Cloud & SaaS Integrations**: `stripe`, `square`, `posthog`, `resend`, `twilio`, `github`, `openai`, `bitwarden`, `slack`, `agentmail`',
+  '- **Fleet Operations, Paperclip Governance & Tri-Harness Routing**: `operating-system`, `goal-and-brief`, `preference-and-memory`, `observability-and-growth`, `paperclip`, `paperclip-board`, `paperclip-converting-plans-to-tasks`, `paperclip-create-agent`, `para-memory-files`, `summarize-status`, `openclaw-integration`, `emdash-skills`, `tri-harness-deepseek-ollama-routing`',
   ''
 ].join('\n');
+
+const ROLE_SKILL_ASSIGNMENTS = {
+  'ceo': ['operating-system', 'goal-and-brief', 'architecture-and-stack', 'observability-and-growth', 'trust-compliance', 'independent-idea-engine', 'blog-publishing', 'summarize-status', 'paperclip-create-agent', 'github', 'posthog', 'stripe'],
+  'architect': ['architecture-and-stack', 'goal-and-brief', 'app-foundation', 'trust-compliance', 'platform-delivery', 'cf-integrations-reference', 'quality-and-verification', 'tdd-and-verification', 'blog-publishing', 'github', 'openai'],
+  'product-manager': ['goal-and-brief', 'operating-system', 'brand-and-content-system', 'content-seo', 'blog-publishing', 'independent-idea-engine', 'observability-and-growth', 'functional', 'summarize-status', 'posthog'],
+  'fullstack': ['app-foundation', 'functional', 'build-and-slice-loop', 'experience-and-design-system', 'quality-performance', 'architecture-and-stack', 'site-generation', 'blog-publishing', 'tdd-and-verification', 'cf-integrations-reference', 'stripe', 'square', 'resend', 'posthog', 'github', 'openai'],
+  'backend': ['architecture-and-stack', 'app-foundation', 'functional', 'platform-delivery', 'cf-integrations-reference', 'build-and-slice-loop', 'quality-performance', 'tdd-and-verification', 'stripe', 'square', 'resend', 'twilio', 'openai', 'github', 'bitwarden'],
+  'database': ['architecture-and-stack', 'app-foundation', 'platform-delivery', 'quality-performance', 'trust-compliance', 'cf-integrations-reference', 'tdd-and-verification', 'build-and-slice-loop'],
+  'qa': ['quality-and-verification', 'tdd-and-verification', 'deploy-and-runtime-verification', 'quality-performance', 'visual-experience', 'agent-browser', 'cua-driver', 'blog-publishing', 'github'],
+  'devsecops': ['deploy-and-runtime-verification', 'platform-delivery', 'trust-compliance', 'architecture-and-stack', 'cf-integrations-reference', 'observability-and-growth', 'bitwarden', 'github'],
+  'sre': ['deploy-and-runtime-verification', 'platform-delivery', 'observability-and-growth', 'quality-performance', 'cf-integrations-reference', 'bitwarden', 'posthog', 'github'],
+  'appsec': ['trust-compliance', 'quality-and-verification', 'tdd-and-verification', 'architecture-and-stack', 'platform-delivery', 'bitwarden', 'github'],
+  'finops': ['observability-and-growth', 'operating-system', 'architecture-and-stack', 'platform-delivery', 'stripe', 'square', 'openai', 'posthog'],
+  'release': ['deploy-and-runtime-verification', 'platform-delivery', 'quality-and-verification', 'tdd-and-verification', 'release-announcement', 'blog-publishing', 'github', 'slack'],
+  'ui-designer': ['experience-and-design-system', 'motion-and-interaction-system', 'visual-experience', 'cinematic-website-prime-directive', 'brand-and-content-system', 'media-orchestration', 'site-generation', 'blog-publishing', 'agent-browser'],
+  'info-architect': ['goal-and-brief', 'content-seo', 'architecture-and-stack', 'site-generation', 'brand-and-content-system', 'blog-publishing', 'experience-and-design-system'],
+  'refactorer': ['build-and-slice-loop', 'quality-and-verification', 'tdd-and-verification', 'quality-performance', 'architecture-and-stack', 'app-foundation'],
+  'performance': ['quality-performance', 'deploy-and-runtime-verification', 'app-foundation', 'architecture-and-stack', 'cf-integrations-reference', 'tdd-and-verification', 'posthog'],
+  'a11y': ['visual-experience', 'quality-and-verification', 'experience-and-design-system', 'tdd-and-verification', 'agent-browser', 'cua-driver', 'site-generation'],
+  'support': ['observability-and-growth', 'goal-and-brief', 'quality-and-verification', 'functional', 'resend', 'twilio', 'slack', 'agentmail'],
+  'router': ['operating-system', 'architecture-and-stack', 'observability-and-growth', 'preference-and-memory', 'openai'],
+  'summarizer': ['goal-and-brief', 'preference-and-memory', 'operating-system', 'summarize-status', 'observability-and-growth'],
+  'technical-writer': ['blog-publishing', 'content-seo', 'brand-and-content-system', 'goal-and-brief', 'architecture-and-stack', 'site-generation', 'release-announcement', 'github'],
+  'growth': ['blog-publishing', 'content-seo', 'observability-and-growth', 'brand-and-content-system', 'site-generation', 'independent-idea-engine', 'release-announcement', 'posthog', 'resend'],
+  'media': ['media-orchestration', 'cinematic-website-prime-directive', 'visual-experience', 'motion-and-interaction-system', 'brand-and-content-system', 'blog-publishing', 'openai'],
+  'computer-use': ['cua-driver', 'agent-browser', 'operating-system', 'quality-and-verification', 'deploy-and-runtime-verification', 'visual-experience'],
+  'browser': ['agent-browser', 'cua-driver', 'quality-and-verification', 'tdd-and-verification', 'visual-experience', 'deploy-and-runtime-verification', 'site-generation'],
+  'hr': ['operating-system', 'goal-and-brief', 'preference-and-memory', 'paperclip-create-agent', 'observability-and-growth', 'summarize-status'],
+  'content': ['blog-publishing', 'content-seo', 'brand-and-content-system', 'site-generation', 'media-orchestration', 'cinematic-website-prime-directive', 'release-announcement', 'resend', 'posthog', 'openai'],
+  'swarm-dispatcher': ['operating-system', 'build-and-slice-loop', 'goal-and-brief', 'architecture-and-stack', 'platform-delivery', 'github', 'summarize-status'],
+  'seo-auditor': ['blog-publishing', 'content-seo', 'brand-and-content-system', 'site-generation', 'observability-and-growth', 'quality-performance', 'agent-browser', 'posthog']
+};
 
 const AUTONOMOUS_MAIN_MERGE_CONTRACT_MD = [
   '',
   '## Paperclip (`swarml.ink`) Autonomous Issue, Sub-Tasks, Governance Fields, Decisions, Tri-Harness DeepSeek/Ollama Routing & Trunk-Based `main` Deployment Contract',
   '',
-  '1. **Tri-Harness DeepSeek & Ollama Offload (`claude` + `codex` + `opencode` via Claw Router `cr` & LiteLLM Gateway `https://llm.megabyte.space`)**: Offload all throughput-safe, routine, mechanical, and scheduled tasks onto DeepSeek (`deepseek-v4-pro`, `deepseek-flash`, `deepseek-chat`, `deepseek-reasoner`) and Local GPU Ollama (`hybrid-coder`, `ollama-coder`, `workstation-ai`, `qwen2.5-coder:14b`) across all three CLI harnesses: Claude Code (`cr @litellm` / `cr @ollama` / `cr @deepseek`), OpenAI Codex (`codex exec -p deepseek` / `codex exec -p ollama`), and OpenCode (`~/.agentskills/bin/opencode-deepseek.sh run -m litellm/deepseek-v4-pro` / `-m litellm/hybrid-coder`). Reserve Frontier subscription models (`fleet-cli/claude`, `fleet-cli/codex`, `fleet-cli/gemini`) strictly for authoring OpenSpec specifications (`proposal.md`, `design.md`, `tasks.md`, `specs/`), deep architecture, security review, and critical incident response.',
-  '2. **Automatic Triage & Metadata Completion**: Every issue on `https://swarml.ink` must have `assignee_agent_id`, `assignee_user_id`, `responsible_user_id`, `project_id`, `project_workspace_id`, `goal_id`, `billing_code`, and `issue_labels` populated.',
-  '3. **Sub-Tasks (`parent_id`) & Graph Relations (`Parent`, `Blocking`, `Blocked by`)**: Use **Sub-tasks (`parentId` / `parent_id`)** whenever an epic or multi-stage initiative splits into distinct specialist deliverables or parallel workstreams, and wire prerequisite edges via `blockedByIssueIds` (`issue_relations` `type = blocks`) so downstream work auto-wakes when blockers reach `done`.',
-  '4. **Reviewers, Approvers, Monitor & Watchdog Fields**: Populate and honor **Reviewers** (`execution_policy.stages` `type = review`: `QA-Verification`, `AppSec`, `A11y-Auditor` + `review_policy = not_creator`), **Approvers** (`execution_policy.stages` `type = approval`: `Architect`, `Release-Manager`, `CEO`), **Monitor** (`execution_policy.monitor` + `monitor_next_check_at`, `monitor_notes`, `monitor_scheduled_by = assignee` while `in_progress`/`in_review`), and **Watchdog** (`issue_watchdogs`: active `SRE` or `Swarm-Dispatcher`).',
-  '5. **Decisions (`/MEG/decisions`) — User Clarification Questions, Recommendations & Scope Expansions Only**: Use Paperclip **Decisions** (`issue_thread_interactions` with `kind = ask_user_questions`) strictly to ask the user genuine questions to clarify instructions or present architectural/product recommendations and scope expansions (with a `(Recommended)` option and free-text support). Never use Decisions for non-question status blurbs, bureaucratic handoffs, or routine PR merge rituals.',
-  '6. **Mandatory On-Thread Comment Response**: Whenever a user posts a message or comment on an issue (`issue_comment.created`), immediately inspect the thread, execute any requested or remaining work, and post a comprehensive status reply on the issue.',
-  '7. **Trunk-Based `main` Execution (`shared_workspace`) — Create AND Merge PR into `main`**: Work in the canonical repository workspace on `main`, create a short-lived branch or PR (`gh pr create --base main`), and **merge it into `main`** (`gh pr merge --merge --delete-branch`) once tests pass.',
-  '8. **Automatic Production Deployment**: Immediately deploy merged `main` changes to production (`wrangler deploy` + CDN cache purge, `npm publish` to `registry.megabyte.space`, Coolify deploy, or systemd service reload on `ubuntu.megabyte.space`) and post live production verification proof on the Paperclip issue before marking `done`.',
+  '1. **Tri-Harness DeepSeek & Ollama Offload (`claude` + `codex` + `opencode` via Claw Router `cr` & LiteLLM Gateway `https://llm.megabyte.space`)**: Offload all throughput-safe, routine, mechanical, and scheduled tasks onto DeepSeek (`deepseek-v4-pro`, `deepseek-flash`, `deepseek-chat`, `deepseek-reasoner`) and Local GPU Ollama (`hybrid-coder`, `ollama-coder`, `workstation-ai`, `qwen2.5-coder:14b`) across all three CLI harnesses: Claude Code (`cr @litellm` / `cr @ollama` / `cr @deepseek`), OpenAI Codex (`codex exec -p deepseek` / `codex exec -p ollama`), and OpenCode (`~/.agentskills/bin/opencode-deepseek.sh run -m litellm/deepseek-v4-pro` / `-m litellm/hybrid-coder`). Reserve Frontier subscription models (`fleet-cli/claude`, `fleet-cli/codex`, `fleet-cli/gemini`) strictly for authoring OpenSpec specifications (`proposal.md`, `design.md`, `tasks.md`, `specs/`), 2,000–3,000+ word reference articles (`blog-publishing`), deep architecture, security review, and critical incident response.',
+  '2. **Blog & Reference Editorial Standard (`skills/blog-publishing/SKILL.md` — `@theme-tools/blog`)**: Every newly authored or generated blog / reference article MUST contain **at least 2,000 substantive editorial words (target 2,000–3,000+ words)** via `computeSubstantiveWordCount >= 2000` (excluding navigation, bibliography, table cells, captions, code blocks, alt text, and boilerplate — **never settle for 600–900 word thin blog posts**), ~12 substantive visual placements (`E01–E30`), a live DataForSEO v3 capture (`isFixture: false`), claim-level inline `CitationNode` (`[n]`) + `BibliographyWidget`, 3 daily publishing slots (`09:00`, `14:00`, `19:00` `America/New_York`), and pass all 12 checks in `runQualityAndReleaseGate`. Always load `~/.agentskills/skills/blog-publishing/SKILL.md` and `references/editorial-writing.md` whenever planning, authoring, or reviewing blog content.',
+  '3. **Global Skill Awareness & Dynamic On-Demand Skill Loading**: Your primary role skills are pre-linked in `~/.openclaw/workspaces/<openclawId>/skills/`. You also have on-demand access to all 48 fleet skills at `~/.agentskills/skills/<slug>/SKILL.md` (`blog-publishing`, `content-seo`, `brand-and-content-system`, `site-generation`, `architecture-and-stack`, `app-foundation`, `functional`, `build-and-slice-loop`, `platform-delivery`, `cf-integrations-reference`, `experience-and-design-system`, `motion-and-interaction-system`, `visual-experience`, `cinematic-website-prime-directive`, `media-orchestration`, `quality-and-verification`, `tdd-and-verification`, `deploy-and-runtime-verification`, `quality-performance`, `trust-compliance`, `agent-browser`, `cua-driver`, `stripe`, `square`, `posthog`, `resend`, `twilio`, `github`, `openai`, `bitwarden`, `slack`, `agentmail`, `operating-system`, `goal-and-brief`, `preference-and-memory`, `observability-and-growth`, `independent-idea-engine`, `release-announcement`, `paperclip`, `paperclip-board`, `paperclip-converting-plans-to-tasks`, `paperclip-create-agent`, `para-memory-files`, `summarize-status`, `openclaw-integration`, `emdash-skills`, `tri-harness-deepseek-ollama-routing`). Dynamically read any relevant `SKILL.md` whenever a task crosses into that domain.',
+  '4. **Automatic Triage & Metadata Completion**: Every issue on `https://swarml.ink` must have `assignee_agent_id`, `assignee_user_id`, `responsible_user_id`, `project_id`, `project_workspace_id`, `goal_id`, `billing_code`, and `issue_labels` populated.',
+  '5. **Sub-Tasks (`parent_id`) & Graph Relations (`Parent`, `Blocking`, `Blocked by`)**: Use **Sub-tasks (`parentId` / `parent_id`)** whenever an epic or multi-stage initiative splits into distinct specialist deliverables or parallel workstreams, and wire prerequisite edges via `blockedByIssueIds` (`issue_relations` `type = blocks`) so downstream work auto-wakes when blockers reach `done`.',
+  '6. **Reviewers, Approvers, Monitor & Watchdog Fields**: Populate and honor **Reviewers** (`execution_policy.stages` `type = review`: `QA-Verification`, `AppSec`, `A11y-Auditor` + `review_policy = not_creator`), **Approvers** (`execution_policy.stages` `type = approval`: `Architect`, `Release-Manager`, `CEO`), **Monitor** (`execution_policy.monitor` + `monitor_next_check_at`, `monitor_notes`, `monitor_scheduled_by = assignee` while `in_progress`/`in_review`), and **Watchdog** (`issue_watchdogs`: active `SRE` or `Swarm-Dispatcher`).',
+  '7. **Decisions (`/MEG/decisions`) — User Clarification Questions, Recommendations & Scope Expansions Only**: Use Paperclip **Decisions** (`issue_thread_interactions` with `kind = ask_user_questions`) strictly to ask the user genuine questions to clarify instructions or present architectural/product recommendations and scope expansions (with a `(Recommended)` option and free-text support). Never use Decisions for non-question status blurbs, bureaucratic handoffs, or routine PR merge rituals.',
+  '8. **Mandatory On-Thread Comment Response**: Whenever a user posts a message or comment on an issue (`issue_comment.created`), immediately inspect the thread, execute any requested or remaining work, and post a comprehensive status reply on the issue.',
+  '9. **Trunk-Based `main` Execution (`shared_workspace`) — Create AND Merge PR into `main`**: Work in the canonical repository workspace on `main`, create a short-lived branch or PR (`gh pr create --base main`), and **merge it into `main`** (`gh pr merge --merge --delete-branch`) once tests pass.',
+  '10. **Automatic Production Deployment**: Immediately deploy merged `main` changes to production (`wrangler deploy` + CDN cache purge, `npm publish` to `registry.megabyte.space`, Coolify deploy, or systemd service reload on `ubuntu.megabyte.space`) and post live production verification proof on the Paperclip issue before marking `done`.',
   ''
 ].join('\n');
 
@@ -912,6 +957,7 @@ function reconcileCompanySkills() {
     }
   }
 
+  const triHarnessDir = '/home/professormanhattan/ai/repos/agent-skills/skills/tri-harness-deepseek-ollama-routing';
   const triHarnessSkillMdPath = resolve(HOME, '.agentskills', 'skills', 'tri-harness-deepseek-ollama-routing', 'SKILL.md');
   if (existsSync(triHarnessSkillMdPath)) {
     const triMd = readFileSync(triHarnessSkillMdPath, 'utf8').replace(/'/g, "''");
@@ -933,13 +979,13 @@ function reconcileCompanySkills() {
         'Tri-Harness DeepSeek & Ollama Offload (claude + codex + opencode via Claw Router & LiteLLM)',
         '#00E5FF',
         '${triMd}',
-        'github',
-        'https://github.com/heymegabyte/agent-skills',
-        'main',
+        'local_path',
+        '${triHarnessDir}',
+        NULL,
         'markdown_only',
         'compatible',
         '[{"path":"SKILL.md","kind":"skill"}]'::jsonb,
-        '{"sourceKind":"github","hostname":"github.com","owner":"heymegabyte","repo":"agent-skills","skillSourceState":"synced"}'::jsonb,
+        '{"sourceKind":"local_path","skillSourceState":"synced"}'::jsonb,
         ARRAY['emdash', 'routing', 'deepseek', 'ollama', 'litellm']::text[],
         29,
         now(),
@@ -950,6 +996,8 @@ function reconcileCompanySkills() {
           description = EXCLUDED.description,
           tagline = EXCLUDED.tagline,
           color = EXCLUDED.color,
+          source_type = 'local_path',
+          source_locator = '${triHarnessDir}',
           categories = EXCLUDED.categories,
           updated_at = now();
 
@@ -975,6 +1023,32 @@ function reconcileCompanySkills() {
     `);
   }
 
+  // Ensure blog-publishing and updated category skills have their latest markdown synced in company_skills and version snapshots
+  const syncMarkdownMap = [
+    { slug: 'blog-publishing', relPath: 'skills/blog-publishing/SKILL.md', extraRef: 'skills/blog-publishing/references/editorial-writing.md' },
+    { slug: 'content-seo', relPath: '23-content-seo/SKILL.md' },
+    { slug: 'brand-and-content-system', relPath: '09-brand-and-content-system/SKILL.md' },
+    { slug: 'site-generation', relPath: '15-site-generation/SKILL.md' }
+  ];
+  for (const item of syncMarkdownMap) {
+    const absMd = resolve(HOME, 'ai/repos/agent-skills', item.relPath);
+    if (!existsSync(absMd)) continue;
+    let combinedMd = readFileSync(absMd, 'utf8');
+    if (item.extraRef) {
+      const absRef = resolve(HOME, 'ai/repos/agent-skills', item.extraRef);
+      if (existsSync(absRef)) {
+        combinedMd = `${combinedMd.trimEnd()}\n\n---\n\n${readFileSync(absRef, 'utf8')}`;
+      }
+    }
+    const mdEsc = combinedMd.replace(/'/g, "''");
+    runSql(`
+      UPDATE company_skills
+      SET markdown = '${mdEsc}',
+          updated_at = now()
+      WHERE company_id = '${COMPANY_ID}' AND slug = '${item.slug}';
+    `);
+  }
+
   runSql(`
     UPDATE company_skill_sources
     SET last_error = NULL
@@ -990,23 +1064,55 @@ function reconcileCompanySkills() {
   `);
 
   const rows = runSql(`
-    SELECT slug, key FROM company_skills WHERE company_id = '${COMPANY_ID}';
+    SELECT id, slug, key, source_type, COALESCE(source_locator, ''), COALESCE(current_version_id::text, '')
+    FROM company_skills
+    WHERE company_id = '${COMPANY_ID}';
   `)
     .split('\n')
     .filter(Boolean);
   const slugToKey = new Map();
+  const keyToRuntimeSpec = new Map();
+  const globalSkillsDir = resolve(HOME, '.agentskills', 'skills');
+  mkdirSync(globalSkillsDir, { recursive: true });
+
   for (const r of rows) {
-    const [slug, key] = r.split('|');
-    if (slug && key) slugToKey.set(slug, key);
+    const [skillId, slug, key, sourceType, sourceLocator, currentVersionId] = r.split('|');
+    if (!slug || !key) continue;
+    slugToKey.set(slug, key);
+    const runtimeName = key.startsWith('paperclipai/paperclip/')
+      ? slug
+      : `${slug}--${createHash('sha256').update(key).digest('hex').slice(0, 10)}`;
+    let sourceDir = sourceLocator;
+    if (sourceType === 'github' && currentVersionId) {
+      sourceDir = `/home/professormanhattan/.paperclip/instances/default/skills/${COMPANY_ID}/__versions__/${skillId}/${currentVersionId}`;
+      mkdirSync(sourceDir, { recursive: true });
+      const mdPath = resolve(sourceDir, 'SKILL.md');
+      if (!existsSync(mdPath) || ['content-seo', 'brand-and-content-system', 'site-generation'].includes(slug)) {
+        const mdText = runSql(`SELECT markdown FROM company_skills WHERE id = '${skillId}';`);
+        if (mdText) writeFileSync(mdPath, mdText + '\n', 'utf8');
+      }
+    }
+    keyToRuntimeSpec.set(key, { slug, key, runtimeName, sourceDir });
+
+    // Ensure ~/.agentskills/skills/<slug> exists or is symlinked for dynamic on-demand loading by any agent
+    const cleanSlugTarget = resolve(globalSkillsDir, slug);
+    if (!existsSync(cleanSlugTarget) && sourceDir && existsSync(sourceDir)) {
+      try {
+        if (lstatSync(cleanSlugTarget)) unlinkSync(cleanSlugTarget);
+      } catch { /* ignore */ }
+      try {
+        symlinkSync(sourceDir, cleanSlugTarget);
+      } catch { /* ignore */ }
+    }
   }
-  return slugToKey;
+  return { slugToKey, keyToRuntimeSpec };
 }
 
 console.log('═'.repeat(80));
 console.log('  CONVERGING 29 PAPERCLIP AGENTS (swarml.ink) + 35 OPENCLAW AGENTS (openclaw.swarml.ink)');
 console.log('═'.repeat(80));
 
-const skillSlugToKey = reconcileCompanySkills();
+const { slugToKey: skillSlugToKey, keyToRuntimeSpec } = reconcileCompanySkills();
 console.log(`✓ Reconciled ${skillSlugToKey.size} Paperclip company_skills with zero warnings`);
 
 const currentRows = runSql(`SELECT id, name, status FROM agents WHERE company_id = '${COMPANY_ID}';`)
@@ -1051,22 +1157,20 @@ for (const agent of CANONICAL_FLEET) {
   const byteLength = Buffer.byteLength(content, 'utf8');
 
   const rawFrontmatterSkills = parseFrontmatterSkills(content);
+  const roleSpecificSlugs = ROLE_SKILL_ASSIGNMENTS[agent.openclawId] || [];
   const desiredSkillSlugs = new Set([
-    ...rawFrontmatterSkills.map(s => s.replace(/^\d+-/, '')),
+    ...rawFrontmatterSkills.map(s => s.replace(/^skills\//, '').replace(/^\d+-/, '')),
+    ...roleSpecificSlugs,
     'openclaw-integration',
     'emdash-skills',
     'paperclip',
     'paperclip-board',
     'paperclip-converting-plans-to-tasks',
+    'para-memory-files',
     'tri-harness-deepseek-ollama-routing'
   ]);
-  if (['browser', 'qa', 'a11y', 'ui-designer'].includes(agent.openclawId)) {
-    desiredSkillSlugs.add('agent-browser');
-  }
-  if (['summarizer', 'ceo', 'product-manager'].includes(agent.openclawId)) {
-    desiredSkillSlugs.add('summarize-status');
-  }
-  const desiredSkillKeys = Array.from(desiredSkillSlugs)
+  const resolvedSkillSlugs = Array.from(desiredSkillSlugs).filter(slug => skillSlugToKey.has(slug));
+  const desiredSkillKeys = resolvedSkillSlugs
     .map(slug => skillSlugToKey.get(slug))
     .filter(Boolean);
 
@@ -1119,7 +1223,7 @@ for (const agent of CANONICAL_FLEET) {
       primary: agent.model,
       fallbacks: agent.fallbacks
     },
-    assignedSkillSlugs: Array.from(desiredSkillSlugs)
+    assignedSkillSlugs: resolvedSkillSlugs
   });
 
   if (!agentId) {
@@ -1177,6 +1281,10 @@ for (const agent of CANONICAL_FLEET) {
 
   nameToId.set(agent.name.toLowerCase(), agentId);
 
+  const agentWorkspaceDir = resolve(OPENCLAW_WORKSPACES_DIR, agent.openclawId);
+  mkdirSync(agentWorkspaceDir, { recursive: true });
+  const agentClaimedKeyPath = resolve(agentWorkspaceDir, 'paperclip-claimed-api-key.json');
+
   const instructionsRoot = `/home/professormanhattan/.paperclip/instances/default/companies/${COMPANY_ID}/agents/${agentId}/instructions`;
   const instructionsFilePath = `${instructionsRoot}/AGENTS.md`;
   const adapterConfig = {
@@ -1187,7 +1295,7 @@ for (const agent of CANONICAL_FLEET) {
     timeoutSec: 3600,
     waitTimeoutMs: 3600000,
     paperclipApiUrl: PAPERCLIP_API_URL,
-    claimedApiKeyPath: CLAIMED_API_KEY_PATH,
+    claimedApiKeyPath: agentClaimedKeyPath,
     disableDeviceAuth: true,
     autoPairOnFirstConnect: true,
     clientId: 'gateway-client',
@@ -1238,19 +1346,37 @@ for (const agent of CANONICAL_FLEET) {
     DO UPDATE SET revision_id = EXCLUDED.revision_id, updated_at = now();
   `);
 
-  const agentWorkspaceDir = resolve(OPENCLAW_WORKSPACES_DIR, agent.openclawId);
-  mkdirSync(agentWorkspaceDir, { recursive: true });
   writeFileSync(resolve(agentWorkspaceDir, 'AGENTS.md'), content, 'utf8');
   writeFileSync(resolve(agentWorkspaceDir, 'IDENTITY.md'), buildIdentityMarkdown(agent), 'utf8');
   writeFileSync(resolve(agentWorkspaceDir, 'SOUL.md'), buildSoulMarkdown(agent), 'utf8');
   writeFileSync(resolve(agentWorkspaceDir, 'USER.md'), CANONICAL_USER_MD, 'utf8');
   writeFileSync(resolve(agentWorkspaceDir, 'TOOLS.md'), CANONICAL_TOOLS_MD, 'utf8');
 
-  const symlinkTarget = resolve(agentWorkspaceDir, 'paperclip-claimed-api-key.json');
+  // Ensure per-agent claimed API key file is an independent file (never a shared symlink that causes race conditions)
   try {
-    if (lstatSync(symlinkTarget)) unlinkSync(symlinkTarget);
+    const st = lstatSync(agentClaimedKeyPath);
+    if (st.isSymbolicLink()) unlinkSync(agentClaimedKeyPath);
   } catch { /* ignore if missing */ }
-  symlinkSync(CLAIMED_API_KEY_PATH, symlinkTarget);
+  if (!existsSync(agentClaimedKeyPath) && existsSync(CLAIMED_API_KEY_PATH)) {
+    copyFileSync(CLAIMED_API_KEY_PATH, agentClaimedKeyPath);
+  }
+
+  // Reconcile ~/.openclaw/workspaces/<openclawId>/skills/ with 100% valid symlinks for all desiredSkillKeys
+  const agentSkillsDir = resolve(agentWorkspaceDir, 'skills');
+  mkdirSync(agentSkillsDir, { recursive: true });
+  for (const existingEntry of readdirSync(agentSkillsDir)) {
+    try {
+      unlinkSync(resolve(agentSkillsDir, existingEntry));
+    } catch { /* ignore */ }
+  }
+  for (const skillKey of desiredSkillKeys) {
+    const spec = keyToRuntimeSpec.get(skillKey);
+    if (!spec || !spec.sourceDir || !existsSync(spec.sourceDir)) continue;
+    const linkPath = resolve(agentSkillsDir, spec.runtimeName);
+    try {
+      symlinkSync(spec.sourceDir, linkPath);
+    } catch { /* ignore */ }
+  }
 
   mkdirSync(resolve(HOME, '.openclaw', 'agents', agent.openclawId, 'agent', 'workshop-skills'), { recursive: true });
 
@@ -1296,8 +1422,25 @@ if (existsSync(OPENCLAW_JSON_PATH)) {
   if (!openclawConfig.skills.load) openclawConfig.skills.load = {};
   const extraDirs = new Set(openclawConfig.skills.load.extraDirs || []);
   extraDirs.add('/home/professormanhattan/ai/repos/agent-skills/openclaw-integration');
+  extraDirs.add('/home/professormanhattan/ai/repos/agent-skills/skills');
   extraDirs.add('/home/professormanhattan/ai/repos/agent-skills');
   openclawConfig.skills.load.extraDirs = Array.from(extraDirs);
+  openclawConfig.skills.load.allowSymlinkTargets = [
+    '/home/professormanhattan/ai/repos/agent-skills',
+    '/home/professormanhattan/.agentskills',
+    '/home/professormanhattan/.paperclip',
+    '/home/professormanhattan/.agents',
+    '/home/professormanhattan/.claude',
+    '/home/professormanhattan/.openclaw',
+    '/home/professormanhattan/.volta'
+  ];
+  openclawConfig.skills.limits = {
+    maxCandidatesPerRoot: 250,
+    maxSkillsLoadedPerSource: 120,
+    maxSkillsInPrompt: 100,
+    maxSkillsPromptChars: 64000,
+    maxSkillFileBytes: 524288
+  };
 
   if (!openclawConfig.agents) openclawConfig.agents = {};
   if (!openclawConfig.agents.defaults) openclawConfig.agents.defaults = {};
