@@ -67,6 +67,16 @@ expensive and loading them on demand is cheap.
 | `10-experience-and-design-system/build-breaking-rules.md` | skill | 9,366 |
 | `rules/principles-incident-log.md` | rule | 6,846 |
 
+## Incremental re-indexing adds zero context cost
+
+The file watcher (`src/watcher.ts`) keeps the index live while the server runs.
+A change re-reads only the changed markdown file and swaps the server-side index;
+no additional tool result, schema, or prompt text is produced. The per-call
+budget above is therefore unchanged by the watcher — the only new bytes are on
+`stderr` (a one-line `reindex` log per burst), which is not sent to the model.
+Set `SKILLS_GATEWAY_WATCH=0` to disable it if a client environment cannot watch
+files; searching then sees the startup snapshot only.
+
 ## Method
 
 `src/measure.ts` builds the real index from the plugin root, runs the real

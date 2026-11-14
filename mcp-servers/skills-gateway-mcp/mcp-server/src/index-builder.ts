@@ -15,7 +15,7 @@
  * @module
  */
 
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative, basename, dirname } from 'node:path';
 import { createHash } from 'node:crypto';
 
@@ -303,19 +303,14 @@ export function buildIndexDetailed(root: string): BuildResult {
     if (e) entries.push(e);
   }
 
-  entries.sort((a, b) => (a.kind === b.kind ? a.name.localeCompare(b.name) : a.kind.localeCompare(b.kind)));
-
-  const digest = createHash('sha256')
-    .update(entries.map((e) => `${e.kind}:${e.name}:${e.sizeBytes}:${e.modifiedMs}`).join('\n'))
-    .digest('hex')
-    .slice(0, 16);
+  entries.sort(compareEntries);
 
   const index: IndexFile = {
     version: INDEX_VERSION,
     builtAt: new Date().toISOString(),
     root,
     entries,
-    digest,
+    digest: digestFor(entries),
   };
   const covered = new Map<string, EntryKind>();
   for (const [file, kind] of files) covered.set(relative(root, file).split('\\').join('/'), kind);
@@ -327,7 +322,118 @@ export function serialiseIndex(index: IndexFile): string {
   return JSON.stringify(index, null, 0);
 }
 
+/** Write the index cache, ignoring read-only mounts. Returns success. */
+export function writeIndexCache(root: string, index: IndexFile): boolean {
+  try {
+    writeFileSync(join(root, INDEX_FILENAME), serialiseIndex(index));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /** Token cost of the serialised index (~4 bytes/token). */
 export function indexTokenCost(index: IndexFile): number {
   return approxTokens(Buffer.byteLength(serialiseIndex(index), 'utf-8'));
+}
+
+// ── Incremental re-index (file watcher) ─────────────────────────────────────
+
+/** Canonical entry ordering — one definition so incremental and full agree. */
+export function compareEntries(a: IndexEntry, b: IndexEntry): number {
+  return a.kind === b.kind ? a.name.localeCompare(b.name) : a.kind.localeCompare(b.kind);
+}
+
+/** Digest over entry identity + size + mtime; identical inputs give identical digests. */
+export function digestFor(entries: IndexEntry[]): string {
+  return createHash('sha256')
+    .update(entries.map((e) => `${e.kind}:${e.name}:${e.sizeBytes}:${e.modifiedMs}`).join('\n'))
+    .digest('hex')
+    .slice(0, 16);
+}
+
+/**
+ * Which index kind a plugin-root-relative path belongs to, or `null` when the
+ * path is outside every indexed area (a caller must then fall back to a full
+ * rebuild — e.g. a brand-new `NN-<slug>/` tree).
+ */
+export function kindForPath(relPath: string): EntryKind | null {
+  const segments = relPath.split('\\').join('/').split('/');
+  if (segments.length < 2) return null;
+  const first = segments[0];
+  if (/^\d\d-/.test(first)) return 'skill';
+  if (first === 'rules') return 'rule';
+  if (first === 'agents') return 'agent';
+  if (first === 'commands') return 'command';
+  return null;
+}
+
+export interface ReindexResult {
+  index: IndexFile;
+  /** `noop` when nothing indexable changed, `incremental` for a partial update. */
+  mode: 'noop' | 'incremental' | 'full';
+  /** Number of entries added, replaced, or removed. */
+  touched: number;
+}
+
+/**
+ * Fold a set of changed plugin-root-relative paths into an existing index.
+ *
+ * A `.md` path inside an indexed area rebuilds exactly one entry; a deleted
+ * file drops its entry. Anything structural (a new directory, a non-markdown
+ * path) triggers a full rebuild, because a watcher event cannot tell us which
+ * files a directory rename added.
+ */
+export function reindexPaths(
+  root: string,
+  previous: IndexFile,
+  changed: Iterable<string>,
+): ReindexResult {
+  const paths = [...new Set([...changed].map((p) => p.split('\\').join('/')))].filter(Boolean);
+  if (paths.length === 0) return { index: previous, mode: 'noop', touched: 0 };
+
+  const byPath = new Map(previous.entries.map((entry) => [entry.path, entry]));
+  let touched = 0;
+
+  for (const rel of paths) {
+    const kind = kindForPath(rel);
+    // Structural change (directory create/rename/delete) — only a full walk is correct.
+    if (kind === null || !/\.md$/i.test(rel)) {
+      return { index: buildIndex(root), mode: 'full', touched: paths.length };
+    }
+    const abs = join(root, ...rel.split('/'));
+    let isFile = false;
+    try {
+      isFile = statSync(abs).isFile();
+    } catch {
+      isFile = false;
+    }
+    if (!isFile) {
+      if (byPath.delete(rel)) touched++;
+      continue;
+    }
+    const entry = buildEntry(abs, root, kind);
+    if (!entry) {
+      if (byPath.delete(rel)) touched++;
+      continue;
+    }
+    const prior = byPath.get(rel);
+    if (prior && prior.sizeBytes === entry.sizeBytes && prior.modifiedMs === entry.modifiedMs) continue;
+    byPath.set(rel, entry);
+    touched++;
+  }
+
+  if (touched === 0) return { index: previous, mode: 'noop', touched: 0 };
+  const entries = [...byPath.values()].sort(compareEntries);
+  return {
+    index: {
+      version: INDEX_VERSION,
+      builtAt: new Date().toISOString(),
+      root,
+      entries,
+      digest: digestFor(entries),
+    },
+    mode: 'incremental',
+    touched,
+  };
 }

@@ -79,7 +79,24 @@ files over their siblings. A small acronym table maps `a11y`, `i18n`, `cwv`,
 
 `src/index.ts` is the MCP wiring. It returns `isError: true` for every failure
 and a normal empty result for a search miss, so a client can retry rather than
-treat a miss as a crash.
+treat a miss as a crash. It serves from a live index (`GatewayView`), so a
+re-index is visible to the next tool call without a restart.
+
+## Incremental re-indexing
+
+`src/watcher.ts` watches the plugin root and folds changes into the running
+index — an edited skill, a new `rules/*.md`, or a `git pull` lands without a
+server restart.
+
+- Debounced (200 ms), so a branch switch that rewrites 40 files costs one pass.
+- A `.md` change re-reads **only that file** (`reindexPaths`); a structural
+  change (new `NN-<slug>/` tree, directory rename) falls back to a full walk,
+  because one event cannot tell us which files a rename added.
+- `node_modules`, `.git`, `dist`, and dot-directories are ignored.
+- The refreshed index is written back to the on-disk cache, so the next cold
+  start is a cache hit.
+- If the platform refuses recursive watching, it falls back to non-recursive
+  watches over the indexed directories. A watch failure never fails a tool call.
 
 ## Configuration
 
@@ -87,6 +104,7 @@ treat a miss as a crash.
 | --- | --- | --- |
 | `SKILLS_GATEWAY_ROOT` | four levels above `dist/` | Plugin root to index. Set it for tests or a vendored copy. |
 | `SKILLS_GATEWAY_NO_CACHE` | unset | `1` skips the on-disk index cache. |
+| `SKILLS_GATEWAY_WATCH` | enabled | `0` disables incremental re-indexing (index is built once at startup). |
 
 ## Client configuration
 

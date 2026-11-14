@@ -19,14 +19,17 @@
  *    normal empty result with a suggestion, not an error — so clients retry
  *    with broader words instead of surfacing a crash.
  *  - `SKILLS_GATEWAY_ROOT` overrides the plugin root (useful for tests);
- *    `SKILLS_GATEWAY_NO_CACHE=1` disables the on-disk cache.
+ *    `SKILLS_GATEWAY_NO_CACHE=1` disables the on-disk cache;
+ *    `SKILLS_GATEWAY_WATCH=0` disables incremental re-indexing.
+ *  - The index is live: a debounced file watcher folds changed markdown into it
+ *    (see ./watcher.ts), so edits and `git pull` land without a restart.
  *
  * @module
  */
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -34,11 +37,13 @@ import {
   INDEX_FILENAME,
   INDEX_VERSION,
   serialiseIndex,
+  writeIndexCache,
   type IndexEntry,
   type IndexFile,
 } from './index-builder.js';
 import { formatHits, searchEntries, truncate } from './search.js';
 import { findRuleForMeasure } from './format.js';
+import { startIndexWatcher, type IndexWatcher } from './watcher.js';
 import {
   FindRuleInputSchema,
   LoadSkillInputSchema,
@@ -69,27 +74,61 @@ export function loadIndex(root: string): IndexFile {
     } catch {
       /* corrupt cache — fall through to rewrite */
     }
-    try {
-      writeFileSync(cachePath, serialiseIndex(fresh));
-    } catch {
-      /* read-only mount — keep the in-memory index */
-    }
+    writeIndexCache(root, fresh);
   }
   return fresh;
 }
 
-export function createServer(index: IndexFile): Server {
-  const byName = new Map<string, IndexEntry[]>();
-  for (const entry of index.entries) {
-    for (const key of [entry.name, ...entry.aliases]) {
-      const list = byName.get(key) ?? [];
-      list.push(entry);
-      byName.set(key, list);
-    }
+/**
+ * A live index + name map. Rebuilds the map lazily whenever the digest of the
+ * source changes, which is what makes a watcher-driven re-index invisible to
+ * callers: `view.index` is always current at call time.
+ */
+export class GatewayView {
+  private readonly source: () => IndexFile;
+  private byName = new Map<string, IndexEntry[]>();
+  private builtDigest = '';
+
+  constructor(source: IndexFile | (() => IndexFile)) {
+    this.source = typeof source === 'function' ? source : () => source;
+    this.refresh();
   }
 
+  /** Current index; refreshes the name map first if the digest moved. */
+  get index(): IndexFile {
+    return this.refresh();
+  }
+
+  /** Name/alias → entries for the current index. */
+  get names(): Map<string, IndexEntry[]> {
+    this.refresh();
+    return this.byName;
+  }
+
+  private refresh(): IndexFile {
+    const current = this.source();
+    if (current.digest !== this.builtDigest) {
+      const map = new Map<string, IndexEntry[]>();
+      for (const entry of current.entries) {
+        for (const key of [entry.name, ...entry.aliases]) {
+          const list = map.get(key) ?? [];
+          list.push(entry);
+          map.set(key, list);
+        }
+      }
+      this.byName = map;
+      this.builtDigest = current.digest;
+    }
+    return current;
+  }
+}
+
+/** `createServer` serves whatever its index source holds at call time. */
+export function createServer(index: IndexFile | (() => IndexFile)): Server {
+  const view = new GatewayView(index);
+
   const server = new Server(
-    { name: 'skills-gateway-mcp', version: '1.1.0' },
+    { name: 'skills-gateway-mcp', version: '1.2.0' },
     { capabilities: { tools: {} } },
   );
 
@@ -105,16 +144,18 @@ export function createServer(index: IndexFile): Server {
 
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const { name, arguments: args } = request.params;
+    const liveIndex = view.index;
+    const liveNames = view.names;
 
     switch (name) {
       case 'search_skills': {
         const parsed = SearchSkillsInputSchema.safeParse(args ?? {});
         if (!parsed.success) return toolError(`Invalid arguments for search_skills: ${parsed.error.message}`);
         const { query, kind, max_results } = parsed.data;
-        const hits = searchEntries(index.entries, query, { kind, limit: max_results ?? 8 });
+        const hits = searchEntries(liveIndex.entries, query, { kind, limit: max_results ?? 8 });
         if (hits.length === 0) {
           return toolText(
-            `No matches for "${query}". The gateway indexes ${index.entries.length} entries (skills, rules, agents, commands). Try broader words, or call find_rule for a rule topic.`,
+            `No matches for "${query}". The gateway indexes ${liveIndex.entries.length} entries (skills, rules, agents, commands). Try broader words, or call find_rule for a rule topic.`,
           );
         }
         return toolText(`${hits.length} result(s) for "${query}":\n\n${formatHits(hits, query)}`);
@@ -124,9 +165,9 @@ export function createServer(index: IndexFile): Server {
         const parsed = LoadSkillInputSchema.safeParse(args ?? {});
         if (!parsed.success) return toolError(`Invalid arguments for load_skill: ${parsed.error.message}`);
         const { name: requested, sections } = parsed.data;
-        const candidates = byName.get(requested);
+        const candidates = liveNames.get(requested);
         if (!candidates || candidates.length === 0) {
-          const near = searchEntries(index.entries, requested, { limit: 3 });
+          const near = searchEntries(liveIndex.entries, requested, { limit: 3 });
           const hint = near.length ? ` Did you mean: ${near.map((h) => h.entry.name).join(', ')}?` : '';
           return toolError(`No entry named "${requested}".${hint}`);
         }
@@ -163,15 +204,15 @@ export function createServer(index: IndexFile): Server {
         const parsed = FindRuleInputSchema.safeParse(args ?? {});
         if (!parsed.success) return toolError(`Invalid arguments for find_rule: ${parsed.error.message}`);
         const { topic, max_results } = parsed.data;
-        const hits = searchEntries(index.entries, topic, { kind: 'rule', limit: max_results ?? 3 });
+        const hits = searchEntries(liveIndex.entries, topic, { kind: 'rule', limit: max_results ?? 3 });
         if (hits.length === 0) {
-          const elsewhere = searchEntries(index.entries, topic, { limit: 3 });
+          const elsewhere = searchEntries(liveIndex.entries, topic, { limit: 3 });
           const hint = elsewhere.length
             ? ` Closest entries overall: ${elsewhere.map((h) => `${h.entry.name} (${h.entry.kind})`).join(', ')}.`
             : '';
           return toolText(`No rule matches "${topic}". The topic may live in a skill or agent — use search_skills.${hint}`);
         }
-        return toolText(findRuleForMeasure(ROOT, index.entries, topic, max_results ?? 3));
+        return toolText(findRuleForMeasure(ROOT, liveIndex.entries, topic, max_results ?? 3));
       }
 
       default:
@@ -219,17 +260,48 @@ function toolError(text: string) {
 }
 
 async function main(): Promise<void> {
-  const index = loadIndex(ROOT);
-  const counts = index.entries.reduce<Record<string, number>>((acc, e) => {
-    acc[e.kind] = (acc[e.kind] ?? 0) + 1;
-    return acc;
-  }, {});
-  process.stderr.write(
-    `[skills-gateway] root=${ROOT} entries=${index.entries.length} ` +
-      `${Object.entries(counts).map(([k, v]) => `${k}=${v}`).join(' ')} digest=${index.digest}\n`,
-  );
-  const server = createServer(index);
+  let index = loadIndex(ROOT);
+  const report = (label: string, next: IndexFile): void => {
+    const counts = next.entries.reduce<Record<string, number>>((acc, e) => {
+      acc[e.kind] = (acc[e.kind] ?? 0) + 1;
+      return acc;
+    }, {});
+    process.stderr.write(
+      `[skills-gateway] ${label} root=${ROOT} entries=${next.entries.length} ` +
+        `${Object.entries(counts).map(([k, v]) => `${k}=${v}`).join(' ')} digest=${next.digest}\n`,
+    );
+  };
+  report('ready', index);
+
+  let watcher: IndexWatcher | null = null;
+  if (process.env.SKILLS_GATEWAY_WATCH !== '0') {
+    watcher = startIndexWatcher({
+      root: ROOT,
+      index: () => index,
+      onIndex: (next, info) => {
+        index = next;
+        if (!cacheDisabled()) writeIndexCache(ROOT, next);
+        process.stderr.write(
+          `[skills-gateway] reindex ${info.mode} changed=${info.changed.length} digest=${next.digest}\n`,
+        );
+      },
+      onError: (error) => process.stderr.write(`[skills-gateway] watcher: ${String(error)}\n`),
+    });
+    const stop = (): void => watcher?.close();
+    process.on('exit', stop);
+    process.on('SIGINT', () => {
+      stop();
+      process.exit(0);
+    });
+    process.on('SIGTERM', () => {
+      stop();
+      process.exit(0);
+    });
+  }
+
+  const server = createServer(() => index);
   await server.connect(new StdioServerTransport());
+  server.onclose = () => watcher?.close();
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
