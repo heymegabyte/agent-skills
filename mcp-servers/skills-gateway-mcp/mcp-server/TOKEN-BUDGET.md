@@ -1,6 +1,6 @@
 # Token budget — before and after the skills gateway
 
-Measured on 2026-10-26 against this repository: **176 skills, 176 rules, 28 agents, 36 commands** (416 indexed files).
+Measured on 2026-11-14 against this repository at `main`: **176 skills, 201 rules, 52 agents, 36 commands** (465 indexed entries).
 
 Tokens are `ceil(bytes / 4)` — the same ratio the repo's
 `bin/audit-always-load-budget.mjs` uses. Regenerate with:
@@ -14,19 +14,26 @@ npm install && npm run build && npm run measure:json
 
 | What is paid per session | Bytes | ~Tokens |
 | --- | ---: | ---: |
-| **Before** — skill/agent/command frontmatter + every rule body | 1,078,519 | **269,630** |
-| **Before** — every indexed markdown file, loaded in full | 2,824,050 | **706,013** |
+| **Before** — skill/agent/command frontmatter + every rule body | 1,322,742 | **330,686** |
+| **Before** — every indexed markdown file, loaded in full | 3,363,464 | **840,866** |
 | **After** — the 3 tool definitions (constant per session) | 1,484 | **371** |
 | **After** — typical turn: definitions + one 5-hit search | — | **855** |
-| **After** — `find_rule` result (rule body, capped at 4,000 chars) | 10,720 | 2,680 |
+| **After** — `find_rule` result (rule body, capped at 4,000 chars) | 11,862 | 2,966 |
 | **After** — `load_skill` on a one-line stub | 43 | 11 |
-| Index held server-side (never sent to the model) | 747,617 | 186,905 |
+| Index held server-side (never sent to the model) | 859,293 | 214,824 |
 
 - Typical turn is **99.7% smaller** than the always-load
   baseline and **99.9% smaller** than loading
   everything.
-- Roughly **268,775 tokens saved per session** against the
+- Roughly **329,831 tokens saved per session** against the
   always-load baseline.
+
+### Prior measurement (2026-10-26, 416 entries — 176 skills, 176 rules, 28 agents, 36 commands)
+
+Kept for provenance: the corpus has since grown by 49 rules and 24 agents, so the
+absolute "before" cost rose while the "after" cost stayed flat at 371 tokens of
+tool definitions. Then: 269,630 / 706,013 before, 371 / 855 after, 268,775 tokens
+saved per session. The conclusion did not change; only the corpus did.
 
 ## What "before" means
 
@@ -59,7 +66,7 @@ expensive and loading them on demand is cheap.
 | File | Kind | ~Tokens |
 | --- | --- | ---: |
 | `15-site-generation/build-prompts.md` | skill | 22,091 |
-| `15-site-generation/build-breaking-rules.md` | skill | 21,886 |
+| `15-site-generation/build-breaking-rules.md` | skill | 22,024 |
 | `12-media-orchestration/build-breaking-rules.md` | skill | 12,330 |
 | `15-site-generation/quality-gates.md` | skill | 11,922 |
 | `15-site-generation/template-system.md` | skill | 10,156 |
