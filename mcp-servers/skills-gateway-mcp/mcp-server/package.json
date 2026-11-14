@@ -1,7 +1,7 @@
 {
   "name": "skills-gateway-mcp",
-  "version": "1.2.0",
-  "description": "MCP Gateway that indexes every heymegabyte/agent-skills skill, rule, and agent behind 3 meta-tools \u2014 cuts skill context from ~50K tokens to ~1K, with incremental re-indexing",
+  "version": "1.2.1",
+  "description": "MCP Gateway that indexes every heymegabyte/agent-skills skill, rule, and agent behind 3 meta-tools — cuts skill context from ~50K tokens to ~1K, with incremental re-indexing",
   "type": "module",
   "main": "dist/index.js",
   "bin": {

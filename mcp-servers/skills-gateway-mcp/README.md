@@ -92,6 +92,12 @@ server restart.
 - A `.md` change re-reads **only that file** (`reindexPaths`); a structural
   change (new `NN-<slug>/` tree, directory rename) falls back to a full walk,
   because one event cannot tell us which files a rename added.
+- A single-file rename arrives as a create at the **new** path only, so the
+  directories an event touches are swept for entries whose file no longer
+  exists. Without that sweep the old name keeps answering `search_skills` with
+  text that is gone.
+- An editor save (write temp, rename over the target) and a rapid write burst
+  are collapsed by the debounce into one settled rebuild with the final content.
 - `node_modules`, `.git`, `dist`, and dot-directories are ignored.
 - The refreshed index is written back to the on-disk cache, so the next cold
   start is a cache hit.

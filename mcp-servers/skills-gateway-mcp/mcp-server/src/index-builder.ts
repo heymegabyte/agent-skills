@@ -15,7 +15,7 @@
  * @module
  */
 
-import { readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative, basename, dirname } from 'node:path';
 import { createHash } from 'node:crypto';
 
@@ -394,6 +394,8 @@ export function reindexPaths(
 
   const byPath = new Map(previous.entries.map((entry) => [entry.path, entry]));
   let touched = 0;
+  /** Directories reached by a .md event; swept for entries whose file vanished. */
+  const eventDirs = new Set<string>();
 
   for (const rel of paths) {
     const kind = kindForPath(rel);
@@ -401,6 +403,7 @@ export function reindexPaths(
     if (kind === null || !/\.md$/i.test(rel)) {
       return { index: buildIndex(root), mode: 'full', touched: paths.length };
     }
+    eventDirs.add(dirname(rel));
     const abs = join(root, ...rel.split('/'));
     let isFile = false;
     try {
@@ -420,6 +423,16 @@ export function reindexPaths(
     const prior = byPath.get(rel);
     if (prior && prior.sizeBytes === entry.sizeBytes && prior.modifiedMs === entry.modifiedMs) continue;
     byPath.set(rel, entry);
+    touched++;
+  }
+
+  // A rename is reported at the *new* path only, so the old entry would keep
+  // answering searches for a file that no longer exists. Sweep just the
+  // directories this event set touched (a few stats), never the whole corpus.
+  for (const [rel] of byPath) {
+    if (!eventDirs.has(dirname(rel))) continue;
+    if (existsSync(join(root, ...rel.split('/')))) continue;
+    byPath.delete(rel);
     touched++;
   }
 
