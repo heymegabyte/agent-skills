@@ -4,12 +4,13 @@ description: Visual quality assurance agent. Screenshots pages at all breakpoint
 tools: Read, Bash, mcp__playwright__*
 allowed-tools: Read Bash(npx:*) mcp__playwright__*
 disallowedTools: Write, Edit
-model: "opus"
+model: "sonnet"
 permissionMode: plan
 maxTurns: 25
-effort: xhigh
+effort: high
 model_fallback: "sonnet"
 fallback_reason: cost_optimization
+routing_note: "Issue #6: visual QA is screenshot diffing, not judgment — DeepSeek Flash tier (sonnet->deepseek-flash). See bin/deepseek-routing.sh agent-coverage."
 context: fork
 effort_fallback: high
 skills: ["10-experience-and-design-system", "07-quality-and-verification"]

@@ -1,0 +1,71 @@
+{
+  "server": "skills-gateway-mcp",
+  "_comment": "Retrieval-quality golden tests. Each case asserts that a realistic user wording surfaces the right entry in the top 3 — the property that makes 3 meta-tools a replacement for loading all descriptions.",
+  "tests": [
+    {
+      "id": "intent-payments",
+      "_comment": "Product wording, not the skill name.",
+      "tool": "search_skills",
+      "input": { "query": "take payments with stripe", "max_results": 3 },
+      "expected_contains": ["Stripe Billing"],
+      "scoring": "exact-match-keys"
+    },
+    {
+      "id": "intent-accessibility",
+      "_comment": "The a11y shorthand expands to accessibility.",
+      "tool": "search_skills",
+      "input": { "query": "a11y audit", "max_results": 3 },
+      "expected_contains": ["accessibility"],
+      "scoring": "exact-match-keys"
+    },
+    {
+      "id": "intent-i18n",
+      "_comment": "The i18n shorthand expands to internationalization.",
+      "tool": "search_skills",
+      "input": { "query": "i18n", "max_results": 3 },
+      "expected_contains": ["Internationalization"],
+      "scoring": "exact-match-keys"
+    },
+    {
+      "id": "intent-design-system",
+      "_comment": "Design wording lands on the design-system skill or an agent.",
+      "tool": "search_skills",
+      "input": { "query": "visual design system tokens", "max_results": 5 },
+      "expected_contains": ["design"],
+      "scoring": "exact-match-keys"
+    },
+    {
+      "id": "intent-deploy",
+      "_comment": "Deployment wording lands on the deploy skill.",
+      "tool": "search_skills",
+      "input": { "query": "ship to production", "max_results": 5 },
+      "expected_contains": ["deploy"],
+      "scoring": "exact-match-keys"
+    },
+    {
+      "id": "agent-kind-filter",
+      "_comment": "kind=agent narrows to agents: a security review finds the security-reviewer agent.",
+      "tool": "search_skills",
+      "input": { "query": "security review", "kind": "agent", "max_results": 5 },
+      "expected_contains": ["security-reviewer"],
+      "scoring": "exact-match-keys"
+    },
+    {
+      "id": "rule-security-topic",
+      "_comment": "A doctrine topic resolves to a rule file path.",
+      "tool": "find_rule",
+      "input": { "topic": "secrets never in git", "max_results": 3 },
+      "expected_contains": ["rules/"],
+      "scoring": "exact-match-keys"
+    },
+    {
+      "id": "rule-unknown-topic-suggests",
+      "_comment": "A rule miss is not an error and points at search_skills.",
+      "tool": "find_rule",
+      "input": { "topic": "zebra striping across yachts" },
+      "expected_is_error": false,
+      "expected_contains": ["search_skills"],
+      "scoring": "error-shape"
+    }
+  ]
+}

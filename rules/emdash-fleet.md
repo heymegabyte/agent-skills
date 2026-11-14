@@ -45,7 +45,7 @@ Cross-links: `[[parallel-subagent-economy]]` `[[delegate-when-saturated]]` `[[op
 
 - Cheap tier (haiku) for mechanical agents: changelog, content, seo, cost, accessibility.
 - Sonnet for build/test/migrate/deploy agents.
-- Opus ONLY for architecture, completeness, security, visual-qa, meta-orchestration — and these carry `model_fallback: claude-sonnet-4-6` per `[[opus-quota-fallback]]`.
+- Opus ONLY for architecture, completeness, security, meta-orchestration — and these carry `model_fallback: claude-sonnet-4-6` per `[[opus-quota-fallback]]`. `visual-qa` is screenshot diffing (Sonnet since issue #6 — DeepSeek Flash tier).
 - Pass `effort` low for mechanical stages; reserve high/xhigh for verify/judge.
 
 ## Cloudflare-first defaults (the architecture)
