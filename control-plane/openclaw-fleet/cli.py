@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
 """Single-turn official CLI adapter: explicit policy transport and bounded lifetime.
 
-Includes automatic runtime failover across codex, deepseek, and gemini (agy) when a
-subscription OAuth session (e.g. claude) is unavailable on the host.
+Implements Tri-Harness DeepSeek & Ollama Offload across:
+  - Claude Code (`cr @litellm`, `cr @ollama`, `cr @deepseek`, and subscription `cr --provider claude`)
+  - OpenAI Codex (`codex exec -p deepseek`, `codex exec -p ollama`, and subscription `codex exec`)
+  - OpenCode (`opencode-deepseek.sh -m litellm/deepseek-v4-pro`, `litellm/hybrid-coder`, `litellm/deepseek-flash`)
+  - Gemini (`agy --model gemini-4-carbon-high`)
+
+Automatically offloads routine timer heartbeats and throughput-safe work to DeepSeek / Ollama
+via Claw Router (`cr`) and the LiteLLM Gateway (`https://llm.megabyte.space`), while reserving
+Frontier subscriptions (`claude`, `codex`, `gemini`) for OpenSpec authoring (`proposal.md`,
+`design.md`, `tasks.md`, `specs/`), deep architecture, security review, and final judgment.
 """
 import argparse
 import hashlib
@@ -21,24 +29,112 @@ MAX_EVENTS = 200
 MAX_RECORD = 2 * 1024 * 1024
 MAX_TEXT = 1024 * 1024
 
+FRONTIER_OPENSPEC_RE = re.compile(
+    r'(\bopenspec/changes/\b|\bproposal\.md\b|\bdesign\.md\b|\btasks\.md\b|\bspecs/[a-z0-9_-]+/spec\.md\b|'
+    r'\bADR-\d{4}\b|\bSTRIDE\b|\bthreat\s+model\b|\bzero-day\b|\bcritical\s+incident\b)',
+    re.IGNORECASE,
+)
 
-def build_command(provider_model: str, home: Path, skills_root: Path, system_prompt_file: Path | None):
+THROUGHPUT_SAFE_RE = re.compile(
+    r'(\bsummariz|\bsitrep\b|\bheartbeat\b|\broutine\b|\bstatus\s+card\b|\bsummary\s+slot\b|'
+    r'\bhygiene\b|\baudit\s+sweep\b|\bboilerplate\b|\brefactor\b|\blint\b|\bformat\b|'
+    r'\bseo\s+audit\b|\ba11y\s+audit\b|\bfinops\b|\bcost\s+report\b|\bcontent\s+draft\b|'
+    r'\bchangelog\b|\breadme\b|\bworktree\s+wave\b)',
+    re.IGNORECASE,
+)
+
+
+def resolve_secret(name: str, env: dict[str, str]) -> str:
+    if env.get(name):
+        return env[name]
+    try:
+        val = subprocess.check_output(
+            ['get-secret', name],
+            env=env,
+            text=True,
+            timeout=5,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+        return val
+    except (OSError, subprocess.SubprocessError):
+        return ''
+
+
+def classify_task_tier(raw_prompt: str, env: dict[str, str]) -> str:
+    """Return 'frontier' when OpenSpec/architecture requires premium subscription models,
+    or 'throughput' when the task can safely run on DeepSeek / Ollama via Claude/Codex/OpenCode.
+    """
+    if env.get('PAPERCLIP_FORCE_FRONTIER') == '1':
+        return 'frontier'
+    if env.get('PAPERCLIP_FORCE_THROUGHPUT') == '1':
+        return 'throughput'
+    if FRONTIER_OPENSPEC_RE.search(raw_prompt):
+        return 'frontier'
+    wake_reason = (env.get('PAPERCLIP_WAKE_REASON') or '').lower()
+    if wake_reason in ('heartbeat_timer', 'routine_trigger', 'scheduled_routine'):
+        return 'throughput'
+    if THROUGHPUT_SAFE_RE.search(raw_prompt) and len(raw_prompt) < 48000:
+        return 'throughput'
+    return 'frontier'
+
+
+def build_command(provider_model: str, home: Path, skills_root: Path, system_prompt_file: Path | None, base_env: dict[str, str]):
+    run_env = base_env.copy()
+    codex_bin = str(home / '.local/bin/codex') if (home / '.local/bin/codex').is_file() else 'codex'
+    opencode_wrapper = str(skills_root / 'bin/opencode-deepseek.sh')
+
     if provider_model == 'codex':
-        cmd = [str(home / '.local/bin/codex'), 'exec', '--json', '--skip-git-repo-check', '--dangerously-bypass-approvals-and-sandbox', '-']
-        if not Path(cmd[0]).is_file():
-            cmd[0] = 'codex'
-        return cmd, False
+        cmd = [codex_bin, 'exec', '--json', '--skip-git-repo-check', '--dangerously-bypass-approvals-and-sandbox', '-']
+        return cmd, False, run_env
+
+    if provider_model in ('codex-deepseek', 'codex-ollama'):
+        litellm_key = resolve_secret('LITELLM_API_KEY', run_env) or resolve_secret('DEEPSEEK_API_KEY', run_env)
+        if litellm_key:
+            run_env['LITELLM_API_KEY'] = litellm_key
+        target_model = 'hybrid-coder' if provider_model == 'codex-ollama' else 'deepseek-chat'
+        cmd = [
+            codex_bin, 'exec', '--json', '--skip-git-repo-check', '--dangerously-bypass-approvals-and-sandbox',
+            '-c', 'model_provider="litellm"',
+            '-c', 'model_providers.litellm.name="LiteLLM"',
+            '-c', 'model_providers.litellm.base_url="https://llm.megabyte.space/v1"',
+            '-c', 'model_providers.litellm.env_key="LITELLM_API_KEY"',
+            '-c', 'model_providers.litellm.wire_api="responses"',
+            '-m', target_model,
+            '-',
+        ]
+        return cmd, False, run_env
+
     if provider_model == 'claude':
+        run_env['CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT'] = '1'
         cmd = ['cr', '--provider', 'claude', '-p', '--output-format', 'stream-json', '--verbose', '--dangerously-skip-permissions']
         if system_prompt_file:
             cmd += ['--append-system-prompt-file', str(system_prompt_file.resolve())]
-        return cmd, True
+        return cmd, True, run_env
+
+    if provider_model in ('claude-deepseek', 'claude-ollama'):
+        run_env['CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT'] = '1'
+        backend_tag = '@ollama' if provider_model == 'claude-ollama' else '@litellm'
+        cmd = ['cr', backend_tag, '--provider', 'claude', '-p', '--output-format', 'stream-json', '--verbose', '--dangerously-skip-permissions']
+        if system_prompt_file:
+            cmd += ['--append-system-prompt-file', str(system_prompt_file.resolve())]
+        return cmd, True, run_env
+
     if provider_model.startswith('gemini'):
         agy_model = 'gemini-4-carbon-high' if provider_model == 'gemini' else provider_model
         cmd = [str(home / '.local/bin/agy'), '--model', agy_model, '--output-format', 'stream-json', '--dangerously-skip-permissions']
-        return cmd, False
-    cmd = [str(skills_root / 'bin/opencode-deepseek.sh'), 'run', '--format', 'json', '-m', 'deepseek/deepseek-chat']
-    return cmd, False
+        return cmd, False, run_env
+
+    if provider_model in ('ollama', 'hybrid-coder'):
+        cmd = [opencode_wrapper, 'run', '--format', 'json', '-m', 'litellm/hybrid-coder']
+        return cmd, False, run_env
+
+    if provider_model == 'deepseek-flash':
+        cmd = [opencode_wrapper, 'run', '--format', 'json', '-m', 'litellm/deepseek-flash']
+        return cmd, False, run_env
+
+    # Default throughput model: deepseek / deepseek-v4-pro / opencode via LiteLLM Gateway
+    cmd = [opencode_wrapper, 'run', '--format', 'json', '-m', 'litellm/deepseek-v4-pro']
+    return cmd, False, run_env
 
 
 def parse_output_stream(output_file):
@@ -114,7 +210,12 @@ def main():
     p.add_argument(
         '--provider-model',
         default='codex',
-        choices=['codex', 'claude', 'deepseek', 'gemini', 'gemini-4-carbon-high', 'gemini-4-argon-high', 'gemini-3.8-flash-high'],
+        choices=[
+            'codex', 'claude', 'deepseek', 'deepseek-v4-pro', 'deepseek-flash',
+            'ollama', 'hybrid-coder', 'opencode',
+            'claude-deepseek', 'claude-ollama', 'codex-deepseek', 'codex-ollama',
+            'gemini', 'gemini-4-carbon-high', 'gemini-4-argon-high', 'gemini-3.8-flash-high',
+        ],
     )
     p.add_argument('--system-prompt-file', type=Path)
     a = p.parse_args()
@@ -179,16 +280,33 @@ def main():
     logdir.mkdir(parents=True, exist_ok=True, mode=0o700)
     trace = logdir / ('compute-' + str(time.time_ns()) + '.json')
 
-    # Build ordered candidate chain so expired Claude OAuth or transient CLI failure seamlessly falls back
+    # Determine task tier: 'frontier' (OpenSpec / Architecture / Security) vs 'throughput' (DeepSeek / Ollama offload)
+    task_tier = classify_task_tier(raw_prompt, env)
     candidates = []
-    if a.provider_model == 'claude':
-        # Check if claude credentials exist; otherwise prioritize codex -> deepseek -> gemini
-        candidates = ['codex', 'deepseek', 'gemini']
+    if a.provider_model in ('ollama', 'hybrid-coder', 'claude-ollama', 'codex-ollama'):
+        candidates = [a.provider_model, 'ollama', 'claude-ollama', 'codex-ollama', 'deepseek', 'claude-deepseek', 'codex-deepseek', 'codex', 'claude', 'gemini']
+    elif a.provider_model in ('deepseek', 'deepseek-v4-pro', 'deepseek-flash', 'opencode', 'claude-deepseek', 'codex-deepseek'):
+        candidates = [a.provider_model, 'deepseek', 'claude-deepseek', 'codex-deepseek', 'ollama', 'codex', 'claude', 'gemini']
+    elif task_tier == 'throughput':
+        # Offload routine/throughput work onto DeepSeek / Ollama through the requested CLI harness first!
+        if a.provider_model == 'claude':
+            candidates = ['claude-deepseek', 'claude-ollama', 'deepseek', 'ollama', 'claude', 'codex', 'gemini']
+        elif a.provider_model == 'codex':
+            candidates = ['codex-deepseek', 'deepseek', 'ollama', 'codex-ollama', 'codex', 'claude', 'gemini']
+        else:
+            candidates = ['deepseek', 'ollama', a.provider_model, 'codex', 'claude', 'gemini']
     else:
+        # Frontier tier: preserve requested subscription harness first (including claude!), with DeepSeek/Ollama + peer fallbacks
         candidates = [a.provider_model]
-        for fb in ('codex', 'deepseek', 'gemini'):
+        for fb in ('claude', 'codex', 'claude-deepseek', 'codex-deepseek', 'deepseek', 'ollama', 'gemini'):
             if fb not in candidates:
                 candidates.append(fb)
+    # Deduplicate while preserving order
+    deduped_candidates = []
+    for c in candidates:
+        if c not in deduped_candidates:
+            deduped_candidates.append(c)
+    candidates = deduped_candidates
 
     events, parts, post_command_parts, failures = [], [], [], []
     session = None
@@ -229,7 +347,7 @@ def main():
 
         for candidate_model in candidates:
             active_model = candidate_model
-            command, uses_prompt_file_flag = build_command(candidate_model, home, skills_root, a.system_prompt_file)
+            command, uses_prompt_file_flag, run_env = build_command(candidate_model, home, skills_root, a.system_prompt_file, env)
             prompt = raw_prompt
             if a.system_prompt_file and not uses_prompt_file_flag and a.system_prompt_file.is_file():
                 prompt = '<openclaw-policy>\n' + a.system_prompt_file.read_text() + '\n</openclaw-policy>\n' + raw_prompt
@@ -249,7 +367,7 @@ def main():
                 child = subprocess.Popen(
                     run_cmd,
                     cwd=workspace if Path(workspace).is_dir() else str(home),
-                    env=env,
+                    env=run_env,
                     stdin=subprocess.PIPE,
                     stdout=output,
                     stderr=errors,
@@ -299,7 +417,8 @@ def main():
             'runId': env.get('AI_RUN_ID'),
             'runtime': active_model,
             'requestedRuntime': a.provider_model,
-            'router': active_model != 'deepseek',
+            'taskTier': task_tier,
+            'router': active_model not in ('deepseek', 'ollama', 'hybrid-coder', 'opencode'),
             'session': session,
             'exitCode': code,
             'durationSeconds': round(time.monotonic() - started, 3),

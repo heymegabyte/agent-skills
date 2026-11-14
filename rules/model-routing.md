@@ -79,11 +79,23 @@ Rules (enforce in agent frontmatter + settings):
 - Secrets via `apiKeyHelper` (→ `get-secret DEEPSEEK_API_KEY`), never a hardcoded `ANTHROPIC_AUTH_TOKEN`/`ANTHROPIC_API_KEY` on disk. **Gotcha:** `apiKeyHelper` has LOWER precedence than those two env vars — a hardcoded token silently disables the helper (it "isn't used"), so REMOVE the token for the helper to take effect. `apiKeyHelper` DOES work with a custom `ANTHROPIC_BASE_URL` (its output is sent as `Authorization: Bearer`, which is what DeepSeek's endpoint expects).
 - Current DeepSeek IDs (per DeepSeek's official Claude Code docs, Sep 2026): `deepseek-flash` / `deepseek-flash[1m]`. `deepseek-v4-flash` is undocumented ON THIS RAIL — prefer `deepseek-flash`. (The OpenCode/Zen rail below uses a DIFFERENT namespace where `deepseek-v4-*` IS canonical — never copy IDs across rails.)
 
-## OpenCode harness — direct DeepSeek for local development
+## Tri-Harness DeepSeek & Ollama Offload (`claude` + `codex` + `opencode` via Claw Router `cr` & LiteLLM Gateway `https://llm.megabyte.space`)
 
-Routine/high-volume local work runs through `bin/opencode-deepseek.sh` with `DEEPSEEK_API_KEY` directly against `https://api.deepseek.com/v1`. The environment key takes precedence over `get-secret`. Provider references use the `deepseek/` namespace; verify the current provider catalog before selecting a model. The primary host currently configures `deepseek/deepseek-chat` as its routine default.
+Routine, high-volume, scheduled, and throughput-safe work runs across **all three CLI harnesses** (`claude`, `codex`, and `opencode`) backed by **DeepSeek** (`deepseek-v4-pro`, `deepseek-flash`, `deepseek-chat`, `deepseek-reasoner`) and **Local GPU Ollama** (`hybrid-coder`, `ollama-coder`, `workstation-ai`, `local-llm`, `qwen2.5-coder:14b`) through Claw Router (`cr`) and the LiteLLM Gateway (`https://llm.megabyte.space`):
 
-Do not route local CLI compute through Cloudflare AI Gateway, OpenCode Zen/Go or another hosted billing gateway. Claude and Codex use official subscription CLIs routed by Claw Router. Cloudflare-hosted product AI is a separate deployment concern. See [the fleet policy](../control-plane/FLEET.md) and `agent-provider-policy.md`.
+1. **Claude Code (`claude` via Claw Router `cr`)**:
+   - `cr @litellm` (`fleet-cli/claude-deepseek`): routes Claude Code through `https://llm.megabyte.space` (`model=deepseek-v4-pro`, `smallFastModel=deepseek-flash`).
+   - `cr @ollama` (`fleet-cli/claude-ollama`): routes Claude Code through `https://llm.megabyte.space` (`model=hybrid-coder`, `smallFastModel=ollama-coder`, with automatic `deepseek-chat` fallback).
+   - `cr @deepseek`: routes Claude Code through `https://api.deepseek.com/anthropic` (`model=deepseek-chat`).
+2. **OpenAI Codex (`codex` via `~/.codex/{deepseek,deepseek-pro,flash,ollama}.config.toml`)**:
+   - `codex exec -p deepseek` (`fleet-cli/codex-deepseek`): routes Codex through `https://llm.megabyte.space/v1` (`wire_api = "responses"`, `model = "deepseek-chat"`).
+   - `codex exec -p ollama` (`fleet-cli/codex-ollama`): routes Codex through `https://llm.megabyte.space/v1` (`wire_api = "responses"`, `model = "hybrid-coder"`).
+3. **OpenCode (`opencode` via `bin/opencode-deepseek.sh`)**:
+   - `bin/opencode-deepseek.sh run --format json -m litellm/deepseek-v4-pro` (`fleet-cli/deepseek`): 4-key rotated DeepSeek V4 Pro reasoning.
+   - `bin/opencode-deepseek.sh run --format json -m litellm/deepseek-flash` (`fleet-cli/deepseek-flash`): low-latency triage and summarization.
+   - `bin/opencode-deepseek.sh run --format json -m litellm/hybrid-coder` (`fleet-cli/ollama` / `fleet-cli/hybrid-coder`): local GPU Ollama `qwen2.5-coder:14b` with automatic `deepseek-chat` fallback.
+
+Reserve Frontier subscription CLIs (`fleet-cli/claude`, `fleet-cli/codex`, `fleet-cli/gemini`) strictly for authoring OpenSpec specifications (`proposal.md`, `design.md`, `tasks.md`, `specs/`), deep architecture, security review, and critical incident response. See [the fleet policy](../control-plane/FLEET.md) and `agent-provider-policy.md`.
 
 ## Retired models (requests error)
 

@@ -25,8 +25,11 @@ const AGENTS_DIR = resolve(HOME, '.agentskills', 'agents');
 const OPENCLAW_JSON_PATH = resolve(HOME, '.openclaw', 'openclaw.json');
 const OPENCLAW_WORKSPACES_DIR = resolve(HOME, '.openclaw', 'workspaces');
 
-const CODEX_PACE_FALLBACKS = ['fleet-cli/claude', 'fleet-cli/deepseek', 'fleet-cli/gemini'];
-const DEEPSEEK_PACE_FALLBACKS = ['fleet-cli/codex', 'fleet-cli/claude', 'fleet-cli/gemini'];
+const CODEX_PACE_FALLBACKS = ['fleet-cli/claude', 'fleet-cli/codex-deepseek', 'fleet-cli/deepseek', 'fleet-cli/ollama', 'fleet-cli/gemini'];
+const CLAUDE_PACE_FALLBACKS = ['fleet-cli/codex', 'fleet-cli/claude-deepseek', 'fleet-cli/deepseek', 'fleet-cli/ollama', 'fleet-cli/gemini'];
+const GEMINI_PACE_FALLBACKS = ['fleet-cli/claude', 'fleet-cli/codex', 'fleet-cli/deepseek', 'fleet-cli/ollama'];
+const DEEPSEEK_PACE_FALLBACKS = ['fleet-cli/claude-deepseek', 'fleet-cli/codex-deepseek', 'fleet-cli/ollama', 'fleet-cli/codex', 'fleet-cli/claude', 'fleet-cli/gemini'];
+const OLLAMA_PACE_FALLBACKS = ['fleet-cli/deepseek', 'fleet-cli/claude-ollama', 'fleet-cli/codex-ollama', 'fleet-cli/codex', 'fleet-cli/claude', 'fleet-cli/gemini'];
 
 export const CANONICAL_FLEET = [
   {
@@ -40,8 +43,8 @@ export const CANONICAL_FLEET = [
     callsign: 'VANGUARD-01',
     role: 'ceo',
     title: 'Supreme Commander (VANGUARD-01)',
-    model: 'fleet-cli/codex',
-    fallbacks: CODEX_PACE_FALLBACKS,
+    model: 'fleet-cli/claude',
+    fallbacks: CLAUDE_PACE_FALLBACKS,
     icon: 'crown',
     paletteId: 'golden-hour',
     budgetMonthlyCents: 25000,
@@ -61,15 +64,15 @@ export const CANONICAL_FLEET = [
     callsign: 'STRAT-01',
     role: 'engineer',
     title: 'Principal Battle Planner (STRAT-01)',
-    model: 'fleet-cli/codex',
-    fallbacks: CODEX_PACE_FALLBACKS,
+    model: 'fleet-cli/claude',
+    fallbacks: CLAUDE_PACE_FALLBACKS,
     icon: 'layers',
     paletteId: 'ultraviolet-tide',
     budgetMonthlyCents: 15000,
     canAssignTasks: true,
     supervisorRole: 'CEO',
     cwd: '/home/professormanhattan/ai/repos/swarml.ink',
-    capabilities: 'Principal systems architect and review arbiter. Designs repo maps, ADRs, database schemas, and Hono/Zod/OpenAPI contracts. Enforces hexagonal separation and locks contracts before ground implementation.'
+    capabilities: 'Principal systems architect and review arbiter. Authors OpenSpec specifications (proposal.md, design.md, tasks.md, specs/), designs repo maps, ADRs, database schemas, and Hono/Zod/OpenAPI contracts.'
   },
   {
     file: 'product-manager.md',
@@ -82,15 +85,15 @@ export const CANONICAL_FLEET = [
     callsign: 'RECON-01',
     role: 'pm',
     title: 'Tactical Recon Officer (RECON-01)',
-    model: 'fleet-cli/codex',
-    fallbacks: CODEX_PACE_FALLBACKS,
+    model: 'fleet-cli/claude',
+    fallbacks: CLAUDE_PACE_FALLBACKS,
     icon: 'clipboard-list',
     paletteId: 'arctic-blue',
     budgetMonthlyCents: 10000,
     canAssignTasks: true,
     supervisorRole: 'CEO',
     cwd: '/home/professormanhattan/ai/workspace',
-    capabilities: 'Tactical reconnaissance and product intent officer. Converts open-ended briefs into battle-tested PRDs with binary pass/fail acceptance criteria. Slices epics into vertical milestones using RICE scoring.'
+    capabilities: 'Tactical reconnaissance and product intent officer. Converts open-ended briefs into battle-tested OpenSpec PRDs with binary pass/fail acceptance criteria. Slices epics into vertical milestones using RICE scoring.'
   },
   {
     file: 'fullstack-engineer.md',
@@ -229,8 +232,8 @@ export const CANONICAL_FLEET = [
     callsign: 'SENTRY-01',
     role: 'security',
     title: 'Perimeter Defense Sentry (SENTRY-01)',
-    model: 'fleet-cli/codex',
-    fallbacks: CODEX_PACE_FALLBACKS,
+    model: 'fleet-cli/claude',
+    fallbacks: CLAUDE_PACE_FALLBACKS,
     icon: 'shield-alert',
     paletteId: 'violet-ember',
     budgetMonthlyCents: 8000,
@@ -250,15 +253,15 @@ export const CANONICAL_FLEET = [
     callsign: 'QUARTERMASTER-01',
     role: 'general',
     title: 'Resource Quartermaster (QUARTERMASTER-01)',
-    model: 'fleet-cli/codex',
-    fallbacks: CODEX_PACE_FALLBACKS,
+    model: 'fleet-cli/deepseek',
+    fallbacks: DEEPSEEK_PACE_FALLBACKS,
     icon: 'dollar-sign',
     paletteId: 'coral-mint',
     budgetMonthlyCents: 5000,
     canAssignTasks: false,
     supervisorRole: 'DevSecOps',
     cwd: '/home/professormanhattan/ai/workspace',
-    capabilities: 'Resource rationing quartermaster and token economics officer. Governs cloud spend and LLM inference costs. Enforces context pruning, semantic prompt caching, and cost-cognition multi-model arbitrage.'
+    capabilities: 'Resource rationing quartermaster and token economics officer. Governs cloud spend and LLM inference costs via DeepSeek/Ollama arbitrage, context pruning, and semantic prompt caching.'
   },
   {
     file: 'release-manager.md',
@@ -271,8 +274,8 @@ export const CANONICAL_FLEET = [
     callsign: 'AIRBOSS-01',
     role: 'devops',
     title: 'Deployment Gate Arbiter (AIRBOSS-01)',
-    model: 'fleet-cli/codex',
-    fallbacks: CODEX_PACE_FALLBACKS,
+    model: 'fleet-cli/claude',
+    fallbacks: CLAUDE_PACE_FALLBACKS,
     icon: 'send',
     paletteId: 'violet-ember',
     budgetMonthlyCents: 5000,
@@ -292,8 +295,8 @@ export const CANONICAL_FLEET = [
     callsign: 'VANGUARD-UI',
     role: 'design',
     title: 'Visual Experience Vanguard (VANGUARD-UI)',
-    model: 'fleet-cli/codex',
-    fallbacks: CODEX_PACE_FALLBACKS,
+    model: 'fleet-cli/claude',
+    fallbacks: CLAUDE_PACE_FALLBACKS,
     icon: 'palette',
     paletteId: 'pink-lemonade',
     budgetMonthlyCents: 8000,
@@ -313,8 +316,8 @@ export const CANONICAL_FLEET = [
     callsign: 'CARTOGRAPHER-01',
     role: 'pm',
     title: 'Signal Cartographer (CARTOGRAPHER-01)',
-    model: 'fleet-cli/codex',
-    fallbacks: CODEX_PACE_FALLBACKS,
+    model: 'fleet-cli/claude',
+    fallbacks: CLAUDE_PACE_FALLBACKS,
     icon: 'map',
     paletteId: 'electric-grove',
     budgetMonthlyCents: 5000,
@@ -334,15 +337,15 @@ export const CANONICAL_FLEET = [
     callsign: 'SWEEPER-01',
     role: 'engineer',
     title: 'Mine Clearance Unit (SWEEPER-01)',
-    model: 'fleet-cli/codex',
-    fallbacks: CODEX_PACE_FALLBACKS,
+    model: 'fleet-cli/ollama',
+    fallbacks: OLLAMA_PACE_FALLBACKS,
     icon: 'scissors',
     paletteId: 'violet-ember',
     budgetMonthlyCents: 8000,
     canAssignTasks: false,
     supervisorRole: 'Architect',
     cwd: '/home/professormanhattan/ai/workspace',
-    capabilities: 'Mine clearance and tech debt purge specialist. Exterminates dead code with Knip, reduces cyclomatic complexity, removes anti-patterns, and restores modularity while preserving 100% behavioral parity.'
+    capabilities: 'Mine clearance and tech debt purge specialist powered by Hybrid Ollama + DeepSeek. Exterminates dead code with Knip, reduces cyclomatic complexity, removes anti-patterns, and restores modularity while preserving 100% behavioral parity.'
   },
   {
     file: 'performance-engineer.md',
@@ -376,8 +379,8 @@ export const CANONICAL_FLEET = [
     callsign: 'SENTINEL-01',
     role: 'qa',
     title: 'Universal Access Sentry (SENTINEL-01)',
-    model: 'fleet-cli/codex',
-    fallbacks: CODEX_PACE_FALLBACKS,
+    model: 'fleet-cli/deepseek',
+    fallbacks: DEEPSEEK_PACE_FALLBACKS,
     icon: 'eye',
     paletteId: 'arctic-blue',
     budgetMonthlyCents: 5000,
@@ -397,8 +400,8 @@ export const CANONICAL_FLEET = [
     callsign: 'MEDIC-01',
     role: 'pm',
     title: 'Battlefield Medic (MEDIC-01)',
-    model: 'fleet-cli/codex',
-    fallbacks: CODEX_PACE_FALLBACKS,
+    model: 'fleet-cli/deepseek',
+    fallbacks: DEEPSEEK_PACE_FALLBACKS,
     icon: 'life-buoy',
     paletteId: 'cherry-pop',
     budgetMonthlyCents: 5000,
@@ -426,7 +429,7 @@ export const CANONICAL_FLEET = [
     canAssignTasks: false,
     supervisorRole: 'DevSecOps',
     cwd: '/home/professormanhattan/ai/workspace',
-    capabilities: 'Signal corps communications officer and PACE model switcher. Dynamically routes prompts across Codex, Claude, DeepSeek, and Gemini. Balances provider quotas, monitors token velocity, and executes instant failover.'
+    capabilities: 'Signal corps communications officer and PACE model switcher. Dynamically routes prompts across Claude, Codex, OpenCode, DeepSeek, Ollama, and Gemini via Claw Router and LiteLLM Gateway.'
   },
   {
     file: 'summarizer.md',
@@ -461,15 +464,15 @@ export const CANONICAL_FLEET = [
     callsign: 'CHRONICLER-01',
     role: 'general',
     title: 'Doctrine Archivist (CHRONICLER-01)',
-    model: 'fleet-cli/codex',
-    fallbacks: CODEX_PACE_FALLBACKS,
+    model: 'fleet-cli/ollama',
+    fallbacks: OLLAMA_PACE_FALLBACKS,
     icon: 'book-open',
     paletteId: 'electric-grove',
     budgetMonthlyCents: 8000,
     canAssignTasks: false,
     supervisorRole: 'CEO',
     cwd: '/home/professormanhattan/ai/workspace',
-    capabilities: 'Combat field manuals and doctrine archivist. Authors executable documentation-as-code, comprehensive OpenAPI 3.1 specifications, interactive API portals, and living READMEs with zero documentation drift.'
+    capabilities: 'Combat field manuals and doctrine archivist powered by Hybrid Ollama + DeepSeek. Authors executable documentation-as-code, comprehensive OpenAPI 3.1 specifications, interactive API portals, and living READMEs with zero documentation drift.'
   },
   {
     file: 'growth-strategist.md',
@@ -482,8 +485,8 @@ export const CANONICAL_FLEET = [
     callsign: 'PSYOP-01',
     role: 'general',
     title: 'Psychological Operations (PSYOP-01)',
-    model: 'fleet-cli/codex',
-    fallbacks: CODEX_PACE_FALLBACKS,
+    model: 'fleet-cli/claude',
+    fallbacks: CLAUDE_PACE_FALLBACKS,
     icon: 'trending-up',
     paletteId: 'electric-grove',
     budgetMonthlyCents: 8000,
@@ -503,8 +506,8 @@ export const CANONICAL_FLEET = [
     callsign: 'BROADCAST-01',
     role: 'general',
     title: 'Visual Broadcast Unit (BROADCAST-01)',
-    model: 'fleet-cli/codex',
-    fallbacks: CODEX_PACE_FALLBACKS,
+    model: 'fleet-cli/gemini',
+    fallbacks: GEMINI_PACE_FALLBACKS,
     icon: 'film',
     paletteId: 'violet-ember',
     budgetMonthlyCents: 10000,
@@ -524,8 +527,8 @@ export const CANONICAL_FLEET = [
     callsign: 'DRONE-01',
     role: 'engineer',
     title: 'Autonomous Drone Operator (DRONE-01)',
-    model: 'fleet-cli/codex',
-    fallbacks: CODEX_PACE_FALLBACKS,
+    model: 'fleet-cli/gemini',
+    fallbacks: GEMINI_PACE_FALLBACKS,
     icon: 'bot',
     paletteId: 'electric-grove',
     budgetMonthlyCents: 10000,
@@ -546,15 +549,15 @@ export const CANONICAL_FLEET = [
     callsign: 'RECON-WEB',
     role: 'qa',
     title: 'Browser Recon & Visual QA (RECON-WEB)',
-    model: 'fleet-cli/codex',
-    fallbacks: CODEX_PACE_FALLBACKS,
+    model: 'fleet-cli/ollama',
+    fallbacks: OLLAMA_PACE_FALLBACKS,
     icon: 'globe',
     paletteId: 'bubblegum-sky',
     budgetMonthlyCents: 5000,
     canAssignTasks: false,
     supervisorRole: 'QA-Verification',
     cwd: '/home/professormanhattan/ai/workspace',
-    capabilities: 'Browser reconnaissance and visual QA specialist. Drives real browsers via Stagehand, Playwright CDP, and cua-driver to execute live golden-path user flows, audit console/network logs, and validate 6-breakpoint layouts.'
+    capabilities: 'Browser reconnaissance and visual QA specialist powered by Hybrid Ollama + DeepSeek. Drives real browsers via Stagehand, Playwright CDP, and cua-driver to execute live golden-path user flows, audit console/network logs, and validate 6-breakpoint layouts.'
   },
   {
     file: 'hr.md',
@@ -633,8 +636,8 @@ export const CANONICAL_FLEET = [
     callsign: 'SEO-01',
     role: 'qa',
     title: 'Search & GEO Recon Auditor (SEO-01)',
-    model: 'fleet-cli/codex',
-    fallbacks: CODEX_PACE_FALLBACKS,
+    model: 'fleet-cli/deepseek',
+    fallbacks: DEEPSEEK_PACE_FALLBACKS,
     icon: 'search',
     paletteId: 'electric-grove',
     budgetMonthlyCents: 8000,
@@ -735,6 +738,7 @@ function buildSoulMarkdown(item) {
     '## Core Truths',
     '',
     '- **Execute with Auftragstaktik (Mission-Type Tactics):** Understand Commander Intent, take decisive action within your sector, and deliver verified outcomes without narration filler.',
+    '- **Tri-Harness DeepSeek & Ollama Offload (`claude` + `codex` + `opencode` via Claw Router `cr` & LiteLLM Gateway `https://llm.megabyte.space`):** Preserve premium Frontier subscription quotas (`fleet-cli/claude`, `fleet-cli/codex`, `fleet-cli/gemini`) strictly for authoring OpenSpec specifications (`proposal.md`, `design.md`, `tasks.md`, `specs/`), deep architecture, security review, and critical incident response. Offload all throughput-safe, routine, mechanical, and scheduled tasks onto **DeepSeek** (`deepseek-v4-pro`, `deepseek-flash`, `deepseek-chat`, `deepseek-reasoner`) and **Local GPU Ollama** (`hybrid-coder`, `ollama-coder`, `workstation-ai`, `qwen2.5-coder:14b`) across all three harnesses: Claude Code (`cr @litellm` / `cr @ollama` / `cr @deepseek`), Codex (`codex exec -p deepseek` / `codex exec -p ollama`), and OpenCode (`~/.agentskills/bin/opencode-deepseek.sh run -m litellm/deepseek-v4-pro` / `-m litellm/hybrid-coder`).',
     '- **Autonomous Paperclip Issue Lifecycle & Metadata Ownership:** On every Paperclip issue (`MEG-*` at `https://swarml.ink/MEG/issues/*`), ensure all metadata (`assignee_agent_id`, `assignee_user_id`, `responsible_user_id`, `project_id`, `project_workspace_id`, `goal_id`, `billing_code`, and `issue_labels`) is populated, and respond directly on-thread to every user message or comment.',
     '- **Sub-Tasks (`parent_id`) & Graph Relations (`Parent`, `Blocking`, `Blocked by`):** Decompose multi-step epics or cross-domain initiatives into child sub-tasks (`parentId` / `parent_id`) whenever appropriate, and wire prerequisite dependencies via `blockedByIssueIds` (`issue_relations` `type = blocks`) so downstream issues auto-wake (`issue_blockers_resolved`) when blockers finish and parent issues auto-wake (`issue_children_completed`) when all sub-tasks complete.',
     '- **Reviewers, Approvers, Monitor & Watchdog Fields:** Ensure every issue leverages **Reviewers** (`execution_policy.stages` `type = review`: `QA-Verification`, `AppSec`, `A11y-Auditor` + `review_policy = not_creator`), **Approvers** (`execution_policy.stages` `type = approval`: `Architect`, `Release-Manager`, `CEO`), **Monitor** (`execution_policy.monitor` + `monitor_next_check_at`, `monitor_notes`, `monitor_scheduled_by = assignee` while `in_progress`/`in_review`), and **Watchdog** (`issue_watchdogs`: active `SRE` or `Swarm-Dispatcher`).',
@@ -758,6 +762,7 @@ const CANONICAL_USER_MD = [
   '<!-- observed: 2026-11-13 | status: active -->',
   '',
   '- Prefer TypeScript over Python (Node 24 native strip-types / Bun + Bash for system glue).',
+  '- Fully leverage **Claude (`cr @litellm` / `cr @ollama` / `cr @deepseek`) + Codex (`codex exec -p deepseek` / `-p ollama`) + OpenCode (`opencode-deepseek.sh -m litellm/deepseek-v4-pro` / `-m litellm/hybrid-coder`)** for everything that can run off of **DeepSeek** or **Ollama** via Claw Router (`cr`) and the LiteLLM Gateway (`https://llm.megabyte.space`) instead of burning premium subscription quota. Reserve Frontier subscription models (`claude` / `codex` / `gemini`) strictly for authoring OpenSpec specifications (`proposal.md`, `design.md`, `tasks.md`, `specs/`), deep architecture, security review, and critical incident response.',
   '- Automatically handle all Paperclip (`swarml.ink`) issues end-to-end: auto-assign a specialist agent and owner user, populate all metadata (`project_id`, `project_workspace_id`, `goal_id`, `billing_code`, `labels`), respond on-thread to every comment, create AND merge Pull Requests directly into `main` (`shared_workspace`), and automatically deploy to production.',
   '- Use Paperclip **Sub-tasks (`parent_id`)** whenever appropriate; populate and leverage **Reviewers** (`QA-Verification`, `AppSec`, `A11y-Auditor`), **Approvers** (`Architect`, `Release-Manager`, `CEO`), **Monitor** (`monitor_next_check_at`), and **Watchdog** (`issue_watchdogs`); and wire **Parent** (`parent_id`), **Blocking** (`blocks`), and **Blocked by** (`blockedByIssueIds` / `issue_relations`) whenever appropriate.',
   '- Use Paperclip **Decisions** (`/MEG/decisions`, `issue_thread_interactions` `kind = ask_user_questions`) strictly to ask the user genuine questions to clarify instructions or provide recommendations and scope expansions (with `(Recommended)` options) — never leave non-question noise in Decisions.',
@@ -766,17 +771,43 @@ const CANONICAL_USER_MD = [
   ''
 ].join('\n');
 
+const CANONICAL_TOOLS_MD = [
+  '# TOOLS.md - Tri-Harness CLI & Gateway Routing Reference',
+  '',
+  '## Tri-Harness DeepSeek & Ollama Offload via Claw Router (`cr`) & LiteLLM Gateway (`https://llm.megabyte.space`)',
+  '',
+  'All three CLI harnesses (`claude`, `codex`, `opencode`) are wired to run off of **DeepSeek** (`deepseek-v4-pro`, `deepseek-flash`, `deepseek-chat`, `deepseek-reasoner`) and **Local GPU Ollama** (`hybrid-coder`, `ollama-coder`, `workstation-ai`, `qwen2.5-coder:14b`) through Claw Router (`cr`) and the LiteLLM Gateway (`https://llm.megabyte.space`):',
+  '',
+  '1. **Claude Code (`claude` via Claw Router `cr`)**:',
+  '   - DeepSeek V4 Pro via LiteLLM Gateway: `cr @litellm --provider claude -p --output-format stream-json --verbose --dangerously-skip-permissions "<prompt>"`',
+  '   - Local Ollama (`hybrid-coder` with automatic DeepSeek fallback) via LiteLLM Gateway: `cr @ollama --provider claude -p --output-format stream-json --verbose --dangerously-skip-permissions "<prompt>"`',
+  '   - Direct DeepSeek Anthropic API: `cr @deepseek --provider claude -p --output-format stream-json --verbose --dangerously-skip-permissions "<prompt>"`',
+  '   - Frontier Claude Subscription (OpenSpec / Architecture only): `cr --provider claude -p --output-format stream-json --verbose --dangerously-skip-permissions "<prompt>"`',
+  '',
+  '2. **OpenAI Codex (`codex`)**:',
+  '   - DeepSeek via LiteLLM Gateway (`~/.codex/deepseek.config.toml`): `LITELLM_API_KEY="$(get-secret LITELLM_API_KEY)" codex exec --json --skip-git-repo-check --dangerously-bypass-approvals-and-sandbox -p deepseek "<prompt>"`',
+  '   - Local Ollama (`hybrid-coder`) via LiteLLM Gateway (`~/.codex/ollama.config.toml`): `LITELLM_API_KEY="$(get-secret LITELLM_API_KEY)" codex exec --json --skip-git-repo-check --dangerously-bypass-approvals-and-sandbox -p ollama "<prompt>"`',
+  '   - Frontier Codex Pro Subscription: `codex exec --json --skip-git-repo-check --dangerously-bypass-approvals-and-sandbox "<prompt>"`',
+  '',
+  '3. **OpenCode (`opencode` via `opencode-deepseek.sh`)**:',
+  '   - DeepSeek V4 Pro (4-key rotated via LiteLLM): `~/.agentskills/bin/opencode-deepseek.sh run --format json -m litellm/deepseek-v4-pro "<prompt>"`',
+  '   - DeepSeek V4.1 Flash (fast triage/SITREPs): `~/.agentskills/bin/opencode-deepseek.sh run --format json -m litellm/deepseek-flash "<prompt>"`',
+  '   - Local Ollama Hybrid Coder (`qwen2.5-coder:14b` + DeepSeek fallback): `~/.agentskills/bin/opencode-deepseek.sh run --format json -m litellm/hybrid-coder "<prompt>"`',
+  ''
+].join('\n');
+
 const AUTONOMOUS_MAIN_MERGE_CONTRACT_MD = [
   '',
-  '## Paperclip (`swarml.ink`) Autonomous Issue, Sub-Tasks, Governance Fields, Decisions & Trunk-Based `main` Deployment Contract',
+  '## Paperclip (`swarml.ink`) Autonomous Issue, Sub-Tasks, Governance Fields, Decisions, Tri-Harness DeepSeek/Ollama Routing & Trunk-Based `main` Deployment Contract',
   '',
-  '1. **Automatic Triage & Metadata Completion**: Every issue on `https://swarml.ink` must have `assignee_agent_id`, `assignee_user_id`, `responsible_user_id`, `project_id`, `project_workspace_id`, `goal_id`, `billing_code`, and `issue_labels` populated.',
-  '2. **Sub-Tasks (`parent_id`) & Graph Relations (`Parent`, `Blocking`, `Blocked by`)**: Use **Sub-tasks (`parentId` / `parent_id`)** whenever an epic or multi-stage initiative splits into distinct specialist deliverables or parallel workstreams, and wire prerequisite edges via `blockedByIssueIds` (`issue_relations` `type = blocks`) so downstream work auto-wakes when blockers reach `done`.',
-  '3. **Reviewers, Approvers, Monitor & Watchdog Fields**: Populate and honor **Reviewers** (`execution_policy.stages` `type = review`: `QA-Verification`, `AppSec`, `A11y-Auditor` + `review_policy = not_creator`), **Approvers** (`execution_policy.stages` `type = approval`: `Architect`, `Release-Manager`, `CEO`), **Monitor** (`execution_policy.monitor` + `monitor_next_check_at`, `monitor_notes`, `monitor_scheduled_by = assignee` while `in_progress`/`in_review`), and **Watchdog** (`issue_watchdogs`: active `SRE` or `Swarm-Dispatcher`).',
-  '4. **Decisions (`/MEG/decisions`) — User Clarification Questions, Recommendations & Scope Expansions Only**: Use Paperclip **Decisions** (`issue_thread_interactions` with `kind = ask_user_questions`) strictly to ask the user genuine questions to clarify instructions or present architectural/product recommendations and scope expansions (with a `(Recommended)` option and free-text support). Never use Decisions for non-question status blurbs, bureaucratic handoffs, or routine PR merge rituals.',
-  '5. **Mandatory On-Thread Comment Response**: Whenever a user posts a message or comment on an issue (`issue_comment.created`), immediately inspect the thread, execute any requested or remaining work, and post a comprehensive status reply on the issue.',
-  '6. **Trunk-Based `main` Execution (`shared_workspace`) — Create AND Merge PR into `main`**: Work in the canonical repository workspace on `main`, create a short-lived branch or PR (`gh pr create --base main`), and **merge it into `main`** (`gh pr merge --merge --delete-branch`) once tests pass.',
-  '7. **Automatic Production Deployment**: Immediately deploy merged `main` changes to production (`wrangler deploy` + CDN cache purge, `npm publish` to `registry.megabyte.space`, Coolify deploy, or systemd service reload on `ubuntu.megabyte.space`) and post live production verification proof on the Paperclip issue before marking `done`.',
+  '1. **Tri-Harness DeepSeek & Ollama Offload (`claude` + `codex` + `opencode` via Claw Router `cr` & LiteLLM Gateway `https://llm.megabyte.space`)**: Offload all throughput-safe, routine, mechanical, and scheduled tasks onto DeepSeek (`deepseek-v4-pro`, `deepseek-flash`, `deepseek-chat`, `deepseek-reasoner`) and Local GPU Ollama (`hybrid-coder`, `ollama-coder`, `workstation-ai`, `qwen2.5-coder:14b`) across all three CLI harnesses: Claude Code (`cr @litellm` / `cr @ollama` / `cr @deepseek`), OpenAI Codex (`codex exec -p deepseek` / `codex exec -p ollama`), and OpenCode (`~/.agentskills/bin/opencode-deepseek.sh run -m litellm/deepseek-v4-pro` / `-m litellm/hybrid-coder`). Reserve Frontier subscription models (`fleet-cli/claude`, `fleet-cli/codex`, `fleet-cli/gemini`) strictly for authoring OpenSpec specifications (`proposal.md`, `design.md`, `tasks.md`, `specs/`), deep architecture, security review, and critical incident response.',
+  '2. **Automatic Triage & Metadata Completion**: Every issue on `https://swarml.ink` must have `assignee_agent_id`, `assignee_user_id`, `responsible_user_id`, `project_id`, `project_workspace_id`, `goal_id`, `billing_code`, and `issue_labels` populated.',
+  '3. **Sub-Tasks (`parent_id`) & Graph Relations (`Parent`, `Blocking`, `Blocked by`)**: Use **Sub-tasks (`parentId` / `parent_id`)** whenever an epic or multi-stage initiative splits into distinct specialist deliverables or parallel workstreams, and wire prerequisite edges via `blockedByIssueIds` (`issue_relations` `type = blocks`) so downstream work auto-wakes when blockers reach `done`.',
+  '4. **Reviewers, Approvers, Monitor & Watchdog Fields**: Populate and honor **Reviewers** (`execution_policy.stages` `type = review`: `QA-Verification`, `AppSec`, `A11y-Auditor` + `review_policy = not_creator`), **Approvers** (`execution_policy.stages` `type = approval`: `Architect`, `Release-Manager`, `CEO`), **Monitor** (`execution_policy.monitor` + `monitor_next_check_at`, `monitor_notes`, `monitor_scheduled_by = assignee` while `in_progress`/`in_review`), and **Watchdog** (`issue_watchdogs`: active `SRE` or `Swarm-Dispatcher`).',
+  '5. **Decisions (`/MEG/decisions`) — User Clarification Questions, Recommendations & Scope Expansions Only**: Use Paperclip **Decisions** (`issue_thread_interactions` with `kind = ask_user_questions`) strictly to ask the user genuine questions to clarify instructions or present architectural/product recommendations and scope expansions (with a `(Recommended)` option and free-text support). Never use Decisions for non-question status blurbs, bureaucratic handoffs, or routine PR merge rituals.',
+  '6. **Mandatory On-Thread Comment Response**: Whenever a user posts a message or comment on an issue (`issue_comment.created`), immediately inspect the thread, execute any requested or remaining work, and post a comprehensive status reply on the issue.',
+  '7. **Trunk-Based `main` Execution (`shared_workspace`) — Create AND Merge PR into `main`**: Work in the canonical repository workspace on `main`, create a short-lived branch or PR (`gh pr create --base main`), and **merge it into `main`** (`gh pr merge --merge --delete-branch`) once tests pass.',
+  '8. **Automatic Production Deployment**: Immediately deploy merged `main` changes to production (`wrangler deploy` + CDN cache purge, `npm publish` to `registry.megabyte.space`, Coolify deploy, or systemd service reload on `ubuntu.megabyte.space`) and post live production verification proof on the Paperclip issue before marking `done`.',
   ''
 ].join('\n');
 
@@ -881,6 +912,69 @@ function reconcileCompanySkills() {
     }
   }
 
+  const triHarnessSkillMdPath = resolve(HOME, '.agentskills', 'skills', 'tri-harness-deepseek-ollama-routing', 'SKILL.md');
+  if (existsSync(triHarnessSkillMdPath)) {
+    const triMd = readFileSync(triHarnessSkillMdPath, 'utf8').replace(/'/g, "''");
+    const triSkillId = 'a8d45f20-1e99-4d40-9b01-77e883900001';
+    const triVerId = 'a8d45f20-1e99-4d40-9b01-77e883900002';
+    const triKey = 'github/1216267923/triharness000001/tri-harness-deepseek-ollama-routing';
+    runSql(`
+      INSERT INTO company_skills (
+        id, company_id, key, slug, name, description, tagline, color, markdown,
+        source_type, source_locator, source_ref, trust_level, compatibility,
+        file_inventory, metadata, categories, install_count, created_at, updated_at
+      ) VALUES (
+        '${triSkillId}',
+        '${COMPANY_ID}',
+        '${triKey}',
+        'tri-harness-deepseek-ollama-routing',
+        'tri-harness-deepseek-ollama-routing',
+        'Route non-frontier, throughput-safe, and routine heartbeat work across Claude Code, OpenAI Codex, and OpenCode onto DeepSeek and Local GPU Ollama via Claw Router and LiteLLM Gateway.',
+        'Tri-Harness DeepSeek & Ollama Offload (claude + codex + opencode via Claw Router & LiteLLM)',
+        '#00E5FF',
+        '${triMd}',
+        'github',
+        'https://github.com/heymegabyte/agent-skills',
+        'main',
+        'markdown_only',
+        'compatible',
+        '[{"path":"SKILL.md","kind":"skill"}]'::jsonb,
+        '{"sourceKind":"github","hostname":"github.com","owner":"heymegabyte","repo":"agent-skills","skillSourceState":"synced"}'::jsonb,
+        ARRAY['emdash', 'routing', 'deepseek', 'ollama', 'litellm']::text[],
+        29,
+        now(),
+        now()
+      )
+      ON CONFLICT (company_id, key) DO UPDATE
+      SET markdown = EXCLUDED.markdown,
+          description = EXCLUDED.description,
+          tagline = EXCLUDED.tagline,
+          color = EXCLUDED.color,
+          categories = EXCLUDED.categories,
+          updated_at = now();
+
+      INSERT INTO company_skill_versions (
+        id, company_id, company_skill_id, revision_number, label, file_inventory, created_at
+      ) VALUES (
+        '${triVerId}',
+        '${COMPANY_ID}',
+        (SELECT id FROM company_skills WHERE company_id = '${COMPANY_ID}' AND slug = 'tri-harness-deepseek-ollama-routing' LIMIT 1),
+        1,
+        'Tri-Harness DeepSeek & Ollama Routing v1',
+        '[{"path":"SKILL.md","kind":"skill"}]'::jsonb,
+        now()
+      )
+      ON CONFLICT (company_skill_id, revision_number) DO NOTHING;
+
+      UPDATE company_skills
+      SET current_version_id = COALESCE(
+        current_version_id,
+        (SELECT id FROM company_skill_versions WHERE company_skill_id = company_skills.id ORDER BY revision_number DESC LIMIT 1)
+      )
+      WHERE company_id = '${COMPANY_ID}' AND slug = 'tri-harness-deepseek-ollama-routing';
+    `);
+  }
+
   runSql(`
     UPDATE company_skill_sources
     SET last_error = NULL
@@ -963,7 +1057,8 @@ for (const agent of CANONICAL_FLEET) {
     'emdash-skills',
     'paperclip',
     'paperclip-board',
-    'paperclip-converting-plans-to-tasks'
+    'paperclip-converting-plans-to-tasks',
+    'tri-harness-deepseek-ollama-routing'
   ]);
   if (['browser', 'qa', 'a11y', 'ui-designer'].includes(agent.openclawId)) {
     desiredSkillSlugs.add('agent-browser');
@@ -1009,7 +1104,7 @@ for (const agent of CANONICAL_FLEET) {
     heartbeat: {
       enabled: true,
       cooldownSec: 10,
-      intervalSec: 300,
+      intervalSec: 1800,
       wakeOnDemand: true,
       maxConcurrentRuns: 10,
       skipTimerWhenNoActionableWork: true
@@ -1118,6 +1213,9 @@ for (const agent of CANONICAL_FLEET) {
 
   mkdirSync(instructionsRoot, { recursive: true });
   writeFileSync(resolve(instructionsRoot, 'AGENTS.md'), content, 'utf8');
+  writeFileSync(resolve(instructionsRoot, 'SOUL.md'), buildSoulMarkdown(agent), 'utf8');
+  writeFileSync(resolve(instructionsRoot, 'USER.md'), CANONICAL_USER_MD, 'utf8');
+  writeFileSync(resolve(instructionsRoot, 'TOOLS.md'), CANONICAL_TOOLS_MD, 'utf8');
 
   const revisionId = randomUUID();
   runSql(`
@@ -1146,6 +1244,7 @@ for (const agent of CANONICAL_FLEET) {
   writeFileSync(resolve(agentWorkspaceDir, 'IDENTITY.md'), buildIdentityMarkdown(agent), 'utf8');
   writeFileSync(resolve(agentWorkspaceDir, 'SOUL.md'), buildSoulMarkdown(agent), 'utf8');
   writeFileSync(resolve(agentWorkspaceDir, 'USER.md'), CANONICAL_USER_MD, 'utf8');
+  writeFileSync(resolve(agentWorkspaceDir, 'TOOLS.md'), CANONICAL_TOOLS_MD, 'utf8');
 
   const symlinkTarget = resolve(agentWorkspaceDir, 'paperclip-claimed-api-key.json');
   try {
@@ -1178,6 +1277,7 @@ for (const agent of CANONICAL_FLEET) {
 const mainAgent = OPENCLAW_PROJECT_AGENTS[0];
 writeFileSync(resolve(mainAgent.workspace, 'IDENTITY.md'), buildIdentityMarkdown(mainAgent), 'utf8');
 writeFileSync(resolve(mainAgent.workspace, 'USER.md'), CANONICAL_USER_MD, 'utf8');
+writeFileSync(resolve(mainAgent.workspace, 'TOOLS.md'), CANONICAL_TOOLS_MD, 'utf8');
 
 console.log('\nSynchronizing ~/.openclaw/openclaw.json entries (all 35 agents & gateway origins)...');
 if (existsSync(OPENCLAW_JSON_PATH)) {
@@ -1200,6 +1300,22 @@ if (existsSync(OPENCLAW_JSON_PATH)) {
   openclawConfig.skills.load.extraDirs = Array.from(extraDirs);
 
   if (!openclawConfig.agents) openclawConfig.agents = {};
+  if (!openclawConfig.agents.defaults) openclawConfig.agents.defaults = {};
+  openclawConfig.agents.defaults.maxConcurrent = 16;
+  if (!openclawConfig.agents.defaults.models) openclawConfig.agents.defaults.models = {};
+  const registeredFleetModels = [
+    'codex', 'claude', 'deepseek', 'deepseek-v4-pro', 'deepseek-flash',
+    'ollama', 'hybrid-coder', 'opencode',
+    'claude-deepseek', 'claude-ollama', 'codex-deepseek', 'codex-ollama',
+    'gemini', 'gemini-4-carbon-high', 'gemini-4-argon-high', 'gemini-3.8-flash-high'
+  ];
+  for (const m of registeredFleetModels) {
+    openclawConfig.agents.defaults.models[`fleet-cli/${m}`] = {};
+  }
+  if (openclawConfig.models?.providers?.['fleet-cli']) {
+    openclawConfig.models.providers['fleet-cli'].models = registeredFleetModels.map(m => ({ id: m, name: m }));
+  }
+
   openclawConfig.agents.ownership = 'explicit';
   const nextEntries = {};
 
