@@ -10,7 +10,7 @@
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdirSync, mkdtempSync, rmSync, unlinkSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, renameSync, rmSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import {
@@ -22,6 +22,7 @@ import {
 } from './index-builder.js';
 import { startIndexWatcher, watchablePath } from './watcher.js';
 import { GatewayView } from './index.js';
+import { searchEntries } from './search.js';
 
 function fixture(files: Record<string, string>): string {
   const root = mkdtempSync(join(tmpdir(), 'skills-gateway-watch-'));
@@ -250,6 +251,110 @@ test('a closed watcher stops publishing and close is idempotent', async () => {
     assert.equal(published, 0);
     assert.equal(watcher.pending().length, 0);
   } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('a renamed rule drops its old name and answers under the new one', async () => {
+  const root = fixture({ 'rules/alpha.md': '---\nname: alpha\ndescription: vestigiallexeme\n---\n# Alpha\n' });
+  let index: IndexFile = buildIndex(root);
+  const view = new GatewayView(() => index);
+  const watcher = startIndexWatcher({
+    root,
+    index: () => index,
+    onIndex: (next) => {
+      index = next;
+    },
+    debounceMs: 20,
+  });
+  try {
+    assert.ok(view.names.get('alpha'), 'precondition: alpha is indexed');
+
+    // A rename is `mv` plus an edit: the platform reports the new path, never a
+    // delete for the old one, so the drop has to come from the index sweep.
+    renameSync(join(root, 'rules/alpha.md'), join(root, 'rules/omega.md'));
+    writeFileSync(join(root, 'rules/omega.md'), '---\nname: omega\ndescription: renamed wording\n---\n# Omega\n');
+
+    await waitFor(() => view.names.has('omega') && !view.names.has('alpha'));
+    watcher.flush();
+
+    assert.equal(index.entries.some((e) => e.path === 'rules/alpha.md'), false, 'old path must leave the index');
+    assert.equal(index.entries.some((e) => e.name === 'alpha'), false, 'old name and aliases must disappear');
+    assert.ok(view.names.get('omega')?.length, 'new name must resolve');
+    assert.equal(searchEntries(index.entries, 'omega').length, 1);
+    assert.equal(searchEntries(index.entries, 'vestigiallexeme').length, 0, 'old body must not answer search');
+  } finally {
+    watcher.close();
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('a renamed skill directory rebuilds and retires the old tree', async () => {
+  const root = fixture({ '06-old-name/SKILL.md': '---\nname: old-name\ndescription: skill before rename\n---\n# Old\n' });
+  let index: IndexFile = buildIndex(root);
+  const view = new GatewayView(() => index);
+  const modes: string[] = [];
+  const watcher = startIndexWatcher({
+    root,
+    index: () => index,
+    onIndex: (next, info) => {
+      index = next;
+      modes.push(info.mode);
+    },
+    debounceMs: 20,
+  });
+  try {
+    assert.ok(view.names.get('old-name'), 'precondition: old-name is indexed');
+
+    renameSync(join(root, '06-old-name'), join(root, '07-new-name'));
+    writeFileSync(join(root, '07-new-name/SKILL.md'), '---\nname: new-name\ndescription: skill after rename\n---\n# New\n');
+
+    await waitFor(() => view.names.has('new-name') && !view.names.has('old-name'));
+    watcher.flush();
+
+    assert.equal(index.entries.some((e) => e.path.startsWith('06-old-name/')), false);
+    assert.ok(index.entries.some((e) => e.path === '07-new-name/SKILL.md' && e.name === 'new-name'));
+    assert.deepEqual(modes, ['full'], 'a directory rename is structural and must rebuild');
+  } finally {
+    watcher.close();
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('an editor save plus a write burst collapses into one rebuild', async () => {
+  const root = fixture({ 'rules/alpha.md': '---\nname: alpha\ndescription: original\n---\n# Alpha\n' });
+  let index: IndexFile = buildIndex(root);
+  let published = 0;
+  const watcher = startIndexWatcher({
+    root,
+    index: () => index,
+    onIndex: (next) => {
+      index = next;
+      published++;
+    },
+    debounceMs: 100,
+  });
+  try {
+    const target = join(root, 'rules/alpha.md');
+    const temp = join(root, 'rules/alpha.md.tmp');
+    // Atomic save: write a sibling temp file, then rename it over the target.
+    writeFileSync(temp, '---\nname: alpha\ndescription: saved atomically\n---\n# Alpha\n');
+    renameSync(temp, target);
+    // Then a rapid burst of ordinary writes, all inside one debounce window.
+    for (const n of [1, 2, 3]) {
+      writeFileSync(target, `---\nname: alpha\ndescription: burst ${n}\n---\n# Alpha\n`);
+    }
+
+    await waitFor(() => index.entries.find((e) => e.name === 'alpha')?.description === 'burst 3');
+    watcher.flush();
+    // Give a stray late event its own window; a collapse must not publish again.
+    await new Promise((resolve) => setTimeout(resolve, 250));
+    watcher.flush();
+
+    assert.equal(index.entries.find((e) => e.name === 'alpha')!.description, 'burst 3');
+    assert.equal(published, 1, `expected one settled rebuild, saw ${published}`);
+  } finally {
+    watcher.close();
     rmSync(root, { recursive: true, force: true });
   }
 });
