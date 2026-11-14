@@ -6,6 +6,7 @@ export default {
   register(api) {
     api.registerCliBackend({
       id: "fleet-cli",
+      ownsNativeCompaction: true,
       config: {
         command: "python3",
         args: [fileURLToPath(new URL("./cli.py", import.meta.url))],
@@ -13,6 +14,7 @@ export default {
         output: "json",
         modelArg: "--provider-model",
         sessionMode: "none",
+        sessionIdFields: ["session_id", "thread_id", "sessionId"],
         systemPromptFileArg: "--system-prompt-file",
         systemPromptWhen: "always",
         systemPromptMode: "append",

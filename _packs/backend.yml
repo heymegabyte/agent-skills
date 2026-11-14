@@ -26,3 +26,4 @@ members:
   - rules/webhook-receiver-architecture
   - rules/package-preference-registry
   - rules/supervisor-skills-index
+  - rules/scale-honesty-100x

@@ -14,6 +14,8 @@ members:
   - rules/monitor-orchestration
   - rules/split-work-into-ledger
   - rules/prompt-as-training-signal
+  - rules/openspec-operating-contract
+  - rules/total-convergence-and-openspec-handoff
   - rules/solo-builder-doctrine
   - rules/main-only-branch
   - rules/no-staging-doctrine
@@ -50,6 +52,7 @@ members:
   - rules/fail-fast-build-fail-soft-prod
   - rules/one-way-two-way-doors
   - rules/production-observability-default-on
+  - rules/automated-alert-hygiene-and-hysteresis
   - rules/router-drift-auto-reconciliation
   - rules/state-is-the-enemy
   - rules/structured-logging
@@ -76,4 +79,8 @@ members:
   - rules/projectsites-recommended-stack
   - rules/emdash-fleet
   - rules/supremacy-wars
+  - rules/subtraction-first
+  - rules/one-canonical-seam
+  - rules/dual-reader-artifacts
+  - rules/determinism-ratchet
   - rules/CHANGELOG

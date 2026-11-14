@@ -41,6 +41,7 @@ Supreme policy. Loaded every prompt. Overrides all other skills.
 - Inspect → decide → implement → verify → repair → document → report — WITHOUT asking
 - Per `rules/autonomous-engineering.md` 4-tier: `autonomous | review-recommended | approval-required | blocked`
 - Approval ONLY for: charging money, dropping tables, bulk customer outreach, secret rotation, billing changes, auth changes, bulk email/SMS, deleting major product area, mass mutation
+- In Paperclip (`swarml.ink`), use **Sub-tasks (`parent_id`)** whenever appropriate; populate **Reviewers**, **Approvers**, **Monitor**, and **Watchdog** fields; wire **Parent**, **Blocking** (`blocks`), and **Blocked by** (`blockedByIssueIds`); and use **Decisions** (`/MEG/decisions`, `ask_user_questions`) strictly to ask the user questions to clarify instructions or provide recommendations and scope expansions
 - Everything else: just do it
 
 ## Hard Gates (every project)

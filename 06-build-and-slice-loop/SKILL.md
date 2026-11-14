@@ -1,9 +1,9 @@
 ---
 name: "build-and-slice-loop"
-description: "Implements features in vertical slices, always starting with homepage. Enforces anti-placeholder rules — no lorem ipsum, no TODO stubs, no gray boxes. Real content, real images, real interactions. TypeScript strict mode, Zod validation, and structured file organization."
+description: "Use when implementing features or streaming OnePrompt site builds. Complete vertical slices with real content, strict TypeScript and Zod. Parallel section/data work, deterministic assembly, granular patches and immediate valid previews."
 metadata:
   version: "2.1.0"
-  updated: "2026-10-04"
+  updated: "2026-10-27"
   effort: "high"
   model: "sonnet"
 license: "Rutgers"
@@ -57,7 +57,7 @@ Implement features in real vertical slices (UI→API→DB→tests→deploy) star
 
 ## Vertical-slice principle
 
-Every iteration ships ONE feature end-to-end through every layer (UI → API → DB → tests → deploy). Never half a feature across two passes.
+Complete each feature end-to-end through its required layers (UI → API → DB → tests → deploy). Independent slices may proceed in parallel; the slice contract defines completeness, not a global serial execution requirement.
 
 ## Homepage FIRST (every project, no exceptions)
 
@@ -65,6 +65,8 @@ Every iteration ships ONE feature end-to-end through every layer (UI → API →
 - Real H1, real meta tags, real OG card, real JSON-LD
 - Deploy before adding any other route — establishes design system, auth layer, analytics tier, deploy pipeline
 - Per `rules/website-build-doctrine.md` Phase 0 / Phase 1
+
+For the **OnePrompt streaming builder**, render the cached draftl.ink/Storybook shell immediately while independent research/section/data work proceeds. Content-only slot patches do not rebuild the project. Follow `rules/event-sourced-build-progress.md`: typed agent results, one assembler, deterministic scripts/ast-grep, versioned patches and an isolated preview iframe. Preserve normal validation/promotion gates; a draft preview is not a production deployment.
 
 ## Anti-placeholder (NON-NEGOTIABLE)
 
@@ -171,6 +173,10 @@ e2e/
 - Data: real API / Workers AI / D1 query > mocked
 - Testimonials: real attribution > none (never fabricated)
 - Stats: cited per `rules/citations.md`
+
+## CLI and compute work
+
+Use native Go and the appropriate current Charm components per `rules/terminal-styling.md`. Keep product orchestration in TypeScript/Cloudflare; use Rust/WASM only when `05-architecture-and-stack/SKILL.md`'s measurement and runtime-fit gates pass. Do not serialize independent work for an animation or start a native runner for a content-only preview patch.
 
 ## When to stop adding sections
 

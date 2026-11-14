@@ -72,6 +72,10 @@ jobs:
           MAJOR_LTS=$(echo "$LATEST_LTS" | cut -d. -f1)
           PINNED=$(grep -oE 'Node [0-9]+ LTS|node:[0-9]+' rules/code-style.md | head -1 | grep -oE '[0-9]+' || echo "$MAJOR_LTS")
           DRIFT=$((MAJOR_LTS - PINNED))
+          # Snippet-level drift: any documented `node-version:` that disagrees
+          # with the pin (the class of drift the rule-file-only grep missed).
+          SNIPPET_STALE=$(grep -rhoE 'node-version: *"\??[0-9]+' --include='*.md' . 2>/dev/null \
+            | grep -v node_modules | grep -oE '[0-9]+$' | sort -u | grep -vx "$PINNED" | tr '\n' ' ')
           {
             echo "name=Node LTS"
             echo "current=v$LATEST_LTS"
@@ -79,6 +83,7 @@ jobs:
             echo "drift=$DRIFT"
             echo "threshold=2"
             echo "fix-loc=rules/code-style.md + rules/angular.md"
+            echo "snippet-stale=${SNIPPET_STALE:-none}"
           } >> "$GITHUB_OUTPUT"
 
       - name: Summarize + open issues per probe
@@ -98,7 +103,10 @@ jobs:
               core.info(`${p.name}: current=${p.current} pinned=${p.pinned} drift=${p.drift} (threshold=${p.threshold})`);
               const drift = parseInt(p.drift || '0', 10);
               const thr = parseInt(p.threshold || '99', 10);
-              if (drift < thr) continue;
+              const snippetStale = (p['snippet-stale'] || 'none') !== 'none'
+                ? `\nDocs still contain stale \`node-version\` snippets: ${p['snippet-stale']}\n`
+                : '';
+              if (drift < thr && !snippetStale) continue;
               const label = `${(p.name || 'dep').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-drift`;
               const {data: existing} = await github.rest.issues.listForRepo({
                 owner: context.repo.owner, repo: context.repo.repo,
@@ -115,6 +123,7 @@ jobs:
                   `**${p.name}** current: \`${p.current}\``,
                   `**${p.name}** pinned: \`${p.pinned}\``,
                   `Drift: **${p.drift} versions** (threshold: ${p.threshold})`,
+                  snippetStale,
                   ``,
                   `Fix locations: ${p['fix-loc']}`,
                   ``,

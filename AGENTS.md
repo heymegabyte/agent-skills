@@ -2,9 +2,17 @@
 
 This repository contains 23 skill categories, 28 agents, and 149 reference docs for autonomous product building.
 
+## Scoped shared-platform mandate (2026-10-31)
+
+For OnePrompt.site/ProjectSites.dev, theme.tools/ui.theme.tools, desktop.management, Inbox.vision, pdf.kitchen and their shared infrastructure, load [rules/platform-shared-capabilities.md](rules/platform-shared-capabilities.md) before older stack defaults, then its relevant modules. The [platform pack](_packs/platform.yml) and [execution prompt](prompts/platform-convergence.md) require Bolt.diy, Cloudflare Agents, AG-UI, json-render, MCP Apps, Better Auth, AI Search instead of QMD, PlateJS, React Flow, Remotion, Infisical Agent Vault, shared connectors and automation. These scoped decisions supersede conflicting defaults below; preserve unrelated policies and migrate safely. Apply them during `/run-the-loop`, retain explicit Figma approval, and distinguish committed policy from verified product functionality and acknowledged consumer sync.
+
 ## Stack
 
 CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1-rc | Clerk | Stripe + Link (default) · Square on request | Inngest | Amazon SES | Bun | Playwright v1.63+ | PostHog | Sentry
+
+## Canonical UI and approval (HARD RULE)
+
+For every UI, component, Storybook, theme, Figma, OnePrompt, or ProjectSites task, first read [rules/theme-tools-canonical-components.md](rules/theme-tools-canonical-components.md). Every visual component is sourced, edited, updated, managed, tested, and published through the source repository backing **ui.theme.tools**; **theme.tools** owns starting themes/tokens. Consume pinned packages, not local forks or mutable hosted scripts. This supersedes older draftl.ink and per-app copied-component defaults. Guide Brian through explicit Figma approval per screen or for the complete design before programming new/materially changed UI. A general request to implement everything is not design approval. OnePrompt requires Cloudflare, PostHog, Sentry, GA4, GTM, Langfuse Cloud, and Promptfoo, with verified delivery rather than merely installed SDKs. Use manifest-first progressive previews and smallest-sufficient, authorized stack patches; keep generated previews isolated.
 
 ## Internal Agent Providers (HARD RULE)
 
@@ -13,6 +21,8 @@ Internal dev/research/agent-orchestration runs on **subscription CLIs** (`claude
 ## Usage
 
 For recurring development and local host operations, read [control-plane/FLEET.md](control-plane/FLEET.md) and the matching profile under `machines/`. GitHub owns the per-project schedule; the persistent Ubuntu Proxmox VM is the primary host and prefers Codex for setup. OpenClaw orchestrates official subscription CLIs through Claw Router and direct OpenCode/DeepSeek. Main is normal; feature branches are exceptional. Do not schedule this skills repository.
+
+In Paperclip (`https://swarml.ink`), use **Sub-tasks (`parent_id`)** whenever appropriate; leverage the **Reviewers**, **Approvers**, **Monitor**, and **Watchdog** fields on issues; wire **Parent** (`parent_id`), **Blocking** (`blocks`), and **Blocked by** (`blockedByIssueIds` / `issue_relations`) whenever appropriate; and use **Decisions** (`/MEG/decisions`, `ask_user_questions`) strictly to ask the user questions to clarify instructions or provide recommendations and scope expansions.
 
 Load skills on demand via the skill router (`_router.md`). Each category has a `SKILL.md` with submodules listed in frontmatter.
 

@@ -1,22 +1,12 @@
 ---
 name: "predictive-completeness"
-priority: 2
-pack: "website-build"
-triggers:
-  - "build"
-  - "create"
-  - "app"
-  - "site"
-  - "website"
-  - "feature"
-  - "implement"
-  - "generate"
-  - "first time"
-  - "gorgeous"
-  - "complete"
-  - "scope"
 last_reviewed: 2026-09-27
 superseded_by: null
+priority: 3
+pack: "misc"
+triggers: []
+paths:
+  - "*"
 ---
 
 # Predictive Completeness (Deliver the 80% from the 20% — first pass, not iterative)
@@ -68,6 +58,13 @@ both: enumerate the arc, build it pass-1.
   WHY the first pass didn't predict it, then add the missed item to this checklist (or the owning
   skill) THE SAME TURN, per `[[prompt-as-training-signal]]`. This checklist is the accumulated
   predictive model — it only grows, and each addition is a class of miss retired forever.
+- **"Top X" list selection = pass-1 prediction miss**: When a "Top X" list (e.g., Top 30 ideas or
+  missing items) is printed and the user states which ones they want implemented, note the selected
+  items (and any exclusions), ask yourself **why each wanted feature wasn't automatically
+  implemented before the user asked for the Top X ideas**, and modify `~/.agentskills` (plus
+  upstream bootstraps/templates like `install.doctor` or `template.projectsites.dev`) in the same
+  turn so the idea is **automatically integrated on pass 1 next time—before a "Top X" list is ever
+  requested** (`[[prompt-as-training-signal]]` §8, `[[auto-integrate-recs]]`).
 
 ## Anti-patterns (all guarantee a re-prompt)
 

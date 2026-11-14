@@ -36,6 +36,10 @@ class FleetIntegration(unittest.TestCase):
 import json,os,pathlib,subprocess,time
 p=pathlib.Path(os.environ['AI_RUN_WORKSPACE']);log=pathlib.Path(os.environ['AI_RUN_LOG_DIR'])
 start=time.time()
+if os.environ.get('FLEET_TEST_NOOP'):
+ pathlib.Path(os.environ['AI_FLEET_REPORT']).write_text(json.dumps({'majorActions':[],'tests':[],'warnings':[],'nextActions':[]}))
+ (log/'test-agent-interval.json').write_text(json.dumps([start,time.time()]))
+ raise SystemExit(0)
 (p/'agent-change.txt').write_text(os.environ['AI_RUN_ID'])
 if os.environ.get('FLEET_TEST_FAIL'):
  raise SystemExit(17)
@@ -64,7 +68,7 @@ pathlib.Path(os.environ['AI_FLEET_REPORT']).write_text(json.dumps({'majorActions
     def tearDown(self):
         fleet.AI = self.old_ai
         os.environ['PATH'] = self.old_path
-        for key in ('FLEET_TEST_FAIL','FLEET_TEST_BAD_CHECK','FLEET_TEST_ORPHAN'):
+        for key in ('FLEET_TEST_FAIL','FLEET_TEST_BAD_CHECK','FLEET_TEST_ORPHAN','FLEET_TEST_NOOP'):
             os.environ.pop(key, None)
         self.temp.cleanup()
 
@@ -138,6 +142,16 @@ pathlib.Path(os.environ['AI_FLEET_REPORT']).write_text(json.dumps({'majorActions
             self.assertEqual(fleet.run(self.projects[0],timeout=15),1)
         record=json.loads(next((fleet.AI/'logs').glob('*/run.json')).read_text())
         self.assertEqual(record['failureCategory'],'commit-lineage')
+
+    def test_noop_run_without_changes_or_major_actions_fails_red(self):
+        os.environ['FLEET_TEST_NOOP'] = '1'
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(fleet.run(self.projects[0], timeout=15), 1)
+        record = json.loads(next((fleet.AI / 'logs').glob('*/run.json')).read_text())
+        self.assertEqual(record['status'], 'failure')
+        self.assertEqual(record.get('failureCategory'), 'no-op')
+        self.assertFalse(record.get('files'))
+        self.assertFalse(record.get('majorActions'))
 
     def test_secret_redaction_and_repository_allowlist(self):
         self.assertEqual(fleet.scrub('ghp_' + 'A' * 40), '[REDACTED]')

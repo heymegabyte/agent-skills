@@ -1,0 +1,38 @@
+name: Control Plane Tests
+
+# Regression gate for the fleet-orchestration tooling under control-plane/:
+#   - fleet.py   no-op guard (a run with no files + no majorActions → status=failure)
+#   - cost.py    per-project token/cost rollup
+#   - preview.py Worker version-preview URL capture (stdout parse)
+#
+# Scoped DELIBERATELY to the three modules proven green on ubuntu. The broader
+# suite (test_cli_adapter, test_run_contract, ...) has pre-existing env-dependent
+# failures — 4 are a macOS /private/var tempdir-symlink artifact, 1 is a workflow
+# shell-YAML assertion — tracked for a dedicated triage pass (ESTATE-UPGRADES #14
+# follow-up). Gating the full suite would be red-on-arrival and starve this check
+# (permanently-red-gate anti-pattern), so it runs the owned, verified-green subset
+# and expands as each other module is triaged to green on Linux CI.
+
+on:
+  push:
+    paths:
+      - 'control-plane/**'
+      - '.github/workflows/control-plane-tests.yml'
+  pull_request:
+    paths:
+      - 'control-plane/**'
+      - '.github/workflows/control-plane-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: control-plane unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Run authored control-plane test modules
+        working-directory: control-plane
+        run: python3 -m unittest tests.test_fleet tests.test_cost tests.test_preview -v

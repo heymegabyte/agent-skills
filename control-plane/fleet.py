@@ -256,6 +256,16 @@ Write a non-secret JSON report to {result_file} with majorActions (string array)
                 command(['git', 'worktree', 'remove', str(work)], repo)
             report['status'] = 'success'
             event('Verified worktree retained for submodule inspection' if (work / '.gitmodules').exists() else 'Worktree cleaned; repository state remains canonical')
+            # No-op guard: a run that completed WITHOUT committing any file change AND without recording
+            # any major action is a hollow no-op (ran, shipped nothing, claimed nothing). Fail RED so it
+            # cannot report green. Precise + non-starving: a real fire commits files; a deliberate
+            # convergence fire still records what it verified in majorActions; only a true no-op has neither.
+            if not report.get('files') and not report.get('majorActions'):
+                report['status'] = 'failure'
+                report['failureCategory'] = 'no-op'
+                report['failures'].append('No-op: the run committed no file change and recorded no major action. A productive loop fire must ship a real improvement, or record the verification it performed in majorActions. Failing RED so a hollow run does not report success.')
+                report['nextActions'].append('Advance real repository-owned work next fire, or record what was verified in majorActions; never emit an empty run as success.')
+                event('No-op guard: flipped hollow success to failure (no committed files, no major actions)')
     except Exception as error:
         report['status'] = 'failure'
         report['failureCategory'] = category(error)

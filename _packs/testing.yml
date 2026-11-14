@@ -8,3 +8,4 @@ members:
   - rules/quality-metrics
   - rules/forge-with-test-scaffold-pattern
   - rules/verify-against-source-of-truth
+  - rules/adversarial-twin-before-ship

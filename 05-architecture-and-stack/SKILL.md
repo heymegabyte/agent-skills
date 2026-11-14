@@ -1,9 +1,9 @@
 ---
 name: "architecture-and-stack"
-description: "Cloudflare-first platform selection. Decision trees for Workers, D1, R2, KV, DO, Queues, Vectorize, Containers, Sandboxes, Flagship, Agent Memory, Workflows v2. Default stack, override conditions, auth, data patterns, reliability."
+description: "Cloudflare-first platform selection. Workers, D1, R2, KV, DO, Queues, Vectorize, Containers, Workflows, native Go CLIs and measured Rust/WASM acceleration. Default stack, override conditions, auth, data patterns and reliability."
 metadata:
   version: "2.1.0"
-  updated: "2026-05-03"
+  updated: "2026-10-27"
   effort: "high"
   model: "opus"
 license: "Rutgers"
@@ -40,6 +40,23 @@ paths:
 # 05 — Architecture and Stack
 
 Default stack: `_kernel/standards.md#stack`. Override conditions below.
+
+## Language and execution placement
+
+- Keep TypeScript/Hono as the Cloudflare product control plane. Build new CLIs in **native Go** using `rules/terminal-styling.md`; extend existing `aid`, not a new portfolio CLI.
+- Use **Rust → WASM** for bounded computation only when representative measurements show a significant end-to-end improvement. Profile with existing tools/scripts; include initialization, JS/WASM copies, memory, bundle size and correctness. Do not promise a speedup from the language alone.
+- Keep I/O and Cloudflare bindings in the host adapter. Verify the exact crate/features/imports against the deployed Workers runtime; browser WASM, WASI components and native Rust are not interchangeable deployment targets. Batch calls across the JS/WASM boundary.
+- Use native Rust/Go jobs for workloads needing processes, large memory, native libraries or prolonged computation. The control plane remains on Cloudflare; apply the idle-compute policy in `rules/cloudflare-hostable-supervisor.md`.
+- Prefer native browser/CSS/Web Animations/View Transitions for presentation. Do not move animations to WASM without measured benefit, or make build execution wait for animation playback.
+
+### Approved integration scope (2026-10-27)
+
+- Pursue mail-authentication diagnostics, routing/matching, structured diffing, bounded XLSX processing, restic/rclone-backed backup/transfer jobs, conditional Markdown acceleration and fast incremental previews where the product needs them. Reuse mature implementations; keep secrets/network access in the appropriate host.
+- Exclude from this rollout: a new unified `mb` CLI, standalone doctor/benchmark/deployment-planning CLIs, custom MIME or shared-redaction WASM, a shared Go-hosted WASM engine, DuckDB product querying, SVG-card generation, dedicated analytics kernels and a separate telemetry CLI. These are scope decisions, not a ban on existing upstream capabilities.
+- Defer event replay tooling. Reconnecting a live build stream to reconstruct its UI remains part of build correctness and does not authorize operational job replay.
+- Resolve product identity and repository ownership from current source; do not assign a product role from a domain name alone. **issuel.ink's purpose remains undecided**; no earlier suggested product role is approved by implication.
+
+Sources: [Workers WebAssembly](https://developers.cloudflare.com/workers/runtime-apis/webassembly/), [workers-rs](https://github.com/cloudflare/workers-rs), [Charm CLI guidance](../rules/terminal-styling.md).
 
 ## Cloudflare-first decision tree
 

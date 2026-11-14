@@ -38,6 +38,12 @@ paths:
 
 Open-source only.
 
+## Language preference (when choosing an implementation language)
+
+- **Prefer TypeScript over Python** (`[[code-style]]` § Language selection order): reach for **TypeScript** (Node 24 native strip-types / Bun) for all app, service, tool, CLI, verifier, and test logic, and **Bash** for system scripts, glue, systemd, cron, and CI (`ShellCheck` + `shfmt` + `emdash_*`).
+- **Python is NOT a default** — use Python only for genuine ML/data-science workloads or a Python-only library; never write `*.py` for convenience on host exporters, verifiers, parsers, or automation.
+- Fallback order when TS/Bash genuinely do not fit: **TS ≈ Bash > Rust > Go > Python (ML/data only) > C# > others**; queries stay **SQL**.
+
 ## Command vocabulary
 
 - `re-write` → full replacement

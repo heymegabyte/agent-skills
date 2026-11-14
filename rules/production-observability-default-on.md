@@ -25,6 +25,8 @@ paths:
 
 Every Worker ships telemetry from line 1. Retrofitting PostHog, OTLP spans, and Sentry to a live Worker costs 4–8× more than the initial scaffold.
 
+**Always reach for `@sentry/cloudflare` whenever appropriate (Brian directive 2026-10-29).** ANY Cloudflare-runtime surface that can run server-side JS — Workers, Pages Functions, Workers-fronted apps, Durable Objects — gets `Sentry.withSentry` **server-side** (the browser SDK is retired, ~155 KB gz — never ship it). "Whenever appropriate" = any surface where an unhandled exception would otherwise be invisible; the default answer is **YES**. One Sentry project per app in the `megabyte-labs` org (slug = repo name, dots→dashes). New projects ship the `web-crawlers`+`legacy-browsers` inbound filters OFF (they blackhole server-to-server events). This is the estate baseline (reinforces the 2026-10-24 "Sentry on all my projects" directive below).
+
 ## The four pillars (all four, every Worker)
 
 ### 1. Structured JSON logging
@@ -70,15 +72,21 @@ See `reference/production-observability-default-on.md` for the `withSentry` wrap
 - [ ] At least one `posthog.capture` in the main request path
 - [ ] `[observability] enabled = true` in `wrangler.toml`
 
-## Observability tier routing
+## Observability baseline — all four rails on EVERY project (owner directive, 2026-10-24)
 
-Per `CLAUDE.md` § Observability:
+Per `CLAUDE.md` + `[[paperclip-openclaw-fleet-doctrine]]`, **every** project — solo, nonprofit, portfolio, or enterprise — fully integrates all four rails. This **supersedes** the earlier "2 vendors max for solo / don't add all tiers" guidance: with wiring now cheap + automated (AI-abundance), complete queryable signal beats vendor-minimalism, and marketing/growth needs the attribution.
 
-- **Solo SaaS / nonprofit / portfolio** — PostHog + Workers Tracing OTLP (2 vendors max)
-- **Enterprise / regulated / multi-team** — add `@sentry/cloudflare` v11 (stream trace lifecycle default since 11.0) + GA4/GTM + Axiom
-- **LLM-heavy (>10k AI calls/month)** — add AI Gateway to either tier
+- **PostHog** — product analytics, funnels, session replay, feature-flag evaluations (pillar 2 above).
+- **Google Analytics (GA4)** — audience / acquisition / marketing attribution; pairs with the `/run-the-loop` Growth roster.
+- **Sentry** (`@sentry/cloudflare` v11, server-side) — errors + stream trace lifecycle; estate baseline on every Worker (pillar 4).
+- **Langfuse** — LLM/agent observability: every AI call traced (prompt · model · tokens · cost · latency · eval score). Mandatory on any AI-native surface (per AI-permanence, that's most of them) and on the fleet's own agent runs.
+  - **Graceful Fallback + Bounded Timeout Contract (Mandatory)**: Langfuse MUST always be used AND MUST degrade gracefully if Langfuse is down, slow, or unreachable:
+    1. **Strict Timeout (`2500ms`)**: Configure every Langfuse SDK instance, fetch call, and OTLP exporter with an explicit timeout (`timeout: 2500` / `AbortSignal.timeout(2500)` / `LANGFUSE_TIMEOUT_MS=2500`).
+    2. **Fail-Open Wrapper + Circuit Breaker (`~/.agentskills/bin/lib/langfuse-safe.ts`)**: Wrap all `trace`, `generation`, `score`, `getPrompt`, and `flushAsync` operations in a non-throwing `try/catch` (`ctx.waitUntil` on Cloudflare Workers) with a 3-strike circuit breaker (60s open cooldown) and local JSONL spool (`${XDG_CACHE_HOME:-$HOME/.cache}/megabyte/ai/langfuse-spool/traces.jsonl` on Node/CLI hosts). A down Langfuse endpoint must NEVER fail or delay an LLM call, Worker request, or agent turn.
+- **+ Cloudflare AI Gateway** in front of all LLM calls for caching + cost control + `$ai_*` telemetry — LLM-heavy or not.
+- Workers Tracing OTLP + structured JSON logging (pillars 1 + 3) remain the Worker-level substrate.
 
-Do NOT add all four tiers to a solo project. Vendor proliferation is its own observability problem.
+The **Business Analytics & Ops** role in `/run-the-loop` reads all four rails and converts signal (drop-off, error spikes, LLM-eval regressions, spend) into next-wave backlog. Scaffold checklist gains: `@posthog/*` + GA4 tag + `@sentry/cloudflare` + `langfuse` client + AI-Gateway base URL for any model call.
 
 ## Anti-patterns
 

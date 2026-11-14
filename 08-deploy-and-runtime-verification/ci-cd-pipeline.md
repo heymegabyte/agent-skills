@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '22' }
+        with: { node-version: '24' }
       - run: npm ci
       - run: npx tsc --noEmit
       - run: npx eslint . --max-warnings=0
@@ -48,7 +48,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '22' }
+        with: { node-version: '24' }
       - run: npm ci
       - name: Deploy to Cloudflare
         run: npx wrangler deploy
@@ -89,7 +89,7 @@ Set via: `gh secret set CLOUDFLARE_API_TOKEN --body "..."` or through GitHub UI.
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '22' }
+        with: { node-version: '24' }
       - run: npm ci
       - name: Deploy Preview
         run: npx wrangler deploy --env preview
@@ -144,7 +144,7 @@ Set via: `gh secret set CLOUDFLARE_API_TOKEN --body "..."` or through GitHub UI.
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '22' }
+        with: { node-version: '24' }
       - run: npm ci
       - name: Install Playwright
         run: npx playwright install --with-deps chromium
@@ -173,7 +173,7 @@ Set via: `gh secret set CLOUDFLARE_API_TOKEN --body "..."` or through GitHub UI.
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: '22' }
+        with: { node-version: '24' }
       - run: npm ci
       - run: npx tsc --noEmit
       - run: npx vitest run --coverage

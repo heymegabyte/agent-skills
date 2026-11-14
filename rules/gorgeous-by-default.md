@@ -16,6 +16,20 @@ paths:
 
 Nothing ships plain. Every element a user can see gets a deliberate, beautiful, animated treatment — never the framework default, never raw text where a designed component belongs. Two non-negotiable halves: (1) **enumerable values render as pills, never comma-joined text**, and (2) **every interactive + decorative element is gorgeous, animated, and transitions at `0.333s`**.
 
+## Super-boost: opportunistic web-platform capabilities (reach for these WHENEVER possible)
+
+On every surface, scan `rules/web-platform-capabilities.md` (the 30-capability catalog with copy-paste
+examples + a trigger table) and deploy every capability whose trigger matches — each as progressive
+enhancement with its fallback. Highest-leverage for gorgeous UI specifically:
+
+- **Overlays/menus/tooltips** → #2 Popover + #15 CSS Anchor Positioning + #16 Invoker Commands (delete Floating-UI/Popper; no z-index wars).
+- **Motion** → #1 same-doc View Transitions, #17 scroll-driven animations (`animation-timeline`, compositor-thread, INP-safe), #8 `@property` animated gradients/angles — all gated by #13 `prefers-reduced-motion`.
+- **Layout + type** → #12 `subgrid` (aligned bento), #6 container/style queries, #10 `text-wrap: balance`/`pretty`, #11 `dvh`, #7 `:has()`.
+- **Color** → #9 `color-mix()` + relative color for hover/tint/alpha variants from one OKLCH token.
+- **Affordances** → #22 async Clipboard copy, #21 Web Share, #18 `field-sizing` auto-grow inputs.
+
+Opportunistic ≠ reckless: feature-detect/`@supports`, keep Chromium-only items non-load-bearing, never regress INP/LCP/CLS or a11y.
+
 ## Half 1 — Enumerable values are ALWAYS pills (never `join(', ')`)
 
 Any set of discrete, enumerable values rendered to the screen MUST be a row of styled pills / chips / badges — one per value. Comma-joining them into a sentence (`roles.join(', ')`, `tags.join(' · ')`, `"admin, donor, volunteer"`) is a build-fail-class mistake: it reads as raw data, not designed UI.
@@ -144,4 +158,13 @@ Every widget that *appears* (AI-chat widget cards, command palettes, popover men
 - **Directed execution, bounded by evidence.** Each pass is `observe → critique → identify the single highest-value weakness → targeted fix → re-observe → compare` — never an arbitrary diff. 10 is a ceiling of ambition, not a quota. **Stop at a measured plateau** (independent critique stops surfacing high-value problems, or a change trades one strong dimension for another with no net gain) and **revert any pass that makes the surface worse**. Never add motion/effect merely to satisfy a pass. See `reference/aesthetic-quality-lexicon.md` §4.
 - **Track state in a per-project `.claude/modifier-matrix.json`** — per-surface `{beautifyPasses, aiVisionScore, density, lastVisit, next[]}`. The orchestrator/loop reads it to decide WHEN to fire passes (lowest score × highest traffic first) and appends concrete `next` ideas while context is warm. Density axis 0-10 (marketing-airy → Coinbase-Pro cockpit) sets the intricacy target per surface class.
 - Reference impl: megabyte.space `.claude/modifier-matrix.json` + `.claude/commands/run-the-loop.md` §Beautify-10x.
-<!-- grow-ok: 2026-09-29 Brian directive — beautify-10x loop + modifier matrix doctrine -->
+
+## Per-Widget Micro-Loop Convergence & 16-State Visual Matrix (Extracted from `CONSTITUTION.md`)
+
+Every UI widget and component MUST converge on beauty, gorgeousness, and the principles of good UI via the **Micro Loop** (`CREATE → RENDER → EXPERIENCE → CRITIQUE → MODIFY → COMPARE`):
+
+1. **16-State Visual State Matrix**: Every interactive widget must define and verify all applicable states:
+   - `default` · `hover` · `focus-visible` · `active` · `selected` · `disabled` · `loading` · `expanded` · `collapsed` · `dragging` · `drop-target` · `success` · `warning` · `error` · `empty` · `populated` (low, typical, and extreme content density).
+2. **Design Champion vs. Challenger**: For hero sections, primary widgets, and core workflows, compare the current implementation (**Champion**) against a challenger refinement (**Challenger**) and retain only changes that measurably improve 3-second clarity, visual hierarchy, and tactile delight.
+3. **Parallel Sync to `theme.tools` (`ui.theme.tools`)**: Whenever a prompt or UI pass reveals a reusable widget improvement, OKLCH token refinement, or visual state contract, propagate it to `heymegabyte/theme.tools` via OpenSpec and link the issue in Paperclip (`[[total-convergence-and-openspec-handoff]]`).
+<!-- grow-ok: 2026-11-04 Brian directive — beautify-10x loop + per-widget micro-loop convergence -->
