@@ -404,11 +404,11 @@ export const AdminApiKeysDeleteInputSchema = z.object({
 
 export const ListAuditLogsInputSchema = z.object({
   effective_at: z.record(z.unknown()).describe("Return only events whose `effective_at` (Unix seconds) is in this range.").optional(),
-  project_ids[]: z.array(z.string()).describe("Return only events for these projects.").optional(),
-  event_types[]: z.array(z.record(z.unknown())).describe("Return only events with a `type` in one of these values. For example, `project.created`. For all options, see the documentation for the [audit log object](/docs/api-reference/audit-logs/object).").optional(),
-  actor_ids[]: z.array(z.string()).describe("Return only events performed by these actors. Can be a user ID, a service account ID, or an api key tracking ID.").optional(),
-  actor_emails[]: z.array(z.string()).describe("Return only events performed by users with these emails.").optional(),
-  resource_ids[]: z.array(z.string()).describe("Return only events performed on these targets. For example, a project ID updated.").optional(),
+  "project_ids[]": z.array(z.string()).describe("Return only events for these projects.").optional(),
+  "event_types[]": z.array(z.record(z.unknown())).describe("Return only events with a `type` in one of these values. For example, `project.created`. For all options, see the documentation for the [audit log object](/docs/api-reference/audit-logs/object).").optional(),
+  "actor_ids[]": z.array(z.string()).describe("Return only events performed by these actors. Can be a user ID, a service account ID, or an api key tracking ID.").optional(),
+  "actor_emails[]": z.array(z.string()).describe("Return only events performed by users with these emails.").optional(),
+  "resource_ids[]": z.array(z.string()).describe("Return only events performed on these targets. For example, a project ID updated.").optional(),
   limit: z.number().int().describe("A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.\n").optional(),
   after: z.string().describe("A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.\n").optional(),
   before: z.string().describe("A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.\n").optional(),
@@ -1008,7 +1008,7 @@ export const ListRunsInputSchema = z.object({
 
 export const CreateRunInputSchema = z.object({
   thread_id: z.string().describe("The ID of the thread to run."),
-  include[]: z.array(z.enum(["step_details.tool_calls[*].file_search.results[*].content"])).describe("A list of additional fields to include in the response. Currently the only supported value is `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result content.\n\nSee the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.\n").optional(),
+  "include[]": z.array(z.enum(["step_details.tool_calls[*].file_search.results[*].content"])).describe("A list of additional fields to include in the response. Currently the only supported value is `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result content.\n\nSee the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.\n").optional(),
   body: z.record(z.unknown()).optional(),
 }).strict();
 
@@ -1035,14 +1035,14 @@ export const ListRunStepsInputSchema = z.object({
   order: z.enum(["asc","desc"]).describe("Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.\n").optional(),
   after: z.string().describe("A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.\n").optional(),
   before: z.string().describe("A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.\n").optional(),
-  include[]: z.array(z.enum(["step_details.tool_calls[*].file_search.results[*].content"])).describe("A list of additional fields to include in the response. Currently the only supported value is `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result content.\n\nSee the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.\n").optional(),
+  "include[]": z.array(z.enum(["step_details.tool_calls[*].file_search.results[*].content"])).describe("A list of additional fields to include in the response. Currently the only supported value is `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result content.\n\nSee the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.\n").optional(),
 }).strict();
 
 export const GetRunStepInputSchema = z.object({
   thread_id: z.string().describe("The ID of the thread to which the run and run step belongs."),
   run_id: z.string().describe("The ID of the run to which the run step belongs."),
   step_id: z.string().describe("The ID of the run step to retrieve."),
-  include[]: z.array(z.enum(["step_details.tool_calls[*].file_search.results[*].content"])).describe("A list of additional fields to include in the response. Currently the only supported value is `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result content.\n\nSee the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.\n").optional(),
+  "include[]": z.array(z.enum(["step_details.tool_calls[*].file_search.results[*].content"])).describe("A list of additional fields to include in the response. Currently the only supported value is `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result content.\n\nSee the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information.\n").optional(),
 }).strict();
 
 export const SubmitToolOuputsToRunInputSchema = z.object({
@@ -1858,6 +1858,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         return { isError: true, content: [{ type: 'text' as const, text: JSON.stringify({ code: 'FETCH_ERROR', message: String(err) }) }] };
       }
     }
+
+  return {
+    isError: true,
+    content: [{ type: "text" as const, text: `Unknown tool: ${request.params.name}` }],
+  };
+});
 
 // ── Boot ─────────────────────────────────────────────────────────────────────
 

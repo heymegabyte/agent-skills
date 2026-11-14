@@ -448,7 +448,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   tools: [
   {
     "name": "ListAlphaSender",
-    "description": "List alpha sender"
+    "description": "List alpha sender",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -476,7 +476,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "CreateAlphaSender",
-    "description": "Create alpha sender"
+    "description": "Create alpha sender",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -497,7 +497,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "FetchAlphaSender",
-    "description": "Retrieve alpha sender"
+    "description": "Retrieve alpha sender",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -518,7 +518,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "DeleteAlphaSender",
-    "description": "Delete alpha sender"
+    "description": "Delete alpha sender",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -539,7 +539,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "CreateBrandRegistrationOtp",
-    "description": "Create brand registration otp"
+    "description": "Create brand registration otp",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -555,7 +555,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "FetchBrandRegistrations",
-    "description": "Retrieve brand registrations"
+    "description": "Retrieve brand registrations",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -571,7 +571,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "UpdateBrandRegistrations",
-    "description": "Update brand registrations"
+    "description": "Update brand registrations",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -587,7 +587,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "ListBrandRegistrations",
-    "description": "List brand registrations"
+    "description": "List brand registrations",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -608,7 +608,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "CreateBrandRegistrations",
-    "description": "Create brand registrations"
+    "description": "Create brand registrations",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -641,7 +641,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "ListBrandVetting",
-    "description": "List brand vetting"
+    "description": "List brand vetting",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -661,7 +661,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "CreateBrandVetting",
-    "description": "Create brand vetting"
+    "description": "Create brand vetting",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -686,7 +686,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "FetchBrandVetting",
-    "description": "Retrieve brand vetting"
+    "description": "Retrieve brand vetting",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -707,7 +707,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "ListChannelSender",
-    "description": "List channel sender"
+    "description": "List channel sender",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -735,7 +735,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "CreateChannelSender",
-    "description": "Create channel sender"
+    "description": "Create channel sender",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -756,7 +756,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "FetchChannelSender",
-    "description": "Retrieve channel sender"
+    "description": "Retrieve channel sender",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -777,7 +777,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "DeleteChannelSender",
-    "description": "Delete channel sender"
+    "description": "Delete channel sender",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -811,7 +811,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "ListDestinationAlphaSender",
-    "description": "List destination alpha sender"
+    "description": "List destination alpha sender",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -843,7 +843,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "CreateDestinationAlphaSender",
-    "description": "Create destination alpha sender"
+    "description": "Create destination alpha sender",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -868,7 +868,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "FetchDestinationAlphaSender",
-    "description": "Retrieve destination alpha sender"
+    "description": "Retrieve destination alpha sender",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -889,7 +889,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "DeleteDestinationAlphaSender",
-    "description": "Delete destination alpha sender"
+    "description": "Delete destination alpha sender",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -910,7 +910,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "FetchDomainCertV4",
-    "description": "Retrieve domain cert v4"
+    "description": "Retrieve domain cert v4",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -926,7 +926,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "UpdateDomainCertV4",
-    "description": "Update domain cert v4"
+    "description": "Update domain cert v4",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -947,7 +947,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "DeleteDomainCertV4",
-    "description": "Delete domain cert v4"
+    "description": "Delete domain cert v4",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -963,7 +963,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "FetchDomainConfig",
-    "description": "Retrieve domain config"
+    "description": "Retrieve domain config",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -979,7 +979,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "UpdateDomainConfig",
-    "description": "Update domain config"
+    "description": "Update domain config",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1011,7 +1011,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "FetchDomainConfigMessagingService",
-    "description": "Retrieve domain config messaging service"
+    "description": "Retrieve domain config messaging service",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1027,7 +1027,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "FetchDomainDnsValidation",
-    "description": "Retrieve domain dns validation"
+    "description": "Retrieve domain dns validation",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1043,7 +1043,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "CreateExternalCampaign",
-    "description": "Create external campaign"
+    "description": "Create external campaign",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1068,7 +1068,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "CreateLinkshorteningMessagingService",
-    "description": "Create linkshortening messaging service"
+    "description": "Create linkshortening messaging service",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1089,7 +1089,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "DeleteLinkshorteningMessagingService",
-    "description": "Delete linkshortening messaging service"
+    "description": "Delete linkshortening messaging service",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1110,7 +1110,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "FetchLinkshorteningMessagingServiceDomainAssociation",
-    "description": "Retrieve linkshortening messaging service domain association"
+    "description": "Retrieve linkshortening messaging service domain association",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1126,7 +1126,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "ListPhoneNumber",
-    "description": "List phone number"
+    "description": "List phone number",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1154,7 +1154,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "CreatePhoneNumber",
-    "description": "Create phone number"
+    "description": "Create phone number",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1175,7 +1175,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "FetchPhoneNumber",
-    "description": "Retrieve phone number"
+    "description": "Retrieve phone number",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1196,7 +1196,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "DeletePhoneNumber",
-    "description": "Delete phone number"
+    "description": "Delete phone number",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1217,7 +1217,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "UpdateRequestManagedCert",
-    "description": "Update request managed cert"
+    "description": "Update request managed cert",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1233,7 +1233,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "ListService",
-    "description": "List service"
+    "description": "List service",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1254,7 +1254,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "CreateService",
-    "description": "Create service"
+    "description": "Create service",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1330,7 +1330,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "FetchService",
-    "description": "Retrieve service"
+    "description": "Retrieve service",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1346,7 +1346,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "UpdateService",
-    "description": "Update service"
+    "description": "Update service",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1426,7 +1426,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "DeleteService",
-    "description": "Delete service"
+    "description": "Delete service",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1442,7 +1442,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "ListShortCode",
-    "description": "List short code"
+    "description": "List short code",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1470,7 +1470,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "CreateShortCode",
-    "description": "Create short code"
+    "description": "Create short code",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1491,7 +1491,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "FetchShortCode",
-    "description": "Retrieve short code"
+    "description": "Retrieve short code",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1512,7 +1512,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "DeleteShortCode",
-    "description": "Delete short code"
+    "description": "Delete short code",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1931,7 +1931,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "ListUsAppToPerson",
-    "description": "List us app to person"
+    "description": "List us app to person",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -1959,7 +1959,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "CreateUsAppToPerson",
-    "description": "Create us app to person"
+    "description": "Create us app to person",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -2054,7 +2054,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "FetchUsAppToPerson",
-    "description": "Retrieve us app to person"
+    "description": "Retrieve us app to person",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -2075,7 +2075,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "UpdateUsAppToPerson",
-    "description": "Update us app to person"
+    "description": "Update us app to person",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -2139,7 +2139,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "DeleteUsAppToPerson",
-    "description": "Delete us app to person"
+    "description": "Delete us app to person",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -2160,7 +2160,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "FetchUsAppToPersonUsecase",
-    "description": "Retrieve us app to person usecase"
+    "description": "Retrieve us app to person usecase",
     "inputSchema": {
       "type": "object",
       "properties": {
@@ -2180,7 +2180,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   },
   {
     "name": "FetchUsecase",
-    "description": "Retrieve usecase"
+    "description": "Retrieve usecase",
     "inputSchema": {
       "type": "object",
       "properties": {}

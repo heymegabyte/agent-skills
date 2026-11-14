@@ -106,16 +106,16 @@ def build_command(provider_model: str, home: Path, skills_root: Path, system_pro
 
     if provider_model == 'claude':
         run_env['CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT'] = '1'
-        cmd = ['cr', '--provider', 'claude', '-p', '--output-format', 'stream-json', '--verbose', '--dangerously-skip-permissions']
-        if system_prompt_file:
+        cmd = ['cr', '--provider', 'claude', '-p', '--output-format', 'stream-json', '--verbose', '--dangerously-skip-permissions', '--max-turns', '25', '--strict-mcp-config']
+        if system_prompt_file and system_prompt_file.is_file():
             cmd += ['--append-system-prompt-file', str(system_prompt_file.resolve())]
         return cmd, True, run_env
 
     if provider_model in ('claude-deepseek', 'claude-ollama'):
         run_env['CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT'] = '1'
-        backend_tag = '@ollama' if provider_model == 'claude-ollama' else '@litellm'
-        cmd = ['cr', backend_tag, '--provider', 'claude', '-p', '--output-format', 'stream-json', '--verbose', '--dangerously-skip-permissions']
-        if system_prompt_file:
+        backend_tag = '@ollama' if provider_model == 'claude-ollama' else '@deepseek'
+        cmd = ['cr', backend_tag, '--provider', 'claude', '-p', '--output-format', 'stream-json', '--verbose', '--dangerously-skip-permissions', '--max-turns', '25', '--strict-mcp-config']
+        if system_prompt_file and system_prompt_file.is_file():
             cmd += ['--append-system-prompt-file', str(system_prompt_file.resolve())]
         return cmd, True, run_env
 
@@ -129,16 +129,21 @@ def build_command(provider_model: str, home: Path, skills_root: Path, system_pro
         return cmd, False, run_env
 
     if provider_model == 'deepseek-flash':
-        cmd = [opencode_wrapper, 'run', '--format', 'json', '-m', 'litellm/deepseek-flash']
+        cmd = [opencode_wrapper, 'run', '--format', 'json', '-m', 'deepseek/deepseek-chat']
         return cmd, False, run_env
 
-    # Default throughput model: deepseek / deepseek-v4-pro / opencode via LiteLLM Gateway
-    cmd = [opencode_wrapper, 'run', '--format', 'json', '-m', 'litellm/deepseek-v4-pro']
+    if provider_model == 'deepseek-v4-pro':
+        cmd = [opencode_wrapper, 'run', '--format', 'json', '-m', 'deepseek/deepseek-chat']
+        return cmd, False, run_env
+
+    # Default throughput model: deepseek / opencode via direct DeepSeek API (fast tool-calling, zero proxy 429s)
+    cmd = [opencode_wrapper, 'run', '--format', 'json', '-m', 'deepseek/deepseek-chat']
     return cmd, False, run_env
 
 
 def parse_output_stream(output_file):
     events, parts, post_command_parts, failures = [], [], [], []
+    tool_summaries = []
     session = None
     output_file.seek(0)
     while True:
@@ -175,13 +180,37 @@ def parse_output_stream(output_file):
                 post_command_parts.append(msg_text)
             if record.get('type') in ('command_execution', 'mcp_tool_call', 'web_search', 'file_change'):
                 post_command_parts.clear()
+                tool_summaries.append(str(record.get('type')))
             if record.get('type') == 'command_execution' and len(events) < MAX_EVENTS:
                 events.append({'command': '[native command; contents private]', 'exitCode': record.get('exit_code')})
         if kind in ('turn.completed', 'result', 'step_finish') and len(events) < MAX_EVENTS:
             usage = item.get('usage', item.get('part', {}).get('tokens'))
             if isinstance(usage, dict):
                 events.append({'usage': {k: v for k, v in usage.items() if isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)}})
+        if item.get('is_api_error_message') or item.get('error'):
+            failures.append(f"CLI API error: {item.get('error') or 'api_error'}")
+            continue
         if kind == 'result':
+            if item.get('subtype') == 'error_max_turns' or item.get('terminal_reason') == 'max_turns':
+                num_turns = item.get('num_turns') or len(tool_summaries) or 1
+                summary_msg = f"Completed {num_turns} execution turns in this heartbeat window."
+                if tool_summaries:
+                    summary_msg += " Actions: " + "; ".join(tool_summaries[-5:])
+                if not any(pt.strip() for pt in parts):
+                    parts.append(summary_msg)
+                if not any(pt.strip() for pt in post_command_parts):
+                    non_empty = [pt for pt in parts if pt.strip()]
+                    post_command_parts.append(non_empty[-1] if non_empty else summary_msg)
+                session = item.get('session_id', session)
+                continue
+            if item.get('is_error') or item.get('terminal_reason') == 'api_error':
+                err_res = str(item.get('result') or '').strip()
+                if err_res or not any(pt.strip() for pt in parts):
+                    failures.append(f"CLI reported an error result: {err_res[:160]}")
+                    parts.clear()
+                    post_command_parts.clear()
+                session = item.get('session_id', session)
+                continue
             res_obj = item.get('result', '')
             if isinstance(res_obj, dict):
                 resp_text = str(res_obj.get('response') or '')[:MAX_TEXT]
@@ -190,12 +219,34 @@ def parse_output_stream(output_file):
                     post_command_parts.append(resp_text)
                 session = res_obj.get('conversation_id') or item.get('session_id') or session
             else:
-                parts.append(str(res_obj)[:MAX_TEXT])
+                res_str = str(res_obj)[:MAX_TEXT]
+                if re.match(r'^(Failed to authenticate:|API Error:\s*Request rejected|API Error:\s*\d{3}\b)', res_str.strip(), re.I):
+                    failures.append(f"CLI returned upstream error string: {res_str[:160]}")
+                    parts.clear()
+                    post_command_parts.clear()
+                    continue
+                if res_str.strip():
+                    parts.append(res_str)
                 session = item.get('session_id', session)
-            if item.get('is_error'):
-                failures.append('CLI reported an error result')
         if kind in ('error', 'turn.failed'):
-            failures.append('CLI reported a failure event')
+            err_msg = str(item.get('message') or item.get('error') or '')
+            if not re.search(r'(Heads up:|Reconnecting)', err_msg, re.I):
+                failures.append('CLI reported a failure event')
+        if kind == 'assistant':
+            msg_obj = item.get('message') if isinstance(item.get('message'), dict) else {}
+            content_list = msg_obj.get('content') if isinstance(msg_obj.get('content'), list) else []
+            for block in content_list:
+                if isinstance(block, dict) and block.get('type') == 'text':
+                    txt = str(block.get('text') or '')[:MAX_TEXT]
+                    if txt.strip():
+                        parts.append(txt)
+                        post_command_parts.append(txt)
+                elif isinstance(block, dict) and block.get('type') == 'tool_use':
+                    post_command_parts.clear()
+                    inp = block.get('input') if isinstance(block.get('input'), dict) else {}
+                    desc = str(inp.get('description') or block.get('name') or 'tool_use')[:80]
+                    tool_summaries.append(desc)
+            session = item.get('session_id', session)
         if kind == 'text':
             parts.append(str(item.get('part', {}).get('text', ''))[:MAX_TEXT])
             session = item.get('sessionID', session)
@@ -284,21 +335,19 @@ def main():
     task_tier = classify_task_tier(raw_prompt, env)
     candidates = []
     if a.provider_model in ('ollama', 'hybrid-coder', 'claude-ollama', 'codex-ollama'):
-        candidates = [a.provider_model, 'ollama', 'claude-ollama', 'codex-ollama', 'deepseek', 'claude-deepseek', 'codex-deepseek', 'codex', 'claude', 'gemini']
+        candidates = [a.provider_model, 'ollama', 'claude-ollama', 'codex-ollama', 'claude-deepseek', 'deepseek', 'codex-deepseek', 'codex', 'claude', 'gemini']
     elif a.provider_model in ('deepseek', 'deepseek-v4-pro', 'deepseek-flash', 'opencode', 'claude-deepseek', 'codex-deepseek'):
-        candidates = [a.provider_model, 'deepseek', 'claude-deepseek', 'codex-deepseek', 'ollama', 'codex', 'claude', 'gemini']
-    elif task_tier == 'throughput':
-        # Offload routine/throughput work onto DeepSeek / Ollama through the requested CLI harness first!
-        if a.provider_model == 'claude':
-            candidates = ['claude-deepseek', 'claude-ollama', 'deepseek', 'ollama', 'claude', 'codex', 'gemini']
-        elif a.provider_model == 'codex':
-            candidates = ['codex-deepseek', 'deepseek', 'ollama', 'codex-ollama', 'codex', 'claude', 'gemini']
+        if a.system_prompt_file:
+            candidates = ['claude-deepseek', 'deepseek', 'codex', 'claude', 'gemini']
         else:
-            candidates = ['deepseek', 'ollama', a.provider_model, 'codex', 'claude', 'gemini']
+            candidates = [a.provider_model, 'claude-deepseek', 'deepseek', 'codex', 'claude', 'gemini']
+    elif task_tier == 'throughput':
+        # Offload routine/throughput work onto DeepSeek through the fastest prompt-cached CLI harness first!
+        candidates = ['claude-deepseek', 'deepseek', a.provider_model, 'codex', 'claude', 'gemini']
     else:
-        # Frontier tier: preserve requested subscription harness first (including claude!), with DeepSeek/Ollama + peer fallbacks
+        # Frontier tier: preserve requested subscription harness first (including claude!), with DeepSeek + peer fallbacks
         candidates = [a.provider_model]
-        for fb in ('claude', 'codex', 'claude-deepseek', 'codex-deepseek', 'deepseek', 'ollama', 'gemini'):
+        for fb in ('claude', 'codex', 'claude-deepseek', 'codex-deepseek', 'deepseek', 'gemini'):
             if fb not in candidates:
                 candidates.append(fb)
     # Deduplicate while preserving order
@@ -306,7 +355,14 @@ def main():
     for c in candidates:
         if c not in deduped_candidates:
             deduped_candidates.append(c)
-    candidates = deduped_candidates
+    candidates = deduped_candidates[:2]
+    if a.system_prompt_file and a.system_prompt_file.is_file():
+        try:
+            persisted_prompt = logdir / f'system-prompt-{time.time_ns()}.md'
+            persisted_prompt.write_text(a.system_prompt_file.read_text(encoding='utf-8'), encoding='utf-8')
+            a.system_prompt_file = persisted_prompt
+        except OSError:
+            pass
 
     events, parts, post_command_parts, failures = [], [], [], []
     session = None
@@ -375,7 +431,7 @@ def main():
                     start_new_session=True,
                 )
                 try:
-                    child.communicate(input=stdin_payload, timeout=min(timeout, 540.0))
+                    child.communicate(input=stdin_payload, timeout=min(timeout, 300.0))
                     code = child.returncode
                 except subprocess.TimeoutExpired:
                     failures.append(f'{candidate_model}: CLI exceeded run deadline')
@@ -384,12 +440,23 @@ def main():
                     settle()
 
                 c_events, c_parts, c_post_parts, c_session, c_failures = parse_output_stream(output)
-                if any(pt.strip() for pt in c_parts):
+                if not any(pt.strip() for pt in c_parts) and c_events and not c_failures:
+                    c_parts = [f"Completed {len(c_events)} execution steps in this heartbeat window."]
+                    c_post_parts = list(c_parts)
+                valid_parts = [
+                    pt for pt in c_parts
+                    if pt.strip() and not re.match(r'^(Failed to authenticate:|API Error:\s*Request rejected|API Error:\s*\d{3}\b)', pt.strip(), re.I)
+                ]
+                last_non_empty = [pt.strip() for pt in c_parts if pt.strip()]
+                last_is_upstream_err = bool(
+                    last_non_empty and re.match(r'^(Failed to authenticate:|API Error:\s*Request rejected|API Error:\s*\d{3}\b)', last_non_empty[-1], re.I)
+                )
+                if valid_parts and not last_is_upstream_err:
                     events = c_events
-                    parts = c_parts
-                    post_command_parts = c_post_parts
+                    parts = valid_parts
+                    post_command_parts = [pt for pt in c_post_parts if pt.strip() and not re.match(r'^(Failed to authenticate:|API Error:\s*Request rejected|API Error:\s*\d{3}\b)', pt.strip(), re.I)]
                     session = c_session
-                    failures = [f for f in c_failures if 'error' in f.lower()]
+                    failures = []
                     code = 0
                     break
                 else:

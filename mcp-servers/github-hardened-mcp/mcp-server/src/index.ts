@@ -3595,6 +3595,14 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
     }
 
+  return {
+    isError: true,
+    content: [{ type: "text" as const, text: `Unknown tool: ${request.params.name}` }],
+  };
+});
+
+async function main() {
+  const transport = new StdioServerTransport();
   await server.connect(transport);
   process.stderr.write('github-hardened-mcp MCP server running on stdio\n');
 }
