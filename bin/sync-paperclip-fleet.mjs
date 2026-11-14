@@ -1449,7 +1449,8 @@ if (existsSync(OPENCLAW_JSON_PATH)) {
     '/home/professormanhattan/.agents',
     '/home/professormanhattan/.claude',
     '/home/professormanhattan/.openclaw',
-    '/home/professormanhattan/.volta'
+    '/home/professormanhattan/.volta',
+    '/home/professormanhattan/.cua-driver'
   ];
   openclawConfig.skills.limits = {
     maxCandidatesPerRoot: 250,
