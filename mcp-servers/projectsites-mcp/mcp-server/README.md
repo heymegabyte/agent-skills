@@ -5,7 +5,7 @@ wraps the projectsites.dev REST API and Cloudflare provisioning behind **34
 tools** that Claude Code (or any MCP client) can call.
 
 ```
-create_site → provision_d1 / provision_kv / provision_r2 → deploy_site → add_domain → get_site_health
+create_site → cf_provision_d1 / cf_provision_kv / cf_provision_r2 → deploy_site → add_domain → get_site_health
 ```
 
 ## Install
@@ -105,11 +105,11 @@ emits only `/health`), so every path lives in one map — `SDK_ENDPOINTS` in
 
 | Tool | Command | Gate |
 | --- | --- | --- |
-| `provision_d1` | `wrangler d1 create <name>` | `confirm: true` |
+| `cf_provision_d1` | `wrangler d1 create <name>` | `confirm: true` |
 | `list_d1_databases` | `wrangler d1 list --json` | read-only |
-| `provision_kv` | `wrangler kv namespace create <title>` | `confirm: true` |
+| `cf_provision_kv` | `wrangler kv namespace create <title>` | `confirm: true` |
 | `list_kv_namespaces` | `wrangler kv namespace list` | read-only |
-| `provision_r2` | `wrangler r2 bucket create <name>` | `confirm: true` |
+| `cf_provision_r2` | `wrangler r2 bucket create <name>` | `confirm: true` |
 | `list_r2_buckets` | `wrangler r2 bucket list` | read-only |
 | `cf_attach_binding` | appends a TOML block | `confirm: true` |
 | `cf_set_worker_secret` | `wrangler secret put <NAME> --name <worker>` | `confirm: true` |
@@ -124,7 +124,7 @@ not a promise:
 {
   "ok": true,
   "applied": false,
-  "tool": "provision_d1",
+  "tool": "cf_provision_d1",
   "plan": { "bin": "wrangler", "argv": ["d1", "create", "njsk-db"] },
   "note": "Re-call with confirm: true to create."
 }
@@ -148,9 +148,9 @@ Four rules make this safe to hand to an agent:
 
 ```text
 1. launch_site(business_name="St. John's Soup Kitchen", slug="njsk")
-2. provision_d1(name="njsk-db")                 → plan, then confirm: true
-3. provision_kv(title="njsk-cache")             → plan, then confirm: true
-4. provision_r2(name="njsk-assets")             → plan, then confirm: true
+2. cf_provision_d1(name="njsk-db")              → plan, then confirm: true
+3. cf_provision_kv(title="njsk-cache")          → plan, then confirm: true
+4. cf_provision_r2(name="njsk-assets")          → plan, then confirm: true
 5. cf_attach_binding(kind="d1", binding="DB", resource_id="<id from step 2>", confirm: true)
 6. [build the site — skill 16]
 7. deploy_site(id, zip_path="/tmp/njsk.zip")

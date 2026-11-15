@@ -188,8 +188,8 @@ export type SetWorkerSecretInput = z.infer<typeof SetWorkerSecretInput>;
 export async function provisionD1(rt: Runtime, input: ProvisionD1Input) {
   const { wranglerBin } = cloudflare();
   const argv = ['d1', 'create', input.name];
-  if (!input.confirm) return plan('provision_d1', wranglerBin, argv, 'Re-call with confirm: true to create.');
-  return result('provision_d1', await runCli(wranglerBin, argv));
+  if (!input.confirm) return plan('cf_provision_d1', wranglerBin, argv, 'Re-call with confirm: true to create.');
+  return result('cf_provision_d1', await runCli(wranglerBin, argv));
 }
 
 /** List D1 databases. Read-only. */
@@ -202,8 +202,8 @@ export async function listD1Databases(rt: Runtime) {
 export async function provisionKv(rt: Runtime, input: ProvisionKvInput) {
   const { wranglerBin } = cloudflare();
   const argv = ['kv', 'namespace', 'create', input.title];
-  if (!input.confirm) return plan('provision_kv', wranglerBin, argv, 'Re-call with confirm: true to create.');
-  return result('provision_kv', await runCli(wranglerBin, argv));
+  if (!input.confirm) return plan('cf_provision_kv', wranglerBin, argv, 'Re-call with confirm: true to create.');
+  return result('cf_provision_kv', await runCli(wranglerBin, argv));
 }
 
 /** List KV namespaces. Read-only. */
@@ -216,8 +216,8 @@ export async function listKvNamespaces(rt: Runtime) {
 export async function provisionR2(rt: Runtime, input: ProvisionR2Input) {
   const { wranglerBin } = cloudflare();
   const argv = ['r2', 'bucket', 'create', input.name];
-  if (!input.confirm) return plan('provision_r2', wranglerBin, argv, 'Re-call with confirm: true to create.');
-  return result('provision_r2', await runCli(wranglerBin, argv));
+  if (!input.confirm) return plan('cf_provision_r2', wranglerBin, argv, 'Re-call with confirm: true to create.');
+  return result('cf_provision_r2', await runCli(wranglerBin, argv));
 }
 
 /** List R2 buckets. Read-only. */

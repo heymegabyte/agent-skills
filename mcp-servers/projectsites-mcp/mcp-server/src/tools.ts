@@ -381,7 +381,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   })),
   // ----- Cloudflare provisioning -----
   defineTool(
-    'provision_d1',
+    'cf_provision_d1',
     'provisioning',
     'Create a D1 database. Dry run unless confirm: true.',
     ProvisionD1Input,
@@ -391,7 +391,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
     listD1Databases(rt),
   ),
   defineTool(
-    'provision_kv',
+    'cf_provision_kv',
     'provisioning',
     'Create a KV namespace. Dry run unless confirm: true.',
     ProvisionKvInput,
@@ -401,7 +401,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
     listKvNamespaces(rt),
   ),
   defineTool(
-    'provision_r2',
+    'cf_provision_r2',
     'provisioning',
     'Create an R2 bucket. Dry run unless confirm: true.',
     ProvisionR2Input,
