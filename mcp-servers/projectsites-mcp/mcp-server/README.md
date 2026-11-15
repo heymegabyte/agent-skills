@@ -161,7 +161,7 @@ Four rules make this safe to hand to an agent:
 ## Verification
 
 ```bash
-npm test        # build + 40 node:test cases
+npm test        # build + 42 node:test cases
 npm run typecheck
 ```
 
