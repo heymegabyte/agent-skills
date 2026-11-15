@@ -159,6 +159,13 @@ new MutationObserver(muts => muts.flatMap(m=>[...m.addedNodes]).filter(n=>n.node
 
 ## Every site nav/header (***SOLID BACKGROUND — NEVER TRANSPARENT — UNIVERSAL — BUILD-BREAKING***)
 
+### Cross-route brand-shell parity (***UNIVERSAL — BUILD-BREAKING***)
+
+- New blogs, docs, dashboards, sub-apps, framework islands, and nested routes MUST begin from the existing production shell—not a fresh navbar.
+- Preserve the exact canonical logo asset/variant, wordmark, primary nav labels/order/hrefs, header behavior, footer identity, and responsive navigation unless the user explicitly approves a divergence.
+- A package or framework boundary is an adapter problem, never permission to replace an image logo with text, omit destinations, rename the established information architecture, or create a visually unrelated header.
+- Build gate: compare every changed route to the canonical homepage at desktop and mobile. Assert the logo `src`, nav label/href sequence, active-page semantics, keyboard order, and mobile access. Any unexplained mismatch fails with `shell.brand_parity` or `shell.navigation_parity`.
+
 - Nav/header MUST have a solid, opaque background at ALL times — including homepage hero, hero-scroll overlap, mobile drawer open, any route.
 - Allowed exception: hero-parallax scroll effect where header transitions transparent → solid at ≤50px scroll (MUST be SOLID by 50px — never stays transparent).
 - Nav base CSS: `background-color: var(--nav-bg, var(--bg-primary)); backdrop-filter: blur(8px)` — blur adds depth but NEVER replaces a solid base. If hero uses full-bleed image behind nav area, nav MUST have an explicit solid band.

@@ -2,8 +2,8 @@
 name: "experience-and-design-system"
 description: "Anti-AI-slop design system for distinctive, premium interfaces. Bold typography, dark-first #060610, fluid clamp() type, cascade layers + native nesting + container queries, OKLCH color, @starting-style, View Transitions API, DTCG tokens."
 metadata:
-  version: "2.2.0"
-  updated: "2026-10-27"
+  version: "2.3.0"
+  updated: "2026-11-14"
   effort: "high"
   model: "opus"
 license: "Rutgers"
@@ -148,6 +148,14 @@ Build anti-AI-slop premium interfaces: dark-first OKLCH color, fluid `clamp()` t
 - **Glass** — `backdrop-filter: blur(16px) saturate(140%)` + `rgba(10,10,26,0.6)` bg + 1px top `--border-subtle`; `@supports` solid fallback; ≤3 blurred surfaces per view (GPU)
 - **Grain** — tiled SVG `feTurbulence` data-URI at 3-5% opacity, `mix-blend-mode: overlay`, `pointer-events:none` — kills gradient banding; never a runtime filter over scrolling areas
 - **Spartan UI** — copied-in components (not a black-box dep), OnPush everywhere, lazy-load heavy views (tables, editors, charts), Tailwind + design-token theming. Per `rules/angular.md`.
+
+## Route-shell continuity (BUILD-BREAKING)
+
+- Before adding a blog, docs area, dashboard, marketing route, microsite, or sub-application, inventory the production site shell: logo asset and variant, wordmark, primary navigation labels/order/destinations, header behavior, footer, tokens, and responsive/mobile treatment.
+- Every first-party route on the same domain MUST reuse that established shell by default. The same logo file, wordmark, primary nav information architecture, header height/behavior, and core tokens are required; a framework boundary (React island, Vite sub-app, static page, docs renderer) is not a reason to invent a second brand shell.
+- Use the repository’s shared shell/component when one exists. If framework boundaries prevent direct reuse, expose a canonical cross-framework component or a thin adapter from `@theme.tools/*`; do not substitute a text-only brand, omit the logo, rename primary destinations, or create a visually unrelated navbar.
+- A deliberately different shell requires explicit user approval and documented rationale. Silence is not approval.
+- Verification gate: on every changed route, assert the canonical logo source resolves, nav labels/order and destinations match the established shell, current-page state is present, mobile and keyboard behavior work, and screenshots at desktop/mobile show recognizable shell parity.
 
 ## Interaction (every interactive element)
 
