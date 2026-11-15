@@ -830,11 +830,11 @@ const ROLE_SKILL_ASSIGNMENTS = {
   'summarizer': ['goal-and-brief', 'preference-and-memory', 'operating-system', 'summarize-status', 'observability-and-growth'],
   'technical-writer': ['blog-publishing', 'content-seo', 'brand-and-content-system', 'goal-and-brief', 'architecture-and-stack', 'site-generation', 'release-announcement', 'github'],
   'growth': ['blog-publishing', 'content-seo', 'observability-and-growth', 'brand-and-content-system', 'site-generation', 'independent-idea-engine', 'release-announcement', 'posthog', 'resend'],
-  'media': ['media-orchestration', 'cinematic-website-prime-directive', 'visual-experience', 'motion-and-interaction-system', 'brand-and-content-system', 'blog-publishing', 'openai'],
+  'media': ['media-orchestration', 'hyperframes', 'hyperframes-cli', 'hyperframes-registry', 'media-use', 'remotion-to-hyperframes', 'cinematic-website-prime-directive', 'visual-experience', 'motion-and-interaction-system', 'brand-and-content-system', 'blog-publishing', 'openai'],
   'computer-use': ['cua-driver', 'agent-browser', 'operating-system', 'quality-and-verification', 'deploy-and-runtime-verification', 'visual-experience'],
   'browser': ['agent-browser', 'cua-driver', 'quality-and-verification', 'tdd-and-verification', 'visual-experience', 'deploy-and-runtime-verification', 'site-generation'],
   'hr': ['operating-system', 'goal-and-brief', 'preference-and-memory', 'paperclip-create-agent', 'observability-and-growth', 'summarize-status'],
-  'content': ['blog-publishing', 'content-seo', 'brand-and-content-system', 'site-generation', 'media-orchestration', 'cinematic-website-prime-directive', 'release-announcement', 'resend', 'posthog', 'openai'],
+  'content': ['blog-publishing', 'content-seo', 'brand-and-content-system', 'site-generation', 'media-orchestration', 'hyperframes', 'media-use', 'cinematic-website-prime-directive', 'release-announcement', 'resend', 'posthog', 'openai'],
   'swarm-dispatcher': ['operating-system', 'build-and-slice-loop', 'goal-and-brief', 'architecture-and-stack', 'platform-delivery', 'github', 'summarize-status'],
   'seo-auditor': ['blog-publishing', 'content-seo', 'brand-and-content-system', 'site-generation', 'observability-and-growth', 'quality-performance', 'agent-browser', 'posthog']
 };
@@ -1152,6 +1152,16 @@ runSql(`
   UPDATE agents
   SET runtime_config = '{"heartbeat":{"enabled":false}}'::jsonb
   WHERE company_id = '${COMPANY_ID}' AND status = 'terminated';
+  UPDATE projects
+  SET status = 'in_progress',
+      archived_at = NULL,
+      execution_workspace_policy = '{"enabled":true,"defaultMode":"shared_workspace"}'::jsonb
+  WHERE company_id = '${COMPANY_ID}';
+  UPDATE project_workspaces
+  SET visibility = 'company',
+      is_primary = true,
+      source_type = 'git_repo'
+  WHERE company_id = '${COMPANY_ID}';
 `);
 
 mkdirSync(OPENCLAW_WORKSPACES_DIR, { recursive: true });
@@ -1217,6 +1227,10 @@ for (const agent of CANONICAL_FLEET) {
     characterVersion: 'cap-v1'
   });
 
+  const fastTimerNames = new Set([
+    'Architect', 'Swarm-Dispatcher', 'SRE', 'Full-Stack-Engineer',
+    'Backend-Engineer', 'UI-Designer', 'QA-Verification', 'AppSec', 'Model-Router'
+  ]);
   const runtimeConfigJson = JSON.stringify({
     model: agent.model,
     paperclipSkillSync: {
@@ -1224,10 +1238,10 @@ for (const agent of CANONICAL_FLEET) {
     },
     heartbeat: {
       enabled: true,
-      cooldownSec: 10,
-      intervalSec: 1800,
+      cooldownSec: 120,
+      intervalSec: fastTimerNames.has(agent.name) ? 1800 : 3600,
       wakeOnDemand: true,
-      maxConcurrentRuns: 10,
+      maxConcurrentRuns: 2,
       skipTimerWhenNoActionableWork: true
     }
   });
