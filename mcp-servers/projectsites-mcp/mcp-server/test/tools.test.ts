@@ -88,11 +88,11 @@ describe('manifest', () => {
       'update_sso_config',
       'append_sla_snapshot',
       // Cloudflare provisioning
-      'provision_d1',
+      'cf_provision_d1',
       'list_d1_databases',
-      'provision_kv',
+      'cf_provision_kv',
       'list_kv_namespaces',
-      'provision_r2',
+      'cf_provision_r2',
       'list_r2_buckets',
       'add_domain',
       'get_site_health',
@@ -101,6 +101,16 @@ describe('manifest', () => {
       'launch_site',
     ];
     for (const name of required) assert.ok(TOOLS_BY_NAME.has(name), `missing ${name}`);
+  });
+
+  it("uses the cf_provision_* names from agent-skills#5 verbatim", () => {
+    for (const name of ['cf_provision_d1', 'cf_provision_kv', 'cf_provision_r2']) {
+      assert.ok(TOOLS_BY_NAME.has(name), `missing ${name}`);
+      assert.equal(TOOLS_BY_NAME.get(name)!.category, 'provisioning');
+    }
+    for (const retired of ['provision_d1', 'provision_kv', 'provision_r2']) {
+      assert.equal(TOOLS_BY_NAME.has(retired), false, `${retired} was renamed to cf_${retired}`);
+    }
   });
 
   it('advertises object schemas with properties for every tool', () => {
@@ -119,7 +129,7 @@ describe('manifest', () => {
   });
 
   it('defaults destructive-ish flags to false', () => {
-    for (const name of ['provision_d1', 'provision_kv', 'provision_r2', 'cf_attach_binding', 'delete_site']) {
+    for (const name of ['cf_provision_d1', 'cf_provision_kv', 'cf_provision_r2', 'cf_attach_binding', 'delete_site']) {
       const properties = toJsonSchema(TOOLS_BY_NAME.get(name)!.inputSchema).properties as Record<
         string,
         { default?: unknown }

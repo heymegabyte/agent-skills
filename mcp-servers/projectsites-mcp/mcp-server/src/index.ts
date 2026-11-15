@@ -7,7 +7,7 @@
  * Claude Code (or any MCP client) can take a one-line prompt to a live
  * edge-native site:
  *
- *   create_site → provision_d1/kv/r2 → deploy_site → add_domain → get_site_health
+ *   create_site → cf_provision_d1/kv/r2 → deploy_site → add_domain → get_site_health
  *
  * Contract notes
  *  - Every failure is returned as `isError: true` with a machine-readable

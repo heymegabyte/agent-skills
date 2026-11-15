@@ -1,6 +1,6 @@
 {
   "name": "projectsites-mcp",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Project Sites MCP server — one-prompt site launch via the projectsites.dev API, plus Cloudflare provisioning (D1/KV/R2, bindings, worker secrets).",
   "type": "module",
   "main": "dist/src/index.js",

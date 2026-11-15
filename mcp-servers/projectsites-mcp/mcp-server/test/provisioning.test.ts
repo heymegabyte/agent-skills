@@ -80,7 +80,7 @@ describe('runCli', () => {
 });
 
 describe('plan-first create tools', () => {
-  it('provision_d1 only plans by default', async () => {
+  it('cf_provision_d1 only plans by default', async () => {
     const out = (await provisionD1(rt(), { name: 'njsk-db', confirm: false })) as {
       applied: boolean;
       plan: { bin: string; argv: string[] };
@@ -89,7 +89,7 @@ describe('plan-first create tools', () => {
     assert.deepEqual(out.plan.argv, ['d1', 'create', 'njsk-db']);
   });
 
-  it('provision_d1 applies when confirmed and parses JSON', async () => {
+  it('cf_provision_d1 applies when confirmed and parses JSON', async () => {
     const out = (await provisionD1(rt(), { name: 'njsk-db', confirm: true })) as {
       ok: boolean;
       parsed: { argv: string[] };
@@ -98,7 +98,7 @@ describe('plan-first create tools', () => {
     assert.deepEqual(out.parsed.argv, ['d1', 'create', 'njsk-db']);
   });
 
-  it('provision_kv and provision_r2 build the right argv', async () => {
+  it('cf_provision_kv and cf_provision_r2 build the right argv', async () => {
     const kv = (await provisionKv(rt(), { title: 'njsk-cache', confirm: false })) as { plan: { argv: string[] } };
     assert.deepEqual(kv.plan.argv, ['kv', 'namespace', 'create', 'njsk-cache']);
 
