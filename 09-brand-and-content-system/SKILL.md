@@ -32,6 +32,11 @@ paths:
 
 # 09 — Brand and Content System
 
+## Shared blog implementation boundary
+
+- Never implement a blog as a hand-authored standalone HTML page, product-local wall of markup/CSS, or replacement component library.
+- Blog surfaces must use React + Vite + Vitest and consume the canonical `@theme.tools/blog` / `@theme-tools/ui` web-component surfaces. Consumer repositories own structured content, brand tokens, routes, and thin adapters only; missing reusable UI is implemented and tested in `theme.tools` first.
+
 Extract real brand assets and apply the full copy system (anti-slop, SEO, trust surfaces, GEO) to every website build surface.
 
 > **Model migration note (pass-77, 2026-06-09)**: `DALL-E` → **GPT Image 2** (2026-04; 2.5 branded 2026-09 — check current API id at integration) + `GPT-4o` → **GPT Image 2 vision**. Per `platform.openai.com/docs/deprecations`. Brand extraction protocol unchanged.

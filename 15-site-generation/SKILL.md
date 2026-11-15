@@ -119,6 +119,11 @@ CRITICAL — In manual/prompt-based builds (no container), Phase 0 runs INLINE a
 
 ## Build Rules (NON-NEGOTIABLE)
 
+### Blog architecture
+
+- Never ship a hardcoded standalone blog HTML page or a product-local replacement for the shared editorial system.
+- Build blog surfaces with React + Vite, test them with Vitest, and consume the canonical `@theme.tools/blog` / `@theme-tools/ui` web components. Keep consumer code to structured content, theme tokens, routes, and thin adapters; contribute missing reusable UI upstream to `theme.tools` first.
+
 ### Images
 
 - USE ALL images in `assets/`. Never external URLs (hotlinking blocked).
