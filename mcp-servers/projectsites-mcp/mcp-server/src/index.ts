@@ -27,8 +27,15 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprot
 import { ApiError, defaultRuntime, type Runtime } from './http.js';
 import { listToolsPayload, TOOLS_BY_NAME, TOOL_DEFINITIONS } from './tools.js';
 
-/** Server name/version reported during `initialize`. */
-export const SERVER_INFO = { name: 'projectsites-mcp', version: '2.0.0' } as const;
+/**
+ * Server name/version reported during `initialize`.
+ *
+ * The version is duplicated from `package.json` because the build copies only
+ * `src` + `test` into `dist`, so a JSON import from the package root would fall
+ * outside `rootDir`. `test/server-info.test.ts` pins the two together — a
+ * version bump that misses this constant fails the suite.
+ */
+export const SERVER_INFO = { name: 'projectsites-mcp', version: '2.1.0' } as const;
 
 /** Shape of one MCP tool result. */
 type ToolResult = { content: Array<{ type: 'text'; text: string }>; isError?: boolean };
