@@ -1,15 +1,34 @@
 {
   "name": "projectsites-mcp",
-  "version": "1.0.0",
-  "description": "Project Sites MCP server — one-prompt site launch via projectsites.dev API. Exposes create_site, deploy_site, provision_d1/kv/r2, get_site_status, add_domain.",
+  "version": "2.0.0",
+  "description": "Project Sites MCP server — one-prompt site launch via the projectsites.dev API, plus Cloudflare provisioning (D1/KV/R2, bindings, worker secrets).",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "dist/src/index.js",
+  "bin": {
+    "projectsites-mcp": "dist/src/index.js"
+  },
+  "files": [
+    "dist/src",
+    "README.md"
+  ],
   "scripts": {
-    "start": "node --loader ts-node/esm src/index.ts",
-    "dev": "node --watch --loader ts-node/esm src/index.ts"
+    "build": "tsc && chmod +x dist/src/index.js",
+    "start": "node dist/src/index.js",
+    "dev": "npm run build && node --watch dist/src/index.js",
+    "test": "npm run build && node --test dist/test/*.test.js",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",
-    "zod": "^3.24.0"
-  }
+    "zod": "^3.24.0",
+    "zod-to-json-schema": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "SEE LICENSE IN ../../../LICENSE"
 }

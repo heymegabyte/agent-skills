@@ -72,7 +72,7 @@
       "variant": "base",
       "canonical": false,
       "supersedes": null,
-      "mainEntry": null,
+      "mainEntry": "mcp-server/src/index.ts",
       "evals": 0
     },
     {
