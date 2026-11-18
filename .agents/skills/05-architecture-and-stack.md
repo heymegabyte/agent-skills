@@ -30,7 +30,7 @@ Default stack: `_kernel/standards.md#stack`. Override conditions below.
 - Defer event replay tooling. Reconnecting a live build stream to reconstruct its UI remains part of build correctness and does not authorize operational job replay.
 - Resolve product identity and repository ownership from current source; do not assign a product role from a domain name alone. **issuel.ink's purpose remains undecided**; no earlier suggested product role is approved by implication.
 
-Sources: [Workers WebAssembly](https://developers.cloudflare.com/workers/runtime-apis/webassembly/), [workers-rs](https://github.com/cloudflare/workers-rs), [Charm CLI guidance](../rules/terminal-styling.md).
+Sources: [Workers WebAssembly](https://developers.cloudflare.com/workers/runtime-apis/webassembly/), [workers-rs](https://github.com/cloudflare/workers-rs), [Charm CLI guidance](../../rules/terminal-styling.md).
 
 ## Cloudflare-first decision tree
 
