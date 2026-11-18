@@ -22,3 +22,6 @@ members:
   - rules/agent-neutrality
   - rules/account-entitlements
   - rules/agent-readable-by-default
+  - rules/ai-search-knowledge-fabric
+  - rules/cloudflare-agent-fabric
+  - rules/template-first-generation

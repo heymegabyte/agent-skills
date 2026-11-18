@@ -18,3 +18,5 @@ members:
   - rules/workstation-shared-provisioning-policy
   - rules/terminal-styling
   - rules/idempotency-by-default
+  - rules/tail-worker-agent-observability
+  - rules/fleet-secret-handling
