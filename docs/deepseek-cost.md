@@ -8,10 +8,10 @@ Goal: cut DeepSeek V4 cost 40%+ on internal agent work.
 | Sub-feature | Where | Status |
 | --- | --- | --- |
 | Agent-level model routing | `bin/deepseek-routing.sh agent-coverage` / `resolve`; `agents/visual-qa.md`; `rules/model-routing.md` § DeepSeek rail routing | implemented + gated |
-| Cache pre-warming | `bin/deepseek-routing.sh warm` / `run` (lazy warm, prefix-hash TTL stamp) | implemented; needs a real key to verify |
+| Cache pre-warming | `bin/deepseek-routing.sh warm` / `run` (lazy warm, prefix-hash TTL stamp) | implemented; cache economics measured (91–92%), warm call needs a DeepSeek key |
 | Effort escalator | `bin/effort-escalator.py` (`classify` / `hook`); wired into `deepseek-routing.sh run --variant` | implemented + tested |
 
-Routing was already supported through agent frontmatter `model:` aliases (verified: 25 of 28 agents already resolved to the Flash tier). What was missing:
+Routing was already supported through agent frontmatter `model:` aliases (verified: the large majority already resolved to the Flash tier). What was missing:
 
 1. No DeepSeek tier → model-ID table lived anywhere, so the issue's Pro/Flash split was not enforceable or testable.
 2. `visual-qa` was on the Pro tier (Opus), contradicting the issue's target table.
@@ -24,10 +24,10 @@ Routing was already supported through agent frontmatter `model:` aliases (verifi
 
 | Target | Alias | DeepSeek ID | Agents |
 | --- | --- | --- | --- |
-| Pro[1m] | `opus` | `deepseek-v4-pro[1m]` | architect, security-reviewer, completeness-checker |
+| Pro | `opus` | `deepseek-v4-pro` | architect, security-reviewer, completeness-checker |
 | Flash | `sonnet` / `haiku` | `deepseek-flash` | test-writer, code-simplifier, changelog-generator, visual-qa, content-writer, and every other non-judgment agent |
 
-Result on this branch: `✓ routing table matches agents/*.md`, flash-tier agents **21/28 (75%)**.
+Result on this branch: `✓ routing table matches agents/*.md`, flash-tier agents **44/52 (85%)**.
 
 Change made: `agents/visual-qa.md` moved Opus → Sonnet (`effort: xhigh` → `high`) with a `routing_note`. Rationale: visual QA is screenshot diffing plus DOM assertions, not judgment. The tier lists in `rules/model-routing.md`, `rules/emdash-fleet.md`, `rules/agent-selection.md`, and `rules/parallel-subagent-economy.md` were updated with it; `bin/check-agent-routing.sh` and `bin/check-agent-fallback.sh` both pass.
 
@@ -44,7 +44,9 @@ Design notes:
 - **Failure is non-fatal.** A non-200 warm logs a warning and the real run continues.
 - The response's `usage.prompt_cache_hit_tokens` / `prompt_cache_miss_tokens` are reported, so a real key can confirm whether the provider cached the prefix at all.
 
-**Not verified here:** this host's `DEEPSEEK_API_KEY` reference is unavailable to the agent session, so the warm path is exercised for argument handling and failure mode only. The 91%/120× figures in the issue stay an input assumption, not a measurement.
+**Verified 2026-11-18 through the fleet gateway** (`llm.megabyte.space`): a 10,511-character system prompt returned **2,432 cache-hit tokens of 2,629 (92.5%)** on `deepseek-flash`/`deepseek-chat` and **2,432 of 2,654 (91.6%)** on `deepseek-v4-pro`, with 6 of 6 sequential calls hitting after the first. The issue's 91% assumption holds in this environment.
+
+**Still not verified:** the `warm` subcommand itself calls `api.deepseek.com` and needs `DEEPSEEK_API_KEY`, which this agent session does not hold; its argument handling and failure mode are tested, the provider call is not. Warm the real prefix and read `cache_hit_tokens` on a host that has the key.
 
 ## 3. Effort escalator
 
@@ -61,30 +63,42 @@ Not wired into `settings.json` hooks here: the repo's `settings.json` is the mac
 
 ## 4. Measured cost delta (model, fixed workload)
 
-`bin/deepseek-cost-model.py` runs a fixed 10-agent, 246-call workload (`DEFAULT_WORKLOAD` in the script) before/after:
+### Inputs, measured on 2026-11-18
 
-- **Before** — every agent on `deepseek-chat`, no cache.
-- **After** — Pro tier for the 3 judgment agents, Flash for the rest, 91% system-prompt cache hit.
+- **Prices** — `docs/deepseek-prices.json`, read from `GET https://llm.megabyte.space/v1/model/info`. `deepseek-v4-pro` routes to `deepseek/deepseek-reasoner` and `deepseek-flash` to `deepseek/deepseek-chat`; **both bill $0.28/M input and $0.42/M output**, cache read $0.028/M (90% discount). At these rates tier routing is **not** a rate lever.
+- **Cache hit** — 10,511-char system prompt, 6 sequential identical calls per model: 92.5% of prompt tokens hit on `deepseek-flash`/`deepseek-chat`, 91.6% on `deepseek-v4-pro`; 6/6 calls hit after the first. Use 90–92% as the observed range.
+- **Pro output volume** — same fixed code-review task (`max_tokens=600`, `temperature=0`, 3 samples): `deepseek-flash` emitted 85/52/52 completion tokens; `deepseek-v4-pro` emitted 600/600/600, of which 588–600 were `reasoning_tokens`, with `finish_reason=length` and empty content. Reasoning tokens bill as output, so the Pro/Flash output ratio is **at least 600/85 = 7.1×**, and Pro did not even finish. `pro_output_multiplier: 7.1` in the price file is that lower bound.
 
-With the placeholder price file (`docs/deepseek-prices.example.json` — **not real prices**):
+### Result
+
+`bin/deepseek-cost-model.py` runs a fixed 10-agent, 246-call workload (`DEFAULT_WORKLOAD`): **Before** = every agent on `deepseek-chat`, no cache; **After** = Pro for the 3 judgment agents, Flash for the rest.
 
 | Scenario | Before | After | Saved |
 | --- | ---: | ---: | ---: |
-| Routing only (no cache) | $0.67 | $0.44 | **34.5%** |
-| Routing + 91% cache hit | $0.67 | $0.20 | **69.8%** |
+| Routing only, flat output (multiplier 1.0), no cache | $0.51 | $0.51 | **0.0%** |
+| Routing + 91% cache, flat output | $0.51 | $0.18 | **64.2%** |
+| Routing + 91% cache + measured 7.1× Pro reasoning output | $0.51 | $0.28 | **43.8%** |
+| Same, 11.5× (Pro / median Flash output) | $0.51 | $0.36 | **29.0%** |
 
-So routing alone lands below the 40% goal on this workload; the cache pre-warm term closes it. Both numbers move with real prices — re-run before quoting:
+Read this honestly:
+
+- **Prompt caching is the whole saving.** Routing contributes 0.0% at flat rates — the earlier 34.5% figure came from a fictional price spread and has been removed.
+- **Routing the three judgment agents to Pro eats 20 of the 64 points** the cache buys, because Pro bills 7× or more output on the same task. The 40% goal is met at the measured 7.1× (43.8%) and missed at 11.5× (29.0%).
+- Keep Pro for architect / security-reviewer / completeness-checker only where judgment is worth 7× output cost; route anything mechanical to Flash. The multiplier is a lower bound from a truncated sample — re-run on a longer-output task before treating 7.1 as converged.
+
+Reproduce:
 
 ```sh
-bin/deepseek-cost-model.py --prices <real-prices.json> --cache-hit <observed-hit-rate>
+bin/deepseek-cost-model.py --prices docs/deepseek-prices.json --cache-hit 0.916
+bin/deepseek-cost-model.py --prices docs/deepseek-prices.json --cache-hit 0.916 --pro-output-multiplier 1.0
 ```
 
-Cache hits are capped at 95% inside the model, and a cache-hit discount of 90% (hit ≈ 10% of miss price) is assumed.
+Cache hits are capped at 95% inside the model.
 
 ## Verification
 
 ```sh
-bash bin/deepseek-routing.sh agent-coverage                 # exit 0, 75% flash
+bash bin/deepseek-routing.sh agent-coverage                 # exit 0, 85% flash
 bash bin/check-agent-routing.sh && bash bin/check-agent-fallback.sh
 python3 -m pytest control-plane/tests/test_effort_escalator.py control-plane/tests/test_deepseek_cost_model.py
 shellcheck -x -S warning bin/deepseek-routing.sh
@@ -93,8 +107,9 @@ ruff check bin/effort-escalator.py bin/deepseek-cost-model.py
 
 ## Remaining
 
-- Fill `docs/deepseek-prices.example.json` with the published price list (or point `--prices` at a live copy) and re-record the table above.
-- With a real `DEEPSEEK_API_KEY`, run `bin/deepseek-routing.sh warm deepseek-flash "<system prompt>"` twice and read `cache_hit_tokens` to confirm the provider retention window.
+- Re-fetch `docs/deepseek-prices.json` from `/v1/model/info` before quoting any figure; the gateway can re-route an alias and the rate snapshot goes stale silently.
+- Re-measure `pro_output_multiplier` on a task that produces a complete Pro answer. The 7.1 figure is a lower bound because Pro hit `max_tokens=600` on reasoning alone.
+- With a real `DEEPSEEK_API_KEY`, run `bin/deepseek-routing.sh warm deepseek-flash "<system prompt>"` twice and read `cache_hit_tokens` to confirm the provider retention window. The warm path is not covered by the gateway measurement.
 - `opencode run --variant` is accepted on the installed OpenCode (1.18.35) for provider-specific reasoning effort. It is a *variant* name, not a numeric level — if the DeepSeek provider rejects `low|medium|high|max`, map them in one place (`cmd_run` in `bin/deepseek-routing.sh`).
 
 Generated by `bin/deepseek-cost-model.py`. **Model, not invoice.**

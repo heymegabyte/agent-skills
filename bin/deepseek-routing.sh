@@ -18,7 +18,7 @@
 # Why aliases: rules/model-routing.md § Provider portability forbids hardcoding
 # provider IDs in agent frontmatter. The DeepSeek mapping lives HERE, in one
 # table, so a tier change never touches 28 agent files:
-#   opus    -> deepseek-v4-pro[1m]   (architect, security-reviewer, completeness-checker)
+#   opus    -> deepseek-v4-pro       (architect, security-reviewer, completeness-checker)
 #   sonnet  -> deepseek-flash        (test-writer, code-simplifier, visual-qa, content-writer …)
 #   haiku   -> deepseek-flash
 #
@@ -75,7 +75,7 @@ tier_alias_for_agent() {
 # deepseek_id_for_tier <alias> -> prints the DeepSeek model ID for that rail tier
 deepseek_id_for_tier() {
   case "$1" in
-    opus) printf 'deepseek-v4-pro[1m]' ;;
+    opus) printf 'deepseek-v4-pro' ;;
     sonnet | haiku) printf 'deepseek-flash' ;;
     *) return 1 ;;
   esac
@@ -124,7 +124,7 @@ cmd_agent_coverage() {
       "$([ "$drift" = "1" ] && echo true || echo false)"
   else
     printf '▸ DeepSeek agent routing — target table from issue #6\n'
-    printf '  pro[1m] (opus): %s\n' "$TARGET_AGENTS_PRO"
+    printf '  pro (opus): %s\n' "$TARGET_AGENTS_PRO"
     printf '  flash  (sonnet|haiku): %s\n' "$TARGET_AGENTS_FLASH"
     [ -n "$pro_missing" ] && printf '  ✗ missing agent files (pro): %s\n' "$pro_missing"
     [ -n "$flash_missing" ] && printf '  ✗ missing agent files (flash): %s\n' "$flash_missing"

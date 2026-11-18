@@ -101,7 +101,7 @@ Reserve Frontier subscription CLIs (`fleet-cli/claude`, `fleet-cli/codex`, `flee
 
 Three cost controls live in `bin/` for the OpenCode → DeepSeek rail. They do not change any agent file: agents keep tier aliases, and one table maps tiers to DeepSeek IDs.
 
-- **Agent-level routing** — `bin/deepseek-routing.sh agent-coverage` audits `agents/*.md` against the issue's target table and fails on drift; `resolve <agent>` prints the DeepSeek ID a tier alias resolves to. Target: `opus` → `deepseek-v4-pro[1m]` (architect, security-reviewer, completeness-checker); `sonnet`/`haiku` → `deepseek-flash` (test-writer, code-simplifier, changelog-generator, visual-qa, content-writer, plus every other non-judgment agent — 75% of agents). `visual-qa` moved Opus → Sonnet here: it is screenshot diffing, not judgment.
+- **Agent-level routing** — `bin/deepseek-routing.sh agent-coverage` audits `agents/*.md` against the issue's target table and fails on drift; `resolve <agent>` prints the DeepSeek ID a tier alias resolves to. Target: `opus` → `deepseek-v4-pro` (architect, security-reviewer, completeness-checker); `sonnet`/`haiku` → `deepseek-flash` (test-writer, code-simplifier, changelog-generator, visual-qa, content-writer, plus every other non-judgment agent — 85% of agents). `visual-qa` moved Opus → Sonnet here: it is screenshot diffing, not judgment.
 - **Cache pre-warming** — `bin/deepseek-routing.sh warm <model> <system-prompt-prefix>` sends one minimal `max_tokens` request for the prefix the session will actually send, then stamps the prefix hash with a TTL (`DEEPSEEK_WARM_TTL`, default 1800 s). A warm request only helps when it shares the next request's prefix, so warm the real system prompt — not a dummy string. `run -a <agent> …` warms lazily and then `exec`s `opencode run` with the agent's model.
 - **Effort escalator** — `bin/effort-escalator.py classify "<task text>"` scores keywords into `low | medium | high | max` (architecture/refactor/security/auth/payment/debug/migration → `max`; rename/format/typo/changelog/docs-only → `low`; feature implementation → `high`; otherwise `medium`). `hook` reads a `PreToolUse`/prompt payload JSON on stdin. `run` passes the result as `opencode run --variant`.
 
@@ -123,10 +123,11 @@ Warm-cache savings depend on provider-side cache retention and are reported by `
 
 ## Agent routing
 
-- **Opus** — architect, completeness-checker, computer-use-operator, incident-responder, meta-orchestrator, performance-profiler, security-reviewer (each has `model_fallback: claude-sonnet-4-6` + `effort_fallback: high` per `opus-quota-fallback`)
-- **Burst capacity until 2026-11-04**: claimed Claude cloud-session credits run OUTSIDE plan limits — route round-sweeps / fan-outs / unattended batches to `claude --cloud` first, per `account-entitlements`.
-- **Sonnet** — accessibility-auditor, browser-operator, content-writer, deploy-verifier, media-orchestrator, migration-agent, motion-choreographer, resource-broker, seo-auditor, test-writer, visual-qa
-- **Haiku** — changelog-drafter, changelog-generator, code-simplifier, cost-estimator, dead-code-remover, dependency-auditor, formatter, model-router, renamer, transcriber
+Generated from `agents/*.md` frontmatter — run `bash bin/check-agent-routing.sh` to verify; edit the agent file, not this list.
+
+- **Opus** — architect, ceo, completeness-checker, computer-use-operator, incident-responder, meta-orchestrator, performance-profiler, security-reviewer (each has `model_fallback: claude-sonnet-4-6` + `effort_fallback: high` per `opus-quota-fallback`)
+- **Sonnet** — a11y-auditor, accessibility-auditor, appsec, backend-engineer, browser-operator, content-writer, database-engineer, deploy-verifier, devsecops, finops, full-stack-engineer, fullstack-engineer, growth-strategist, hr, hr-director, information-architect, media-orchestrator, migration-agent, model-router, motion-choreographer, performance-engineer, product-manager, qa-verification, refactorer, release-manager, resource-broker, seo-auditor, sre, support-dispatcher, swarm-dispatcher, technical-writer, test-writer, ui-designer, visual-qa
+- **Haiku** — changelog-drafter, changelog-generator, code-simplifier, cost-estimator, dead-code-remover, dependency-auditor, formatter, renamer, summarizer, transcriber
 
 ## Quota-aware routing
 

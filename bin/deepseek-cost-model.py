@@ -12,7 +12,7 @@ What is modelled
 * **Before** — every agent runs on ``deepseek-chat`` (the branch's current
   default: ``"model": "deepseek/deepseek-chat"``) with no cache pre-warming, so
   every invocation pays full input price for its system prompt.
-* **After** — judgment agents run on ``deepseek-v4-pro[1m]`` and the rest on
+* **After** — judgment agents run on ``deepseek-v4-pro`` and the rest on
   ``deepseek-flash`` (the ``bin/deepseek-routing.sh`` table), plus a warm cache
   hit rate for the system-prompt prefix (``--cache-hit``, default 0.91 as
   reported in issue #6; the warm hit rate is capped at 0.95 and a 1-token-per-
@@ -64,6 +64,10 @@ class Prices:
     flash_in: float
     flash_out: float
     cache_hit_discount: float = 0.9  # DeepSeek: cache-hit input ≈ 10% of miss price
+    # Reasoning models bill their reasoning tokens as output. Set this from a
+    # measured Pro/Flash output-token ratio; 1.0 means "assume none", which is
+    # the conservative choice until someone measures it.
+    pro_output_multiplier: float = 1.0
 
     @classmethod
     def from_dict(cls, d: dict[str, float]) -> Prices:
@@ -73,6 +77,7 @@ class Prices:
             raise ValueError(f"prices missing keys: {', '.join(missing)}")
         kwargs = {k: float(d[k]) for k in required}
         kwargs["cache_hit_discount"] = float(d.get("cache_hit_discount", cls.cache_hit_discount))
+        kwargs["pro_output_multiplier"] = float(d.get("pro_output_multiplier", 1.0))
         return cls(**kwargs)
 
 
@@ -112,9 +117,11 @@ def model(prices: Prices, workload: list[dict], cache_hit: float) -> dict:
         tier = tier_of(agent)
         if tier == "pro":
             in_p, out_p = prices.pro_in, prices.pro_out
+            out_tokens = output_tokens * prices.pro_output_multiplier
         else:
             in_p, out_p = prices.flash_in, prices.flash_out
-        a = calls * call_cost(prices, in_p, out_p, system_tokens, output_tokens, cache_hit)
+            out_tokens = output_tokens
+        a = calls * call_cost(prices, in_p, out_p, system_tokens, out_tokens, cache_hit)
 
         before += b
         after += a
@@ -172,6 +179,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--prices", required=True, help="JSON price file (see docs/deepseek-prices.example.json)")
     parser.add_argument("--workload", help="JSON workload file; defaults to the built-in fixed workload")
     parser.add_argument("--cache-hit", type=float, default=0.91, help="warm cache-hit share (default 0.91)")
+    parser.add_argument(
+        "--pro-output-multiplier",
+        type=float,
+        default=None,
+        help="measured Pro/Flash output-token ratio (reasoning tokens bill as output); "
+        "overrides the price file, default 1.0",
+    )
     parser.add_argument("--target", type=float, default=0.40, help="savings goal as a fraction (default 0.40)")
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--out", help="write markdown here instead of stdout")
@@ -183,6 +197,12 @@ def main(argv: list[str] | None = None) -> int:
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         print(f"deepseek-cost-model: bad --prices: {exc}", file=sys.stderr)
         return 2
+
+    if args.pro_output_multiplier is not None:
+        if args.pro_output_multiplier <= 0:
+            print("deepseek-cost-model: --pro-output-multiplier must be > 0", file=sys.stderr)
+            return 2
+        prices = Prices(**{**prices.__dict__, "pro_output_multiplier": args.pro_output_multiplier})
 
     if args.workload:
         try:
