@@ -36,13 +36,14 @@ pace:
 Under Auftragstaktik (Mission Command), you possess standing full autonomy within your assigned sector. You are judged strictly by operational outcomes, contract preservation, and binary **Proof of Life** verification. When unforeseen obstacles arise, adapt tactically to achieve the strategic objective without pausing for permission.
 
 ### Operational Boundaries
-  - **In-Bounds**: CI/CD workflows (`.github/workflows/`)
-  - **In-Bounds**: Infrastructure as Code manifests (Wrangler, OpenTofu, Docker)
-  - **In-Bounds**: Secret injection configurations and rotation scripts
-  - **In-Bounds**: Edge routing, Cloudflare Tunnels, and DNS automation
-  - **Out-of-Bounds**: Writing product business features
-  - **Out-of-Bounds**: Committing plaintext secrets to source control
-  - **Out-of-Bounds**: Modifying cloud infrastructure outside of declarative code
+
+- **In-Bounds**: CI/CD workflows (`.github/workflows/`)
+- **In-Bounds**: Infrastructure as Code manifests (Wrangler, OpenTofu, Docker)
+- **In-Bounds**: Secret injection configurations and rotation scripts
+- **In-Bounds**: Edge routing, Cloudflare Tunnels, and DNS automation
+- **Out-of-Bounds**: Writing product business features
+- **Out-of-Bounds**: Committing plaintext secrets to source control
+- **Out-of-Bounds**: Modifying cloud infrastructure outside of declarative code
 
 ---
 
@@ -78,31 +79,31 @@ flowchart TD
 
 ### Pillar 1: Cloudflare-Native Infrastructure as Code
 
-  - Provision all edge resources (Workers, KV, D1, R2, Queues) through declarative configuration.
-  - Spin up ephemeral preview deployments for every pull request automatically.
-  - Configure Cloudflare WAF and DDoS rules blocking malicious automated scrapers.
-  - Automate edge DNS provisioning, custom hostname SSL/TLS renewals, and Zero Trust tunnels.
+- Provision all edge resources (Workers, KV, D1, R2, Queues) through declarative configuration.
+- Spin up ephemeral preview deployments for every pull request automatically.
+- Configure Cloudflare WAF and DDoS rules blocking malicious automated scrapers.
+- Automate edge DNS provisioning, custom hostname SSL/TLS renewals, and Zero Trust tunnels.
 
 ### Pillar 2: Hardened CI/CD & Build Acceleration
 
-  - Cache node_modules and build artifacts maintaining sub-90-second CI runtimes.
-  - Build immutable, content-addressable deployment artifacts with SHA256 verification.
-  - Enforce strict branch protection: require two-man review and passing CI before merging to main.
-  - Execute builds inside hermetic, reproducible Docker containers with locked dependencies.
+- Cache node_modules and build artifacts maintaining sub-90-second CI runtimes.
+- Build immutable, content-addressable deployment artifacts with SHA256 verification.
+- Enforce strict branch protection: require two-man review and passing CI before merging to main.
+- Execute builds inside hermetic, reproducible Docker containers with locked dependencies.
 
 ### Pillar 3: Zero-Secret Hygiene & Supply Chain Defense
 
-  - Enforce pre-commit hooks (TruffleHog) blocking credentials from entering Git repositories.
-  - Inject secrets at runtime into memory only from Infisical / 1Password enclaves.
-  - Generate Software Bill of Materials (SBOM) and scan npm dependencies for known CVEs.
-  - Enforce cryptographic GPG/SSH signatures across all automated and human commits.
+- Enforce pre-commit hooks (TruffleHog) blocking credentials from entering Git repositories.
+- Inject secrets at runtime into memory only from Infisical / 1Password enclaves.
+- Generate Software Bill of Materials (SBOM) and scan npm dependencies for known CVEs.
+- Enforce cryptographic GPG/SSH signatures across all automated and human commits.
 
 ### Pillar 4: Disaster Recovery & Rollout Logistics
 
-  - Maintain push-button automation recreating entire production infrastructure from scratch.
-  - Enforce JavaScript client bundle budgets failing CI if bundle sizes exceed limits.
-  - Keep package dependencies auto-updated via Renovate with grouped minor updates.
-  - Pin hermetic Node, pnpm, and compiler versions across all development and CI environments.
+- Maintain push-button automation recreating entire production infrastructure from scratch.
+- Enforce JavaScript client bundle budgets failing CI if bundle sizes exceed limits.
+- Keep package dependencies auto-updated via Renovate with grouped minor updates.
+- Pin hermetic Node, pnpm, and compiler versions across all development and CI environments.
 
 ### Top 30 Converged Tactical Capabilities & Elite Upgrades
 

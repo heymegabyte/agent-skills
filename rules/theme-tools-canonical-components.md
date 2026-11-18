@@ -59,6 +59,7 @@ User directive, 2026-10-31. This rule supersedes older instructions that make dr
 Whenever an agent encounters any of the situations below, it MUST reach for the corresponding `@theme.tools/*` default library (and extend it upstream in `heymegabyte/theme.tools` if a capability is missing):
 
 ### Tier 1 — 5 Core Visual, Theme, Editorial & Testing Packages (`core-workspace`)
+
 | # | Default Package | Upstream / Standard | When to Use (Automatic Trigger) | Core Exports & Cloudflare Primitives |
 |---|---|---|---|---|
 | 1 | **`@theme.tools/themes`** | W3C DTCG 2025.10 + OKLCH | Any theme, color palette, dark/light mode, typography scale, or motion token (`0.333s`) | `BASE_THEME`, OKLCH palettes (`#060610`, `#00E5FF`, `#50AAE3`, `#7C3AED`), CSS custom properties |
@@ -68,6 +69,7 @@ Whenever an agent encounters any of the situations below, it MUST reach for the 
 | 5 | **`@theme.tools/testing`** | Playwright + CF Browser Run + 16-State Verifier | Verifying UI widgets across all 16 visual states and 10 micro-critique lenses | `evaluateWidgetConvergence()`, `VISUAL_STATE_MATRIX_16`, `MICRO_CRITIQUE_LENSES_10`, 450-item testing catalog |
 
 ### Tier 2 — 15 Cloudflare-Native Absorbed Open-Source Application Engines (`absorbed-saas-engine`)
+
 | # | Default Package | Absorbed Open-Source Inspiration | When to Use (Automatic Trigger) | Core Exports & Cloudflare Primitives |
 |---|---|---|---|---|
 | 6 | **`@theme.tools/workflows`** | **Activepieces** (MIT `packages/shared` & pieces) | Any workflow automation, trigger/action builder, webhook orchestration, or React Flow DAG | `validateCloudflareWorkflow()`, `definePiece()`, `projectFlowToReactFlowGraph()` (`Workflows`, `Queues`, `DO`, `D1`) |
@@ -87,6 +89,7 @@ Whenever an agent encounters any of the situations below, it MUST reach for the 
 | 20 | **`@theme.tools/dataplane`** | **Papermark** (clean-room CF-native) | Any secure pitch deck, investor/board data room, dynamic PDF watermarking, or page-by-page dwell analytics | `<tt-secure-deck-viewer>`, viewer-email R2 PDF watermarker, NDA gate (`R2`, `D1`, `Analytics Engine`) |
 
 ### Tier 3 — 8 Foundational Cross-Site Utility Libraries (`foundational-utility`)
+
 | # | Default Package | Scope & Standard | When to Use (Automatic Trigger) | Core Exports & Cloudflare Primitives |
 |---|---|---|---|---|
 | 21 | **`@theme.tools/telemetry`** | 7-Rail Observability + Langfuse Safe | Every Worker/app request, LLM call, analytics event, error boundary, or Promptfoo eval | Cloudflare OTLP, PostHog, Sentry v11, GA4, GTM, **Langfuse `2500ms` fail-open circuit breaker**, PII redactor |

@@ -13,6 +13,7 @@
 Workflow execution results are authoritative in GitHub Actions. Callers are propagated to the tested immutable implementation revision after this commit; subsequent documentation-only updates need not repin unchanged execution code. Private machine README contains operational recovery steps. No website deployment or Cloudflare provisioning occurred.
 
 First live workflow verification:
+
 - [megabyte.space / Claude](https://github.com/heymegabyte/megabyte.space/actions/runs/38002669136): success; submodule worktree retained without a false cleanup failure.
 - [projectsites.dev / Codex](https://github.com/heymegabyte/projectsites.dev/actions/runs/38002666704): native execution exited zero, but completion validation rejected an unknown deployment URL represented as JSON null. Fixed by normalizing null deployment fields to empty unknown values, with a regression assertion. Invalid object/list types and unsafe URLs still fail. Compute evidence is now collected before validating the completion report.
 

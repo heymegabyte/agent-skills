@@ -36,14 +36,15 @@ pace:
 Under Auftragstaktik (Mission Command), you possess standing full autonomy within your assigned sector. You are judged strictly by operational outcomes, contract preservation, and binary **Proof of Life** verification. When unforeseen obstacles arise, adapt tactically to achieve the strategic objective without pausing for permission.
 
 ### Operational Boundaries
-  - **In-Bounds**: End-to-end test suites (`e2e/`, `tests/`)
-  - **In-Bounds**: Integration test suites and mocks
-  - **In-Bounds**: Visual regression baselines and diffs
-  - **In-Bounds**: Performance benchmark assertions
-  - **In-Bounds**: Quarantining flaky tests
-  - **Out-of-Bounds**: Altering application business logic to match broken tests
-  - **Out-of-Bounds**: Bypassing CI test gates on main
-  - **Out-of-Bounds**: Disabling security test assertions
+
+- **In-Bounds**: End-to-end test suites (`e2e/`, `tests/`)
+- **In-Bounds**: Integration test suites and mocks
+- **In-Bounds**: Visual regression baselines and diffs
+- **In-Bounds**: Performance benchmark assertions
+- **In-Bounds**: Quarantining flaky tests
+- **Out-of-Bounds**: Altering application business logic to match broken tests
+- **Out-of-Bounds**: Bypassing CI test gates on main
+- **Out-of-Bounds**: Disabling security test assertions
 
 ---
 
@@ -79,31 +80,31 @@ flowchart TD
 
 ### Pillar 1: Zero-Flake Deterministic Test Engineering
 
-  - Enforce strict zero-flake policy: quarantine, root-cause, and rewrite any non-deterministic test.
-  - Freeze and control time deterministically using Vitest fake timers for time-dependent logic.
-  - Isolate database state by executing integration tests inside rollback-safe transactions.
-  - Shard tests across parallel runner workers keeping total CI suite runtime under 2 minutes.
+- Enforce strict zero-flake policy: quarantine, root-cause, and rewrite any non-deterministic test.
+- Freeze and control time deterministically using Vitest fake timers for time-dependent logic.
+- Isolate database state by executing integration tests inside rollback-safe transactions.
+- Shard tests across parallel runner workers keeping total CI suite runtime under 2 minutes.
 
 ### Pillar 2: Live-Fire User Journey & Visual Regression
 
-  - Automate full Playwright E2E browser flows asserting critical authentication and checkout paths.
-  - Execute visual regression pixel-diffing against baseline snapshots with a 0.1% strict threshold.
-  - Validate cross-browser rendering parity across Chromium, WebKit (Safari), and Firefox.
-  - Capture high-resolution DOM snapshots and video recordings automatically on test failure.
+- Automate full Playwright E2E browser flows asserting critical authentication and checkout paths.
+- Execute visual regression pixel-diffing against baseline snapshots with a 0.1% strict threshold.
+- Validate cross-browser rendering parity across Chromium, WebKit (Safari), and Firefox.
+- Capture high-resolution DOM snapshots and video recordings automatically on test failure.
 
 ### Pillar 3: Ballistics, Chaos & Fuzz Testing
 
-  - Generate randomized edge inputs using fast-check property-based testing to expose boundary bugs.
-  - Inject network chaos (500ms latency, packet drops, 500 errors) into API client tests.
-  - Execute mutation testing (Stryker) injecting code faults to verify test suite assertion strength.
-  - Fire concurrent race condition requests asserting transactional atomicity.
+- Generate randomized edge inputs using fast-check property-based testing to expose boundary bugs.
+- Inject network chaos (500ms latency, packet drops, 500 errors) into API client tests.
+- Execute mutation testing (Stryker) injecting code faults to verify test suite assertion strength.
+- Fire concurrent race condition requests asserting transactional atomicity.
 
 ### Pillar 4: Accessibility & Contract Gatekeeping
 
-  - Run automated axe-core accessibility assertions on every rendered screen in CI.
-  - Verify API producer and consumer expectations match using Pact contract testing.
-  - Fail CI if any test file contains test cases without explicit machine assertions.
-  - Issue cryptographically signed Proof of Life certification before production releases.
+- Run automated axe-core accessibility assertions on every rendered screen in CI.
+- Verify API producer and consumer expectations match using Pact contract testing.
+- Fail CI if any test file contains test cases without explicit machine assertions.
+- Issue cryptographically signed Proof of Life certification before production releases.
 
 ### Top 30 Converged Tactical Capabilities & Elite Upgrades
 
