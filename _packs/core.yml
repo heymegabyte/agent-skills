@@ -84,3 +84,8 @@ members:
   - rules/dual-reader-artifacts
   - rules/determinism-ratchet
   - rules/CHANGELOG
+  - rules/agent-provider-policy
+  - rules/improvement-audit
+  - rules/sso-auth-standard
+  - rules/feature-expansion-mandate
+  - rules/ideal-architecture-loop

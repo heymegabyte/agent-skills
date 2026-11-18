@@ -10,7 +10,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "bin/deepseek-cost-model.py"
-PRICES = ROOT / "docs/deepseek-prices.example.json"
+PRICES = ROOT / "docs/deepseek-prices.json"
 
 
 def _load():
@@ -34,15 +34,59 @@ def test_default_workload_meets_goal():
     assert result["savings_pct"] >= 40.0
 
 
-def test_routing_only_baseline():
-    """Routing alone saves; the cache hook closes the rest to the 40% goal.
+def _flat_prices():
+    """Real rates with the Pro output multiplier neutralised.
 
-    Pinned so a routing regression shows up as a smaller baseline rather than
-    hiding behind the cache term.
+    Isolates the rate lever from the reasoning-token lever.
     """
-    result = mod.model(_prices(), mod.DEFAULT_WORKLOAD, 0.0)
-    assert result["savings_pct"] >= 30.0
-    assert result["savings_pct"] < 40.0
+    return mod.Prices(**{**_prices().__dict__, "pro_output_multiplier": 1.0})
+
+
+def test_routing_only_saves_nothing_at_flat_rates():
+    """At the gateway's current rates, pro and flash bill identically.
+
+    Tier routing is a latency and output-volume lever, not a rate lever. This
+    test pins that truth so nobody re-derives a routing percentage from a
+    fictional price spread (the earlier docs claimed 34.5% this way).
+    """
+    prices = _flat_prices()
+    assert prices.pro_in == prices.flash_in
+    assert prices.pro_out == prices.flash_out
+    result = mod.model(prices, mod.DEFAULT_WORKLOAD, 0.0)
+    assert result["savings_pct"] == pytest.approx(0.0, abs=0.05)
+
+
+def test_all_savings_come_from_cache():
+    """Flat output rates: the 40% goal is carried entirely by prompt caching."""
+    prices = _flat_prices()
+    cold = mod.model(prices, mod.DEFAULT_WORKLOAD, 0.0)["savings_pct"]
+    warm = mod.model(prices, mod.DEFAULT_WORKLOAD, 0.91)["savings_pct"]
+    assert cold == pytest.approx(0.0, abs=0.05)
+    assert warm >= 60.0
+
+
+def test_measured_reasoning_multiplier_still_meets_goal():
+    """With measured Pro reasoning output, savings shrink but still clear 40%.
+
+    The measured multiplier (7.1x) is a lower bound: Pro was truncated at
+    max_tokens and still billed every token. If it grows, the headline saving
+    goes with it, which is why the doc publishes the range.
+    """
+    prices = _prices()
+    assert prices.pro_output_multiplier == pytest.approx(7.1)
+    warm = mod.model(prices, mod.DEFAULT_WORKLOAD, 0.916)
+    assert warm["savings_pct"] >= 40.0
+    assert warm["savings_pct"] < mod.model(_flat_prices(), mod.DEFAULT_WORKLOAD, 0.916)["savings_pct"]
+
+
+def test_pro_output_multiplier_raises_pro_cost():
+    """A reasoner that bills extra reasoning tokens must show up as higher cost."""
+    base = _prices()
+    costs = {}
+    for multiplier in (1.0, 2.0):
+        prices = mod.Prices(**{**base.__dict__, "pro_output_multiplier": multiplier})
+        costs[multiplier] = mod.model(prices, mod.DEFAULT_WORKLOAD, 0.91)["after_usd"]
+    assert costs[2.0] > costs[1.0]
 
 
 def test_judgment_agents_stay_pro():

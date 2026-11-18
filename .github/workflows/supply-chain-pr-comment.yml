@@ -35,7 +35,14 @@ jobs:
       - name: Run security-supply-chain audit (JSON)
         id: audit
         run: |
-          AUDIT_JSON=$(bash bin/security-supply-chain.sh "$PWD" --json 2>/dev/null || echo '{"summary":{"exit":1}}')
+          # The script prints a JSON report AND exits non-zero when a check fails.
+          # `|| echo` on the assignment appended a second JSON document in that
+          # case ("Unexpected non-whitespace character after JSON"), so capture the
+          # report first and fall back only when stdout is not valid JSON.
+          AUDIT_JSON=$(bash bin/security-supply-chain.sh "$PWD" --json 2>/dev/null || true)
+          if ! printf '%s' "$AUDIT_JSON" | node -e 'let d="";process.stdin.on("data",c=>d+=c).on("end",()=>{JSON.parse(d)})' 2>/dev/null; then
+            AUDIT_JSON='{"summary":{"exit":1}}'
+          fi
           {
             echo "audit_json<<AUDITEOF"
             echo "$AUDIT_JSON"

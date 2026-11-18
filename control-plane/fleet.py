@@ -140,7 +140,12 @@ def run(repository, output=None, message=None, timeout=3600, runtime=None):
         raise ValueError('Unsupported fleet runtime')
     if not 1 <= timeout <= 3600:
         raise ValueError('Turn timeout must be between 1 and 3600 seconds')
-    run_id = f'{repository.replace("/", "--")}-{os.environ.get("GITHUB_RUN_ID", "local-" + str(time.time_ns()))}-{os.environ.get("GITHUB_RUN_ATTEMPT", "1")}'
+    # The pid keeps parallel fleet runs in one CI job distinct: they share
+    # GITHUB_RUN_ID + GITHUB_RUN_ATTEMPT, and two processes would otherwise
+    # race the same log dir (FileExistsError) instead of serializing on the
+    # repository lock.
+    run_id = (f'{repository.replace("/", "--")}-{os.environ.get("GITHUB_RUN_ID", "local-" + str(time.time_ns()))}'
+              f'-{os.environ.get("GITHUB_RUN_ATTEMPT", "1")}-{os.getpid()}')
     logdir = AI / 'logs' / run_id
     logdir.mkdir(parents=True, mode=0o700)
     output = Path(output or logdir)

@@ -1,0 +1,25 @@
+{
+  "_comment": "REAL prices, read from the LiteLLM gateway the fleet actually bills through. Source: GET https://llm.megabyte.space/v1/model/info (litellm_params.input_cost_per_token / output_cost_per_token / cache_read_input_token_cost), fetched 2026-11-18. Route mapping at that time: deepseek-v4-pro -> deepseek/deepseek-reasoner, deepseek-flash -> deepseek/deepseek-chat. Re-fetch before quoting any figure; this file is a dated snapshot, not a live rate card.",
+  "_source": {
+    "endpoint": "https://llm.megabyte.space/v1/model/info",
+    "fetched": "2026-11-18",
+    "raw_per_token": {
+      "input_cache_miss": 2.8e-7,
+      "output": 4.2e-7,
+      "cache_read": 2.8e-8
+    }
+  },
+  "_warning": "deepseek-v4-pro and deepseek-flash currently bill at the SAME per-token rate. Tier routing therefore saves $0.00 on rate. The routing benefit is latency plus lower output volume; the dollar saving comes from prompt-cache hits. Do not claim routing-driven percentage savings at these rates.",
+  "_measurement": {
+    "pro_output_multiplier": "Measured 2026-11-18 through the same gateway: fixed code-review task, max_tokens=600, temperature=0, 3 samples per model. deepseek-flash completion tokens 85/52/52; deepseek-v4-pro completion tokens 600/600/600 (588-600 of them reasoning_tokens, finish_reason=length, empty content). 600/85 = 7.06, so 7.1 is a LOWER BOUND on the Pro/Flash output-token ratio for that task: Pro was truncated and still billed the full 600. Re-measure on a longer-output task before treating this as converged.",
+    "cache_hit": "Measured 2026-11-18: 10,511-char system prompt, 6 sequential identical calls per model. Cache hit tokens 2432/2629 (92.5%) for deepseek-flash and deepseek-chat, 2432/2654 (91.6%) for deepseek-v4-pro; 6/6 calls hit after the first. The issue's 91% assumption holds in this environment."
+  },
+  "chat_in": 0.28,
+  "chat_out": 0.42,
+  "pro_in": 0.28,
+  "pro_out": 0.42,
+  "flash_in": 0.28,
+  "flash_out": 0.42,
+  "cache_hit_discount": 0.9,
+  "pro_output_multiplier": 7.1
+}
