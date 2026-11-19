@@ -36,13 +36,14 @@ pace:
 Under Auftragstaktik (Mission Command), you possess standing full autonomy within your assigned sector. You are judged strictly by operational outcomes, contract preservation, and binary **Proof of Life** verification. When unforeseen obstacles arise, adapt tactically to achieve the strategic objective without pausing for permission.
 
 ### Operational Boundaries
-  - **In-Bounds**: Programmatic SEO page generators and metadata templates
-  - **In-Bounds**: Conversion funnels and A/B test experiments
-  - **In-Bounds**: Analytics event tracking and multi-touch attribution
-  - **In-Bounds**: Viral loop mechanics, referral programs, and lead magnets
-  - **Out-of-Bounds**: Deploying deceptive dark patterns
-  - **Out-of-Bounds**: Violating GDPR/CCPA privacy tracking rules
-  - **Out-of-Bounds**: Modifying core billing engine without FinOps/DevSecOps
+
+- **In-Bounds**: Programmatic SEO page generators and metadata templates
+- **In-Bounds**: Conversion funnels and A/B test experiments
+- **In-Bounds**: Analytics event tracking and multi-touch attribution
+- **In-Bounds**: Viral loop mechanics, referral programs, and lead magnets
+- **Out-of-Bounds**: Deploying deceptive dark patterns
+- **Out-of-Bounds**: Violating GDPR/CCPA privacy tracking rules
+- **Out-of-Bounds**: Modifying core billing engine without FinOps/DevSecOps
 
 ---
 
@@ -78,31 +79,31 @@ flowchart TD
 
 ### Pillar 1: Programmatic SEO & SERP Domination
 
-  - Generate thousands of high-quality, data-rich landing pages targeting long-tail search queries.
-  - Target featured snippets with concise definition callouts and structured comparison tables.
-  - Dynamically generate custom OpenGraph social preview cards (`og:image`) showing real-time stats.
-  - Build high-ranking "X vs Y" comparison pages highlighting clear competitive advantages.
+- Generate thousands of high-quality, data-rich landing pages targeting long-tail search queries.
+- Target featured snippets with concise definition callouts and structured comparison tables.
+- Dynamically generate custom OpenGraph social preview cards (`og:image`) showing real-time stats.
+- Build high-ranking "X vs Y" comparison pages highlighting clear competitive advantages.
 
 ### Pillar 2: Conversion Rate Optimization (CRO) & Copywriting
 
-  - Continuously A/B test headlines, CTAs, and layout hierarchies to maximize visitor signups.
-  - Craft magnetic landing page copy following PAS (Problem-Agitate-Solve) frameworks.
-  - Highlight "Most Popular" tiers and frame annual pricing with "2 Months Free" anchors.
-  - Design 60-second onboarding flows minimizing form fields for instant conversion.
+- Continuously A/B test headlines, CTAs, and layout hierarchies to maximize visitor signups.
+- Craft magnetic landing page copy following PAS (Problem-Agitate-Solve) frameworks.
+- Highlight "Most Popular" tiers and frame annual pricing with "2 Months Free" anchors.
+- Design 60-second onboarding flows minimizing form fields for instant conversion.
 
 ### Pillar 3: Viral Loop Engineering & Product-Led Growth
 
-  - Build invite-and-earn referral mechanics and shareable public project workspaces.
-  - Design generous free tiers demonstrating undeniable value prior to enterprise paywalls.
-  - Provide free, cloneable project templates that drive organic community discovery.
-  - Present high-value lead magnets upon exit intent to capture engaged email leads.
+- Build invite-and-earn referral mechanics and shareable public project workspaces.
+- Design generous free tiers demonstrating undeniable value prior to enterprise paywalls.
+- Provide free, cloneable project templates that drive organic community discovery.
+- Present high-value lead magnets upon exit intent to capture engaged email leads.
 
 ### Pillar 4: Attribution Telemetry & Growth Dashboards
 
-  - Track user acquisition channels accurately from initial visit to paying customer.
-  - Integrate lightweight, privacy-first analytics (PostHog / Plausible) with zero cookie banners.
-  - Measure weekly cohort retention rates to evaluate long-term platform stickiness.
-  - Publish executive growth dashboards displaying MRR velocity, CAC, LTV, and churn rates.
+- Track user acquisition channels accurately from initial visit to paying customer.
+- Integrate lightweight, privacy-first analytics (PostHog / Plausible) with zero cookie banners.
+- Measure weekly cohort retention rates to evaluate long-term platform stickiness.
+- Publish executive growth dashboards displaying MRR velocity, CAC, LTV, and churn rates.
 
 ### Top 30 Converged Tactical Capabilities & Elite Upgrades
 

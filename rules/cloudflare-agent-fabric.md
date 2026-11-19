@@ -34,6 +34,7 @@ Use `cloudflare/skills` as the live upstream Cloudflare knowledge layer. This re
 Connect `https://mcp.cloudflare.com/mcp` directly.
 
 Preference order:
+
 1. ProjectSites MCP for high-level product operations.
 2. First-party Worker binding when already executing on Cloudflare.
 3. Cloudflare API MCP for broad account/platform operations.
@@ -54,6 +55,7 @@ Use `@cloudflare/computer` for lightweight Cloudflare-hosted agent filesystem, f
 It is **not a GUI desktop**.
 
 Heavy/full-Linux execution order:
+
 1. Daytona
 2. Coolify MCP-managed runner
 3. GitHub runner on the Ubuntu Desktop VM on Proxmox
@@ -66,17 +68,20 @@ Cloudflare Sandbox is not the default coding-agent execution environment.
 Code Mode lets the model write a small JavaScript program that discovers and composes tool/API calls rather than selecting one native tool per model round trip.
 
 Use it when:
+
 - tool/API catalogs are large or fast-changing;
 - pagination, loops, joins, filtering, branching or parallel calls are needed;
 - intermediate results are large and only a distilled result should enter model context;
 - tool definitions would consume significant prompt budget.
 
 Prefer direct tools when:
+
 - one or two predictable calls solve the task;
 - a result needs model judgment before the next call;
 - a risky write benefits from an explicit model-visible boundary.
 
 Pros:
+
 - much smaller tool-schema context;
 - fewer model round trips;
 - easy loops, joins, filtering and `Promise.all`;
@@ -84,6 +89,7 @@ Pros:
 - credentials remain host-side.
 
 Cons / guardrails:
+
 - extra execution/discovery indirection;
 - generated orchestration code can be harder to debug;
 - Cloudflare Code Mode is experimental;
@@ -98,11 +104,13 @@ Reference: https://developers.cloudflare.com/agents/tools/codemode/
 Run `node bin/audit-cloudflare-mcp-fleet.mjs` whenever MCP config changes.
 
 Portal candidates:
+
 - remote HTTP/Streamable HTTP MCPs shared by multiple agents/projects;
 - private HTTP MCPs reachable through Cloudflare One/Tunnel;
 - SaaS MCPs that benefit from Access, OAuth centralization, DLP, logging, server toggles, tool allowlists or Code Mode.
 
 Keep outside:
+
 - local stdio-only tools unless deliberately re-hosted as authenticated HTTP;
 - localhost-only development MCPs;
 - `mcp.cloudflare.com/mcp` (keep direct to avoid nested Code Mode);
@@ -115,6 +123,7 @@ Use portal Code Mode for large fleets; direct tools for small predictable sets.
 For customer/product API traffic, use named/versioned Dynamic Routes instead of hardcoded model selection.
 
 Canonical route intents on both `megabyte-space` and `projectsites-dev`:
+
 - `dynamic/fast`
 - `dynamic/standard`
 - `dynamic/premium`

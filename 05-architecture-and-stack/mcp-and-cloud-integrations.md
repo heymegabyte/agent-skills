@@ -18,7 +18,6 @@ updated: "2026-10-06"
 - Large portal: Code Mode `default_on`; small predictable server: direct tools are fine.
 - See `[[cloudflare-agent-fabric]]`.
 
-
 ### Scan Locations
 
 1. `~/.claude/settings.json` — global MCP
@@ -93,6 +92,7 @@ claude mcp add google-workspace -- npx -y @taylorwilsdon/google_workspace_mcp
 Use a portal when remote MCPs benefit from one Access front door, OAuth centralization, tool allowlists, tool-call analytics, namespacing, Gateway routing/DLP, server toggles, or Code Mode compression.
 
 Do not portal-wrap:
+
 - stdio/local MCPs unless intentionally re-hosted as authenticated Streamable HTTP;
 - the direct Cloudflare API Code Mode server;
 - an upstream forced into Code Mode when the portal would also force Code Mode.

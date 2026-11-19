@@ -56,6 +56,7 @@ CREATE → RENDER / EXECUTE → EXPERIENCE → CRITIQUE → MODIFY → COMPARE
    - **Pass 10 — Ecosystem Extraction (Triad Sync)**: What reusable pattern belongs in `agent-skills`, `install.doctor`, or `theme.tools` (`ui.theme.tools`)?
 
 ### B. The Product Loop (Workflow & Business Convergence)
+
 - Ask after every feature slice: *Can this become visualization instead of configuration? Navigation instead of instruction? Intent instead of forms?*
 - Every sub-feature must converge across all **8 Mandatory Axes**:
   1. **Beauty** (per-element craft, typography, balanced whitespace, OKLCH harmony)
@@ -68,6 +69,7 @@ CREATE → RENDER / EXECUTE → EXPERIENCE → CRITIQUE → MODIFY → COMPARE
   8. **AI Execution Quality** (frontier architecture, parallel swarm throughput, deterministic verification)
 
 ### C. The Organization Loop (End-of-Prompt Parallel Triad Sync)
+
 - Every prompt trains the organization. Before concluding any turn, execute Section 2 below in parallel.
 
 ---
@@ -91,6 +93,7 @@ Whenever the agent evaluates at the end of a prompt pass what updates can be inf
    - Reconcile host or product changes into the active project repository (`legion.megabyte.space`, `coolify.megabyte.space`, `projectsites.dev`, etc.).
 
 ### Mandatory OpenSpec + Paperclip Registration for Parallel Triad Work
+
 - Whenever inferred work is saved or queued in `agent-skills`, `install.doctor`, `theme.tools`, or any other project:
   1. Properly create or update an **OpenSpec** change directory (`openspec/changes/<change-id>/` containing `proposal.md`, `design.md`, `tasks.md`, and `specs/<capability>/spec.md`) in each respective repository.
   2. Create or update the corresponding **Paperclip issue/task** in each respective Paperclip project (`agent-skills`, `install.doctor`, `theme.tools`, etc.) containing a **direct deep link to the OpenSpec files** via `~/.agentskills/bin/openspec-paperclip-sync.ts` (or Paperclip MCP / `paperclipai issue create`).

@@ -82,6 +82,7 @@ Automatic learning = proposal → evidence/review → accepted knowledge. Never 
 ## Metadata
 
 Stable high-value metadata:
+
 - `tenant`
 - `project`
 - `kind` = skill | requirement | research | incident | deploy | learning | content | design | seo | eval

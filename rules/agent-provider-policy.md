@@ -29,6 +29,7 @@ Typical `throughput-safe` work includes mechanical code changes, scoped feature 
 When two or more independent throughput-safe slices exist, launch an **OpenCode swarm** unless coordination, contention, or launch overhead would make the total outcome worse. Do not require a minimum time saving: reduced Codex/Claude/Gemini usage, greater coverage, independent attempts, and preserved premium context all count as benefits. Use 3–4 workers by default when enough real work exists, obey the global host pool, and never exceed configured concurrency or provider limits. Assign disjoint file/module ownership, give each worker a compact contract, and prohibit nested swarms unless the scheduler explicitly permits them. Use serial waves for dependencies or shared hot files. Swarm output is untrusted until the parent folds it, checks conflicts, and runs the complete verification suite once.
 
 ### Frontier — architecture · research · judgment · OpenSpec Authoring (subscription CLIs ONLY)
+
 - **Claude Code** (`claude` CLI, user's Claude subscription) — **Primary Architect** with a fully-loaded, hydrated context (`<=900K tokens`), OpenSpec specification author (`proposal.md`, `design.md`, `tasks.md`, `specs/`), integrator, final implementation judge, hard debugging, requirements reconciliation, deep architectural expansion, final verification.
 - **Codex** (`codex` CLI, user's ChatGPT subscription) — independent heavy researcher, architecture challenger, OpenSpec Architect/critic, second opinion, adversarial reviewer, plan/prompt critic, independent solution generator.
 - **Gemini CLI / Antigravity** (user subscription) — independent multimodal/frontier Architect, OpenSpec author, judgment, and review; like Codex and Claude, it delegates throughput-safe execution to OpenCode rather than consuming its premium context on routine volume.
@@ -38,6 +39,7 @@ When two or more independent throughput-safe slices exist, launch an **OpenCode 
   expansion / adversarial-review pass itself, then proceeds.
 
 ### Throughput — routine implementation & heartbeats (DeepSeek & Local GPU Ollama across `claude` + `codex` + `opencode`)
+
 - **Tri-Harness DeepSeek & Ollama Offload (`claude` + `codex` + `opencode` via Claw Router `cr` & LiteLLM Gateway `https://llm.megabyte.space`)** — Paperclip and OpenClaw leverage **all three CLI harnesses** (`claude`, `codex`, and `opencode`) on top of **DeepSeek** (`deepseek-v4-pro`, `deepseek-flash`, `deepseek-chat`, `deepseek-reasoner`) and **Local GPU Ollama** (`hybrid-coder`, `ollama-coder`, `workstation-ai`, `local-llm`, `qwen2.5-coder:14b`) through Claw Router (`cr`) and the LiteLLM Gateway (`https://llm.megabyte.space`):
   1. **Claude Code (`claude` via Claw Router `cr`)**:
      - `cr @litellm` (`fleet-cli/claude-deepseek`) routes Claude Code through `https://llm.megabyte.space` (`deepseek-v4-pro` / `deepseek-flash`).
@@ -57,6 +59,7 @@ When two or more independent throughput-safe slices exist, launch an **OpenCode 
 - **Quota preservation — heavily DEFAULT to DeepSeek / Ollama across `claude` + `codex` + `opencode` to protect finite Frontier subscription windows.** Spend Frontier subscription quota ONLY on OpenSpec authoring (`proposal.md`, `design.md`, `tasks.md`, `specs/`), deep architecture, security review, and critical incident response.
 
 ### Research expansion (beginning-of-build research) → [[research-expansion-orchestration]]
+
 - The Phase 0 / prompt-expansion research that used to reach for the OpenAI/Anthropic **APIs** now
   runs on the CLIs: **claude** (deep/judgment + synthesis — replaces Anthropic-API research) +
   **codex** (independent 2nd angle — replaces OpenAI-API research, when provided) +
@@ -66,6 +69,7 @@ When two or more independent throughput-safe slices exist, launch an **OpenCode 
   verdict per session + a final table. Full flow + honesty gate: [[research-expansion-orchestration]].
 
 ## Fleet management plane — Paperclip over OpenClaw (recommended, as of 2026-10)
+
 - **Paperclip** (`github.com/PaperclipAI/paperclip`, MIT, self-host) is the recommended control
   plane for **managing OpenClaw + every other coding agent** as one governed org: task assignment,
   org chart / roles, per-agent + per-project **budgets & cost tracking**, heartbeats, scheduled
@@ -89,11 +93,12 @@ When two or more independent throughput-safe slices exist, launch an **OpenCode 
   in prod. Install `npx paperclipai@latest onboard --yes` (Node ≥24.11; Docker ok); creds via
   `get-secret`. Pin + review deps per `rules/ai-agent-security.md` § Supply chain.
 - Supersedes the bare "OpenClaw = orchestrator" framing in `bootstrap/ubuntu-agent-fleet-codex.md`
-  + `machines/ubuntu-proxmox-primary.md`: OpenClaw stays the runtime; Paperclip is the plane above it.
+  - `machines/ubuntu-proxmox-primary.md`: OpenClaw stays the runtime; Paperclip is the plane above it.
 
 ## HARD provider rules
 
 ### OpenAI (internal orchestration)
+
 - NEVER `OPENAI_API_KEY` for Codex. NEVER the Responses / Chat Completions / Agents API merely
   to make a model research / plan / review / architect / write code / expand a prompt when the
   Codex CLI can do it.
@@ -103,6 +108,7 @@ When two or more independent throughput-safe slices exist, launch an **OpenCode 
   Codex child processes.
 
 ### Anthropic (internal orchestration)
+
 - NEVER `ANTHROPIC_API_KEY`. NEVER the Anthropic API/SDK merely to make Claude research /
   architect / review / write code / expand prompts when Claude Code can via subscription.
 - NEVER silently fall back subscription → Anthropic Console PAYG. NEVER extract/copy Claude
@@ -111,6 +117,7 @@ When two or more independent throughput-safe slices exist, launch an **OpenCode 
   and bills). Launch via the sanitizing helper below.
 
 ### DeepSeek (ALLOWED — preferred inexpensive implementation provider)
+
 - DeepSeek API usage IS allowed, via OpenCode as the normal harness.
 - `get-secret DEEPSEEK_API_KEY` is the encrypted source of truth. CLI launches inject it only into
   the OpenCode child. Desktop/GUI launches do not inherit shell env, so synchronize it into
@@ -124,6 +131,7 @@ When two or more independent throughput-safe slices exist, launch an **OpenCode 
   API keys to prevent accidental premium-provider fallback or billing.
 
 ## Enforcement tooling (`bin/`)
+
 - `provider-capability.sh` — read-only capability + auth + env-leak detector (JSON; never prints
   secrets; distinguishes model discovery, native auth, config shadowing, and source-secret presence).
 - `opencode-deepseek-auth.sh status|sync` — inspect or atomically synchronize native OpenCode auth.
@@ -135,6 +143,7 @@ When two or more independent throughput-safe slices exist, launch an **OpenCode 
   `OPENAI_API_KEY` present in the dev ENV is a WARNING (can override subscription + bill).
 
 ## Product-runtime boundary (NOT governed by the internal ban)
+
 - Customer-facing features intentionally offering OpenAI/Anthropic-backed functionality are
   PRESERVED and billed to the platform, not internal agents: the WLK-39 Resolution Engine
   (`/api/resolve`), the model-registry customer API (`/v1/*`), the editor chat router, the
@@ -146,6 +155,7 @@ When two or more independent throughput-safe slices exist, launch an **OpenCode 
   product-runtime, not internal-orchestration.
 
 ## Fallback ladder (internal orchestration)
+
 1. Frontier judgment → `claude` (subscription) [+ `codex` (subscription) when authed] → synthesize.
 2. Codex unauthed → Claude does the extra independent pass. Not fatal.
 3. Throughput implementation → OpenCode + DeepSeek (swarm when parallelizable).
