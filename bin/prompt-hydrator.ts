@@ -796,9 +796,10 @@ function buildResearchPrompts(workflows: Workflow[]): ResearchPrompt[] {
 }
 
 export function buildGreenfieldCascade(hydrated: HydratedPrompt): GreenfieldCascade {
-  if (hydrated.route !== 'greenfield-saas' || !hydrated.referenceProduct) {
-    throw new Error('greenfield cascade requires a hydrated greenfield SaaS request with a reference product');
+  if (hydrated.route !== 'greenfield-saas') {
+    throw new Error('greenfield cascade requires a hydrated greenfield SaaS request');
   }
+  const referenceProduct = hydrated.referenceProduct ?? 'Enterprise-SaaS';
   const evidenceIds = hydrated.evidence.map((item) => item.id);
   const capabilities = CAPABILITY_TEMPLATES.map(([id, name, dependencies]) => ({ id: `cap-${id}`, name, owner: `product:${id}`, evidenceIds, dependencies: dependencies.map((dependency) => `cap-${dependency}`) }));
   const workflows = capabilities.flatMap((capability) => (WORKFLOW_OVERRIDES[capability.id.replace(/^cap-/, '')] ?? []).map((name) => workflow(capability.id, name, evidenceIds)));
@@ -839,7 +840,7 @@ export function buildGreenfieldCascade(hydrated: HydratedPrompt): GreenfieldCasc
     };
   });
   const gap = {
-    id: stableId('gap', hydrated.referenceProduct, 'scheduled-export'),
+    id: stableId('gap', referenceProduct, 'scheduled-export'),
     workflow: 'Schedule a recurring workspace export',
     owner: 'product:import-export',
     evidenceIds,
@@ -847,9 +848,9 @@ export function buildGreenfieldCascade(hydrated: HydratedPrompt): GreenfieldCasc
   };
   return {
     schemaVersion: 1,
-    cascadeId: stableId('cascade', hydrated.hydrationId, hydrated.referenceProduct),
+    cascadeId: stableId('cascade', hydrated.hydrationId, referenceProduct),
     sourceHydrationId: hydrated.hydrationId,
-    productGoal: { id: 'goal-greenfield-product', request: hydrated.originalRequest, referenceProduct: hydrated.referenceProduct, edition: hydrated.referenceEdition },
+    productGoal: { id: 'goal-greenfield-product', request: hydrated.originalRequest, referenceProduct, edition: hydrated.referenceEdition },
     capabilities,
     workflows,
     researchPrompts,
