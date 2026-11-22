@@ -91,11 +91,17 @@ cmd_agent_coverage() {
   local name tier
 
   for name in $TARGET_AGENTS_PRO; do
-    tier=$(tier_alias_for_agent "$name") || { pro_missing+="$name "; continue; }
+    tier=$(tier_alias_for_agent "$name") || {
+      pro_missing+="$name "
+      continue
+    }
     if [ "$tier" != "opus" ]; then pro_wrong+="$name:$tier "; fi
   done
   for name in $TARGET_AGENTS_FLASH; do
-    tier=$(tier_alias_for_agent "$name") || { flash_missing+="$name "; continue; }
+    tier=$(tier_alias_for_agent "$name") || {
+      flash_missing+="$name "
+      continue
+    }
     case "$tier" in
       sonnet | haiku) : ;;
       *) flash_wrong+="$name:$tier " ;;
@@ -171,7 +177,7 @@ cmd_warm_stamp() {
   [ -n "$key" ] || usage
   local f
   f=$(warm_stamp_file "$key")
-  if [ -f "$f" ] && [ $(( $(date +%s) - $(cat "$f") )) -lt "$WARM_TTL_SECONDS" ]; then
+  if [ -f "$f" ] && [ $(($(date +%s) - $(cat "$f"))) -lt "$WARM_TTL_SECONDS" ]; then
     printf 'fresh\n'
   else
     printf 'stale\n'
@@ -207,7 +213,8 @@ cmd_warm() {
     -X POST "$API_BASE/v1/chat/completions" \
     -H "Authorization: Bearer ${DEEPSEEK_API_KEY}" \
     -H 'Content-Type: application/json' \
-    --data-binary "$(python3 - "$model" "$prefix" "$WARM_MAX_TOKENS" <<'PY'
+    --data-binary "$(
+      python3 - "$model" "$prefix" "$WARM_MAX_TOKENS" <<'PY'
 import json, sys
 model, prefix, max_tokens = sys.argv[1], sys.argv[2], int(sys.argv[3])
 messages = []
@@ -217,12 +224,13 @@ messages.append({"role": "user", "content": "warm"})
 print(json.dumps({"model": model, "messages": messages, "max_tokens": max_tokens,
                   "stream": False, "temperature": 0}))
 PY
-)" 2>/dev/null) || status="000"
+    )" 2>/dev/null) || status="000"
   ended=$(date +%s)
 
   local prompt_tokens=0 cache_hit_tokens=0
   if [ "$status" = "200" ]; then
-    read -r _hit _miss prompt_tokens cache_hit_tokens < <(python3 - "$bodies" <<'PY'
+    read -r _hit _miss prompt_tokens cache_hit_tokens < <(
+      python3 - "$bodies" <<'PY'
 import json, sys
 try:
     d = json.load(open(sys.argv[1]))
@@ -234,11 +242,11 @@ miss = int(u.get("prompt_cache_miss_tokens") or u.get("prompt_tokens") or 0)
 print(1 if hit else 0, 1 if miss else 0, int(u.get("prompt_tokens") or 0), hit)
 PY
     )
-    printf '%s' "$ended" > "$(warm_stamp_file "$key")"
+    printf '%s' "$ended" >"$(warm_stamp_file "$key")"
   fi
   rm -f "$bodies"
 
-  local ms=$(( (ended - started) * 1000 ))
+  local ms=$(((ended - started) * 1000))
   if [ "$json" = "1" ]; then
     printf '{"ok":%s,"status":"%s","ms":%d,"prompt_tokens":%d,"cache_hit_tokens":%d,"stamp":"%s"}\n' \
       "$([ "$status" = "200" ] && echo true || echo false)" "$status" "$ms" \
@@ -302,8 +310,8 @@ cmd_run() {
   key=$(prefix_hash "$model_id|$prefix")
   stale=$(cmd_warm_stamp "$key")
   if [ "$stale" = "stale" ] && [ -n "${DEEPSEEK_API_KEY:-}" ]; then
-    cmd_warm "$model_id" "$prefix" >/dev/null 2>&1 || \
-      printf 'deepseek-routing: warm skipped (request failed; continuing)\n' >&2
+    cmd_warm "$model_id" "$prefix" >/dev/null 2>&1 \
+      || printf 'deepseek-routing: warm skipped (request failed; continuing)\n' >&2
   fi
 
   if ! OPENCODE_BIN="$(command -v opencode 2>/dev/null)"; then

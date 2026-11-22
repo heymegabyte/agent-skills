@@ -2,7 +2,7 @@
 set -euo pipefail
 export PATH="$HOME/.local/bin:$HOME/ai/tools/bin:$HOME/.volta/bin:$PATH"
 account="${1:?Usage: fleet-account-login.sh claude-1|claude-2|claude-3}"
-case "$account" in claude-1|claude-2|claude-3) ;; *) exit 2 ;; esac
+case "$account" in claude-1 | claude-2 | claude-3) ;; *) exit 2 ;; esac
 source "$HOME/ai/tools/claw-router/lib/common.sh"
 directory="$(cr_account_dir "$account")"
 cr_link_shared_paths "$directory"

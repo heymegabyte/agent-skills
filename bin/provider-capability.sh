@@ -145,10 +145,10 @@ OPENAI_KEY_SET='false'
 
 # --- policy verdict --------------------------------------------------------
 POLICY_OK='false'
-if [ "$CLAUDE_INSTALLED" = 'true' ] &&
-  [ "$DEEPSEEK_PRESENT" = 'true' ] &&
-  [ "$ANTHROPIC_KEY_SET" = 'false' ] &&
-  [ "$OPENAI_KEY_SET" = 'false' ]; then
+if [ "$CLAUDE_INSTALLED" = 'true' ] \
+  && [ "$DEEPSEEK_PRESENT" = 'true' ] \
+  && [ "$ANTHROPIC_KEY_SET" = 'false' ] \
+  && [ "$OPENAI_KEY_SET" = 'false' ]; then
   POLICY_OK='true'
 fi
 
