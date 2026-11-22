@@ -1,9 +1,25 @@
 {
   "schemaVersion": 2,
   "reviewedAt": "2026-11-04",
-  "scope": ["oneprompt.site", "theme.tools", "ui.theme.tools", "desktop.management", "inbox.vision", "pdf.kitchen", "status.charity", "linkbl.ink"],
+  "scope": [
+    "oneprompt.site",
+    "theme.tools",
+    "ui.theme.tools",
+    "desktop.management",
+    "inbox.vision",
+    "pdf.kitchen",
+    "status.charity",
+    "linkbl.ink"
+  ],
   "migrationSources": ["projectsites.dev"],
-  "rules": ["rules/platform-shared-capabilities.md", "rules/theme-tools-canonical-components.md", "rules/total-convergence-and-openspec-handoff.md", "rules/platform-agent-ui.md", "rules/platform-knowledge-integrations.md", "rules/platform-content-media.md"],
+  "rules": [
+    "rules/platform-shared-capabilities.md",
+    "rules/theme-tools-canonical-components.md",
+    "rules/total-convergence-and-openspec-handoff.md",
+    "rules/platform-agent-ui.md",
+    "rules/platform-knowledge-integrations.md",
+    "rules/platform-content-media.md"
+  ],
   "pack": "_packs/platform.yml",
   "prompt": "prompts/platform-convergence.md",
   "research": "reference/platform-research-2026-10-31.md",
@@ -62,12 +78,65 @@
       "@theme.tools/i18n-a11y"
     ]
   },
-  "supersedesInScope": {"builder": "VibeSDK", "knowledge": "QMD", "authenticationDefault": "Clerk"},
-  "catalog": {"components": "ui.theme.tools", "themes": "theme.tools", "sharedUtilities": "@theme.tools", "immutableVersions": true, "consumerForks": false},
-  "observability": ["Cloudflare", "PostHog", "Sentry", "Google Analytics 4", "Google Tag Manager", "Langfuse Cloud (2500ms fail-open)", "Promptfoo"],
-  "requiredGates": ["explicit-figma-approval", "server-side-authorization", "tenant-isolation", "license-review", "supported-runtime", "approved-budget", "contract-tests", "real-journey-evidence", "vendor-delivery-evidence", "rollback", "consumer-sync-acknowledgement"],
-  "statuses": ["not-started", "specified", "implemented", "wired", "verified", "deployed", "blocked"],
-  "timeSensitive": [{"date": "2026-11-16", "service": "Langfuse Cloud", "action": "Audit removal of legacy read/ingestion paths against the current compatibility matrix before cutover."}],
-  "sync": {"mode": "reviewed-immutable-revision", "createsSchedule": false, "assumesHostUpdated": false},
-  "distributionFiles": ["prompts/platform-convergence.md", "reference/platform-stack.json", "reference/remotion-upstream.json", "reference/platform-research-2026-10-31.md"]
+  "supersedesInScope": {
+    "builder": "VibeSDK",
+    "knowledge": "QMD",
+    "authenticationDefault": "Clerk"
+  },
+  "catalog": {
+    "components": "ui.theme.tools",
+    "themes": "theme.tools",
+    "sharedUtilities": "@theme.tools",
+    "immutableVersions": true,
+    "consumerForks": false
+  },
+  "observability": [
+    "Cloudflare",
+    "PostHog",
+    "Sentry",
+    "Google Analytics 4",
+    "Google Tag Manager",
+    "Langfuse Cloud (2500ms fail-open)",
+    "Promptfoo"
+  ],
+  "requiredGates": [
+    "explicit-figma-approval",
+    "server-side-authorization",
+    "tenant-isolation",
+    "license-review",
+    "supported-runtime",
+    "approved-budget",
+    "contract-tests",
+    "real-journey-evidence",
+    "vendor-delivery-evidence",
+    "rollback",
+    "consumer-sync-acknowledgement"
+  ],
+  "statuses": [
+    "not-started",
+    "specified",
+    "implemented",
+    "wired",
+    "verified",
+    "deployed",
+    "blocked"
+  ],
+  "timeSensitive": [
+    {
+      "date": "2026-11-16",
+      "service": "Langfuse Cloud",
+      "action": "Audit removal of legacy read/ingestion paths against the current compatibility matrix before cutover."
+    }
+  ],
+  "sync": {
+    "mode": "reviewed-immutable-revision",
+    "createsSchedule": false,
+    "assumesHostUpdated": false
+  },
+  "distributionFiles": [
+    "prompts/platform-convergence.md",
+    "reference/platform-stack.json",
+    "reference/remotion-upstream.json",
+    "reference/platform-research-2026-10-31.md"
+  ]
 }

@@ -16,12 +16,12 @@ name: Control Plane Tests
 on:
   push:
     paths:
-      - 'control-plane/**'
-      - '.github/workflows/control-plane-tests.yml'
+      - "control-plane/**"
+      - ".github/workflows/control-plane-tests.yml"
   pull_request:
     paths:
-      - 'control-plane/**'
-      - '.github/workflows/control-plane-tests.yml'
+      - "control-plane/**"
+      - ".github/workflows/control-plane-tests.yml"
   workflow_dispatch:
 
 permissions:

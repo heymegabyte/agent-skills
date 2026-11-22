@@ -285,11 +285,7 @@
       "status": "implemented",
       "priorityRationale": "Configured skills are of little use if policy never reaches the worker.",
       "resultOrDeferral": "Explicit system-prompt file transport; Claude appends its policy and Codex/OpenCode receive supplemental context while retaining native instructions.",
-      "sourceIds": [
-        "openclaw-plugins",
-        "openclaw-cli",
-        "claude-practices"
-      ],
+      "sourceIds": ["openclaw-plugins", "openclaw-cli", "claude-practices"],
       "implementationFiles": [
         "control-plane/openclaw-fleet/index.js",
         "control-plane/openclaw-fleet/cli.py"
@@ -305,14 +301,8 @@
       "status": "implemented",
       "priorityRationale": "Gateway/client cancellation does not necessarily cancel a remote child.",
       "resultOrDeferral": "Absolute turn deadline, bounded repository lease wait, process-group termination and expired-deadline rejection. Immediate cross-Gateway cancellation remains a limitation.",
-      "sourceIds": [
-        "openclaw-plugins",
-        "gh-security"
-      ],
-      "implementationFiles": [
-        "control-plane/fleet.py",
-        "control-plane/openclaw-fleet/cli.py"
-      ],
+      "sourceIds": ["openclaw-plugins", "gh-security"],
+      "implementationFiles": ["control-plane/fleet.py", "control-plane/openclaw-fleet/cli.py"],
       "confidence": "high",
       "confidenceBasis": "Observed local defect or contract with regression checks"
     },
@@ -324,15 +314,8 @@
       "status": "implemented",
       "priorityRationale": "Recovery should inspect a few relevant facts before opening large histories.",
       "resultOrDeferral": "Per-run context.json contains same-project recent receipts, retained paths, curated surfaces and lean runtime policy; bytes recorded. No blanket token-savings claim.",
-      "sourceIds": [
-        "openclaw-context",
-        "openclaw-memory",
-        "codex-prompts"
-      ],
-      "implementationFiles": [
-        "control-plane/run_context.py",
-        "control-plane/RUNTIME.md"
-      ],
+      "sourceIds": ["openclaw-context", "openclaw-memory", "codex-prompts"],
+      "implementationFiles": ["control-plane/run_context.py", "control-plane/RUNTIME.md"],
       "confidence": "high",
       "confidenceBasis": "Observed local defect or contract with regression checks"
     },
@@ -344,10 +327,7 @@
       "status": "implemented",
       "priorityRationale": "Repeated submodule cleanup failures and unchecked report types were real defects.",
       "resultOrDeferral": "Validate completion types/URLs/size, reject reported failing checks and non-descendant commits, retain submodule worktrees without false run failure.",
-      "sourceIds": [
-        "claude-practices",
-        "codex-evals"
-      ],
+      "sourceIds": ["claude-practices", "codex-evals"],
       "implementationFiles": [
         "control-plane/fleet.py",
         "control-plane/run_context.py",
@@ -364,11 +344,7 @@
       "status": "implemented",
       "priorityRationale": "Operators need route evidence without exposing shell contents or guessing headroom.",
       "resultOrDeferral": "Manual codex/claude/deepseek selection, requested/observed route, adapter/wrapper revision and numeric usage; no ambiguous mutation retry.",
-      "sourceIds": [
-        "router",
-        "opencode-config",
-        "openclaw-plugins"
-      ],
+      "sourceIds": ["router", "opencode-config", "openclaw-plugins"],
       "implementationFiles": [
         ".github/workflows/run-the-loop.yml",
         "control-plane/update-callers.py",
@@ -385,11 +361,7 @@
       "status": "implemented",
       "priorityRationale": "New skills were not consistently linked and authoring material was discoverable as runtime skills.",
       "resultOrDeferral": "Focused OpenClaw skill, metadata/link doctor, owner-preserving synchronization across three Claude profiles and other runtimes; authoring/template files removed from runtime discovery.",
-      "sourceIds": [
-        "skills-spec",
-        "openclaw-skills",
-        "claude-skills"
-      ],
+      "sourceIds": ["skills-spec", "openclaw-skills", "claude-skills"],
       "implementationFiles": [
         "control-plane/skills-doctor.py",
         "control-plane/skill_links.py",
@@ -407,15 +379,8 @@
       "status": "implemented",
       "priorityRationale": "A healthy daemon is not proof that projects are making progress.",
       "resultOrDeferral": "Read-only GitHub/local health report, actual workflow state, recent successes/failure streaks, secret-availability boolean and failure fingerprints; no extra model/timer/issue spam.",
-      "sourceIds": [
-        "openclaw-health",
-        "gh-schedule",
-        "gh-logs"
-      ],
-      "implementationFiles": [
-        "control-plane/portfolio-health.py",
-        "control-plane/fleet.py"
-      ],
+      "sourceIds": ["openclaw-health", "gh-schedule", "gh-logs"],
+      "implementationFiles": ["control-plane/portfolio-health.py", "control-plane/fleet.py"],
       "confidence": "high",
       "confidenceBasis": "Observed local defect or contract with regression checks"
     },
@@ -427,11 +392,7 @@
       "status": "implemented",
       "priorityRationale": "The fifth project exists, and these repositories do not share one application shape.",
       "resultOrDeferral": "Discover and onboard bricklabor.com; preserve existing runner-group approvals; curate project surfaces and verification hints for all five; pin obvious callers on main.",
-      "sourceIds": [
-        "gh-runner-groups",
-        "claude-practices",
-        "gh-schedule"
-      ],
+      "sourceIds": ["gh-runner-groups", "claude-practices", "gh-schedule"],
       "implementationFiles": [
         "control-plane/fleet.json",
         "machines/ubuntu-proxmox-primary.md",
@@ -448,10 +409,7 @@
       "status": "deferred",
       "priorityRationale": "Improve existing FTS before paying for vectors.",
       "resultOrDeferral": "Deferred: current packets already bound initial recovery; measure retrieval misses first.",
-      "sourceIds": [
-        "openclaw-memory",
-        "openclaw-context"
-      ],
+      "sourceIds": ["openclaw-memory", "openclaw-context"],
       "implementationFiles": [],
       "confidence": "conditional",
       "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
@@ -464,10 +422,7 @@
       "status": "deferred",
       "priorityRationale": "A new host should reconstruct useful derived context.",
       "resultOrDeferral": "Deferred: machine bootstrap and git suffice today; artifact retention is only 90 days.",
-      "sourceIds": [
-        "gh-logs",
-        "openclaw-memory"
-      ],
+      "sourceIds": ["gh-logs", "openclaw-memory"],
       "implementationFiles": [],
       "confidence": "conditional",
       "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
@@ -480,10 +435,7 @@
       "status": "deferred",
       "priorityRationale": "Parallel repository work should not race keyboard and mouse.",
       "resultOrDeferral": "Deferred: document one-controller convention; no evidence of concurrent GUI jobs yet.",
-      "sourceIds": [
-        "openclaw-security",
-        "gh-security"
-      ],
+      "sourceIds": ["openclaw-security", "gh-security"],
       "implementationFiles": [],
       "confidence": "conditional",
       "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
@@ -496,10 +448,7 @@
       "status": "deferred",
       "priorityRationale": "Map affected files to proven package commands.",
       "resultOrDeferral": "Deferred: hints implemented first; test commands need validation within each product before automation.",
-      "sourceIds": [
-        "claude-hooks",
-        "codex-evals"
-      ],
+      "sourceIds": ["claude-hooks", "codex-evals"],
       "implementationFiles": [],
       "confidence": "conditional",
       "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
@@ -512,10 +461,7 @@
       "status": "deferred",
       "priorityRationale": "Understand upstream site/control-plane relationships.",
       "resultOrDeferral": "Deferred: discovered stacks are not sufficient evidence of actual dependency edges.",
-      "sourceIds": [
-        "openclaw-memory",
-        "claude-practices"
-      ],
+      "sourceIds": ["openclaw-memory", "claude-practices"],
       "implementationFiles": [],
       "confidence": "conditional",
       "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
@@ -528,10 +474,7 @@
       "status": "deferred",
       "priorityRationale": "Use fresh context when review value exceeds extra compute.",
       "resultOrDeferral": "Deferred: avoid mandatory reviewer cost for every fifteen-minute turn.",
-      "sourceIds": [
-        "claude-subagents",
-        "codex-evals"
-      ],
+      "sourceIds": ["claude-subagents", "codex-evals"],
       "implementationFiles": [],
       "confidence": "conditional",
       "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
@@ -544,10 +487,7 @@
       "status": "deferred",
       "priorityRationale": "Expose safe router observations with timestamps.",
       "resultOrDeferral": "Deferred: preserve unknown/stale states; avoid undocumented subscription APIs.",
-      "sourceIds": [
-        "router",
-        "codex-auth"
-      ],
+      "sourceIds": ["router", "codex-auth"],
       "implementationFiles": [],
       "confidence": "conditional",
       "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
@@ -560,10 +500,7 @@
       "status": "deferred",
       "priorityRationale": "Measure completion quality and overhead before claiming savings.",
       "resultOrDeferral": "Deferred: regression contracts added now; representative multi-project trials need a baseline dataset.",
-      "sourceIds": [
-        "codex-evals",
-        "codex-prompts"
-      ],
+      "sourceIds": ["codex-evals", "codex-prompts"],
       "implementationFiles": [],
       "confidence": "conditional",
       "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
@@ -576,10 +513,7 @@
       "status": "deferred",
       "priorityRationale": "An upstream tool release can alter the backend contract.",
       "resultOrDeferral": "Deferred: installed runtime integration is verified now; automatic upgrade service adds another failure surface.",
-      "sourceIds": [
-        "gh-runner-updates",
-        "openclaw-plugins"
-      ],
+      "sourceIds": ["gh-runner-updates", "openclaw-plugins"],
       "implementationFiles": [],
       "confidence": "conditional",
       "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
@@ -592,10 +526,7 @@
       "status": "deferred",
       "priorityRationale": "Reuse history only when workspace/policy identity matches.",
       "resultOrDeferral": "Deferred: current backend deliberately uses fresh sessions and durable files; unsafe resume could mix worktrees.",
-      "sourceIds": [
-        "openclaw-cli",
-        "openclaw-compaction"
-      ],
+      "sourceIds": ["openclaw-cli", "openclaw-compaction"],
       "implementationFiles": [],
       "confidence": "conditional",
       "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
@@ -608,10 +539,7 @@
       "status": "deferred",
       "priorityRationale": "Containment alone cannot revoke leaked credentials.",
       "resultOrDeferral": "Deferred and required follow-up: needs each provider account; do not automate unverified destructive rotation.",
-      "sourceIds": [
-        "gh-security",
-        "gh-logs"
-      ],
+      "sourceIds": ["gh-security", "gh-logs"],
       "implementationFiles": [],
       "confidence": "conditional",
       "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
@@ -624,10 +552,7 @@
       "status": "deferred",
       "priorityRationale": "Git snapshots omit credentials, databases and personal data.",
       "resultOrDeferral": "Deferred: host-level backup policy requires Proxmox access; machine README makes limits explicit.",
-      "sourceIds": [
-        "gh-security",
-        "openclaw-security"
-      ],
+      "sourceIds": ["gh-security", "openclaw-security"],
       "implementationFiles": [],
       "confidence": "conditional",
       "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
@@ -640,10 +565,7 @@
       "status": "deferred",
       "priorityRationale": "Mutable shared skills are a privileged input.",
       "resultOrDeferral": "Deferred: SHA-pinned workflow callers plus trusted git source are sufficient current boundary.",
-      "sourceIds": [
-        "gh-security",
-        "skills-spec"
-      ],
+      "sourceIds": ["gh-security", "skills-spec"],
       "implementationFiles": [],
       "confidence": "conditional",
       "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
@@ -656,10 +578,7 @@
       "status": "deferred",
       "priorityRationale": "Let humans inspect reports without opening each project.",
       "resultOrDeferral": "Deferred: user excluded website publishing; current local UI remains operational.",
-      "sourceIds": [
-        "gh-logs",
-        "openclaw-memory"
-      ],
+      "sourceIds": ["gh-logs", "openclaw-memory"],
       "implementationFiles": [],
       "confidence": "conditional",
       "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
@@ -672,10 +591,7 @@
       "status": "deferred",
       "priorityRationale": "Respond sooner to actionable changes.",
       "resultOrDeferral": "Deferred: user explicitly wants one turn for every enabled repository on each tick.",
-      "sourceIds": [
-        "gh-schedule",
-        "openclaw-automation"
-      ],
+      "sourceIds": ["gh-schedule", "openclaw-automation"],
       "implementationFiles": [],
       "confidence": "conditional",
       "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
@@ -688,10 +604,7 @@
       "status": "deferred",
       "priorityRationale": "Allocate scarce subscription headroom across projects.",
       "resultOrDeferral": "Deferred: user explicitly ruled out sophisticated slot allocation for now.",
-      "sourceIds": [
-        "router",
-        "gh-schedule"
-      ],
+      "sourceIds": ["router", "gh-schedule"],
       "implementationFiles": [],
       "confidence": "conditional",
       "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
@@ -704,10 +617,7 @@
       "status": "deferred",
       "priorityRationale": "May help when corpus scale/retrieval quality justifies it.",
       "resultOrDeferral": "Deferred: no measured need beyond local file/FTS search; no new Cloudflare assets.",
-      "sourceIds": [
-        "openclaw-memory",
-        "openclaw-context"
-      ],
+      "sourceIds": ["openclaw-memory", "openclaw-context"],
       "implementationFiles": [],
       "confidence": "conditional",
       "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
@@ -720,10 +630,7 @@
       "status": "deferred",
       "priorityRationale": "Real tenant boundaries exceed environment filtering.",
       "resultOrDeferral": "Deferred: this is an explicitly trusted-owner persistent desktop; full isolation is a larger redesign.",
-      "sourceIds": [
-        "gh-security",
-        "openclaw-security"
-      ],
+      "sourceIds": ["gh-security", "openclaw-security"],
       "implementationFiles": [],
       "confidence": "conditional",
       "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
@@ -736,10 +643,7 @@
       "status": "deferred",
       "priorityRationale": "Convert repeat errors into narrow guidance and behavioral evals.",
       "resultOrDeferral": "Deferred: avoid treating agent self-reports as training truth; gather verified examples first.",
-      "sourceIds": [
-        "codex-evals",
-        "skills-spec"
-      ],
+      "sourceIds": ["codex-evals", "skills-spec"],
       "implementationFiles": [],
       "confidence": "conditional",
       "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
@@ -752,10 +656,7 @@
       "status": "rejected",
       "priorityRationale": "Parallel answers can reduce latency for read-only questions.",
       "resultOrDeferral": "Rejected for routine mutating turns: duplicate costs and conflicting edits outweigh unproven benefit.",
-      "sourceIds": [
-        "claude-subagents",
-        "router"
-      ],
+      "sourceIds": ["claude-subagents", "router"],
       "implementationFiles": [],
       "confidence": "conditional",
       "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"
@@ -768,10 +669,7 @@
       "status": "rejected",
       "priorityRationale": "Business integrations could eventually connect to orchestrated work.",
       "resultOrDeferral": "Rejected for this setup task: real payments, messages and campaign changes need specific authorized product flows.",
-      "sourceIds": [
-        "openclaw-security",
-        "gh-security"
-      ],
+      "sourceIds": ["openclaw-security", "gh-security"],
       "implementationFiles": [],
       "confidence": "conditional",
       "confidenceBasis": "Plausible opportunity; benefit not measured on this fleet"

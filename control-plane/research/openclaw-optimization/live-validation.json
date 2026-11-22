@@ -13,9 +13,7 @@
       "contextBytes": 1661,
       "unchangedCommit": true,
       "wrapperRevision": "f218843987ac5a74e7e802db92a511c23cb1b351",
-      "adapterRevisions": [
-        null
-      ]
+      "adapterRevisions": [null]
     },
     {
       "repo": "megabyte.space",
@@ -28,9 +26,7 @@
       "contextBytes": 1953,
       "unchangedCommit": true,
       "wrapperRevision": "f218843987ac5a74e7e802db92a511c23cb1b351",
-      "adapterRevisions": [
-        null
-      ]
+      "adapterRevisions": [null]
     },
     {
       "repo": "bricklabor.com",
@@ -43,9 +39,7 @@
       "contextBytes": 952,
       "unchangedCommit": true,
       "wrapperRevision": "f218843987ac5a74e7e802db92a511c23cb1b351",
-      "adapterRevisions": [
-        null
-      ]
+      "adapterRevisions": [null]
     },
     {
       "repo": "runner-ops",

@@ -14,10 +14,10 @@ on:
         default: '["self-hosted","linux","persistent","proxmox-vm","agent","codex"]'
       runtime:
         type: string
-        default: 'codex'
+        default: "codex"
       objective:
         type: string
-        default: ''
+        default: ""
 
 permissions:
   contents: write
@@ -25,7 +25,7 @@ permissions:
 
 jobs:
   loop:
-    name: '${{ inputs.project }} · persistent loop'
+    name: "${{ inputs.project }} · persistent loop"
     runs-on: ${{ fromJSON(inputs.runner-labels) }}
     timeout-minutes: 75
     env:
@@ -33,7 +33,7 @@ jobs:
       FLEET_REVISION: ${{ inputs.shared-revision }}
       FLEET_RUNTIME: ${{ inputs.runtime }}
       FLEET_OBJECTIVE: ${{ inputs.objective }}
-      FLEET_OUTPUT: '${{ github.workspace }}/fleet-report-${{ github.run_id }}-${{ github.run_attempt }}'
+      FLEET_OUTPUT: "${{ github.workspace }}/fleet-report-${{ github.run_id }}-${{ github.run_attempt }}"
     steps:
       - name: Validate repository identity and pinned implementation
         shell: bash
@@ -100,7 +100,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: 'fleet-run-${{ github.run_id }}-${{ github.run_attempt }}'
+          name: "fleet-run-${{ github.run_id }}-${{ github.run_attempt }}"
           path: |
             ${{ env.FLEET_OUTPUT }}/run.json
             ${{ env.FLEET_OUTPUT }}/summary.md

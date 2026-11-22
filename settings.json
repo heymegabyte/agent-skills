@@ -27,10 +27,7 @@
       "Bash(chmod -R 777 /)"
     ],
     "defaultMode": "auto",
-    "additionalDirectories": [
-      "/Users/apple/.agentskills",
-      "/Users/apple/emdash-projects"
-    ]
+    "additionalDirectories": ["/Users/apple/.agentskills", "/Users/apple/emdash-projects"]
   },
   "hooks": {
     "PreToolUse": [
@@ -101,26 +98,15 @@
   "sandbox": {
     "enabled": true,
     "autoAllowBashIfSandboxed": true,
-    "excludedCommands": [
-      "docker *",
-      "wrangler *",
-      "gh *",
-      "bun *"
-    ],
+    "excludedCommands": ["docker *", "wrangler *", "gh *", "bun *"],
     "network": {
-      "allowedDomains": [
-        "*"
-      ],
+      "allowedDomains": ["*"],
       "allowLocalBinding": true,
       "allowAllUnixSockets": true
     },
     "enableWeakerNestedSandbox": true,
     "filesystem": {
-      "denyRead": [
-        "/Users/apple/.ssh",
-        "/Users/apple/.gnupg",
-        "/Users/apple/.config/age"
-      ],
+      "denyRead": ["/Users/apple/.ssh", "/Users/apple/.gnupg", "/Users/apple/.config/age"],
       "allowWrite": [
         "/Users/apple/.claude",
         "/Users/apple/.agentskills",

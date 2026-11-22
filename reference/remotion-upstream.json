@@ -10,6 +10,22 @@
   "vendored": false,
   "licenseReview": "The inspected root tree has no LICENSE and package.json has no license field. Verify applicable rights before copying/distributing upstream skill text; this is not a blanket legal conclusion.",
   "localRule": "rules/platform-content-media.md",
-  "guidance": ["preserve-user-edits", "preview-before-export", "load-relevant-router-references", "typed-compositions", "frame-derived-timing", "captions-and-saas-runtime-review"],
-  "refresh": {"trigger": "relevant-remotion-loop-work", "steps": ["Resolve current upstream revision", "Review diff and applicable licensing", "Reconcile local requirements and tests", "Update this receipt only after review"], "autoVendor": false}
+  "guidance": [
+    "preserve-user-edits",
+    "preview-before-export",
+    "load-relevant-router-references",
+    "typed-compositions",
+    "frame-derived-timing",
+    "captions-and-saas-runtime-review"
+  ],
+  "refresh": {
+    "trigger": "relevant-remotion-loop-work",
+    "steps": [
+      "Resolve current upstream revision",
+      "Review diff and applicable licensing",
+      "Reconcile local requirements and tests",
+      "Update this receipt only after review"
+    ],
+    "autoVendor": false
+  }
 }
