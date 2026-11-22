@@ -1,8 +1,12 @@
 #!/usr/bin/env node
 /**
- * Enforces the Multi-Swarm Parallel Orchestration (Claude + Codex + Gemini)
- * and OpenCode (DeepSeek) Swarm Offload philosophy across every single SKILL.md
- * file in the repository and live ~/.agentskills plugin checkout.
+ * Enforces:
+ * 1. Multi-Swarm Parallel Orchestration (Claude + Codex + Gemini) & OpenCode (DeepSeek) Swarm Offload
+ * 2. End-of-Round Parallel Meaning & Preference Triad Extraction (`agent-skills` for AI skills under
+ *    the Minimum-Prompt Ecosystem Completeness Assumption, `theme.tools` for site code, and
+ *    `install.doctor` for system code)
+ * across every single SKILL.md file AND every single Agent-Specific Master Prompt (`agents/*.md`)
+ * in the repository and live ~/.agentskills plugin checkout.
  */
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
@@ -11,6 +15,8 @@ import { fileURLToPath } from 'node:url';
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 const SECTION_HEADING = '## Multi-Swarm Parallelization & OpenCode (DeepSeek) Offload Mandate';
+const TRIAD_BULLET_MARKER = '**End-of-Round Parallel Meaning & Preference Triad Extraction (`bin/triad-end-of-turn-sync.ts`)**';
+const AGENT_SECTION_HEADING = '## 8. End-of-Round Parallel Meaning & Preference Triad Extraction & Multi-Swarm Mandate';
 
 const DOMAIN_GUIDANCE: Record<string, string> = {
   '01-operating-system':
@@ -63,6 +69,9 @@ const DOMAIN_GUIDANCE: Record<string, string> = {
     'Coordinate Paperclip governance and OpenClaw 35-agent execution by routing frontier architecture and SCRUM synthesis to `claude`/`codex`/`gemini` while offloading 80%+ of throughput-safe coding and plugin swarms to `opencode` (DeepSeek via LiteLLM).',
 };
 
+const TRIAD_BULLET =
+  `- ${TRIAD_BULLET_MARKER}: At the end of every prompt round (running in parallel with final verification, deployment, and reporting), extract any possible meaning, preference, architectural lesson, reusable site code, or system configuration from the current agent window and store it concurrently into **\`heymegabyte/agent-skills\`** (for AI skills/rules/prompts — always updated under the **Minimum-Prompt Ecosystem Completeness Assumption**: assuming the skills *should have already been written* so that we write **as few prompts as possible** to finish **as complete a product or multi-repo ecosystem as possible** via massive parallel agent swarms), **\`heymegabyte/theme.tools\`** (for reusable site/app code across the 28 canonical \`@theme.tools/*\` libraries), and **\`heymegabyte/install.doctor\`** (for reusable system/host code).`;
+
 function findSkillFiles(rootDir: string): string[] {
   const results: string[] = [];
   if (!existsSync(rootDir)) return results;
@@ -87,7 +96,16 @@ function findSkillFiles(rootDir: string): string[] {
   return results.sort();
 }
 
-function buildSection(skillDirName: string): string {
+function findAgentFiles(rootDir: string): string[] {
+  const agentsDir = join(rootDir, 'agents');
+  if (!existsSync(agentsDir)) return [];
+  return readdirSync(agentsDir, { withFileTypes: true })
+    .filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
+    .map((entry) => join(agentsDir, entry.name))
+    .sort();
+}
+
+function buildSkillSection(skillDirName: string): string {
   const specific =
     DOMAIN_GUIDANCE[skillDirName] ||
     'Decompose work into contract-locked OpenSpec DAG nodes, convene a right-sized SCRUM quorum (`claude` + `codex` + `gemini`) for key decisions, and offload all throughput-safe implementation, plugin catalogs, unit tests (100% coverage), and parallel Cloudflare Browser Run E2E suites to `opencode` (DeepSeek) swarms.';
@@ -99,28 +117,59 @@ function buildSection(skillDirName: string): string {
     `- **Domain Swarm Directive**: ${specific}`,
     '- **Massive OpenCode (DeepSeek) Offload**: Whenever a task slice is throughput-safe (bounded implementation, plugin catalog shards, 100% unit test generation, Playwright E2E specs, migrations, or documentation), offload it to parallel **`opencode` swarms powered by DeepSeek** (`~/.agentskills/bin/opencode-deepseek.sh` via the LiteLLM 4-key pool `https://llm.megabyte.space/v1`) rather than consuming premium `claude`, `codex`, or `gemini` client quota.',
     '- **Tri-Frontier Parallel Swarms & Right-Sized SCRUM Quorum**: When complex architectural synthesis, speculative critical-path racing, or adversarial verification is needed, run `claude`, `codex`, and `gemini` in parallel across isolated Git worktrees (`bin/multi-swarm-orchestrator.ts`) guided by a right-sized collaborative SCRUM meeting (`bin/scrum-deliberation-quorum.ts`) of only the required specialist agents. See `rules/parallel-multi-swarm-orchestration.md`.',
+    TRIAD_BULLET,
     '',
   ].join('\n');
 }
 
-export function enforceAcrossRoot(rootDir: string): { updated: string[]; alreadyPresent: string[] } {
-  const skillFiles = findSkillFiles(rootDir);
-  const updated: string[] = [];
-  const alreadyPresent: string[] = [];
+function buildAgentSection(agentFileName: string): string {
+  const agentName = agentFileName.replace(/\.md$/, '');
+  return [
+    '',
+    '---',
+    '',
+    AGENT_SECTION_HEADING,
+    '',
+    `- **Massive Parallel Swarm Execution (\`${agentName}\`)**: Participate in right-sized collaborative SCRUM deliberation quorums (\`bin/scrum-deliberation-quorum.ts\`) only when your domain is active, and offload all throughput-safe implementation, plugin catalog shards, 100% unit tests, parallel Cloudflare Browser Run (\`@cloudflare/playwright\`) E2E suites, migrations, and documentation to parallel **\`opencode\` (DeepSeek)** worktree swarms (\`bin/multi-swarm-orchestrator.ts\`).`,
+    '- **End-of-Round Parallel Triad Meaning & Preference Extraction (`bin/triad-end-of-turn-sync.ts`)**: In parallel with Phase 4 Debrief & Verification at the end of every prompt round, extract any possible meaning, operator preference, architectural insight, reusable site component, or system config from the current agent window and store it concurrently into:',
+    '  1. **`heymegabyte/agent-skills` (AI Skills, Rules & Agent Master Prompts)** — updated under the **Minimum-Prompt Ecosystem Completeness Assumption**: always author and refine skills assuming they *should have already been written* so that the operator writes **as few prompts as possible (ideally one)** to finish **as complete a product (or entire multi-repo ecosystem) as possible** by automatically expanding scope and executing via massive parallel agent swarms (`Claude` + `Codex` + `Gemini` + 80%+ `OpenCode` DeepSeek offload).',
+    '  2. **`heymegabyte/theme.tools` (Site & Application Code)** — extracting reusable UI components (16 visual states, `0.333s` OKLCH transitions), themes, calculators, workflows, validators, hooks, and plugin adapters into the 28 canonical `@theme.tools/*` libraries so consumer repositories remain thin shells.',
+    '  3. **`heymegabyte/install.doctor` (System & Host Code)** — extracting reusable dotfiles, shell environment defaults, lazy CLI shims (`cnf-build-shims`), daemon units, and workstation/server provisioning logic.',
+    '',
+  ].join('\n');
+}
 
-  for (const filePath of skillFiles) {
+export function enforceAcrossRoot(rootDir: string): {
+  skillsUpdated: number;
+  agentsUpdated: number;
+} {
+  let skillsUpdated = 0;
+  let agentsUpdated = 0;
+
+  for (const filePath of findSkillFiles(rootDir)) {
     const content = readFileSync(filePath, 'utf8');
-    if (content.includes(SECTION_HEADING)) {
-      alreadyPresent.push(filePath);
-      continue;
-    }
     const skillDirName = basename(dirname(filePath));
-    const trimmed = content.replace(/\s+$/, '');
-    const nextContent = `${trimmed}\n${buildSection(skillDirName)}`;
-    writeFileSync(filePath, nextContent, 'utf8');
-    updated.push(filePath);
+    if (!content.includes(SECTION_HEADING)) {
+      const nextContent = `${content.replace(/\s+$/, '')}\n${buildSkillSection(skillDirName)}`;
+      writeFileSync(filePath, nextContent, 'utf8');
+      skillsUpdated += 1;
+    } else if (!content.includes(TRIAD_BULLET_MARKER)) {
+      const nextContent = `${content.replace(/\s+$/, '')}\n${TRIAD_BULLET}\n`;
+      writeFileSync(filePath, nextContent, 'utf8');
+      skillsUpdated += 1;
+    }
   }
-  return { updated, alreadyPresent };
+
+  for (const agentPath of findAgentFiles(rootDir)) {
+    const content = readFileSync(agentPath, 'utf8');
+    if (!content.includes(AGENT_SECTION_HEADING)) {
+      const nextContent = `${content.replace(/\s+$/, '')}\n${buildAgentSection(basename(agentPath))}`;
+      writeFileSync(agentPath, nextContent, 'utf8');
+      agentsUpdated += 1;
+    }
+  }
+
+  return { skillsUpdated, agentsUpdated };
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
@@ -131,6 +180,6 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   }
   for (const root of roots) {
     const res = enforceAcrossRoot(root);
-    console.log(JSON.stringify({ root, updatedCount: res.updated.length, alreadyPresentCount: res.alreadyPresent.length }));
+    console.log(JSON.stringify({ root, ...res }));
   }
 }

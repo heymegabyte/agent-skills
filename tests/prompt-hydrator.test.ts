@@ -41,7 +41,16 @@ test('hydrates live context before execution and preserves evidence safely', asy
   assert.match(first.diagnosticRequest, /\[REDACTED:github-token\]/);
   assert.doesNotMatch(formatHydrationExplanation(first), /ghp_abcdefghijklmnopqrstuvwxyz123456/);
   assert.match(formatHydratedBrief(first), /Original request \(verbatim\)/);
+  assert.match(formatHydratedBrief(first), /Decision-readiness gate/);
   assert.match(formatHydrationExplanation(first), /Omissions and fallbacks/);
+  assert.equal(first.decisionReadiness.materialDecision, true);
+  assert.equal(first.decisionReadiness.architectureReady, false);
+  assert.ok(first.decisionReadiness.blockers.some((blocker) => blocker.startsWith('dependency-documentation:')));
+  assert.ok(first.decisionReadiness.blockers.some((blocker) => blocker.startsWith('market-and-users:')));
+  assert.ok(first.decisionReadiness.blockers.some((blocker) => blocker.startsWith('competitors-and-alternatives:')));
+  assert.equal(first.improvementConvergence.confidenceThreshold, 0.8);
+  assert.equal(first.improvementConvergence.maxConsecutiveNoNewWinners, 2);
+  assert.match(first.improvementConvergence.authorityBoundary, /never create authority/i);
 });
 
 test('clone Notion recursively expands into traceable research and OpenSpec', async () => {
@@ -88,6 +97,24 @@ test('narrow bug fixes do not trigger greenfield fan-out', async () => {
   });
   assert.equal(hydrated.route, 'focused-change');
   assert.equal(hydrated.inferredRequirements.length, 0);
+  assert.equal(hydrated.decisionReadiness.requirements.find((item) => item.domain === 'market-and-users')?.status, 'not-applicable');
+});
+
+test('material decisions are gated on loaded evidence rather than provider availability or filenames', async () => {
+  const hydrated = await hydratePrompt({
+    prompt: 'Implement a new customer billing workflow',
+    checkout: fixtureCheckout(),
+    now: '2026-11-22T00:00:00.000Z',
+  });
+
+  const byDomain = new Map(hydrated.decisionReadiness.requirements.map((item) => [item.domain, item]));
+  assert.equal(byDomain.get('instructions-and-authority')?.status, 'verified');
+  assert.equal(byDomain.get('openspec-and-architecture')?.status, 'discovered-not-loaded');
+  assert.equal(byDomain.get('implementation-and-tests')?.status, 'discovered-not-loaded');
+  assert.equal(byDomain.get('dependency-documentation')?.status, 'pending-research');
+  assert.equal(byDomain.get('market-and-users')?.status, 'pending-research');
+  assert.equal(byDomain.get('competitors-and-alternatives')?.status, 'pending-research');
+  assert.equal(hydrated.decisionReadiness.architectureReady, false);
 });
 
 test('Claude UserPromptSubmit adapter hydrates before execution', () => {
@@ -106,6 +133,8 @@ test('Claude UserPromptSubmit adapter hydrates before execution', () => {
   assert.match(output.hookSpecificOutput.additionalContext, /Settings & Preferences/);
   assert.match(output.hookSpecificOutput.additionalContext, /Right-Sized Collaborative SCRUM Deliberation Quorum/);
   assert.match(output.hookSpecificOutput.additionalContext, /OpenCode \(DeepSeek\) Offload/);
+  assert.match(output.hookSpecificOutput.additionalContext, /Architecture ready: \*\*false\*\*/);
+  assert.match(output.hookSpecificOutput.additionalContext, /Bounded fixed-point improvement loop/);
 });
 
 test('product gap audit, SCRUM deliberation quorum, and 15-strategy multi-swarm plan work end-to-end', async () => {
@@ -125,4 +154,6 @@ test('product gap audit, SCRUM deliberation quorum, and 15-strategy multi-swarm 
   assert.equal(hydrated.swarmExecutionPlan.finishLineContract.unitTestCoverageTarget, '100%');
   assert.equal(hydrated.swarmExecutionPlan.finishLineContract.e2eRunner, 'cloudflare-browser-run-parallel');
   assert.equal(hydrated.swarmExecutionPlan.finishLineContract.gitBranch, 'main');
+  assert.ok(hydrated.handoff.pendingWorkIds.includes('parallel-end-of-round-triad-meaning-extraction'));
+  assert.match(formatHydratedBrief(hydrated), /Minimum-Prompt Ecosystem Completeness Assumption/);
 });

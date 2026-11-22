@@ -125,6 +125,11 @@ const ALWAYS_LOAD_RULES = [
   'rules/agent-neutrality.md',
   'rules/verification-loop.md',
   'rules/prompt-as-training-signal.md',
+  'rules/intent-complete-delivery.md',
+  'rules/context-hydration.md',
+  'rules/greenfield-saas-prompt-hydration.md',
+  'rules/parallel-multi-swarm-orchestration.md',
+  'rules/total-convergence-and-openspec-handoff.md',
 ];
 
 // ─── main ────────────────────────────────────────────────────────────────────

@@ -1,20 +1,20 @@
 ---
-name: 'total-convergence-and-openspec-handoff'
-description: 'Total multi-axis convergence (beauty, gorgeousness, UI principles, business rules, functionality, performance, security, AI execution), extracted micro-task convergence loops, parallel end-of-turn triad sync (agent-skills + install.doctor + theme.tools), Frontier-only OpenSpec authoring (claude/codex/antigravity, never opencode), and automatic Paperclip issue handoff.'
+name: "total-convergence-and-openspec-handoff"
+description: "Total multi-axis convergence (beauty, gorgeousness, UI principles, business rules, functionality, performance, security, AI execution), extracted micro-task convergence loops, parallel end-of-turn triad sync (agent-skills + install.doctor + theme.tools), Frontier-only OpenSpec authoring (claude/codex/antigravity, never opencode), and automatic Paperclip issue handoff."
 last_reviewed: 2026-11-04
 superseded_by: null
 priority: 1
-pack: 'core'
+pack: "core"
 triggers:
-  - 'converge'
-  - 'openspec'
-  - 'paperclip'
-  - 'theme.tools'
-  - 'install.doctor'
-  - 'langfuse'
-  - 'micro-loop'
+  - "converge"
+  - "openspec"
+  - "paperclip"
+  - "theme.tools"
+  - "install.doctor"
+  - "langfuse"
+  - "micro-loop"
 paths:
-  - '*'
+  - "*"
 ---
 
 # Total Multi-Axis Convergence, Parallel Triad Sync & Frontier OpenSpec → Paperclip Handoff
@@ -57,7 +57,7 @@ CREATE → RENDER / EXECUTE → EXPERIENCE → CRITIQUE → MODIFY → COMPARE
 
 ### B. The Product Loop (Workflow & Business Convergence)
 
-- Ask after every feature slice: _Can this become visualization instead of configuration? Navigation instead of instruction? Intent instead of forms?_
+- Ask after every feature slice: *Can this become visualization instead of configuration? Navigation instead of instruction? Intent instead of forms?*
 - Every sub-feature must converge across all **8 Mandatory Axes**:
   1. **Beauty** (per-element craft, typography, balanced whitespace, OKLCH harmony)
   2. **Gorgeousness** (cinematic motion, `0.333s` transitions, glass/depth, pill affordances, zero plain defaults)
@@ -74,15 +74,16 @@ CREATE → RENDER / EXECUTE → EXPERIENCE → CRITIQUE → MODIFY → COMPARE
 
 ---
 
-## 2. End-of-Prompt Parallel Triad Sync (`agent-skills` + `install.doctor` + `theme.tools` + Touched Projects)
+## 2. End-of-Round Parallel Meaning & Preference Triad Extraction (`agent-skills` + `theme.tools` + `install.doctor` + Touched Projects)
 
-Whenever the agent evaluates at the end of a prompt pass what updates can be inferred from the prompt and response, it **MUST evaluate and apply inferred updates across all three canonical upstream repositories in parallel** (plus any other touched project):
+At the end of **every prompt round** — executed in **parallel** alongside final verification, deployment, and reporting steps (`~/.agentskills/bin/triad-end-of-turn-sync.ts`) — the agent MUST run a parallel extraction process that harvests every possible meaning, user preference, architectural pattern, reusable site/app module, and system configuration from the current agent window and stores the value concurrently into:
 
-1. **`heymegabyte/agent-skills` (`~/.agentskills`)**:
-   - Extract reusable rules, skills, convergence checklists, verification scripts, and orchestration helpers discovered during the turn.
-2. **`heymegabyte/install.doctor` (`/Users/Apple/emdash/repositories/install.doctor`)**:
-   - Extract reusable dotfiles, shell environment defaults (`megabyte-cache.sh.tmpl`), package-manager configs, systemd/LaunchAgent units, lazy CLI shims (`cnf-build-shims`), and workstation/server provisioning scripts inferred from the prompt or response.
-3. **`heymegabyte/theme.tools` & `ui.theme.tools` (`@theme.tools`, `/Users/Apple/emdash/repositories/theme.tools`)**:
+1. **`heymegabyte/agent-skills` (`~/.agentskills` — AI Skills, Rules & Agent Master Prompts)**:
+   - **Minimum-Prompt Ecosystem Completeness Assumption**: Update `agent-skills` under the strict assumption that **the skills should have already been written so that the user writes as few prompts as possible (ideally one) to finish as complete a product — or entire multi-repository ecosystem — as possible, by automatically expanding scope and executing via massive agent parallelization swarms** (`Claude` + `Codex` + `Gemini` Frontier Triad + 80%+ `OpenCode` DeepSeek throughput swarms).
+   - Extract reusable rules, skills, convergence checklists, verification scripts, and orchestration helpers discovered during the round so future prompts converge on pass 1 without follow-up nudges.
+2. **`heymegabyte/install.doctor` (`/Users/Apple/emdash/repositories/install.doctor` — System & Host Code)**:
+   - Extract reusable system code, dotfiles, shell environment defaults (`megabyte-cache.sh.tmpl`), package-manager configs, systemd/LaunchAgent units, lazy CLI shims (`cnf-build-shims`), and workstation/server provisioning scripts inferred from the current agent window.
+3. **`heymegabyte/theme.tools` & `ui.theme.tools` (`@theme.tools`, `/Users/Apple/emdash/repositories/theme.tools` — Site & Application Code)**:
    - **`@theme.tools` is the single canonical location for ALL shared utilities, reusable TypeScript libraries, UI components, themes, and complex cross-site engines.** Packages are named by **what they are** (capability/domain noun), never after an upstream vendor brand. Anything that can be reused across sites MUST be stored in `@theme.tools` across its **28 Default `@theme.tools` Libraries** (`rules/theme-tools-canonical-components.md` & `packages/shared-utils/src/absorbed-catalog.ts`):
      - **Tier 1 — 5 Core Workspace Packages**: `@theme.tools/themes`, `@theme.tools/ui` (`ui.theme.tools`), `@theme.tools/blog`, `@theme.tools/catalog`, `@theme.tools/testing`.
      - **Tier 2 — 15 CF-Native Absorbed Open-Source Engines**: `@theme.tools/workflows` (workflow automation), `@theme.tools/integrations` (OAuth2/PKCE connectors & 2-way sync), `@theme.tools/social` (cross-network social publishing), `@theme.tools/scheduling` (calendar booking), `@theme.tools/signing` (PDF e-sign), `@theme.tools/forms` (conversational forms & surveys), `@theme.tools/links` (shortlinks/QR/attribution), `@theme.tools/keys` (API keys & rate limits), `@theme.tools/notifications` (in-app & email notifications), `@theme.tools/crm` (edge CRM & deal pipeline), `@theme.tools/inbox` (support helpdesk inbox), `@theme.tools/billing` (usage metering & credit wallets), `@theme.tools/status` (synthetic probes & status pages), `@theme.tools/kb` (AI Search KB & changelog), `@theme.tools/dataplane` (watermarked PDF data rooms).
@@ -97,12 +98,6 @@ Whenever the agent evaluates at the end of a prompt pass what updates can be inf
 - Whenever inferred work is saved or queued in `agent-skills`, `install.doctor`, `theme.tools`, or any other project:
   1. Properly create or update an **OpenSpec** change directory (`openspec/changes/<change-id>/` containing `proposal.md`, `design.md`, `tasks.md`, and `specs/<capability>/spec.md`) in each respective repository.
   2. Create or update the corresponding **Paperclip issue/task** in each respective Paperclip project (`agent-skills`, `install.doctor`, `theme.tools`, etc.) containing a **direct deep link to the OpenSpec files** via `~/.agentskills/bin/openspec-paperclip-sync.ts` (or Paperclip MCP / `paperclipai issue create`).
-  3. **Leverage Sub-Tasks, Reviewers, Approvers, Monitor, Watchdog & Graph Relations (`Parent`, `Blocking`, `Blocked by`)**:
-     - Decompose multi-part epics or cross-domain work into **Sub-tasks (`parent_id` / `parentId`)** whenever appropriate.
-     - Wire **Parent** (`parent_id`), **Blocking** (`blocks`), and **Blocked by** (`blockedBy` / `blockedByIssueIds` in `issue_relations`) so downstream tasks auto-wake when prerequisites complete.
-     - Populate **Reviewers** (`execution_policy.stages` `type = 'review'`: `QA-Verification`, `AppSec`, `A11y-Auditor` + `review_policy = 'not_creator'`), **Approvers** (`execution_policy.stages` `type = 'approval'`: `Architect`, `Release-Manager`, `CEO`), **Monitor** (`execution_policy.monitor` + `monitor_next_check_at`, `monitor_notes`, `monitor_scheduled_by = 'assignee'` on `in_progress`/`in_review` issues), and **Watchdog** (`issue_watchdogs`: `SRE` or `Swarm-Dispatcher`).
-  4. **Paperclip Decisions (`/MEG/decisions`) — Clarifying Questions, Recommendations & Scope Expansions Only**:
-     - Use Paperclip **Decisions** (`issue_thread_interactions` with `kind = 'ask_user_questions'`) strictly to ask the user genuine questions to clarify instructions or provide architectural/product recommendations and scope expansions (with a `(Recommended)` option and free-text support). Never use Decisions for non-question status blurbs, bureaucratic handoffs, or routine PR merge notifications.
 
 ---
 
@@ -132,7 +127,7 @@ Everything entered at a prompt must converge into the ecosystem without loss:
 - **Why**: OpenSpec defines the architectural contract, domain invariants, security boundaries, and acceptance criteria that downstream worker swarms execute against. Using a lightweight throughput model (`opencode`) to write architectural specs degrades specification fidelity and causes downstream drift.
 - **Division of Labor**:
   - **Frontier Architect (`claude` with full hydrated context · `codex` · `antigravity`)**: Hydrates repository context (`<=900K tokens`), designs the architecture, writes the OpenSpec (`proposal.md`, `design.md`, `tasks.md`, `specs/`), posts the linked issue to Paperclip (`openspec-paperclip-sync.ts` / Paperclip MCP), reviews diffs, and runs final verification.
-  - **Throughput Swarm (`opencode` via LiteLLM DeepSeek pool)**: Executes bounded implementation tasks _after_ the Frontier Architect has written and locked the OpenSpec contract.
+  - **Throughput Swarm (`opencode` via LiteLLM DeepSeek pool)**: Executes bounded implementation tasks *after* the Frontier Architect has written and locked the OpenSpec contract.
 
 ---
 

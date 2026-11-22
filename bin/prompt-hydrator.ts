@@ -34,6 +34,41 @@ export type HydrationRoute = 'greenfield-saas' | 'focused-change';
 export type ExecutionMode = 'hyper-saturated-swarm' | 'focused-swarm';
 export type EvidenceKind = 'explicit' | 'repository' | 'specification' | 'dependency' | 'research';
 export type VerificationStatus = 'verified' | 'inferred-baseline' | 'unverified';
+export type DecisionContextDomain =
+  | 'instructions-and-authority'
+  | 'openspec-and-architecture'
+  | 'implementation-and-tests'
+  | 'dependency-documentation'
+  | 'market-and-users'
+  | 'competitors-and-alternatives'
+  | 'operations-and-cloudflare'
+  | 'shared-platform-ownership';
+export type DecisionContextStatus = 'verified' | 'discovered-not-loaded' | 'pending-research' | 'not-applicable';
+
+export interface DecisionContextRequirement {
+  domain: DecisionContextDomain;
+  required: boolean;
+  status: DecisionContextStatus;
+  evidenceIds: string[];
+  nextAction: string;
+}
+
+export interface DecisionReadinessGate {
+  materialDecision: boolean;
+  architectureReady: boolean;
+  requirements: DecisionContextRequirement[];
+  blockers: string[];
+  stopCondition: string;
+}
+
+export interface ImprovementConvergencePolicy {
+  confidenceThreshold: number;
+  minimumNetValue: 'positive-after-risk-cost-and-maintenance';
+  maxConsecutiveNoNewWinners: number;
+  phases: string[];
+  authorityBoundary: string;
+  upstreamOrder: string[];
+}
 
 export interface ProductGapSurface {
   surface: string;
@@ -137,6 +172,8 @@ export interface HydratedPrompt {
     dependencies: Record<string, string>;
     providers: ProviderRecord[];
   };
+  decisionReadiness: DecisionReadinessGate;
+  improvementConvergence: ImprovementConvergencePolicy;
   productAudit: ProductAuditReport;
   scrumQuorum: ScrumQuorumSummary;
   swarmExecutionPlan: SwarmExecutionPlanSummary;
@@ -240,6 +277,8 @@ const SECRET_PATTERNS: Array<[RegExp, string]> = [
 
 const NARROW_SIGNAL = /\b(fix|bug|broken|regression|typo|focused|narrow|prototype|spike|poc|proof of concept)\b/i;
 const GREENFIELD_SIGNAL = /\b(clone|build|create|make|launch|greenfield|complete|full)\b/i;
+const MATERIAL_DECISION_SIGNAL = /\b(add|architect|architecture|build|change|create|deploy|design|enhance|feature|implement|integration|migrate|optimi[sz]e|platform|product|security|system prompt|website|workflow)\b/i;
+const PRODUCT_DECISION_SIGNAL = /\b(app|application|business|customer|feature|market|platform|product|saas|site|user|website)\b/i;
 
 const CAPABILITY_TEMPLATES: Array<[string, string, string[]]> = [
   ['identity-access', 'Identity, authentication and recovery', ['workspace']],
@@ -397,9 +436,13 @@ function directoryAvailable(path: string): boolean {
 
 function providers(root: string, timeoutMs: number): ProviderRecord[] {
   const parent = dirname(root);
+  const context7Configured = process.env.CONTEXT7_API_KEY
+    || process.env.CONTEXT7_MCP_URL
+    || executableAvailable('context7')
+    || /context7@claude-plugins-official|mcp__context7__|mcp__plugin_context7__/.test(safeRead(join(SOURCE_ROOT, 'settings.json')));
   return [
     { name: 'serena', purpose: 'symbol-level code discovery', availability: executableAvailable('serena') ? 'available' : 'unavailable', deadlineMs: timeoutMs, fallback: 'rg file/symbol search plus nearby tests' },
-    { name: 'context7', purpose: 'version-specific primary documentation', availability: process.env.CONTEXT7_API_KEY || executableAvailable('context7') ? 'available' : 'unavailable', deadlineMs: timeoutMs, fallback: 'installed package metadata and official docs when browsing is authorized' },
+    { name: 'context7', purpose: 'version-specific primary documentation', availability: context7Configured ? 'available' : 'unavailable', deadlineMs: timeoutMs, fallback: 'installed package metadata and official versioned documentation' },
     { name: 'repomix', purpose: 'scoped own-repository context bundles', availability: executableAvailable('repomix') ? 'available' : 'unavailable', deadlineMs: timeoutMs, fallback: 'bounded rg file inventory and targeted reads' },
     { name: 'theme.tools', purpose: 'reusable web components and upstream candidates', availability: directoryAvailable(join(parent, 'theme.tools')) ? 'available' : 'unavailable', deadlineMs: timeoutMs, fallback: 'record reusable candidate and require canonical package lookup before UI implementation' },
     { name: 'install.doctor', purpose: 'reusable system configuration', availability: directoryAvailable(join(parent, 'install.doctor')) ? 'available' : 'unavailable', deadlineMs: timeoutMs, fallback: 'record reusable system candidate without copying host configuration' },
@@ -417,6 +460,91 @@ function classify(prompt: string, reference: string | null): HydrationRoute {
   if (reference && GREENFIELD_SIGNAL.test(prompt)) return 'greenfield-saas';
   if (/\b(saas|application|product|platform)\b/i.test(prompt) && GREENFIELD_SIGNAL.test(prompt)) return 'greenfield-saas';
   return 'focused-change';
+}
+
+function buildDecisionReadiness(input: {
+  prompt: string;
+  route: HydrationRoute;
+  instructionEvidenceIds: string[];
+  specificationEvidenceIds: string[];
+  relevantFiles: string[];
+  dependencies: Record<string, string>;
+  providers: ProviderRecord[];
+  hasCloudflareConfig: boolean;
+}): DecisionReadinessGate {
+  const materialDecision = input.route === 'greenfield-saas' || MATERIAL_DECISION_SIGNAL.test(input.prompt);
+  const productDecision = input.route === 'greenfield-saas' || PRODUCT_DECISION_SIGNAL.test(input.prompt);
+  const context7 = input.providers.find((provider) => provider.name === 'context7');
+  const requirements: DecisionContextRequirement[] = [
+    {
+      domain: 'instructions-and-authority',
+      required: true,
+      status: input.instructionEvidenceIds.length > 0 ? 'verified' : 'pending-research',
+      evidenceIds: input.instructionEvidenceIds,
+      nextAction: 'Read the closest host and repository instructions and resolve authority boundaries.',
+    },
+    {
+      domain: 'openspec-and-architecture',
+      required: materialDecision,
+      status: !materialDecision ? 'not-applicable' : input.specificationEvidenceIds.length > 0 ? 'discovered-not-loaded' : 'pending-research',
+      evidenceIds: input.specificationEvidenceIds,
+      nextAction: 'Read and reconcile applicable OpenSpec changes, durable specifications, approvals, and architectural decisions.',
+    },
+    {
+      domain: 'implementation-and-tests',
+      required: materialDecision,
+      status: !materialDecision ? 'not-applicable' : input.relevantFiles.length > 0 ? 'discovered-not-loaded' : 'pending-research',
+      evidenceIds: [],
+      nextAction: 'Inspect relevant source, tests, runtime configuration, history, and observed behavior—not only filenames.',
+    },
+    {
+      domain: 'dependency-documentation',
+      required: materialDecision && Object.keys(input.dependencies).length > 0,
+      status: !materialDecision || Object.keys(input.dependencies).length === 0 ? 'not-applicable' : 'pending-research',
+      evidenceIds: [],
+      nextAction: context7?.availability === 'available'
+        ? 'Resolve installed versions and load their current primary documentation through Context7 before choosing APIs.'
+        : `Context7 is unavailable; use installed package metadata plus official versioned documentation and record the fallback.`,
+    },
+    {
+      domain: 'market-and-users',
+      required: materialDecision && productDecision,
+      status: materialDecision && productDecision ? 'pending-research' : 'not-applicable',
+      evidenceIds: [],
+      nextAction: 'Research target users, jobs, market expectations, pricing/plan boundaries, adoption friction, and current alternatives with dated sources.',
+    },
+    {
+      domain: 'competitors-and-alternatives',
+      required: materialDecision && productDecision,
+      status: materialDecision && productDecision ? 'pending-research' : 'not-applicable',
+      evidenceIds: [],
+      nextAction: 'Run a current competitor and substitute teardown; separate observed, documented, and inferred behavior.',
+    },
+    {
+      domain: 'operations-and-cloudflare',
+      required: materialDecision && input.hasCloudflareConfig,
+      status: materialDecision && input.hasCloudflareConfig ? 'discovered-not-loaded' : 'not-applicable',
+      evidenceIds: [],
+      nextAction: 'Load Cloudflare bindings, limits, deployment topology, observability, security, data locality, and rollback evidence.',
+    },
+    {
+      domain: 'shared-platform-ownership',
+      required: materialDecision,
+      status: materialDecision ? 'pending-research' : 'not-applicable',
+      evidenceIds: [],
+      nextAction: 'Evaluate theme.tools reuse/extraction first, install.doctor for machine configuration, and agent-skills for reusable agent behavior.',
+    },
+  ];
+  const blockers = requirements
+    .filter((requirement) => requirement.required && requirement.status !== 'verified')
+    .map((requirement) => `${requirement.domain}: ${requirement.nextAction}`);
+  return {
+    materialDecision,
+    architectureReady: blockers.length === 0,
+    requirements,
+    blockers,
+    stopCondition: 'Architecture begins only after every required domain is verified with fresh, decision-relevant evidence; stop loading when further evidence is duplicative and unlikely to change scope, design, risk, or acceptance.',
+  };
 }
 
 function evidence(kind: EvidenceKind, summary: string, provenance: string, confidence: number, status: VerificationStatus, includedBecause: string): EvidenceRecord {
@@ -529,6 +657,10 @@ export async function hydratePrompt(input: HydratorInput): Promise<HydratedPromp
   const activeChanges = listActiveChanges(checkout);
   const dependencyVersions = readDependencies(checkout);
   const providerRecords = providers(checkout, timeoutMs);
+  const relevantFiles = listRelevantFiles(checkout, input.prompt);
+  const hasCloudflareConfig = existsSync(join(checkout, 'wrangler.toml'))
+    || existsSync(join(checkout, 'wrangler.jsonc'))
+    || Object.keys(dependencyVersions).some((name) => /cloudflare|wrangler|hono/i.test(name));
   const productAudit = auditProductGaps(checkout, input.prompt);
   const scrum = conveneScrumQuorum(
     input.prompt,
@@ -556,6 +688,16 @@ export async function hydratePrompt(input: HydratorInput): Promise<HydratedPromp
     : null;
   const primaryResearch = route === 'greenfield-saas' ? referenceResearch(referenceProduct) : [];
   const allEvidence = [explicit, ...repositoryEvidence, ...specEvidence, ...(baseline ? [baseline] : []), ...primaryResearch];
+  const decisionReadiness = buildDecisionReadiness({
+    prompt: input.prompt,
+    route,
+    instructionEvidenceIds: repositoryEvidence.map((item) => item.id),
+    specificationEvidenceIds: specEvidence.map((item) => item.id),
+    relevantFiles,
+    dependencies: dependencyVersions,
+    providers: providerRecords,
+    hasCloudflareConfig,
+  });
   const explicitRequirements: RequirementRecord[] = [{
     id: stableId('req', 'explicit', input.prompt),
     text: input.prompt,
@@ -597,9 +739,30 @@ export async function hydratePrompt(input: HydratorInput): Promise<HydratedPromp
     context: {
       instructions: instructionRecords,
       activeOpenSpecChanges: activeChanges,
-      relevantFiles: listRelevantFiles(checkout, input.prompt),
+      relevantFiles,
       dependencies: dependencyVersions,
       providers: providerRecords,
+    },
+    decisionReadiness,
+    improvementConvergence: {
+      confidenceThreshold: 0.8,
+      minimumNetValue: 'positive-after-risk-cost-and-maintenance',
+      maxConsecutiveNoNewWinners: 2,
+      phases: [
+        'hydrate-and-verify-context',
+        'generate-and-deduplicate-candidates',
+        'filter-by-authority-risk-value-and-scope',
+        'implement-in-parallel-by-locked-openspec-contract',
+        'verify-observable-outcomes',
+        'refresh-context-and-repeat-until-fixed-point',
+      ],
+      authorityBoundary: 'Recommendations never create authority for production, paid services, destructive changes, credentials, external communication, or materially divergent product direction.',
+      upstreamOrder: [
+        'agent-skills for reusable agent behavior',
+        'theme.tools for reusable application and UI capabilities',
+        'install.doctor for reusable machine and tool configuration',
+        'consumer repository only for product-specific composition, bindings, routes, and content',
+      ],
     },
     productAudit,
     scrumQuorum: {
@@ -640,8 +803,8 @@ export async function hydratePrompt(input: HydratorInput): Promise<HydratedPromp
     handoff: {
       acceptedDecisionIds: inferredRequirements.map((item) => item.id),
       pendingWorkIds: route === 'greenfield-saas'
-        ? ['research-primary-sources', 'scrum-quorum-openspec-dag', 'opencode-deepseek-parallel-swarm', 'approve-material-ui', 'implement-and-browser-verify', 'deploy-main-and-cloudflare-domain']
-        : ['scrum-quorum-openspec-dag', 'opencode-deepseek-parallel-swarm', 'implement-focused-change', 'verify-100-coverage-and-deploy-main'],
+        ? ['research-primary-sources', 'scrum-quorum-openspec-dag', 'opencode-deepseek-parallel-swarm', 'approve-material-ui', 'implement-and-browser-verify', 'deploy-main-and-cloudflare-domain', 'parallel-end-of-round-triad-meaning-extraction']
+        : ['scrum-quorum-openspec-dag', 'opencode-deepseek-parallel-swarm', 'implement-focused-change', 'verify-100-coverage-and-deploy-main', 'parallel-end-of-round-triad-meaning-extraction'],
       continuationToken: stableId('continue', hydrationId, input.now ?? 'stable'),
     },
   };
@@ -664,6 +827,19 @@ export function formatHydratedBrief(hydrated: HydratedPrompt): string {
     '## Explicit requirements',
     '',
     ...hydrated.explicitRequirements.map((item) => `- [${item.id}] ${item.text}`),
+    '',
+    '## Decision-readiness gate',
+    '',
+    `- Material decision: **${hydrated.decisionReadiness.materialDecision}**`,
+    `- Architecture ready: **${hydrated.decisionReadiness.architectureReady}**`,
+    `- Stop condition: ${hydrated.decisionReadiness.stopCondition}`,
+    ...hydrated.decisionReadiness.requirements.map((item) => `- **${item.domain}**: ${item.status}${item.required ? ' (required)' : ''} — ${item.nextAction}`),
+    '',
+    '## Bounded fixed-point improvement loop',
+    '',
+    `- Implement candidates only at confidence ≥ ${hydrated.improvementConvergence.confidenceThreshold} with ${hydrated.improvementConvergence.minimumNetValue.replaceAll('-', ' ')}.`,
+    `- Stop after ${hydrated.improvementConvergence.maxConsecutiveNoNewWinners} consecutive evidence-refresh rounds produce no new qualifying winner.`,
+    `- ${hydrated.improvementConvergence.authorityBoundary}`,
     '',
     '## Inferred requirements',
     '',
@@ -698,6 +874,7 @@ export function formatHydratedBrief(hydrated: HydratedPrompt): string {
     `- **Gemini (\`gemini\`)**: ${hydrated.swarmExecutionPlan.frontierTriadRoles.gemini}`,
     `- **OpenCode (DeepSeek) Offload**: **${Math.round(hydrated.swarmExecutionPlan.opencodeDeepseekOffload.targetOffloadRatio * 100)}%** of DAG tasks routed to \`${hydrated.swarmExecutionPlan.opencodeDeepseekOffload.launcher}\` via \`${hydrated.swarmExecutionPlan.opencodeDeepseekOffload.gateway}\` (Parallel Plugin Catalog Swarm: \`${hydrated.swarmExecutionPlan.opencodeDeepseekOffload.parallelPluginCatalogSwarm}\`)`,
     `- **Production Finish Line**: Branch=\`${hydrated.swarmExecutionPlan.finishLineContract.gitBranch}\` · Unit Coverage=\`${hydrated.swarmExecutionPlan.finishLineContract.unitTestCoverageTarget}\` · E2E=\`${hydrated.swarmExecutionPlan.finishLineContract.e2eRunner}\` (\`${hydrated.swarmExecutionPlan.finishLineContract.e2eCoverageTarget}\`) · Cloudflare+Domain Deployed=\`${hydrated.swarmExecutionPlan.finishLineContract.productionDeployed}\``,
+    `- **End-of-Round Parallel Triad Meaning Extraction (\`bin/triad-end-of-turn-sync.ts\`)**: Extract any possible meaning or preference from the current agent window in parallel at the end of the round into \`agent-skills\` (AI skills under the Minimum-Prompt Ecosystem Completeness Assumption: finish complete products/ecosystems in as few prompts as possible via massive parallelization), \`theme.tools\` (reusable site/app code), and \`install.doctor\` (reusable system code).`,
     '',
     '## Consequential assumptions',
     '',

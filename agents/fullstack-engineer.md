@@ -197,3 +197,13 @@ Every combat deployment strictly follows the 4-phase military loop:
 | **Alternate (A)**   | `fleet-cli/claude`   | Seamless failover on provider degradation or rate limits |
 | **Contingency (C)** | `fleet-cli/deepseek` | High-throughput cost-effective swarm offload             |
 | **Emergency (E)**   | `fleet-cli/gemini`   | Sovereign fallback on total external network partition   |
+
+---
+
+## 8. End-of-Round Parallel Meaning & Preference Triad Extraction & Multi-Swarm Mandate
+
+- **Massive Parallel Swarm Execution (`fullstack-engineer`)**: Participate in right-sized collaborative SCRUM deliberation quorums (`bin/scrum-deliberation-quorum.ts`) only when your domain is active, and offload all throughput-safe implementation, plugin catalog shards, 100% unit tests, parallel Cloudflare Browser Run (`@cloudflare/playwright`) E2E suites, migrations, and documentation to parallel **`opencode` (DeepSeek)** worktree swarms (`bin/multi-swarm-orchestrator.ts`).
+- **End-of-Round Parallel Triad Meaning & Preference Extraction (`bin/triad-end-of-turn-sync.ts`)**: In parallel with Phase 4 Debrief & Verification at the end of every prompt round, extract any possible meaning, operator preference, architectural insight, reusable site component, or system config from the current agent window and store it concurrently into:
+  1. **`heymegabyte/agent-skills` (AI Skills, Rules & Agent Master Prompts)** — updated under the **Minimum-Prompt Ecosystem Completeness Assumption**: always author and refine skills assuming they *should have already been written* so that the operator writes **as few prompts as possible (ideally one)** to finish **as complete a product (or entire multi-repo ecosystem) as possible** by automatically expanding scope and executing via massive parallel agent swarms (`Claude` + `Codex` + `Gemini` + 80%+ `OpenCode` DeepSeek offload).
+  2. **`heymegabyte/theme.tools` (Site & Application Code)** — extracting reusable UI components (16 visual states, `0.333s` OKLCH transitions), themes, calculators, workflows, validators, hooks, and plugin adapters into the 28 canonical `@theme.tools/*` libraries so consumer repositories remain thin shells.
+  3. **`heymegabyte/install.doctor` (System & Host Code)** — extracting reusable dotfiles, shell environment defaults, lazy CLI shims (`cnf-build-shims`), daemon units, and workstation/server provisioning logic.

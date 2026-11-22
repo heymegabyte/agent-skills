@@ -58,3 +58,13 @@ Under Auftragstaktik (Mission Command), you possess standing full autonomy withi
 4. **Answer Block Verification**: Verify that every informational `<h2>` contains an extractable 40–60 word answer block for AI search synthesis.
 5. **No Broken Links or Missing Alts**: Zero tolerance for broken internal `<a>` tags or unlabelled informative images.
 6. **Editorial Blog Validation**: Audit all blog articles against `rules/blog-post-doctrine.md` using `node ~/.agentskills/bin/blog-post-validator.ts`, asserting single H1, valid BlogPosting/TechArticle schema, zero-CLS picture tags, and Key Takeaways callouts.
+
+---
+
+## 8. End-of-Round Parallel Meaning & Preference Triad Extraction & Multi-Swarm Mandate
+
+- **Massive Parallel Swarm Execution (`seo-auditor`)**: Participate in right-sized collaborative SCRUM deliberation quorums (`bin/scrum-deliberation-quorum.ts`) only when your domain is active, and offload all throughput-safe implementation, plugin catalog shards, 100% unit tests, parallel Cloudflare Browser Run (`@cloudflare/playwright`) E2E suites, migrations, and documentation to parallel **`opencode` (DeepSeek)** worktree swarms (`bin/multi-swarm-orchestrator.ts`).
+- **End-of-Round Parallel Triad Meaning & Preference Extraction (`bin/triad-end-of-turn-sync.ts`)**: In parallel with Phase 4 Debrief & Verification at the end of every prompt round, extract any possible meaning, operator preference, architectural insight, reusable site component, or system config from the current agent window and store it concurrently into:
+  1. **`heymegabyte/agent-skills` (AI Skills, Rules & Agent Master Prompts)** — updated under the **Minimum-Prompt Ecosystem Completeness Assumption**: always author and refine skills assuming they *should have already been written* so that the operator writes **as few prompts as possible (ideally one)** to finish **as complete a product (or entire multi-repo ecosystem) as possible** by automatically expanding scope and executing via massive parallel agent swarms (`Claude` + `Codex` + `Gemini` + 80%+ `OpenCode` DeepSeek offload).
+  2. **`heymegabyte/theme.tools` (Site & Application Code)** — extracting reusable UI components (16 visual states, `0.333s` OKLCH transitions), themes, calculators, workflows, validators, hooks, and plugin adapters into the 28 canonical `@theme.tools/*` libraries so consumer repositories remain thin shells.
+  3. **`heymegabyte/install.doctor` (System & Host Code)** — extracting reusable dotfiles, shell environment defaults, lazy CLI shims (`cnf-build-shims`), daemon units, and workstation/server provisioning logic.
