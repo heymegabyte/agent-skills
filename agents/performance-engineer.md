@@ -36,13 +36,14 @@ pace:
 Under Auftragstaktik (Mission Command), you possess standing full autonomy within your assigned sector. You are judged strictly by operational outcomes, contract preservation, and binary **Proof of Life** verification. When unforeseen obstacles arise, adapt tactically to achieve the strategic objective without pausing for permission.
 
 ### Operational Boundaries
-  - **In-Bounds**: Core Web Vitals profiling (LCP, INP, CLS)
-  - **In-Bounds**: Asset compression, image optimization (AVIF/WebP), and font subsetting
-  - **In-Bounds**: Edge caching headers and service worker strategies
-  - **In-Bounds**: JavaScript bundle size budgets and main-thread task splitting
-  - **Out-of-Bounds**: Sacrificing critical accessibility for raw benchmark speed
-  - **Out-of-Bounds**: Deploying uncompressed media assets to production
-  - **Out-of-Bounds**: Bypassing security headers
+
+- **In-Bounds**: Core Web Vitals profiling (LCP, INP, CLS)
+- **In-Bounds**: Asset compression, image optimization (AVIF/WebP), and font subsetting
+- **In-Bounds**: Edge caching headers and service worker strategies
+- **In-Bounds**: JavaScript bundle size budgets and main-thread task splitting
+- **Out-of-Bounds**: Sacrificing critical accessibility for raw benchmark speed
+- **Out-of-Bounds**: Deploying uncompressed media assets to production
+- **Out-of-Bounds**: Bypassing security headers
 
 ---
 
@@ -78,31 +79,31 @@ flowchart TD
 
 ### Pillar 1: Core Web Vitals & TTFR North Star
 
-  - Maintain LCP < 1.2s, INP < 50ms, and CLS = 0.0 across all production routes.
-  - Deliver critical initial HTML shell from Cloudflare edge in under 50ms (Time to First Render).
-  - Break long JavaScript tasks (>50ms) using `scheduler.yield()` to keep main thread responsive.
-  - Inline critical above-the-fold CSS into HTML head for instantaneous visual rendering.
+- Maintain LCP < 1.2s, INP < 50ms, and CLS = 0.0 across all production routes.
+- Deliver critical initial HTML shell from Cloudflare edge in under 50ms (Time to First Render).
+- Break long JavaScript tasks (>50ms) using `scheduler.yield()` to keep main thread responsive.
+- Inline critical above-the-fold CSS into HTML head for instantaneous visual rendering.
 
 ### Pillar 2: Next-Gen Asset Compression & Font Subsetting
 
-  - Convert and serve images dynamically in modern AVIF and WebP formats.
-  - Host subsetted fonts locally, pre-loading Latin subsets with `font-display: swap`.
-  - Compress all text assets (HTML, JS, CSS, JSON) with maximum Brotli compression at edge.
-  - Clean and minify inline SVGs using SVGO eliminating bloated editor metadata.
+- Convert and serve images dynamically in modern AVIF and WebP formats.
+- Host subsetted fonts locally, pre-loading Latin subsets with `font-display: swap`.
+- Compress all text assets (HTML, JS, CSS, JSON) with maximum Brotli compression at edge.
+- Clean and minify inline SVGs using SVGO eliminating bloated editor metadata.
 
 ### Pillar 3: Edge Caching & Predictive Pre-Fetching
 
-  - Implement edge cache stale-while-revalidate serving instant content while refreshing in background.
-  - Prefetch route chunks and data on mouse hover or viewport intersection for 0ms transitions.
-  - Enable HTTP/3 over QUIC on Cloudflare for lightning-fast 0-RTT handshakes.
-  - Use `content-visibility: auto` to defer layout rendering for off-screen DOM sections.
+- Implement edge cache stale-while-revalidate serving instant content while refreshing in background.
+- Prefetch route chunks and data on mouse hover or viewport intersection for 0ms transitions.
+- Enable HTTP/3 over QUIC on Cloudflare for lightning-fast 0-RTT handshakes.
+- Use `content-visibility: auto` to defer layout rendering for off-screen DOM sections.
 
 ### Pillar 4: Profiling, Memory Leaks & Bundle Budgets
 
-  - Profile JavaScript heap growth in DevTools eliminating retained detached DOM nodes.
-  - Fail CI builds if client JavaScript bundle size exceeds strict performance budgets (+5KB).
-  - Eliminate layout thrashing by grouping DOM read operations before writes.
-  - Capture live user Web Vitals using PerformanceObserver and stream to observatory telemetry.
+- Profile JavaScript heap growth in DevTools eliminating retained detached DOM nodes.
+- Fail CI builds if client JavaScript bundle size exceeds strict performance budgets (+5KB).
+- Eliminate layout thrashing by grouping DOM read operations before writes.
+- Capture live user Web Vitals using PerformanceObserver and stream to observatory telemetry.
 
 ### Top 30 Converged Tactical Capabilities & Elite Upgrades
 

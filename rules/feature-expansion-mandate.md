@@ -15,38 +15,39 @@ ask by AUTOMATICALLY implementing the AI-recommended features / upgrades / enhan
 across EVERY category the product belongs to — until it is a full-featured, secure, backwards-compatible,
 **Enterprise-grade AI software suite**. The requirements must be met; then the product must go much further.
 (Brian directive, browse.tools 2026-10-30.) This is the stronger, operational form of [[expand-context-always]]
+
 + [[first-time-excellence]] + [[improvement-audit]] + [[predictive-completeness]].
 
 ## The core correction — any idea the AI thinks is recommendable MUST be implemented
 
-- **Core Mandate (Brian 2026-11-04):** **Any of the ideas that the AI thinks are recommendable should be implemented.** Never present recommendable AI feature or improvement ideas as a passive Rec list and ask "which should I build?", and never cap implementation at a subset.
-- **Implement every recommendable idea in the same turn**:
-  - For **workstations, servers, CLI tooling, and infrastructure**: implement every recommendable item end-to-end in the same turn (using Eager-Minimum + Lazy-Everywhere shims via `cnf-build-shims` for optional CLIs so zero bloat is added) and sync reusable configs to `heymegabyte/install.doctor`.
-  - For **applications, SaaS dashboards, and websites**: implement every recommendable feature end-to-end (behind feature flags per [[feature-flags]] when experimental) and scaffold any remaining visual surfaces as gorgeous interactive prototypes per [[progressive-screen-scaffold-approval]].
-  - Parallelize implementation across `~/.agentskills/bin/opencode-swarm.mjs` so shipping all recommendable items completes in a single turn.
-- **What is excluded**: ONLY ideas that are not genuinely recommendable, items on the explicit negative blocklist (`Superset`, `onlykey`, `fido2`, `Biome`, `Resend`, isolated XFCE desktop replacements), or genuinely destructive/irreversible actions (`approval-required` tier in `autonomous-engineering.md`).
++ **Core Mandate (Brian 2026-11-04):** **Any of the ideas that the AI thinks are recommendable should be implemented.** Never present recommendable AI feature or improvement ideas as a passive Rec list and ask "which should I build?", and never cap implementation at a subset.
++ **Implement every recommendable idea in the same turn**:
+  + For **workstations, servers, CLI tooling, and infrastructure**: implement every recommendable item end-to-end in the same turn (using Eager-Minimum + Lazy-Everywhere shims via `cnf-build-shims` for optional CLIs so zero bloat is added) and sync reusable configs to `heymegabyte/install.doctor`.
+  + For **applications, SaaS dashboards, and websites**: implement every recommendable feature end-to-end (behind feature flags per [[feature-flags]] when experimental) and scaffold any remaining visual surfaces as gorgeous interactive prototypes per [[progressive-screen-scaffold-approval]].
+  + Parallelize implementation across `~/.agentskills/bin/opencode-swarm.mjs` so shipping all recommendable items completes in a single turn.
++ **What is excluded**: ONLY ideas that are not genuinely recommendable, items on the explicit negative blocklist (`Superset`, `onlykey`, `fido2`, `Biome`, `Resend`, isolated XFCE desktop replacements), or genuinely destructive/irreversible actions (`approval-required` tier in `autonomous-engineering.md`).
 
 ## Always expand to every "generally recommendable" feature
 
-- On EVERY build + FREQUENTLY mid-build, re-analyze context and make architecture decisions that EXPAND the
++ On EVERY build + FREQUENTLY mid-build, re-analyze context and make architecture decisions that EXPAND the
   surface to include every feature a discerning user/operator of this product CLASS would expect — plus the
   differentiators that set it apart. Meeting the spec is table stakes.
-- **AI-everywhere ([[ai-permanence]] + [[ai-abundance-maximalism]]):** incorporate AI ANY time it abstracts
++ **AI-everywhere ([[ai-permanence]] + [[ai-abundance-maximalism]]):** incorporate AI ANY time it abstracts
   unnecessary complexity away from the user — a step removed, a config inferred, a decision made for them,
   a blank field filled, a natural-language path over a form. An AI affordance that simplifies is default-scaffolded.
-- **Enterprise-grade baseline is assumed:** auth + RBAC + SSO/SAML + audit log + data export/portability +
++ **Enterprise-grade baseline is assumed:** auth + RBAC + SSO/SAML + audit log + data export/portability +
   API + SDK + CLI + MCP + webhooks + observability/analytics + feature-flag admin + notifications + onboarding +
   status/trust page + backups/retention + rate-limits + secrets-as-references. Secure, backwards-compatible
   ([[backwards-compatibility-removal-cadence]]), and instrumented for profitability (usage/billing/cost controls).
-- **Powerful/risky AI features ship as enable/disable flags** defaulted OFF/experimental ([[feature-flags]]);
++ **Powerful/risky AI features ship as enable/disable flags** defaulted OFF/experimental ([[feature-flags]]);
   the user promotes via admin. (browse.tools auto-heal / ask-your-data / smart-routing / agent-memory = toggles.)
 
 ## The shared, GROWING baseline catalog (so every product inherits + compounds)
 
-- The canonical "generally-recommendable feature set" lives in the `saas-feature-completeness` skill — the
++ The canonical "generally-recommendable feature set" lives in the `saas-feature-completeness` skill — the
   growing catalog EVERY product auto-inherits and every build EXPANDS. A new baseline-worthy feature built
   for one product flows BACK there ([[prompt-as-training-signal]] §5) so all future products get it for free.
-- This is what makes the estate's apps "step apart from the rest": a compounding, shared, enterprise-grade
++ This is what makes the estate's apps "step apart from the rest": a compounding, shared, enterprise-grade
   feature floor + per-product differentiators, not one-off builds.
 
 ## Reference incident (browse.tools, 2026-10-30)

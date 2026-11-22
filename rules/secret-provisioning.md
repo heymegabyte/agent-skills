@@ -139,6 +139,7 @@ NEVER silently skip the deploy step because creds were missing — surface it as
 ## Per-Worker least-privilege binding algorithm
 
 For each Worker:
+
 1. parse `wrangler.*`, typed `Env`, and `env.KEY` source references;
 2. classify secret vs ordinary config;
 3. resolve aliases to one canonical secret name;

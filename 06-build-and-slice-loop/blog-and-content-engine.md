@@ -10,6 +10,7 @@ description: "SEO-driven blog system on Cloudflare Workers: markdown-to-HTML ren
 > [!IMPORTANT]
 > **Canonical Blog Publishing Contract (`skills/blog-publishing/SKILL.md` + `references/editorial-writing.md`)**:
 > Every newly generated or authored blog / reference article across the Megabyte Labs ecosystem MUST satisfy `@theme-tools/blog`:
+>
 > 1. **2,000–3,000+ Substantive Editorial Words (`D01–D03`, NON-NEGOTIABLE)**: `computeSubstantiveWordCount >= 2000` (excluding navigation, bibliography, table cells, captions, code blocks, alt text, and boilerplate). **Never settle for 600–900 word thin blog posts.**
 > 2. **~12 Substantive Visual Placements (`E01–E30`)**: 8–12 custom images plus deterministic SVG charts, comparison tables, interactive calculators, and product captures.
 > 3. **Live or Valid Cached DataForSEO v3 Brief (`B01–B30`)** (`isFixture: false` required for production release).

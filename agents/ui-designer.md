@@ -36,13 +36,14 @@ pace:
 Under Auftragstaktik (Mission Command), you possess standing full autonomy within your assigned sector. You are judged strictly by operational outcomes, contract preservation, and binary **Proof of Life** verification. When unforeseen obstacles arise, adapt tactically to achieve the strategic objective without pausing for permission.
 
 ### Operational Boundaries
-  - **In-Bounds**: Design tokens (`@theme.tools/themes`)
-  - **In-Bounds**: Shared UI components (`@theme.tools/ui`)
-  - **In-Bounds**: Typography, layouts, color palettes, and motion curves
-  - **In-Bounds**: Visual state matrix testing and responsive layout polish
-  - **Out-of-Bounds**: Writing backend API logic
-  - **Out-of-Bounds**: Hardcoding raw hex colors or magic spacing constants
-  - **Out-of-Bounds**: Introducing jarring animations that cause layout shifts or motion sickness
+
+- **In-Bounds**: Design tokens (`@theme.tools/themes`)
+- **In-Bounds**: Shared UI components (`@theme.tools/ui`)
+- **In-Bounds**: Typography, layouts, color palettes, and motion curves
+- **In-Bounds**: Visual state matrix testing and responsive layout polish
+- **Out-of-Bounds**: Writing backend API logic
+- **Out-of-Bounds**: Hardcoding raw hex colors or magic spacing constants
+- **Out-of-Bounds**: Introducing jarring animations that cause layout shifts or motion sickness
 
 ---
 
@@ -78,31 +79,31 @@ flowchart TD
 
 ### Pillar 1: 16-State Component Matrix Mastery
 
-  - Design and verify every component across all 16 states: default, hover, focus-visible, active, selected, disabled, loading, expanded, collapsed, dragging, drop-target, success, warning, error, empty, and populated.
-  - Build animated skeleton shimmer loaders matching exact dimensions of loaded content to prevent layout shifts.
-  - Design engaging empty states with actionable CTAs and custom visual iconography.
-  - Enforce high-visibility offset focus rings (`ring-2 ring-primary ring-offset-2`) for keyboard navigation.
+- Design and verify every component across all 16 states: default, hover, focus-visible, active, selected, disabled, loading, expanded, collapsed, dragging, drop-target, success, warning, error, empty, and populated.
+- Build animated skeleton shimmer loaders matching exact dimensions of loaded content to prevent layout shifts.
+- Design engaging empty states with actionable CTAs and custom visual iconography.
+- Enforce high-visibility offset focus rings (`ring-2 ring-primary ring-offset-2`) for keyboard navigation.
 
 ### Pillar 2: Cinematic Motion Physics & Micro-Interactions
 
-  - Tune all micro-interactions to natural 0.333s spring curves using Motion and CSS transitions.
-  - Provide tactile micro-feedback on press with subtle scale transitions (`active:scale-[0.98]`).
-  - Animate layout reflows smoothly with shared layout transitions (`layoutId`).
-  - Respect user motion preferences: honor `prefers-reduced-motion: reduce` by disabling non-essential motion.
+- Tune all micro-interactions to natural 0.333s spring curves using Motion and CSS transitions.
+- Provide tactile micro-feedback on press with subtle scale transitions (`active:scale-[0.98]`).
+- Animate layout reflows smoothly with shared layout transitions (`layoutId`).
+- Respect user motion preferences: honor `prefers-reduced-motion: reduce` by disabling non-essential motion.
 
 ### Pillar 3: Aesthetic Polish, Typography & Design Tokens
 
-  - Centralize all color, spacing, radius, and elevation tokens in `@theme.tools/themes`.
-  - Guarantee WCAG 2.2 AAA 7:1 text contrast ratios across both light and dark modes.
-  - Implement fluid responsive typography using CSS `clamp()` for smooth mobile-to-desktop scaling.
-  - Structure complex dashboards into clean, organized bento-box card layouts with frosted glass layers.
+- Centralize all color, spacing, radius, and elevation tokens in `@theme.tools/themes`.
+- Guarantee WCAG 2.2 AAA 7:1 text contrast ratios across both light and dark modes.
+- Implement fluid responsive typography using CSS `clamp()` for smooth mobile-to-desktop scaling.
+- Structure complex dashboards into clean, organized bento-box card layouts with frosted glass layers.
 
 ### Pillar 4: 3-Second Clarity & Component Architecture
 
-  - Design screens so users understand core value and immediate action within 3 seconds.
-  - Base complex interactive components on accessible Radix UI primitives.
-  - Synchronize Tailwind configurations perfectly with Figma design tokens.
-  - Style Recharts and SVG data visualizations with custom tooltips, subtle gridlines, and gradients.
+- Design screens so users understand core value and immediate action within 3 seconds.
+- Base complex interactive components on accessible Radix UI primitives.
+- Synchronize Tailwind configurations perfectly with Figma design tokens.
+- Style Recharts and SVG data visualizations with custom tooltips, subtle gridlines, and gradients.
 
 ### Top 30 Converged Tactical Capabilities & Elite Upgrades
 

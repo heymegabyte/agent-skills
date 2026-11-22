@@ -109,7 +109,6 @@ The official CLI transport receives Universal Auth credentials and short-lived t
 
 Manual enrollment: `fleet-infisical-setup` accepts a verified HTTPS US/EU/self-hosted origin, project ID, environment, folder and hidden Machine Identity client credentials. The primary host's owner-session enrollment tool is `scripts/enroll-infisical-us.py` in its private machine repository; it validates reads/denied writes before atomic provider replacement. Complete recovery and scope details live in that README. Import additional secrets into the intended US project/environment using Infisical's own tools; do not silently merge unrelated project scopes or commit credentials.
 
-
 ## Optimized turn implementation (2026-10-09)
 
 The coding-turn entrypoint is RUNTIME.md; this document is operational detail. Native CLIs receive OpenClaw policy through an explicit system-prompt-file contract while retaining native tools/system instructions. Generic CLI adapters use fresh native sessions; persistent memory comes from git/context/receipts, not an unimplemented native resume claim. OpenClaw/native context windows and compaction are distinct; do not promise blanket caching or a fixed token reduction.
@@ -124,11 +123,7 @@ Run `python3 control-plane/portfolio-health.py` for derived health and failure s
 
 Regression suite: `python3 -m unittest discover -s control-plane/tests -v`. Workflow shell contracts use PyYAML in the test environment; runtime code otherwise uses Python stdlib. Research and the exact 30% selection: research/openclaw-optimization/_ideas.md.
 
-
 Runner preflight: `python3 control-plane/runner_safety.py` detects the known unsafe Infisical bulk-export hook. `--repair` removes only recognized hook references, preserving unrelated environment entries/hooks; restart idle runners afterward. Registration fails on that known pattern and preserves existing runner-group repository approvals. The runner-ops bootstrap now configures individual broker lookups instead of bulk job injection. Exposed Browserbase/Cloudflare/E2E credentials still require provider rotation.
-
-
-
 
 ## Paperclip and owner remote development
 

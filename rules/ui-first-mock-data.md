@@ -25,6 +25,7 @@ paths:
 > Extends [[feedback_ui_first_radically_enhance_admin_recycle_editors]].
 
 ## Why
+
 - The UI is where product value + taste are judged (first-5s "it" factor, deeper "wow"). A
   fully-built UI on mock data is immediately demoable, reviewable, testable — backend wiring
   becomes a provider SWAP, not a blocker.
@@ -33,6 +34,7 @@ paths:
 - Decouples frontend progress from backend readiness — the UI never waits on an endpoint.
 
 ## Do
+
 - **Build the FULL UI first, richly, with realistic mock/test data** — not lorem, not one row:
   believable names/amounts/dates/statuses, enough rows to exercise pagination / scroll / density.
 - **Every state from mock data**: empty (a first-action launchpad), loading (skeleton, no FOUC),
@@ -55,6 +57,7 @@ paths:
   mock data is how you reach "would Linear/Stripe ship this unchanged?" before the API lands.
 
 ## Don't
+
 - Don't ship a half-built UI "pending the backend," and don't leave a state unbuilt because
   "there's no data yet" — mock the data.
 - Don't let mock data reach prod as if real: gate it behind the fixture provider / mode flag; the
@@ -63,6 +66,7 @@ paths:
 - Don't scatter hardcoded data through components — centralize fixtures behind the seam.
 
 ## projectsites.dev application
+
 - The admin SPA sections + the `/create`→`/waiting` flow + generated-site previews each get a
   typed fixture layer + all states, fully UI-built independent of their Worker endpoints, then the
   real data swaps in at the `ApiService` boundary. Swap points already exist: `ApiService`, the SWR

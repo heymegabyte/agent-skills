@@ -182,12 +182,12 @@ Hierarchical compounds gains over flat fanout. Sub-agent prompts 100–300 words
 
 Spawned specialists for batch test/feature work run on the standing `CLAUDE_CODE_SUBAGENT_MODEL=claude-sonnet-4-6` default per `parallel-subagent-economy` — Opus orchestrates, Sonnet builds. Opus-pinned reviewers (architect/security/meta-orchestrator) override that default with an explicit `model: opus` on the spawn; the call-level model param takes precedence over the env default.
 
-
 ## Cloudflare AI Gateway Dynamic Routes (product runtime)
 
 Applies to customer/product API traffic, not internal subscription-CLI orchestration.
 
 Keep route intent aligned across `megabyte-space` and `projectsites-dev`:
+
 - `dynamic/fast`
 - `dynamic/standard`
 - `dynamic/premium`
