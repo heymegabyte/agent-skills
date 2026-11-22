@@ -30,7 +30,7 @@ Default stack: `_kernel/standards.md#stack`. Override conditions below.
 - Defer event replay tooling. Reconnecting a live build stream to reconstruct its UI remains part of build correctness and does not authorize operational job replay.
 - Resolve product identity and repository ownership from current source; do not assign a product role from a domain name alone. **issuel.ink's purpose remains undecided**; no earlier suggested product role is approved by implication.
 
-Sources: [Workers WebAssembly](https://developers.cloudflare.com/workers/runtime-apis/webassembly/), [workers-rs](https://github.com/cloudflare/workers-rs), [Charm CLI guidance](../rules/terminal-styling.md).
+Sources: [Workers WebAssembly](https://developers.cloudflare.com/workers/runtime-apis/webassembly/), [workers-rs](https://github.com/cloudflare/workers-rs), [Charm CLI guidance](../../rules/terminal-styling.md).
 
 ## Cloudflare-first decision tree
 
@@ -118,3 +118,9 @@ database_name = "myapp"
 5. Migration path → If we have to leave CF, what does it cost?
 
 ## See submodules: cloudflare-primitives.md, data-patterns.md, reliability.md, auth-patterns.md.
+
+## Multi-Swarm Parallelization & OpenCode (DeepSeek) Offload Mandate
+
+- **Domain Swarm Directive**: Have the Frontier Architect (`claude` / `codex` / `gemini` — never `opencode`) lock Hono RPC routes, Drizzle schemas, Zod contracts, and OpenSpec DAGs (`task-graph.json`), then fan out independent service, migration, and `@theme.tools/*` adapter shards to parallel `opencode` (DeepSeek) worktree swarms.
+- **Massive OpenCode (DeepSeek) Offload**: Whenever a task slice is throughput-safe (bounded implementation, plugin catalog shards, 100% unit test generation, Playwright E2E specs, migrations, or documentation), offload it to parallel **`opencode` swarms powered by DeepSeek** (`~/.agentskills/bin/opencode-deepseek.sh` via the LiteLLM 4-key pool `https://llm.megabyte.space/v1`) rather than consuming premium `claude`, `codex`, or `gemini` client quota.
+- **Tri-Frontier Parallel Swarms & Right-Sized SCRUM Quorum**: When complex architectural synthesis, speculative critical-path racing, or adversarial verification is needed, run `claude`, `codex`, and `gemini` in parallel across isolated Git worktrees (`bin/multi-swarm-orchestrator.ts`) guided by a right-sized collaborative SCRUM meeting (`bin/scrum-deliberation-quorum.ts`) of only the required specialist agents. See `rules/parallel-multi-swarm-orchestration.md`.

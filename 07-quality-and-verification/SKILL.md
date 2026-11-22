@@ -148,3 +148,9 @@ After every deploy: browser console must show 0 CSP violations, 0 JS errors, 0 f
 - Pre-commit lint: new component without matching `e2e/<feature>/` warns
 
 ## See submodules: ai-vision-qa.md, multi-agent-testing.md, visual-regression.md.
+
+## Multi-Swarm Parallelization & OpenCode (DeepSeek) Offload Mandate
+
+- **Domain Swarm Directive**: Fan out test generation across parallel `opencode` (DeepSeek) swarms to achieve **100% unit test coverage** and **near-100% E2E coverage** executed in parallel via **Cloudflare Browser Run** (`@cloudflare/playwright` bound to `env.MYBROWSER` / `BROWSER`) across all 6 breakpoints and 16 OKLCH visual states, gated by cross-model `codex`/`gemini` adversarial review.
+- **Massive OpenCode (DeepSeek) Offload**: Whenever a task slice is throughput-safe (bounded implementation, plugin catalog shards, 100% unit test generation, Playwright E2E specs, migrations, or documentation), offload it to parallel **`opencode` swarms powered by DeepSeek** (`~/.agentskills/bin/opencode-deepseek.sh` via the LiteLLM 4-key pool `https://llm.megabyte.space/v1`) rather than consuming premium `claude`, `codex`, or `gemini` client quota.
+- **Tri-Frontier Parallel Swarms & Right-Sized SCRUM Quorum**: When complex architectural synthesis, speculative critical-path racing, or adversarial verification is needed, run `claude`, `codex`, and `gemini` in parallel across isolated Git worktrees (`bin/multi-swarm-orchestrator.ts`) guided by a right-sized collaborative SCRUM meeting (`bin/scrum-deliberation-quorum.ts`) of only the required specialist agents. See `rules/parallel-multi-swarm-orchestration.md`.

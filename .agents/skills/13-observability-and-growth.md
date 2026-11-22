@@ -98,3 +98,9 @@ CRO: sticky CTA bar on mobile · scroll-progress bar (subtle) · exit-intent mod
 Sentry → Inngest pipeline: (1) Sentry webhook on `event.alert.triggered` → (2) Inngest dispatches `incident-responder` agent → (3) agent reads event, traces to source file, proposes fix, opens PR via gh MCP → (4) PR auto-merges if all CI gates pass per `rules/ai-seniority.md`.
 
 ## See submodules: posthog, ga4-gtm, sentry, stripe-billing, square-payments, listmonk, plg-framework, programmatic-seo, incident-remediation, geo-ai-search, local-conversions.
+
+## Multi-Swarm Parallelization & OpenCode (DeepSeek) Offload Mandate
+
+- **Domain Swarm Directive**: Wire all 7 observability rails (PostHog, GA4, GTM, Sentry, Cloudflare Web Analytics, OTLP, and Langfuse `2500ms` fail-open tracing) and Stripe/Link billing webhooks in parallel across `opencode` (DeepSeek) worktree shards.
+- **Massive OpenCode (DeepSeek) Offload**: Whenever a task slice is throughput-safe (bounded implementation, plugin catalog shards, 100% unit test generation, Playwright E2E specs, migrations, or documentation), offload it to parallel **`opencode` swarms powered by DeepSeek** (`~/.agentskills/bin/opencode-deepseek.sh` via the LiteLLM 4-key pool `https://llm.megabyte.space/v1`) rather than consuming premium `claude`, `codex`, or `gemini` client quota.
+- **Tri-Frontier Parallel Swarms & Right-Sized SCRUM Quorum**: When complex architectural synthesis, speculative critical-path racing, or adversarial verification is needed, run `claude`, `codex`, and `gemini` in parallel across isolated Git worktrees (`bin/multi-swarm-orchestrator.ts`) guided by a right-sized collaborative SCRUM meeting (`bin/scrum-deliberation-quorum.ts`) of only the required specialist agents. See `rules/parallel-multi-swarm-orchestration.md`.

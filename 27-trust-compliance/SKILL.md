@@ -42,3 +42,9 @@ stage: stable
 ## Email domain authentication
 
 - Sending domain publishes SPF + DKIM + DMARC (BIMI where a VMC exists). These records live on the SENDING domain's zone (may differ from the site domain — surface any mismatch before staging).
+
+## Multi-Swarm Parallelization & OpenCode (DeepSeek) Offload Mandate
+
+- **Domain Swarm Directive**: Verify RBAC, tenant isolation, CSP Level 3, Trusted Types, GDPR/CCPA data export/deletion in Settings, and secret hygiene via adversarial `codex` security review over `opencode` (DeepSeek) implementation shards.
+- **Massive OpenCode (DeepSeek) Offload**: Whenever a task slice is throughput-safe (bounded implementation, plugin catalog shards, 100% unit test generation, Playwright E2E specs, migrations, or documentation), offload it to parallel **`opencode` swarms powered by DeepSeek** (`~/.agentskills/bin/opencode-deepseek.sh` via the LiteLLM 4-key pool `https://llm.megabyte.space/v1`) rather than consuming premium `claude`, `codex`, or `gemini` client quota.
+- **Tri-Frontier Parallel Swarms & Right-Sized SCRUM Quorum**: When complex architectural synthesis, speculative critical-path racing, or adversarial verification is needed, run `claude`, `codex`, and `gemini` in parallel across isolated Git worktrees (`bin/multi-swarm-orchestrator.ts`) guided by a right-sized collaborative SCRUM meeting (`bin/scrum-deliberation-quorum.ts`) of only the required specialist agents. See `rules/parallel-multi-swarm-orchestration.md`.

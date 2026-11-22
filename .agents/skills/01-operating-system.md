@@ -31,9 +31,10 @@ Supreme policy. Loaded every prompt. Overrides all other skills.
 ## Autonomy default
 
 - Inspect → decide → implement → verify → repair → document → report — WITHOUT asking
+- Automatically re-engineer each request into the strongest execution prompt before acting: preserve the user's verbatim intent and full scope, add only evidence-backed context, infer reversible implementation details with best judgment, resolve obvious ambiguities from the repository and live state, and optimize the work plan for the requested outcome. Treat this as internal prompt refinement, not permission to narrow, substitute, or reinterpret the goal.
+- Ask only when a missing choice would materially change the outcome, requires new authority, or crosses an approval boundary. Otherwise choose the best supported path, state consequential assumptions when useful, and continue.
 - Per `rules/autonomous-engineering.md` 4-tier: `autonomous | review-recommended | approval-required | blocked`
 - Approval ONLY for: charging money, dropping tables, bulk customer outreach, secret rotation, billing changes, auth changes, bulk email/SMS, deleting major product area, mass mutation
-- In Paperclip (`swarml.ink`), use **Sub-tasks (`parent_id`)** whenever appropriate; populate **Reviewers**, **Approvers**, **Monitor**, and **Watchdog** fields; wire **Parent**, **Blocking** (`blocks`), and **Blocked by** (`blockedByIssueIds`); and use **Decisions** (`/MEG/decisions`, `ask_user_questions`) strictly to ask the user questions to clarify instructions or provide recommendations and scope expansions
 - Everything else: just do it
 
 ## Hard Gates (every project)
@@ -54,12 +55,29 @@ Supreme policy. Loaded every prompt. Overrides all other skills.
 
 ## One-line prompt interpretation
 
+**Hydrate before execution:** for every material request, resolve the shared typed context artifact through `bin/prompt-hydrator.ts` (invoked automatically at `UserPromptSubmit` via `bin/prompt-hydration-hook.mjs`) before research, architecture or code. Complete-product/reference-clone prompts load `one-line-saas` + `rules/greenfield-saas-prompt-hydration`; feature requests load `rules/parallel-multi-swarm-orchestration` + `rules/feature-expansion-mandate`; focused fixes remain proportionate while still auditing adjacent product gaps.
+
+## Automatic Hyper-Super-Saturated Hydration, SCRUM Quorum & Multi-Swarm Execution
+
+1. **First Action on Every Prompt (`UserPromptSubmit` Hyper-Saturation & Gap Audit)**:
+   - Every prompt is automatically analyzed and hydrated with repository instructions, active `openspec/changes/*`, and a **Product & Architecture Gap Audit** (`auditProductGaps`). If standard surfaces (such as **Settings**, **Billing**, **RBAC**, **Notifications**, **Plugin Catalogs**, or **28 `@theme.tools/*` Thin-Shell Bindings**) are missing or incomplete, they are automatically folded into the delivery scope.
+2. **Architect Categorical Web-Research Saturation & Parallel Plugin Catalogs**:
+   - On feature or application requests, the **Architect** (`agents/architect.md`) cycles through every categorical aspect of the feature/app (`C01`–`C10`), iteratively expanding the brief with heavy web research, competitor analysis, and top recommendations until zero recommendable ideas remain. Extensible surfaces implement **full plugin catalogs in massive parallel by default**.
+3. **Right-Sized Collaborative SCRUM Deliberation Quorum (`bin/scrum-deliberation-quorum.ts`)**:
+   - All consequential architectural and design decisions are synthesized by a collaborative SCRUM meeting convening **only the specialist agents required for the active domains** across heterogeneous frontier models (`claude`, `codex`, `gemini`).
+4. **Parallel OpenSpec DAG & Massive `OpenCode` (DeepSeek) Swarm Offload (`bin/multi-swarm-orchestrator.ts`)**:
+   - The Frontier Architect (`claude` / `codex` / `gemini` — never `opencode`) authors OpenSpec artifacts (`proposal.md`, `design.md`, `tasks.md`, `specs/`, `task-graph.json`) and upgrades repo docs/comments.
+   - Offload **80%+ of throughput-safe work** (feature shards, plugin catalogs, 100% unit tests, E2E specs, migrations, docs) to parallel **`opencode` (DeepSeek)** worktree swarms via `bin/opencode-deepseek.sh` / LiteLLM (`https://llm.megabyte.space/v1`), reserving parallel `claude`, `codex`, and `gemini` swarms for frontier architecture, speculative critical-path racing, and adversarial cross-review.
+5. **Production Finish Line (`main` + Cloudflare + Custom Domain + 100% Unit + Parallel Cloudflare Browser Run E2E)**:
+   - Every hydrated prompt targets a finished application committed to `main`, Cloudflare bindings (`wrangler.toml`) and custom domain connected and deployed to production with CDN purge, **100% unit test coverage**, and **near-100% E2E coverage** executed in parallel using **Cloudflare Browser Run** (`@cloudflare/playwright` bound to `env.MYBROWSER` / `BROWSER`) across 6 breakpoints and 16 OKLCH visual states.
+
 Phrase → action:
 
 - `make a website for X` / `build a site for Y` / `rebuild Z.com` → skill 16 cinematic-website-prime-directive
 - `improve this` / `make it better` → `rules/supreme-polish.md` 100-ideas audit
 - `add X` / `now do Y` → vertical slice per skill 06
 - `fix X` → `rules/error-recovery.md` self-heal + write regression test
+- `clone Notion` / `clone {SaaS}` / `build a complete product` → hydrate → recursive product research → workflow OpenSpec → implement → browser verify → gap review
 - `audit X` / `100 ideas` → `rules/supreme-polish.md`
 - `simplify X` → `rules/proactive-improvements.md` + remove dead code
 - `polish X` → cinematic motion + refined type + a11y upgrade
@@ -141,3 +159,9 @@ At 60% context, save `progress.md` + spawn fresh agent. Preserve: files touched,
 ## Self-improvement
 
 After every implementation: "What else?" If anything → do it → ask again → loop until zero.
+
+## Multi-Swarm Parallelization & OpenCode (DeepSeek) Offload Mandate
+
+- **Domain Swarm Directive**: Intercept every prompt via `bin/prompt-hydrator.ts`, audit missing product surfaces (e.g., `Settings`, `Plugin Catalogs`, `@theme.tools/*`), convene a right-sized SCRUM deliberation quorum (`bin/scrum-deliberation-quorum.ts`) across `claude`, `codex`, and `gemini`, lock OpenSpec DAG contracts, and offload 80%+ of throughput-safe volume to parallel `opencode` (DeepSeek) worktree swarms.
+- **Massive OpenCode (DeepSeek) Offload**: Whenever a task slice is throughput-safe (bounded implementation, plugin catalog shards, 100% unit test generation, Playwright E2E specs, migrations, or documentation), offload it to parallel **`opencode` swarms powered by DeepSeek** (`~/.agentskills/bin/opencode-deepseek.sh` via the LiteLLM 4-key pool `https://llm.megabyte.space/v1`) rather than consuming premium `claude`, `codex`, or `gemini` client quota.
+- **Tri-Frontier Parallel Swarms & Right-Sized SCRUM Quorum**: When complex architectural synthesis, speculative critical-path racing, or adversarial verification is needed, run `claude`, `codex`, and `gemini` in parallel across isolated Git worktrees (`bin/multi-swarm-orchestrator.ts`) guided by a right-sized collaborative SCRUM meeting (`bin/scrum-deliberation-quorum.ts`) of only the required specialist agents. See `rules/parallel-multi-swarm-orchestration.md`.

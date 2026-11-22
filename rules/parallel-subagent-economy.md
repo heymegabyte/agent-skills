@@ -12,9 +12,11 @@ paths:
   - "*"
 ---
 
-# Parallel Subagent Economy
+# Parallel Subagent Economy & Multi-Swarm Offload (`Claude` · `Codex` · `Gemini` · `OpenCode` DeepSeek)
 
-**Fan out whenever doing so saves ≥5 min wall-clock over serial**, provided units genuinely independent. Sonnet specialists often cheaper than one Opus thread.
+**Leverage multiple swarms of parallel agents whenever doing so speeds up execution or offloads premium frontier quota without sacrificing quality.** In addition to internal Claude subagents, always offload throughput-safe implementation, plugin catalogs, unit tests (100% coverage), E2E suites (Cloudflare Browser Run `@cloudflare/playwright`), migrations, and documentation to **parallel `opencode` swarms powered by DeepSeek** (`bin/opencode-deepseek.sh` / LiteLLM 4-key rotation pool `https://llm.megabyte.space/v1`), while using parallel **`claude` + `codex` + `gemini` frontier swarms** and a right-sized **collaborative SCRUM deliberation quorum** (`bin/scrum-deliberation-quorum.ts`) for architecture, OpenSpec DAG authoring, and adversarial cross-review (`[[parallel-multi-swarm-orchestration]]`).
+
+**Fan out internal Claude subagents whenever doing so saves ≥5 min wall-clock over serial**, provided units genuinely independent. Sonnet specialists and OpenCode (DeepSeek) worker swarms are dramatically cheaper than one serial Opus thread.
 
 Hard preconditions: units independent (distinct files, no shared state, no data dependency) AND real minutes to save — never fan out for appearance on serial-by-nature or trivially-fast work.
 
@@ -79,7 +81,7 @@ Examples: 2×8 min → saves ~6 → **fan out**. 3×4 min → saves ~6 → **fan
 
 - **`CLAUDE_CODE_SUBAGENT_MODEL=claude-sonnet-4-6` SET** (in `~/.claude/settings.json` § env). Every spawned specialist runs Sonnet at `high` effort. ~0% quality loss on impl/test work.
 - **Orchestrator (main thread) stays Opus `xhigh`** — decomposes, slices, folds, verifies. **Never implements.**
-- **Opus-pinned reviewers stay Opus.** Pass explicit `model: opus` on Agent call when spawning `security-reviewer` / `architect` / payment-auth review (`visual-qa` is Flash-tier and keeps the session default). Sonnet default MUST NOT silently downgrade sensitive review. If Opus quota red AND review is security/payment/auth-sensitive → **defer** per `opus-quota-fallback.md`.
+- **Opus-pinned reviewers stay Opus.** Pass explicit `model: opus` on Agent call when spawning `security-reviewer` / `architect` / `visual-qa` / payment-auth review. Sonnet default MUST NOT silently downgrade sensitive review. If Opus quota red AND review is security/payment/auth-sensitive → **defer** per `opus-quota-fallback.md`.
 - **Haiku reserved** for changelog / format / rename.
 - **On Opus quota exhaustion**: orchestrator drops to Sonnet; specialists already Sonnet → fan-out width unchanged (effort drops to `high`).
 

@@ -72,6 +72,17 @@
           }
         ]
       }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node $HOME/.agentskills/bin/prompt-hydration-hook.mjs 2>/dev/null || true",
+            "timeout": 15
+          }
+        ]
+      }
     ]
   },
   "enabledPlugins": {

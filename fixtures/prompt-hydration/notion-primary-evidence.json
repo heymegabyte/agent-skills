@@ -1,0 +1,42 @@
+{
+  "referenceProduct": "Notion",
+  "edition": "Current public SaaS help documentation; plan-specific differences recorded where documented",
+  "observedAt": "2026-11-15",
+  "findings": [
+    {
+      "summary": "Page editing is block-based; the slash menu adds block types and invokes block actions.",
+      "source": "https://www.notion.com/help/writing-and-editing-basics",
+      "status": "verified"
+    },
+    {
+      "summary": "Page sharing exposes member/group access, permission levels, links, web publishing, and access requests.",
+      "source": "https://www.notion.com/help/sharing-and-permissions",
+      "status": "verified"
+    },
+    {
+      "summary": "Databases support multiple independently configured views, including table, board, timeline, calendar, list, gallery and chart.",
+      "source": "https://www.notion.com/help/views-filters-and-sorts",
+      "status": "verified"
+    },
+    {
+      "summary": "Changing the primary sign-in email adds and verifies a new address before making it primary; the old address is removed separately, and Enterprise policy may restrict aliases.",
+      "source": "https://www.notion.com/help/account-settings",
+      "status": "verified"
+    },
+    {
+      "summary": "Pages can be moved or nested with sidebar drag-and-drop; moving shared content into Private removes others' access.",
+      "source": "https://www.notion.com/help/navigate-with-the-sidebar",
+      "status": "verified"
+    },
+    {
+      "summary": "Deleted pages enter Trash, cannot be edited there, can be restored, and default to a 30-day Trash period with Enterprise customization.",
+      "source": "https://www.notion.com/help/duplicate-delete-and-restore-content",
+      "status": "verified"
+    },
+    {
+      "summary": "The exact pending-invitation revocation behavior was not established by the reviewed public Notion help pages and requires authorized interface observation or additional primary documentation.",
+      "source": "research-gap:notion-pending-invitation-revocation",
+      "status": "unverified"
+    }
+  ]
+}

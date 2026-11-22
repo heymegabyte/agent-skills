@@ -53,3 +53,9 @@ source: "28-cf-integrations-reference/SKILL.md (heymegabyte/agent-skills)"
 - Coverage: org-type → standard page-set expansion; per-vertical domain features; pSEO templates; local SEO (Google Business Profile + citations).
 - Owner UX: non-technical-owner onboarding (zero-code edits); small-business rebuild mode.
 - Export/template: bolt-artifact XML envelope; template system = the bolt.diy stack (Vite + React + Tailwind + shadcn) OR Angular per app-foundation.
+
+## Multi-Swarm Parallelization & OpenCode (DeepSeek) Offload Mandate
+
+- **Domain Swarm Directive**: Provision Cloudflare Workers, D1, KV, R2, Queues, Workflows, AI, and Browser Rendering (`[browser]` / `@cloudflare/playwright`) bindings in parallel worktrees with deterministic local port leasing.
+- **Massive OpenCode (DeepSeek) Offload**: Whenever a task slice is throughput-safe (bounded implementation, plugin catalog shards, 100% unit test generation, Playwright E2E specs, migrations, or documentation), offload it to parallel **`opencode` swarms powered by DeepSeek** (`~/.agentskills/bin/opencode-deepseek.sh` via the LiteLLM 4-key pool `https://llm.megabyte.space/v1`) rather than consuming premium `claude`, `codex`, or `gemini` client quota.
+- **Tri-Frontier Parallel Swarms & Right-Sized SCRUM Quorum**: When complex architectural synthesis, speculative critical-path racing, or adversarial verification is needed, run `claude`, `codex`, and `gemini` in parallel across isolated Git worktrees (`bin/multi-swarm-orchestrator.ts`) guided by a right-sized collaborative SCRUM meeting (`bin/scrum-deliberation-quorum.ts`) of only the required specialist agents. See `rules/parallel-multi-swarm-orchestration.md`.

@@ -27,20 +27,20 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 - **26 — Platform and Delivery** — —
 - **27 — Trust and Compliance** — —
 - **28 — CF Integrations Reference** — —
-- **Specialized Domain & Integration Skills (`skills/*`)** — `skills/blog-publishing` (**@theme-tools/blog: 2,000–3,000+ substantive editorial words**, 8-stage pipeline, ~12 visuals `E01–E30`, live DataForSEO v3, inline `CitationNode` + `BibliographyWidget`, 3 daily slots `09:00`/`14:00`/`19:00` ET, 12-check `runQualityAndReleaseGate`), `skills/tdd-and-verification`, `skills/tri-harness-deepseek-ollama-routing`, `skills/stripe`, `skills/square`, `skills/posthog`, `skills/resend`, `skills/twilio`, `skills/github`, `skills/openai`, `skills/bitwarden`, `skills/paperclip`
 
 ## Task Routing
 
 - **Doctrinal principles** → `rules/agent-resilience-discipline`, `rules/backwards-compatibility-removal-cadence`, `rules/blast-radius-minimization`, `rules/conditional-ci-gates`, `rules/cost-per-request-accountability`, `rules/customer-facing-changelog`, `rules/data-residency-by-default`, `rules/error-budget`, `rules/fail-fast-build-fail-soft-prod`, `rules/mcp-auth-options`, `rules/mcp-server-hardening`, `rules/one-way-two-way-doors`, `rules/pii-handling-discipline`, `rules/production-observability-default-on`, `rules/root-cause-validator-findings`, `rules/state-is-the-enemy`, `rules/structured-logging`, `rules/supply-chain-integrity`, `rules/sync-ui-async-backing`, `rules/ttfr-north-star`, `rules/uuid-version-discipline`, `rules/vendor-risk-tiering`, `rules/webhook-as-skill-pattern`, `rules/working-backwards`
-- **New project** → `02`, `05`, `06`, `09`, `21`
-- **Build feature** → `05`, `06`, `07`, `24`
+- **New project** → `02`, `05`, `06`, `09`, `21`, `rules/parallel-multi-swarm-orchestration`
+- **Complete SaaS / reference-product clone / “clone Notion”** → `01/one-line-saas`, `rules/context-hydration`, `rules/greenfield-saas-prompt-hydration`, `rules/parallel-multi-swarm-orchestration`, `02`, `05`, `06`, `07`, `21`; hydrate before research/specification/implementation, run the product gap audit (Settings, plugin catalogs, `@theme.tools/*`), convene the right-sized SCRUM deliberation quorum, author the parallel OpenSpec DAG, fan out `opencode` (DeepSeek) + `claude`/`codex`/`gemini` swarms, and verify 100% unit + parallel Cloudflare Browser Run E2E coverage through production Cloudflare deployment on `main`. Focused fixes and narrow prototypes keep their smaller routes.
+- **Build feature** → `05`, `06`, `07`, `24`, `rules/parallel-multi-swarm-orchestration`, `rules/feature-expansion-mandate`
 - **Go CLI / TUI / terminal prompts / aid / install.doctor** → `rules/terminal-styling`, `rules/package-preference-registry`, `rules/agent-provider-policy`, `05`
 - **Rust / WASM / native runner** → `05`, `rules/cloudflare-hostable-supervisor`, `07/performance-optimization`
 - **OnePrompt / draftl.ink / streaming build / incremental preview** → `rules/event-sourced-build-progress`, `06`, `10`
 - **Debug / CI failure** → `07`, `08` — especially `gh-fix-ci`, `spec-driven-development`
 - **Deploy / launch** → `08`, `26` — add `09` if SEO/content changed
 - **Design / frontend polish** → `09`, `10`, `11`, `12`, `22`
-- **SEO / copy / blog publishing** → `skills/blog-publishing` (**mandatory for all blog/reference articles: 2,000–3,000+ substantive words**, `@theme-tools/blog`, `references/editorial-writing.md`), `09`, `23` — add `06/blog-and-content-engine` or `13/analytics-configuration` when relevant
+- **SEO / copy** → `09`, `23` — add `06/blog-and-content-engine` or `13/analytics-configuration` when relevant
 - **Billing / auth** → `05/auth-and-session-management`, `05/enterprise-multi-tenancy`, `06/webhook-system`, `13/stripe-billing`
 - **File uploads / admin / data grids** → `06/file-uploads-and-storage`, `admin-dashboard`, `data-tables`
 - **Realtime / AI features** → `05/ai-technology-integration`, `06/realtime-and-websockets`, `ai-chat-widget`, `copilot-and-ai-features`
@@ -76,7 +76,7 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 - `.github/workflows/**` → `08/ci-cd-pipeline`, `gh-fix-ci`
 - `*.spec.ts`, `*.test.ts` → `07`
 - `*.css`, `*.scss` → `10`, `11`
-- `blog/**`, `posts/**`, `articles/**` → `skills/blog-publishing` (`SKILL.md` + `references/editorial-writing.md` — **2,000–3,000+ substantive words**, `@theme-tools/blog`), `06/blog-and-content-engine`, `09/seo-and-keywords`, `23`
+- `blog/**`, `posts/**` → `06/blog-and-content-engine`, `09/seo-and-keywords`
 - `api/webhooks/**` → `06/webhook-system`
 - `api/stripe*` → `13/stripe-billing`
 - `api/uploads/**` → `06/file-uploads-and-storage`

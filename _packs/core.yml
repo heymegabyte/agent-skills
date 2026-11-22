@@ -89,3 +89,7 @@ members:
   - rules/sso-auth-standard
   - rules/feature-expansion-mandate
   - rules/ideal-architecture-loop
+  - rules/intent-complete-delivery
+  - rules/context-hydration
+  - rules/greenfield-saas-prompt-hydration
+  - rules/parallel-multi-swarm-orchestration

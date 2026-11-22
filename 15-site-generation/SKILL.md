@@ -186,3 +186,9 @@ Gate every third-party widget on env var: `{import.meta.env.VITE_TURNSTILE_SITEK
 - Addresses → Google Maps links | phone → `tel:` links | email → `mailto:` links
 
 ## See submodules for: research-pipeline, media-acquisition, build-prompts, quality-gates, domain-features, template-system, local-seo, bolt-artifact-protocol, page-set-expansion, source-fidelity-loop, build-breaking-rules.
+
+## Multi-Swarm Parallelization & OpenCode (DeepSeek) Offload Mandate
+
+- **Domain Swarm Directive**: Decompose multi-page site generation, pSEO route matrices, local-SEO schemas, and `@theme.tools/*` block composition into disjoint OpenSpec DAG shards executed concurrently by `opencode` (DeepSeek) worker swarms.
+- **Massive OpenCode (DeepSeek) Offload**: Whenever a task slice is throughput-safe (bounded implementation, plugin catalog shards, 100% unit test generation, Playwright E2E specs, migrations, or documentation), offload it to parallel **`opencode` swarms powered by DeepSeek** (`~/.agentskills/bin/opencode-deepseek.sh` via the LiteLLM 4-key pool `https://llm.megabyte.space/v1`) rather than consuming premium `claude`, `codex`, or `gemini` client quota.
+- **Tri-Frontier Parallel Swarms & Right-Sized SCRUM Quorum**: When complex architectural synthesis, speculative critical-path racing, or adversarial verification is needed, run `claude`, `codex`, and `gemini` in parallel across isolated Git worktrees (`bin/multi-swarm-orchestrator.ts`) guided by a right-sized collaborative SCRUM meeting (`bin/scrum-deliberation-quorum.ts`) of only the required specialist agents. See `rules/parallel-multi-swarm-orchestration.md`.

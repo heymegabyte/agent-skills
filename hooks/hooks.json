@@ -1,0 +1,16 @@
+{
+  "description": "Hydrate every submitted prompt before Claude Code executes it.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/bin/prompt-hydration-hook.mjs",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

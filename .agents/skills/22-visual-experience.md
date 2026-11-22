@@ -64,3 +64,9 @@ source: "22-visual-experience/SKILL.md (heymegabyte/agent-skills)"
 
 - Every `Cache-Control: immutable` / 1yr asset carries a content-version — hashed filename or `?v=` bumped on EVERY change — including any `_headers` Early-Hints preload of the same URL (CF 103 cache lags a deploy briefly).
 - Reference incident (claude.megabyte.space, 2026-10-04): a stylesheet served `immutable, max-age=1yr` on an UNVERSIONED URL left returning visitors on stale CSS indefinitely.
+
+## Multi-Swarm Parallelization & OpenCode (DeepSeek) Offload Mandate
+
+- **Domain Swarm Directive**: Enforce 16-state OKLCH visual completeness and styled pill/chip rendering (`string[]` never comma-joined) across all views in parallel using `opencode` (DeepSeek) UI shards verified by `gemini`/`claude` visual QA.
+- **Massive OpenCode (DeepSeek) Offload**: Whenever a task slice is throughput-safe (bounded implementation, plugin catalog shards, 100% unit test generation, Playwright E2E specs, migrations, or documentation), offload it to parallel **`opencode` swarms powered by DeepSeek** (`~/.agentskills/bin/opencode-deepseek.sh` via the LiteLLM 4-key pool `https://llm.megabyte.space/v1`) rather than consuming premium `claude`, `codex`, or `gemini` client quota.
+- **Tri-Frontier Parallel Swarms & Right-Sized SCRUM Quorum**: When complex architectural synthesis, speculative critical-path racing, or adversarial verification is needed, run `claude`, `codex`, and `gemini` in parallel across isolated Git worktrees (`bin/multi-swarm-orchestrator.ts`) guided by a right-sized collaborative SCRUM meeting (`bin/scrum-deliberation-quorum.ts`) of only the required specialist agents. See `rules/parallel-multi-swarm-orchestration.md`.

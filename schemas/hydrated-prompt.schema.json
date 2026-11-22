@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent.megabyte.space/schemas/hydrated-prompt.schema.json",
+  "title": "Hydrated Prompt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "hydrationId",
+    "hydratedAt",
+    "originalRequest",
+    "diagnosticRequest",
+    "checkout",
+    "route",
+    "referenceProduct",
+    "referenceEdition",
+    "explicitRequirements",
+    "inferredRequirements",
+    "researchFindings",
+    "evidence",
+    "assumptions",
+    "unresolvedConflicts",
+    "omissions",
+    "context",
+    "handoff"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "hydrationId": { "type": "string", "pattern": "^hydration-[a-f0-9]{12}$" },
+    "hydratedAt": { "type": "string", "format": "date-time" },
+    "originalRequest": { "type": "string", "minLength": 1 },
+    "diagnosticRequest": { "type": "string", "minLength": 1 },
+    "checkout": { "type": "string", "minLength": 1 },
+    "route": { "enum": ["greenfield-saas", "focused-change"] },
+    "executionMode": { "enum": ["hyper-saturated-swarm", "focused-swarm"] },
+    "referenceProduct": { "type": ["string", "null"] },
+    "referenceEdition": { "type": "string" },
+    "explicitRequirements": { "$ref": "#/$defs/requirements" },
+    "inferredRequirements": { "$ref": "#/$defs/requirements" },
+    "researchFindings": { "$ref": "#/$defs/evidenceList" },
+    "evidence": { "$ref": "#/$defs/evidenceList" },
+    "assumptions": { "type": "array", "items": { "type": "string" } },
+    "unresolvedConflicts": { "type": "array", "items": { "type": "string" } },
+    "omissions": { "type": "array", "items": { "type": "string" } },
+    "context": {
+      "type": "object",
+      "required": [
+        "instructions",
+        "activeOpenSpecChanges",
+        "relevantFiles",
+        "dependencies",
+        "providers"
+      ],
+      "properties": {
+        "instructions": {
+          "type": "array",
+          "items": { "type": "object", "required": ["path", "sha256", "authority"] }
+        },
+        "activeOpenSpecChanges": { "type": "array", "items": { "type": "string" } },
+        "relevantFiles": { "type": "array", "items": { "type": "string" } },
+        "dependencies": { "type": "object", "additionalProperties": { "type": "string" } },
+        "providers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "purpose", "availability", "deadlineMs", "fallback"]
+          }
+        }
+      }
+    },
+    "productAudit": {
+      "type": "object",
+      "required": ["scannedSurfaces", "missingOrIncompleteSurfaces", "categoricalAspects"],
+      "properties": {
+        "scannedSurfaces": { "type": "array", "items": { "type": "string" } },
+        "missingOrIncompleteSurfaces": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["surface", "status", "remediationTask", "owner", "swarmTier"]
+          }
+        },
+        "categoricalAspects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "category",
+              "webResearchQueries",
+              "competitorBenchmarks",
+              "topRecommendations",
+              "pluginCatalogCandidates"
+            ]
+          }
+        }
+      }
+    },
+    "scrumQuorum": {
+      "type": "object",
+      "required": ["meetingId", "selectedAgents", "excludedAgentCount", "synthesisDirective"],
+      "properties": {
+        "meetingId": { "type": "string" },
+        "selectedAgents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["agentId", "role", "harness", "reasonIncluded"]
+          }
+        },
+        "excludedAgentCount": { "type": "number" },
+        "synthesisDirective": { "type": "string" }
+      }
+    },
+    "swarmExecutionPlan": {
+      "type": "object",
+      "required": [
+        "top15ActiveStrategies",
+        "frontierTriadRoles",
+        "opencodeDeepseekOffload",
+        "finishLineContract"
+      ],
+      "properties": {
+        "top15ActiveStrategies": { "type": "array", "items": { "type": "string" } },
+        "frontierTriadRoles": {
+          "type": "object",
+          "required": ["claude", "codex", "gemini"]
+        },
+        "opencodeDeepseekOffload": {
+          "type": "object",
+          "required": [
+            "enabled",
+            "gateway",
+            "launcher",
+            "targetOffloadRatio",
+            "parallelPluginCatalogSwarm"
+          ]
+        },
+        "finishLineContract": {
+          "type": "object",
+          "required": [
+            "gitBranch",
+            "cloudflareConfigured",
+            "customDomainConnected",
+            "productionDeployed",
+            "unitTestCoverageTarget",
+            "e2eRunner",
+            "e2eCoverageTarget"
+          ]
+        }
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "required": ["acceptedDecisionIds", "pendingWorkIds", "continuationToken"]
+    }
+  },
+  "$defs": {
+    "requirements": {
+      "type": "array",
+      "items": { "type": "object", "required": ["id", "text", "provenance", "evidenceIds"] }
+    },
+    "evidenceList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "summary",
+          "provenance",
+          "confidence",
+          "status",
+          "includedBecause"
+        ]
+      }
+    }
+  }
+}

@@ -120,3 +120,9 @@ Ideas serving higher pursuits get +0.1 confidence boost.
 - After implementation, run one adjacent-opportunity pass; continue only while the bounded loop budget and acceptance criteria permit
 - Per `~/.claude/CLAUDE.md` § Self-Improvement
 - Preserve deferred ideas with reopening conditions rather than expanding effort without a bound
+
+## Multi-Swarm Parallelization & OpenCode (DeepSeek) Offload Mandate
+
+- **Domain Swarm Directive**: Cycle through every categorical aspect of the product with heavy web research until zero recommendable ideas remain, then implement 100% of recommendable ideas in the same turn via massive parallel `opencode` (DeepSeek) swarms rather than presenting passive recommendation lists.
+- **Massive OpenCode (DeepSeek) Offload**: Whenever a task slice is throughput-safe (bounded implementation, plugin catalog shards, 100% unit test generation, Playwright E2E specs, migrations, or documentation), offload it to parallel **`opencode` swarms powered by DeepSeek** (`~/.agentskills/bin/opencode-deepseek.sh` via the LiteLLM 4-key pool `https://llm.megabyte.space/v1`) rather than consuming premium `claude`, `codex`, or `gemini` client quota.
+- **Tri-Frontier Parallel Swarms & Right-Sized SCRUM Quorum**: When complex architectural synthesis, speculative critical-path racing, or adversarial verification is needed, run `claude`, `codex`, and `gemini` in parallel across isolated Git worktrees (`bin/multi-swarm-orchestrator.ts`) guided by a right-sized collaborative SCRUM meeting (`bin/scrum-deliberation-quorum.ts`) of only the required specialist agents. See `rules/parallel-multi-swarm-orchestration.md`.

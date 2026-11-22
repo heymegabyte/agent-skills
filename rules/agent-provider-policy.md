@@ -38,25 +38,23 @@ When two or more independent throughput-safe slices exist, launch an **OpenCode 
 - **Codex unavailable/unauthed is NOT fatal** → Claude performs an extra architecture /
   expansion / adversarial-review pass itself, then proceeds.
 
-### Throughput — routine implementation & heartbeats (DeepSeek & Local GPU Ollama across `claude` + `codex` + `opencode`)
+### Throughput — routine implementation (DeepSeek via OpenCode)
 
-- **Tri-Harness DeepSeek & Ollama Offload (`claude` + `codex` + `opencode` via Claw Router `cr` & LiteLLM Gateway `https://llm.megabyte.space`)** — Paperclip and OpenClaw leverage **all three CLI harnesses** (`claude`, `codex`, and `opencode`) on top of **DeepSeek** (`deepseek-v4-pro`, `deepseek-flash`, `deepseek-chat`, `deepseek-reasoner`) and **Local GPU Ollama** (`hybrid-coder`, `ollama-coder`, `workstation-ai`, `local-llm`, `qwen2.5-coder:14b`) through Claw Router (`cr`) and the LiteLLM Gateway (`https://llm.megabyte.space`):
-  1. **Claude Code (`claude` via Claw Router `cr`)**:
-     - `cr @litellm` (`fleet-cli/claude-deepseek`) routes Claude Code through `https://llm.megabyte.space` (`deepseek-v4-pro` / `deepseek-flash`).
-     - `cr @ollama` (`fleet-cli/claude-ollama`) routes Claude Code through `https://llm.megabyte.space` (`hybrid-coder` -> local Ollama `qwen2.5-coder:14b` with automatic `deepseek-chat` fallback).
-     - `cr @deepseek` routes Claude Code directly through `https://api.deepseek.com/anthropic` (`deepseek-chat`).
-  2. **OpenAI Codex (`codex`)**:
-     - `codex exec -p deepseek` (`fleet-cli/codex-deepseek`, `~/.codex/deepseek.config.toml`) routes Codex through `https://llm.megabyte.space/v1` (`wire_api = "responses"`, `model = "deepseek-chat"`).
-     - `codex exec -p ollama` (`fleet-cli/codex-ollama`, `~/.codex/ollama.config.toml`) routes Codex through `https://llm.megabyte.space/v1` (`wire_api = "responses"`, `model = "hybrid-coder"`).
-  3. **OpenCode (`opencode` via `bin/opencode-deepseek.sh`)**:
-     - `opencode-deepseek.sh run --format json -m litellm/deepseek-v4-pro` (`fleet-cli/deepseek`) for 4-key rotated DeepSeek V4 Pro reasoning.
-     - `opencode-deepseek.sh run --format json -m litellm/deepseek-flash` (`fleet-cli/deepseek-flash`) for low-latency triage and summarization.
-     - `opencode-deepseek.sh run --format json -m litellm/hybrid-coder` (`fleet-cli/ollama` / `fleet-cli/hybrid-coder`) for zero-marginal-cost local GPU Ollama coding with automatic `deepseek-chat` fallback.
-- When enough independent work exists, launch a **DeepSeek / Ollama swarm** rather than one expensive
+- **OpenCode + DeepSeek** — routine implementation, parallel feature shards, test generation,
+  refactors, migrations, repetitive transforms, docs, codebase exploration, independent
+  candidate solutions, bug-fix attempts, cleanup, test-failure triage, TODO elimination,
+  backlog chunks.
+- When enough independent work exists, launch a **DeepSeek swarm** rather than one expensive
   frontier session implementing serially.
-- Claude (`fleet-cli/claude`), Codex (`fleet-cli/codex`), and Gemini (`fleet-cli/gemini`) stay Frontier Architect / OpenSpec author / integrator / final judge.
-- **DeepSeek & Ollama endpoint = the LiteLLM rotation gateway (`https://llm.megabyte.space`) + Claw Router (`cr`) (Brian 2026-11-13).** The gateway rotates the 4-key DeepSeek pool, exposes local workstation GPU Ollama (`hybrid-coder`, `ollama-coder`, `workstation-ai`, `qwen2.5-coder:14b`), enforces cross-provider fallback, and records Langfuse traces. `control-plane/openclaw-fleet/cli.py` automatically classifies every incoming Paperclip / OpenClaw prompt (`classify_task_tier`) and offloads routine timer heartbeats (`PAPERCLIP_WAKE_REASON=heartbeat_timer` / `routine_trigger`) and throughput-safe tasks onto `claude-deepseek`, `codex-deepseek`, `deepseek`, and `ollama` (`hybrid-coder`).
-- **Quota preservation — heavily DEFAULT to DeepSeek / Ollama across `claude` + `codex` + `opencode` to protect finite Frontier subscription windows.** Spend Frontier subscription quota ONLY on OpenSpec authoring (`proposal.md`, `design.md`, `tasks.md`, `specs/`), deep architecture, security review, and critical incident response.
+- Claude stays architect / integrator / final judge; Codex stays independent review.
+- **DeepSeek endpoint = the LiteLLM rotation gateway, NOT a single raw key (Brian 2026-10-30).** OpenCode's DeepSeek rail defaults through `https://llm.megabyte.space/v1` (`[[litellm-gateway]]`): `litellm/deepseek-v4-pro` (reasoning) + `litellm/deepseek-flash` (fast/vision), wired in `~/.config/opencode/opencode.jsonc` (proven live: `llm.provider=litellm`). The gateway rotates the 4-key pool + cross-provider fallback + Langfuse tracing, so a swarm of parallel OpenCode workers survives the per-key 429s a raw key would hit under load. **Heavily leverage it:** whenever a unit is throughput-safe, run it on OpenCode-via-LiteLLM and fan out swarms — this is the primary lever for throughput AND for preserving Claude/Codex quota. Direct `deepseek/*` (`api.deepseek.com`) is the fallback.
+- **Quota preservation — heavily DEFAULT to OpenCode/DeepSeek to protect the finite Claude subscription
+  windows (Brian 2026-10-26).** The Claude Max 5h/weekly quota is the SCARCE resource; every routine turn
+  spent on Claude is quota NOT available for architecture/judgment. Route aggressively to OpenCode+DeepSeek for
+  anything that doesn't need frontier judgment, and use claw-orchestrator **session handoff** to downgrade a live
+  session to a cheaper engine/model the moment the hard thinking is done (expensive→cheap mid-task; a stuck Claude
+  session → Codex). Spend Claude's quota ONLY where it uniquely wins — that is how you maximize the Claude accounts'
+  real capability, not by routing everything to them.
 
 ### Research expansion (beginning-of-build research) → [[research-expansion-orchestration]]
 
@@ -79,7 +77,7 @@ When two or more independent throughput-safe slices exist, launch an **OpenCode 
   per-machine gateway/runtime (chat-in, heartbeat daemon, runs coding sessions) → the **tier agents**
   above (Claude + Codex subscription CLIs; OpenCode+DeepSeek throughput). Paperclip manages OpenClaw;
   it does not replace it.
-- **HARD-rule compliance in adapter config (non-negotiable):** Paperclip is BYO-AI (API key _or_
+- **HARD-rule compliance in adapter config (non-negotiable):** Paperclip is BYO-AI (API key *or*
   subscription) — we use **subscription only**. Its `claude`/`codex` adapters launch via
   `bin/with-subscription-cli.sh` (+ `bin/claude-pool.sh` / claw-router for pooled Claude); DeepSeek
   stays via OpenCode. A stray `ANTHROPIC_API_KEY`/`OPENAI_API_KEY` in any Paperclip adapter env =
@@ -87,7 +85,6 @@ When two or more independent throughput-safe slices exist, launch an **OpenCode 
 - **Governance maps onto existing doctrine:** Paperclip approval gates = the `autonomous-engineering`
   tiers (autonomous | review-recommended | approval-required | blocked); its budgets = `cost-estimator`
   discipline; its task/comment records pair with `/run-the-loop` + `.claude/run-the-loop/CONVERGENCE.md`.
-  Every Paperclip issue leverages **Sub-tasks (`parent_id`)** whenever appropriate, wires **Parent** (`parent_id`), **Blocking** (`blocks`), and **Blocked by** (`blockedByIssueIds` / `issue_relations`), populates **Reviewers** (`QA-Verification`, `AppSec`, `A11y-Auditor` + `review_policy = 'not_creator'`), **Approvers** (`Architect`, `Release-Manager`, `CEO`), **Monitor** (`monitor_next_check_at`, `monitor_notes`, `monitor_scheduled_by = 'assignee'`), and **Watchdog** (`issue_watchdogs`: `SRE` or `Swarm-Dispatcher`), and reserves **Decisions** (`/MEG/decisions`, `issue_thread_interactions` `kind = 'ask_user_questions'`) strictly for asking the user questions to clarify instructions or providing recommendations and scope expansions.
 - **Run it CF-native + safe:** self-host only — never expose the raw Gateway/Control UI; gate behind
   **Cloudflare Access** (as with the OpenClaw Gateway). Embedded Postgres locally → external **Neon**
   in prod. Install `npx paperclipai@latest onboard --yes` (Node ≥24.11; Docker ok); creds via
