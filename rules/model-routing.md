@@ -1,18 +1,18 @@
 ---
 last_reviewed: 2026-10-04
 superseded_by: null
-name: "model-routing"
+name: 'model-routing'
 priority: 2
-pack: "ai"
+pack: 'ai'
 triggers:
-  - "opus"
-  - "sonnet"
-  - "haiku"
-  - "claude model"
+  - 'opus'
+  - 'sonnet'
+  - 'haiku'
+  - 'claude model'
 paths:
-  - ".claude/agents/**"
-  - ".claude/settings.json"
-  - "**/opus-quota*"
+  - '.claude/agents/**'
+  - '.claude/settings.json'
+  - '**/opus-quota*'
 ---
 
 # Model Routing
@@ -22,7 +22,7 @@ Select the correct model tier by task complexity and cost — Claude tiers plus 
 > **Internal agent-orchestration provider policy → [[agent-provider-policy]] (canonical SSOT).**
 > Internal dev / research / agent work uses SUBSCRIPTION CLIs (`claude` / `codex`) +
 > DeepSeek-via-OpenCode — NEVER `OPENAI_API_KEY` / `ANTHROPIC_API_KEY`. The tiers below pick
-> which *model* runs a phase; the SSOT governs which *auth rail* is allowed for internal work
+> which _model_ runs a phase; the SSOT governs which _auth rail_ is allowed for internal work
 > vs. preserved product runtime. Launch internal CLIs via `bin/with-subscription-cli.sh`.
 
 ## Fable 5 (`claude-fable-5`) — frontier (newest, runtime-confirmed)
@@ -35,7 +35,7 @@ Select the correct model tier by task complexity and cost — Claude tiers plus 
 
 - **Use for** — same surfaces as Opus 4.7; zero-cost upgrade (same $5/$25 per MTok pricing).
 - 1M context, 128K output. Adaptive thinking only.
-- Source: Anthropic. (2026). *Models overview*. `docs.anthropic.com/en/docs/about-claude/models/overview`
+- Source: Anthropic. (2026). _Models overview_. `docs.anthropic.com/en/docs/about-claude/models/overview`
 - Migration: `rg "claude-opus-4-7" ~/.claude ~/.agentskills` → s/4-7/4-8/. Keep 4.7/4.6 as fallback chain per `opus-quota-fallback`.
 
 ## Opus 4.7 (`claude-opus-4-7`) — fallback
@@ -164,7 +164,7 @@ Generated from `agents/*.md` frontmatter — run `bash bin/check-agent-routing.s
 
 ## Provider cost tiers (premium / mid-grade / instant)
 
-Standing routing policy for APPLICATION LLM calls + agent build pipelines — a DIFFERENT axis from the Claude-altitude orchestration tiers (which picks which *Claude* model runs a loop phase; this picks which *vendor* serves an app/build call). Brian's directive 2026-06-17.
+Standing routing policy for APPLICATION LLM calls + agent build pipelines — a DIFFERENT axis from the Claude-altitude orchestration tiers (which picks which _Claude_ model runs a loop phase; this picks which _vendor_ serves an app/build call). Brian's directive 2026-06-17.
 
 - **Premium — Anthropic (Claude) / OpenAI (ChatGPT).** ⚠️ **Axis split per [[agent-provider-policy]]:** for INTERNAL dev/research/agent orchestration, premium judgment runs on the SUBSCRIPTION CLIs (`claude`/`codex`), NEVER `ANTHROPIC_API_KEY`/`OPENAI_API_KEY`. For PRODUCT application LLM calls (customer features) Anthropic/OpenAI via the AI Gateway is preserved. Higher-order research, architecture + planning, security/payment/auth decisions, and ALL vision (DeepSeek has none). Reserve for judgment, not volume.
 - **Mid-grade — DeepSeek** (`deepseek-chat`; `deepseek-reasoner` for higher-order). The DEFAULT for most generation/implementation/build work, AND the primary provider for headless **Claude Code build agents** via DeepSeek's Anthropic-compatible endpoint: `ANTHROPIC_BASE_URL=https://api.deepseek.com/anthropic` + `ANTHROPIC_AUTH_TOKEN=$DEEPSEEK_API_KEY` + `ANTHROPIC_MODEL=deepseek-chat` (internal/build agents fall back to **Workers-AI**, NOT an `ANTHROPIC_API_KEY` — that bills Anthropic for internal work, forbidden per [[agent-provider-policy]]; `BUILD_LLM_PROVIDER=anthropic` is product-runtime-only, never an internal default). API base `https://api.deepseek.com`; key `DEEPSEEK_API_KEY` is ALWAYS a `wrangler secret` / get-secret entry — never committed.

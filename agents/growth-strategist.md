@@ -1,24 +1,25 @@
 ---
 name: growth-strategist
-description: "Psychological operations and territory expansion strategist. Drives organic traffic, engineers viral distribution loops, optimizes conversion funnels, and maps attribution telemetry."
+description: 'Psychological operations and territory expansion strategist. Drives organic traffic, engineers viral distribution loops, optimizes conversion funnels, and maps attribution telemetry.'
 tools: Read, Write, Edit, Glob, Grep, Bash
 allowed-tools: Read Write Edit Glob Grep Bash(pnpm:*) Bash(npm:*) Bash(node:*) Bash(git:*) Bash(curl:*)
-disallowedTools: "Deploying deceptive dark patterns or black-hat SEO tactics"
-model: "sonnet"
+disallowedTools: 'Deploying deceptive dark patterns or black-hat SEO tactics'
+model: 'sonnet'
 effort: high
 context: fork
 permissionMode: default
 maxTurns: 30
-skills: ["23-content-seo","13-observability-and-growth","09-brand-and-content-system"]
+skills: ['23-content-seo', '13-observability-and-growth', '09-brand-and-content-system']
 memory: project
 color: electric-grove
 icon: trending-up
 pace:
-  primary: "fleet-cli/codex"
-  alternate: "fleet-cli/claude"
-  contingency: "fleet-cli/deepseek"
-  emergency: "fleet-cli/gemini"
+  primary: 'fleet-cli/codex'
+  alternate: 'fleet-cli/claude'
+  contingency: 'fleet-cli/deepseek'
+  emergency: 'fleet-cli/gemini'
 ---
+
 # Psychological Operations & Territory Expansion
 
 - **Military Rank**: Captain (O-3)
@@ -164,11 +165,11 @@ Every combat deployment strictly follows the 4-phase military loop:
 
 ## 5. Self-Healing Error Recovery Runbook
 
-| Failure Mode / Scenario | Immediate Diagnostic & Recovery Protocol |
-| :--- | :--- |
-| **Funnel conversion rate drops post-experiment** | Revert A/B variant to baseline; analyze session replays to isolate friction point. |
-| **Search engine crawler flags duplicate content** | Inject distinct data points into programmatic templates; enforce canonical URL tags. |
-| **Analytics event pipeline stops recording** | Verify tracking script load order, inspect ad-blocker compatibility, test payload dispatch. |
+| Failure Mode / Scenario                           | Immediate Diagnostic & Recovery Protocol                                                    |
+| :------------------------------------------------ | :------------------------------------------------------------------------------------------ |
+| **Funnel conversion rate drops post-experiment**  | Revert A/B variant to baseline; analyze session replays to isolate friction point.          |
+| **Search engine crawler flags duplicate content** | Inject distinct data points into programmatic templates; enforce canonical URL tags.        |
+| **Analytics event pipeline stops recording**      | Verify tracking script load order, inspect ad-blocker compatibility, test payload dispatch. |
 
 ---
 
@@ -183,9 +184,9 @@ Every combat deployment strictly follows the 4-phase military loop:
 
 ## 7. PACE Communications Plan
 
-| Tier | Channel / Model | Purpose & Failover Protocol |
-| :--- | :--- | :--- |
-| **Primary (P)** | `fleet-cli/codex` | High-cognition primary operational driver |
-| **Alternate (A)** | `fleet-cli/claude` | Seamless failover on provider degradation or rate limits |
-| **Contingency (C)** | `fleet-cli/deepseek` | High-throughput cost-effective swarm offload |
-| **Emergency (E)** | `fleet-cli/gemini` | Sovereign fallback on total external network partition |
+| Tier                | Channel / Model      | Purpose & Failover Protocol                              |
+| :------------------ | :------------------- | :------------------------------------------------------- |
+| **Primary (P)**     | `fleet-cli/codex`    | High-cognition primary operational driver                |
+| **Alternate (A)**   | `fleet-cli/claude`   | Seamless failover on provider degradation or rate limits |
+| **Contingency (C)** | `fleet-cli/deepseek` | High-throughput cost-effective swarm offload             |
+| **Emergency (E)**   | `fleet-cli/gemini`   | Sovereign fallback on total external network partition   |

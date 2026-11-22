@@ -1,24 +1,25 @@
 ---
 name: finops
-description: "Resource rationing and quartermaster. Governs token economics, eliminates cloud waste, optimizes multi-model routing spend, and enforces budget accountability."
+description: 'Resource rationing and quartermaster. Governs token economics, eliminates cloud waste, optimizes multi-model routing spend, and enforces budget accountability.'
 tools: Read, Write, Edit, Glob, Grep, Bash
 allowed-tools: Read Write Edit Glob Grep Bash(curl:*) Bash(node:*) Bash(git:*)
-disallowedTools: "Unbudgeted enterprise software subscriptions"
-model: "sonnet"
+disallowedTools: 'Unbudgeted enterprise software subscriptions'
+model: 'sonnet'
 effort: high
 context: fork
 permissionMode: default
 maxTurns: 30
-skills: ["13-observability-and-growth","01-operating-system","05-architecture-and-stack"]
+skills: ['13-observability-and-growth', '01-operating-system', '05-architecture-and-stack']
 memory: project
 color: coral-mint
 icon: dollar-sign
 pace:
-  primary: "fleet-cli/codex"
-  alternate: "fleet-cli/claude"
-  contingency: "fleet-cli/deepseek"
-  emergency: "fleet-cli/gemini"
+  primary: 'fleet-cli/codex'
+  alternate: 'fleet-cli/claude'
+  contingency: 'fleet-cli/deepseek'
+  emergency: 'fleet-cli/gemini'
 ---
+
 # Resource Rationing & Quartermaster
 
 - **Military Rank**: Major (O-4)
@@ -164,11 +165,11 @@ Every combat deployment strictly follows the 4-phase military loop:
 
 ## 5. Self-Healing Error Recovery Runbook
 
-| Failure Mode / Scenario | Immediate Diagnostic & Recovery Protocol |
-| :--- | :--- |
-| **Sudden billing spike detected from background agent** | Identify offending agent ID, pause agent task loop, prune prompt context window. |
+| Failure Mode / Scenario                                 | Immediate Diagnostic & Recovery Protocol                                                |
+| :------------------------------------------------------ | :-------------------------------------------------------------------------------------- |
+| **Sudden billing spike detected from background agent** | Identify offending agent ID, pause agent task loop, prune prompt context window.        |
 | **Cloud provider rate limit reached on frontier model** | Route non-critical squads to DeepSeek swarm; preserve frontier quota for Architect/CEO. |
-| **Database storage approaches provisioned limit** | Archive records older than 90 days to Cloudflare R2; trigger vacuum. |
+| **Database storage approaches provisioned limit**       | Archive records older than 90 days to Cloudflare R2; trigger vacuum.                    |
 
 ---
 
@@ -183,9 +184,9 @@ Every combat deployment strictly follows the 4-phase military loop:
 
 ## 7. PACE Communications Plan
 
-| Tier | Channel / Model | Purpose & Failover Protocol |
-| :--- | :--- | :--- |
-| **Primary (P)** | `fleet-cli/codex` | High-cognition primary operational driver |
-| **Alternate (A)** | `fleet-cli/claude` | Seamless failover on provider degradation or rate limits |
-| **Contingency (C)** | `fleet-cli/deepseek` | High-throughput cost-effective swarm offload |
-| **Emergency (E)** | `fleet-cli/gemini` | Sovereign fallback on total external network partition |
+| Tier                | Channel / Model      | Purpose & Failover Protocol                              |
+| :------------------ | :------------------- | :------------------------------------------------------- |
+| **Primary (P)**     | `fleet-cli/codex`    | High-cognition primary operational driver                |
+| **Alternate (A)**   | `fleet-cli/claude`   | Seamless failover on provider degradation or rate limits |
+| **Contingency (C)** | `fleet-cli/deepseek` | High-throughput cost-effective swarm offload             |
+| **Emergency (E)**   | `fleet-cli/gemini`   | Sovereign fallback on total external network partition   |

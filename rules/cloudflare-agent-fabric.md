@@ -4,8 +4,17 @@ superseded_by: null
 name: cloudflare-agent-fabric
 priority: 1
 pack: ai
-triggers: ["cloudflare agent","code mode","mcp portal","dynamic route","ai search","browser run","@cloudflare/computer"]
-paths: ["concern:ai-features","concern:cloudflare-workers"]
+triggers:
+  [
+    'cloudflare agent',
+    'code mode',
+    'mcp portal',
+    'dynamic route',
+    'ai search',
+    'browser run',
+    '@cloudflare/computer',
+  ]
+paths: ['concern:ai-features', 'concern:cloudflare-workers']
 ---
 
 # Cloudflare Agent Fabric

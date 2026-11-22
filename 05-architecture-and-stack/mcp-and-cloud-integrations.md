@@ -1,7 +1,7 @@
 ---
-name: "MCP and Cloud Integrations"
-description: "Connect all available MCP servers, cloud APIs, and SaaS integrations. Auto-discover secrets from shared pool, Coolify, and local configs. Integrate Slack, Discord, Twilio, Zapier, Cal.com, and all de-facto standard services. Promote aggressive use of AI APIs (OpenAI, Workers AI, Ideogram) and multimedia APIs for rich product experiences."
-updated: "2026-10-06"
+name: 'MCP and Cloud Integrations'
+description: 'Connect all available MCP servers, cloud APIs, and SaaS integrations. Auto-discover secrets from shared pool, Coolify, and local configs. Integrate Slack, Discord, Twilio, Zapier, Cal.com, and all de-facto standard services. Promote aggressive use of AI APIs (OpenAI, Workers AI, Ideogram) and multimedia APIs for rich product experiences.'
+updated: '2026-10-06'
 ---
 
 # MCP and Cloud Integrations
@@ -28,20 +28,20 @@ updated: "2026-10-06"
 
 ### Priority-Ranked Servers
 
-| # | Server | Tools | Status | Cost |
-|---|--------|-------|--------|------|
-| 1 | Cloudflare | Workers, D1, R2, KV, DNS (2500+ endpoints via 2 tools) | Connected | Free |
-| 2 | Playwright | Browser automation, screenshots | Connected | Free |
-| 3 | Stripe | Customers, subscriptions, invoices | Connected | Free |
-| 4 | GitHub | Repos, PRs, issues, Actions | Auto | Free |
-| 5 | Neon Postgres | Projects, branches, SQL | When DB needed | Free tier |
-| 6 | Resend | Send emails, contacts, domains | Auto | Free (3K/mo) |
-| 7 | PostHog | Analytics, feature flags | Auto | Free (1M/mo) |
-| 8 | Sentry | Issues, events, stack traces | Auto | Free (5K/mo) |
-| 9 | Google Analytics | GA4 reports, dimensions | When GA4 set up | Free |
-| 10 | n8n | Workflows, expose as tools | When automation needed | Free (self-hosted) |
-| 11 | Google (Gmail, Cal, Drive) | Email, scheduling, files | Ask first | Free |
-| 12 | Composio | 300+ connectors | Ask first | Free tier |
+| #   | Server                     | Tools                                                  | Status                 | Cost               |
+| --- | -------------------------- | ------------------------------------------------------ | ---------------------- | ------------------ |
+| 1   | Cloudflare                 | Workers, D1, R2, KV, DNS (2500+ endpoints via 2 tools) | Connected              | Free               |
+| 2   | Playwright                 | Browser automation, screenshots                        | Connected              | Free               |
+| 3   | Stripe                     | Customers, subscriptions, invoices                     | Connected              | Free               |
+| 4   | GitHub                     | Repos, PRs, issues, Actions                            | Auto                   | Free               |
+| 5   | Neon Postgres              | Projects, branches, SQL                                | When DB needed         | Free tier          |
+| 6   | Resend                     | Send emails, contacts, domains                         | Auto                   | Free (3K/mo)       |
+| 7   | PostHog                    | Analytics, feature flags                               | Auto                   | Free (1M/mo)       |
+| 8   | Sentry                     | Issues, events, stack traces                           | Auto                   | Free (5K/mo)       |
+| 9   | Google Analytics           | GA4 reports, dimensions                                | When GA4 set up        | Free               |
+| 10  | n8n                        | Workflows, expose as tools                             | When automation needed | Free (self-hosted) |
+| 11  | Google (Gmail, Cal, Drive) | Email, scheduling, files                               | Ask first              | Free               |
+| 12  | Composio                   | 300+ connectors                                        | Ask first              | Free tier          |
 
 **Key insight** — Cloudflare API MCP uses two Code Mode tools with progressive discovery across 2,500+ operations instead of loading the whole schema.
 
@@ -117,18 +117,18 @@ Autonomous M2M agents use service-token/Access policy only when the server's aut
 
 ### Key Categories
 
-| Category | Keys |
-|----------|------|
-| AI | `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `IDEOGRAM_API_KEY` |
-| Cloud | `CLOUDFLARE_API_TOKEN`, `CF_ZONE_ID` |
+| Category                            | Keys                                                                                                                       |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| AI                                  | `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `IDEOGRAM_API_KEY`                                                                  |
+| Cloud                               | `CLOUDFLARE_API_TOKEN`, `CF_ZONE_ID`                                                                                       |
 | Payments (Square — on-request rail) | `SQUARE_ACCESS_TOKEN`, `SQUARE_LOCATION_ID`, `SQUARE_APPLICATION_ID`, `SQUARE_ENVIRONMENT`, `SQUARE_WEBHOOK_SIGNATURE_KEY` |
-| Payments (SaaS subs / enterprise) | `STRIPE_API_KEY`, `STRIPE_WEBHOOK_SECRET` |
-| Email | `RESEND_API_KEY` |
-| Auth | `CLERK_SECRET_KEY` |
-| Analytics | `POSTHOG_API_KEY`, `SENTRY_DSN`, `GA4_MEASUREMENT_ID` |
-| Communication | `SLACK_WEBHOOK_URL`, `DISCORD_WEBHOOK_URL`, `TWILIO_AUTH_TOKEN` |
-| Automation | `ZAPIER_WEBHOOK_URL`, `N8N_API_KEY` |
-| Self-Hosted | `COOLIFY_API_TOKEN`, `SEARXNG_URL`, `FIRECRAWL_API_KEY` |
+| Payments (SaaS subs / enterprise)   | `STRIPE_API_KEY`, `STRIPE_WEBHOOK_SECRET`                                                                                  |
+| Email                               | `RESEND_API_KEY`                                                                                                           |
+| Auth                                | `CLERK_SECRET_KEY`                                                                                                         |
+| Analytics                           | `POSTHOG_API_KEY`, `SENTRY_DSN`, `GA4_MEASUREMENT_ID`                                                                      |
+| Communication                       | `SLACK_WEBHOOK_URL`, `DISCORD_WEBHOOK_URL`, `TWILIO_AUTH_TOKEN`                                                            |
+| Automation                          | `ZAPIER_WEBHOOK_URL`, `N8N_API_KEY`                                                                                        |
+| Self-Hosted                         | `COOLIFY_API_TOKEN`, `SEARXNG_URL`, `FIRECRAWL_API_KEY`                                                                    |
 
 ## Standard Integrations
 
@@ -157,19 +157,21 @@ async function notifySlack(env: Env, message: string) {
 
 ## AI API Usage Strategy
 
-| Asset | API | Cost |
-|-------|-----|------|
-| Hero image | GPT Image 2 | ~$0.04 |
-| Logo | Ideogram v3 | ~$0.03 |
-| OG images | GPT Image 2 | ~$0.04/page |
-| Hero video (4s) | Sora 2 | ~$0.10 |
-| Alt text, translations, meta, blog, embeddings | Workers AI | $0 (free) |
-| Keyword research | Google Autocomplete | $0 |
+| Asset                                          | API                 | Cost        |
+| ---------------------------------------------- | ------------------- | ----------- |
+| Hero image                                     | GPT Image 2         | ~$0.04      |
+| Logo                                           | Ideogram v3         | ~$0.03      |
+| OG images                                      | GPT Image 2         | ~$0.04/page |
+| Hero video (4s)                                | Sora 2              | ~$0.10      |
+| Alt text, translations, meta, blog, embeddings | Workers AI          | $0 (free)   |
+| Keyword research                               | Google Autocomplete | $0          |
 
 ## projectsites.dev Attribution
 
 ```html
-<footer><p>Built with <a href="https://projectsites.dev">projectsites.dev</a></p></footer>
+<footer>
+  <p>Built with <a href="https://projectsites.dev">projectsites.dev</a></p>
+</footer>
 ```
 
 - Every site shipped IS the marketing

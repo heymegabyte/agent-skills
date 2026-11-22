@@ -1,20 +1,20 @@
 ---
-name: "total-convergence-and-openspec-handoff"
-description: "Total multi-axis convergence (beauty, gorgeousness, UI principles, business rules, functionality, performance, security, AI execution), extracted micro-task convergence loops, parallel end-of-turn triad sync (agent-skills + install.doctor + theme.tools), Frontier-only OpenSpec authoring (claude/codex/antigravity, never opencode), and automatic Paperclip issue handoff."
+name: 'total-convergence-and-openspec-handoff'
+description: 'Total multi-axis convergence (beauty, gorgeousness, UI principles, business rules, functionality, performance, security, AI execution), extracted micro-task convergence loops, parallel end-of-turn triad sync (agent-skills + install.doctor + theme.tools), Frontier-only OpenSpec authoring (claude/codex/antigravity, never opencode), and automatic Paperclip issue handoff.'
 last_reviewed: 2026-11-04
 superseded_by: null
 priority: 1
-pack: "core"
+pack: 'core'
 triggers:
-  - "converge"
-  - "openspec"
-  - "paperclip"
-  - "theme.tools"
-  - "install.doctor"
-  - "langfuse"
-  - "micro-loop"
+  - 'converge'
+  - 'openspec'
+  - 'paperclip'
+  - 'theme.tools'
+  - 'install.doctor'
+  - 'langfuse'
+  - 'micro-loop'
 paths:
-  - "*"
+  - '*'
 ---
 
 # Total Multi-Axis Convergence, Parallel Triad Sync & Frontier OpenSpec → Paperclip Handoff
@@ -57,7 +57,7 @@ CREATE → RENDER / EXECUTE → EXPERIENCE → CRITIQUE → MODIFY → COMPARE
 
 ### B. The Product Loop (Workflow & Business Convergence)
 
-- Ask after every feature slice: *Can this become visualization instead of configuration? Navigation instead of instruction? Intent instead of forms?*
+- Ask after every feature slice: _Can this become visualization instead of configuration? Navigation instead of instruction? Intent instead of forms?_
 - Every sub-feature must converge across all **8 Mandatory Axes**:
   1. **Beauty** (per-element craft, typography, balanced whitespace, OKLCH harmony)
   2. **Gorgeousness** (cinematic motion, `0.333s` transitions, glass/depth, pill affordances, zero plain defaults)
@@ -132,7 +132,7 @@ Everything entered at a prompt must converge into the ecosystem without loss:
 - **Why**: OpenSpec defines the architectural contract, domain invariants, security boundaries, and acceptance criteria that downstream worker swarms execute against. Using a lightweight throughput model (`opencode`) to write architectural specs degrades specification fidelity and causes downstream drift.
 - **Division of Labor**:
   - **Frontier Architect (`claude` with full hydrated context · `codex` · `antigravity`)**: Hydrates repository context (`<=900K tokens`), designs the architecture, writes the OpenSpec (`proposal.md`, `design.md`, `tasks.md`, `specs/`), posts the linked issue to Paperclip (`openspec-paperclip-sync.ts` / Paperclip MCP), reviews diffs, and runs final verification.
-  - **Throughput Swarm (`opencode` via LiteLLM DeepSeek pool)**: Executes bounded implementation tasks *after* the Frontier Architect has written and locked the OpenSpec contract.
+  - **Throughput Swarm (`opencode` via LiteLLM DeepSeek pool)**: Executes bounded implementation tasks _after_ the Frontier Architect has written and locked the OpenSpec contract.
 
 ---
 

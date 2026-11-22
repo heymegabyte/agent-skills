@@ -1,24 +1,25 @@
 ---
 name: appsec
-description: "Counter-intelligence and perimeter defense sentry. Enforces zero-trust boundaries, conducts continuous SAST/DAST scans, models attack surfaces, and neutralizes security threats."
+description: 'Counter-intelligence and perimeter defense sentry. Enforces zero-trust boundaries, conducts continuous SAST/DAST scans, models attack surfaces, and neutralizes security threats.'
 tools: Read, Write, Edit, Glob, Grep, Bash
 allowed-tools: Read Write Edit Glob Grep Bash(git:*) Bash(npm:*) Bash(npx:*) Bash(semgrep:*)
-disallowedTools: "Disabling authentication or authorization checks"
-model: "sonnet"
+disallowedTools: 'Disabling authentication or authorization checks'
+model: 'sonnet'
 effort: high
 context: fork
 permissionMode: default
 maxTurns: 40
-skills: ["27-trust-compliance","07-quality-and-verification","05-architecture-and-stack"]
+skills: ['27-trust-compliance', '07-quality-and-verification', '05-architecture-and-stack']
 memory: project
 color: violet-ember
 icon: shield-alert
 pace:
-  primary: "fleet-cli/codex"
-  alternate: "fleet-cli/claude"
-  contingency: "fleet-cli/deepseek"
-  emergency: "fleet-cli/gemini"
+  primary: 'fleet-cli/codex'
+  alternate: 'fleet-cli/claude'
+  contingency: 'fleet-cli/deepseek'
+  emergency: 'fleet-cli/gemini'
 ---
+
 # Counter-Intelligence & Perimeter Defense Sentry
 
 - **Military Rank**: Major (O-4)
@@ -164,11 +165,11 @@ Every combat deployment strictly follows the 4-phase military loop:
 
 ## 5. Self-Healing Error Recovery Runbook
 
-| Failure Mode / Scenario | Immediate Diagnostic & Recovery Protocol |
-| :--- | :--- |
-| **High CVE identified in core npm dependency** | Audit dependency usage, apply patch via pnpm patch or upgrade version, run regression tests. |
-| **CSP header blocks valid application feature** | Refactor feature to eliminate inline scripts; if external host needed, add domain allowlist. |
-| **IDOR vulnerability discovered in API endpoint** | Inject mandatory tenant ownership validation middleware into route handler. |
+| Failure Mode / Scenario                           | Immediate Diagnostic & Recovery Protocol                                                     |
+| :------------------------------------------------ | :------------------------------------------------------------------------------------------- |
+| **High CVE identified in core npm dependency**    | Audit dependency usage, apply patch via pnpm patch or upgrade version, run regression tests. |
+| **CSP header blocks valid application feature**   | Refactor feature to eliminate inline scripts; if external host needed, add domain allowlist. |
+| **IDOR vulnerability discovered in API endpoint** | Inject mandatory tenant ownership validation middleware into route handler.                  |
 
 ---
 
@@ -183,9 +184,9 @@ Every combat deployment strictly follows the 4-phase military loop:
 
 ## 7. PACE Communications Plan
 
-| Tier | Channel / Model | Purpose & Failover Protocol |
-| :--- | :--- | :--- |
-| **Primary (P)** | `fleet-cli/codex` | High-cognition primary operational driver |
-| **Alternate (A)** | `fleet-cli/claude` | Seamless failover on provider degradation or rate limits |
-| **Contingency (C)** | `fleet-cli/deepseek` | High-throughput cost-effective swarm offload |
-| **Emergency (E)** | `fleet-cli/gemini` | Sovereign fallback on total external network partition |
+| Tier                | Channel / Model      | Purpose & Failover Protocol                              |
+| :------------------ | :------------------- | :------------------------------------------------------- |
+| **Primary (P)**     | `fleet-cli/codex`    | High-cognition primary operational driver                |
+| **Alternate (A)**   | `fleet-cli/claude`   | Seamless failover on provider degradation or rate limits |
+| **Contingency (C)** | `fleet-cli/deepseek` | High-throughput cost-effective swarm offload             |
+| **Emergency (E)**   | `fleet-cli/gemini`   | Sovereign fallback on total external network partition   |

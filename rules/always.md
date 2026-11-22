@@ -1,12 +1,12 @@
 ---
-name: "always"
+name: 'always'
 last_reviewed: 2026-06-28
 superseded_by: null
 priority: 1
-pack: "core"
+pack: 'core'
 triggers: []
 paths:
-  - "*"
+  - '*'
 ---
 
 # Always

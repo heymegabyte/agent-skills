@@ -79,7 +79,7 @@ When two or more independent throughput-safe slices exist, launch an **OpenCode 
   per-machine gateway/runtime (chat-in, heartbeat daemon, runs coding sessions) → the **tier agents**
   above (Claude + Codex subscription CLIs; OpenCode+DeepSeek throughput). Paperclip manages OpenClaw;
   it does not replace it.
-- **HARD-rule compliance in adapter config (non-negotiable):** Paperclip is BYO-AI (API key *or*
+- **HARD-rule compliance in adapter config (non-negotiable):** Paperclip is BYO-AI (API key _or_
   subscription) — we use **subscription only**. Its `claude`/`codex` adapters launch via
   `bin/with-subscription-cli.sh` (+ `bin/claude-pool.sh` / claw-router for pooled Claude); DeepSeek
   stays via OpenCode. A stray `ANTHROPIC_API_KEY`/`OPENAI_API_KEY` in any Paperclip adapter env =

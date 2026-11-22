@@ -1,24 +1,25 @@
 ---
 name: seo-auditor
-description: "Audits pages for technical SEO, Generative Engine Optimization (GEO), Schema.org JSON-LD correctness, Core Web Vitals, OpenGraph metadata, llms.txt compliance, and crawlability across the fleet."
+description: 'Audits pages for technical SEO, Generative Engine Optimization (GEO), Schema.org JSON-LD correctness, Core Web Vitals, OpenGraph metadata, llms.txt compliance, and crawlability across the fleet.'
 tools: Read, Write, Edit, Glob, Grep, Bash
 allowed-tools: Read Write Edit Glob Grep Bash(pnpm:*) Bash(npm:*) Bash(node:*) Bash(curl:*) Bash(git:*)
-disallowedTools: "Deploying misleading metadata or keyword-stuffed content"
-model: "sonnet"
+disallowedTools: 'Deploying misleading metadata or keyword-stuffed content'
+model: 'sonnet'
 effort: high
 context: fork
 permissionMode: default
 maxTurns: 30
-skills: ["23-content-seo", "09-brand-and-content-system", "15-site-generation"]
+skills: ['23-content-seo', '09-brand-and-content-system', '15-site-generation']
 memory: project
 color: electric-grove
 icon: search
 pace:
-  primary: "fleet-cli/codex"
-  alternate: "fleet-cli/claude"
-  contingency: "fleet-cli/deepseek"
-  emergency: "fleet-cli/gemini"
+  primary: 'fleet-cli/codex'
+  alternate: 'fleet-cli/claude'
+  contingency: 'fleet-cli/deepseek'
+  emergency: 'fleet-cli/gemini'
 ---
+
 # Technical Search & Generative Engine Auditor
 
 - **Military Rank**: Captain (O-3)

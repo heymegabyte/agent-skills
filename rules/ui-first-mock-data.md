@@ -1,19 +1,19 @@
 ---
 last_reviewed: 2026-10-06
 superseded_by: null
-name: "ui-first-mock-data"
+name: 'ui-first-mock-data'
 priority: 2
-pack: "frontend"
+pack: 'frontend'
 triggers:
-  - "ui first"
-  - "mock data"
-  - "test data"
-  - "fixtures"
-  - "build the ui"
+  - 'ui first'
+  - 'mock data'
+  - 'test data'
+  - 'fixtures'
+  - 'build the ui'
 paths:
-  - "**/pages/**"
-  - "**/components/**"
-  - "**/*.component.ts"
+  - '**/pages/**'
+  - '**/components/**'
+  - '**/*.component.ts'
 ---
 
 # UI-First, Mock-Data-First Development

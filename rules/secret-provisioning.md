@@ -1,15 +1,15 @@
 ---
 last_reviewed: 2026-10-06
 superseded_by: null
-name: "secret-provisioning"
+name: 'secret-provisioning'
 priority: 2
-pack: "infra"
+pack: 'infra'
 triggers:
-  - "secret"
-  - "env var"
-  - "api key"
+  - 'secret'
+  - 'env var'
+  - 'api key'
 paths:
-  - "concern:cloudflare-workers"
+  - 'concern:cloudflare-workers'
 ---
 
 # Secret Provisioning

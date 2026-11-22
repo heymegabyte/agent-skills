@@ -23,12 +23,12 @@ Packaged runtime discovery: OpenClaw captures plugin files outside the git check
 
 ## Completed rollout
 
-| Verification | Result | Evidence |
-| --- | --- | --- |
-| projectsites.dev / Codex | Success | [Actions run](https://github.com/heymegabyte/projectsites.dev/actions/runs/38003657648) |
-| megabyte.space / Claude | Success | [Actions run](https://github.com/heymegabyte/megabyte.space/actions/runs/38003663261) |
-| bricklabor.com onboarding / Codex | Success | [Actions run](https://github.com/heymegabyte/bricklabor.com/actions/runs/38003666317) |
-| runner-ops individual Infisical broker | Success | [Actions run](https://github.com/heymegabyte/runner-ops/actions/runs/38003668735) |
+| Verification                           | Result  | Evidence                                                                                |
+| -------------------------------------- | ------- | --------------------------------------------------------------------------------------- |
+| projectsites.dev / Codex               | Success | [Actions run](https://github.com/heymegabyte/projectsites.dev/actions/runs/38003657648) |
+| megabyte.space / Claude                | Success | [Actions run](https://github.com/heymegabyte/megabyte.space/actions/runs/38003663261)   |
+| bricklabor.com onboarding / Codex      | Success | [Actions run](https://github.com/heymegabyte/bricklabor.com/actions/runs/38003666317)   |
+| runner-ops individual Infisical broker | Success | [Actions run](https://github.com/heymegabyte/runner-ops/actions/runs/38003668735)       |
 
 These were read-only verification turns. All three project artifacts were downloaded and checked: success, expected runtime, unchanged base/result commit, summaries present. Recovery packets measured 952–1953 bytes; this measures only packets, not total model context. All four completed verification logs had zero unmasked sensitive environment headers in the targeted scan. It is not a general proof that arbitrary future model output cannot leak secrets.
 

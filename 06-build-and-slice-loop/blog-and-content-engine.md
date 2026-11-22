@@ -1,8 +1,8 @@
 ---
-name: "Blog and Content Engine"
-version: "2.0.0"
-updated: "2026-04-23"
-description: "SEO-driven blog system on Cloudflare Workers: markdown-to-HTML rendering, RSS feed, reading time, social sharing, related posts, categories, pagination. Every post targets a longtail keyword. Generates 3-5 seed posts on first build for immediate SEO value. Stored in D1 or as static markdown files."
+name: 'Blog and Content Engine'
+version: '2.0.0'
+updated: '2026-04-23'
+description: 'SEO-driven blog system on Cloudflare Workers: markdown-to-HTML rendering, RSS feed, reading time, social sharing, related posts, categories, pagination. Every post targets a longtail keyword. Generates 3-5 seed posts on first build for immediate SEO value. Stored in D1 or as static markdown files.'
 ---
 
 # Blog and Content Engine (`@theme-tools/blog` — `skills/blog-publishing/SKILL.md`)
@@ -16,7 +16,7 @@ description: "SEO-driven blog system on Cloudflare Workers: markdown-to-HTML ren
 > 3. **Live or Valid Cached DataForSEO v3 Brief (`B01–B30`)** (`isFixture: false` required for production release).
 > 4. **Claim-Level Citations (`C01–C30`)**: Inline `CitationNode` (`[n]`) mapped to `SourceVersion` + `EvidenceReference` and rendered in the bottom `BibliographyWidget`.
 > 5. **3 Daily Publishing Slots (`09:00`, `14:00`, `19:00` `America/New_York`)** & **12-Check Release Gate (`runQualityAndReleaseGate`)**.
-> Always load `~/.agentskills/skills/blog-publishing/SKILL.md` alongside this file!
+>    Always load `~/.agentskills/skills/blog-publishing/SKILL.md` alongside this file!
 
 ## Architecture
 
@@ -113,14 +113,18 @@ app.get('/blog/rss.xml', async (c) => {
     <link>https://domain.com/blog</link>
     <description>Latest from Brand</description>
     <atom:link href="https://domain.com/blog/rss.xml" rel="self" type="application/rss+xml"/>
-    ${posts.map(p => `
+    ${posts
+      .map(
+        (p) => `
     <item>
       <title>${escapeXml(p.title)}</title>
       <link>https://domain.com/blog/${p.slug}</link>
       <description>${escapeXml(p.description)}</description>
       <pubDate>${new Date(p.date).toUTCString()}</pubDate>
       <guid>https://domain.com/blog/${p.slug}</guid>
-    </item>`).join('')}
+    </item>`,
+      )
+      .join('')}
   </channel>
 </rss>`;
   return c.text(rss, 200, { 'Content-Type': 'application/rss+xml' });
@@ -146,7 +150,11 @@ function calculateReadingTime(text: string): number {
   "datePublished": "2026-04-19",
   "dateModified": "2026-04-19",
   "author": { "@type": "Person", "name": "Brian Zalewski" },
-  "publisher": { "@type": "Organization", "name": "Brand", "logo": { "@type": "ImageObject", "url": "https://domain.com/logo.png" } },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Brand",
+    "logo": { "@type": "ImageObject", "url": "https://domain.com/logo.png" }
+  },
   "description": "Meta description",
   "image": "https://domain.com/images/blog/post.webp",
   "mainEntityOfPage": "https://domain.com/blog/post-slug"

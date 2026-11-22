@@ -1,18 +1,18 @@
 ---
-name: "theme-tools-canonical-components"
+name: 'theme-tools-canonical-components'
 priority: 1
-pack: "design"
+pack: 'design'
 triggers:
-  - "ui.theme.tools"
-  - "theme.tools"
-  - "storybook"
-  - "components"
-  - "oneprompt"
-  - "projectsites"
-  - "figma"
+  - 'ui.theme.tools'
+  - 'theme.tools'
+  - 'storybook'
+  - 'components'
+  - 'oneprompt'
+  - 'projectsites'
+  - 'figma'
 paths:
-  - "concern:frontend"
-  - "concern:design-system"
+  - 'concern:frontend'
+  - 'concern:design-system'
 last_reviewed: 2026-10-31
 superseded_by: null
 ---
@@ -44,7 +44,7 @@ User directive, 2026-10-31. This rule supersedes older instructions that make dr
 - **Every consuming project wires the FULL `@theme.tools/blog` catalog so the build auto-selects the right component for a need — never hand-wire a few.** `@theme.tools/blog` exposes **~100 components** (widgets + media + multimedia render fns + the component registry), NOT ~14 — the catalog is large; rotate/leverage it fully in blog content AND chrome.
 - **Config pattern (do this per consumer):** add the tsconfig `paths` alias for `@theme.tools/blog/*` (mirror in vitest `resolve.alias` + esbuild honors it) AND import the **component registry** — `renderComponent` / `COMPONENT_TYPES` / `ALL_BLOG_CSS` — so all components are available by default, not a curated subset. The build picks by type; you don't hand-import each one.
 - **Anti-pattern (kill on sight):** "using only a handful of the available components." Using ≤a few when ~100 exist is DRIFT — a re-prompt to "use theme.tools more" means the catalog was under-leveraged.
-- OnePrompt-preview payload discipline (don't ship the whole catalog into every *live preview iframe*, § OnePrompt) is a RUNTIME concern, orthogonal to this BUILD-time availability — both hold.
+- OnePrompt-preview payload discipline (don't ship the whole catalog into every _live preview iframe_, § OnePrompt) is a RUNTIME concern, orthogonal to this BUILD-time availability — both hold.
 
 ## Edit `@theme.tools` FREELY to improve it (compose AND contribute)
 
@@ -60,46 +60,46 @@ Whenever an agent encounters any of the situations below, it MUST reach for the 
 
 ### Tier 1 — 5 Core Visual, Theme, Editorial & Testing Packages (`core-workspace`)
 
-| # | Default Package | Upstream / Standard | When to Use (Automatic Trigger) | Core Exports & Cloudflare Primitives |
-|---|---|---|---|---|
-| 1 | **`@theme.tools/themes`** | W3C DTCG 2025.10 + OKLCH | Any theme, color palette, dark/light mode, typography scale, or motion token (`0.333s`) | `BASE_THEME`, OKLCH palettes (`#060610`, `#00E5FF`, `#50AAE3`, `#7C3AED`), CSS custom properties |
-| 2 | **`@theme.tools/ui`** | `ui.theme.tools` (React 19 + `<tt-*>` Custom Elements) | Any UI primitive, section, card, modal, form control, pill/chip list, or Storybook catalog item | 575+ components, 16-state Visual State Matrix compliance, `:focus-within` wrappers, pill array renderers |
-| 3 | **`@theme.tools/blog`** | Ghost + PlateJS + DataForSEO v3 | Any blog, article generation, keyword research, APA citation verification, RSS, or editorial calendar | DataForSEO v3 briefs, SSRF-safe APA citation ledger, 30 SVG/chart briefs, PlateJS inline editor, 3-slot scheduler |
-| 4 | **`@theme.tools/catalog`** | Content-Addressed Manifest Registry | Binding theme tokens, component versions, fixtures, and `json-render` catalogs | Immutable SHA-256 compatibility manifests (`Workers`, `R2`, `D1`) |
-| 5 | **`@theme.tools/testing`** | Playwright + CF Browser Run + 16-State Verifier | Verifying UI widgets across all 16 visual states and 10 micro-critique lenses | `evaluateWidgetConvergence()`, `VISUAL_STATE_MATRIX_16`, `MICRO_CRITIQUE_LENSES_10`, 450-item testing catalog |
+| #   | Default Package            | Upstream / Standard                                    | When to Use (Automatic Trigger)                                                                       | Core Exports & Cloudflare Primitives                                                                              |
+| --- | -------------------------- | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| 1   | **`@theme.tools/themes`**  | W3C DTCG 2025.10 + OKLCH                               | Any theme, color palette, dark/light mode, typography scale, or motion token (`0.333s`)               | `BASE_THEME`, OKLCH palettes (`#060610`, `#00E5FF`, `#50AAE3`, `#7C3AED`), CSS custom properties                  |
+| 2   | **`@theme.tools/ui`**      | `ui.theme.tools` (React 19 + `<tt-*>` Custom Elements) | Any UI primitive, section, card, modal, form control, pill/chip list, or Storybook catalog item       | 575+ components, 16-state Visual State Matrix compliance, `:focus-within` wrappers, pill array renderers          |
+| 3   | **`@theme.tools/blog`**    | Ghost + PlateJS + DataForSEO v3                        | Any blog, article generation, keyword research, APA citation verification, RSS, or editorial calendar | DataForSEO v3 briefs, SSRF-safe APA citation ledger, 30 SVG/chart briefs, PlateJS inline editor, 3-slot scheduler |
+| 4   | **`@theme.tools/catalog`** | Content-Addressed Manifest Registry                    | Binding theme tokens, component versions, fixtures, and `json-render` catalogs                        | Immutable SHA-256 compatibility manifests (`Workers`, `R2`, `D1`)                                                 |
+| 5   | **`@theme.tools/testing`** | Playwright + CF Browser Run + 16-State Verifier        | Verifying UI widgets across all 16 visual states and 10 micro-critique lenses                         | `evaluateWidgetConvergence()`, `VISUAL_STATE_MATRIX_16`, `MICRO_CRITIQUE_LENSES_10`, 450-item testing catalog     |
 
 ### Tier 2 — 15 Cloudflare-Native Absorbed Open-Source Application Engines (`absorbed-saas-engine`)
 
-| # | Default Package | Absorbed Open-Source Inspiration | When to Use (Automatic Trigger) | Core Exports & Cloudflare Primitives |
-|---|---|---|---|---|
-| 6 | **`@theme.tools/workflows`** | **Activepieces** (MIT `packages/shared` & pieces) | Any workflow automation, trigger/action builder, webhook orchestration, or React Flow DAG | `validateCloudflareWorkflow()`, `definePiece()`, `projectFlowToReactFlowGraph()` (`Workflows`, `Queues`, `DO`, `D1`) |
-| 7 | **`@theme.tools/integrations`** | **Nango** (clean-room CF-native port) | Any OAuth2/PKCE connection, token refresh lock, webhook ingestion, or incremental 2-way sync | `createSignedOAuthState()`, `verifySignedOAuthState()`, `advanceIntegrationSyncCursor()`, Infisical Agent Vault refs (`DO`, `D1`, `KV`) |
-| 8 | **`@theme.tools/social`** | **Postiz** (clean-room CF-native port) | Any cross-network social scheduling (X, LinkedIn, Bluesky, Reddit, Threads, Mastodon, YouTube, TikTok, Discord) | `validateAndSegmentSocialPost()`, `SOCIAL_CHANNEL_SPECS`, thread splitter, OG card hooks (`Workflows`, `Queues`, `R2`) |
-| 9 | **`@theme.tools/scheduling`** | **Cal.com** (clean-room CF-native port) | Any appointment booking, availability slot solver, calendar sync, round-robin routing, or `.ics` invite | `<tt-booking-calendar>`, timezone slot solver, Google/Outlook sync via `@theme.tools/integrations` (`D1`, `DO`, `Workflows`) |
-| 10 | **`@theme.tools/signing`** | **Documenso / OpenSign** (clean-room CF-native) | Any PDF e-signature, contract/waiver/NDA signing, field overlay, or tamper-evident audit trail (`pdf.kitchen`) | `<tt-pdf-signer>`, WebCrypto SHA-256/ECDSA seal, audit certificate generator (`R2`, `D1`, `Workers`) |
-| 11 | **`@theme.tools/forms`** | **Formbricks + Tally** (clean-room CF-native) | Any multi-step form, onboarding wizard, conditional survey, NPS/CSAT poll, or multimodal intake | `<tt-conversational-form>`, `<tt-micro-survey>`, Turnstile guard, voice/photo intent extraction (`D1`, `R2`, `Workers AI`) |
-| 12 | **`@theme.tools/links`** | **Dub.co + Shlink** (clean-room CF-native) | Any shortlink, dynamic QR code, UTM attribution, geo/device redirect, or click-to-conversion tracking (`linkbl.ink`) | `<5ms` KV redirector, SVG/PNG QR generator, Analytics Engine attribution (`KV`, `Analytics Engine`, `D1`) |
-| 13 | **`@theme.tools/keys`** | **Unkey** (MIT-derived CF-native port) | Any customer API key issuance (`sk_live_...`), token/cost quota, sliding-window rate limit, or webhook signing | SHA-256 key verifier, Durable Object sliding-window limiter, `<tt-api-keys-manager>` (`KV`, `DO`, `D1`) |
-| 14 | **`@theme.tools/notifications`** | **Novu + Listmonk** (clean-room CF-native) | Any in-app notification bell, toast stream, digest batching, preference matrix, or SES/Listmonk email | `<tt-notification-bell>`, `<tt-notification-preferences>`, Queue/DO fanout, SES + Listmonk adapter (`Queues`, `DO`, `D1`) |
-| 15 | **`@theme.tools/crm`** | **Twenty CRM + Attio** (clean-room CF-native) | Any Contact/Org/Lead/Donor/Deal pipeline, activity timeline, kanban board, or AI lead enrichment | `<tt-crm-kanban>`, `<tt-contact-drawer>`, Workers AI enrichment (`D1`, `AI Search`, `Workers AI`) |
-| 16 | **`@theme.tools/inbox`** | **Chatwoot + Papercups** (clean-room CF-native) | Any live support chat widget, shared email/chat helpdesk, AI RAG auto-reply, or human handoff (`inbox.vision`) | `<tt-support-inbox>`, `Cloudflare Agents` + `AG-UI` socket, Email Routing parser (`Agents`, `DO`, `Email Routing`, `AI Search`) |
-| 17 | **`@theme.tools/billing`** | **Lago + Stripe Billing** (clean-room CF-native) | Any integer micro-USD usage metering, credit wallet, subscription checkout, or server-side entitlement gate | Atomic DO credit ledger, Stripe Payment Element + Link wrapper, `<tt-pricing-table>`, `<tt-usage-meter>` (`DO`, `D1`, `Queues`) |
-| 18 | **`@theme.tools/status`** | **OpenStatus + Upptime** (clean-room CF-native) | Any public `/status` or `/trust` page, multi-region synthetic probe, latency histogram, or incident timeline (`status.charity`) | `<tt-status-badge>`, `<tt-uptime-timeline>`, Cron synthetic probes (`Workers`, `Cron Triggers`, `Analytics Engine`, `D1`) |
-| 19 | **`@theme.tools/kb`** | **Fumadocs + Mintlify + Outline** (CF-native) | Any `/docs`, `/help`, `/changelog`, `/glossary`, `Cmd+K` semantic search, or `llms.txt` documentation surface | `<tt-cmd-k-search>`, `<tt-changelog-feed>`, PlateJS docs renderer, AI Search RAG (`AI Search`, `D1`, `R2`) |
-| 20 | **`@theme.tools/dataplane`** | **Papermark** (clean-room CF-native) | Any secure pitch deck, investor/board data room, dynamic PDF watermarking, or page-by-page dwell analytics | `<tt-secure-deck-viewer>`, viewer-email R2 PDF watermarker, NDA gate (`R2`, `D1`, `Analytics Engine`) |
+| #   | Default Package                  | Absorbed Open-Source Inspiration                  | When to Use (Automatic Trigger)                                                                                                 | Core Exports & Cloudflare Primitives                                                                                                    |
+| --- | -------------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| 6   | **`@theme.tools/workflows`**     | **Activepieces** (MIT `packages/shared` & pieces) | Any workflow automation, trigger/action builder, webhook orchestration, or React Flow DAG                                       | `validateCloudflareWorkflow()`, `definePiece()`, `projectFlowToReactFlowGraph()` (`Workflows`, `Queues`, `DO`, `D1`)                    |
+| 7   | **`@theme.tools/integrations`**  | **Nango** (clean-room CF-native port)             | Any OAuth2/PKCE connection, token refresh lock, webhook ingestion, or incremental 2-way sync                                    | `createSignedOAuthState()`, `verifySignedOAuthState()`, `advanceIntegrationSyncCursor()`, Infisical Agent Vault refs (`DO`, `D1`, `KV`) |
+| 8   | **`@theme.tools/social`**        | **Postiz** (clean-room CF-native port)            | Any cross-network social scheduling (X, LinkedIn, Bluesky, Reddit, Threads, Mastodon, YouTube, TikTok, Discord)                 | `validateAndSegmentSocialPost()`, `SOCIAL_CHANNEL_SPECS`, thread splitter, OG card hooks (`Workflows`, `Queues`, `R2`)                  |
+| 9   | **`@theme.tools/scheduling`**    | **Cal.com** (clean-room CF-native port)           | Any appointment booking, availability slot solver, calendar sync, round-robin routing, or `.ics` invite                         | `<tt-booking-calendar>`, timezone slot solver, Google/Outlook sync via `@theme.tools/integrations` (`D1`, `DO`, `Workflows`)            |
+| 10  | **`@theme.tools/signing`**       | **Documenso / OpenSign** (clean-room CF-native)   | Any PDF e-signature, contract/waiver/NDA signing, field overlay, or tamper-evident audit trail (`pdf.kitchen`)                  | `<tt-pdf-signer>`, WebCrypto SHA-256/ECDSA seal, audit certificate generator (`R2`, `D1`, `Workers`)                                    |
+| 11  | **`@theme.tools/forms`**         | **Formbricks + Tally** (clean-room CF-native)     | Any multi-step form, onboarding wizard, conditional survey, NPS/CSAT poll, or multimodal intake                                 | `<tt-conversational-form>`, `<tt-micro-survey>`, Turnstile guard, voice/photo intent extraction (`D1`, `R2`, `Workers AI`)              |
+| 12  | **`@theme.tools/links`**         | **Dub.co + Shlink** (clean-room CF-native)        | Any shortlink, dynamic QR code, UTM attribution, geo/device redirect, or click-to-conversion tracking (`linkbl.ink`)            | `<5ms` KV redirector, SVG/PNG QR generator, Analytics Engine attribution (`KV`, `Analytics Engine`, `D1`)                               |
+| 13  | **`@theme.tools/keys`**          | **Unkey** (MIT-derived CF-native port)            | Any customer API key issuance (`sk_live_...`), token/cost quota, sliding-window rate limit, or webhook signing                  | SHA-256 key verifier, Durable Object sliding-window limiter, `<tt-api-keys-manager>` (`KV`, `DO`, `D1`)                                 |
+| 14  | **`@theme.tools/notifications`** | **Novu + Listmonk** (clean-room CF-native)        | Any in-app notification bell, toast stream, digest batching, preference matrix, or SES/Listmonk email                           | `<tt-notification-bell>`, `<tt-notification-preferences>`, Queue/DO fanout, SES + Listmonk adapter (`Queues`, `DO`, `D1`)               |
+| 15  | **`@theme.tools/crm`**           | **Twenty CRM + Attio** (clean-room CF-native)     | Any Contact/Org/Lead/Donor/Deal pipeline, activity timeline, kanban board, or AI lead enrichment                                | `<tt-crm-kanban>`, `<tt-contact-drawer>`, Workers AI enrichment (`D1`, `AI Search`, `Workers AI`)                                       |
+| 16  | **`@theme.tools/inbox`**         | **Chatwoot + Papercups** (clean-room CF-native)   | Any live support chat widget, shared email/chat helpdesk, AI RAG auto-reply, or human handoff (`inbox.vision`)                  | `<tt-support-inbox>`, `Cloudflare Agents` + `AG-UI` socket, Email Routing parser (`Agents`, `DO`, `Email Routing`, `AI Search`)         |
+| 17  | **`@theme.tools/billing`**       | **Lago + Stripe Billing** (clean-room CF-native)  | Any integer micro-USD usage metering, credit wallet, subscription checkout, or server-side entitlement gate                     | Atomic DO credit ledger, Stripe Payment Element + Link wrapper, `<tt-pricing-table>`, `<tt-usage-meter>` (`DO`, `D1`, `Queues`)         |
+| 18  | **`@theme.tools/status`**        | **OpenStatus + Upptime** (clean-room CF-native)   | Any public `/status` or `/trust` page, multi-region synthetic probe, latency histogram, or incident timeline (`status.charity`) | `<tt-status-badge>`, `<tt-uptime-timeline>`, Cron synthetic probes (`Workers`, `Cron Triggers`, `Analytics Engine`, `D1`)               |
+| 19  | **`@theme.tools/kb`**            | **Fumadocs + Mintlify + Outline** (CF-native)     | Any `/docs`, `/help`, `/changelog`, `/glossary`, `Cmd+K` semantic search, or `llms.txt` documentation surface                   | `<tt-cmd-k-search>`, `<tt-changelog-feed>`, PlateJS docs renderer, AI Search RAG (`AI Search`, `D1`, `R2`)                              |
+| 20  | **`@theme.tools/dataplane`**     | **Papermark** (clean-room CF-native)              | Any secure pitch deck, investor/board data room, dynamic PDF watermarking, or page-by-page dwell analytics                      | `<tt-secure-deck-viewer>`, viewer-email R2 PDF watermarker, NDA gate (`R2`, `D1`, `Analytics Engine`)                                   |
 
 ### Tier 3 — 8 Foundational Cross-Site Utility Libraries (`foundational-utility`)
 
-| # | Default Package | Scope & Standard | When to Use (Automatic Trigger) | Core Exports & Cloudflare Primitives |
-|---|---|---|---|---|
-| 21 | **`@theme.tools/telemetry`** | 7-Rail Observability + Langfuse Safe | Every Worker/app request, LLM call, analytics event, error boundary, or Promptfoo eval | Cloudflare OTLP, PostHog, Sentry v11, GA4, GTM, **Langfuse `2500ms` fail-open circuit breaker**, PII redactor |
-| 22 | **`@theme.tools/auth`** | Better Auth + Infisical Agent Vault | Every login, session check, multi-tenant RBAC gate, cross-site OIDC SSO, or secret reference | Better Auth D1/Drizzle schema, `requireEntitlement()`, Infisical `secretRef` resolver (`D1`, `KV`, `DO`) |
-| 23 | **`@theme.tools/flags`** | Canonical D1/KV Feature Flags | Every dark launch, gradual rollout, experiment, or admin flag toggle | `feature_flags` + `feature_flag_overrides` + `feature_flag_audit`, `isFlagOn()`, `useFeatureFlag()`, `<tt-feature-flags-admin>` |
-| 24 | **`@theme.tools/agent-ui`** | Cloudflare Agents + AG-UI + `json-render` + MCP Apps | Every stateful AI agent stream, generative UI spec patch, MCP App tool iframe, or HITL approval | `AG-UI` event cursors, `json-render` SpecStream validator, `MCP Apps` bridge, approval nonces (`Agents`, `DO`, `AI Gateway`) |
-| 25 | **`@theme.tools/seo-geo`** | Schema.org JSON-LD + Answer-Engine Optimization | Every route's meta tags, OG image, JSON-LD graph, `sitemap.xml`, `robots.txt`, `security.txt`, or `llms.txt` | Dynamic 1200×630 OKLCH OG image generator, JSON-LD validator, discovery route handlers (`Workers`, `R2`, `Images`) |
-| 26 | **`@theme.tools/media-video`** | Remotion + Cloudflare Containers / Stream | Every programmable video, audio-synced caption track, aspect-ratio reflow (`16:9`/`1:1`/`9:16`), or media pipeline | Remotion storyboard schema, caption aligner, Cloudflare Containers render client (`Containers`, `R2`, `Stream`, `Images`) |
-| 27 | **`@theme.tools/crawl-research`** | SSRF-Safe Scraper + DataForSEO + Public Records | Every external URL scrape, Wayback/Form 990/Google Places entity lookup, or citation verification | SSRF guard (`169.254.0.0/16` & RFC1918 blocked), DataForSEO v3 client, APA claim-citation verifier (`Browser Rendering`, `Workers`) |
-| 28 | **`@theme.tools/i18n-a11y`** | Census ACS B16001 Locale + WCAG 2.2 AA | Every locale detection, `hreflang` tag, RTL layout, OKLCH contrast check, or reduced-motion transition | ACS B16001 locale solver, `hreflang` builder, OKLCH `>=4.5:1` contrast solver, `0.333s` motion tokens (`Workers`, `KV`) |
+| #   | Default Package                   | Scope & Standard                                     | When to Use (Automatic Trigger)                                                                                    | Core Exports & Cloudflare Primitives                                                                                                |
+| --- | --------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| 21  | **`@theme.tools/telemetry`**      | 7-Rail Observability + Langfuse Safe                 | Every Worker/app request, LLM call, analytics event, error boundary, or Promptfoo eval                             | Cloudflare OTLP, PostHog, Sentry v11, GA4, GTM, **Langfuse `2500ms` fail-open circuit breaker**, PII redactor                       |
+| 22  | **`@theme.tools/auth`**           | Better Auth + Infisical Agent Vault                  | Every login, session check, multi-tenant RBAC gate, cross-site OIDC SSO, or secret reference                       | Better Auth D1/Drizzle schema, `requireEntitlement()`, Infisical `secretRef` resolver (`D1`, `KV`, `DO`)                            |
+| 23  | **`@theme.tools/flags`**          | Canonical D1/KV Feature Flags                        | Every dark launch, gradual rollout, experiment, or admin flag toggle                                               | `feature_flags` + `feature_flag_overrides` + `feature_flag_audit`, `isFlagOn()`, `useFeatureFlag()`, `<tt-feature-flags-admin>`     |
+| 24  | **`@theme.tools/agent-ui`**       | Cloudflare Agents + AG-UI + `json-render` + MCP Apps | Every stateful AI agent stream, generative UI spec patch, MCP App tool iframe, or HITL approval                    | `AG-UI` event cursors, `json-render` SpecStream validator, `MCP Apps` bridge, approval nonces (`Agents`, `DO`, `AI Gateway`)        |
+| 25  | **`@theme.tools/seo-geo`**        | Schema.org JSON-LD + Answer-Engine Optimization      | Every route's meta tags, OG image, JSON-LD graph, `sitemap.xml`, `robots.txt`, `security.txt`, or `llms.txt`       | Dynamic 1200×630 OKLCH OG image generator, JSON-LD validator, discovery route handlers (`Workers`, `R2`, `Images`)                  |
+| 26  | **`@theme.tools/media-video`**    | Remotion + Cloudflare Containers / Stream            | Every programmable video, audio-synced caption track, aspect-ratio reflow (`16:9`/`1:1`/`9:16`), or media pipeline | Remotion storyboard schema, caption aligner, Cloudflare Containers render client (`Containers`, `R2`, `Stream`, `Images`)           |
+| 27  | **`@theme.tools/crawl-research`** | SSRF-Safe Scraper + DataForSEO + Public Records      | Every external URL scrape, Wayback/Form 990/Google Places entity lookup, or citation verification                  | SSRF guard (`169.254.0.0/16` & RFC1918 blocked), DataForSEO v3 client, APA claim-citation verifier (`Browser Rendering`, `Workers`) |
+| 28  | **`@theme.tools/i18n-a11y`**      | Census ACS B16001 Locale + WCAG 2.2 AA               | Every locale detection, `hreflang` tag, RTL layout, OKLCH contrast check, or reduced-motion transition             | ACS B16001 locale solver, `hreflang` builder, OKLCH `>=4.5:1` contrast solver, `0.333s` motion tokens (`Workers`, `KV`)             |
 
 ## Approval before UI implementation
 

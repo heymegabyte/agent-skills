@@ -1,7 +1,35 @@
 ---
 name: workstation-shared-provisioning-policy
 description: Canonical ownership, 3-tier pass-through Nexus caching, and Install Doctor source-of-truth mandate for workstations, servers, dotfiles, package managers, and system configurations.
-triggers: ["install.doctor", "dotfiles", "package manager config", "system config", "nexus", "pass-through proxy", "workstation provisioning", "legion.megabyte.space", "ubuntu.megabyte.space", "chezmoi", "megabyte-local-proxy", "strip-types", "ollama-auth-proxy", "workstation-hw-exporter", "macos-obs-relay", "post-workstation", "langfuse-spool-drain", "agent-skills-sync", "autotrim", "swappiness", "swapon", "apport", "whoopsie", "fail2ban", "crowdsec", "pbs-workstation-backup"]
+triggers:
+  [
+    'install.doctor',
+    'dotfiles',
+    'package manager config',
+    'system config',
+    'nexus',
+    'pass-through proxy',
+    'workstation provisioning',
+    'legion.megabyte.space',
+    'ubuntu.megabyte.space',
+    'chezmoi',
+    'megabyte-local-proxy',
+    'strip-types',
+    'ollama-auth-proxy',
+    'workstation-hw-exporter',
+    'macos-obs-relay',
+    'post-workstation',
+    'langfuse-spool-drain',
+    'agent-skills-sync',
+    'autotrim',
+    'swappiness',
+    'swapon',
+    'apport',
+    'whoopsie',
+    'fail2ban',
+    'crowdsec',
+    'pbs-workstation-backup',
+  ]
 ---
 
 # Workstation & Shared Provisioning Operational Policy

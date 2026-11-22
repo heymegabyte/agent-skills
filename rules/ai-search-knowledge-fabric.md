@@ -4,8 +4,17 @@ superseded_by: null
 name: ai-search-knowledge-fabric
 priority: 1
 pack: ai
-triggers: ["ai search","knowledge","rag","research corpus","requirements","competitor research","agent memory"]
-paths: ["concern:ai-features"]
+triggers:
+  [
+    'ai search',
+    'knowledge',
+    'rag',
+    'research corpus',
+    'requirements',
+    'competitor research',
+    'agent memory',
+  ]
+paths: ['concern:ai-features']
 ---
 
 # AI Search Knowledge Fabric
