@@ -19,7 +19,7 @@ square in a browser tab). Produce the full set like realfavicongenerator (favico
 Ideogram `Api-Key` is available (store via `get-secret` + add it to the CF AI Gateway as the provider
 key); **CF Workers AI (flux) is the FALLBACK** so a missing key never wastes the generated work.
 
-Cross-links: `[[logo-contrast]]` · `[[image-quality]]` · `[[gorgeous-by-default]]` ·
+Cross-links: `[[universal-mega-menu-navbar]]` · `[[logo-contrast]]` · `[[image-quality]]` · `[[gorgeous-by-default]]` ·
 `[[website-build-doctrine]]` · `[[cloudflare-native-provisioning]]` (CF Workers AI image gen) · `[[extra-mile]]`.
 
 ## Auto-fire — generate whenever a logo is MISSING
