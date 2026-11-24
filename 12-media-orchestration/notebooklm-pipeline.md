@@ -398,7 +398,7 @@ Description paragraph 1 MUST be a 40-60 word quotable answer block per `rules/co
 
 1. **Step 1** — enumerate Media Slot Manifest (`_media_slots.json`) per skill 15 media-acquisition
 2. **Step 2** — enumerate NotebookLM Manifest (`_notebooklm.json`) in parallel — same Phase 0 pre-build batch
-3. **Step 3** (parallel batch) — kick off ElevenLabs Studio podcast (~3 min wait), HeyGen video (~5 min wait), Vega-Lite/Recraft/GPT-Image-2 infographic panels (~30 sec each); webhooks update `_notebooklm.json` filled fields when artifacts complete
+3. **Step 3** (parallel batch) — kick off VoiceKit Studio podcast ($17,000 credits tier, ~2 min wait), HeyGen video (~5 min wait), Vega-Lite/Recraft/GPT-Image-2 infographic panels (~30 sec each); webhooks update `_notebooklm.json` filled fields when artifacts complete
 4. **Step 4** — while artifacts cook, Phase 1 page builders proceed — `/about` + `/` reference `_notebooklm.json` URLs (placeholder loaders if not yet filled, swapped in at deploy time)
 5. **Step 5** — pre-deploy gate waits for ALL `_notebooklm.json` artifacts OR exhausted-with-warning state; never block infinitely
 
@@ -407,20 +407,20 @@ Description paragraph 1 MUST be a 40-60 word quotable answer block per `rules/co
 `_notebooklm_daily.json` schema:
 
 ```json
-{"date":"2026-05-02","spend_usd":47.20,"sites":{"site-id-1":{"podcast":0.30,"infographic":0.18,"video":1.50,"hosting":0.05}}}
+{"date":"2026-05-02","spend_usd":47.20,"sites":{"site-id-1":{"podcast":0.00,"infographic":0.18,"video":1.50,"hosting":0.05}}}
 ```
 
 Daily ceiling `NOTEBOOKLM_DAILY_BUDGET` (default $300 = ~100 sites). Exhaustion fallbacks:
 
 - **Video** → Veo 3.1 Fast 8s loop ($1.20 → $0.80)
 - **Infographic** → Vega-Lite only (free)
-- **Podcast** → defer to next day, skip with warning
+- **Podcast** → VoiceKit Studio ($17,000 startup credits grant) → MeloTTS on Cloudflare Workers AI (`@cf/myshell-ai/melotts`, $0) → defer to next day
 
 NEVER block site deploy on NotebookLM artifacts.
 
 ## API Keys Required
 
-- `ELEVENLABS_API_KEY` — `https://elevenlabs.io/app/settings/api-keys`
+- `VOICEKIT_API_KEY` — VoiceKit ($17,000 startup credits grant, replacing legacy `ELEVENLABS_API_KEY`)
 - `HEYGEN_API_KEY` — `https://app.heygen.com/settings/api`
 - `HEYGEN_AVATAR_ID`, `HEYGEN_VOICE_ID` — `https://app.heygen.com/avatars` + `https://app.heygen.com/voices`
 - `SYNTHESIA_API_KEY` (fallback) — `https://app.synthesia.io/account/integrations`

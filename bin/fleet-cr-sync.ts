@@ -1234,6 +1234,18 @@ if (existsSync(ocRootDir)) {
   } catch {}
 }
 
+// 7e. Automatically converge all repositories in ~/ai/repos across 8 multi-axis dimensions
+const repoConvergerScript = join(skillsRoot, "bin", "fleet-55-repo-multi-axis-converger.ts");
+const aiReposDir = join(home, "ai", "repos");
+if (existsSync(repoConvergerScript) && existsSync(aiReposDir)) {
+  try {
+    execFileSync(process.execPath, ["--experimental-strip-types", repoConvergerScript, "--root", aiReposDir], {
+      stdio: "ignore",
+      timeout: 15_000,
+    });
+  } catch {}
+}
+
 // 8. Transpile control-plane/openclaw-fleet/cli.ts -> cli.mjs via Node 24 stripTypeScriptTypes
 // so OpenClaw's node_modules plugin capture sandbox never triggers ERR_UNSUPPORTED_NODE_MODULES_TYPE_STRIPPING
 const fleetDir = join(skillsRoot, "control-plane", "openclaw-fleet");

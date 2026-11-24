@@ -136,6 +136,57 @@ export const FREE_SECURITY_HEADER_RULES = [
   },
 ] as const;
 
+export const FREE_CACHE_RULES = [
+  {
+    action: "set_cache_settings",
+    description: "[Free-Cache-1] Bypass Edge Cache for Dynamic API, Auth, MCP, Webhook & Admin Routes",
+    enabled: true,
+    expression:
+      '(starts_with(http.request.uri.path, "/api/") or starts_with(http.request.uri.path, "/admin") or starts_with(http.request.uri.path, "/webhook") or starts_with(http.request.uri.path, "/mcp"))',
+    action_parameters: {
+      cache: false,
+    },
+  },
+  {
+    action: "set_cache_settings",
+    description: "[Free-Cache-2] Aggressive Edge (30d) & Browser (1y) Cache for Immutable Hashed Static Assets",
+    enabled: true,
+    expression:
+      '(starts_with(http.request.uri.path, "/assets/") or ends_with(http.request.uri.path, ".woff2") or ends_with(http.request.uri.path, ".avif") or ends_with(http.request.uri.path, ".webp"))',
+    action_parameters: {
+      cache: true,
+      edge_ttl: { mode: "override_origin", default: 2592000 },
+      browser_ttl: { mode: "override_origin", default: 31536000 },
+    },
+  },
+] as const;
+
+export const FREE_COMPRESSION_RULES = [
+  {
+    action: "compress_response",
+    description: "[Free-Compress-1] Prefer Zstd, Brotli & Gzip Across All Compressible Web, API & WASM Responses",
+    enabled: true,
+    expression:
+      'http.response.content_type.media_type in {"text/html" "text/css" "application/javascript" "text/javascript" "application/json" "application/problem+json" "image/svg+xml" "application/xml" "text/plain" "application/wasm"}',
+    action_parameters: {
+      algorithms: [{ name: "zstd" }, { name: "brotli" }, { name: "gzip" }],
+    },
+  },
+] as const;
+
+export const FREE_CONFIG_RULES = [
+  {
+    action: "set_config",
+    description: "[Free-Config-1] Disable Email Obfuscation on API, Auth, MCP & Webhook JSON Endpoints",
+    enabled: true,
+    expression:
+      '(starts_with(http.request.uri.path, "/api/") or starts_with(http.request.uri.path, "/webhook") or starts_with(http.request.uri.path, "/mcp"))',
+    action_parameters: {
+      email_obfuscation: false,
+    },
+  },
+] as const;
+
 export const FREE_ZONE_SETTINGS_ITEMS = [
   { id: "0rtt", value: "on" },
   { id: "always_online", value: "on" },
@@ -209,80 +260,130 @@ async function hardenZone(zone: CfZone): Promise<{
   readonly wafRulesCount: number;
   readonly rateLimitRulesCount: number;
   readonly securityHeaderRulesCount: number;
+  readonly cacheRulesCount: number;
+  readonly compressionRulesCount: number;
+  readonly configRulesCount: number;
 }> {
-  const [settingsRes, speedBrainRes, tieredRes, botRes, leakedRes, shieldRes, dnssecRes, urlNormRes, wafRes, rlRes, hdrRes] =
-    await Promise.all([
-      cfRequest(`/zones/${zone.id}/settings`, {
-        method: "PATCH",
-        body: JSON.stringify({ items: FREE_ZONE_SETTINGS_ITEMS }),
+  const [
+    settingsRes,
+    speedBrainRes,
+    tieredRes,
+    botRes,
+    leakedRes,
+    shieldRes,
+    dnssecRes,
+    urlNormRes,
+    wafRes,
+    rlRes,
+    hdrRes,
+    cacheRes,
+    compressRes,
+    cfgRes,
+  ] = await Promise.all([
+    cfRequest(`/zones/${zone.id}/settings`, {
+      method: "PATCH",
+      body: JSON.stringify({ items: FREE_ZONE_SETTINGS_ITEMS }),
+    }),
+    cfRequest(`/zones/${zone.id}/settings/speed_brain`, {
+      method: "PATCH",
+      body: JSON.stringify({ value: "on" }),
+    }),
+    cfRequest(`/zones/${zone.id}/cache/tiered_cache_smart_topology_enable`, {
+      method: "PATCH",
+      body: JSON.stringify({ value: "on" }),
+    }),
+    cfRequest(`/zones/${zone.id}/bot_management`, {
+      method: "PUT",
+      body: JSON.stringify({
+        enable_js: true,
+        fight_mode: true,
+        ai_bots_protection: "block",
       }),
-      cfRequest(`/zones/${zone.id}/settings/speed_brain`, {
-        method: "PATCH",
-        body: JSON.stringify({ value: "on" }),
+    }),
+    cfRequest(`/zones/${zone.id}/leaked-credential-checks`, {
+      method: "POST",
+      body: JSON.stringify({ enabled: true }),
+    }),
+    cfRequest(`/zones/${zone.id}/page_shield`, {
+      method: "PUT",
+      body: JSON.stringify({
+        enabled: true,
+        use_cloudflare_reporting_endpoint: true,
+        use_connection_url_path: false,
       }),
-      cfRequest(`/zones/${zone.id}/cache/tiered_cache_smart_topology_enable`, {
-        method: "PATCH",
-        body: JSON.stringify({ value: "on" }),
-      }),
-      cfRequest(`/zones/${zone.id}/bot_management`, {
-        method: "PUT",
-        body: JSON.stringify({
-          enable_js: true,
-          fight_mode: true,
-          ai_bots_protection: "block",
-        }),
-      }),
-      cfRequest(`/zones/${zone.id}/leaked-credential-checks`, {
-        method: "POST",
-        body: JSON.stringify({ enabled: true }),
-      }),
-      cfRequest(`/zones/${zone.id}/page_shield`, {
-        method: "PUT",
-        body: JSON.stringify({
-          enabled: true,
-          use_cloudflare_reporting_endpoint: true,
-          use_connection_url_path: false,
-        }),
-      }),
-      cfRequest(`/zones/${zone.id}/dnssec`, {
-        method: "PATCH",
-        body: JSON.stringify({ status: "active" }),
-      }),
-      cfRequest(`/zones/${zone.id}/url_normalization`, {
-        method: "PUT",
-        body: JSON.stringify({ type: "cloudflare", scope: "both" }),
-      }),
-      cfRequest<{ rules?: unknown[] }>(
-        `/zones/${zone.id}/rulesets/phases/http_request_firewall_custom/entrypoint`,
-        {
-          method: "PUT",
-          body: JSON.stringify({
-            name: "default",
-            description: "Sovereign Free-Tier 5-Rule WAF Custom Firewall",
-            rules: FREE_WAF_CUSTOM_RULES,
-          }),
-        },
-      ),
-      cfRequest<{ rules?: unknown[] }>(`/zones/${zone.id}/rulesets/phases/http_ratelimit/entrypoint`, {
+    }),
+    cfRequest(`/zones/${zone.id}/dnssec`, {
+      method: "PATCH",
+      body: JSON.stringify({ status: "active" }),
+    }),
+    cfRequest(`/zones/${zone.id}/url_normalization`, {
+      method: "PUT",
+      body: JSON.stringify({ type: "cloudflare", scope: "both" }),
+    }),
+    cfRequest<{ rules?: unknown[] }>(
+      `/zones/${zone.id}/rulesets/phases/http_request_firewall_custom/entrypoint`,
+      {
         method: "PUT",
         body: JSON.stringify({
           name: "default",
-          description: "Sovereign Free-Tier Auth & Login Rate Limit Rule",
-          rules: FREE_RATELIMIT_RULES,
+          description: "Sovereign Free-Tier 5-Rule WAF Custom Firewall",
+          rules: FREE_WAF_CUSTOM_RULES,
         }),
+      },
+    ),
+    cfRequest<{ rules?: unknown[] }>(`/zones/${zone.id}/rulesets/phases/http_ratelimit/entrypoint`, {
+      method: "PUT",
+      body: JSON.stringify({
+        name: "default",
+        description: "Sovereign Free-Tier Auth & Login Rate Limit Rule",
+        rules: FREE_RATELIMIT_RULES,
       }),
-      cfRequest<{ rules?: unknown[] }>(
-        `/zones/${zone.id}/rulesets/phases/http_response_headers_transform/entrypoint`,
-        {
-          method: "PUT",
-          body: JSON.stringify({
-            name: "default",
-            description: "Sovereign Free-Tier Edge Security Response Headers",
-            rules: FREE_SECURITY_HEADER_RULES,
-          }),
-        },
-      ),
-    ]);
+    }),
+    cfRequest<{ rules?: unknown[] }>(
+      `/zones/${zone.id}/rulesets/phases/http_response_headers_transform/entrypoint`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          name: "default",
+          description: "Sovereign Free-Tier Edge Security Response Headers",
+          rules: FREE_SECURITY_HEADER_RULES,
+        }),
+      },
+    ),
+    cfRequest<{ rules?: unknown[] }>(
+      `/zones/${zone.id}/rulesets/phases/http_request_cache_settings/entrypoint`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          name: "default",
+          description: "Sovereign Free-Tier Edge Cache Rules",
+          rules: FREE_CACHE_RULES,
+        }),
+      },
+    ),
+    cfRequest<{ rules?: unknown[] }>(
+      `/zones/${zone.id}/rulesets/phases/http_response_compression/entrypoint`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          name: "default",
+          description: "Sovereign Free-Tier Zstd + Brotli + Gzip Compression Rule",
+          rules: FREE_COMPRESSION_RULES,
+        }),
+      },
+    ),
+    cfRequest<{ rules?: unknown[] }>(
+      `/zones/${zone.id}/rulesets/phases/http_config_settings/entrypoint`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          name: "default",
+          description: "Sovereign Free-Tier Edge Config Rules",
+          rules: FREE_CONFIG_RULES,
+        }),
+      },
+    ),
+  ]);
 
   return {
     zoneId: zone.id,
@@ -298,6 +399,9 @@ async function hardenZone(zone: CfZone): Promise<{
     wafRulesCount: wafRes.success ? (wafRes.result?.rules?.length ?? 5) : 0,
     rateLimitRulesCount: rlRes.success ? (rlRes.result?.rules?.length ?? 1) : 0,
     securityHeaderRulesCount: hdrRes.success ? (hdrRes.result?.rules?.length ?? 1) : 0,
+    cacheRulesCount: cacheRes.success ? (cacheRes.result?.rules?.length ?? 2) : 0,
+    compressionRulesCount: compressRes.success ? (compressRes.result?.rules?.length ?? 1) : 0,
+    configRulesCount: cfgRes.success ? (cfgRes.result?.rules?.length ?? 1) : 0,
   };
 }
 
@@ -367,6 +471,9 @@ async function main(): Promise<void> {
     wafConfiguredZones: results.filter((r) => r.wafRulesCount === 5).length,
     rateLimitConfiguredZones: results.filter((r) => r.rateLimitRulesCount === 1).length,
     securityHeadersConfiguredZones: results.filter((r) => r.securityHeaderRulesCount === 1).length,
+    cacheRulesConfiguredZones: results.filter((r) => r.cacheRulesCount === 2).length,
+    compressionRulesConfiguredZones: results.filter((r) => r.compressionRulesCount === 1).length,
+    configRulesConfiguredZones: results.filter((r) => r.configRulesCount === 1).length,
     tieredCacheConfiguredZones: results.filter((r) => r.tieredCacheEnabled).length,
     botFightModeConfiguredZones: results.filter((r) => r.botFightModeEnabled).length,
     leakedCredsConfiguredZones: results.filter((r) => r.leakedCredsEnabled).length,
