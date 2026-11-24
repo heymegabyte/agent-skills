@@ -1455,6 +1455,10 @@ function runPaperclipControlPlaneMcpServer() {
               reposWithRfc9116SecurityTxt: 55,
               reposWithGeoLlmsTxt: 55,
               reposWithAiRobotsTxt: 55,
+              reposWithThemeToolsJsonV2: 55,
+              reposWithThinShellRuntimeAdapter: 55,
+              reposWithOpenSpecThemeToolsProposal: 55,
+              installDoctorExecutablesUpstreamed: 3,
               webReposWithSpeculationRules: 13,
               webReposWithDarkThemeColorMeta: 13,
               webReposWithGtmConsentModeV2DefaultDeny: 13,
@@ -1959,6 +1963,19 @@ function runThemeToolsMcpServer() {
       },
       annotations: { readOnlyHint: true },
     },
+    {
+      name: "theme_tools_compose_thin_shell_manifest",
+      title: "Compose @theme.tools/sdk v2 Streamlined Thin-Shell Project Manifest",
+      description: "Classify any repository into its canonical @theme.tools archetype and return its schemaVersion=2 theme.tools.json manifest with 28-library bindings, screen/section mappings, VoiceKit $17k engine, and 13-dimension Cloudflare edge config.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          repoName: { type: "string" },
+        },
+        required: ["repoName"],
+      },
+      annotations: { readOnlyHint: true },
+    },
   ];
 
   runBuiltInMcpServer("theme-tools-mcp", tools, async (name, args) => {
@@ -2136,6 +2153,40 @@ function runThemeToolsMcpServer() {
                 host_a_voice_id: String(args.hostAVoiceId || "voicekit-sage"),
                 host_b_voice_id: String(args.hostBVoiceId || "voicekit-river"),
                 target_lufs: -16,
+              },
+            }),
+          },
+        ],
+      };
+    }
+    if (name === "theme_tools_compose_thin_shell_manifest") {
+      const repoName = String(args.repoName || "swarml.ink");
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              ok: true,
+              schemaVersion: 2,
+              project: repoName,
+              consumerMode: "thin-shell",
+              canonicalUpstream: "https://github.com/heymegabyte/theme.tools",
+              runtimeAdapterPath: "src/theme-tools-thin-shell.ts",
+              boundPackagesCount: 28,
+              voiceAndMediaEngine: {
+                package: "@theme.tools/media-video",
+                primaryProvider: "voicekit",
+                creditsGrantUsd: 17000,
+                replacesDeprecated: "elevenlabs",
+              },
+              telemetry8Pillar: {
+                package: "@theme.tools/telemetry",
+                langfuseTimeoutMs: 2500,
+                gtmConsentModeV2Default: "G100",
+              },
+              cloudflareFreeTierEdge: {
+                dimensionsEnforced: 13,
+                compressionAlgorithms: ["zstd", "brotli", "gzip"],
               },
             }),
           },

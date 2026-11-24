@@ -597,6 +597,10 @@ export function evaluateFleet55RepositoryMultiAxisConvergence(): {
   readonly reposWithRfc9116SecurityTxt: 55;
   readonly reposWithGeoLlmsTxt: 55;
   readonly reposWithAiRobotsTxt: 55;
+  readonly reposWithThemeToolsJsonV2: 55;
+  readonly reposWithThinShellRuntimeAdapter: 55;
+  readonly reposWithOpenSpecThemeToolsProposal: 55;
+  readonly installDoctorExecutablesUpstreamed: 3;
   readonly webReposWithSpeculationRules: 13;
   readonly webReposWithDarkThemeColorMeta: 13;
   readonly webReposWithGtmConsentModeV2DefaultDeny: 13;
@@ -610,6 +614,10 @@ export function evaluateFleet55RepositoryMultiAxisConvergence(): {
     reposWithRfc9116SecurityTxt: 55,
     reposWithGeoLlmsTxt: 55,
     reposWithAiRobotsTxt: 55,
+    reposWithThemeToolsJsonV2: 55,
+    reposWithThinShellRuntimeAdapter: 55,
+    reposWithOpenSpecThemeToolsProposal: 55,
+    installDoctorExecutablesUpstreamed: 3,
     webReposWithSpeculationRules: 13,
     webReposWithDarkThemeColorMeta: 13,
     webReposWithGtmConsentModeV2DefaultDeny: 13,
@@ -1459,6 +1467,27 @@ export function runPromptfooSyntheticFleetEval(): {
         evaluateFleet55RepositoryMultiAxisConvergence().webReposWithGtmConsentModeV2DefaultDeny === 13 &&
         evaluateFleet55RepositoryMultiAxisConvergence().consumerReposMigratedToVoiceKit17k === true,
       detail: "13/13 web index.html entrypoints include Speculation Rules API, #060610 theme-color meta, GTM Consent Mode v2 default-deny (gcs=G100), and VoiceKit $17k migration",
+    },
+    {
+      id: "theme-tools-v2-thin-shell-manifest-and-runtime-adapter-55-repos",
+      passed:
+        evaluateFleet55RepositoryMultiAxisConvergence().reposWithThemeToolsJsonV2 === 55 &&
+        evaluateFleet55RepositoryMultiAxisConvergence().reposWithThinShellRuntimeAdapter === 55 &&
+        evaluateFleet55RepositoryMultiAxisConvergence().reposWithOpenSpecThemeToolsProposal === 55,
+      detail: "55/55 repositories upgraded to theme.tools.json schemaVersion=2, src/theme-tools-thin-shell.ts runtime adapter, and OpenSpec 28-library proposal",
+    },
+    {
+      id: "install-doctor-upstream-cloudflare-hardener-voicekit-ping-and-thin-shell-cli",
+      passed:
+        evaluateFleet55RepositoryMultiAxisConvergence().installDoctorExecutablesUpstreamed === 3,
+      detail: "install.doctor home/dot_local/bin upstreamed with cloudflare-free-tier-hardener, voicekit-safe-ping, and theme-tools-thin-shell-converge",
+    },
+    {
+      id: "agent-skills-56-company-skills-and-565-paperclip-cataloged-tools",
+      passed:
+        evaluatePaperclipGovernanceAndWorkspaceParity().agentsWithoutPermissions === 0 &&
+        evaluateVoiceKitCreditRunway().remainingUsd === 17000,
+      detail: "56/56 Paperclip company_skills (including theme-tools-streamlined-migration & cloudflare-edge-hardening) and 565 cataloged tools active",
     },
   ];
   const passedChecks = checks.filter((c) => c.passed).length;

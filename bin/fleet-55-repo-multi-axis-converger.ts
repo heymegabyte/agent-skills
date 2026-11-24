@@ -129,6 +129,339 @@ Sitemap: https://${domain}/sitemap.xml
 `;
 }
 
+type RepoArchetype =
+  | "saas-shortener-link-engine"
+  | "control-plane-and-observability"
+  | "media-cinema-and-directory"
+  | "commercial-field-service-and-client-sites"
+  | "workstation-and-developer-platform";
+
+function classifyRepoArchetype(repoName: string): RepoArchetype {
+  const clean = repoName.trim().toLowerCase();
+  if (clean.endsWith(".ink") && clean !== "swarml.ink") {
+    return "saas-shortener-link-engine";
+  }
+  if (
+    clean === "swarml.ink" ||
+    (clean.endsWith(".megabyte.space") && !["mission.megabyte.space", "michael.megabyte.space"].includes(clean))
+  ) {
+    return "control-plane-and-observability";
+  }
+  if (
+    [
+      "bz.rocks",
+      "indie-music-toolkit",
+      "musicblobs.com",
+      "thebestsites.com",
+      "videoblobs.com",
+      "pdf.kitchen",
+      "open-seo",
+    ].includes(clean)
+  ) {
+    return "media-cinema-and-directory";
+  }
+  if (
+    [
+      "agent-skills",
+      "browse.computer",
+      "browse.tools",
+      "cloudflare-os",
+      "coolify-host-config",
+      "desktop.management",
+      "desktop.tools",
+      "homebrew-tap",
+      "install.doctor",
+      "runner-ops",
+      "semantic-release-python",
+      "theme.tools",
+    ].includes(clean)
+  ) {
+    return "workstation-and-developer-platform";
+  }
+  return "commercial-field-service-and-client-sites";
+}
+
+function buildThemeToolsJsonV2(repoName: string): string {
+  const archetype = classifyRepoArchetype(repoName);
+  const primaryDomain = repoName.includes(".") ? repoName : `${repoName}.megabyte.space`;
+  const tier1 = [
+    "@theme.tools/themes",
+    "@theme.tools/ui",
+    "@theme.tools/blog",
+    "@theme.tools/catalog",
+    "@theme.tools/testing",
+  ];
+  const tier3 = [
+    "@theme.tools/telemetry",
+    "@theme.tools/auth",
+    "@theme.tools/flags",
+    "@theme.tools/agent-ui",
+    "@theme.tools/seo-geo",
+    "@theme.tools/media-video",
+    "@theme.tools/crawl-research",
+    "@theme.tools/i18n-a11y",
+  ];
+  const tier2All = [
+    "@theme.tools/workflows",
+    "@theme.tools/integrations",
+    "@theme.tools/social",
+    "@theme.tools/scheduling",
+    "@theme.tools/signing",
+    "@theme.tools/forms",
+    "@theme.tools/links",
+    "@theme.tools/keys",
+    "@theme.tools/notifications",
+    "@theme.tools/crm",
+    "@theme.tools/inbox",
+    "@theme.tools/billing",
+    "@theme.tools/status",
+    "@theme.tools/kb",
+    "@theme.tools/dataplane",
+  ];
+  let boundPackages = [...tier1, ...tier2All, ...tier3];
+  if (archetype === "saas-shortener-link-engine") {
+    boundPackages = [
+      ...tier1,
+      ...tier3,
+      "@theme.tools/links",
+      "@theme.tools/keys",
+      "@theme.tools/billing",
+      "@theme.tools/workflows",
+      "@theme.tools/integrations",
+      "@theme.tools/notifications",
+      "@theme.tools/status",
+      "@theme.tools/kb",
+    ];
+  } else if (archetype === "control-plane-and-observability") {
+    boundPackages = [
+      ...tier1,
+      ...tier3,
+      "@theme.tools/status",
+      "@theme.tools/workflows",
+      "@theme.tools/integrations",
+      "@theme.tools/keys",
+      "@theme.tools/notifications",
+      "@theme.tools/kb",
+      "@theme.tools/dataplane",
+      "@theme.tools/billing",
+    ];
+  } else if (archetype === "media-cinema-and-directory") {
+    boundPackages = [
+      ...tier1,
+      ...tier3,
+      "@theme.tools/social",
+      "@theme.tools/signing",
+      "@theme.tools/forms",
+      "@theme.tools/links",
+      "@theme.tools/kb",
+      "@theme.tools/status",
+      "@theme.tools/billing",
+    ];
+  } else if (archetype === "workstation-and-developer-platform") {
+    boundPackages = [
+      ...tier1,
+      ...tier3,
+      "@theme.tools/keys",
+      "@theme.tools/integrations",
+      "@theme.tools/workflows",
+      "@theme.tools/kb",
+      "@theme.tools/status",
+      "@theme.tools/dataplane",
+    ];
+  }
+
+  const manifest = {
+    schemaVersion: 2,
+    project: repoName,
+    primaryDomain,
+    archetype,
+    consumerMode: "thin-shell",
+    canonicalUpstream: "https://github.com/heymegabyte/theme.tools",
+    runtimeAdapterPath: "src/theme-tools-thin-shell.ts",
+    themeTokens: {
+      background: "#060610",
+      accent: "#00E5FF",
+      colorSpace: "oklch",
+      transitionDuration: "0.333s",
+      interactionStates: 16,
+      minApcaContrastLc: 60,
+    },
+    boundPackages,
+    screenAndSectionBindings: [
+      {
+        screenOrRoute: "/* (Global Header & Navigation)",
+        canonicalSectionComponent: "UniversalMegaMenuNavbar + BrandLogoLockup",
+        sourceLibrary: "@theme.tools/ui",
+        interactionStates: 16,
+        transitionDuration: "0.333s",
+      },
+      {
+        screenOrRoute: "/ (Hero, Bento Feature Grid & Social Proof)",
+        canonicalSectionComponent: "SpotlightBentoCard + PillCluster + BtfReveal",
+        sourceLibrary: "@theme.tools/ui",
+        interactionStates: 16,
+        transitionDuration: "0.333s",
+      },
+      {
+        screenOrRoute: "/blog & /blog/:slug (Editorial & Audio Narration)",
+        canonicalSectionComponent: "Full 100-Component Blog Registry + VoiceKit AudioNarrationPlayer",
+        sourceLibrary: "@theme.tools/blog",
+        interactionStates: 16,
+        transitionDuration: "0.333s",
+      },
+      {
+        screenOrRoute: "/status & /api/health/* (Synthetic Probes & Uptime)",
+        canonicalSectionComponent: "tt-status-badge + tt-uptime-timeline",
+        sourceLibrary: "@theme.tools/status",
+        interactionStates: 16,
+        transitionDuration: "0.333s",
+      },
+    ],
+    blogSystem: {
+      package: "@theme.tools/blog",
+      editor: "platejs/react",
+      fullCatalogEnabled: true,
+      componentCount: 100,
+      postIndex: "content/posts/index.json",
+      routes: ["/blog", "/blog/:slug", "/blog/:slug/edit", "/blog/api/:slug"],
+    },
+    voiceAndMediaEngine: {
+      package: "@theme.tools/media-video",
+      primaryProvider: "voicekit",
+      creditsGrantUsd: 17000,
+      fallbackChain: ["voicekit", "melotts-workers-ai", "piper-local"],
+      replacesDeprecated: "elevenlabs",
+    },
+    telemetry8Pillar: {
+      package: "@theme.tools/telemetry",
+      langfuseTimeoutMs: 2500,
+      circuitBreakerStrikes: 3,
+      gtmConsentModeV2Default: "G100",
+      pillars: [
+        "posthog",
+        "sentry",
+        "ga4",
+        "gtm",
+        "langfuse",
+        "cloudflare-rum",
+        "w3c-traceparent",
+        "promptfoo",
+      ],
+    },
+    cloudflareFreeTierEdge: {
+      dimensionsEnforced: 13,
+      wafCustomRules: 5,
+      rateLimitRules: 1,
+      securityHeaders: 4,
+      cacheRules: 2,
+      compressionAlgorithms: ["zstd", "brotli", "gzip"],
+      configRules: 1,
+      urlNormalizationScope: "both",
+      zoneSettingsCount: 25,
+    },
+    contributedSharedModules: [
+      "@theme.tools/sdk/streamlined-thin-shell-composer",
+      "@theme.tools/media-video/zero-cost-video-credit-planner",
+    ],
+  };
+
+  return JSON.stringify(manifest, null, 2) + "\n";
+}
+
+function buildThinShellRuntimeAdapterTs(repoName: string): string {
+  const archetype = classifyRepoArchetype(repoName);
+  const primaryDomain = repoName.includes(".") ? repoName : `${repoName}.megabyte.space`;
+  return `// @file src/theme-tools-thin-shell.ts
+// @description Streamlined @theme.tools v2 Thin-Shell Runtime Composition Adapter for ${repoName} (${primaryDomain})
+// Generated by ~/.agentskills/bin/fleet-55-repo-multi-axis-converger.ts
+
+export const THEME_TOOLS_THIN_SHELL_CONFIG = {
+  schemaVersion: 2,
+  project: ${JSON.stringify(repoName)},
+  primaryDomain: ${JSON.stringify(primaryDomain)},
+  archetype: ${JSON.stringify(archetype)},
+  consumerMode: "thin-shell",
+  canonicalUpstream: "https://github.com/heymegabyte/theme.tools",
+  themeTokens: {
+    background: "#060610",
+    accent: "#00E5FF",
+    colorSpace: "oklch",
+    transitionDuration: "0.333s",
+    interactionStates: 16,
+    minApcaContrastLc: 60,
+  },
+  voicekitEngine: {
+    package: "@theme.tools/media-video",
+    primaryProvider: "voicekit",
+    creditsGrantUsd: 17000,
+    replacesDeprecated: "elevenlabs",
+    fallbackChain: ["voicekit", "melotts-workers-ai", "piper-local"],
+  },
+  telemetry8Pillar: {
+    package: "@theme.tools/telemetry",
+    langfuseTimeoutMs: 2500,
+    circuitBreakerStrikes: 3,
+    gtmConsentModeV2Default: "G100",
+  },
+  cloudflareFreeTierEdge: {
+    dimensionsEnforced: 13,
+    compressionAlgorithms: ["zstd", "brotli", "gzip"],
+    urlNormalizationScope: "both",
+  },
+} as const;
+
+export function buildStreamlinedPageContext(routePath = "/", incomingTraceparent?: string) {
+  const traceparent =
+    incomingTraceparent && /^00-[0-9a-f]{32}-[0-9a-f]{16}-01$/.test(incomingTraceparent)
+      ? incomingTraceparent
+      : "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01";
+  return {
+    ok: true,
+    project: THEME_TOOLS_THIN_SHELL_CONFIG.project,
+    routePath,
+    traceparent,
+    gtmConsentDefaultGcs: "G100",
+    themeTokens: THEME_TOOLS_THIN_SHELL_CONFIG.themeTokens,
+    voicekitCreditsUsd: THEME_TOOLS_THIN_SHELL_CONFIG.voicekitEngine.creditsGrantUsd,
+    langfuseTimeoutMs: THEME_TOOLS_THIN_SHELL_CONFIG.telemetry8Pillar.langfuseTimeoutMs,
+  };
+}
+
+export function buildRfc9457ProblemDetails(status: number, title: string, detail: string, instance = "/") {
+  return {
+    type: \`https://httpstatuses.com/\${status}\`,
+    title,
+    status,
+    detail,
+    instance,
+    timestamp: new Date().toISOString(),
+  };
+}
+`;
+}
+
+function buildOpenSpecThemeToolsProposalMd(repoName: string): string {
+  const archetype = classifyRepoArchetype(repoName);
+  return `# OpenSpec Proposal — Streamline \`@theme.tools\` 28-Library Thin-Shell Adoption (\`${repoName}\`)
+
+## 1. Intent & Scope
+
+- **Project**: \`${repoName}\` (\`${archetype}\`)
+- **Objective**: Ensure every screen, section, component, worker endpoint, audio/video pipeline, and observability hook delegates to the canonical **28 \`@theme.tools/*\` Libraries** via \`theme.tools.json\` (\`schemaVersion: 2\`) and \`src/theme-tools-thin-shell.ts\`.
+
+## 2. Canonical Delegations
+
+1. **Global Navigation & Marketing Sections (\`@theme.tools/ui\` & \`@theme.tools/themes\`)**:
+   - \`UniversalMegaMenuNavbar\`, \`BrandLogoLockup\`, \`SpotlightBentoCard\`, \`PillCluster\`, \`BtfReveal\` with dark-first \`#060610\` / \`#00E5FF\` OKLCH tokens (\`0.333s\` transitions across all 16 interaction states, APCA \`Lc >= 60\`).
+2. **Editorial & 100-Component Blog Catalog (\`@theme.tools/blog\`)**:
+   - Full component registry (\`renderComponent\`, \`COMPONENT_TYPES\`, \`ALL_BLOG_CSS\`) and PlateJS editor at \`/blog/*\`.
+3. **VoiceKit \`$17,000\` Credits Voice & Media Pipeline (\`@theme.tools/media-video\` & \`@theme.tools/workflows\`)**:
+   - \`buildVoiceKitTtsRequest()\`, \`buildVoiceKitPodcastStudioRequest()\`, and \`buildZeroCostVideoCreditExecutionPlan()\` replacing ElevenLabs everywhere, with Cloudflare Workers AI MeloTTS (\`@cf/myshell-ai/melotts\`) and Piper ONNX fallback.
+4. **Sovereign 8-Pillar Telemetry (\`@theme.tools/telemetry\`) & 13-Dimension Cloudflare Free-Tier Edge**:
+   - W3C \`traceparent\`, Langfuse v4 OTLP (\`2500ms\` fail-open + 3-strike circuit breaker), PostHog 4-Event AI Tree, Sentry Envelope v7, GA4, GTM Consent Mode v2 (\`gcs=G100\`), Chromium Speculation Rules API, and Zstandard (\`zstd\`) edge compression.
+`;
+}
+
 const HEAD_INJECTION_SNIPPET = `
   <!-- Sovereign 8-Pillar Telemetry, Dark-First #060610 Theme, GTM Consent Mode v2 (gcs=G100) & Speculation Rules API -->
   <meta name="theme-color" content="#060610" />
@@ -384,6 +717,9 @@ async function convergeSingleRepository(
   readonly securityTxtReady: boolean;
   readonly llmsTxtReady: boolean;
   readonly robotsTxtReady: boolean;
+  readonly themeToolsV2Ready: boolean;
+  readonly thinShellAdapterReady: boolean;
+  readonly openSpecProposalReady: boolean;
   readonly htmlFilesEnhanced: number;
   readonly voicekitCodeEdits: number;
 }> {
@@ -398,6 +734,11 @@ async function convergeSingleRepository(
       securityTxtReady: existsSync(join(repoDir, "public/.well-known/security.txt")),
       llmsTxtReady: existsSync(join(repoDir, "public/llms.txt")) || existsSync(join(repoDir, "llms.txt")),
       robotsTxtReady: existsSync(join(repoDir, "public/robots.txt")),
+      themeToolsV2Ready: existsSync(join(repoDir, "theme.tools.json")),
+      thinShellAdapterReady: existsSync(join(repoDir, "src/theme-tools-thin-shell.ts")),
+      openSpecProposalReady: existsSync(
+        join(repoDir, "openspec/changes/streamline-theme-tools-28-library-adoption/proposal.md"),
+      ),
       htmlFilesEnhanced: 0,
       voicekitCodeEdits: 0,
     };
@@ -475,6 +816,40 @@ async function convergeSingleRepository(
   // 8. Consumer VoiceKit $17,000 Credits migration
   const voicekitCodeEdits = migrateConsumerRepoVoiceKit(repoDir, repoName);
 
+  // 9. Streamlined theme.tools.json v2 manifest
+  const ttJsonPath = join(repoDir, "theme.tools.json");
+  let themeToolsV2Ready = false;
+  try {
+    let needsUpgrade = !existsSync(ttJsonPath);
+    if (!needsUpgrade) {
+      const parsed = JSON.parse(readFileSync(ttJsonPath, "utf8")) as { schemaVersion?: number };
+      if ((parsed.schemaVersion ?? 1) < 2) needsUpgrade = true;
+    }
+    if (needsUpgrade) {
+      writeFileSync(ttJsonPath, buildThemeToolsJsonV2(repoName), "utf8");
+    }
+    themeToolsV2Ready = true;
+  } catch {
+    writeFileSync(ttJsonPath, buildThemeToolsJsonV2(repoName), "utf8");
+    themeToolsV2Ready = true;
+  }
+
+  // 10. Runtime src/theme-tools-thin-shell.ts adapter
+  const srcDir = join(repoDir, "src");
+  mkdirSync(srcDir, { recursive: true });
+  const thinShellAdapterPath = join(srcDir, "theme-tools-thin-shell.ts");
+  if (!existsSync(thinShellAdapterPath)) {
+    writeFileSync(thinShellAdapterPath, buildThinShellRuntimeAdapterTs(repoName), "utf8");
+  }
+
+  // 11. OpenSpec change proposal for streamlined @theme.tools 28-library adoption
+  const osChangeDir = join(repoDir, "openspec/changes/streamline-theme-tools-28-library-adoption");
+  const osProposalPath = join(osChangeDir, "proposal.md");
+  if (!existsSync(osProposalPath)) {
+    mkdirSync(osChangeDir, { recursive: true });
+    writeFileSync(osProposalPath, buildOpenSpecThemeToolsProposalMd(repoName), "utf8");
+  }
+
   return {
     repoName,
     skippedPreserveClean: false,
@@ -491,6 +866,9 @@ async function convergeSingleRepository(
     robotsTxtReady:
       existsSync(join(repoDir, "public/robots.txt")) ||
       existsSync(join(repoDir, "frontend/public/robots.txt")),
+    themeToolsV2Ready,
+    thinShellAdapterReady: existsSync(thinShellAdapterPath),
+    openSpecProposalReady: existsSync(osProposalPath),
     htmlFilesEnhanced,
     voicekitCodeEdits,
   };
@@ -509,6 +887,9 @@ export async function runFleet55RepoMultiAxisConvergence(options?: {
   readonly securityTxtConverged: number;
   readonly llmsTxtConverged: number;
   readonly robotsTxtConverged: number;
+  readonly themeToolsV2Converged: number;
+  readonly thinShellAdapterConverged: number;
+  readonly openSpecProposalConverged: number;
   readonly htmlFilesEnhancedTotal: number;
   readonly voicekitCodeEditsTotal: number;
 }> {
@@ -533,12 +914,15 @@ export async function runFleet55RepoMultiAxisConvergence(options?: {
     securityTxtConverged: results.filter((r) => r.securityTxtReady).length,
     llmsTxtConverged: results.filter((r) => r.llmsTxtReady).length,
     robotsTxtConverged: results.filter((r) => r.robotsTxtReady).length,
+    themeToolsV2Converged: results.filter((r) => r.themeToolsV2Ready).length,
+    thinShellAdapterConverged: results.filter((r) => r.thinShellAdapterReady).length,
+    openSpecProposalConverged: results.filter((r) => r.openSpecProposalReady).length,
     htmlFilesEnhancedTotal: results.reduce((acc, r) => acc + r.htmlFilesEnhanced, 0),
     voicekitCodeEditsTotal: results.reduce((acc, r) => acc + r.voicekitCodeEdits, 0),
   };
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1]?.endsWith("fleet-55-repo-multi-axis-converger.ts")) {
   const args = process.argv.slice(2);
   const rootIdx = args.indexOf("--root");
   const reposRoot = rootIdx !== -1 && args[rootIdx + 1] ? args[rootIdx + 1]! : DEFAULT_REPOS_ROOT;
