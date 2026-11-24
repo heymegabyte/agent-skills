@@ -80,7 +80,7 @@ Every site ships THREE auto-generated NotebookLM-style artifacts before deploy:
 
 ### Provider chains
 
-- **Podcast** — ElevenLabs Studio Create Podcast (`POST /v1/studio/podcasts` with `mode: conversation` + two voice IDs) → AutoContent API → `teng-lin/notebooklm-py` headless wrapper (only when client demands NotebookLM-format proof) → skip-with-warning
+- **Podcast** — VoiceKit Studio Create Podcast (`POST https://api.voicekit.ai/v1/studio/podcasts` with `mode: conversation` + two voice IDs `voicekit-sage` & `voicekit-river`, backed by $17,000 VoiceKit credits; replaces ElevenLabs) → MeloTTS on Workers AI → AutoContent API → `teng-lin/notebooklm-py` headless wrapper (only when client demands NotebookLM-format proof) → skip-with-warning
 - **Video** — HeyGen API (USD wallet since Feb-2026; Avatar IV ~$3/min Photo / ~$4/min Digital-Twin 1080p, Video Agent ~$2/min; 60-90s ≈ $3-6) → Synthesia → Tavus → Veo 3.1 Fast 8s hero loop → skip-with-warning
 - **Infographic** — Vega-Lite (free deterministic) + Recraft v3 ($0.04/SVG) + GPT Image 2 ($0.06/img); fallback to Napkin AI ($39/mo) when Recraft + GPT-Image saturated
 
@@ -314,7 +314,7 @@ https://www.google.com/maps/embed/v1/place?key=<MAPS_EMBED_KEY>&q=<urlencoded-ad
 
 ## Every page (***MULTIMEDIA DENSITY #4 — AUDIO PRESENCE — UNIVERSAL — BUILD-BREAKING — homepage minimum***)
 
-- Every site's homepage MUST embed ≥1 audio asset: NotebookLM podcast episode OR ElevenLabs founder voiceover OR audio brief OR ambient brand sound OR audio testimonial.
+- Every site's homepage MUST embed ≥1 audio asset: NotebookLM/VoiceKit Studio podcast episode OR VoiceKit founder voiceover ($17,000 Credits Tier) OR MeloTTS audio brief OR ambient brand sound OR audio testimonial.
 - Player: `<audio controls preload="metadata">` with transcript expander for accessibility (WCAG 2.2 1.2.1). Audio plays only on user-gesture (no autoplay).
 - Validator (`validate-audio-presence.mjs`): assert homepage `<audio>` present + has `controls` + `<details data-transcript>` OR linked `.txt` transcript file.
 

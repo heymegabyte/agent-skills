@@ -27,8 +27,8 @@ Mirrors `_media_slots.json` shape so the same fail-CLOSED auto-regenerate patter
     "subtitle": "Two-host audio overview generated from research corpus",
     "duration_target_sec": 1800,
     "duration_actual_sec": null,
-    "host_a": { "name": "Sage", "voice_id": "21m00Tcm4TlvDq8ikWAM", "persona": "skeptical journalist" },
-    "host_b": { "name": "River", "voice_id": "AZnzlk1XvdvUeBnXmlld", "persona": "curious enthusiast" },
+    "host_a": { "name": "Sage", "voice_id": "voicekit-sage", "persona": "skeptical journalist" },
+    "host_b": { "name": "River", "voice_id": "voicekit-river", "persona": "curious enthusiast" },
     "transcript_url": "<R2>/podcast/transcript.json",
     "audio_url": "<R2>/podcast/episode-01.mp3",
     "cover_url": "<R2>/podcast/cover-3000.jpg",
@@ -36,7 +36,7 @@ Mirrors `_media_slots.json` shape so the same fail-CLOSED auto-regenerate patter
     "filled_by": null,
     "filled_score": null,
     "regen_attempts": 0,
-    "provider_chain": ["elevenlabs-studio", "autocontent-api", "notebooklm-py-headless", "fallback-skip-with-warning"]
+    "provider_chain": ["voicekit-studio", "melotts-workers-ai", "autocontent-api", "notebooklm-py-headless", "fallback-skip-with-warning"]
   },
   "infographic": {
     "panels": [
@@ -69,14 +69,15 @@ Mirrors `_media_slots.json` shape so the same fail-CLOSED auto-regenerate patter
 }
 ```
 
-## Audio Podcast — Two-Host Overview (***PRIMARY: ElevenLabs Studio***)
+## Audio Podcast — Two-Host Overview (***PRIMARY: VoiceKit Studio — $17,000 Credits Tier***)
 
 ### Provider order
 
-1. **ElevenLabs Studio Create Podcast** (`POST /v1/studio/podcasts` with `mode:"conversation"`, two voice IDs, source text = condensed research brief 8-15K chars) — deterministic REST API, no browser automation, ships finished MP3 + transcript JSON. ~$0.30/episode at 30 min
-2. **AutoContent API** ($39/mo unlimited, NotebookLM-format mimicry) — when ElevenLabs quota exhausted
-3. **`teng-lin/notebooklm-py`** wrapper — ONLY in CF Container with feature flag `NOTEBOOKLM_BROWSER=1`; use when client demands "made in NotebookLM" as marketing claim
-4. **Skip-with-warning** — surface in dashboard for manual upload
+1. **VoiceKit Studio Create Podcast** (`POST https://api.voicekit.ai/v1/studio/podcasts` with `mode:"conversation"`, two voice IDs `voicekit-sage` & `voicekit-river`, source text = condensed research brief 8-15K chars) — deterministic REST API backed by our **$17,000 VoiceKit startup credits grant** (replaces ElevenLabs Studio), ships finished MP3 + transcript JSON.
+2. **MeloTTS on Cloudflare Workers AI** (`@cf/myshell-ai/melotts`) — zero-cost edge OSS synthesis fallback cached in R2.
+3. **AutoContent API** ($39/mo unlimited, NotebookLM-format mimicry) — secondary fallback
+4. **`teng-lin/notebooklm-py`** wrapper — ONLY in CF Container with feature flag `NOTEBOOKLM_BROWSER=1`; use when client demands "made in NotebookLM" as marketing claim
+5. **Skip-with-warning** — surface in dashboard for manual upload
 
 NEVER block deploy on podcast — it's enrichment, not infrastructure.
 
@@ -95,21 +96,21 @@ Saved to `_podcast_source.md` for human review + future re-runs.
 
 ### Voice selection
 
-Default voice IDs from `~/.claude/.env`:
+Default voice IDs from Infisical / `get-secret`:
 
-- `ELEVENLABS_VOICE_HOST_A=21m00Tcm4TlvDq8ikWAM` (Rachel)
-- `ELEVENLABS_VOICE_HOST_B=AZnzlk1XvdvUeBnXmlld` (Domi)
+- `VOICEKIT_VOICE_HOST_A=voicekit-sage` (Sage)
+- `VOICEKIT_VOICE_HOST_B=voicekit-river` (River)
 
 Override per-site via `_brand.json.podcast.voices[]` when client supplies brand voices. NEVER use the same voice for both hosts.
 
-### ElevenLabs API call
+### VoiceKit API call
 
 ```ts
-const r = await fetch("https://api.elevenlabs.io/v1/studio/podcasts", {
+const r = await fetch("https://api.voicekit.ai/v1/studio/podcasts", {
   method: "POST",
-  headers: { "xi-api-key": env.ELEVENLABS_API_KEY, "Content-Type": "application/json" },
+  headers: { "Authorization": `Bearer ${env.VOICEKIT_API_KEY}`, "Content-Type": "application/json" },
   body: JSON.stringify({
-    model_id: "eleven_turbo_v2_5",
+    model_id: "voicekit_studio_v2",
     mode: { type: "conversation", conversation: { host_voice_id: voiceA, guest_voice_id: voiceB } },
     source: { type: "text", text: briefMd },
     duration_scale: "default",  // ~25-35 min from 10K-char source
@@ -123,7 +124,7 @@ const { project_id } = await r.json();
 ### Output assets per episode
 
 - `episode-NN.mp3` — 96kbps stereo VBR, ≤1MB/min
-- `transcript.json` — ElevenLabs-provided word-timing JSON
+- `transcript.json` — VoiceKit-provided word-timing JSON
 - `transcript.vtt` — derived for `<audio>` track
 - `cover-3000.jpg` — 3000×3000 JPEG (Apple-required), branded via Satori with brand palette + logo + episode title
 - `chapters.json` — auto-extracted from transcript via gpt-4o-mini topical-segmentation pass

@@ -8,8 +8,8 @@ export default {
       id: "fleet-cli",
       ownsNativeCompaction: true,
       config: {
-        command: "python3",
-        args: [fileURLToPath(new URL("./cli.py", import.meta.url))],
+        command: process.execPath || "node",
+        args: [fileURLToPath(new URL("./cli.mjs", import.meta.url))],
         input: "stdin",
         output: "json",
         modelArg: "--provider-model",
@@ -19,7 +19,14 @@ export default {
         systemPromptWhen: "always",
         systemPromptMode: "append",
         serialize: false,
-        clearEnv: ["ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "OPENAI_API_KEY", "OPENAI_BASE_URL", "ANTHROPIC_BASE_URL", "CLAUDE_CODE_OAUTH_TOKEN"],
+        clearEnv: [
+          "ANTHROPIC_API_KEY",
+          "ANTHROPIC_AUTH_TOKEN",
+          "OPENAI_API_KEY",
+          "OPENAI_BASE_URL",
+          "ANTHROPIC_BASE_URL",
+          "CLAUDE_CODE_OAUTH_TOKEN",
+        ],
       },
     });
   },

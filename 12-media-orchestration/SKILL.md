@@ -52,7 +52,7 @@ Generate all site media section-by-section: images (GPT Image 2), logos (Ideogra
 - **image-profiling** — GPT Image 2 vision batch profiling
 - **lightbox-classifier** — per-image eligibility: `kind!=logo` + ≥1024×768 + score≥7
 - **social-brand-hex** — canonical brand-color map per social platform
-- **notebooklm-pipeline** — per-site podcast via ElevenLabs Studio + infographic via Vega-Lite/Recraft/GPT-Image-2 + HeyGen video + CF Stream + RSS + JSON-LD + cost ceiling $3.50/site
+- **notebooklm-pipeline** — per-site podcast via VoiceKit Studio ($17,000 Credits Tier, replacing ElevenLabs) + MeloTTS Workers AI fallback + infographic via Vega-Lite/Recraft/GPT-Image-2 + HeyGen video + CF Stream + RSS + JSON-LD + cost ceiling $3.50/site
 
 ## Strategy by Section
 

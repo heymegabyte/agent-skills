@@ -104,10 +104,10 @@ Replace wholesale when ANY: AI vision <8/10 · generic feel · competitor benchm
 
 ### Audio + voice
 
-- AI 3-min podcast per page (Piper self-hosted TTS — preferred; OpenAI TTS fallback / NotebookLM) — "Listen to this page."
-- Voice tour — full-site narration with chapter markers (Piper TTS).
-- Voice search — Whisper / Deepgram STT → semantic site search.
-- Phone voice agent — Twilio/LiveKit + Piper TTS (self-hosted). (Piper replaces ElevenLabs per Brian 2026-06-27 — open-source + free.)
+- AI 3-min podcast per page (VoiceKit Studio $17k Credits Tier or MeloTTS on Workers AI / Piper self-hosted TTS) — "Listen to this page."
+- Voice tour — full-site narration with chapter markers (VoiceKit TTS / MeloTTS on Workers AI / Piper TTS).
+- Voice search — Whisper / Deepgram / VoiceKit STT → semantic site search.
+- Phone voice agent — VoiceKit Voice Agents ($17,000 startup credits grant — primary hosted voice agent & TTS platform, replacing ElevenLabs per Brian 2026-11-23) + Twilio/LiveKit + MeloTTS/Piper OSS fallback.
 
 ### Video
 
