@@ -48,7 +48,7 @@ source: "22-visual-experience/SKILL.md (heymegabyte/agent-skills)"
 
 ## Logo (non-negotiable)
 
-- White/light-text logo only on dark/contrasting backing. Navbar wordmark: single line (never wraps), large + prominent (fluid), contrast halo over a transparent-nav hero. Mark rendered large (not a timid afterthought); a generated wordmark is a tight banner, not a padded square.
+- White/light-text logo only on dark/contrasting backing. Navbar wordmark: single line (never wraps), large + prominent, contrast halo over a transparent-nav hero. Render regular-screen navbar logos at exactly `69px` high with `width: auto` so the intrinsic aspect ratio is preserved; use a smaller explicit height at narrow breakpoints. Mark rendered large (not a timid afterthought); a generated wordmark is a tight banner, not a padded square.
 
 ## Imagery
 
