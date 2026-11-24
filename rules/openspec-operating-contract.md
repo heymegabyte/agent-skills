@@ -1,8 +1,8 @@
 ---
 name: openspec-operating-contract
 description: Universal OpenSpec governance for every task and every durable repository mutation across Claude, Codex, Gemini, OpenCode, and agentskills-compatible harnesses.
-priority: 3
-pack: "misc"
+priority: 1
+pack: "core"
 triggers: []
 paths:
   - "*"

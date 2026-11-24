@@ -3,10 +3,8 @@ name: "predictive-completeness"
 last_reviewed: 2026-09-27
 superseded_by: null
 priority: 3
-pack: "misc"
+pack: "website-build"
 triggers: []
-paths:
-  - "*"
 ---
 
 # Predictive Completeness (Deliver the 80% from the 20% — first pass, not iterative)

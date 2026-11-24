@@ -7,8 +7,6 @@ pack: "ai"
 triggers:
   - "quota"
   - "fallback"
-paths:
-  - "*"
 ---
 
 # Opus Quota Fallback

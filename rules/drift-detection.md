@@ -6,8 +6,6 @@ priority: 2
 pack: "core"
 triggers:
   - "drift"
-paths:
-  - "*"
 ---
 
 # Architecture Drift Detection

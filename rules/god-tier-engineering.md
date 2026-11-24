@@ -5,8 +5,6 @@ name: "god-tier-engineering"
 priority: 3
 pack: "core"
 triggers: []
-paths:
-  - "*"
 ---
 
 # God-Tier Engineering Patterns

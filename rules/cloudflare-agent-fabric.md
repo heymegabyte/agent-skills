@@ -2,7 +2,7 @@
 last_reviewed: 2026-10-06
 superseded_by: null
 name: cloudflare-agent-fabric
-priority: 1
+priority: 2
 pack: ai
 triggers:
   [

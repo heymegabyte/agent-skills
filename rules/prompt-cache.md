@@ -7,8 +7,6 @@ pack: "ai"
 triggers:
   - "cache"
   - "preamble"
-paths:
-  - "*"
 ---
 
 # Prompt Cache Optimization

@@ -1,6 +1,6 @@
 ---
 name: 'theme-tools-canonical-components'
-priority: 1
+priority: 2
 pack: 'design'
 triggers:
   - 'ui.theme.tools'

@@ -7,8 +7,6 @@ pack: "ai"
 triggers:
   - "tool"
   - "mcp"
-paths:
-  - "*"
 ---
 
 # Tool Design as API

@@ -8,8 +8,6 @@ triggers:
   - "refactor"
   - "simplify"
   - "add feature"
-paths:
-  - "*"
 ---
 
 # Subtraction-First — Try Deleting Before Adding

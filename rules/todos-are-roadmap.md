@@ -6,8 +6,6 @@ priority: 2
 pack: "core"
 triggers:
   - "todo"
-paths:
-  - "*"
 ---
 
 # TODOs Are Roadmap

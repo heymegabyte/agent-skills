@@ -9,8 +9,6 @@ triggers:
   - "provisioning"
   - "setup script"
   - "deploy"
-paths:
-  - "*"
 ---
 
 # Idempotency By Default — Every Step Is Safe to Run Twice

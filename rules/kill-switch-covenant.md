@@ -9,8 +9,6 @@ triggers:
   - "background job"
   - "autonomous"
   - "scheduled"
-paths:
-  - "*"
 ---
 
 # Kill-Switch Covenant — Nothing Runs Forever Unattended

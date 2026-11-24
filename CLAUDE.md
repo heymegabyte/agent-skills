@@ -160,7 +160,7 @@ Scope:
 ## Routing
 
 - **Skills 23** — `01-OS` → `16-cinematic-website-prime-directive` core lifecycle + `21-app-foundation` → `28-cf-integrations-reference` delivery-requirement categories (03/17-20 retired into them)
-- **Agents 28** — `architect`, `code-simplifier`, `completeness-checker`, `deploy-verifier`, `security-reviewer`, `test-writer`, `seo-auditor`, `visual-qa`, `computer-use-operator`, `dependency-auditor`, `meta-orchestrator`, `migration-agent`, `content-writer`, `performance-profiler`, `incident-responder`, `accessibility-auditor`, `cost-estimator`, `changelog-generator`, `media-orchestrator`, `motion-choreographer`, `changelog-drafter`, `dead-code-remover`, `formatter`, `model-router`, `renamer`, `transcriber`, `browser-operator`, `resource-broker`
+- **Agents 52** — canonical profiles live in `agents/*.md`; use that generated catalog instead of maintaining a duplicate hand-written name list here.
 - **Template** — `megabytespace/saas-starter`. Clone for new projects. Update when stack/patterns change.
 
 ## Prime Directive

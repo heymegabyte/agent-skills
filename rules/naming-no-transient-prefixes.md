@@ -11,8 +11,6 @@ triggers:
   - "idea list"
   - "naming convention"
   - "cleanly named"
-paths:
-  - "*"
 ---
 
 # Naming — No Transient Prefixes, No Vibe Names

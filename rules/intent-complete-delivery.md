@@ -11,8 +11,6 @@ triggers:
   - "desired outcome"
   - "complete outcome"
   - "intent complete"
-paths:
-  - "*"
 ---
 
 # Intent-Complete Delivery

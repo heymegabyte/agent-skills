@@ -20,8 +20,6 @@ triggers:
   - "two-way"
   - "reversible"
   - "irreversible"
-paths:
-  - "*"
 ---
 
 # One-Way vs Two-Way Doors

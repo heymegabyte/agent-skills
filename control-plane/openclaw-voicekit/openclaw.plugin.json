@@ -2,9 +2,7 @@
   "id": "voicekit",
   "name": "VoiceKit ($17k Credits Voice Agents & TTS)",
   "description": "Primary hosted Voice Agents, Two-Host Podcast Studio, High-Fidelity TTS, and Realtime Transcription via VoiceKit ($17,000 startup credits grant; replaces ElevenLabs).",
-  "categories": [
-    "voice"
-  ],
+  "categories": ["voice"],
   "activation": {
     "onStartup": false
   },
@@ -14,22 +12,14 @@
     "providers": [
       {
         "id": "voicekit",
-        "envVars": [
-          "VOICEKIT_API_KEY"
-        ]
+        "envVars": ["VOICEKIT_API_KEY"]
       }
     ]
   },
   "contracts": {
-    "speechProviders": [
-      "voicekit"
-    ],
-    "mediaUnderstandingProviders": [
-      "voicekit"
-    ],
-    "realtimeTranscriptionProviders": [
-      "voicekit"
-    ]
+    "speechProviders": ["voicekit"],
+    "mediaUnderstandingProviders": ["voicekit"],
+    "realtimeTranscriptionProviders": ["voicekit"]
   },
   "configSchema": {
     "type": "object",

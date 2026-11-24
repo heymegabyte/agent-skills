@@ -9,8 +9,6 @@ triggers:
   - "empty state"
   - "first run"
   - "demo"
-paths:
-  - "*"
 ---
 
 # The Self-Demoing Product — Teach By Doing, Not By Telling

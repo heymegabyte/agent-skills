@@ -2,10 +2,8 @@
 name: ideal-architecture-loop
 description: Context-aware whole-system improvement loop for perfect/build/audit requests spanning product, application, website, infrastructure, security, integrations, operations, and business outcomes.
 priority: 3
-pack: "misc"
+pack: "core"
 triggers: []
-paths:
-  - "*"
 ---
 
 # Ideal Architecture Loop

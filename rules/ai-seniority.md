@@ -5,8 +5,6 @@ name: "ai-seniority"
 priority: 2
 pack: "ai"
 triggers: []
-paths:
-  - "*"
 ---
 
 # AI Seniority

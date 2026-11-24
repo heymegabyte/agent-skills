@@ -404,6 +404,14 @@ def cmd_fingerprint(cwd: str | None = None) -> dict:
                 fp["concerns"].append("e2e-testing")
             if any(d in deps for d in ("@sentry/node", "@sentry/cloudflare", "posthog-node", "posthog-js", "@opentelemetry/api", "@axiomhq/js")):
                 fp["concerns"].append("observability")
+            if any(d in deps for d in ("@ag-ui/client", "@ag-ui/core", "@json-render/core", "@json-render/react", "@xyflow/react")):
+                fp["concerns"].append("agent-ui")
+            if any(d in deps for d in ("better-auth", "@nangohq/node", "@activepieces/pieces-framework", "@infisical/sdk")):
+                fp["concerns"].append("identity-knowledge-integrations")
+            if any(d in deps for d in ("@udecode/plate", "platejs", "remotion", "@remotion/player", "@remotion/renderer")):
+                fp["concerns"].append("content-media")
+            if any(d.startswith("@theme.tools/") or d.startswith("@theme-tools/") for d in deps):
+                fp["concerns"].append("shared-platform")
             if any(d in deps for d in ("yjs", "@automerge/automerge", "@liveblocks/client", "partykit", "partysocket")):
                 fp["concerns"].append("realtime")
             fp["languages"].append("typescript" if (cwd_p / "tsconfig.json").exists() else "javascript")
@@ -443,6 +451,8 @@ def cmd_fingerprint(cwd: str | None = None) -> dict:
             fp["concerns"].append("website-build")
         if name in {"form_990.pdf", "_nonprofit.json"} or "nonprofit" in name:
             fp["is_nonprofit"] = True
+        if name in {"theme.tools.json", "platform-stack.json"}:
+            fp["concerns"].append("shared-platform")
 
     # CLAUDE.md signals
     claude_md = cwd_p / "CLAUDE.md"

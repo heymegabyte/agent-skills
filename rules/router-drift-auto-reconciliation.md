@@ -10,8 +10,6 @@ triggers:
   - "router reconcile"
   - "_router.md out of date"
   - "skill not routed"
-paths:
-  - "*"
 ---
 
 # Router Drift Auto-Reconciliation

@@ -23,6 +23,7 @@
     "rules/greenfield-saas-prompt-hydration.md",
     "rules/parallel-multi-swarm-orchestration.md",
     "rules/total-convergence-and-openspec-handoff.md",
+    "rules/production-delivery-closure.md",
     "01-operating-system/SKILL.md",
     "02-goal-and-brief/SKILL.md",
     "04-preference-and-memory/SKILL.md",

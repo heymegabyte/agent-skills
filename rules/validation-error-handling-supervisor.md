@@ -7,8 +7,6 @@ pack: "backend"
 triggers:
   - "validation"
   - "error handler"
-paths:
-  - "*"
 ---
 
 # Validation + Error-Handling Supervisor

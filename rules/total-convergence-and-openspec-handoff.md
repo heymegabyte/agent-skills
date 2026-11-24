@@ -71,6 +71,7 @@ CREATE → RENDER / EXECUTE → EXPERIENCE → CRITIQUE → MODIFY → COMPARE
 ### C. The Organization Loop (End-of-Prompt Parallel Triad Sync)
 
 - Every prompt trains the organization. Before concluding any turn, execute Section 2 below in parallel.
+- Run documentation/comment reconciliation and bounded `theme.tools`, `install.doctor`, and `agent-skills` extraction reviews concurrently with proportional tests and release preparation. After reconciling those changes and generated outputs, revalidate the exact final tree; commit only that tested tree, push it normally to `main`, promote it through the approved production rail, and run production smoke plus critical E2E verification. Fail closed without mutating production when an authority, credential, spending, review, recovery, validation, or provenance gate is missing, and record the exact blocker.
 
 ---
 

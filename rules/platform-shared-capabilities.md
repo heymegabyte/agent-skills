@@ -1,6 +1,6 @@
 ---
 name: "platform-shared-capabilities"
-priority: 1
+priority: 2
 pack: "platform"
 triggers:
   - "oneprompt"

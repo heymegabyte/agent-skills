@@ -2,7 +2,7 @@
 last_reviewed: 2026-06-29
 superseded_by: null
 name: "auto-integrate-recs"
-priority: 2
+priority: 1
 pack: "core"
 triggers: []
 paths:

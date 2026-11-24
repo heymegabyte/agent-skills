@@ -1,6 +1,6 @@
 ---
 name: "first-time-excellence"
-priority: 1
+priority: 2
 pack: "website-build"
 triggers:
   - "build"

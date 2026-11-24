@@ -7,8 +7,6 @@ pack: "frontend"
 triggers:
   - "react or angular"
   - "what stack"
-paths:
-  - "*"
 ---
 
 # Stack Selector

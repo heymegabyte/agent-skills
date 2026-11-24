@@ -7,8 +7,6 @@ pack: "core"
 triggers:
   - "feature flag"
   - "rollout"
-paths:
-  - "*"
 ---
 
 # Feature Flags

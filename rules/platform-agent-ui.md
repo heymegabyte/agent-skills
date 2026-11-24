@@ -1,6 +1,6 @@
 ---
 name: "platform-agent-ui"
-priority: 1
+priority: 2
 pack: "platform"
 triggers:
   - "ag-ui"

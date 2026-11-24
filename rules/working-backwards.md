@@ -15,8 +15,6 @@ triggers:
   - "before coding"
   - "feature scoping"
   - "before implementation"
-paths:
-  - "*"
 ---
 
 # Working Backwards (Amazon-Style Press Release First)

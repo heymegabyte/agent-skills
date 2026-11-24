@@ -22,7 +22,7 @@ paths:
 > every state — backed by realistic MOCK/TEST DATA, BEFORE (or in parallel with) wiring real
 > backends. A surface should look + feel complete + demoable on the FIRST pass, even when its
 > backend is thin or absent. Then wire the real data behind the already-finished UI.
-> Extends [[feedback_ui_first_radically_enhance_admin_recycle_editors]].
+> Applies `[[first-time-excellence]]` and `[[theme-tools-canonical-components]]` to UI-first delivery.
 
 ## Why
 

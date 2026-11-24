@@ -8,8 +8,6 @@ triggers:
   - "verify"
   - "review"
   - "before ship"
-paths:
-  - "*"
 ---
 
 # Adversarial Twin — Survive a Red-Team Before Ship

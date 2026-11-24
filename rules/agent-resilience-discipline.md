@@ -13,8 +13,6 @@ triggers:
   - "partial work"
   - "mid-stream failure"
   - "agent resilience"
-paths:
-  - "*"
 ---
 
 # Agent Connection-Drop Resilience

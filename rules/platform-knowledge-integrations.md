@@ -1,6 +1,6 @@
 ---
 name: "platform-knowledge-integrations"
-priority: 1
+priority: 2
 pack: "platform"
 triggers:
   - "better auth"

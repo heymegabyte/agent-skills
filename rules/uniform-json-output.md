@@ -8,8 +8,6 @@ triggers:
   - "json output"
   - "machine-readable"
   - "ci dashboard"
-paths:
-  - "*"
 ---
 
 # Uniform JSON Output

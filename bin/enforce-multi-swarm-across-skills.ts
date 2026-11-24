@@ -16,6 +16,7 @@ const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 const SECTION_HEADING = '## Multi-Swarm Parallelization & OpenCode (DeepSeek) Offload Mandate';
 const TRIAD_BULLET_MARKER = '**End-of-Round Parallel Meaning & Preference Triad Extraction (`bin/triad-end-of-turn-sync.ts`)**';
+const DELIVERY_CLOSURE_MARKER = '**Concurrent End-of-Prompt Delivery Closure**';
 const AGENT_SECTION_HEADING = '## 8. End-of-Round Parallel Meaning & Preference Triad Extraction & Multi-Swarm Mandate';
 
 const DOMAIN_GUIDANCE: Record<string, string> = {
@@ -72,6 +73,9 @@ const DOMAIN_GUIDANCE: Record<string, string> = {
 const TRIAD_BULLET =
   `- ${TRIAD_BULLET_MARKER}: At the end of every prompt round (running in parallel with final verification, deployment, and reporting), extract any possible meaning, preference, architectural lesson, reusable site code, or system configuration from the current agent window and store it concurrently into **\`heymegabyte/agent-skills\`** (for AI skills/rules/prompts — always updated under the **Minimum-Prompt Ecosystem Completeness Assumption**: assuming the skills *should have already been written* so that we write **as few prompts as possible** to finish **as complete a product or multi-repo ecosystem as possible** via massive parallel agent swarms), **\`heymegabyte/theme.tools\`** (for reusable site/app code across the 28 canonical \`@theme.tools/*\` libraries), and **\`heymegabyte/install.doctor\`** (for reusable system/host code).`;
 
+const DELIVERY_CLOSURE_BULLET =
+  `- ${DELIVERY_CLOSURE_MARKER}: Run documentation/comment reconciliation and bounded \`theme.tools\`, \`install.doctor\`, and \`agent-skills\` extraction reviews concurrently with proportional tests and release preparation. After reconciling those changes and generated outputs, revalidate the exact final tree. Commit only that tested tree, push it normally to \`main\`, promote it through the approved production rail, and run production smoke plus critical E2E verification. Fail closed without mutating production when authority, credentials, spending permission, review, recovery, validation, or provenance gates are missing; record the exact blocker instead.`;
+
 function findSkillFiles(rootDir: string): string[] {
   const results: string[] = [];
   if (!existsSync(rootDir)) return results;
@@ -118,6 +122,7 @@ function buildSkillSection(skillDirName: string): string {
     '- **Massive OpenCode (DeepSeek) Offload**: Whenever a task slice is throughput-safe (bounded implementation, plugin catalog shards, 100% unit test generation, Playwright E2E specs, migrations, or documentation), offload it to parallel **`opencode` swarms powered by DeepSeek** (`~/.agentskills/bin/opencode-deepseek.sh` via the LiteLLM 4-key pool `https://llm.megabyte.space/v1`) rather than consuming premium `claude`, `codex`, or `gemini` client quota.',
     '- **Tri-Frontier Parallel Swarms & Right-Sized SCRUM Quorum**: When complex architectural synthesis, speculative critical-path racing, or adversarial verification is needed, run `claude`, `codex`, and `gemini` in parallel across isolated Git worktrees (`bin/multi-swarm-orchestrator.ts`) guided by a right-sized collaborative SCRUM meeting (`bin/scrum-deliberation-quorum.ts`) of only the required specialist agents. See `rules/parallel-multi-swarm-orchestration.md`.',
     TRIAD_BULLET,
+    DELIVERY_CLOSURE_BULLET,
     '',
   ].join('\n');
 }
@@ -135,6 +140,7 @@ function buildAgentSection(agentFileName: string): string {
     '  1. **`heymegabyte/agent-skills` (AI Skills, Rules & Agent Master Prompts)** — updated under the **Minimum-Prompt Ecosystem Completeness Assumption**: always author and refine skills assuming they *should have already been written* so that the operator writes **as few prompts as possible (ideally one)** to finish **as complete a product (or entire multi-repo ecosystem) as possible** by automatically expanding scope and executing via massive parallel agent swarms (`Claude` + `Codex` + `Gemini` + 80%+ `OpenCode` DeepSeek offload).',
     '  2. **`heymegabyte/theme.tools` (Site & Application Code)** — extracting reusable UI components (16 visual states, `0.333s` OKLCH transitions), themes, calculators, workflows, validators, hooks, and plugin adapters into the 28 canonical `@theme.tools/*` libraries so consumer repositories remain thin shells.',
     '  3. **`heymegabyte/install.doctor` (System & Host Code)** — extracting reusable dotfiles, shell environment defaults, lazy CLI shims (`cnf-build-shims`), daemon units, and workstation/server provisioning logic.',
+    DELIVERY_CLOSURE_BULLET,
     '',
   ].join('\n');
 }
@@ -153,10 +159,16 @@ export function enforceAcrossRoot(rootDir: string): {
       const nextContent = `${content.replace(/\s+$/, '')}\n${buildSkillSection(skillDirName)}`;
       writeFileSync(filePath, nextContent, 'utf8');
       skillsUpdated += 1;
-    } else if (!content.includes(TRIAD_BULLET_MARKER)) {
-      const nextContent = `${content.replace(/\s+$/, '')}\n${TRIAD_BULLET}\n`;
-      writeFileSync(filePath, nextContent, 'utf8');
-      skillsUpdated += 1;
+    } else {
+      const missingDirectives = [
+        !content.includes(TRIAD_BULLET_MARKER) ? TRIAD_BULLET : '',
+        !content.includes(DELIVERY_CLOSURE_MARKER) ? DELIVERY_CLOSURE_BULLET : '',
+      ].filter(Boolean);
+      if (missingDirectives.length) {
+        const nextContent = `${content.replace(/\s+$/, '')}\n${missingDirectives.join('\n')}\n`;
+        writeFileSync(filePath, nextContent, 'utf8');
+        skillsUpdated += 1;
+      }
     }
   }
 
@@ -164,6 +176,10 @@ export function enforceAcrossRoot(rootDir: string): {
     const content = readFileSync(agentPath, 'utf8');
     if (!content.includes(AGENT_SECTION_HEADING)) {
       const nextContent = `${content.replace(/\s+$/, '')}\n${buildAgentSection(basename(agentPath))}`;
+      writeFileSync(agentPath, nextContent, 'utf8');
+      agentsUpdated += 1;
+    } else if (!content.includes(DELIVERY_CLOSURE_MARKER)) {
+      const nextContent = `${content.replace(/\s+$/, '')}\n${DELIVERY_CLOSURE_BULLET}\n`;
       writeFileSync(agentPath, nextContent, 'utf8');
       agentsUpdated += 1;
     }

@@ -9,8 +9,6 @@ triggers:
   - "audit script"
   - "soft gate"
   - "hard gate"
-paths:
-  - "*"
 ---
 
 # Audit Arc Maturity Ladder

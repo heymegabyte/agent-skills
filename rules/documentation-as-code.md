@@ -11,8 +11,6 @@ triggers:
   - "docs"
   - "jsdoc"
   - "migration guide"
-paths:
-  - "*"
 ---
 
 # Documentation as Code

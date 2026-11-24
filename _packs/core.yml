@@ -16,6 +16,8 @@ members:
   - rules/prompt-as-training-signal
   - rules/openspec-operating-contract
   - rules/total-convergence-and-openspec-handoff
+  - rules/production-delivery-closure
+  - rules/universal-competitor-api-backwards-compatibility
   - rules/solo-builder-doctrine
   - rules/main-only-branch
   - rules/no-staging-doctrine

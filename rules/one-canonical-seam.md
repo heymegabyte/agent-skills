@@ -8,8 +8,6 @@ triggers:
   - "architecture"
   - "identity"
   - "single source"
-paths:
-  - "*"
 ---
 
 # One Canonical Seam Per Concern

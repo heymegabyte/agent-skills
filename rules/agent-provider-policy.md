@@ -56,7 +56,7 @@ When two or more independent throughput-safe slices exist, launch an **OpenCode 
   session → Codex). Spend Claude's quota ONLY where it uniquely wins — that is how you maximize the Claude accounts'
   real capability, not by routing everything to them.
 
-### Research expansion (beginning-of-build research) → [[research-expansion-orchestration]]
+### Research expansion (beginning-of-build research) → `bin/research-orchestrator.sh`
 
 - The Phase 0 / prompt-expansion research that used to reach for the OpenAI/Anthropic **APIs** now
   runs on the CLIs: **claude** (deep/judgment + synthesis — replaces Anthropic-API research) +
@@ -64,7 +64,7 @@ When two or more independent throughput-safe slices exist, launch an **OpenCode 
   **opencode/DeepSeek** (throughput breadth — always leveraged). Codex unavailable → claude extra pass.
 - Drive it through `bin/research-orchestrator.sh` so every expansion is `gum`-logged: announce each
   major step, a before/after + summary box per session, run/skip(+why), and a USED/NOT-USED(+why)
-  verdict per session + a final table. Full flow + honesty gate: [[research-expansion-orchestration]].
+  verdict per session + a final table. The orchestrator and its tests are the canonical flow and honesty gate.
 
 ## Fleet management plane — Paperclip over OpenClaw (recommended, as of 2026-10)
 

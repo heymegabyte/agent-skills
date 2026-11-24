@@ -5,8 +5,6 @@ name: "solo-rituals-eliminated"
 priority: 2
 pack: "core"
 triggers: []
-paths:
-  - "*"
 ---
 
 # Solo Rituals Eliminated

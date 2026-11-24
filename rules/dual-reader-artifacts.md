@@ -8,8 +8,6 @@ triggers:
   - "api response"
   - "output format"
   - "report"
-paths:
-  - "*"
 ---
 
 # Dual-Reader Artifacts — Human Skim + Machine Parse, Always Both

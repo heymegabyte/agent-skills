@@ -9,8 +9,6 @@ triggers:
   - "landing page"
   - "hero"
   - "placeholder"
-paths:
-  - "*"
 ---
 
 # Kill the Cliché — Never Ship the Generic Default

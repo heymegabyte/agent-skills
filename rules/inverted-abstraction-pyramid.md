@@ -12,8 +12,6 @@ triggers:
   - "shared util"
   - "base class"
   - "generic handler"
-paths:
-  - "*"
 ---
 
 # Inverted Abstraction Pyramid

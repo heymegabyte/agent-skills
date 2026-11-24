@@ -1,6 +1,6 @@
 ---
 name: "emdash-fleet"
-priority: 1
+priority: 2
 pack: "core"
 triggers:
   - "emdash"
@@ -10,8 +10,6 @@ triggers:
   - "parallel agents"
   - "run_in_background"
   - "isolation worktree"
-paths:
-  - "*"
 last_reviewed: 2026-06-28
 superseded_by: null
 ---

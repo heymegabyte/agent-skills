@@ -5,8 +5,6 @@ name: "no-staging-doctrine"
 priority: 1
 pack: "core"
 triggers: []
-paths:
-  - "*"
 ---
 
 # No Staging Doctrine

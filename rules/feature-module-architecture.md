@@ -6,8 +6,6 @@ priority: 2
 pack: "backend"
 triggers:
   - "feature module"
-paths:
-  - "*"
 ---
 
 # Feature Module Architecture

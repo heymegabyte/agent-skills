@@ -7,8 +7,6 @@ pack: "backend"
 triggers:
   - "zod"
   - "validation"
-paths:
-  - "*"
 ---
 
 # Zod Everywhere

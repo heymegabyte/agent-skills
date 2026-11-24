@@ -5,8 +5,6 @@ name: "context-spillover"
 priority: 2
 pack: "core"
 triggers: []
-paths:
-  - "*"
 ---
 
 # Context Spillover

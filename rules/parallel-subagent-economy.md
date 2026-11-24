@@ -8,8 +8,6 @@ triggers:
   - "subagent"
   - "parallel"
   - "fan out"
-paths:
-  - "*"
 ---
 
 # Parallel Subagent Economy & Multi-Swarm Offload (`Claude` · `Codex` · `Gemini` · `OpenCode` DeepSeek)

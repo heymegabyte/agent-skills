@@ -9,8 +9,6 @@ triggers:
   - "exception"
   - "rollback"
   - "deploy fail"
-paths:
-  - "*"
 ---
 
 # Error Recovery

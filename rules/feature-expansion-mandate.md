@@ -2,10 +2,8 @@
 name: feature-expansion-mandate
 description: Every product/app/site goes FAR beyond the literal prompt — automatically SCAFFOLD every generally-recommendable feature (not just prompt-named screens) as a gorgeous prototype, then gate only CODING on approval. Products must become full-featured, secure, backwards-compatible, Enterprise-grade AI suites that make AI easier/smarter/safer/faster/more profitable. Use on any app/dashboard/SaaS/website build, feature planning, "what else", scaffolding, or roadmap.
 priority: 3
-pack: "misc"
+pack: "core"
 triggers: []
-paths:
-  - "*"
 ---
 
 # Feature Expansion Mandate
@@ -14,7 +12,7 @@ The prompt is the FLOOR, never the ceiling. Every product is EXPECTED to be carr
 ask by AUTOMATICALLY implementing the AI-recommended features / upgrades / enhancements / improvements
 across EVERY category the product belongs to — until it is a full-featured, secure, backwards-compatible,
 **Enterprise-grade AI software suite**. The requirements must be met; then the product must go much further.
-(Brian directive, browse.tools 2026-10-30.) This is the stronger, operational form of [[expand-context-always]]
+(Brian directive, browse.tools 2026-10-30.) This is the operational expansion contract; pair it with `[[context-hydration]]` and `[[improvement-audit]]`.
 
 + [[first-time-excellence]] + [[improvement-audit]] + [[predictive-completeness]].
 
@@ -32,7 +30,7 @@ across EVERY category the product belongs to — until it is a full-featured, se
 + On EVERY build + FREQUENTLY mid-build, re-analyze context and make architecture decisions that EXPAND the
   surface to include every feature a discerning user/operator of this product CLASS would expect — plus the
   differentiators that set it apart. Meeting the spec is table stakes.
-+ **AI-everywhere ([[ai-permanence]] + [[ai-abundance-maximalism]]):** incorporate AI ANY time it abstracts
++ **AI-everywhere (`[[ai-agent-supervisor]]` + `[[ai-seniority]]`):** incorporate AI ANY time it abstracts
   unnecessary complexity away from the user — a step removed, a config inferred, a decision made for them,
   a blank field filled, a natural-language path over a form. An AI affordance that simplifies is default-scaffolded.
 + **Enterprise-grade baseline is assumed:** auth + RBAC + SSO/SAML + audit log + data export/portability +
@@ -59,8 +57,8 @@ full recommendable set, gate only the coding, and treat enterprise-grade AI-suit
 
 ## Cross-links
 
-[[expand-context-always]] · [[improvement-audit]] (generate+rank the set) · [[first-time-excellence]] ·
+[[context-hydration]] · [[improvement-audit]] (generate+rank the set) · [[first-time-excellence]] ·
 [[predictive-completeness]] · [[extra-mile]] · [[auto-integrate-recs]] (the code-ship filter) ·
-[[progressive-screen-scaffold-approval]] (scaffold→review→code, with optional Figma) · [[feature-flags]] (toggles) ·
-[[competitor-research]] (the floor to beat) · [[ai-permanence]] · [[ai-abundance-maximalism]] (AI-everywhere) ·
+[[ui-first-mock-data]] (complete approved UI states before or alongside backend wiring) · [[theme-tools-canonical-components]] (Figma/shared-component authority) · [[feature-flags]] (toggles) ·
+[[competitor-research]] (the floor to beat) · [[ai-agent-supervisor]] · [[ai-seniority]] (AI-everywhere) ·
 [[backwards-compatibility-removal-cadence]] · `saas-feature-completeness` skill (the growing catalog).

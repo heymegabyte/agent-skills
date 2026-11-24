@@ -8,8 +8,6 @@ triggers:
   - "scale"
   - "performance"
   - "load"
-paths:
-  - "*"
 ---
 
 # Scale-Honesty — Name What Breaks at 100×

@@ -130,6 +130,7 @@ const ALWAYS_LOAD_RULES = [
   'rules/greenfield-saas-prompt-hydration.md',
   'rules/parallel-multi-swarm-orchestration.md',
   'rules/total-convergence-and-openspec-handoff.md',
+  'rules/production-delivery-closure.md',
 ];
 
 // ─── main ────────────────────────────────────────────────────────────────────

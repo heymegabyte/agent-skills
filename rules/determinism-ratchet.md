@@ -8,8 +8,6 @@ triggers:
   - "repeated correction"
   - "keeps happening"
   - "enforce"
-paths:
-  - "*"
 ---
 
 # Determinism Ratchet — Push Repeated Corrections DOWN the Ladder

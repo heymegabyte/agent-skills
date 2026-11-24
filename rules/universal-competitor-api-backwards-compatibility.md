@@ -2,7 +2,7 @@
 name: 'universal-competitor-api-backwards-compatibility'
 last_reviewed: 2026-11-22
 superseded_by: null
-priority: 1
+priority: 2
 pack: 'core'
 triggers:
   - 'compat'
@@ -10,8 +10,6 @@ triggers:
   - 'competitor'
   - 'api'
   - 'sdk'
-paths:
-  - '*'
 ---
 
 # Universal Industry Competitor API Backwards-Compatibility & Upstream Test Retrofit Mandate

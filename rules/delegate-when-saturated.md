@@ -7,8 +7,6 @@ pack: "core"
 triggers:
   - "saturated"
   - "context full"
-paths:
-  - "*"
 ---
 
 # Delegate When Saturated

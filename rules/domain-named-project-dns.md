@@ -2,7 +2,7 @@
 last_reviewed: 2026-10-04
 superseded_by: null
 name: "domain-named-project-dns"
-priority: 1
+priority: 2
 pack: "core"
 triggers:
   - "dns"
@@ -12,8 +12,6 @@ triggers:
   - "go live"
   - "website up"
   - "workers.dev"
-paths:
-  - "*"
 ---
 
 # Domain-Named Project → DNS Must Be Live at That Domain (first prompt)

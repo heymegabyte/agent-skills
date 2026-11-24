@@ -9,8 +9,6 @@ triggers:
   - "llms.txt"
   - "agent"
   - "api"
-paths:
-  - "*"
 ---
 
 # Agent-Readable By Default — Humans Aren't the Only Users
