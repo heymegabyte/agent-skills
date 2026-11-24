@@ -11,3 +11,5 @@ node_modules/
 __pycache__/
 # Built index cache for mcp-servers/skills-gateway-mcp
 .skills-gateway-index.json
+# Ask-room local state + credentials (ask-project skill) — never commit (credentials.json holds a room token)
+.ask/local/
