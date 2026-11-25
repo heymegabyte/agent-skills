@@ -440,22 +440,22 @@
             "id": "VERIFY:TASK-10.4:FOCUSED",
             "command": "node --experimental-strip-types --test tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts",
             "status": "pass",
-            "evidenceDigest": "sha256:1f350e5c8e7f736c6b1eaef6ae79c59a464240e63d1fdb79ec73416eda9a16b1",
+            "evidenceDigest": "sha256:607c234fd9e85a1bc4738070bfb98f9f88230ec0d9f332df275dab4ac4f3c9ab",
             "observedAt": "2026-11-25T07:34:56.000Z"
           }
         ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "04490ce5d118939a051b0c6fb51c786bec96c2f9",
+        "testedTree": "04490ce5d118939a051b0c6fb51c786bec96c2f9",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "04490ce5d118939a051b0c6fb51c786bec96c2f9",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -506,38 +506,61 @@
         "id": "TASK-10.5",
         "owner": "integration writer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/10-5"],
+        "affectedPaths": [
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.5-validation.json",
+          "bin/run-perfect-loop.mjs",
+          "tests/operational-change-delivery-trace.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "PASS/FAIL/SKIP/BLOCKED/UNVERIFIED are reported distinctly and all required passing gates are green"
         ],
         "expectedEvidence": [
           {
-            "kind": "blocker",
-            "strength": "local",
-            "description": "Focused verification receipt bound to exact source"
+            "kind": "verification",
+            "strength": "controlled",
+            "description": "Evidence artifact task-10.5-validation.json"
           }
         ]
       },
       "implementation": {
-        "state": "proposed",
-        "codePaths": []
+        "state": "implemented",
+        "codePaths": [
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.5-validation.json",
+          "bin/run-perfect-loop.mjs",
+          "tests/operational-change-delivery-trace.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-10.5:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:607c234fd9e85a1bc4738070bfb98f9f88230ec0d9f332df275dab4ac4f3c9ab",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          },
+          {
+            "id": "VERIFY:TASK-10.5:ARTIFACT",
+            "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.5-validation.json",
+            "status": "pass",
+            "evidenceDigest": "sha256:454b60b2ee02e7cdf4d1fcf6e64f0af72bab55f30b905037755369eaaa87ee94",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "04490ce5d118939a051b0c6fb51c786bec96c2f9",
+        "testedTree": "04490ce5d118939a051b0c6fb51c786bec96c2f9",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "04490ce5d118939a051b0c6fb51c786bec96c2f9",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -568,17 +591,7 @@
           "evidenceIds": ["EVIDENCE:TASK-10.5:1"]
         }
       },
-      "blockers": [
-        {
-          "id": "BLOCKER:TASK-10.5",
-          "edge": "verification",
-          "reason": "The exact post-review integration tree has not completed the required validation suite.",
-          "owner": "integration writer",
-          "nextAction": "Run the required validation suite on one coherent local commit and record the result.",
-          "status": "active",
-          "evidenceIds": ["EVIDENCE:TASK-10.5:BLOCKER"]
-        }
-      ]
+      "blockers": []
     },
     {
       "recordId": "TRACE:REQ-OPH-03:TASK-10.6",
@@ -2780,7 +2793,7 @@
             "id": "VERIFY:TASK-10.1:FOCUSED",
             "command": "node --experimental-strip-types --test tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts",
             "status": "pass",
-            "evidenceDigest": "sha256:1f350e5c8e7f736c6b1eaef6ae79c59a464240e63d1fdb79ec73416eda9a16b1",
+            "evidenceDigest": "sha256:607c234fd9e85a1bc4738070bfb98f9f88230ec0d9f332df275dab4ac4f3c9ab",
             "observedAt": "2026-11-25T07:34:56.000Z"
           },
           {
@@ -2885,7 +2898,7 @@
             "id": "VERIFY:TASK-10.2:FOCUSED",
             "command": "node --experimental-strip-types --test tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts",
             "status": "pass",
-            "evidenceDigest": "sha256:1f350e5c8e7f736c6b1eaef6ae79c59a464240e63d1fdb79ec73416eda9a16b1",
+            "evidenceDigest": "sha256:607c234fd9e85a1bc4738070bfb98f9f88230ec0d9f332df275dab4ac4f3c9ab",
             "observedAt": "2026-11-25T07:34:56.000Z"
           },
           {
@@ -2988,7 +3001,7 @@
             "id": "VERIFY:TASK-10.3:FOCUSED",
             "command": "node --experimental-strip-types --test tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts",
             "status": "pass",
-            "evidenceDigest": "sha256:1f350e5c8e7f736c6b1eaef6ae79c59a464240e63d1fdb79ec73416eda9a16b1",
+            "evidenceDigest": "sha256:607c234fd9e85a1bc4738070bfb98f9f88230ec0d9f332df275dab4ac4f3c9ab",
             "observedAt": "2026-11-25T07:34:56.000Z"
           },
           {

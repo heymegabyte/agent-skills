@@ -11,6 +11,7 @@ const changeId = 'operational-prompt-hydration-workflow';
 const changeRelative = `openspec/changes/${changeId}`;
 const integratedAgentSkillsRevision = 'b57f593caa92835d166aa7024944582887bc4ed2';
 const integratedThemeToolsRevision = '5d716b6ccd8064abbafa3822e1210d0bfd50d0e4';
+const postReviewValidationRevision = '04490ce5d118939a051b0c6fb51c786bec96c2f9';
 const agentSkillsRemote = 'https://github.com/heymegabyte/agent-skills.git';
 const themeToolsRemote = 'https://github.com/heymegabyte/theme.tools.git';
 const evidenceByTask: Record<string, string> = {
@@ -19,13 +20,12 @@ const evidenceByTask: Record<string, string> = {
   '8.3': 'task-8.3-blocked-release.json', '9.2': 'task-9.2-installation.json',
   '9.3': 'task-9.3-runtime-loading.json', '9.4': 'task-9.4-capability-matrix.json',
   '10.1': 'task-10.1-evaluation.json', '10.2': 'task-10.2-evaluation.json',
-  '10.3': 'task-10.3-evaluation.json'
+  '10.3': 'task-10.3-evaluation.json', '10.5': 'task-10.5-validation.json'
 };
 const blocked: Record<string, { edge: 'verification' | 'release' | 'consumer' | 'integration'; reason: string; next: string }> = {
   '8.3': { edge: 'release', reason: 'GitHub Actions billing prevents qualification; changeset is unapplied and @theme.tools/sdk@1.0.1 is absent.', next: 'Restore Actions billing, apply approved versioning, pass qualification, publish through OIDC workflow, and observe immutable 1.0.1.' },
   '8.4': { edge: 'consumer', reason: 'The required @theme.tools/sdk@1.0.1 package is unpublished.', next: 'Resume only after task 8.3 observes the approved published artifact.' },
   '8.5': { edge: 'consumer', reason: 'Consumer integration cannot close before publication and adoption.', next: 'Verify consumer resolution, lockfile, behavior, commit, remote main, and CI after 8.4.' },
-  '10.5': { edge: 'verification', reason: 'The exact post-review integration tree has not completed the required validation suite.', next: 'Run the required validation suite on one coherent local commit and record the result.' },
   '10.6': { edge: 'integration', reason: 'Exact validated integration tree is not yet available.', next: 'Push normally and observe exact remote SHAs and applicable CI.' },
   '10.7': { edge: 'integration', reason: 'Remote integration and final evidence reconciliation remain incomplete.', next: 'Reconcile traces, sync specs, and validate archive readiness after 10.6.' }
 };
@@ -90,7 +90,8 @@ const taskPathManifest: Record<string, string[]> = {
   '10.1': ['bin/evaluate-operational-scenarios.ts', 'openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.1-evaluation.json', 'tests/operational-scenarios-evaluation.test.ts'],
   '10.2': ['bin/durability-evaluation.ts', 'openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.2-evaluation.json', 'tests/durability-evaluation.test.ts'],
   '10.3': ['openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.3-evaluation.json', 'openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.3-review.json', 'openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.3-runtime-loading.json'],
-  '10.4': ['openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.4-product-completeness-review.json', 'openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.4-final-architecture-review.json', 'tests/product-completeness-review.test.ts']
+  '10.4': ['openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.4-product-completeness-review.json', 'openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.4-final-architecture-review.json', 'tests/product-completeness-review.test.ts'],
+  '10.5': ['openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.5-validation.json', 'bin/run-perfect-loop.mjs', 'tests/operational-change-delivery-trace.test.ts']
 };
 
 const verificationTests: Record<string, string> = {
@@ -140,7 +141,8 @@ function verificationForTask(root: string, id: string, evidenceFile?: string) {
 
 function integratedEvidence(id: string) {
   const themeTools = id === '8.2';
-  const commit = themeTools ? integratedThemeToolsRevision : integratedAgentSkillsRevision;
+  const postReview = id === '10.4' || id === '10.5';
+  const commit = themeTools ? integratedThemeToolsRevision : postReview ? postReviewValidationRevision : integratedAgentSkillsRevision;
   return {
     status: 'integrated',
     integratedCommit: commit,
@@ -215,7 +217,7 @@ export function compileOperationalChangeTrace(root: string, sourceRevision: stri
     if (isChecked) {
       item.codePaths = pathsForTask(id, true);
       item.verification = verificationForTask(root, id, evidenceFile);
-      if (id !== '10.4') item.integration = integratedEvidence(id);
+      item.integration = integratedEvidence(id);
     }
     if (blocker) item.blockers = [{ id: `BLOCKER:${task}`, edge: blocker.edge, reason: blocker.reason, owner: line.match(/Owner:\s*([^;]+)/)?.[1] ?? 'assigned owner', nextAction: blocker.next, status: 'active', evidenceIds: [evidenceFile ? `EVIDENCE:${evidenceFile.replace(/[^A-Za-z0-9._:-]/g, '-')}` : `EVIDENCE:${task}:BLOCKER`] }];
     if (id === '8.3') item.delivery = { release: { applicability: 'required', status: 'blocked', package: '@theme.tools/sdk', version: '1.0.1', artifactDigest: 'pending', evidenceIds: ['EVIDENCE:task-8.3-blocked-release.json'] }, consumers: [{ id: `CONSUMER:${task}`, status: 'pending', resolvedVersion: 'pending', lockfilePath: `pending/${task}.lock`, verificationReceiptIds: [`VERIFY:${task}:pending`], integratedCommit: 'pending' }], production: { applicability: 'not-applicable', status: 'not-applicable', environment: 'not-applicable', deploymentId: 'pending', observedAt: '1970-01-01T00:00:00.000Z', evidenceIds: ['EVIDENCE:task-8.3-blocked-release.json'] } };
