@@ -35,39 +35,283 @@
     "uncheckedTasks": 7
   },
   "requirementAssessments": [
-    { "domain": "authoritative-work-ledger", "requirement": "Repository integration has one leased writer", "status": "pass", "evidence": ["Controlled writer-lease and collision tests plus task 10.2 evaluation."], "findingIds": [] },
-    { "domain": "authoritative-work-ledger", "requirement": "Run checkpoints identify exact resumption", "status": "pass", "evidence": ["Run-state durability and task 10.2 interruption/resume evaluation."], "findingIds": [] },
-    { "domain": "authoritative-work-ledger", "requirement": "Integrated commits close traced work", "status": "pass", "evidence": ["Regenerated ledger binds all 49 checked tasks to real code paths, passing receipts, tested trees, integrated commits, and observed remotes; exactly seven unchecked tasks remain pending."], "findingIds": [] },
-    { "domain": "autonomous-mission-expansion", "requirement": "Scope expands moderately with accumulated evidence", "status": "pass", "evidence": ["Recursive-improvement implementation and controlled ranking fixtures."], "findingIds": [] },
-    { "domain": "autonomous-mission-expansion", "requirement": "Expansion is outcome-limited", "status": "pass", "evidence": ["Two-refreshed-no-winner convergence tests."], "findingIds": [] },
-    { "domain": "autonomous-work-admission", "requirement": "Admission degrades capability honestly", "status": "pass", "evidence": ["Task 10.1 single-provider evaluation records sequential-single-agent and independent=false."], "findingIds": [] },
-    { "domain": "autonomous-work-admission", "requirement": "Maintenance admission suppresses recursion", "status": "pass", "evidence": ["Task 10.2 maintenance-recursion scenario."], "findingIds": [] },
-    { "domain": "delivery-traceability", "requirement": "Trace records span the delivery chain", "status": "pass", "evidence": ["delivery-trace.json digest 5289b6aa covers all 56 tasks: 49 implemented/verified/integrated/remote-observed and seven honestly pending."], "findingIds": [] },
-    { "domain": "delivery-traceability", "requirement": "Dispatch is idempotent and collision safe", "status": "pass", "evidence": ["Task 10.2 duplicate-dispatch and competing-writer scenarios."], "findingIds": [] },
-    { "domain": "delivery-traceability", "requirement": "Maintenance cannot recursively launch itself", "status": "pass", "evidence": ["Native/wrapper recursion fixtures and task 10.2 evaluation."], "findingIds": [] },
-    { "domain": "delivery-traceability", "requirement": "Interruption resumes the next exact action", "status": "pass", "evidence": ["Task 10.2 checkpointed resume result."], "findingIds": [] },
-    { "domain": "delivery-traceability", "requirement": "Shared capabilities reach intended consumers", "status": "blocked", "evidence": ["Task 8.3 receipt: SDK 1.0.1 absent; 8.4 and 8.5 correctly remain unchecked."], "findingIds": ["PC-006"] },
-    { "domain": "delivery-traceability", "requirement": "Git integration proves remote delivery", "status": "pass", "evidence": ["agent-skills remote main and installed revision equal b57f593caa92835d166aa7024944582887bc4ed2; hosted run 45569136143 completed SUCCESS on that SHA."], "findingIds": [] },
-    { "domain": "evidence-integrity", "requirement": "Evidence strength matches delivery claims", "status": "pass", "evidence": ["Task 9.4 matrix reports controlled wrappers separately and zero live executions; 8.3 preserves BLOCKED."], "findingIds": [] },
-    { "domain": "evidence-integrity", "requirement": "Policy receipts bind runtime instructions", "status": "pass", "evidence": ["Relocated task-9.3-runtime-loading.json binds provider/model/auth rail, policy id/version/digest/source revision, coordinator/worker roles, Prompt Hydration invocation, handoff, and transcript digests."], "findingIds": [] },
-    { "domain": "evidence-integrity", "requirement": "Shared release evidence is dependency closed", "status": "blocked", "evidence": ["Exact 8.3 registry and billing blocker; no consumer dependency or runtime adoption is claimed."], "findingIds": ["PC-006"] },
-    { "domain": "instruction-policy-distribution", "requirement": "One canonical compact policy owns shared semantics", "status": "pass", "evidence": ["Canonical policy digest tests and task 2.1 reviewer receipt."], "findingIds": [] },
-    { "domain": "instruction-policy-distribution", "requirement": "Supported instruction surfaces are generated safely", "status": "pass", "evidence": ["Managed-block byte-preservation and target enumeration tests."], "findingIds": [] },
-    { "domain": "instruction-policy-distribution", "requirement": "Installation uses an explicit verified source", "status": "pass", "evidence": ["Installed revision and remote main both resolve to b57f593caa92835d166aa7024944582887bc4ed2; task 9.4 pins installed manifest digests."], "findingIds": [] },
-    { "domain": "instruction-policy-distribution", "requirement": "Runtime loading is proven by receipts", "status": "pass", "evidence": ["Relocated task 9.3 records fresh ephemeral coordinator and delegated worker subscription executions, policy match, Prompt Hydration as first stage, and worker handoff."], "findingIds": [] },
-    { "domain": "instruction-policy-distribution", "requirement": "Drift and destructive generation fail CI", "status": "pass", "evidence": ["Corrective checker is integrated at b57f593c and Validate & Publish Skills run 45569136143 succeeded on that exact SHA."], "findingIds": [] },
-    { "domain": "multi-model-convergence", "requirement": "Frontier models converge independently", "status": "pass", "evidence": ["Conference runtime and honest sequential fallback fixtures; no false independence claim."], "findingIds": [] },
-    { "domain": "multi-model-convergence", "requirement": "Parallel work is collision-safe", "status": "pass", "evidence": ["Lease, dispatch, collision, and controlled task 10.2 evidence."], "findingIds": [] },
-    { "domain": "prompt-hydration-workflow", "requirement": "Prompt Hydration is the first engineering stage", "status": "pass", "evidence": ["Schema-valid narrow/material hydration and all supported wrapper fixtures."], "findingIds": [] },
-    { "domain": "prompt-hydration-workflow", "requirement": "Hydration produces sparse complete coverage", "status": "pass", "evidence": ["Twelve-dimension sparse matrix fixtures and task 10.1 proportionality evaluation."], "findingIds": [] },
-    { "domain": "prompt-hydration-workflow", "requirement": "Architecture conference adapts to available capacity", "status": "pass", "evidence": ["Single-provider controlled evaluation and capability-plan tests."], "findingIds": [] },
-    { "domain": "prompt-hydration-workflow", "requirement": "OpenSpec coverage is traceable and executable", "status": "pass", "evidence": ["The active ledger covers all 28 requirements, 35 scenarios, and 56 tasks with exact implementation, verification, integration, remote, blocker, and pending evidence."], "findingIds": [] },
-    { "domain": "prompt-hydration-workflow", "requirement": "Improvement rounds converge from refreshed evidence", "status": "pass", "evidence": ["Persisted two-round evaluation and reopen-on-new-evidence tests."], "findingIds": [] }
+    {
+      "domain": "authoritative-work-ledger",
+      "requirement": "Repository integration has one leased writer",
+      "status": "pass",
+      "evidence": ["Controlled writer-lease and collision tests plus task 10.2 evaluation."],
+      "findingIds": []
+    },
+    {
+      "domain": "authoritative-work-ledger",
+      "requirement": "Run checkpoints identify exact resumption",
+      "status": "pass",
+      "evidence": ["Run-state durability and task 10.2 interruption/resume evaluation."],
+      "findingIds": []
+    },
+    {
+      "domain": "authoritative-work-ledger",
+      "requirement": "Integrated commits close traced work",
+      "status": "pass",
+      "evidence": [
+        "Regenerated ledger binds all 49 checked tasks to real code paths, passing receipts, tested trees, integrated commits, and observed remotes; exactly seven unchecked tasks remain pending."
+      ],
+      "findingIds": []
+    },
+    {
+      "domain": "autonomous-mission-expansion",
+      "requirement": "Scope expands moderately with accumulated evidence",
+      "status": "pass",
+      "evidence": ["Recursive-improvement implementation and controlled ranking fixtures."],
+      "findingIds": []
+    },
+    {
+      "domain": "autonomous-mission-expansion",
+      "requirement": "Expansion is outcome-limited",
+      "status": "pass",
+      "evidence": ["Two-refreshed-no-winner convergence tests."],
+      "findingIds": []
+    },
+    {
+      "domain": "autonomous-work-admission",
+      "requirement": "Admission degrades capability honestly",
+      "status": "pass",
+      "evidence": [
+        "Task 10.1 single-provider evaluation records sequential-single-agent and independent=false."
+      ],
+      "findingIds": []
+    },
+    {
+      "domain": "autonomous-work-admission",
+      "requirement": "Maintenance admission suppresses recursion",
+      "status": "pass",
+      "evidence": ["Task 10.2 maintenance-recursion scenario."],
+      "findingIds": []
+    },
+    {
+      "domain": "delivery-traceability",
+      "requirement": "Trace records span the delivery chain",
+      "status": "pass",
+      "evidence": [
+        "delivery-trace.json digest 5289b6aa covers all 56 tasks: 49 implemented/verified/integrated/remote-observed and seven honestly pending."
+      ],
+      "findingIds": []
+    },
+    {
+      "domain": "delivery-traceability",
+      "requirement": "Dispatch is idempotent and collision safe",
+      "status": "pass",
+      "evidence": ["Task 10.2 duplicate-dispatch and competing-writer scenarios."],
+      "findingIds": []
+    },
+    {
+      "domain": "delivery-traceability",
+      "requirement": "Maintenance cannot recursively launch itself",
+      "status": "pass",
+      "evidence": ["Native/wrapper recursion fixtures and task 10.2 evaluation."],
+      "findingIds": []
+    },
+    {
+      "domain": "delivery-traceability",
+      "requirement": "Interruption resumes the next exact action",
+      "status": "pass",
+      "evidence": ["Task 10.2 checkpointed resume result."],
+      "findingIds": []
+    },
+    {
+      "domain": "delivery-traceability",
+      "requirement": "Shared capabilities reach intended consumers",
+      "status": "blocked",
+      "evidence": ["Task 8.3 receipt: SDK 1.0.1 absent; 8.4 and 8.5 correctly remain unchecked."],
+      "findingIds": ["PC-006"]
+    },
+    {
+      "domain": "delivery-traceability",
+      "requirement": "Git integration proves remote delivery",
+      "status": "pass",
+      "evidence": [
+        "agent-skills remote main and installed revision equal b57f593caa92835d166aa7024944582887bc4ed2; hosted run 45569136143 completed SUCCESS on that SHA."
+      ],
+      "findingIds": []
+    },
+    {
+      "domain": "evidence-integrity",
+      "requirement": "Evidence strength matches delivery claims",
+      "status": "pass",
+      "evidence": [
+        "Task 9.4 matrix reports controlled wrappers separately and zero live executions; 8.3 preserves BLOCKED."
+      ],
+      "findingIds": []
+    },
+    {
+      "domain": "evidence-integrity",
+      "requirement": "Policy receipts bind runtime instructions",
+      "status": "pass",
+      "evidence": [
+        "Relocated task-9.3-runtime-loading.json binds provider/model/auth rail, policy id/version/digest/source revision, coordinator/worker roles, Prompt Hydration invocation, handoff, and transcript digests."
+      ],
+      "findingIds": []
+    },
+    {
+      "domain": "evidence-integrity",
+      "requirement": "Shared release evidence is dependency closed",
+      "status": "blocked",
+      "evidence": [
+        "Exact 8.3 registry and billing blocker; no consumer dependency or runtime adoption is claimed."
+      ],
+      "findingIds": ["PC-006"]
+    },
+    {
+      "domain": "instruction-policy-distribution",
+      "requirement": "One canonical compact policy owns shared semantics",
+      "status": "pass",
+      "evidence": ["Canonical policy digest tests and task 2.1 reviewer receipt."],
+      "findingIds": []
+    },
+    {
+      "domain": "instruction-policy-distribution",
+      "requirement": "Supported instruction surfaces are generated safely",
+      "status": "pass",
+      "evidence": ["Managed-block byte-preservation and target enumeration tests."],
+      "findingIds": []
+    },
+    {
+      "domain": "instruction-policy-distribution",
+      "requirement": "Installation uses an explicit verified source",
+      "status": "pass",
+      "evidence": [
+        "Installed revision and remote main both resolve to b57f593caa92835d166aa7024944582887bc4ed2; task 9.4 pins installed manifest digests."
+      ],
+      "findingIds": []
+    },
+    {
+      "domain": "instruction-policy-distribution",
+      "requirement": "Runtime loading is proven by receipts",
+      "status": "pass",
+      "evidence": [
+        "Relocated task 9.3 records fresh ephemeral coordinator and delegated worker subscription executions, policy match, Prompt Hydration as first stage, and worker handoff."
+      ],
+      "findingIds": []
+    },
+    {
+      "domain": "instruction-policy-distribution",
+      "requirement": "Drift and destructive generation fail CI",
+      "status": "pass",
+      "evidence": [
+        "Corrective checker is integrated at b57f593c and Validate & Publish Skills run 45569136143 succeeded on that exact SHA."
+      ],
+      "findingIds": []
+    },
+    {
+      "domain": "multi-model-convergence",
+      "requirement": "Frontier models converge independently",
+      "status": "pass",
+      "evidence": [
+        "Conference runtime and honest sequential fallback fixtures; no false independence claim."
+      ],
+      "findingIds": []
+    },
+    {
+      "domain": "multi-model-convergence",
+      "requirement": "Parallel work is collision-safe",
+      "status": "pass",
+      "evidence": ["Lease, dispatch, collision, and controlled task 10.2 evidence."],
+      "findingIds": []
+    },
+    {
+      "domain": "prompt-hydration-workflow",
+      "requirement": "Prompt Hydration is the first engineering stage",
+      "status": "pass",
+      "evidence": ["Schema-valid narrow/material hydration and all supported wrapper fixtures."],
+      "findingIds": []
+    },
+    {
+      "domain": "prompt-hydration-workflow",
+      "requirement": "Hydration produces sparse complete coverage",
+      "status": "pass",
+      "evidence": [
+        "Twelve-dimension sparse matrix fixtures and task 10.1 proportionality evaluation."
+      ],
+      "findingIds": []
+    },
+    {
+      "domain": "prompt-hydration-workflow",
+      "requirement": "Architecture conference adapts to available capacity",
+      "status": "pass",
+      "evidence": ["Single-provider controlled evaluation and capability-plan tests."],
+      "findingIds": []
+    },
+    {
+      "domain": "prompt-hydration-workflow",
+      "requirement": "OpenSpec coverage is traceable and executable",
+      "status": "pass",
+      "evidence": [
+        "The active ledger covers all 28 requirements, 35 scenarios, and 56 tasks with exact implementation, verification, integration, remote, blocker, and pending evidence."
+      ],
+      "findingIds": []
+    },
+    {
+      "domain": "prompt-hydration-workflow",
+      "requirement": "Improvement rounds converge from refreshed evidence",
+      "status": "pass",
+      "evidence": ["Persisted two-round evaluation and reopen-on-new-evidence tests."],
+      "findingIds": []
+    }
   ],
   "taskAssessmentGroups": [
     {
       "disposition": "supported",
-      "taskIds": ["1.1", "1.2", "1.3", "1.4", "1.5", "2.1", "2.2", "2.3", "2.4", "2.5", "2.6", "2.7", "3.1", "3.2", "3.3", "3.4", "3.5", "3.6", "4.1", "4.2", "4.3", "4.4", "5.1", "5.2", "5.3", "5.4", "5.5", "6.1", "6.2", "6.3", "6.4", "6.5", "6.6", "6.7", "7.1", "7.2", "7.3", "7.4", "8.1", "8.2", "8.6", "9.1", "9.2", "9.3", "9.4", "9.5", "10.1", "10.2", "10.3"],
+      "taskIds": [
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "2.1",
+        "2.2",
+        "2.3",
+        "2.4",
+        "2.5",
+        "2.6",
+        "2.7",
+        "3.1",
+        "3.2",
+        "3.3",
+        "3.4",
+        "3.5",
+        "3.6",
+        "4.1",
+        "4.2",
+        "4.3",
+        "4.4",
+        "5.1",
+        "5.2",
+        "5.3",
+        "5.4",
+        "5.5",
+        "6.1",
+        "6.2",
+        "6.3",
+        "6.4",
+        "6.5",
+        "6.6",
+        "6.7",
+        "7.1",
+        "7.2",
+        "7.3",
+        "7.4",
+        "8.1",
+        "8.2",
+        "8.6",
+        "9.1",
+        "9.2",
+        "9.3",
+        "9.4",
+        "9.5",
+        "10.1",
+        "10.2",
+        "10.3"
+      ],
       "basis": "All 49 checked tasks bind real implementation paths, passing verification receipts, exact integrated/tested commits, and observed remote evidence."
     },
     {
@@ -111,4 +355,3 @@
     "basis": "All 26 non-external requirements pass with direct controlled, installed, live, integrated, and remote evidence. The only incomplete requirements are the two shared release/consumer edges correctly blocked by the exact task-8.3 external billing and publication preconditions; archive readiness remains false."
   }
 }
-
