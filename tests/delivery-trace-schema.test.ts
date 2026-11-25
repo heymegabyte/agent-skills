@@ -52,14 +52,17 @@ test('duplicate exact trace records and scenario references are rejected', () =>
   assert.ok(validateSchemaInstance(schema, duplicateScenario).some((error) => error.includes('uniqueItems')));
 });
 
-test('semantic validator rejects duplicate requirement and task identities even when records differ', () => {
+test('semantic validator permits one requirement to own multiple tasks but rejects conflicting definitions and duplicate tasks', () => {
   const duplicateIdentity = structuredClone(complete);
   const second = structuredClone(duplicateIdentity.records[0]);
   second.recordId = 'TRACE:REQ-001:TASK-002';
   second.task.id = 'TASK-002';
   second.requirement.observableBehavior = 'A conflicting behavior reuses the same requirement identity.';
   duplicateIdentity.records.push(second);
-  assert.ok(validateDeliveryTraceInstance(schema, duplicateIdentity).some((error) => error.includes('duplicate requirement id')));
+  const sharedRequirement = structuredClone(duplicateIdentity); sharedRequirement.records[1].requirement = structuredClone(sharedRequirement.records[0].requirement);
+  assert.equal(validateDeliveryTraceInstance(schema, sharedRequirement).some((error) => error.includes('requirement')), false);
+  const conflicting = structuredClone(sharedRequirement); conflicting.records[1].requirement.observableBehavior = 'Conflicting behavior';
+  assert.ok(validateDeliveryTraceInstance(schema, conflicting).some((error) => error.includes('conflicting requirement definition')));
   second.requirement.id = 'REQ-002';
   second.task.id = duplicateIdentity.records[0].task.id;
   assert.ok(validateDeliveryTraceInstance(schema, duplicateIdentity).some((error) => error.includes('duplicate task id')));

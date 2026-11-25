@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent.megabyte.space/schemas/harness-capability-matrix.schema.json",
+  "title": "Installed harness capability matrix",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "taskId", "observedAt", "installedSource", "probePolicy", "targets", "summary", "claimLimits"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "taskId": { "const": "9.4" },
+    "observedAt": { "type": "string", "format": "date-time" },
+    "installedSource": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "revision", "clean", "entrypointManifestDigest", "hookManifestDigest"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "revision": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "clean": { "const": true },
+        "entrypointManifestDigest": { "$ref": "#/$defs/digest" },
+        "hookManifestDigest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "probePolicy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["readOnly", "secretsExposed", "credentialsMutated", "liveTurnsRequested"],
+      "properties": {
+        "readOnly": { "const": true },
+        "secretsExposed": { "const": false },
+        "credentialsMutated": { "const": false },
+        "liveTurnsRequested": { "const": false }
+      }
+    },
+    "targets": {
+      "type": "array", "minItems": 6, "maxItems": 6, "uniqueItems": true,
+      "items": { "$ref": "#/$defs/target" }
+    },
+    "summary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["installedProfiles", "authenticatedAvailable", "controlledWrappersPassed", "nativeHooks", "liveExecutionsObserved"],
+      "properties": {
+        "installedProfiles": { "type": "integer", "minimum": 0 },
+        "authenticatedAvailable": { "type": "integer", "minimum": 0 },
+        "controlledWrappersPassed": { "const": 6 },
+        "nativeHooks": { "const": 1 },
+        "liveExecutionsObserved": { "const": 0 }
+      }
+    },
+    "claimLimits": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+  },
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "signal": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "evidence"],
+      "properties": {
+        "status": { "enum": ["present", "absent", "available", "partial", "unavailable", "unverified", "passed", "not-supported", "not-run", "blocked"] },
+        "evidence": { "type": "string", "minLength": 1 }
+      }
+    },
+    "target": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "installedPresence", "nativePromptHook", "explicitWrapper", "authenticatedAvailability", "liveProviderExecution", "evidenceStrength", "blockers"],
+      "properties": {
+        "id": { "enum": ["codex", "claude", "gemini", "opencode", "paperclip", "openclaw"] },
+        "installedPresence": { "$ref": "#/$defs/signal" },
+        "nativePromptHook": { "$ref": "#/$defs/signal" },
+        "explicitWrapper": { "$ref": "#/$defs/signal" },
+        "authenticatedAvailability": { "$ref": "#/$defs/signal" },
+        "liveProviderExecution": { "$ref": "#/$defs/signal" },
+        "evidenceStrength": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": { "enum": ["installed-presence", "authenticated-capability", "controlled-wrapper", "native-hook-fixture", "live-provider"] }
+        },
+        "blockers": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+      }
+    }
+  }
+}
+

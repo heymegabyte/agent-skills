@@ -48,3 +48,7 @@ When operating through Paperclip (`https://swarml.ink`), decompose multi-deliver
   - `node --experimental-strip-types ~/.agentskills/control-plane/fleet-control.ts cloudflare-telemetry-worker`
   - `node --experimental-strip-types ~/.agentskills/control-plane/fleet-control.ts converge`
 - **Concurrent End-of-Prompt Delivery Closure**: Run documentation/comment reconciliation and bounded `theme.tools`, `install.doctor`, and `agent-skills` extraction reviews concurrently with proportional tests and release preparation. After reconciling those changes and generated outputs, revalidate the exact final tree. Commit only that tested tree, push it normally to `main`, promote it through the approved production rail, and run production smoke plus critical E2E verification. Fail closed without mutating production when authority, credentials, spending permission, review, recovery, validation, or provenance gates are missing; record the exact blocker instead.
+
+## Theme.tools ecosystem contract (required)
+
+Before implementation, load `rules/theme-tools-skill-integration.md` from the agent-skills repository and the entry for this skill in `config/theme-tools-skill-map.json`. Apply catalog-first reuse, upstream contribution, thin-consumer adoption, UI-first theme.tools implementation and test-driven verification, and `.tools/telemetry` routing proportionally to this task.

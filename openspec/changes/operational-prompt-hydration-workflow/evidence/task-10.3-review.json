@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0.0",
+  "taskId": "10.3",
+  "reviewedEvaluation": "operational-prompt-hydration-task-10.3",
+  "reviewedAt": "2026-11-25T07:11:00Z",
+  "reviewerProvider": "openai",
+  "reviewerModel": "gpt-6.2-astra",
+  "role": "independent-evidence-reviewer",
+  "status": "pass",
+  "evidenceStrength": "live-subscription-cli",
+  "launchProvenance": "with-subscription-cli.sh codex exec --ephemeral --sandbox read-only -m gpt-6.2-astra",
+  "findings": [],
+  "residualBlocker": "GitHub Actions billing blocked qualification, the version changeset remained unapplied, and the authoritative registry showed @theme.tools/sdk 1.0.0. Publication of 1.0.1 and consumer adoption remain unverified.",
+  "rationale": "All three source receipt hashes match. The evaluation classifies the local registry fixture as controlled mechanics and commit 5d716b6ccd8064abbafa3822e1210d0bfd50d0e4 as remote source evidence only. Task 9.2 supports installation. Task 9.3 records fresh coordinator and worker subscription processes invoking explicit wrappers with the same policy digest, and the worker observed the coordinator hydration ID. The live claim stays within those entrypoints.",
+  "transcriptSha256": "6afa0e47ac7f599c503c1df660381e618dd50e1303407ef9c0b10c3877ae1efc",
+  "rawFinalSha256": "4221b71b2035d2c1a8977eebd48e71f63706a19f4ec213e215277cc71ce61193",
+  "credentialsPrinted": false
+}

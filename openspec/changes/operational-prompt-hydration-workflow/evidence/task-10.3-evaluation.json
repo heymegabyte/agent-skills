@@ -1,0 +1,71 @@
+{
+  "$schema": "./task-10.3-evaluation.schema.json",
+  "schemaVersion": "1.0.0",
+  "evaluationId": "operational-prompt-hydration-task-10.3",
+  "changeId": "operational-prompt-hydration-workflow",
+  "evaluatedAt": "2026-11-25T07:09:55Z",
+  "status": "PASS_WITH_BLOCKED_EXTERNAL_EDGE",
+  "evidenceClasses": ["controlled", "installed", "live", "remote", "blocked"],
+  "scenarios": [
+    {
+      "id": "shared-component-propagation",
+      "status": "PASS_WITH_BLOCKED_EXTERNAL_EDGE",
+      "observations": [
+        {
+          "classification": "remote",
+          "state": "observed",
+          "claim": "theme.tools remote main is exactly source commit 5d716b6ccd8064abbafa3822e1210d0bfd50d0e4; the commit object is locally readable.",
+          "evidenceRef": "git ls-remote https://github.com/heymegabyte/theme.tools.git refs/heads/main",
+          "evidenceSha256": "0718b2dfa9a584855c1e10369142d74cb19b6fc1a7b76cf849b2d34fc641ad38"
+        },
+        {
+          "classification": "controlled",
+          "state": "pass",
+          "claim": "The isolated local registry closes source, publication, observed version, consumer manifest/lockfile, consumer behavior, and consumer commit mechanics; source-only evidence remains insufficient and the blocked edge is idempotent.",
+          "evidenceRef": "node --test tests/theme-tools-release-chain.red.test.ts",
+          "evidenceSha256": "f74c4052813c899ce46467d911e8be71b6dc71d98f5e6bf243d4c75f8d3143c3"
+        },
+        {
+          "classification": "blocked",
+          "state": "blocked",
+          "claim": "The authoritative registry still exposes @theme.tools/sdk 1.0.0, expected 1.0.1 is absent, GitHub qualification jobs never started because of account billing/spending state, and no real consumer adoption is claimed.",
+          "evidenceRef": "openspec/changes/operational-prompt-hydration-workflow/evidence/task-8.3-blocked-release.json",
+          "evidenceSha256": "e210f52b319631a44e9f6f519d1d042e4d371018692025d50167f4445bfac3ac"
+        }
+      ],
+      "nextAction": "After an authorized billing administrator restores Actions, apply the approved versioning commit, require qualification to pass, publish through release-publish-oidc.yml, observe immutable @theme.tools/sdk@1.0.1, then update and verify the intended consumer."
+    },
+    {
+      "id": "fresh-coordinator-worker-loading",
+      "status": "PASS",
+      "observations": [
+        {
+          "classification": "installed",
+          "state": "pass",
+          "claim": "Revision 89e5c7d747db31572768c0c449701f5b4a80d5b9 is installed from an explicit clean remote-backed source; four managed global files pass drift checks with unmanaged bytes preserved.",
+          "evidenceRef": "openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.2-installation.json",
+          "evidenceSha256": "48af7c7ab10b5f03a03fc6484e49e5f872f34156c60a3bec7cbc8cdff97cd8fa"
+        },
+        {
+          "classification": "live",
+          "state": "pass",
+          "claim": "Fresh ephemeral coordinator and worker Codex subscription processes loaded operational-prompt-hydration v1.0.0 digest sha256:4833e290e756aecb61e14bdcff1be6f01137730bc3a27b7445eb1a78dcad960e and invoked their explicit Prompt Hydration entrypoints; the worker consumed the coordinator handoff.",
+          "evidenceRef": "openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.3-runtime-loading.json",
+          "evidenceSha256": "11779ed6e18824b455889acd674f3b943483106ddfba5a4aa1af3a21d5d18d95"
+        }
+      ],
+      "nextAction": "Retain transcript hashes and rerun bounded live probes only when installed policy revision or supported entrypoint behavior changes."
+    }
+  ],
+  "claimLimits": [
+    "Controlled local-registry closure proves mechanics only; it is not evidence that @theme.tools/sdk@1.0.1 was published or adopted.",
+    "Remote source integration does not close the package release, consumer, or production edges.",
+    "Installed instruction presence is separated from task-9.3 live subscription loading evidence.",
+    "Live coordinator/worker evidence proves the Codex subscription entrypoint only and does not claim provider-controlled instruction authority."
+  ],
+  "reviewer": {
+    "status": "pass",
+    "evidenceStrength": "live-subscription-cli",
+    "receiptRef": "openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.3-review.json"
+  }
+}

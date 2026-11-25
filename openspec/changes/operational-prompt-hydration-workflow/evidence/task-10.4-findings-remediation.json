@@ -1,0 +1,112 @@
+{
+  "schemaVersion": "1.0.0",
+  "taskId": "10.4-remediation",
+  "capturedAt": "2026-11-25T07:21:55Z",
+  "status": "corrective-local-verification-pass-remote-pending",
+  "scope": ["AV-003", "AV-004", "AV-005", "AV-006", "PC-003", "PC-004", "PC-005", "PC-006"],
+  "failedCi": {
+    "runId": 45564079256,
+    "url": "https://github.com/heymegabyte/agent-skills/actions/runs/45564079256",
+    "workflow": "Validate & Publish Skills",
+    "revision": "89e5c7d747db31572768c0c449701f5b4a80d5b9",
+    "failedJob": "validate",
+    "failedStep": "Validate theme.tools skill integration",
+    "failure": "node bin/check-theme-tools-skill-integration.mjs failed because the pushed workflow referenced an absent file",
+    "classification": "integration-closure-omission"
+  },
+  "evidenceRelocation": {
+    "source": "clean remote-based reconciliation worktree",
+    "destination": "editable agent-skills change evidence directory",
+    "sanitized": true,
+    "files": [
+      {
+        "path": "task-8.3-blocked-release.json",
+        "sha256": "e210f52b319631a44e9f6f519d1d042e4d371018692025d50167f4445bfac3ac"
+      },
+      {
+        "path": "task-9.2-installation.json",
+        "sha256": "48af7c7ab10b5f03a03fc6484e49e5f872f34156c60a3bec7cbc8cdff97cd8fa"
+      },
+      {
+        "path": "task-9.3-runtime-loading.json",
+        "sha256": "11779ed6e18824b455889acd674f3b943483106ddfba5a4aa1af3a21d5d18d95"
+      },
+      {
+        "path": "task-10.3-evaluation.json",
+        "sha256": "c3ed47d043dce31dc58fec292b4821b44881d7312c792bd2466f17b9f2b57e0b"
+      },
+      {
+        "path": "task-10.3-evaluation.schema.json",
+        "sha256": "ed0932f9c2a3417f0b88d52d8fbdb1a27949bf091f167a8cf3842672a85a87e6"
+      },
+      {
+        "path": "task-10.3-review.json",
+        "sha256": "712e63dd07d8ba4148dd6500f08fd3b57277d1fd3033b16b2f6d630b44a20ecc"
+      }
+    ]
+  },
+  "correctivePatch": {
+    "integrationBase": "89e5c7d747db31572768c0c449701f5b4a80d5b9",
+    "checker": {
+      "path": "bin/check-theme-tools-skill-integration.mjs",
+      "sha256": "521529354f3d9108e08778b2d483d0578aa52b21c66e39410517bb4470dec3ae"
+    },
+    "test": {
+      "path": "bin/__tests__/theme-tools-skill-integration.test.mjs",
+      "sha256": "5ce84e690407216a5355eee8056a6c58fe53df0a00c271ebd1a17f09e9657317"
+    },
+    "contract": {
+      "path": "rules/theme-tools-skill-integration.md",
+      "sha256": "514eb64a1f7f9ac97850b015648a89eac09ad23347f9dbb0691e5a9c7f156c97"
+    },
+    "mapping": {
+      "path": "config/theme-tools-skill-map.json",
+      "sha256": "ee43db834a8e7a56590af23e52d690d3917915a8aaf73e285c8492db290a8bb9"
+    },
+    "dependencies": [
+      "Contract markers in all 24 canonical skills and the provider skill template",
+      "Capability-based observability wording in the four checker-owned stale-policy surfaces",
+      "rules/theme-tools-skill-integration membership in _packs/core.yml"
+    ]
+  },
+  "verification": [
+    {
+      "command": "node bin/check-theme-tools-skill-integration.mjs",
+      "status": "PASS",
+      "observed": "24 canonical skills plus provider template"
+    },
+    {
+      "command": "node --test bin/__tests__/theme-tools-skill-integration.test.mjs",
+      "status": "PASS",
+      "tests": 1
+    },
+    {
+      "command": "node scripts/validate-packs.mjs",
+      "status": "PASS",
+      "observed": "19 packs, 212 rules, 23 skill dirs; two non-blocking pre-existing breadth warnings"
+    },
+    {
+      "command": "bash scripts/validate-skills.sh",
+      "status": "PASS",
+      "observed": "canonical policy verified across 32 targets at base revision"
+    },
+    {
+      "command": "node scripts/sha-pin-actions.mjs --check .github/workflows/*.yml",
+      "status": "PASS",
+      "observed": "zero unpinned refs"
+    },
+    { "command": "python3 -m json.tool <six relocated receipts>", "status": "PASS" }
+  ],
+  "preservedBlocker": {
+    "task": "8.3",
+    "status": "BLOCKED",
+    "reason": "@theme.tools/sdk@1.0.1 remains unpublished; GitHub Actions billing, unapplied versioning, registry observation, and consumer edges remain unchanged."
+  },
+  "remaining": [
+    "Corrective patch has not yet been committed or pushed; PC-005/AV-006 remote integration remains pending.",
+    "A replacement CI run must observe the corrective commit before PC-004 can close.",
+    "Task 10.4 remains incomplete pending re-review of all findings."
+  ],
+  "tasksMdModified": false,
+  "credentialsIncluded": false
+}

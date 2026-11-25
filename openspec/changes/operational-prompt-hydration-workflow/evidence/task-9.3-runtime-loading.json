@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "1.0.0",
+  "taskId": "9.3",
+  "capturedAt": "2026-11-25T07:07:46Z",
+  "result": "pass",
+  "evidenceStrength": "live-subscription-cli",
+  "source": {
+    "installedPath": "~/.claude/plugins/heymegabyte-agent-skills",
+    "selectedRevision": "89e5c7d747db31572768c0c449701f5b4a80d5b9",
+    "cleanBeforeAndAfter": true
+  },
+  "policy": {
+    "id": "operational-prompt-hydration",
+    "version": "1.0.0",
+    "digest": "sha256:4833e290e756aecb61e14bdcff1be6f01137730bc3a27b7445eb1a78dcad960e",
+    "sourceRevision": "4833e290e756aecb61e14bdcff1be6f01137730b"
+  },
+  "providerCapability": {
+    "provider": "openai",
+    "cli": "codex-cli 0.172.0",
+    "model": "gpt-6.2-sol",
+    "authentication": "ChatGPT subscription OAuth",
+    "launcher": "bin/with-subscription-cli.sh codex",
+    "apiKeyEnvironment": "OPENAI_API_KEY stripped from each child process",
+    "paygUsed": false
+  },
+  "coordinator": {
+    "threadId": "01a21186-420e-7fd1-ba34-4e5084488189",
+    "role": "coordinator",
+    "instructionSurface": "~/.codex/AGENTS.md + installed explicit coordinator wrapper",
+    "launchCommand": "with-subscription-cli.sh codex exec -C <installed-source> --ephemeral --sandbox read-only -m gpt-6.2-sol -c model_reasoning_effort=low --json",
+    "launchProvenance": "fresh ephemeral ChatGPT-subscription Codex process",
+    "skillInvocation": "bin/prompt-hydration-entry.mjs --harness coordinator",
+    "hydration": {
+      "harness": "coordinator",
+      "stage": "Prompt Hydration",
+      "status": "hydrated",
+      "id": "hydration-8cb721b2366b"
+    },
+    "observedPolicyMatch": true,
+    "rawTranscriptSha256": "4ce2a8b212a687385f0488ec92cae0df2eedfa5173f542f035e0f684238c4f9e",
+    "rawFinalSha256": "bc8b19e9c72ce014ac160a0c7871cbe2cbbb542a50c79b48cb543836083701d3",
+    "normalization": "The model final conservatively emitted null for digest/provenance/auth fields. This receipt binds those fields from the same live transcript's managed-block command output and the outer accepted launch command; no absent runtime behavior is inferred."
+  },
+  "worker": {
+    "threadId": "01a21187-a47c-7773-94c8-8b5ffbff3890",
+    "role": "worker",
+    "instructionSurface": "~/.codex/AGENTS.md + installed explicit worker wrapper",
+    "launchCommand": "with-subscription-cli.sh codex exec -C <installed-source> --ephemeral --sandbox read-only -m gpt-6.2-sol -c model_reasoning_effort=low --json",
+    "launchProvenance": "fresh ephemeral ChatGPT-subscription Codex process with coordinator receipt handoff",
+    "skillInvocation": "bin/prompt-hydration-entry.mjs --harness worker",
+    "hydration": {
+      "harness": "worker",
+      "stage": "Prompt Hydration",
+      "status": "hydrated",
+      "id": "hydration-99ef16116915"
+    },
+    "coordinatorHydrationIdObserved": "hydration-8cb721b2366b",
+    "observedPolicyMatch": true,
+    "rawTranscriptSha256": "03d6e7852cae5cf0a0bad2a85ad411d1dcd99b3d10d8db6a71bd246c7839b676",
+    "rawFinalSha256": "3a791f275bdddb809e28a64fdc1d29257b7f72be54e146a373657f8f1b3b9c8a",
+    "normalization": "The model final conservatively emitted null for digest/provenance/auth/match fields. The live transcript shows it read the normalized coordinator handoff, observed the same installed managed block and revision, and invoked the worker wrapper successfully."
+  },
+  "delegationValidation": {
+    "samePolicyId": true,
+    "samePolicyVersion": true,
+    "samePolicyDigest": true,
+    "samePolicySourceRevision": true,
+    "sameSelectedSourceRevision": true,
+    "coordinatorFirstStage": "Prompt Hydration",
+    "workerFirstStage": "Prompt Hydration",
+    "workerReceivedCoordinatorHandoff": true
+  },
+  "unsupportedAttempt": {
+    "model": "gpt-5.4",
+    "result": "unsupported",
+    "messageClassification": "model-not-supported-for-ChatGPT-account",
+    "executionStarted": false,
+    "fallbackUsed": false
+  },
+  "safety": {
+    "credentialsPrinted": false,
+    "providerApiKeysUsed": false,
+    "externalCommunicationPerformed": false,
+    "repositoryMutationPerformed": false,
+    "providerControlledInstructionAuthorityClaimed": false
+  }
+}

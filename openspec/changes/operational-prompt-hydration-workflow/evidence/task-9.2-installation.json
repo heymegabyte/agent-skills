@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "1.0.0",
+  "taskId": "9.2",
+  "capturedAt": "2026-11-25T06:59:12Z",
+  "result": "pass",
+  "authorityBoundary": "user-controlled-customization-only",
+  "source": {
+    "selection": "explicit-clean-remote-backed-plugin-clone",
+    "path": "~/.claude/plugins/heymegabyte-agent-skills",
+    "revision": "89e5c7d747db31572768c0c449701f5b4a80d5b9",
+    "remoteMainRevision": "89e5c7d747db31572768c0c449701f5b4a80d5b9",
+    "clean": true,
+    "implicitAgentskillsSourceUsed": false,
+    "agentskillsLinkState": "selected-source"
+  },
+  "policy": {
+    "id": "operational-prompt-hydration",
+    "version": "1.0.0",
+    "digest": "sha256:4833e290e756aecb61e14bdcff1be6f01137730bc3a27b7445eb1a78dcad960e",
+    "policySourceRevision": "4833e290e756aecb61e14bdcff1be6f01137730b"
+  },
+  "backup": {
+    "path": "~/.claude/plugins/backups/heymegabyte-agent-skills.pre-task-9.2.20261125T065746Z",
+    "reason": "Preserve the previously divergent, dirty active plugin before exact-revision replacement.",
+    "recoverable": true
+  },
+  "targets": [
+    {
+      "id": "plugin",
+      "target": "~/.claude/plugins/heymegabyte-agent-skills",
+      "supportLevel": "installed",
+      "mechanism": "exact detached clone from remote main",
+      "revision": "89e5c7d747db31572768c0c449701f5b4a80d5b9",
+      "treeDigest": "git-tree:c63755b05ae61a20249fd299475f9ecf9d7ade2f",
+      "driftCheck": "pass"
+    },
+    {
+      "id": "codex",
+      "target": "~/.codex/AGENTS.md",
+      "supportLevel": "installed",
+      "mechanism": "managed-block",
+      "changed": true,
+      "unmanagedBytesPreserved": true,
+      "driftCheck": "pass"
+    },
+    {
+      "id": "claude",
+      "target": "~/.claude/CLAUDE.md",
+      "supportLevel": "installed",
+      "mechanism": "managed-block plus installed plugin bundle",
+      "changed": true,
+      "unmanagedBytesPreserved": true,
+      "nativePromptHook": true,
+      "hookDigest": "sha256:496be0593d4f32a275ef49e65095867e7fd23d922ee3aecbc62c07c819f64fee",
+      "driftCheck": "pass"
+    },
+    {
+      "id": "gemini",
+      "target": "~/.gemini/GEMINI.md",
+      "supportLevel": "installed",
+      "mechanism": "managed-block",
+      "changed": true,
+      "unmanagedBytesPreserved": true,
+      "driftCheck": "pass"
+    },
+    {
+      "id": "opencode",
+      "target": "~/.config/opencode/AGENTS.md",
+      "supportLevel": "installed",
+      "mechanism": "managed-block",
+      "changed": true,
+      "unmanagedBytesPreserved": true,
+      "driftCheck": "pass"
+    },
+    {
+      "id": "paperclip",
+      "target": "~/.claude/plugins/heymegabyte-agent-skills/bin/prompt-hydration-entry.mjs --harness paperclip",
+      "supportLevel": "profile-wrapper",
+      "mechanism": "explicit-wrapper",
+      "wrapperDigest": "sha256:b632c24067ed7d2eccaa372f05f1a190e23fc3ddcf24e084526abaef7c91561a",
+      "fixtureStatus": "hydrated",
+      "nativePromptHook": false
+    },
+    {
+      "id": "openclaw",
+      "target": "~/.claude/plugins/heymegabyte-agent-skills/bin/prompt-hydration-entry.mjs --harness openclaw",
+      "supportLevel": "profile-wrapper",
+      "mechanism": "explicit-wrapper",
+      "wrapperDigest": "sha256:b632c24067ed7d2eccaa372f05f1a190e23fc3ddcf24e084526abaef7c91561a",
+      "fixtureStatus": "hydrated",
+      "nativePromptHook": false
+    }
+  ],
+  "checks": {
+    "explicitSourcePreflight": "pass",
+    "installedManagedBlockDrift": "4/4 pass",
+    "unmanagedBytePreservation": "4/4 pass",
+    "paperclipWrapperFixture": "pass",
+    "openclawWrapperFixture": "pass"
+  },
+  "unsupportedOrUnproven": [
+    "No provider-controlled system or developer instruction authority is claimed.",
+    "Paperclip and OpenClaw have no supported native prompt hook in this revision; explicit wrapper fixtures were used.",
+    "Instruction installation and wrapper fixtures do not prove fresh provider runtime loading; that proof belongs to tasks 9.3 and 9.4.",
+    "No remote fleet SSH, credential access, billing action, or provider launch occurred."
+  ]
+}

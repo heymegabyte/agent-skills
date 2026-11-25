@@ -12,8 +12,14 @@ export function validateDeliveryTraceInstance(schema: Schema, value: unknown): s
     if (duplicates.length) errors.push(`$.records: duplicate ${label}: ${[...new Set(duplicates)].join(', ')}`);
   };
   unique('recordId', records.map((record) => record.recordId));
-  unique('requirement id', records.map((record) => record.requirement.id));
   unique('task id', records.map((record) => record.task.id));
+  const requirements = new Map<string, string>();
+  for (const record of records) {
+    const serialized = JSON.stringify(record.requirement);
+    const prior = requirements.get(record.requirement.id);
+    if (prior && prior !== serialized) errors.push(`$.records: conflicting requirement definition: ${record.requirement.id}`);
+    else requirements.set(record.requirement.id, serialized);
+  }
   for (const [index, record] of records.entries()) {
     const base = `$.records[${index}]`;
     const scenarioIds = new Set(record.requirement.scenarios.map((scenario: any) => scenario.id));

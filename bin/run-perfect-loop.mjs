@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const sourceRevision = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: ROOT, encoding: 'utf8' }).stdout.trim();
 const checks = [
+  ['node', ['--experimental-strip-types', 'bin/bounded-drift-detector.ts', '--source-root', ROOT, '--source-revision', sourceRevision, '--json']],
   ['python3', ['-m', 'unittest', 'bin/__tests__/skill_router_test.py', '-v']],
   ['node', ['bin/check-route-health.mjs']],
   ['node', ['bin/gen-codex-skills.mjs', '--check']],

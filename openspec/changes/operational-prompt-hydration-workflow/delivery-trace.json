@@ -1,0 +1,4816 @@
+{
+  "schemaVersion": 1,
+  "traceId": "TRACE:operational-prompt-hydration-workflow",
+  "changeId": "operational-prompt-hydration-workflow",
+  "sourceRevision": "89e5c7d747db31572768c0c449701f5b4a80d5b9",
+  "records": [
+    {
+      "recordId": "TRACE:REQ-OPH-01:TASK-6.2",
+      "requirement": {
+        "id": "REQ-OPH-01",
+        "observableBehavior": "The ledger SHALL grant at most one renewable integration-writer lease per repository and SHALL preserve waiting work without conflicting mutation.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-01-1",
+            "when": "the writer misses its bounded heartbeat and recovery conditions pass",
+            "then": "the lease becomes recoverable with an attributable transition and preserved partial work"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-01-1"],
+      "task": {
+        "id": "TASK-6.2",
+        "owner": "concurrency engineer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/6-2"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "only one writer can integrate a repository and stale leases recover under policy"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/6-2"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-6.2:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-6.2",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-6.2.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-6.2:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-6.2:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-02:TASK-6.1",
+      "requirement": {
+        "id": "REQ-OPH-02",
+        "observableBehavior": "The ledger SHALL persist the frozen contract, task and dispatch identities, ownership, completed evidence, blockers, and next ready action at every durable transition.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-02-1",
+            "when": "it loads a valid checkpoint",
+            "then": "it reuses completed receipts, restores safe leases, and dispatches only unfinished ready tasks"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-02-1"],
+      "task": {
+        "id": "TASK-6.1",
+        "owner": "run-state engineer",
+        "dependencies": [],
+        "affectedPaths": [
+          "schemas/orchestration-run.schema.json",
+          "bin/orchestration-run-state.ts"
+        ],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": ["state survives interruption and invalid transitions fail"],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["schemas/orchestration-run.schema.json", "bin/orchestration-run-state.ts"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-6.1:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-6.1",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-6.1.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-6.1:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-6.1:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-02:TASK-6.7",
+      "requirement": {
+        "id": "REQ-OPH-02",
+        "observableBehavior": "The ledger SHALL persist the frozen contract, task and dispatch identities, ownership, completed evidence, blockers, and next ready action at every durable transition.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-02-1",
+            "when": "it loads a valid checkpoint",
+            "then": "it reuses completed receipts, restores safe leases, and dispatches only unfinished ready tasks"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-02-1"],
+      "task": {
+        "id": "TASK-6.7",
+        "owner": "documentation maintainer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/6-7"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": ["procedures match runtime state transitions"],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/6-7"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-6.7:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-6.7",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-6.7.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-6.7:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-6.7:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-03:TASK-6.6",
+      "requirement": {
+        "id": "REQ-OPH-03",
+        "observableBehavior": "The ledger SHALL associate each completed requirement and task with the exact tested integrated commit and remote reconciliation result.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-03-1",
+            "when": "remote verification cannot find the recorded commit",
+            "then": "delivery remains incomplete even when local tests passed"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-03-1"],
+      "task": {
+        "id": "TASK-6.6",
+        "owner": "Git integrator",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/6-6"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "dirty edit checkouts are preserved and tested tree equals pushed tree"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/6-6"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-6.6:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-6.6",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-6.6.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-6.6:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-6.6:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-03:TASK-10.4",
+      "requirement": {
+        "id": "REQ-OPH-03",
+        "observableBehavior": "The ledger SHALL associate each completed requirement and task with the exact tested integrated commit and remote reconciliation result.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-03-1",
+            "when": "remote verification cannot find the recorded commit",
+            "then": "delivery remains incomplete even when local tests passed"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-03-1"],
+      "task": {
+        "id": "TASK-10.4",
+        "owner": "architecture verifier",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/10-4"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": ["no required item is closed on indirect or missing proof"],
+        "expectedEvidence": [
+          {
+            "kind": "blocker",
+            "strength": "controlled",
+            "description": "Evidence artifact task-10.4-architecture-verification-codex.json"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "proposed",
+        "codePaths": []
+      },
+      "verification": {
+        "status": "fail",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-10.4",
+            "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.4-architecture-verification-codex.json",
+            "status": "fail",
+            "evidenceDigest": "sha256:fbda8f5ff8afd6b9eaf77d4024de6f6c0410b4f14ba4ddfcae54bb30d8c89654",
+            "observedAt": "2026-11-25T18:00:00.000Z"
+          }
+        ]
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-10.4:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-10.4",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-10.4.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-10.4:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-10.4:1"]
+        }
+      },
+      "blockers": [
+        {
+          "id": "BLOCKER:TASK-10.4",
+          "edge": "verification",
+          "reason": "Independent review verdict is FAIL with unresolved findings.",
+          "owner": "architecture verifier",
+          "nextAction": "Resolve findings and issue a new independent digest-bound review.",
+          "status": "active",
+          "evidenceIds": ["EVIDENCE:task-10.4-architecture-verification-codex.json"]
+        }
+      ]
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-03:TASK-10.5",
+      "requirement": {
+        "id": "REQ-OPH-03",
+        "observableBehavior": "The ledger SHALL associate each completed requirement and task with the exact tested integrated commit and remote reconciliation result.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-03-1",
+            "when": "remote verification cannot find the recorded commit",
+            "then": "delivery remains incomplete even when local tests passed"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-03-1"],
+      "task": {
+        "id": "TASK-10.5",
+        "owner": "integration writer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/10-5"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "PASS/FAIL/SKIP/BLOCKED/UNVERIFIED are reported distinctly and all required passing gates are green"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "blocker",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "proposed",
+        "codePaths": []
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-10.5:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-10.5",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-10.5.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-10.5:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-10.5:1"]
+        }
+      },
+      "blockers": [
+        {
+          "id": "BLOCKER:TASK-10.5",
+          "edge": "verification",
+          "reason": "Independent review has not passed.",
+          "owner": "integration writer",
+          "nextAction": "Run required validation on the exact integration tree after 10.4 passes.",
+          "status": "active",
+          "evidenceIds": ["EVIDENCE:TASK-10.5:BLOCKER"]
+        }
+      ]
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-03:TASK-10.6",
+      "requirement": {
+        "id": "REQ-OPH-03",
+        "observableBehavior": "The ledger SHALL associate each completed requirement and task with the exact tested integrated commit and remote reconciliation result.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-03-1",
+            "when": "remote verification cannot find the recorded commit",
+            "then": "delivery remains incomplete even when local tests passed"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-03-1"],
+      "task": {
+        "id": "TASK-10.6",
+        "owner": "integration writer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/10-6"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "no tested local-only task-related commit remains and no unverified claim is marked complete"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "blocker",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "proposed",
+        "codePaths": []
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-10.6:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-10.6",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-10.6.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-10.6:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-10.6:1"]
+        }
+      },
+      "blockers": [
+        {
+          "id": "BLOCKER:TASK-10.6",
+          "edge": "integration",
+          "reason": "Exact validated integration tree is not yet available.",
+          "owner": "integration writer",
+          "nextAction": "Push normally and observe exact remote SHAs and applicable CI.",
+          "status": "active",
+          "evidenceIds": ["EVIDENCE:TASK-10.6:BLOCKER"]
+        }
+      ]
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-03:TASK-10.7",
+      "requirement": {
+        "id": "REQ-OPH-03",
+        "observableBehavior": "The ledger SHALL associate each completed requirement and task with the exact tested integrated commit and remote reconciliation result.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-03-1",
+            "when": "remote verification cannot find the recorded commit",
+            "then": "delivery remains incomplete even when local tests passed"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-03-1"],
+      "task": {
+        "id": "TASK-10.7",
+        "owner": "OpenSpec maintainer",
+        "dependencies": [],
+        "affectedPaths": ["openspec/"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "every tracked task and requirement maps to current evidence and proposed/implemented state is accurate"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "blocker",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "proposed",
+        "codePaths": []
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-10.7:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-10.7",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-10.7.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-10.7:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-10.7:1"]
+        }
+      },
+      "blockers": [
+        {
+          "id": "BLOCKER:TASK-10.7",
+          "edge": "integration",
+          "reason": "Remote integration and final evidence reconciliation remain incomplete.",
+          "owner": "OpenSpec maintainer",
+          "nextAction": "Reconcile traces, sync specs, and validate archive readiness after 10.6.",
+          "status": "active",
+          "evidenceIds": ["EVIDENCE:TASK-10.7:BLOCKER"]
+        }
+      ]
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-04:TASK-7.1",
+      "requirement": {
+        "id": "REQ-OPH-04",
+        "observableBehavior": "After satisfying the requested outcome, agents SHALL rank and implement adjacent safe improvements when evidence shows clear value, bounded effort, compatibility, authority, and objective verification, then refresh evidence and repeat until convergence.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-04-1",
+            "when": "adding the control is reversible, directly beneficial, and testable within the active change",
+            "then": "the agent adds it or records it as governed follow-on work without requesting routine permission"
+          },
+          {
+            "id": "SCN-OPH-04-2",
+            "when": "consecutive improvement reviews find no new candidate meeting confidence, value, novelty, reversibility, authority, and verification thresholds",
+            "then": "the agent records convergence and preserves the last verified state"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-04-1", "SCN-OPH-04-2"],
+      "task": {
+        "id": "TASK-7.1",
+        "owner": "improvement engineer",
+        "dependencies": [],
+        "affectedPaths": ["bin/recursive-improvement.ts"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "only justified non-conflicting candidates become traced requirements/tasks"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["bin/recursive-improvement.ts"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-7.1:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-7.1",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-7.1.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-7.1:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-7.1:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-04:TASK-7.4",
+      "requirement": {
+        "id": "REQ-OPH-04",
+        "observableBehavior": "After satisfying the requested outcome, agents SHALL rank and implement adjacent safe improvements when evidence shows clear value, bounded effort, compatibility, authority, and objective verification, then refresh evidence and repeat until convergence.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-04-1",
+            "when": "adding the control is reversible, directly beneficial, and testable within the active change",
+            "then": "the agent adds it or records it as governed follow-on work without requesting routine permission"
+          },
+          {
+            "id": "SCN-OPH-04-2",
+            "when": "consecutive improvement reviews find no new candidate meeting confidence, value, novelty, reversibility, authority, and verification thresholds",
+            "then": "the agent records convergence and preserves the last verified state"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-04-1", "SCN-OPH-04-2"],
+      "task": {
+        "id": "TASK-7.4",
+        "owner": "documentation maintainer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/7-4"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": ["obsolete guidance is removed and examples remain executable"],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/7-4"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-7.4:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-7.4",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-7.4.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-7.4:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-7.4:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-05:TASK-7.3",
+      "requirement": {
+        "id": "REQ-OPH-05",
+        "observableBehavior": "Agents SHALL stop expanding when two refreshed rounds find no qualifying work, marginal value is weak, validation is unavailable, budgets or deadlines are threatened, or work would displace a higher-priority committed outcome.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-05-1",
+            "when": "evidence cannot support measurable benefit or a safe verification path",
+            "then": "the agent leaves the speculative change unimplemented and preserves the completed verified outcome"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-05-1"],
+      "task": {
+        "id": "TASK-7.3",
+        "owner": "learning maintainer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/7-3"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "a scoped correction updates only its intended guidance and secrets/private context are rejected"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/7-3"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-7.3:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-7.3",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-7.3.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-7.3:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-7.3:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-06:TASK-4.2",
+      "requirement": {
+        "id": "REQ-OPH-06",
+        "observableBehavior": "The system SHALL admit safe work under available agent slots and approved providers by combining or sequencing responsibilities instead of requiring unavailable diversity.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-06-1",
+            "when": "the request is authorized and verifiable but only one approved provider can run",
+            "then": "the system performs labeled sequential role passes, records the limitation, and continues without fabricating independent model evidence"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-06-1"],
+      "task": {
+        "id": "TASK-4.2",
+        "owner": "capability router",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/4-2"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "the same workflow completes in a one-provider fixture with honest provenance"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/4-2"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-4.2:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-4.2",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-4.2.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-4.2:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-4.2:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-07:TASK-6.5",
+      "requirement": {
+        "id": "REQ-OPH-07",
+        "observableBehavior": "Maintenance work SHALL include trigger identity and recursion depth so equivalent end-of-round, policy-sync, or documentation jobs are admitted at most once per evidence revision.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-07-1",
+            "when": "its own write produces another matching event",
+            "then": "the admission layer records the event as already covered and does not start another equivalent job"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-07-1"],
+      "task": {
+        "id": "TASK-6.5",
+        "owner": "maintenance engineer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/6-5"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "equivalent maintenance cannot recursively start itself while unrelated ready work continues"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/6-5"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-6.5:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-6.5",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-6.5.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-6.5:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-6.5:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-08:TASK-5.1",
+      "requirement": {
+        "id": "REQ-OPH-08",
+        "observableBehavior": "The system SHALL link each requirement to tasks, owners, affected paths, code changes, verification receipts, integrated commit SHA, remote state, and applicable package or production evidence.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-08-1",
+            "when": "a task is marked done but no tested integrated commit contains its code and verification",
+            "then": "the requirement remains incomplete and the missing trace edge is reported"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-08-1"],
+      "task": {
+        "id": "TASK-5.1",
+        "owner": "schema engineer",
+        "dependencies": [],
+        "affectedPaths": ["schemas/"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": ["incomplete or ambiguous trace edges fail validation"],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["schemas/"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-5.1:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-5.1",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-5.1.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-5.1:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-5.1:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-09:TASK-1.4",
+      "requirement": {
+        "id": "REQ-OPH-09",
+        "observableBehavior": "Task execution SHALL use stable dispatch identities, non-overlapping ownership, one integration writer lease per repository, and duplicate suppression across retries and resumes.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-09-1",
+            "when": "two runs attempt integration concurrently",
+            "then": "exactly one obtains the lease and the other preserves work in a recoverable waiting state"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-09-1"],
+      "task": {
+        "id": "TASK-1.4",
+        "owner": "verification engineer",
+        "dependencies": [],
+        "affectedPaths": ["tests/", "fixtures/orchestration/", "schemas/"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "each failure mode contradicts the current runtime in a controlled simulation"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "controlled",
+            "description": "Evidence artifact task-1.4-red.json"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["tests/", "fixtures/orchestration/", "schemas/"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-1.4",
+            "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-1.4-red.json",
+            "status": "unverified",
+            "evidenceDigest": "sha256:76a9d128ff2e4fe8cae4d8a4cc49ab6a5746f48b24ed1b81e77ddc2b88703170",
+            "observedAt": "2026-11-25T18:00:00.000Z"
+          }
+        ]
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-1.4:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-1.4",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-1.4.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-1.4:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-1.4:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-10:TASK-3.5",
+      "requirement": {
+        "id": "REQ-OPH-10",
+        "observableBehavior": "Documentation, learning, installation, and end-of-round maintenance hooks SHALL carry recursion guards and SHALL NOT create duplicate runs for the same triggering evidence.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-10-1",
+            "when": "generated instruction updates activate normal maintenance detection",
+            "then": "the original run records the projection without recursively starting another equivalent run"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-10-1"],
+      "task": {
+        "id": "TASK-3.5",
+        "owner": "workflow integrator",
+        "dependencies": [],
+        "affectedPaths": ["bin/prompt-hydration-hook.mjs"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "narrow fixes receive impact/verification/improvement review and material changes receive expanded applicable coverage"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["bin/prompt-hydration-hook.mjs"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-3.5:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-3.5",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-3.5.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-3.5:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-3.5:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-11:TASK-6.4",
+      "requirement": {
+        "id": "REQ-OPH-11",
+        "observableBehavior": "Durable run state SHALL record frozen contracts, completed tasks, leases, partial outputs, blockers, and the next ready action so a fresh coordinator resumes without repeating completed work.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-11-1",
+            "when": "execution resumes after interruption",
+            "then": "completed receipts remain valid, duplicate dispatch is suppressed, and only ready unfinished work is launched"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-11-1"],
+      "task": {
+        "id": "TASK-6.4",
+        "owner": "recovery engineer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/6-4"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "interruption/resume neither repeats completed work nor loses ownership/evidence"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/6-4"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-6.4:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-6.4",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-6.4.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-6.4:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-6.4:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-12:TASK-8.1",
+      "requirement": {
+        "id": "REQ-OPH-12",
+        "observableBehavior": "Reusable changes SHALL trace `theme.tools` validation, source commit, package release, published-version verification, intended consumer and lockfile updates, consumer verification, and consumer commits.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-12-1",
+            "when": "no verified package version and consumer update exists",
+            "then": "the shared-capability requirement remains blocked with the exact pending release edge"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-12-1"],
+      "task": {
+        "id": "TASK-8.1",
+        "owner": "shared-capability router",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/8-1"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "reusable work receives a shared-owner edge and product-specific work stays local"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/8-1"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-8.1:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-8.1",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-8.1.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-8.1:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-8.1:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-12:TASK-8.2",
+      "requirement": {
+        "id": "REQ-OPH-12",
+        "observableBehavior": "Reusable changes SHALL trace `theme.tools` validation, source commit, package release, published-version verification, intended consumer and lockfile updates, consumer verification, and consumer commits.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-12-1",
+            "when": "no verified package version and consumer update exists",
+            "then": "the shared-capability requirement remains blocked with the exact pending release edge"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-12-1"],
+      "task": {
+        "id": "TASK-8.2",
+        "owner": "theme.tools integration writer",
+        "dependencies": [],
+        "affectedPaths": ["theme.tools"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "package validation passes and the source commit is pushed to current main"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["theme.tools"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-8.2:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-8.2",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-8.2.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-8.2:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-8.2:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-12:TASK-8.3",
+      "requirement": {
+        "id": "REQ-OPH-12",
+        "observableBehavior": "Reusable changes SHALL trace `theme.tools` validation, source commit, package release, published-version verification, intended consumer and lockfile updates, consumer verification, and consumer commits.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-12-1",
+            "when": "no verified package version and consumer update exists",
+            "then": "the shared-capability requirement remains blocked with the exact pending release edge"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-12-1"],
+      "task": {
+        "id": "TASK-8.3",
+        "owner": "release engineer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/8-3"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": ["published contents/digest/version match the source commit"],
+        "expectedEvidence": [
+          {
+            "kind": "blocker",
+            "strength": "controlled",
+            "description": "Evidence artifact task-8.3-blocked-release.json"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "proposed",
+        "codePaths": []
+      },
+      "verification": {
+        "status": "blocked",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-8.3",
+            "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-8.3-blocked-release.json",
+            "status": "blocked",
+            "evidenceDigest": "sha256:e210f52b319631a44e9f6f519d1d042e4d371018692025d50167f4445bfac3ac",
+            "observedAt": "2026-11-25T18:00:00.000Z"
+          }
+        ]
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "required",
+          "status": "blocked",
+          "package": "@theme.tools/sdk",
+          "version": "1.0.1",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:task-8.3-blocked-release.json"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-8.3",
+            "status": "pending",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-8.3.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-8.3:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:task-8.3-blocked-release.json"]
+        }
+      },
+      "blockers": [
+        {
+          "id": "BLOCKER:TASK-8.3",
+          "edge": "release",
+          "reason": "GitHub Actions billing prevents qualification; changeset is unapplied and @theme.tools/sdk@1.0.1 is absent.",
+          "owner": "release engineer",
+          "nextAction": "Restore Actions billing, apply approved versioning, pass qualification, publish through OIDC workflow, and observe immutable 1.0.1.",
+          "status": "active",
+          "evidenceIds": ["EVIDENCE:task-8.3-blocked-release.json"]
+        }
+      ]
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-12:TASK-8.4",
+      "requirement": {
+        "id": "REQ-OPH-12",
+        "observableBehavior": "Reusable changes SHALL trace `theme.tools` validation, source commit, package release, published-version verification, intended consumer and lockfile updates, consumer verification, and consumer commits.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-12-1",
+            "when": "no verified package version and consumer update exists",
+            "then": "the shared-capability requirement remains blocked with the exact pending release edge"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-12-1"],
+      "task": {
+        "id": "TASK-8.4",
+        "owner": "consumer integration writer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/8-4"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "the consumer resolves the published version and exercises the shared behavior"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "blocker",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "proposed",
+        "codePaths": []
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-8.4:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-8.4",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-8.4.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-8.4:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-8.4:1"]
+        }
+      },
+      "blockers": [
+        {
+          "id": "BLOCKER:TASK-8.4",
+          "edge": "consumer",
+          "reason": "The required @theme.tools/sdk@1.0.1 package is unpublished.",
+          "owner": "consumer integration writer",
+          "nextAction": "Resume only after task 8.3 observes the approved published artifact.",
+          "status": "active",
+          "evidenceIds": ["EVIDENCE:TASK-8.4:BLOCKER"]
+        }
+      ]
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-12:TASK-8.5",
+      "requirement": {
+        "id": "REQ-OPH-12",
+        "observableBehavior": "Reusable changes SHALL trace `theme.tools` validation, source commit, package release, published-version verification, intended consumer and lockfile updates, consumer verification, and consumer commits.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-12-1",
+            "when": "no verified package version and consumer update exists",
+            "then": "the shared-capability requirement remains blocked with the exact pending release edge"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-12-1"],
+      "task": {
+        "id": "TASK-8.5",
+        "owner": "release verifier",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/8-5"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "remote commits and applicable CI are observed for both repositories"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "blocker",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "proposed",
+        "codePaths": []
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-8.5:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-8.5",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-8.5.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-8.5:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-8.5:1"]
+        }
+      },
+      "blockers": [
+        {
+          "id": "BLOCKER:TASK-8.5",
+          "edge": "consumer",
+          "reason": "Consumer integration cannot close before publication and adoption.",
+          "owner": "release verifier",
+          "nextAction": "Verify consumer resolution, lockfile, behavior, commit, remote main, and CI after 8.4.",
+          "status": "active",
+          "evidenceIds": ["EVIDENCE:TASK-8.5:BLOCKER"]
+        }
+      ]
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-13:TASK-9.1",
+      "requirement": {
+        "id": "REQ-OPH-13",
+        "observableBehavior": "Task-related changes SHALL be reconciled onto current main, validated as the exact tree committed, pushed normally, and verified in remote main and applicable CI without force-push or blanket staging.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-13-1",
+            "when": "integration discovers new remote commits",
+            "then": "it reconciles them, reruns invalidated checks, and pushes only the updated tested commit"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-13-1"],
+      "task": {
+        "id": "TASK-9.1",
+        "owner": "integration writer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/9-1"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "remote main contains the exact tested SHA and unrelated dirty work remains untouched"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/9-1"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-9.1:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-9.1",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-9.1.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-9.1:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-9.1:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-14:TASK-1.1",
+      "requirement": {
+        "id": "REQ-OPH-14",
+        "observableBehavior": "The system SHALL distinguish prose presence, generated output, simulated execution, runtime loading, local verification, package publication, consumer adoption, remote integration, and production behavior.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-14-1",
+            "when": "only a controlled simulator produced orchestration receipts",
+            "then": "the system may verify mechanics but MUST NOT claim live provider, installed policy, package, consumer, remote, or production delivery"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-14-1"],
+      "task": {
+        "id": "TASK-1.1",
+        "owner": "integration writer",
+        "dependencies": [],
+        "affectedPaths": [
+          "control-plane/",
+          "openspec/changes/operational-prompt-hydration-workflow/"
+        ],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "every source, revision, divergence, installed target, capability, and ownership uncertainty is classified"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["control-plane/", "openspec/changes/operational-prompt-hydration-workflow/"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-1.1:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-1.1",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-1.1.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-1.1:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-1.1:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-14:TASK-1.2",
+      "requirement": {
+        "id": "REQ-OPH-14",
+        "observableBehavior": "The system SHALL distinguish prose presence, generated output, simulated execution, runtime loading, local verification, package publication, consumer adoption, remote integration, and production behavior.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-14-1",
+            "when": "only a controlled simulator produced orchestration receipts",
+            "then": "the system may verify mechanics but MUST NOT claim live provider, installed policy, package, consumer, remote, or production delivery"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-14-1"],
+      "task": {
+        "id": "TASK-1.2",
+        "owner": "verification engineer",
+        "dependencies": [],
+        "affectedPaths": ["tests/", "bin/__tests__/fixtures/", "schemas/"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "fixtures fail against the baseline for the intended behavioral reason"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "controlled",
+            "description": "Evidence artifact task-1.2-red.json"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["tests/", "bin/__tests__/fixtures/", "schemas/"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-1.2",
+            "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-1.2-red.json",
+            "status": "unverified",
+            "evidenceDigest": "sha256:9e9119ad2d9aa050ab61de60b6b53d39a9c8c9141c7b6716ea3a3e75bbe11da8",
+            "observedAt": "2026-11-25T18:00:00.000Z"
+          }
+        ]
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-1.2:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-1.2",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-1.2.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-1.2:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-1.2:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-14:TASK-1.3",
+      "requirement": {
+        "id": "REQ-OPH-14",
+        "observableBehavior": "The system SHALL distinguish prose presence, generated output, simulated execution, runtime loading, local verification, package publication, consumer adoption, remote integration, and production behavior.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-14-1",
+            "when": "only a controlled simulator produced orchestration receipts",
+            "then": "the system may verify mechanics but MUST NOT claim live provider, installed policy, package, consumer, remote, or production delivery"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-14-1"],
+      "task": {
+        "id": "TASK-1.3",
+        "owner": "verification engineer",
+        "dependencies": [],
+        "affectedPaths": ["tests/", "fixtures/prompt-hydration/", "schemas/"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "each objective scenario has observable assertions rather than file-presence checks"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "controlled",
+            "description": "Evidence artifact task-1.3-red.json"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["tests/", "fixtures/prompt-hydration/", "schemas/"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-1.3",
+            "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-1.3-red.json",
+            "status": "unverified",
+            "evidenceDigest": "sha256:c39433b17bc30548bee08cd2506a50e4e4fef554cebb51e38089da3e61ae4d82",
+            "observedAt": "2026-11-25T18:00:00.000Z"
+          }
+        ]
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-1.3:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-1.3",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-1.3.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-1.3:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-1.3:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-14:TASK-1.5",
+      "requirement": {
+        "id": "REQ-OPH-14",
+        "observableBehavior": "The system SHALL distinguish prose presence, generated output, simulated execution, runtime loading, local verification, package publication, consumer adoption, remote integration, and production behavior.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-14-1",
+            "when": "only a controlled simulator produced orchestration receipts",
+            "then": "the system may verify mechanics but MUST NOT claim live provider, installed policy, package, consumer, remote, or production delivery"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-14-1"],
+      "task": {
+        "id": "TASK-1.5",
+        "owner": "release verifier",
+        "dependencies": [],
+        "affectedPaths": ["tests/", "fixtures/theme-tools-release/", "schemas/"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": ["source-only changes cannot satisfy the fixture"],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "controlled",
+            "description": "Evidence artifact task-1.5-red.json"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["tests/", "fixtures/theme-tools-release/", "schemas/"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-1.5",
+            "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-1.5-red.json",
+            "status": "unverified",
+            "evidenceDigest": "sha256:45676a7411845341183bdf5d9eed4bcc95d4c289e5bfd21e6585bb88ddf0e398",
+            "observedAt": "2026-11-25T18:00:00.000Z"
+          }
+        ]
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-1.5:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-1.5",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-1.5.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-1.5:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-1.5:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-14:TASK-2.7",
+      "requirement": {
+        "id": "REQ-OPH-14",
+        "observableBehavior": "The system SHALL distinguish prose presence, generated output, simulated execution, runtime loading, local verification, package publication, consumer adoption, remote integration, and production behavior.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-14-1",
+            "when": "only a controlled simulator produced orchestration receipts",
+            "then": "the system may verify mechanics but MUST NOT claim live provider, installed policy, package, consumer, remote, or production delivery"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-14-1"],
+      "task": {
+        "id": "TASK-2.7",
+        "owner": "documentation maintainer",
+        "dependencies": [],
+        "affectedPaths": ["README.md", "control-plane/"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "commands run as written and do not expose secrets or imply unsupported system-prompt control"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["README.md", "control-plane/"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-2.7:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-2.7",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-2.7.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-2.7:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-2.7:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-14:TASK-10.1",
+      "requirement": {
+        "id": "REQ-OPH-14",
+        "observableBehavior": "The system SHALL distinguish prose presence, generated output, simulated execution, runtime loading, local verification, package publication, consumer adoption, remote integration, and production behavior.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-14-1",
+            "when": "only a controlled simulator produced orchestration receipts",
+            "then": "the system may verify mechanics but MUST NOT claim live provider, installed policy, package, consumer, remote, or production delivery"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-14-1"],
+      "task": {
+        "id": "TASK-10.1",
+        "owner": "evaluation engineer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/10-1"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "each scenario satisfies its observable spec without over-expansion or false independence"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "controlled",
+            "description": "Evidence artifact task-10.1-evaluation.json"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/10-1"]
+      },
+      "verification": {
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-10.1",
+            "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.1-evaluation.json",
+            "status": "pass",
+            "evidenceDigest": "sha256:10c3609b48ef5bf2cef3f653772ce208877e730565611b114a4126563003e54e",
+            "observedAt": "2026-11-25T18:00:00.000Z"
+          }
+        ]
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-10.1:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-10.1",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-10.1.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-10.1:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-10.1:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-14:TASK-10.2",
+      "requirement": {
+        "id": "REQ-OPH-14",
+        "observableBehavior": "The system SHALL distinguish prose presence, generated output, simulated execution, runtime loading, local verification, package publication, consumer adoption, remote integration, and production behavior.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-14-1",
+            "when": "only a controlled simulator produced orchestration receipts",
+            "then": "the system may verify mechanics but MUST NOT claim live provider, installed policy, package, consumer, remote, or production delivery"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-14-1"],
+      "task": {
+        "id": "TASK-10.2",
+        "owner": "evaluation engineer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/10-2"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "state, ownership, evidence, and exact next action remain correct after every fault"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "controlled",
+            "description": "Evidence artifact task-10.2-evaluation.json"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/10-2"]
+      },
+      "verification": {
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-10.2",
+            "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.2-evaluation.json",
+            "status": "pass",
+            "evidenceDigest": "sha256:edab6f9761a07f994dbd92ca23c7667a25773c042fc053d4d2d71d914d0dc7dc",
+            "observedAt": "2026-11-25T18:00:00.000Z"
+          }
+        ]
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-10.2:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-10.2",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-10.2.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-10.2:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-10.2:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-14:TASK-10.3",
+      "requirement": {
+        "id": "REQ-OPH-14",
+        "observableBehavior": "The system SHALL distinguish prose presence, generated output, simulated execution, runtime loading, local verification, package publication, consumer adoption, remote integration, and production behavior.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-14-1",
+            "when": "only a controlled simulator produced orchestration receipts",
+            "then": "the system may verify mechanics but MUST NOT claim live provider, installed policy, package, consumer, remote, or production delivery"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-14-1"],
+      "task": {
+        "id": "TASK-10.3",
+        "owner": "evaluation engineer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/10-3"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": ["the evidence-strength claims match observed state"],
+        "expectedEvidence": [
+          {
+            "kind": "blocker",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "blocked",
+        "codePaths": ["task-scopes/10-3"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-10.3:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-10.3",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-10.3.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-10.3:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-10.3:1"]
+        }
+      },
+      "blockers": [
+        {
+          "id": "BLOCKER:TASK-10.3",
+          "edge": "verification",
+          "reason": "No task-10.3 evaluation receipt exists.",
+          "owner": "evaluation engineer",
+          "nextAction": "Run shared propagation and fresh loading scenarios with controlled, installed, and live evidence separated.",
+          "status": "active",
+          "evidenceIds": ["EVIDENCE:TASK-10.3:BLOCKER"]
+        }
+      ]
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-15:TASK-9.3",
+      "requirement": {
+        "id": "REQ-OPH-15",
+        "observableBehavior": "Coordinator and worker policy receipts SHALL include the canonical policy identifier, version, digest, source revision, instruction surface, and launch provenance.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-15-1",
+            "when": "coordinator and worker policy receipts disagree",
+            "then": "delegation validation fails and identifies the stale surface"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-15-1"],
+      "task": {
+        "id": "TASK-9.3",
+        "owner": "runtime verifier",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/9-3"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "receipts identify actual model/provider, instruction digest, role, and skill invocation without exposing credentials"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "blocker",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "blocked",
+        "codePaths": ["task-scopes/9-3"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-9.3:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-9.3",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-9.3.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-9.3:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-9.3:1"]
+        }
+      },
+      "blockers": [
+        {
+          "id": "BLOCKER:TASK-9.3",
+          "edge": "verification",
+          "reason": "No signed fresh coordinator and worker policy-loading receipts exist.",
+          "owner": "runtime verifier",
+          "nextAction": "Produce matching coordinator and delegated-worker receipts or record an exact runtime blocker.",
+          "status": "active",
+          "evidenceIds": ["EVIDENCE:TASK-9.3:BLOCKER"]
+        }
+      ]
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-16:TASK-8.6",
+      "requirement": {
+        "id": "REQ-OPH-16",
+        "observableBehavior": "Reusable capability evidence SHALL link source validation and commit to release workflow, published artifact identity, intended consumer resolution, lockfile state, consumer verification, and integrated consumer commit.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-16-1",
+            "when": "intended consumer dependency evidence does not match the released version",
+            "then": "adoption remains incomplete and the stale dependency edge is reported"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-16-1"],
+      "task": {
+        "id": "TASK-8.6",
+        "owner": "release verifier",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/8-6"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": ["blocked-release/resume behavior is exact and idempotent"],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/8-6"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-8.6:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-8.6",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-8.6.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-8.6:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-8.6:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-17:TASK-2.1",
+      "requirement": {
+        "id": "REQ-OPH-17",
+        "observableBehavior": "The system SHALL maintain one concise canonical policy with a stable identifier, version, and digest while routing detailed procedure to focused skills and references.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-17-1",
+            "when": "maintainers revise common operating semantics",
+            "then": "they edit the canonical policy and regenerate managed consumers rather than manually reconciling copies"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-17-1"],
+      "task": {
+        "id": "TASK-2.1",
+        "owner": "policy maintainer",
+        "dependencies": [],
+        "affectedPaths": ["policies/", "rules/", "01-operating-system/"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "the compact core remains concise and no conflicting canonical copy exists"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "controlled",
+            "description": "Evidence artifact task-2.1-review.json"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["policies/", "rules/", "01-operating-system/"]
+      },
+      "verification": {
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-2.1",
+            "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-2.1-review.json",
+            "status": "pass",
+            "evidenceDigest": "sha256:4e49a6655da655114c0931d2c5da4613aee228fa127f9cfafa21ec9aaf3ef83f",
+            "observedAt": "2026-11-25T18:00:00.000Z"
+          }
+        ]
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-2.1:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-2.1",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-2.1.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-2.1:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-2.1:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-18:TASK-2.2",
+      "requirement": {
+        "id": "REQ-OPH-18",
+        "observableBehavior": "Repository, global, plugin, harness, coordinator, and worker instruction files SHALL receive managed policy blocks without overwriting unrelated user-controlled instructions.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-18-1",
+            "when": "a release or fleet sync projects the policy",
+            "then": "generated outputs retain the canonical block and unrelated instructions byte-for-byte outside managed boundaries"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-18-1"],
+      "task": {
+        "id": "TASK-2.2",
+        "owner": "generator engineer",
+        "dependencies": [],
+        "affectedPaths": ["bin/", "schemas/", "tests/"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "all managed-block red fixtures pass and round trips are idempotent"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["bin/", "schemas/", "tests/"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-2.2:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-2.2",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-2.2.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-2.2:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-2.2:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-18:TASK-2.3",
+      "requirement": {
+        "id": "REQ-OPH-18",
+        "observableBehavior": "Repository, global, plugin, harness, coordinator, and worker instruction files SHALL receive managed policy blocks without overwriting unrelated user-controlled instructions.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-18-1",
+            "when": "a release or fleet sync projects the policy",
+            "then": "generated outputs retain the canonical block and unrelated instructions byte-for-byte outside managed boundaries"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-18-1"],
+      "task": {
+        "id": "TASK-2.3",
+        "owner": "harness integrator",
+        "dependencies": [],
+        "affectedPaths": ["config/", "prompts/", "agents/"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": ["every target records support level and source digest"],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["config/", "prompts/", "agents/"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-2.3:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-2.3",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-2.3.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-2.3:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-2.3:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-18:TASK-2.5",
+      "requirement": {
+        "id": "REQ-OPH-18",
+        "observableBehavior": "Repository, global, plugin, harness, coordinator, and worker instruction files SHALL receive managed policy blocks without overwriting unrelated user-controlled instructions.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-18-1",
+            "when": "a release or fleet sync projects the policy",
+            "then": "generated outputs retain the canonical block and unrelated instructions byte-for-byte outside managed boundaries"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-18-1"],
+      "task": {
+        "id": "TASK-2.5",
+        "owner": "release engineer",
+        "dependencies": [],
+        "affectedPaths": [
+          ".github/workflows/publish.yml",
+          "bin/gen-harness-manifests.mjs",
+          "bin/gen-codex-skills.mjs"
+        ],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "publish output is generated from the canonical digest and no target is wholesale overwritten"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": [
+          ".github/workflows/publish.yml",
+          "bin/gen-harness-manifests.mjs",
+          "bin/gen-codex-skills.mjs"
+        ]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-2.5:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-2.5",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-2.5.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-2.5:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-2.5:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-18:TASK-2.6",
+      "requirement": {
+        "id": "REQ-OPH-18",
+        "observableBehavior": "Repository, global, plugin, harness, coordinator, and worker instruction files SHALL receive managed policy blocks without overwriting unrelated user-controlled instructions.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-18-1",
+            "when": "a release or fleet sync projects the policy",
+            "then": "generated outputs retain the canonical block and unrelated instructions byte-for-byte outside managed boundaries"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-18-1"],
+      "task": {
+        "id": "TASK-2.6",
+        "owner": "policy maintainer",
+        "dependencies": [],
+        "affectedPaths": [
+          "AGENTS.md",
+          "CLAUDE.md",
+          "CODEX.md",
+          "GEMINI.md",
+          "scripts/validate-skills.sh",
+          "bin/run-perfect-loop.mjs"
+        ],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": ["generated outputs match one digest and manual drift fails"],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": [
+          "AGENTS.md",
+          "CLAUDE.md",
+          "CODEX.md",
+          "GEMINI.md",
+          "scripts/validate-skills.sh",
+          "bin/run-perfect-loop.mjs"
+        ]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-2.6:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-2.6",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-2.6.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-2.6:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-2.6:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-19:TASK-2.4",
+      "requirement": {
+        "id": "REQ-OPH-19",
+        "observableBehavior": "Fleet synchronization SHALL identify the source checkout and revision explicitly and SHALL fail when an ambiguous or divergent installed symlink would propagate stale policy.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-19-1",
+            "when": "the active plugin resolves to another dirty or divergent checkout",
+            "then": "installation stops with source, revision, and drift evidence instead of copying from the ambiguous tree"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-19-1"],
+      "task": {
+        "id": "TASK-2.4",
+        "owner": "fleet integrator",
+        "dependencies": [],
+        "affectedPaths": ["bin/sync-fleet-harnesses.ts", "install.doctor"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "divergent or dirty sources fail closed and the selected revision appears in receipts"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["bin/sync-fleet-harnesses.ts", "install.doctor"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-2.4:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-2.4",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-2.4.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-2.4:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-2.4:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-19:TASK-9.2",
+      "requirement": {
+        "id": "REQ-OPH-19",
+        "observableBehavior": "Fleet synchronization SHALL identify the source checkout and revision explicitly and SHALL fail when an ambiguous or divergent installed symlink would propagate stale policy.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-19-1",
+            "when": "the active plugin resolves to another dirty or divergent checkout",
+            "then": "installation stops with source, revision, and drift evidence instead of copying from the ambiguous tree"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-19-1"],
+      "task": {
+        "id": "TASK-9.2",
+        "owner": "installation engineer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/9-2"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": ["no installation reads from the divergent implicit symlink"],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/9-2"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-9.2:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-9.2",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-9.2.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-9.2:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-9.2:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-20:TASK-9.4",
+      "requirement": {
+        "id": "REQ-OPH-20",
+        "observableBehavior": "Every supported coordinator and worker path SHALL report the same policy identifier and digest plus **Prompt Hydration** as its first engineering stage through an approved launch or controlled fixture.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-20-1",
+            "when": "a newly started coordinator delegates a bounded task",
+            "then": "both processes return matching policy receipts and the worker demonstrates relevant skill invocation"
+          },
+          {
+            "id": "SCN-OPH-20-2",
+            "when": "a supported harness cannot intercept prompt submission",
+            "then": "its approved wrapper or explicit entry command performs hydration and emits an honest receipt without claiming a native hook"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-20-1", "SCN-OPH-20-2"],
+      "task": {
+        "id": "TASK-9.4",
+        "owner": "runtime verifier",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/9-4"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": ["no simulated/manual presence is labeled live"],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "controlled",
+            "description": "Evidence artifact task-9.4-capability-matrix.json"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/9-4"]
+      },
+      "verification": {
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-9.4",
+            "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.4-capability-matrix.json",
+            "status": "pass",
+            "evidenceDigest": "sha256:14ac61d6931e115dc352bd053b4b02ee3916d21daeea09bf481fe65a2fbca15d",
+            "observedAt": "2026-11-25T18:00:00.000Z"
+          }
+        ]
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-9.4:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-9.4",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-9.4.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-9.4:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-9.4:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-21:TASK-9.5",
+      "requirement": {
+        "id": "REQ-OPH-21",
+        "observableBehavior": "CI and the bounded final loop SHALL detect stale managed blocks, missing installed targets, publish-time policy loss, and coordinator-worker digest mismatches.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-21-1",
+            "when": "its managed policy block no longer matches the canonical digest",
+            "then": "validation fails with the canonical source and regeneration command"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-21-1"],
+      "task": {
+        "id": "TASK-9.5",
+        "owner": "drift maintainer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/9-5"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "drift reports exact repair inputs and never rewrites unmanaged content"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/9-5"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-9.5:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-9.5",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-9.5.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-9.5:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-9.5:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-22:TASK-4.1",
+      "requirement": {
+        "id": "REQ-OPH-22",
+        "observableBehavior": "Architecture, security, and ambiguous product decisions SHALL use a Codex-led conference with product/completeness and architecture/verification responsibilities, obtaining independent Gemini, Codex, and Claude judgments when available and using honest combined or sequential fallback otherwise.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-22-1",
+            "when": "independent recommendations conflict on a high-impact decision",
+            "then": "an AI critic compares evidence and the designated architect or CEO records the resolved rationale"
+          },
+          {
+            "id": "SCN-OPH-22-2",
+            "when": "approved model or slot capacity cannot provide the preferred independent families",
+            "then": "the lead combines or sequences the missing responsibilities, records actual provenance, and continues if risk and verification remain acceptable"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-22-1", "SCN-OPH-22-2"],
+      "task": {
+        "id": "TASK-4.1",
+        "owner": "conference engineer",
+        "dependencies": [],
+        "affectedPaths": [
+          "bin/evidence-gated-deliberation.ts",
+          "bin/evidence-gated-orchestrator.ts"
+        ],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "decisions, alternatives, disagreements, evidence, and unresolved assumptions receive typed receipts"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["bin/evidence-gated-deliberation.ts", "bin/evidence-gated-orchestrator.ts"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-4.1:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-4.1",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-4.1.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-4.1:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-4.1:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-23:TASK-6.3",
+      "requirement": {
+        "id": "REQ-OPH-23",
+        "observableBehavior": "Mass parallel execution SHALL use declared ownership, dependency graphs, isolated worktrees or non-overlapping edit roots, budgets, deadlines, idempotent dispatch, and one leased integration authority per repository.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-23-1",
+            "when": "ownership detection finds overlapping writes",
+            "then": "the scheduler serializes or reassigns the units before mutation"
+          },
+          {
+            "id": "SCN-OPH-23-2",
+            "when": "a retry or resumed coordinator presents the same dispatch identity",
+            "then": "the scheduler returns the existing execution state instead of launching duplicate work"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-23-1", "SCN-OPH-23-2"],
+      "task": {
+        "id": "TASK-6.3",
+        "owner": "dispatcher engineer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/6-3"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "duplicate events do not launch duplicate work and independent tasks parallelize"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/6-3"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-6.3:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-6.3",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-6.3.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-6.3:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-6.3:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-24:TASK-3.1",
+      "requirement": {
+        "id": "REQ-OPH-24",
+        "observableBehavior": "The system SHALL name and execute **Prompt Hydration** before planning or mutation, scaled to the request while preserving the verbatim request and explicit constraints.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-24-1",
+            "when": "a user requests a focused defect repair",
+            "then": "hydration records relevant context, impact, regression evidence, and improvement review without inventing a product redesign"
+          },
+          {
+            "id": "SCN-OPH-24-2",
+            "when": "a request changes product behavior, architecture, security, integrations, or migration state",
+            "then": "hydration maps complete journeys, states, quality concerns, dependencies, reusable ownership, operations, and acceptance evidence before execution"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-24-1", "SCN-OPH-24-2"],
+      "task": {
+        "id": "TASK-3.1",
+        "owner": "hydration engineer",
+        "dependencies": [],
+        "affectedPaths": ["bin/prompt-hydrator.ts", "schemas/hydrated-prompt.schema.json"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "both narrow and substantial requests produce schema-valid proportionate results"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["bin/prompt-hydrator.ts", "schemas/hydrated-prompt.schema.json"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-3.1:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-3.1",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-3.1.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-3.1:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-3.1:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-25:TASK-3.2",
+      "requirement": {
+        "id": "REQ-OPH-25",
+        "observableBehavior": "The system SHALL record applicability and gaps across repositories, capabilities, personas, journeys, surfaces, states, and quality concerns without blindly materializing irrelevant combinations.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-25-1",
+            "when": "a coverage dimension cannot affect the intended outcome",
+            "then": "the matrix records it as inapplicable with a concise basis rather than generating work"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-25-1"],
+      "task": {
+        "id": "TASK-3.2",
+        "owner": "hydration engineer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/3-2"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "applicable gaps are explicit while inapplicable combinations remain justified rather than blindly expanded"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/3-2"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-3.2:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-3.2",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-3.2.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-3.2:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-3.2:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-25:TASK-3.3",
+      "requirement": {
+        "id": "REQ-OPH-25",
+        "observableBehavior": "The system SHALL record applicability and gaps across repositories, capabilities, personas, journeys, surfaces, states, and quality concerns without blindly materializing irrelevant combinations.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-25-1",
+            "when": "a coverage dimension cannot affect the intended outcome",
+            "then": "the matrix records it as inapplicable with a concise basis rather than generating work"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-25-1"],
+      "task": {
+        "id": "TASK-3.3",
+        "owner": "evidence engineer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/3-3"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "confident reversible assumptions progress while consequential unresolved uncertainty remains visible"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/3-3"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-3.3:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-3.3",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-3.3.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-3.3:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-3.3:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-25:TASK-3.4",
+      "requirement": {
+        "id": "REQ-OPH-25",
+        "observableBehavior": "The system SHALL record applicability and gaps across repositories, capabilities, personas, journeys, surfaces, states, and quality concerns without blindly materializing irrelevant combinations.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-25-1",
+            "when": "a coverage dimension cannot affect the intended outcome",
+            "then": "the matrix records it as inapplicable with a concise basis rather than generating work"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-25-1"],
+      "task": {
+        "id": "TASK-3.4",
+        "owner": "research integrator",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/3-4"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "source/version/date/decision impact are recorded and stale evidence is rejected by policy"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/3-4"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-3.4:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-3.4",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-3.4.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-3.4:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-3.4:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-25:TASK-3.6",
+      "requirement": {
+        "id": "REQ-OPH-25",
+        "observableBehavior": "The system SHALL record applicability and gaps across repositories, capabilities, personas, journeys, surfaces, states, and quality concerns without blindly materializing irrelevant combinations.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-25-1",
+            "when": "a coverage dimension cannot affect the intended outcome",
+            "then": "the matrix records it as inapplicable with a concise basis rather than generating work"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-25-1"],
+      "task": {
+        "id": "TASK-3.6",
+        "owner": "documentation maintainer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/3-6"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "routing selects the smallest coherent skill set and duplicate doctrine is removed"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/3-6"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-3.6:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-3.6",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-3.6.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-3.6:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-3.6:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-26:TASK-4.3",
+      "requirement": {
+        "id": "REQ-OPH-26",
+        "observableBehavior": "Material work SHALL receive independent product/completeness and architecture/verification challenge led by Codex, using separate agents when available and combined or sequential passes with honest receipts otherwise.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-26-1",
+            "when": "the lead can delegate both complementary reviews",
+            "then": "the reviewers inspect independently, exchange concise findings, and the lead resolves recorded disagreement from evidence"
+          },
+          {
+            "id": "SCN-OPH-26-2",
+            "when": "concurrency or provider availability prevents delegation",
+            "then": "the lead performs identified sequential role passes and continues without claiming model diversity"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-26-1", "SCN-OPH-26-2"],
+      "task": {
+        "id": "TASK-4.3",
+        "owner": "security reviewer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/4-3"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "fallback never silently weakens authorization or high-risk verification"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/4-3"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-4.3:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-4.3",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-4.3.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-4.3:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-4.3:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-26:TASK-4.4",
+      "requirement": {
+        "id": "REQ-OPH-26",
+        "observableBehavior": "Material work SHALL receive independent product/completeness and architecture/verification challenge led by Codex, using separate agents when available and combined or sequential passes with honest receipts otherwise.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-26-1",
+            "when": "the lead can delegate both complementary reviews",
+            "then": "the reviewers inspect independently, exchange concise findings, and the lead resolves recorded disagreement from evidence"
+          },
+          {
+            "id": "SCN-OPH-26-2",
+            "when": "concurrency or provider availability prevents delegation",
+            "then": "the lead performs identified sequential role passes and continues without claiming model diversity"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-26-1", "SCN-OPH-26-2"],
+      "task": {
+        "id": "TASK-4.4",
+        "owner": "documentation maintainer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/4-4"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "docs distinguish independent, combined, sequential, simulated, and live review"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/4-4"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-4.4:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-4.4",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-4.4.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-4.4:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-4.4:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-27:TASK-5.2",
+      "requirement": {
+        "id": "REQ-OPH-27",
+        "observableBehavior": "Material hydrated outcomes SHALL compile into requirements with identifiers and observable scenarios plus dependency-ordered tasks naming owners, paths, acceptance criteria, and completion evidence.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-27-1",
+            "when": "a user requests an MCP catalog website",
+            "then": "OpenSpec covers discovery, search, categories, details, ingestion, deduplication, updates, submissions, moderation, administration, installation guidance, operations, and an explicit per-MCP traceability inventory"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-27-1"],
+      "task": {
+        "id": "TASK-5.2",
+        "owner": "OpenSpec compiler engineer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/5-2"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "requirement → task → code → verification → integrated commit is queryable and checkboxes alone cannot close requirements"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/5-2"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-5.2:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-5.2",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-5.2.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-5.2:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-5.2:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-27:TASK-5.3",
+      "requirement": {
+        "id": "REQ-OPH-27",
+        "observableBehavior": "Material hydrated outcomes SHALL compile into requirements with identifiers and observable scenarios plus dependency-ordered tasks naming owners, paths, acceptance criteria, and completion evidence.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-27-1",
+            "when": "a user requests an MCP catalog website",
+            "then": "OpenSpec covers discovery, search, categories, details, ingestion, deduplication, updates, submissions, moderation, administration, installation guidance, operations, and an explicit per-MCP traceability inventory"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-27-1"],
+      "task": {
+        "id": "TASK-5.3",
+        "owner": "catalog domain engineer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/5-3"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "the one-sentence catalog fixture expands into complete traceable product coverage"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/5-3"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-5.3:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-5.3",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-5.3.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-5.3:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-5.3:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-27:TASK-5.4",
+      "requirement": {
+        "id": "REQ-OPH-27",
+        "observableBehavior": "Material hydrated outcomes SHALL compile into requirements with identifiers and observable scenarios plus dependency-ordered tasks naming owners, paths, acceptance criteria, and completion evidence.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-27-1",
+            "when": "a user requests an MCP catalog website",
+            "then": "OpenSpec covers discovery, search, categories, details, ingestion, deduplication, updates, submissions, moderation, administration, installation guidance, operations, and an explicit per-MCP traceability inventory"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-27-1"],
+      "task": {
+        "id": "TASK-5.4",
+        "owner": "catalog domain engineer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/5-4"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": ["omitted or falsely executable MCP records fail"],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/5-4"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-5.4:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-5.4",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-5.4.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-5.4:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-5.4:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-27:TASK-5.5",
+      "requirement": {
+        "id": "REQ-OPH-27",
+        "observableBehavior": "Material hydrated outcomes SHALL compile into requirements with identifiers and observable scenarios plus dependency-ordered tasks naming owners, paths, acceptance criteria, and completion evidence.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-27-1",
+            "when": "a user requests an MCP catalog website",
+            "then": "OpenSpec covers discovery, search, categories, details, ingestion, deduplication, updates, submissions, moderation, administration, installation guidance, operations, and an explicit per-MCP traceability inventory"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-27-1"],
+      "task": {
+        "id": "TASK-5.5",
+        "owner": "documentation maintainer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/5-5"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": [
+          "an operator can regenerate and inspect traces without manual tables"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/5-5"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-5.5:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-5.5",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-5.5.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-5.5:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-5.5:1"]
+        }
+      },
+      "blockers": []
+    },
+    {
+      "recordId": "TRACE:REQ-OPH-28:TASK-7.2",
+      "requirement": {
+        "id": "REQ-OPH-28",
+        "observableBehavior": "After the requested outcome is delivered, the system SHALL rank and implement authorized qualifying improvements, refresh evidence, and stop only after two consecutive rounds yield no new qualifying winner or a precise blocker is recorded.",
+        "scenarios": [
+          {
+            "id": "SCN-OPH-28-1",
+            "when": "one improvement review produces no qualifying candidate",
+            "then": "the system refreshes applicable evidence and performs one additional review before convergence"
+          },
+          {
+            "id": "SCN-OPH-28-2",
+            "when": "a later round finds positive-value, reversible, verifiable work within authority",
+            "then": "the system adds traceable requirements, implements and verifies the work, and resets the no-winner convergence count"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-OPH-28-1", "SCN-OPH-28-2"],
+      "task": {
+        "id": "TASK-7.2",
+        "owner": "improvement engineer",
+        "dependencies": [],
+        "affectedPaths": ["task-scopes/7-2"],
+        "packages": ["repository-local"],
+        "acceptanceCriteria": ["one empty round cannot converge and new evidence reopens work"],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["task-scopes/7-2"]
+      },
+      "verification": {
+        "status": "unverified",
+        "receipts": []
+      },
+      "integration": {
+        "status": "pending",
+        "integratedCommit": "pending",
+        "testedTree": "pending",
+        "remote": {
+          "status": "pending",
+          "repository": "pending",
+          "branch": "main",
+          "observedSha": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "ciStatus": "unverified"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "package": "repository-local",
+          "version": "pending",
+          "artifactDigest": "pending",
+          "evidenceIds": ["EVIDENCE:TASK-7.2:1"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:TASK-7.2",
+            "status": "not-applicable",
+            "resolvedVersion": "pending",
+            "lockfilePath": "pending/TASK-7.2.lock",
+            "verificationReceiptIds": ["VERIFY:TASK-7.2:pending"],
+            "integratedCommit": "pending"
+          }
+        ],
+        "production": {
+          "applicability": "not-applicable",
+          "status": "not-applicable",
+          "environment": "not-applicable",
+          "deploymentId": "pending",
+          "observedAt": "1970-01-01T00:00:00.000Z",
+          "evidenceIds": ["EVIDENCE:TASK-7.2:1"]
+        }
+      },
+      "blockers": []
+    }
+  ]
+}

@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "taskId": "9.4",
+  "observedAt": "2026-11-25T07:03:20Z",
+  "installedSource": {
+    "path": "/Users/Apple/.claude/plugins/heymegabyte-agent-skills",
+    "revision": "89e5c7d747db31572768c0c449701f5b4a80d5b9",
+    "clean": true,
+    "entrypointManifestDigest": "sha256:c71963f2e1dd1fbf547a3738256ad1e332066212fcfdfe2a6988d53cf179de43",
+    "hookManifestDigest": "sha256:ea6e19a82b0fa5a5e536461d0c096d91bf212baee9843768d8294e014369c095"
+  },
+  "probePolicy": {
+    "readOnly": true,
+    "secretsExposed": false,
+    "credentialsMutated": false,
+    "liveTurnsRequested": false
+  },
+  "targets": [
+    {
+      "id": "codex",
+      "installedPresence": {
+        "status": "present",
+        "evidence": "codex-cli 0.172.0 is executable; ~/.codex/AGENTS.md contains the installed canonical managed block."
+      },
+      "nativePromptHook": {
+        "status": "not-supported",
+        "evidence": "Installed entrypoint manifest declares nativePromptHook=false."
+      },
+      "explicitWrapper": {
+        "status": "passed",
+        "evidence": "Installed wrapper returned hydrated Prompt Hydration receipt hydration-6abcf7ae97fd with all four focused-plan sections."
+      },
+      "authenticatedAvailability": {
+        "status": "available",
+        "evidence": "Read-only codex login status reported ChatGPT subscription login; no token was read."
+      },
+      "liveProviderExecution": {
+        "status": "not-run",
+        "evidence": "No Codex model turn was requested; authenticated availability is not live execution."
+      },
+      "evidenceStrength": ["installed-presence", "authenticated-capability", "controlled-wrapper"],
+      "blockers": ["Live provider execution belongs to the separately bounded runtime-loading probe."]
+    },
+    {
+      "id": "claude",
+      "installedPresence": {
+        "status": "present",
+        "evidence": "Claude Code 2.1.197 is executable; ~/.claude/CLAUDE.md and installed plugin/hook manifests are present."
+      },
+      "nativePromptHook": {
+        "status": "passed",
+        "evidence": "Installed UserPromptSubmit hook fixture returned hookEventName=UserPromptSubmit and Prompt Hydration context."
+      },
+      "explicitWrapper": {
+        "status": "passed",
+        "evidence": "Installed explicit wrapper also returned hydrated Prompt Hydration receipt hydration-6abcf7ae97fd; this wrapper result is distinct from native-hook support."
+      },
+      "authenticatedAvailability": {
+        "status": "available",
+        "evidence": "Read-only claude auth status reported first-party claude.ai subscription login; account identifiers were discarded."
+      },
+      "liveProviderExecution": {
+        "status": "not-run",
+        "evidence": "No Claude model turn was requested; native-hook fixture execution is not provider execution."
+      },
+      "evidenceStrength": ["installed-presence", "authenticated-capability", "controlled-wrapper", "native-hook-fixture"],
+      "blockers": ["Live provider execution belongs to the separately bounded runtime-loading probe."]
+    },
+    {
+      "id": "gemini",
+      "installedPresence": {
+        "status": "partial",
+        "evidence": "~/.gemini/GEMINI.md contains the installed managed policy block, but no gemini executable is resolvable."
+      },
+      "nativePromptHook": {
+        "status": "not-supported",
+        "evidence": "Installed entrypoint manifest declares nativePromptHook=false."
+      },
+      "explicitWrapper": {
+        "status": "passed",
+        "evidence": "Installed wrapper returned hydrated Prompt Hydration receipt hydration-6abcf7ae97fd with all four focused-plan sections."
+      },
+      "authenticatedAvailability": {
+        "status": "unavailable",
+        "evidence": "No Gemini executable is installed, so authentication could not be probed."
+      },
+      "liveProviderExecution": {
+        "status": "unavailable",
+        "evidence": "No executable provider entrypoint exists; wrapper behavior does not establish a live Gemini turn."
+      },
+      "evidenceStrength": ["installed-presence", "controlled-wrapper"],
+      "blockers": ["Install and authenticate a supported Gemini CLI before any live-provider claim."]
+    },
+    {
+      "id": "opencode",
+      "installedPresence": {
+        "status": "present",
+        "evidence": "OpenCode 1.19.4 and ~/.config/opencode/AGENTS.md are present; the read-only model catalog lists DeepSeek routes."
+      },
+      "nativePromptHook": {
+        "status": "not-supported",
+        "evidence": "Installed entrypoint manifest declares nativePromptHook=false."
+      },
+      "explicitWrapper": {
+        "status": "passed",
+        "evidence": "Installed wrapper returned hydrated Prompt Hydration receipt hydration-6abcf7ae97fd with all four focused-plan sections."
+      },
+      "authenticatedAvailability": {
+        "status": "partial",
+        "evidence": "Model routes are discoverable, but the approved provider-capability probe reports DEEPSEEK_API_KEY presence=false."
+      },
+      "liveProviderExecution": {
+        "status": "blocked",
+        "evidence": "No brokered DeepSeek turn was attempted because the approved secret-presence gate is false."
+      },
+      "evidenceStrength": ["installed-presence", "controlled-wrapper"],
+      "blockers": ["Provision the approved DeepSeek credential through the secret rail; do not substitute a paid or unapproved route."]
+    },
+    {
+      "id": "paperclip",
+      "installedPresence": {
+        "status": "present",
+        "evidence": "Installed revision contains skills/paperclip/SKILL.md, Paperclip sync/MCP entrypoints, and the declared profile-wrapper target."
+      },
+      "nativePromptHook": {
+        "status": "not-supported",
+        "evidence": "Installed manifest requires an explicit wrapper and forbids a native-interception claim."
+      },
+      "explicitWrapper": {
+        "status": "passed",
+        "evidence": "Installed wrapper returned hydrated Prompt Hydration receipt hydration-6abcf7ae97fd with all four focused-plan sections."
+      },
+      "authenticatedAvailability": {
+        "status": "unverified",
+        "evidence": "Profile presence was inspected locally; no Paperclip account or remote API authentication was probed."
+      },
+      "liveProviderExecution": {
+        "status": "not-run",
+        "evidence": "No Paperclip issue, wake, delegation, or provider turn was created."
+      },
+      "evidenceStrength": ["installed-presence", "controlled-wrapper"],
+      "blockers": ["A separately authorized live Paperclip profile/wake receipt is required for live execution evidence."]
+    },
+    {
+      "id": "openclaw",
+      "installedPresence": {
+        "status": "present",
+        "evidence": "Installed revision contains openclaw-integration/SKILL.md, OpenClaw fleet plugin profiles, and the declared profile-wrapper target; no openclaw executable is resolvable on this host."
+      },
+      "nativePromptHook": {
+        "status": "not-supported",
+        "evidence": "Installed manifest requires an explicit wrapper and forbids a native-interception claim."
+      },
+      "explicitWrapper": {
+        "status": "passed",
+        "evidence": "Installed wrapper returned hydrated Prompt Hydration receipt hydration-6abcf7ae97fd with all four focused-plan sections."
+      },
+      "authenticatedAvailability": {
+        "status": "unverified",
+        "evidence": "Profile presence was inspected locally; no Gateway account/session authentication was probed."
+      },
+      "liveProviderExecution": {
+        "status": "not-run",
+        "evidence": "No OpenClaw Gateway wake, profile execution, or downstream model turn was requested."
+      },
+      "evidenceStrength": ["installed-presence", "controlled-wrapper"],
+      "blockers": ["A host with the OpenClaw executable/Gateway and a separately authorized bounded profile run is required for live execution evidence."]
+    }
+  ],
+  "summary": {
+    "installedProfiles": 6,
+    "authenticatedAvailable": 2,
+    "controlledWrappersPassed": 6,
+    "nativeHooks": 1,
+    "liveExecutionsObserved": 0
+  },
+  "claimLimits": [
+    "Controlled wrapper fixtures prove hydration behavior but are not live provider turns.",
+    "Only Claude has repository-observed native prompt-hook support; its hook fixture does not prove a model invocation.",
+    "Installed instruction/profile presence does not prove provider loading, remote Paperclip/OpenClaw execution, or production behavior.",
+    "No secret value, account identifier, credential mutation, login flow, paid API substitution, or live model request is included."
+  ]
+}
+

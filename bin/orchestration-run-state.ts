@@ -55,6 +55,10 @@ export interface DispatchExecution {
   status: 'running' | 'completed' | 'stalled' | 'failed'; brief: WorkerBrief;
   assignedAt: string; lastHeartbeatAt: string; completedReceiptRef?: string;
 }
+export interface ExternalDeliveryEdge {
+  edgeId: string; sourceCommit: string; package: string; publishedVersion: string | null; consumer: string;
+  status: 'blocked' | 'ready'; nextAction: 'observe-published-version' | 'verify-consumer-adoption'; resumable: true; evidenceRefs: string[];
+}
 export interface AtomicCheckpoint {
   checkpointId: string;
   priorCheckpointId: string | null;
@@ -69,11 +73,12 @@ export interface AtomicCheckpoint {
   integrationWriterLeases: IntegrationWriterLease[];
   integrationWriterLeaseReceipts: IntegrationWriterLeaseReceipt[];
   dispatchExecutions: DispatchExecution[];
+  externalDeliveryEdges: ExternalDeliveryEdge[];
   recordedAt: string;
 }
 
 export interface PhaseReceipt { receiptId: string; runId: string; sequence: number; fromPhase: RunPhase; toPhase: RunPhase; priorStateDigest: string; inputDigest: string; stateDigest: string; recordedAt: string }
-export interface RunState { schemaVersion: 1; runId: string; changeId: string; phase: RunPhase; sequence: number; stateDigest: string; receipts: PhaseReceipt[]; phaseEvidence: Partial<Record<RunPhase, { inputDigest: string; recordedAt: string }>>; assumptionLedger: AssumptionLedgerEntry[]; evidence: unknown[]; evidenceReferences: string[]; providerInvocations: unknown[]; architectAssignments: unknown[]; deliberations: unknown[]; taskGraph: { digest: string; nodes: unknown[] }; taskStates: DurableTaskState[]; checkpoints: AtomicCheckpoint[]; maintenance: MaintenanceContext; integrationWriterLeases: IntegrationWriterLease[]; integrationWriterLeaseReceipts: IntegrationWriterLeaseReceipt[]; dispatchExecutions: DispatchExecution[]; nodeExecutions: unknown[]; integrations: unknown[]; blockers: unknown[] }
+export interface RunState { schemaVersion: 1; runId: string; changeId: string; phase: RunPhase; sequence: number; stateDigest: string; receipts: PhaseReceipt[]; phaseEvidence: Partial<Record<RunPhase, { inputDigest: string; recordedAt: string }>>; assumptionLedger: AssumptionLedgerEntry[]; evidence: unknown[]; evidenceReferences: string[]; providerInvocations: unknown[]; architectAssignments: unknown[]; deliberations: unknown[]; taskGraph: { digest: string; nodes: unknown[] }; taskStates: DurableTaskState[]; checkpoints: AtomicCheckpoint[]; maintenance: MaintenanceContext; integrationWriterLeases: IntegrationWriterLease[]; integrationWriterLeaseReceipts: IntegrationWriterLeaseReceipt[]; dispatchExecutions: DispatchExecution[]; externalDeliveryEdges: ExternalDeliveryEdge[]; nodeExecutions: unknown[]; integrations: unknown[]; blockers: unknown[] }
 
 function canonical(value: unknown): string {
   if (Array.isArray(value)) return `[${value.map(canonical).join(',')}]`;
@@ -90,7 +95,7 @@ function statePayload(state: Omit<RunState, 'stateDigest'> | RunState): unknown 
 export function createRunState(runId: string, changeId: string, assumptionLedger: AssumptionLedgerEntry[] = []): RunState {
   if (!runId.trim() || !changeId.trim()) throw new Error('runId and changeId are required');
   validateAssumptionLedger(assumptionLedger);
-  const state = { schemaVersion: 1 as const, runId, changeId, phase: 'intake' as const, sequence: 0, receipts: [], phaseEvidence: {}, assumptionLedger: structuredClone(assumptionLedger), evidence: [], evidenceReferences: [], providerInvocations: [], architectAssignments: [], deliberations: [], taskGraph: { digest: digest([]), nodes: [] }, taskStates: [], checkpoints: [], maintenance: { kind: 'run' as const, evidenceRevision: changeId, triggerId: `run:${runId}`, recursionDepth: 0, coveredTriggerIds: [] }, integrationWriterLeases: [], integrationWriterLeaseReceipts: [], dispatchExecutions: [], nodeExecutions: [], integrations: [], blockers: [] };
+  const state = { schemaVersion: 1 as const, runId, changeId, phase: 'intake' as const, sequence: 0, receipts: [], phaseEvidence: {}, assumptionLedger: structuredClone(assumptionLedger), evidence: [], evidenceReferences: [], providerInvocations: [], architectAssignments: [], deliberations: [], taskGraph: { digest: digest([]), nodes: [] }, taskStates: [], checkpoints: [], maintenance: { kind: 'run' as const, evidenceRevision: changeId, triggerId: `run:${runId}`, recursionDepth: 0, coveredTriggerIds: [] }, integrationWriterLeases: [], integrationWriterLeaseReceipts: [], dispatchExecutions: [], externalDeliveryEdges: [], nodeExecutions: [], integrations: [], blockers: [] };
   return { ...state, stateDigest: digest(statePayload(state)) };
 }
 
@@ -130,6 +135,7 @@ export function verifyRunState(state: RunState): void {
           integrationWriterLeases: structuredClone(boundary.integrationWriterLeases),
           integrationWriterLeaseReceipts: structuredClone(boundary.integrationWriterLeaseReceipts),
           dispatchExecutions: structuredClone(boundary.dispatchExecutions),
+          externalDeliveryEdges: structuredClone(boundary.externalDeliveryEdges),
           checkpoints: structuredClone(state.checkpoints.slice(0, checkpointIndex + 1)),
         };
         prior = { ...hydrated, stateDigest: digest(statePayload(hydrated)) };
@@ -190,10 +196,37 @@ function checkpoint(state: RunState, action: string, recordedAt: string, evidenc
     integrationWriterLeases: structuredClone(state.integrationWriterLeases),
     integrationWriterLeaseReceipts: structuredClone(state.integrationWriterLeaseReceipts),
     dispatchExecutions: structuredClone(state.dispatchExecutions),
+    externalDeliveryEdges: structuredClone(state.externalDeliveryEdges),
     recordedAt,
   };
   const next = { ...state, checkpoints: [...state.checkpoints, { ...payload, checkpointId: digest(payload) }] };
   return { ...next, stateDigest: digest(statePayload(next)) };
+}
+
+function externalDeliveryEdgeId(input: { sourceCommit: string; package: string; consumer: string }): string {
+  return digest({ edge: 'release-to-consumer', sourceCommit: input.sourceCommit, package: input.package, consumer: input.consumer });
+}
+
+export function recordExternalDeliveryEdgeInRun(state: RunState, input: { sourceCommit: string; package: string; publishedVersion: string | null; consumer: string; evidenceRefs?: string[]; recordedAt?: string }, expectedStateDigest = state.stateDigest): { state: RunState; edge: ExternalDeliveryEdge; disposition: 'recorded' | 'existing' } {
+  verifyRunState(state);
+  if (expectedStateDigest !== state.stateDigest) throw new Error('stale state transition');
+  if (!/^[a-f0-9]{40}$/.test(input.sourceCommit) || !input.package.trim() || !input.consumer.trim()) throw new Error('external delivery edge requires exact source commit, package, and consumer');
+  const edgeId = externalDeliveryEdgeId(input);
+  const expected: ExternalDeliveryEdge = { edgeId, sourceCommit: input.sourceCommit, package: input.package, publishedVersion: input.publishedVersion, consumer: input.consumer, status: input.publishedVersion ? 'ready' : 'blocked', nextAction: input.publishedVersion ? 'verify-consumer-adoption' : 'observe-published-version', resumable: true, evidenceRefs: [...new Set(input.evidenceRefs ?? [])] };
+  const existing = state.externalDeliveryEdges.find((edge) => edge.edgeId === edgeId);
+  if (existing) {
+    if (existing.publishedVersion !== expected.publishedVersion) throw new Error('external delivery edge update requires an explicit evidence-bearing transition');
+    return { state, edge: existing, disposition: 'existing' };
+  }
+  const next = { ...state, externalDeliveryEdges: [...state.externalDeliveryEdges, expected], evidenceReferences: [...new Set([...state.evidenceReferences, ...expected.evidenceRefs])] };
+  const checked = checkpoint({ ...next, stateDigest: digest(statePayload(next)) }, `external-delivery-edge:${edgeId}`, input.recordedAt ?? new Date().toISOString(), expected.evidenceRefs);
+  return { state: checked, edge: expected, disposition: 'recorded' };
+}
+
+export function recordExternalDeliveryEdge(input: { sourceCommit: string; package: string; publishedVersion: string | null; consumer: string }): { status: 'blocked' | 'ready'; nextAction: 'observe-published-version' | 'verify-consumer-adoption'; resumable: true } {
+  const state = createRunState(`external-edge:${digest(input).slice(-12)}`, 'controlled-external-delivery');
+  const { edge } = recordExternalDeliveryEdgeInRun(state, { ...input, recordedAt: '1970-01-01T00:00:00.000Z' });
+  return { status: edge.status, nextAction: edge.nextAction, resumable: edge.resumable };
 }
 
 export function registerDurableTask(
@@ -642,10 +675,17 @@ function verifyDurableState(state: RunState): void {
   if (last && (last.taskStateDigest !== digest(state.taskStates) || last.maintenanceDigest !== digest(state.maintenance)
     || digest(last.integrationWriterLeases) !== digest(state.integrationWriterLeases)
     || digest(last.integrationWriterLeaseReceipts) !== digest(state.integrationWriterLeaseReceipts)
-    || digest(last.dispatchExecutions) !== digest(state.dispatchExecutions))) throw new Error('checkpoint does not match current durable state');
+    || digest(last.dispatchExecutions) !== digest(state.dispatchExecutions)
+    || digest(last.externalDeliveryEdges) !== digest(state.externalDeliveryEdges))) throw new Error('checkpoint does not match current durable state');
   for (const reference of state.evidenceReferences) if (!reference.trim()) throw new Error('empty evidence reference');
   verifyWriterLeases(state);
   verifyDispatchExecutions(state);
+  const edgeIds = new Set<string>();
+  for (const edge of state.externalDeliveryEdges) {
+    if (edge.edgeId !== externalDeliveryEdgeId(edge) || edgeIds.has(edge.edgeId) || !/^[a-f0-9]{40}$/.test(edge.sourceCommit) || !edge.package.trim() || !edge.consumer.trim()) throw new Error('invalid external delivery edge');
+    if ((edge.publishedVersion === null) !== (edge.status === 'blocked' && edge.nextAction === 'observe-published-version')) throw new Error('external delivery edge state is inconsistent');
+    edgeIds.add(edge.edgeId);
+  }
 }
 
 function verifyDispatchExecutions(state: RunState): void {

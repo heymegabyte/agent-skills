@@ -45,3 +45,7 @@ All generated curl examples use `-H "Authorization: Bearer $API_TOKEN"`.
 
 Generated {{GENERATED_DATE}} by forge-skill-from-openapi.
 Spec: {{SPEC_URL}}
+
+## Theme.tools ecosystem contract (required)
+
+Before implementation, load `rules/theme-tools-skill-integration.md` and the `provider-api-skill` mapping in `config/theme-tools-skill-map.json`. Reusable provider actions, triggers, syncs, schemas, UI, and telemetry belong in theme.tools; consumers retain credentials, grants, product policy, and thin configuration.

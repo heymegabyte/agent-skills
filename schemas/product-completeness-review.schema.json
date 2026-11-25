@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent.megabyte.space/schemas/product-completeness-review.schema.json",
+  "title": "Product and completeness review receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "reviewId", "changeId", "reviewer", "evidenceSnapshot", "scope", "requirementAssessments", "taskAssessmentGroups", "traceAssessment", "findings", "verdict"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "reviewId": { "$ref": "#/$defs/id" },
+    "changeId": { "const": "operational-prompt-hydration-workflow" },
+    "reviewer": {
+      "type": "object", "additionalProperties": false,
+      "required": ["identity", "role", "independence", "signedAt", "signatureMethod", "signatureDigest"],
+      "properties": {
+        "identity": { "const": "codex-product-completeness-reviewer" },
+        "role": { "const": "product-completeness" },
+        "independence": { "const": "sequential-independent-review-pass" },
+        "signedAt": { "type": "string", "format": "date-time" },
+        "signatureMethod": { "const": "sha256-reviewer-time-input-digest" },
+        "signatureDigest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "evidenceSnapshot": {
+      "type": "object", "additionalProperties": false,
+      "required": ["editableHead", "agentSkillsRemoteMain", "installedRevision", "themeToolsRemoteMain", "tasksDigest", "reviewInputDigest", "releaseBlockerReceipt"],
+      "properties": {
+        "editableHead": { "$ref": "#/$defs/commit" },
+        "agentSkillsRemoteMain": { "$ref": "#/$defs/commit" },
+        "installedRevision": { "$ref": "#/$defs/commit" },
+        "themeToolsRemoteMain": { "$ref": "#/$defs/commit" },
+        "tasksDigest": { "$ref": "#/$defs/digest" },
+        "reviewInputDigest": { "$ref": "#/$defs/digest" },
+        "releaseBlockerReceipt": { "type": "string", "minLength": 1 }
+      }
+    },
+    "scope": {
+      "type": "object", "additionalProperties": false,
+      "required": ["requirements", "scenarios", "tasks", "checkedTasks", "uncheckedTasks"],
+      "properties": {
+        "requirements": { "const": 28 },
+        "scenarios": { "const": 35 },
+        "tasks": { "const": 56 },
+        "checkedTasks": { "const": 49 },
+        "uncheckedTasks": { "const": 7 }
+      }
+    },
+    "requirementAssessments": {
+      "type": "array", "minItems": 28, "maxItems": 28, "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["domain", "requirement", "status", "evidence", "findingIds"],
+        "properties": {
+          "domain": { "type": "string", "minLength": 1 },
+          "requirement": { "type": "string", "minLength": 1 },
+          "status": { "enum": ["pass", "partial", "fail", "blocked"] },
+          "evidence": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+          "findingIds": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/id" } }
+        }
+      }
+    },
+    "taskAssessmentGroups": {
+      "type": "array", "minItems": 4, "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["disposition", "taskIds", "basis"],
+        "properties": {
+          "disposition": { "enum": ["supported", "checked-with-finding", "blocked-consistent", "pending-consistent"] },
+          "taskIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" } },
+          "basis": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "traceAssessment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "actualChangeLedgerPresent", "genericFixturePresent", "basis"],
+      "properties": {
+        "status": { "const": "fail" },
+        "actualChangeLedgerPresent": { "const": false },
+        "genericFixturePresent": { "const": true },
+        "basis": { "type": "string", "minLength": 1 }
+      }
+    },
+    "findings": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "severity", "kind", "affected", "evidence", "requiredAction"],
+        "properties": {
+          "id": { "$ref": "#/$defs/id" },
+          "severity": { "enum": ["critical", "high", "medium", "blocker"] },
+          "kind": { "enum": ["missing-trace", "indirect-proof", "checkbox-inconsistency", "integration-gap", "external-blocker"] },
+          "affected": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+          "evidence": { "type": "string", "minLength": 1 },
+          "requiredAction": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "verdict": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "archiveReady", "basis"],
+      "properties": {
+        "status": { "const": "FAIL_ACTION_REQUIRED" },
+        "archiveReady": { "const": false },
+        "basis": { "type": "string", "minLength": 1 }
+      }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,127}$" },
+    "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" }
+  }
+}
+

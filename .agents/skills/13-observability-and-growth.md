@@ -19,9 +19,9 @@ Tiered PostHog+Sentry+GA4 stacks wired from day one; feature flags, PLG patterns
 
 Per `_kernel/standards.md#integrations`:
 
-- **Tier 1 (solo)** — PostHog + Workers Tracing OTLP (2 vendors max, cookie-free, free tier covers <10k MAU)
-- **Tier 2 (enterprise)** — + Sentry `@sentry/cloudflare` v9 + GA4/GTM + Axiom
-- **Tier 3 (LLM-heavy >10k calls/mo)** — + AI Gateway
+- **Worker baseline** — Sentry `@sentry/cloudflare` v11 + PostHog + Workers Tracing, routed through `@theme.tools/telemetry`
+- **Acquisition/marketing capability** — add consent-aware GA4/GTM and Axiom when the product requires them
+- **AI/agent capability** — add Langfuse with a 2500ms fail-open boundary and AI Gateway as applicable
 
 ## PostHog (Tier 1 cornerstone)
 
@@ -30,7 +30,7 @@ Per `_kernel/standards.md#integrations`:
 - CSP: `script-src` + `connect-src` for posthog domain
 - Per-feature event naming: `<feature>:<action>` (`signup:complete`, `editor:save`, `share:copy`)
 
-## Sentry (Tier 2)
+## Sentry (Worker baseline)
 
 - `@sentry/cloudflare` v11 (stream trace lifecycle default since 11.0) + `withSentry` wrapper; project via `mcp__sentry__create_project` (org:`megabyte-labs`)
 - `SENTRY_DSN` via `wrangler secret put`
@@ -38,7 +38,7 @@ Per `_kernel/standards.md#integrations`:
 - Breadcrumbs before risky ops; capture exception w/ context tags (`worker` | `route` | `userId`)
 - Release tracking via `SENTRY_RELEASE` env; Workers Tracing handles I/O spans
 
-## Workers Tracing (Tier 1 + 2) / GA4 + GTM (Tier 2) / AI Gateway (Tier 3)
+## Workers Tracing / capability-driven GA4 + GTM / AI Gateway
 
 - Workers Tracing: `[observability] enabled = true` in `wrangler.jsonc` — zero-config OTel I/O tracing; export to Axiom, Honeycomb, Grafana, Datadog via `@opentelemetry/exporter-trace-otlp-http`
 - GA4 + GTM: container snippet (head script + noscript iframe); CSP: `googletagmanager.com` + `google-analytics.com` + `analytics.google.com` + `region1.google-analytics.com`; server-side tagging for EU; custom dimensions over custom events
@@ -106,3 +106,7 @@ Sentry → Inngest pipeline: (1) Sentry webhook on `event.alert.triggered` → (
 - **Tri-Frontier Parallel Swarms & Right-Sized SCRUM Quorum**: When complex architectural synthesis, speculative critical-path racing, or adversarial verification is needed, run `claude`, `codex`, and `gemini` in parallel across isolated Git worktrees (`bin/multi-swarm-orchestrator.ts`) guided by a right-sized collaborative SCRUM meeting (`bin/scrum-deliberation-quorum.ts`) of only the required specialist agents. See `rules/parallel-multi-swarm-orchestration.md`.
 - **End-of-Round Parallel Meaning & Preference Triad Extraction (`bin/triad-end-of-turn-sync.ts`)**: At the end of every prompt round (running in parallel with final verification, deployment, and reporting), extract any possible meaning, preference, architectural lesson, reusable site code, or system configuration from the current agent window and store it concurrently into **`heymegabyte/agent-skills`** (for AI skills/rules/prompts — always updated under the **Minimum-Prompt Ecosystem Completeness Assumption**: assuming the skills *should have already been written* so that we write **as few prompts as possible** to finish **as complete a product or multi-repo ecosystem as possible** via massive parallel agent swarms), **`heymegabyte/theme.tools`** (for reusable site/app code across the 28 canonical `@theme.tools/*` libraries), and **`heymegabyte/install.doctor`** (for reusable system/host code).
 - **Concurrent End-of-Prompt Delivery Closure**: Run documentation/comment reconciliation and bounded `theme.tools`, `install.doctor`, and `agent-skills` extraction reviews concurrently with proportional tests and release preparation. After reconciling those changes and generated outputs, revalidate the exact final tree. Commit only that tested tree, push it normally to `main`, promote it through the approved production rail, and run production smoke plus critical E2E verification. Fail closed without mutating production when authority, credentials, spending permission, review, recovery, validation, or provenance gates are missing; record the exact blocker instead.
+
+## Theme.tools ecosystem contract (required)
+
+Before implementation, load `rules/theme-tools-skill-integration.md` from the agent-skills repository and the entry for this skill in `config/theme-tools-skill-map.json`. Apply catalog-first reuse, upstream contribution, thin-consumer adoption, UI-first theme.tools implementation and test-driven verification, and `.tools/telemetry` routing proportionally to this task.

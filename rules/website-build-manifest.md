@@ -77,7 +77,7 @@ Cross-links: `[[always]]` `[[website-build-doctrine]]` `[[predictive-completenes
 - CF Workers + Hono + D1 + R2 + KV + DO (`[[hono-api]]`). Deep lock-in is the feature.
 - Every clickable entity linked (email/phone/URL/route) — unlinked email/phone = build fail.
 - Every form: Turnstile + Zod + Amazon SES deliverability gate.
-- Analytics instrumented before DONE (solo tier: PostHog + Workers Tracing OTLP) — Worker-reverse-proxied, autocapture OFF, schema-controlled events (`[[production-observability-default-on]]`). A finished site with zero analytics is incomplete; this rule's triggers don't fire on a bare site prompt, so pull it explicitly.
+- Analytics instrumented before DONE through `@theme.tools/telemetry`: server-side Sentry + PostHog + Workers Tracing baseline, with consent-aware GA4/GTM and site-specific adapters when applicable. Use a Worker reverse proxy, autocapture OFF by default, and schema-controlled events (`[[production-observability-default-on]]`).
 
 ## Quality gates (every gate green before DONE)
 

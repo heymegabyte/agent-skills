@@ -97,3 +97,4 @@ members:
   - rules/context-hydration
   - rules/greenfield-saas-prompt-hydration
   - rules/parallel-multi-swarm-orchestration
+  - rules/theme-tools-skill-integration

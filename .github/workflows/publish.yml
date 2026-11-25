@@ -31,6 +31,9 @@ jobs:
             --source-root "$GITHUB_WORKSPACE" \
             --expected-revision "$(git rev-parse HEAD)"
 
+      - name: Check bounded canonical/generated/installed/publish drift
+        run: node --experimental-strip-types bin/bounded-drift-detector.ts --source-root "$GITHUB_WORKSPACE" --source-revision "$(git rev-parse HEAD)" --json
+
       - name: Validate pack cross-link integrity
         run: node scripts/validate-packs.mjs
 

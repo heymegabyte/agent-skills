@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "evaluationId",
+    "changeId",
+    "evaluatedAt",
+    "status",
+    "evidenceClasses",
+    "scenarios",
+    "claimLimits",
+    "reviewer"
+  ],
+  "properties": {
+    "$schema": { "const": "./task-10.3-evaluation.schema.json" },
+    "schemaVersion": { "const": "1.0.0" },
+    "evaluationId": { "const": "operational-prompt-hydration-task-10.3" },
+    "changeId": { "const": "operational-prompt-hydration-workflow" },
+    "evaluatedAt": { "type": "string", "format": "date-time" },
+    "status": { "enum": ["PASS_WITH_BLOCKED_EXTERNAL_EDGE", "FAIL"] },
+    "evidenceClasses": {
+      "type": "array",
+      "uniqueItems": true,
+      "minItems": 5,
+      "items": { "enum": ["controlled", "installed", "live", "remote", "blocked"] },
+      "allOf": [
+        { "contains": { "const": "controlled" } },
+        { "contains": { "const": "installed" } },
+        { "contains": { "const": "live" } },
+        { "contains": { "const": "remote" } },
+        { "contains": { "const": "blocked" } }
+      ]
+    },
+    "scenarios": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "status", "observations", "nextAction"],
+        "properties": {
+          "id": { "enum": ["shared-component-propagation", "fresh-coordinator-worker-loading"] },
+          "status": { "enum": ["PASS", "PASS_WITH_BLOCKED_EXTERNAL_EDGE"] },
+          "observations": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["classification", "state", "claim", "evidenceRef", "evidenceSha256"],
+              "properties": {
+                "classification": {
+                  "enum": ["controlled", "installed", "live", "remote", "blocked"]
+                },
+                "state": { "enum": ["pass", "observed", "blocked"] },
+                "claim": { "type": "string", "minLength": 1 },
+                "evidenceRef": { "type": "string", "minLength": 1 },
+                "evidenceSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+              }
+            }
+          },
+          "nextAction": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "claimLimits": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "evidenceStrength", "receiptRef"],
+      "properties": {
+        "status": { "enum": ["pending", "pass", "fail"] },
+        "evidenceStrength": { "enum": ["pending", "live-subscription-cli"] },
+        "receiptRef": { "type": "string" }
+      }
+    }
+  }
+}

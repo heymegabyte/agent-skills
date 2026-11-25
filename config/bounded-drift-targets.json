@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "baselineRevision": "89e5c7d747db31572768c0c449701f5b4a80d5b9",
+  "canonicalPath": "policies/operational-prompt-hydration.md",
+  "targets": [
+    {
+      "id": "canonical-policy",
+      "class": "canonical",
+      "targetPath": "policies/operational-prompt-hydration.md",
+      "mode": "canonical-digest",
+      "expectedDigest": "sha256:4833e290e756aecb61e14bdcff1be6f01137730bc3a27b7445eb1a78dcad960e"
+    },
+    {
+      "id": "generated-agents",
+      "class": "generated",
+      "targetPath": "AGENTS.md",
+      "mode": "managed-block"
+    },
+    {
+      "id": "generated-claude",
+      "class": "generated",
+      "targetPath": "CLAUDE.md",
+      "mode": "managed-block"
+    },
+    {
+      "id": "installed-codex",
+      "class": "installed",
+      "targetPath": "CODEX.md",
+      "mode": "managed-block",
+      "optional": true
+    },
+    {
+      "id": "publish-copilot",
+      "class": "publish",
+      "targetPath": ".github/copilot-instructions.md",
+      "mode": "managed-block"
+    }
+  ]
+}

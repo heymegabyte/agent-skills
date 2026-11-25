@@ -46,7 +46,7 @@ Same OTLP pattern — change URL + auth headers.
 
 - **Sentry** (`@sentry/cloudflare` v11, stream trace lifecycle default since 11.0) — **exceptions** only. Use `withSentry` wrapper. Drop the manual breadcrumb scaffolding for I/O; Workers Tracing covers that.
 - **Workers Tracing (OTLP)** — **spans** for every I/O, perf timing, "where did time go" debugging.
-- **PostHog** — product analytics + session replay + feature flags + frontend error tracking (one platform). New projects can go PostHog-only for frontend, Sentry-only for backend.
+- **PostHog** — product analytics + consented session replay + feature flags. Sentry remains the server-side Worker error baseline.
 - **GA4 / GTM** — marketing + acquisition + conversion funnels.
 - **AI Gateway** — every LLM call. Logging + caching + rate-limit + fallback in one binding.
 
