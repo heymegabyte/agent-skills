@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "taskId": "10.7",
+  "status": "partial-sync-valid-blocked",
+  "archiveReady": false,
+  "capturedAt": "2026-11-25T08:05:00Z",
+  "sourceRevision": "61f41f6938b6ac765ebaafe287fbaa13a08db521",
+  "syncedCapabilities": [
+    {
+      "id": "authoritative-work-ledger",
+      "path": "openspec/specs/authoritative-work-ledger/spec.md",
+      "strictValidation": "pass"
+    },
+    {
+      "id": "autonomous-work-admission",
+      "path": "openspec/specs/autonomous-work-admission/spec.md",
+      "strictValidation": "pass"
+    },
+    {
+      "id": "delivery-traceability",
+      "path": "openspec/specs/delivery-traceability/spec.md",
+      "strictValidation": "pass"
+    },
+    {
+      "id": "evidence-integrity",
+      "path": "openspec/specs/evidence-integrity/spec.md",
+      "strictValidation": "pass"
+    },
+    {
+      "id": "instruction-policy-distribution",
+      "path": "openspec/specs/instruction-policy-distribution/spec.md",
+      "strictValidation": "pass"
+    },
+    {
+      "id": "prompt-hydration-workflow",
+      "path": "openspec/specs/prompt-hydration-workflow/spec.md",
+      "strictValidation": "pass"
+    }
+  ],
+  "validation": {
+    "command": "openspec validate --specs --strict --json",
+    "items": 6,
+    "passed": 6,
+    "failed": 0
+  },
+  "structuralBlockers": [
+    {
+      "id": "autonomous-mission-expansion-missing-main-spec",
+      "deltaPath": "openspec/changes/operational-prompt-hydration-workflow/specs/autonomous-mission-expansion/spec.md",
+      "operation": "MODIFIED-only",
+      "reason": "No main autonomous-mission-expansion spec exists, so this change cannot apply MODIFIED requirements without inventing a baseline.",
+      "nextAction": "Use a separately authorized architect-owned change to establish the canonical main baseline from authoritative prior behavior, validate it strictly, then re-run this change's spec sync without converting MODIFIED to ADDED."
+    },
+    {
+      "id": "multi-model-convergence-missing-main-spec",
+      "deltaPath": "openspec/changes/operational-prompt-hydration-workflow/specs/multi-model-convergence/spec.md",
+      "operation": "MODIFIED-only",
+      "reason": "No main multi-model-convergence spec exists, so this change cannot apply MODIFIED requirements without inventing a baseline.",
+      "nextAction": "Use a separately authorized architect-owned change to establish the canonical main baseline from authoritative prior behavior, validate it strictly, then re-run this change's spec sync without converting MODIFIED to ADDED."
+    }
+  ],
+  "externalBlocker": {
+    "taskIds": ["8.3", "8.4", "8.5"],
+    "state": "blocked",
+    "reason": "GitHub Actions billing prevents qualification, approved versioning remains unapplied, and @theme.tools/sdk@1.0.1 is absent from the authoritative registry.",
+    "nextAction": "After an authorized billing administrator restores Actions, apply the approved versioning path, require qualification to pass, publish through the OIDC workflow, observe immutable 1.0.1, then verify intended consumer resolution, lockfile, behavior, remote integration, and CI."
+  },
+  "taskState": {
+    "task10_7Checked": false,
+    "archiveAttempted": false,
+    "deltaOperationChanged": false,
+    "inventedBaseline": false
+  },
+  "completionNextActions": [
+    "Resolve both missing-main-spec structural blockers through separately authorized architect-owned baseline changes.",
+    "Resolve and verify tasks 8.3 through 8.5 through the recorded external release and consumer path.",
+    "Re-run strict spec and change validation, reconcile the delivery trace, and review archive readiness before checking task 10.7 or archiving."
+  ]
+}
