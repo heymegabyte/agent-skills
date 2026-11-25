@@ -108,6 +108,50 @@ test('composition root executes the receipt-gated production sequence through ve
   assert.equal(result.conferenceResolution.exchanges.length, 3);
 });
 
+test('composition root applies the host pre-integration review gate', async () => {
+  const { checkout, paths, specialists } = fixture();
+  const calls: string[] = [];
+  const adapters = configured(checkout, paths, calls);
+  adapters.schedulerOptions = {
+    concurrency: 1,
+    async reviewBeforeIntegration(node, receipt) {
+      calls.push(`review:${node.id}`);
+      return { approved: true, reviewer: 'independent-host-review', sourceDigest: receipt.sourceDigestAfter! };
+    },
+  };
+
+  const result = await runEvidenceGatedPipeline(input(checkout, specialists), adapters);
+
+  assert.equal(result.executions[0].review?.reviewer, 'independent-host-review');
+  assert.ok(calls.indexOf('accept:implement') < calls.indexOf('review:implement'));
+  assert.ok(calls.indexOf('review:implement') < calls.indexOf('integrate:implement'));
+});
+
+test('a recovered execution attempt remains in history without blocking verification', async () => {
+  const { checkout, paths, specialists } = fixture();
+  const calls: string[] = [];
+  const adapters = configured(checkout, paths, calls);
+  const compile = adapters.compileOpenSpec;
+  const launch = adapters.scheduler.launch;
+  let attempts = 0;
+  adapters.compileOpenSpec = async (request) => {
+    const compiled = await compile(request);
+    return { ...compiled, nodes: compiled.nodes.map((node) => ({ ...node, maxAttempts: 2 })) };
+  };
+  adapters.scheduler.launch = (...args) => ++attempts === 1
+    ? Promise.resolve({ ...completedProcess(), exitCode: 1 })
+    : launch(...args);
+
+  const result = await runEvidenceGatedPipeline(input(checkout, specialists), adapters);
+
+  assert.equal(result.status, 'complete');
+  assert.deepEqual(result.executions.map(({ attempt, status }) => ({ attempt, status })), [
+    { attempt: 1, status: 'failed' },
+    { attempt: 2, status: 'integrated' },
+  ]);
+  assert(calls.includes('verify:adversarial'));
+});
+
 test('low-risk pipeline completes with one provider through labeled sequential responsibilities', async () => {
   const { checkout, paths } = fixture(); const calls: string[] = [];
   const specialists: Specialist[] = [{ id: 'codex-only', expertise: ['product', 'architecture'], family: 'codex', architectEligible: true }];

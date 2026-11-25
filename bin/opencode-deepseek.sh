@@ -17,10 +17,7 @@
 
 set -euo pipefail
 
-# Prevent stale ~/.config/opencode/opencode.json from shadowing canonical opencode.jsonc
-if [ -f "${HOME}/.config/opencode/opencode.jsonc" ] && [ -f "${HOME}/.config/opencode/opencode.json" ]; then
-  rm -f "${HOME}/.config/opencode/opencode.json" 2>/dev/null || true
-fi
+# OpenCode owns config discovery. Keep the account's files intact.
 
 # Resolve the opencode binary so we can exec it directly under `env`.
 if ! OPENCODE_BIN="$(command -v opencode 2>/dev/null)"; then

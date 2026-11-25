@@ -64,6 +64,7 @@ export interface PipelineAdapters {
   assignArchitect: (input: { changeId: string; prompt: string; roster: ReturnType<typeof selectConferenceRoster>; fixedPointDigest: string }) => Promise<ArchitectAssignmentReceipt>;
   compileOpenSpec: (input: OpenSpecCompilerInput) => Promise<{ artifacts: CompiledArtifact[]; nodes: ExecutionNode[] }>;
   scheduler: SchedulerAdapter;
+  schedulerOptions?: Parameters<typeof executeFrozenContract>[2];
   verify: (input: { contract: FrozenContract; executions: NodeExecutionReceipt[] }) => Promise<{ passed: boolean; receipts: VerificationReceipt[]; blockers?: string[] }>;
 }
 
@@ -177,12 +178,17 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
   state = advance(state, 'openspec-compilation', { contract: compiled });
   const contract = compileAndFreezeContract({ checkout: input.checkout, changeId: input.changeId, assignment, trustedAuthoritySourceDigest: input.trustedAuthoritySourceDigest, evidenceDigest, fixedPointDigest, unresolvedMaterialDeltas: [], frozenBaseRevision: input.sourceRevision, ...compiled });
   state = advance(state, 'contract-freeze', { contract });
-  const executions = await executeFrozenContract(contract, configured.scheduler);
-  const failed = executions.filter((receipt) => receipt.status !== 'integrated');
-  if (failed.length) throw new Error(`Swarm execution did not integrate every node: ${failed.map((receipt) => `${receipt.nodeId}:${receipt.status}`).join(', ')}`);
+  const executions = await executeFrozenContract(contract, configured.scheduler, configured.schedulerOptions);
+  const latestByNode = new Map(executions.map((receipt) => [receipt.nodeId, receipt]));
+  const failures = contract.nodes.flatMap(({ id }) => {
+    const status = latestByNode.get(id)?.status;
+    return status === 'integrated' ? [] : [`${id}:${status ?? 'missing'}`];
+  });
+  if (failures.length) throw new Error(`Swarm execution did not integrate every node: ${failures.join(', ')}`);
+  const terminalExecutions = [...latestByNode.values()];
   state = advance(state, 'swarm-execution', { executions });
-  state = advance(state, 'integration', { executions });
-  const verification = await configured.verify({ contract, executions });
+  state = advance(state, 'integration', { executions: terminalExecutions });
+  const verification = await configured.verify({ contract, executions: terminalExecutions });
   if (!verification.passed || !verification.receipts.length) throw new Error(`Adversarial verification failed closed: ${(verification.blockers ?? ['missing verification receipts']).join('; ')}`);
   const reviewerFamilies = new Set(verification.receipts.map((receipt) => receipt.reviewerFamily));
   const highRisk = riskGate.categories.length > 0;

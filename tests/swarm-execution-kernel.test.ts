@@ -4,6 +4,9 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
 import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
+import { createDetachedDevelopmentWorktree } from '../bin/local-development-worktree.ts';
+import { localDevelopmentLauncher } from '../bin/local-development-launchers.ts';
 import {
   compileAndFreezeContract,
   createApprovedProcessAdapter,
@@ -107,6 +110,164 @@ test('hostile graphs fail before launch', () => {
   assert.throws(() => validateTaskGraph(collision), /ownership collision/);
 });
 
+test('local development worktree starts at the frozen commit and preserves local edits', () => {
+  const root = mkdtempSync(join(tmpdir(), 'development-worktree-test-'));
+  const checkout = join(root, 'source');
+  mkdirSync(checkout);
+  const git = (directory: string, ...args: string[]) =>
+    execFileSync('git', ['-C', directory, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+  try {
+    git(checkout, 'init', '-q');
+    const source = join(checkout, 'fixture.txt');
+    writeFileSync(source, 'frozen source');
+    git(checkout, 'add', 'fixture.txt');
+    git(checkout, '-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.test', 'commit', '-qm', 'Frozen fixture');
+    const base = git(checkout, 'rev-parse', 'HEAD');
+    writeFileSync(source, 'concurrent local edits');
+
+    const created = createDetachedDevelopmentWorktree(checkout, root, base);
+
+    assert.equal(created.sourceDigest, base);
+    assert.equal(git(created.directory, 'rev-parse', 'HEAD'), base);
+    assert.equal(git(created.directory, 'status', '--porcelain'), '');
+    assert.equal(readFileSync(join(created.directory, 'fixture.txt'), 'utf8'), 'frozen source');
+    assert.equal(readFileSync(source, 'utf8'), 'concurrent local edits');
+    assert.throws(() => createDetachedDevelopmentWorktree(checkout, root, 'HEAD'), /full Git commit identity/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('local dispatch maps each supported provider to its canonical wrapper', () => {
+  const { checkout, nodes } = fixture();
+  const evidence = {
+    agentSkillsCheckout: checkout,
+    budgetReceipt: 'fixture-budget',
+    enforcesWorktreeIsolation: true,
+    enforcesBoundedEgress: false,
+  };
+  const paths = [
+    ['codex', 'with-subscription-cli.sh', ['codex', 'exec', '--sandbox', 'workspace-write', '--cd', checkout]],
+    ['claude', 'with-subscription-cli.sh', ['claude', '--print', '--permission-mode', 'acceptEdits', '--strict-mcp-config']],
+    ['opencode-deepseek', 'opencode-deepseek.sh', ['run', '--pure', '-m', 'litellm/deepseek-v4-pro', '--dir', checkout]],
+  ] as const;
+
+  for (const [provider, wrapper, prefix] of paths) {
+    const launcher = localDevelopmentLauncher(provider, evidence);
+    const args = [...launcher.fixedArgs, ...launcher.taskArgs!(nodes[0], 'fixture', checkout)];
+    assert.equal(launcher.executable, join(checkout, 'bin', wrapper));
+    assert.deepEqual(args.slice(0, -2), [...prefix]);
+    assert.equal(args.at(-2), '--');
+    const prompt = args.at(-1)!;
+    assert(prompt.includes(nodes[0].title));
+    assert(prompt.includes(nodes[0].ownedPaths[0]));
+    assert.equal(launcher.budgetReceipt, evidence.budgetReceipt);
+  }
+});
+
+test('scheduler rejects changes to frozen task inputs before adapter calls', async () => {
+  const { checkout, artifacts, assignment, nodes } = fixture();
+  const contract = compileAndFreezeContract({
+    checkout, changeId: 'change', assignment, trustedAuthoritySourceDigest: assignment.authoritySourceDigest,
+    evidenceDigest: 'e', fixedPointDigest: 'f', unresolvedMaterialDeltas: [], artifacts, nodes,
+  });
+  contract.nodes[0].title = 'Changed after approval';
+  const runner = adapter();
+
+  await assert.rejects(executeFrozenContract(contract, runner), /do not match their digests/);
+  assert.deepEqual(runner.calls, []);
+});
+
+test('scheduler bounds independent ready work to the configured wave size', async () => {
+  const { checkout, artifacts, assignment, nodes } = fixture();
+  nodes[1].dependsOn = [];
+  const contract = compileAndFreezeContract({
+    checkout, changeId: 'change', assignment, trustedAuthoritySourceDigest: assignment.authoritySourceDigest,
+    evidenceDigest: 'e', fixedPointDigest: 'f', unresolvedMaterialDeltas: [], artifacts, nodes,
+  });
+  const runner = adapter();
+
+  await assert.rejects(executeFrozenContract(contract, runner, { concurrency: 0 }), /positive integer/);
+  assert.deepEqual(runner.calls, []);
+  const receipts = await executeFrozenContract(contract, runner, { concurrency: 1 });
+
+  assert.deepEqual(receipts.map(({ status }) => status), ['integrated', 'integrated']);
+  assert(runner.calls.indexOf('integrate:bounded') < runner.calls.indexOf('preflight:codex:integrate'));
+});
+
+test('configured 8, 24 and 76 worker caps are enforced across a ready backlog', async () => {
+  const { checkout, artifacts, assignment } = fixture();
+  const nodes: ExecutionNode[] = Array.from({ length: 77 }, (_, index) => ({
+    id: `task-${index}`, title: 'Fixture task', provider: 'opencode-deepseek', classification: 'bounded',
+    dependsOn: [], worktree: `worktree-${index}`, branch: `swarm/task-${index}`, port: 4300 + index,
+    ownedPaths: [`src/file-${index}.ts`], acceptance: [{ command: 'node', args: ['--test'] }],
+  }));
+  const tasks = artifacts.find(({ kind }) => kind === 'tasks')!;
+  tasks.content = nodes.map(({ id }) => `- [ ] [${id}] Run fixture (requirements: R1; scenarios: S1)`).join('\n');
+  writeFileSync(join(checkout, tasks.path), tasks.content);
+  const contract = compileAndFreezeContract({
+    checkout, changeId: 'change', assignment, trustedAuthoritySourceDigest: assignment.authoritySourceDigest,
+    evidenceDigest: 'e', fixedPointDigest: 'f', unresolvedMaterialDeltas: [], artifacts, nodes,
+  });
+
+  for (const concurrency of [8, 24, 76]) {
+    let active = 0;
+    let peak = 0;
+    const runner = adapter({
+      async launch() {
+        active += 1;
+        peak = Math.max(peak, active);
+        await new Promise<void>((resolve) => setImmediate(resolve));
+        active -= 1;
+        return processReceipt();
+      },
+      async changedFiles(node) { return node.ownedPaths; },
+    });
+    const receipts = await executeFrozenContract(contract, runner, { concurrency });
+    assert.equal(peak, concurrency);
+    assert.equal(receipts.length, nodes.length);
+    assert(receipts.every(({ status }) => status === 'integrated'));
+  }
+});
+
+test('provider setup failures leave independent ready work running', async () => {
+  const { checkout, artifacts, assignment, nodes } = fixture();
+  nodes[0].maxAttempts = 1;
+  nodes[1].dependsOn = [];
+  const contract = compileAndFreezeContract({
+    checkout, changeId: 'change', assignment, trustedAuthoritySourceDigest: assignment.authoritySourceDigest,
+    evidenceDigest: 'e', fixedPointDigest: 'f', unresolvedMaterialDeltas: [], artifacts, nodes,
+  });
+
+  for (const phase of ['preflight', 'createWorktree'] as const) {
+    const runner = adapter();
+    if (phase === 'preflight') {
+      const original = runner.preflight;
+      runner.preflight = async (provider, node) => {
+        if (node.id === 'bounded') throw new Error('Fixture setup failed');
+        return original(provider, node);
+      };
+    } else {
+      const original = runner.createWorktree;
+      runner.createWorktree = async (node) => {
+        if (node.id === 'bounded') throw new Error('Fixture setup failed');
+        return original(node);
+      };
+    }
+    const receipts = await executeFrozenContract(contract, runner);
+
+    assert.equal(receipts.find(({ nodeId }) => nodeId === 'bounded')?.failure, 'Fixture setup failed');
+    assert.equal(receipts.find(({ nodeId }) => nodeId === 'integrate')?.status, 'integrated');
+    assert(runner.calls.includes('preserve:bounded'));
+    assert(!runner.calls.includes('launch:opencode-deepseek:bounded'));
+  }
+
+  const cancelled = adapter();
+  const receipts = await executeFrozenContract(contract, cancelled, { signal: AbortSignal.abort('already cancelled') });
+  assert.deepEqual(receipts.map(({ status }) => status), ['cancelled', 'cancelled']);
+  assert.deepEqual(cancelled.calls, []);
+});
+
 test('scheduler runs dependency waves and only integrates launched, accepted exact source', async () => {
   const { checkout, artifacts, assignment, nodes } = fixture();
   const contract = compileAndFreezeContract({ checkout, changeId: 'change', assignment, trustedAuthoritySourceDigest: assignment.authoritySourceDigest, evidenceDigest: 'e', fixedPointDigest: 'f', unresolvedMaterialDeltas: [], artifacts, nodes });
@@ -196,6 +357,41 @@ test('accepted source mutation is fenced before integration', async () => {
   assert.ok(!fake.calls.includes('integrate:bounded'));
 });
 
+test('pre-integration review is bound to accepted source and requires observed work', async () => {
+  const { checkout, artifacts, assignment, nodes } = fixture();
+  nodes[0].maxAttempts = 1;
+  const contract = compileAndFreezeContract({
+    checkout, changeId: 'change', assignment, trustedAuthoritySourceDigest: assignment.authoritySourceDigest,
+    evidenceDigest: 'e', fixedPointDigest: 'f', unresolvedMaterialDeltas: [], artifacts, nodes,
+  });
+
+  const accepted = adapter();
+  const passing = await executeFrozenContract(contract, accepted, {
+    async reviewBeforeIntegration(node, receipt) {
+      assert(accepted.calls.includes(`accept:${node.id}`));
+      assert(!accepted.calls.includes(`integrate:${node.id}`));
+      return { reviewer: 'fixture-independent', approved: true, sourceDigest: receipt.sourceDigestAfter! };
+    },
+  });
+  assert.deepEqual(passing.map(({ status }) => status), ['integrated', 'integrated']);
+  assert.equal(passing[0].review?.reviewer, 'fixture-independent');
+
+  const rejected = adapter();
+  const failing = await executeFrozenContract(contract, rejected, {
+    async reviewBeforeIntegration() {
+      return { reviewer: 'fixture-independent', approved: true, sourceDigest: 'different-source' };
+    },
+  });
+  assert.match(failing[0].failure ?? '', /did not approve the accepted source/);
+  assert(!rejected.calls.some((call) => call.startsWith('integrate:')));
+
+  const empty = adapter({ async changedFiles() { return []; } });
+  const noDiff = await executeFrozenContract(contract, empty, {
+    async reviewBeforeIntegration() { throw new Error('No diff must be rejected before review'); },
+  });
+  assert.match(noDiff[0].failure ?? '', /requires an owned diff and executed acceptance/);
+});
+
 test('central integration is serialized and receives the frozen base revision', async () => {
   const { checkout, artifacts, assignment, nodes } = fixture();
   nodes[1] = { ...nodes[1], dependsOn: [] };
@@ -206,6 +402,32 @@ test('central integration is serialized and receives the frozen base revision', 
   assert.ok(receipts.every((receipt) => receipt.status === 'integrated'));
   assert.equal(peak, 1);
   assert.deepEqual(bases, ['base-revision-1', 'base-revision-1']);
+});
+
+test('headless process adapter closes standard input for child commands', async () => {
+  const { checkout, nodes } = fixture();
+  writeFileSync(join(checkout, 'read-stdin.mjs'), 'for await (const _ of process.stdin) {} console.log("stdin ended");');
+  const processAdapter = createApprovedProcessAdapter({
+    checkout,
+    safeWorktreeRoots: [checkout],
+    launchers: {},
+    allowedAcceptanceExecutables: ['node'],
+    processTimeoutMs: 1500,
+    resolveSecretReference: () => undefined,
+    async createWorktree() { return { directory: checkout, sourceDigest: 'before' }; },
+    async listChangedFiles() { return []; },
+    async sourceDigest() { return 'after'; },
+    async integrate(_node, _directory, sourceDigest) { return { sourceDigest }; },
+    async preserveForRecovery() {},
+  });
+
+  await processAdapter.createWorktree(nodes[0]);
+  const receipt = await processAdapter.runAcceptance(
+    nodes[0], { command: 'node', args: ['read-stdin.mjs'] }, new AbortController().signal,
+  );
+
+  assert.equal(receipt.exitCode, 0);
+  assert.equal(receipt.stdout.trim(), 'stdin ended');
 });
 
 test('process adapter rejects hostile acceptance arguments beyond executable allowlisting', async () => {
