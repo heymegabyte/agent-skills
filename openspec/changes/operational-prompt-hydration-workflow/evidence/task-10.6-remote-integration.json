@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "taskId": "10.6",
+  "status": "pass",
+  "observedAt": "2026-11-25T08:01:00Z",
+  "repository": "https://github.com/heymegabyte/agent-skills.git",
+  "branch": "main",
+  "integrationCommits": [
+    {
+      "sha": "2dc7866de908fa7ee23aa5eac7a1454fa3a953f1",
+      "purpose": "task-10.5 checked state and regenerated delivery trace",
+      "hostedCiRunId": 45572362206,
+      "hostedCiConclusion": "failure",
+      "failureClassification": "task-owned JSON formatting",
+      "supersededBy": "6169d32967677d876488a2268004f8374c5d7f0a"
+    },
+    {
+      "sha": "6169d32967677d876488a2268004f8374c5d7f0a",
+      "purpose": "exact formatting correction without behavioral change",
+      "hostedCiRunId": 45572437553,
+      "hostedCiConclusion": "success",
+      "hostedCiUrl": "https://github.com/heymegabyte/agent-skills/actions/runs/45572437553",
+      "remoteMainObserved": true
+    }
+  ],
+  "themeTools": {
+    "sourceCommit": "5d716b6ccd8064abbafa3822e1210d0bfd50d0e4",
+    "alreadyDelivered": true,
+    "newPushRequired": false
+  },
+  "releaseBoundary": {
+    "task8_3": "BLOCKED",
+    "packagePublished": false,
+    "consumerAdoptionClaimed": false,
+    "reason": "GitHub Actions billing, unapplied approved versioning, and absent @theme.tools/sdk@1.0.1 remain exact external preconditions."
+  },
+  "pushMode": "normal-fast-forward",
+  "forcePushUsed": false
+}

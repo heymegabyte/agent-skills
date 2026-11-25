@@ -440,7 +440,7 @@
             "id": "VERIFY:TASK-10.4:FOCUSED",
             "command": "node --experimental-strip-types --test tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts",
             "status": "pass",
-            "evidenceDigest": "sha256:607c234fd9e85a1bc4738070bfb98f9f88230ec0d9f332df275dab4ac4f3c9ab",
+            "evidenceDigest": "sha256:4b9e78aba4904a84858d95807e3bc566b310de11079e8b4ee8d4e483aa8242fa",
             "observedAt": "2026-11-25T07:34:56.000Z"
           }
         ]
@@ -538,7 +538,7 @@
             "id": "VERIFY:TASK-10.5:FOCUSED",
             "command": "node --experimental-strip-types --test tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts",
             "status": "pass",
-            "evidenceDigest": "sha256:607c234fd9e85a1bc4738070bfb98f9f88230ec0d9f332df275dab4ac4f3c9ab",
+            "evidenceDigest": "sha256:4b9e78aba4904a84858d95807e3bc566b310de11079e8b4ee8d4e483aa8242fa",
             "observedAt": "2026-11-25T07:34:56.000Z"
           },
           {
@@ -611,38 +611,61 @@
         "id": "TASK-10.6",
         "owner": "integration writer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/10-6"],
+        "affectedPaths": [
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.6-remote-integration.json",
+          ".github/workflows/publish.yml",
+          "tests/operational-change-delivery-trace.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "no tested local-only task-related commit remains and no unverified claim is marked complete"
         ],
         "expectedEvidence": [
           {
-            "kind": "blocker",
-            "strength": "local",
-            "description": "Focused verification receipt bound to exact source"
+            "kind": "verification",
+            "strength": "controlled",
+            "description": "Evidence artifact task-10.6-remote-integration.json"
           }
         ]
       },
       "implementation": {
-        "state": "proposed",
-        "codePaths": []
+        "state": "implemented",
+        "codePaths": [
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.6-remote-integration.json",
+          ".github/workflows/publish.yml",
+          "tests/operational-change-delivery-trace.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-10.6:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:4b9e78aba4904a84858d95807e3bc566b310de11079e8b4ee8d4e483aa8242fa",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          },
+          {
+            "id": "VERIFY:TASK-10.6:ARTIFACT",
+            "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.6-remote-integration.json",
+            "status": "pass",
+            "evidenceDigest": "sha256:7dc030f11d7a2618f476b0f23352c9f38c0c95579c0eaad551d853f461035416",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "6169d32967677d876488a2268004f8374c5d7f0a",
+        "testedTree": "6169d32967677d876488a2268004f8374c5d7f0a",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "6169d32967677d876488a2268004f8374c5d7f0a",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -673,17 +696,7 @@
           "evidenceIds": ["EVIDENCE:TASK-10.6:1"]
         }
       },
-      "blockers": [
-        {
-          "id": "BLOCKER:TASK-10.6",
-          "edge": "integration",
-          "reason": "Exact validated integration tree is not yet available.",
-          "owner": "integration writer",
-          "nextAction": "Push normally and observe exact remote SHAs and applicable CI.",
-          "status": "active",
-          "evidenceIds": ["EVIDENCE:TASK-10.6:BLOCKER"]
-        }
-      ]
+      "blockers": []
     },
     {
       "recordId": "TRACE:REQ-OPH-03:TASK-10.7",
@@ -2793,7 +2806,7 @@
             "id": "VERIFY:TASK-10.1:FOCUSED",
             "command": "node --experimental-strip-types --test tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts",
             "status": "pass",
-            "evidenceDigest": "sha256:607c234fd9e85a1bc4738070bfb98f9f88230ec0d9f332df275dab4ac4f3c9ab",
+            "evidenceDigest": "sha256:4b9e78aba4904a84858d95807e3bc566b310de11079e8b4ee8d4e483aa8242fa",
             "observedAt": "2026-11-25T07:34:56.000Z"
           },
           {
@@ -2898,7 +2911,7 @@
             "id": "VERIFY:TASK-10.2:FOCUSED",
             "command": "node --experimental-strip-types --test tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts",
             "status": "pass",
-            "evidenceDigest": "sha256:607c234fd9e85a1bc4738070bfb98f9f88230ec0d9f332df275dab4ac4f3c9ab",
+            "evidenceDigest": "sha256:4b9e78aba4904a84858d95807e3bc566b310de11079e8b4ee8d4e483aa8242fa",
             "observedAt": "2026-11-25T07:34:56.000Z"
           },
           {
@@ -3001,7 +3014,7 @@
             "id": "VERIFY:TASK-10.3:FOCUSED",
             "command": "node --experimental-strip-types --test tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts",
             "status": "pass",
-            "evidenceDigest": "sha256:607c234fd9e85a1bc4738070bfb98f9f88230ec0d9f332df275dab4ac4f3c9ab",
+            "evidenceDigest": "sha256:4b9e78aba4904a84858d95807e3bc566b310de11079e8b4ee8d4e483aa8242fa",
             "observedAt": "2026-11-25T07:34:56.000Z"
           },
           {

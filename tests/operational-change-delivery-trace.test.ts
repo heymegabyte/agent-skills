@@ -26,7 +26,7 @@ test('operational change ledger covers all requirements and tasks with exact int
 test('checked tasks use real paths, passing verification, and exact remote integration', () => {
   const taskText = readFileSync(join(root, 'openspec/changes/operational-prompt-hydration-workflow/tasks.md'), 'utf8');
   const checked = new Set([...taskText.matchAll(/^- \[x\] (\d+\.\d+) /gm)].map((match) => `TASK-${match[1]}`));
-  assert.equal(checked.size, 51);
+  assert.equal(checked.size, 52);
   for (const record of ledger.records.filter((item: any) => checked.has(item.task.id))) {
     assert.equal(record.implementation.state, 'implemented', record.task.id);
     assert.ok(record.implementation.codePaths.length > 0, record.task.id);
@@ -35,7 +35,7 @@ test('checked tasks use real paths, passing verification, and exact remote integ
     assert.ok(record.verification.receipts.length > 0, record.task.id);
     assert.equal(record.verification.receipts.every((receipt: any) => receipt.status === 'pass'), true, record.task.id);
     assert.equal(record.integration.status, 'integrated', record.task.id);
-    const expected = record.task.id === 'TASK-8.2' ? '5d716b6ccd8064abbafa3822e1210d0bfd50d0e4' : ['TASK-10.4', 'TASK-10.5'].includes(record.task.id) ? '04490ce5d118939a051b0c6fb51c786bec96c2f9' : 'b57f593caa92835d166aa7024944582887bc4ed2';
+    const expected = record.task.id === 'TASK-8.2' ? '5d716b6ccd8064abbafa3822e1210d0bfd50d0e4' : record.task.id === 'TASK-10.6' ? '6169d32967677d876488a2268004f8374c5d7f0a' : ['TASK-10.4', 'TASK-10.5'].includes(record.task.id) ? '04490ce5d118939a051b0c6fb51c786bec96c2f9' : 'b57f593caa92835d166aa7024944582887bc4ed2';
     assert.equal(record.integration.integratedCommit, expected, record.task.id);
     assert.equal(record.integration.testedTree, expected, record.task.id);
     assert.equal(record.integration.remote.status, 'observed-main', record.task.id);
@@ -48,7 +48,7 @@ test('change trace is queryable and preserves only exact blocked and pending tas
   assert.equal(queryDeliveryTrace(ledger, { requirementId: 'REQ-OPH-12' }).length > 0, true);
   const release = queryDeliveryTrace(ledger, { taskId: 'TASK-8.3' })[0];
   assert.equal(release.delivery.release.status, 'blocked'); assert.equal(release.delivery.release.version, '1.0.1');
-  for (const id of ['TASK-8.3', 'TASK-8.4', 'TASK-8.5', 'TASK-10.6', 'TASK-10.7']) {
+  for (const id of ['TASK-8.3', 'TASK-8.4', 'TASK-8.5', 'TASK-10.7']) {
     const record = queryDeliveryTrace(ledger, { taskId: id })[0];
     assert.equal(record.integration.status, 'pending', id);
     assert.equal(record.blockers[0].status, 'active', id);

@@ -12,6 +12,7 @@ const changeRelative = `openspec/changes/${changeId}`;
 const integratedAgentSkillsRevision = 'b57f593caa92835d166aa7024944582887bc4ed2';
 const integratedThemeToolsRevision = '5d716b6ccd8064abbafa3822e1210d0bfd50d0e4';
 const postReviewValidationRevision = '04490ce5d118939a051b0c6fb51c786bec96c2f9';
+const remoteIntegrationRevision = '6169d32967677d876488a2268004f8374c5d7f0a';
 const agentSkillsRemote = 'https://github.com/heymegabyte/agent-skills.git';
 const themeToolsRemote = 'https://github.com/heymegabyte/theme.tools.git';
 const evidenceByTask: Record<string, string> = {
@@ -20,13 +21,13 @@ const evidenceByTask: Record<string, string> = {
   '8.3': 'task-8.3-blocked-release.json', '9.2': 'task-9.2-installation.json',
   '9.3': 'task-9.3-runtime-loading.json', '9.4': 'task-9.4-capability-matrix.json',
   '10.1': 'task-10.1-evaluation.json', '10.2': 'task-10.2-evaluation.json',
-  '10.3': 'task-10.3-evaluation.json', '10.5': 'task-10.5-validation.json'
+  '10.3': 'task-10.3-evaluation.json', '10.5': 'task-10.5-validation.json',
+  '10.6': 'task-10.6-remote-integration.json'
 };
 const blocked: Record<string, { edge: 'verification' | 'release' | 'consumer' | 'integration'; reason: string; next: string }> = {
   '8.3': { edge: 'release', reason: 'GitHub Actions billing prevents qualification; changeset is unapplied and @theme.tools/sdk@1.0.1 is absent.', next: 'Restore Actions billing, apply approved versioning, pass qualification, publish through OIDC workflow, and observe immutable 1.0.1.' },
   '8.4': { edge: 'consumer', reason: 'The required @theme.tools/sdk@1.0.1 package is unpublished.', next: 'Resume only after task 8.3 observes the approved published artifact.' },
   '8.5': { edge: 'consumer', reason: 'Consumer integration cannot close before publication and adoption.', next: 'Verify consumer resolution, lockfile, behavior, commit, remote main, and CI after 8.4.' },
-  '10.6': { edge: 'integration', reason: 'Exact validated integration tree is not yet available.', next: 'Push normally and observe exact remote SHAs and applicable CI.' },
   '10.7': { edge: 'integration', reason: 'Remote integration and final evidence reconciliation remain incomplete.', next: 'Reconcile traces, sync specs, and validate archive readiness after 10.6.' }
 };
 
@@ -91,7 +92,8 @@ const taskPathManifest: Record<string, string[]> = {
   '10.2': ['bin/durability-evaluation.ts', 'openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.2-evaluation.json', 'tests/durability-evaluation.test.ts'],
   '10.3': ['openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.3-evaluation.json', 'openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.3-review.json', 'openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.3-runtime-loading.json'],
   '10.4': ['openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.4-product-completeness-review.json', 'openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.4-final-architecture-review.json', 'tests/product-completeness-review.test.ts'],
-  '10.5': ['openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.5-validation.json', 'bin/run-perfect-loop.mjs', 'tests/operational-change-delivery-trace.test.ts']
+  '10.5': ['openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.5-validation.json', 'bin/run-perfect-loop.mjs', 'tests/operational-change-delivery-trace.test.ts'],
+  '10.6': ['openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.6-remote-integration.json', '.github/workflows/publish.yml', 'tests/operational-change-delivery-trace.test.ts']
 };
 
 const verificationTests: Record<string, string> = {
@@ -142,7 +144,7 @@ function verificationForTask(root: string, id: string, evidenceFile?: string) {
 function integratedEvidence(id: string) {
   const themeTools = id === '8.2';
   const postReview = id === '10.4' || id === '10.5';
-  const commit = themeTools ? integratedThemeToolsRevision : postReview ? postReviewValidationRevision : integratedAgentSkillsRevision;
+  const commit = themeTools ? integratedThemeToolsRevision : id === '10.6' ? remoteIntegrationRevision : postReview ? postReviewValidationRevision : integratedAgentSkillsRevision;
   return {
     status: 'integrated',
     integratedCommit: commit,
