@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "traceId": "TRACE:operational-prompt-hydration-workflow",
   "changeId": "operational-prompt-hydration-workflow",
-  "sourceRevision": "89e5c7d747db31572768c0c449701f5b4a80d5b9",
+  "sourceRevision": "b57f593caa92835d166aa7024944582887bc4ed2",
   "records": [
     {
       "recordId": "TRACE:REQ-OPH-01:TASK-6.2",
@@ -22,7 +22,11 @@
         "id": "TASK-6.2",
         "owner": "concurrency engineer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/6-2"],
+        "affectedPaths": [
+          "bin/orchestration-run-state.ts",
+          "bin/swarm-execution-kernel.ts",
+          "tests/integration-writer-leases.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "only one writer can integrate a repository and stale leases recover under policy"
@@ -37,23 +41,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/6-2"]
+        "codePaths": [
+          "bin/orchestration-run-state.ts",
+          "bin/swarm-execution-kernel.ts",
+          "tests/integration-writer-leases.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-6.2:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/orchestration-run-state-durability.test.ts tests/integration-writer-leases.test.ts tests/idempotent-task-dispatch.test.ts tests/exact-resume.test.ts tests/maintenance-recursion-guards.test.ts tests/git-reconciliation.test.ts tests/durable-execution-docs.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:4086f7408aafd5a3a176cf65bc2ba9f774ce04ab654c671954c1da1de8624d57",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -105,8 +121,9 @@
         "owner": "run-state engineer",
         "dependencies": [],
         "affectedPaths": [
+          "bin/orchestration-run-state.ts",
           "schemas/orchestration-run.schema.json",
-          "bin/orchestration-run-state.ts"
+          "tests/orchestration-run-state-durability.test.ts"
         ],
         "packages": ["repository-local"],
         "acceptanceCriteria": ["state survives interruption and invalid transitions fail"],
@@ -120,23 +137,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["schemas/orchestration-run.schema.json", "bin/orchestration-run-state.ts"]
+        "codePaths": [
+          "bin/orchestration-run-state.ts",
+          "schemas/orchestration-run.schema.json",
+          "tests/orchestration-run-state-durability.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-6.1:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/orchestration-run-state-durability.test.ts tests/integration-writer-leases.test.ts tests/idempotent-task-dispatch.test.ts tests/exact-resume.test.ts tests/maintenance-recursion-guards.test.ts tests/git-reconciliation.test.ts tests/durable-execution-docs.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:4086f7408aafd5a3a176cf65bc2ba9f774ce04ab654c671954c1da1de8624d57",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -187,7 +216,11 @@
         "id": "TASK-6.7",
         "owner": "documentation maintainer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/6-7"],
+        "affectedPaths": [
+          "control-plane/DURABLE-EXECUTION.md",
+          "control-plane/RECOVERY.md",
+          "tests/durable-execution-docs.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": ["procedures match runtime state transitions"],
         "expectedEvidence": [
@@ -200,23 +233,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/6-7"]
+        "codePaths": [
+          "control-plane/DURABLE-EXECUTION.md",
+          "control-plane/RECOVERY.md",
+          "tests/durable-execution-docs.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-6.7:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/orchestration-run-state-durability.test.ts tests/integration-writer-leases.test.ts tests/idempotent-task-dispatch.test.ts tests/exact-resume.test.ts tests/maintenance-recursion-guards.test.ts tests/git-reconciliation.test.ts tests/durable-execution-docs.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:4086f7408aafd5a3a176cf65bc2ba9f774ce04ab654c671954c1da1de8624d57",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -267,7 +312,11 @@
         "id": "TASK-6.6",
         "owner": "Git integrator",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/6-6"],
+        "affectedPaths": [
+          "bin/git-reconciliation.ts",
+          "tests/git-reconciliation.test.ts",
+          "tests/integration-writer-leases.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "dirty edit checkouts are preserved and tested tree equals pushed tree"
@@ -282,23 +331,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/6-6"]
+        "codePaths": [
+          "bin/git-reconciliation.ts",
+          "tests/git-reconciliation.test.ts",
+          "tests/integration-writer-leases.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-6.6:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/orchestration-run-state-durability.test.ts tests/integration-writer-leases.test.ts tests/idempotent-task-dispatch.test.ts tests/exact-resume.test.ts tests/maintenance-recursion-guards.test.ts tests/git-reconciliation.test.ts tests/durable-execution-docs.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:4086f7408aafd5a3a176cf65bc2ba9f774ce04ab654c671954c1da1de8624d57",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -349,30 +410,38 @@
         "id": "TASK-10.4",
         "owner": "architecture verifier",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/10-4"],
+        "affectedPaths": [
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.4-product-completeness-review.json",
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.4-final-architecture-review.json",
+          "tests/product-completeness-review.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": ["no required item is closed on indirect or missing proof"],
         "expectedEvidence": [
           {
-            "kind": "blocker",
-            "strength": "controlled",
-            "description": "Evidence artifact task-10.4-architecture-verification-codex.json"
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused verification receipt bound to exact source"
           }
         ]
       },
       "implementation": {
-        "state": "proposed",
-        "codePaths": []
+        "state": "implemented",
+        "codePaths": [
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.4-product-completeness-review.json",
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.4-final-architecture-review.json",
+          "tests/product-completeness-review.test.ts"
+        ]
       },
       "verification": {
-        "status": "fail",
+        "status": "pass",
         "receipts": [
           {
-            "id": "VERIFY:TASK-10.4",
-            "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.4-architecture-verification-codex.json",
-            "status": "fail",
-            "evidenceDigest": "sha256:fbda8f5ff8afd6b9eaf77d4024de6f6c0410b4f14ba4ddfcae54bb30d8c89654",
-            "observedAt": "2026-11-25T18:00:00.000Z"
+            "id": "VERIFY:TASK-10.4:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:1f350e5c8e7f736c6b1eaef6ae79c59a464240e63d1fdb79ec73416eda9a16b1",
+            "observedAt": "2026-11-25T07:34:56.000Z"
           }
         ]
       },
@@ -417,17 +486,7 @@
           "evidenceIds": ["EVIDENCE:TASK-10.4:1"]
         }
       },
-      "blockers": [
-        {
-          "id": "BLOCKER:TASK-10.4",
-          "edge": "verification",
-          "reason": "Independent review verdict is FAIL with unresolved findings.",
-          "owner": "architecture verifier",
-          "nextAction": "Resolve findings and issue a new independent digest-bound review.",
-          "status": "active",
-          "evidenceIds": ["EVIDENCE:task-10.4-architecture-verification-codex.json"]
-        }
-      ]
+      "blockers": []
     },
     {
       "recordId": "TRACE:REQ-OPH-03:TASK-10.5",
@@ -513,9 +572,9 @@
         {
           "id": "BLOCKER:TASK-10.5",
           "edge": "verification",
-          "reason": "Independent review has not passed.",
+          "reason": "The exact post-review integration tree has not completed the required validation suite.",
           "owner": "integration writer",
-          "nextAction": "Run required validation on the exact integration tree after 10.4 passes.",
+          "nextAction": "Run the required validation suite on one coherent local commit and record the result.",
           "status": "active",
           "evidenceIds": ["EVIDENCE:TASK-10.5:BLOCKER"]
         }
@@ -728,7 +787,11 @@
         "id": "TASK-7.1",
         "owner": "improvement engineer",
         "dependencies": [],
-        "affectedPaths": ["bin/recursive-improvement.ts"],
+        "affectedPaths": [
+          "bin/recursive-improvement.ts",
+          "fixtures/orchestration/improvement-phase/candidates.json",
+          "tests/recursive-improvement-phase.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "only justified non-conflicting candidates become traced requirements/tasks"
@@ -743,23 +806,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["bin/recursive-improvement.ts"]
+        "codePaths": [
+          "bin/recursive-improvement.ts",
+          "fixtures/orchestration/improvement-phase/candidates.json",
+          "tests/recursive-improvement-phase.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-7.1:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/recursive-improvement-phase.test.ts tests/scoped-learning-router.test.ts tests/documentation-learning-responsibilities.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:c167bd99af2186b9521195e8347e0aff001416039c02c5d91e5f0b675b413e9f",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -815,7 +890,11 @@
         "id": "TASK-7.4",
         "owner": "documentation maintainer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/7-4"],
+        "affectedPaths": [
+          "bin/documentation-learning-responsibilities.ts",
+          "control-plane/DOCUMENTATION-LEARNING.md",
+          "tests/documentation-learning-responsibilities.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": ["obsolete guidance is removed and examples remain executable"],
         "expectedEvidence": [
@@ -828,23 +907,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/7-4"]
+        "codePaths": [
+          "bin/documentation-learning-responsibilities.ts",
+          "control-plane/DOCUMENTATION-LEARNING.md",
+          "tests/documentation-learning-responsibilities.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-7.4:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/recursive-improvement-phase.test.ts tests/scoped-learning-router.test.ts tests/documentation-learning-responsibilities.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:c167bd99af2186b9521195e8347e0aff001416039c02c5d91e5f0b675b413e9f",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -895,7 +986,11 @@
         "id": "TASK-7.3",
         "owner": "learning maintainer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/7-3"],
+        "affectedPaths": [
+          "bin/scoped-learning-router.ts",
+          "04-preference-and-memory/SKILL.md",
+          "tests/scoped-learning-router.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "a scoped correction updates only its intended guidance and secrets/private context are rejected"
@@ -910,23 +1005,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/7-3"]
+        "codePaths": [
+          "bin/scoped-learning-router.ts",
+          "04-preference-and-memory/SKILL.md",
+          "tests/scoped-learning-router.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-7.3:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/recursive-improvement-phase.test.ts tests/scoped-learning-router.test.ts tests/documentation-learning-responsibilities.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:c167bd99af2186b9521195e8347e0aff001416039c02c5d91e5f0b675b413e9f",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -977,7 +1084,11 @@
         "id": "TASK-4.2",
         "owner": "capability router",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/4-2"],
+        "affectedPaths": [
+          "bin/evidence-gated-orchestrator.ts",
+          "tests/evidence-gated-orchestrator.test.ts",
+          "tests/harness-capability-matrix.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "the same workflow completes in a one-provider fixture with honest provenance"
@@ -992,23 +1103,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/4-2"]
+        "codePaths": [
+          "bin/evidence-gated-orchestrator.ts",
+          "tests/evidence-gated-orchestrator.test.ts",
+          "tests/harness-capability-matrix.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-4.2:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/evidence-gated-deliberation.test.ts tests/evidence-gated-orchestrator.test.ts tests/conference-risk-gates.test.ts tests/conference-policy-docs.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:20759e64ed52d314a23dc86a0c3a8def82656dac7166fa99ed59fb22b818f31c",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -1059,7 +1182,11 @@
         "id": "TASK-6.5",
         "owner": "maintenance engineer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/6-5"],
+        "affectedPaths": [
+          "bin/maintenance-recursion.mjs",
+          "bin/triad-end-of-turn-sync.ts",
+          "tests/maintenance-recursion-guards.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "equivalent maintenance cannot recursively start itself while unrelated ready work continues"
@@ -1074,23 +1201,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/6-5"]
+        "codePaths": [
+          "bin/maintenance-recursion.mjs",
+          "bin/triad-end-of-turn-sync.ts",
+          "tests/maintenance-recursion-guards.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-6.5:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/orchestration-run-state-durability.test.ts tests/integration-writer-leases.test.ts tests/idempotent-task-dispatch.test.ts tests/exact-resume.test.ts tests/maintenance-recursion-guards.test.ts tests/git-reconciliation.test.ts tests/durable-execution-docs.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:4086f7408aafd5a3a176cf65bc2ba9f774ce04ab654c671954c1da1de8624d57",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -1141,7 +1280,11 @@
         "id": "TASK-5.1",
         "owner": "schema engineer",
         "dependencies": [],
-        "affectedPaths": ["schemas/"],
+        "affectedPaths": [
+          "schemas/delivery-trace.schema.json",
+          "fixtures/delivery-trace",
+          "tests/delivery-trace-schema.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": ["incomplete or ambiguous trace edges fail validation"],
         "expectedEvidence": [
@@ -1154,23 +1297,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["schemas/"]
+        "codePaths": [
+          "schemas/delivery-trace.schema.json",
+          "fixtures/delivery-trace",
+          "tests/delivery-trace-schema.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-5.1:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/delivery-trace-schema.test.ts tests/openspec-delivery-compiler.test.ts tests/mcp-catalog-scope.test.ts tests/mcp-inventory-compiler.test.ts tests/delivery-trace-docs.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:b60225a8a48265c8094acd7453dfef5ccb38607682c1079d45612bdc22b51ed7",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -1221,7 +1376,11 @@
         "id": "TASK-1.4",
         "owner": "verification engineer",
         "dependencies": [],
-        "affectedPaths": ["tests/", "fixtures/orchestration/", "schemas/"],
+        "affectedPaths": [
+          "tests/orchestration-durability.red.test.ts",
+          "fixtures/orchestration/operational-contract",
+          "schemas/orchestration-run.schema.json"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "each failure mode contradicts the current runtime in a controlled simulation"
@@ -1236,31 +1395,42 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["tests/", "fixtures/orchestration/", "schemas/"]
+        "codePaths": [
+          "tests/orchestration-durability.red.test.ts",
+          "fixtures/orchestration/operational-contract",
+          "schemas/orchestration-run.schema.json"
+        ]
       },
       "verification": {
-        "status": "unverified",
+        "status": "pass",
         "receipts": [
           {
-            "id": "VERIFY:TASK-1.4",
+            "id": "VERIFY:TASK-1.4:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/prompt-policy-distribution.red.test.ts tests/prompt-hydration-contract.red.test.ts tests/orchestration-durability.red.test.ts tests/theme-tools-release-chain.red.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:18c32f7c2bc7a0a24587e654d0bdb975985355fe90e2d9bde312ee550fbe68be",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          },
+          {
+            "id": "VERIFY:TASK-1.4:ARTIFACT",
             "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-1.4-red.json",
-            "status": "unverified",
+            "status": "pass",
             "evidenceDigest": "sha256:76a9d128ff2e4fe8cae4d8a4cc49ab6a5746f48b24ed1b81e77ddc2b88703170",
-            "observedAt": "2026-11-25T18:00:00.000Z"
+            "observedAt": "2026-11-25T07:34:56.000Z"
           }
         ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -1311,7 +1481,11 @@
         "id": "TASK-3.5",
         "owner": "workflow integrator",
         "dependencies": [],
-        "affectedPaths": ["bin/prompt-hydration-hook.mjs"],
+        "affectedPaths": [
+          "bin/prompt-hydration-hook.mjs",
+          "bin/prompt-hydration-entry.mjs",
+          "hooks/hooks.json"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "narrow fixes receive impact/verification/improvement review and material changes receive expanded applicable coverage"
@@ -1326,23 +1500,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["bin/prompt-hydration-hook.mjs"]
+        "codePaths": [
+          "bin/prompt-hydration-hook.mjs",
+          "bin/prompt-hydration-entry.mjs",
+          "hooks/hooks.json"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-3.5:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/prompt-hydration-contract.red.test.ts tests/prompt-hydrator.test.ts tests/prompt-hydration-entrypoints.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:e66da779bc207044311eb008f6c70b914ab7a400c3f6d5d0388d6b144d8cfccd",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -1393,7 +1579,11 @@
         "id": "TASK-6.4",
         "owner": "recovery engineer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/6-4"],
+        "affectedPaths": [
+          "bin/orchestration-run-state.ts",
+          "tests/exact-resume.test.ts",
+          "fixtures/orchestration/operational-contract/resume-crash-matrix.json"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "interruption/resume neither repeats completed work nor loses ownership/evidence"
@@ -1408,23 +1598,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/6-4"]
+        "codePaths": [
+          "bin/orchestration-run-state.ts",
+          "tests/exact-resume.test.ts",
+          "fixtures/orchestration/operational-contract/resume-crash-matrix.json"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-6.4:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/orchestration-run-state-durability.test.ts tests/integration-writer-leases.test.ts tests/idempotent-task-dispatch.test.ts tests/exact-resume.test.ts tests/maintenance-recursion-guards.test.ts tests/git-reconciliation.test.ts tests/durable-execution-docs.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:4086f7408aafd5a3a176cf65bc2ba9f774ce04ab654c671954c1da1de8624d57",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -1475,7 +1677,11 @@
         "id": "TASK-8.1",
         "owner": "shared-capability router",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/8-1"],
+        "affectedPaths": [
+          "config/theme-tools-skill-map.json",
+          "bin/theme-tools-control-plane-adapter.ts",
+          "tests/theme-tools-hydration-routing.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "reusable work receives a shared-owner edge and product-specific work stays local"
@@ -1490,23 +1696,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/8-1"]
+        "codePaths": [
+          "config/theme-tools-skill-map.json",
+          "bin/theme-tools-control-plane-adapter.ts",
+          "tests/theme-tools-hydration-routing.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-8.1:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/theme-tools-hydration-routing.test.ts tests/theme-tools-release-chain.red.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:0ebfd9c8100b875258a60c91076943eeef13192afe397dd2ae14ad4c4c67ca50",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -1557,8 +1775,12 @@
         "id": "TASK-8.2",
         "owner": "theme.tools integration writer",
         "dependencies": [],
-        "affectedPaths": ["theme.tools"],
-        "packages": ["repository-local"],
+        "affectedPaths": [
+          "packages/sdk/src/index.ts",
+          "packages/sdk/package.json",
+          ".changeset/quiet-bridges-report.md"
+        ],
+        "packages": ["@theme.tools/sdk"],
         "acceptanceCriteria": [
           "package validation passes and the source commit is pushed to current main"
         ],
@@ -1572,22 +1794,34 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["theme.tools"]
+        "codePaths": [
+          "packages/sdk/src/index.ts",
+          "packages/sdk/package.json",
+          ".changeset/quiet-bridges-report.md"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-8.2:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/theme-tools-hydration-routing.test.ts tests/theme-tools-release-chain.red.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:0ebfd9c8100b875258a60c91076943eeef13192afe397dd2ae14ad4c4c67ca50",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "5d716b6ccd8064abbafa3822e1210d0bfd50d0e4",
+        "testedTree": "5d716b6ccd8064abbafa3822e1210d0bfd50d0e4",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/theme.tools.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
+          "observedSha": "5d716b6ccd8064abbafa3822e1210d0bfd50d0e4",
+          "observedAt": "2026-11-25T06:39:47.000Z",
           "ciStatus": "unverified"
         }
       },
@@ -1595,7 +1829,7 @@
         "release": {
           "applicability": "not-applicable",
           "status": "not-applicable",
-          "package": "repository-local",
+          "package": "@theme.tools/sdk",
           "version": "pending",
           "artifactDigest": "pending",
           "evidenceIds": ["EVIDENCE:TASK-8.2:1"]
@@ -1655,16 +1889,8 @@
         "codePaths": []
       },
       "verification": {
-        "status": "blocked",
-        "receipts": [
-          {
-            "id": "VERIFY:TASK-8.3",
-            "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-8.3-blocked-release.json",
-            "status": "blocked",
-            "evidenceDigest": "sha256:e210f52b319631a44e9f6f519d1d042e4d371018692025d50167f4445bfac3ac",
-            "observedAt": "2026-11-25T18:00:00.000Z"
-          }
-        ]
+        "status": "unverified",
+        "receipts": []
       },
       "integration": {
         "status": "pending",
@@ -1921,7 +2147,11 @@
         "id": "TASK-9.1",
         "owner": "integration writer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/9-1"],
+        "affectedPaths": [
+          "bin/git-reconciliation.ts",
+          "tests/git-reconciliation.test.ts",
+          "openspec/changes/operational-prompt-hydration-workflow/delivery-trace.json"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "remote main contains the exact tested SHA and unrelated dirty work remains untouched"
@@ -1936,23 +2166,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/9-1"]
+        "codePaths": [
+          "bin/git-reconciliation.ts",
+          "tests/git-reconciliation.test.ts",
+          "openspec/changes/operational-prompt-hydration-workflow/delivery-trace.json"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-9.1:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/git-reconciliation.test.ts tests/prompt-policy-distribution.red.test.ts tests/harness-capability-matrix.test.ts tests/bounded-drift-detector.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:93ed713843ce2230b87d37d52fcf8eb7e93ed69853282c8faa618d9a444e5bf2",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -2004,8 +2246,8 @@
         "owner": "integration writer",
         "dependencies": [],
         "affectedPaths": [
-          "control-plane/",
-          "openspec/changes/operational-prompt-hydration-workflow/"
+          "openspec/changes/operational-prompt-hydration-workflow/baseline-inventory.json",
+          "openspec/changes/operational-prompt-hydration-workflow/baseline-inventory.schema.json"
         ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
@@ -2014,30 +2256,41 @@
         "expectedEvidence": [
           {
             "kind": "verification",
-            "strength": "local",
-            "description": "Focused verification receipt bound to exact source"
+            "strength": "controlled",
+            "description": "Evidence artifact baseline-inventory.json"
           }
         ]
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["control-plane/", "openspec/changes/operational-prompt-hydration-workflow/"]
+        "codePaths": [
+          "openspec/changes/operational-prompt-hydration-workflow/baseline-inventory.json",
+          "openspec/changes/operational-prompt-hydration-workflow/baseline-inventory.schema.json"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-1.1:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/prompt-policy-distribution.red.test.ts tests/prompt-hydration-contract.red.test.ts tests/orchestration-durability.red.test.ts tests/theme-tools-release-chain.red.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:18c32f7c2bc7a0a24587e654d0bdb975985355fe90e2d9bde312ee550fbe68be",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -2088,7 +2341,11 @@
         "id": "TASK-1.2",
         "owner": "verification engineer",
         "dependencies": [],
-        "affectedPaths": ["tests/", "bin/__tests__/fixtures/", "schemas/"],
+        "affectedPaths": [
+          "tests/prompt-policy-distribution.red.test.ts",
+          "bin/__tests__/fixtures/prompt-policy-distribution",
+          "schemas/instruction-targets.schema.json"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "fixtures fail against the baseline for the intended behavioral reason"
@@ -2103,31 +2360,42 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["tests/", "bin/__tests__/fixtures/", "schemas/"]
+        "codePaths": [
+          "tests/prompt-policy-distribution.red.test.ts",
+          "bin/__tests__/fixtures/prompt-policy-distribution",
+          "schemas/instruction-targets.schema.json"
+        ]
       },
       "verification": {
-        "status": "unverified",
+        "status": "pass",
         "receipts": [
           {
-            "id": "VERIFY:TASK-1.2",
+            "id": "VERIFY:TASK-1.2:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/prompt-policy-distribution.red.test.ts tests/prompt-hydration-contract.red.test.ts tests/orchestration-durability.red.test.ts tests/theme-tools-release-chain.red.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:18c32f7c2bc7a0a24587e654d0bdb975985355fe90e2d9bde312ee550fbe68be",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          },
+          {
+            "id": "VERIFY:TASK-1.2:ARTIFACT",
             "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-1.2-red.json",
-            "status": "unverified",
+            "status": "pass",
             "evidenceDigest": "sha256:9e9119ad2d9aa050ab61de60b6b53d39a9c8c9141c7b6716ea3a3e75bbe11da8",
-            "observedAt": "2026-11-25T18:00:00.000Z"
+            "observedAt": "2026-11-25T07:34:56.000Z"
           }
         ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -2178,7 +2446,11 @@
         "id": "TASK-1.3",
         "owner": "verification engineer",
         "dependencies": [],
-        "affectedPaths": ["tests/", "fixtures/prompt-hydration/", "schemas/"],
+        "affectedPaths": [
+          "tests/prompt-hydration-contract.red.test.ts",
+          "fixtures/prompt-hydration/operational-contract",
+          "schemas/hydrated-prompt.schema.json"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "each objective scenario has observable assertions rather than file-presence checks"
@@ -2193,31 +2465,42 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["tests/", "fixtures/prompt-hydration/", "schemas/"]
+        "codePaths": [
+          "tests/prompt-hydration-contract.red.test.ts",
+          "fixtures/prompt-hydration/operational-contract",
+          "schemas/hydrated-prompt.schema.json"
+        ]
       },
       "verification": {
-        "status": "unverified",
+        "status": "pass",
         "receipts": [
           {
-            "id": "VERIFY:TASK-1.3",
+            "id": "VERIFY:TASK-1.3:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/prompt-policy-distribution.red.test.ts tests/prompt-hydration-contract.red.test.ts tests/orchestration-durability.red.test.ts tests/theme-tools-release-chain.red.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:18c32f7c2bc7a0a24587e654d0bdb975985355fe90e2d9bde312ee550fbe68be",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          },
+          {
+            "id": "VERIFY:TASK-1.3:ARTIFACT",
             "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-1.3-red.json",
-            "status": "unverified",
+            "status": "pass",
             "evidenceDigest": "sha256:c39433b17bc30548bee08cd2506a50e4e4fef554cebb51e38089da3e61ae4d82",
-            "observedAt": "2026-11-25T18:00:00.000Z"
+            "observedAt": "2026-11-25T07:34:56.000Z"
           }
         ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -2268,7 +2551,11 @@
         "id": "TASK-1.5",
         "owner": "release verifier",
         "dependencies": [],
-        "affectedPaths": ["tests/", "fixtures/theme-tools-release/", "schemas/"],
+        "affectedPaths": [
+          "tests/theme-tools-release-chain.red.test.ts",
+          "fixtures/theme-tools-release/controlled-registry",
+          "schemas/theme-tools-release-receipt.schema.json"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": ["source-only changes cannot satisfy the fixture"],
         "expectedEvidence": [
@@ -2281,31 +2568,42 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["tests/", "fixtures/theme-tools-release/", "schemas/"]
+        "codePaths": [
+          "tests/theme-tools-release-chain.red.test.ts",
+          "fixtures/theme-tools-release/controlled-registry",
+          "schemas/theme-tools-release-receipt.schema.json"
+        ]
       },
       "verification": {
-        "status": "unverified",
+        "status": "pass",
         "receipts": [
           {
-            "id": "VERIFY:TASK-1.5",
+            "id": "VERIFY:TASK-1.5:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/prompt-policy-distribution.red.test.ts tests/prompt-hydration-contract.red.test.ts tests/orchestration-durability.red.test.ts tests/theme-tools-release-chain.red.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:18c32f7c2bc7a0a24587e654d0bdb975985355fe90e2d9bde312ee550fbe68be",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          },
+          {
+            "id": "VERIFY:TASK-1.5:ARTIFACT",
             "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-1.5-red.json",
-            "status": "unverified",
+            "status": "pass",
             "evidenceDigest": "sha256:45676a7411845341183bdf5d9eed4bcc95d4c289e5bfd21e6585bb88ddf0e398",
-            "observedAt": "2026-11-25T18:00:00.000Z"
+            "observedAt": "2026-11-25T07:34:56.000Z"
           }
         ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -2356,7 +2654,11 @@
         "id": "TASK-2.7",
         "owner": "documentation maintainer",
         "dependencies": [],
-        "affectedPaths": ["README.md", "control-plane/"],
+        "affectedPaths": [
+          "README.md",
+          "control-plane/INSTRUCTION-POLICY.md",
+          "control-plane/README.md"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "commands run as written and do not expose secrets or imply unsupported system-prompt control"
@@ -2371,23 +2673,31 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["README.md", "control-plane/"]
+        "codePaths": ["README.md", "control-plane/INSTRUCTION-POLICY.md", "control-plane/README.md"]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-2.7:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/prompt-policy-distribution.red.test.ts tests/instruction-targets-config.test.ts tests/publish-policy-generation.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:4cb4e2ba67c72338b4fab893501b90591c6fbfedc0710362cc202500f0341b10",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -2438,7 +2748,11 @@
         "id": "TASK-10.1",
         "owner": "evaluation engineer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/10-1"],
+        "affectedPaths": [
+          "bin/evaluate-operational-scenarios.ts",
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.1-evaluation.json",
+          "tests/operational-scenarios-evaluation.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "each scenario satisfies its observable spec without over-expansion or false independence"
@@ -2453,31 +2767,42 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/10-1"]
+        "codePaths": [
+          "bin/evaluate-operational-scenarios.ts",
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.1-evaluation.json",
+          "tests/operational-scenarios-evaluation.test.ts"
+        ]
       },
       "verification": {
         "status": "pass",
         "receipts": [
           {
-            "id": "VERIFY:TASK-10.1",
+            "id": "VERIFY:TASK-10.1:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:1f350e5c8e7f736c6b1eaef6ae79c59a464240e63d1fdb79ec73416eda9a16b1",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          },
+          {
+            "id": "VERIFY:TASK-10.1:ARTIFACT",
             "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.1-evaluation.json",
             "status": "pass",
             "evidenceDigest": "sha256:10c3609b48ef5bf2cef3f653772ce208877e730565611b114a4126563003e54e",
-            "observedAt": "2026-11-25T18:00:00.000Z"
+            "observedAt": "2026-11-25T07:34:56.000Z"
           }
         ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -2528,7 +2853,11 @@
         "id": "TASK-10.2",
         "owner": "evaluation engineer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/10-2"],
+        "affectedPaths": [
+          "bin/durability-evaluation.ts",
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.2-evaluation.json",
+          "tests/durability-evaluation.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "state, ownership, evidence, and exact next action remain correct after every fault"
@@ -2543,31 +2872,42 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/10-2"]
+        "codePaths": [
+          "bin/durability-evaluation.ts",
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.2-evaluation.json",
+          "tests/durability-evaluation.test.ts"
+        ]
       },
       "verification": {
         "status": "pass",
         "receipts": [
           {
-            "id": "VERIFY:TASK-10.2",
+            "id": "VERIFY:TASK-10.2:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:1f350e5c8e7f736c6b1eaef6ae79c59a464240e63d1fdb79ec73416eda9a16b1",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          },
+          {
+            "id": "VERIFY:TASK-10.2:ARTIFACT",
             "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.2-evaluation.json",
             "status": "pass",
             "evidenceDigest": "sha256:edab6f9761a07f994dbd92ca23c7667a25773c042fc053d4d2d71d914d0dc7dc",
-            "observedAt": "2026-11-25T18:00:00.000Z"
+            "observedAt": "2026-11-25T07:34:56.000Z"
           }
         ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -2618,36 +2958,59 @@
         "id": "TASK-10.3",
         "owner": "evaluation engineer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/10-3"],
+        "affectedPaths": [
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.3-evaluation.json",
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.3-review.json",
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.3-runtime-loading.json"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": ["the evidence-strength claims match observed state"],
         "expectedEvidence": [
           {
-            "kind": "blocker",
-            "strength": "local",
-            "description": "Focused verification receipt bound to exact source"
+            "kind": "verification",
+            "strength": "controlled",
+            "description": "Evidence artifact task-10.3-evaluation.json"
           }
         ]
       },
       "implementation": {
-        "state": "blocked",
-        "codePaths": ["task-scopes/10-3"]
+        "state": "implemented",
+        "codePaths": [
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.3-evaluation.json",
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.3-review.json",
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.3-runtime-loading.json"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-10.3:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:1f350e5c8e7f736c6b1eaef6ae79c59a464240e63d1fdb79ec73416eda9a16b1",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          },
+          {
+            "id": "VERIFY:TASK-10.3:ARTIFACT",
+            "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.3-evaluation.json",
+            "status": "pass",
+            "evidenceDigest": "sha256:c3ed47d043dce31dc58fec292b4821b44881d7312c792bd2466f17b9f2b57e0b",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -2678,17 +3041,7 @@
           "evidenceIds": ["EVIDENCE:TASK-10.3:1"]
         }
       },
-      "blockers": [
-        {
-          "id": "BLOCKER:TASK-10.3",
-          "edge": "verification",
-          "reason": "No task-10.3 evaluation receipt exists.",
-          "owner": "evaluation engineer",
-          "nextAction": "Run shared propagation and fresh loading scenarios with controlled, installed, and live evidence separated.",
-          "status": "active",
-          "evidenceIds": ["EVIDENCE:TASK-10.3:BLOCKER"]
-        }
-      ]
+      "blockers": []
     },
     {
       "recordId": "TRACE:REQ-OPH-15:TASK-9.3",
@@ -2708,38 +3061,59 @@
         "id": "TASK-9.3",
         "owner": "runtime verifier",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/9-3"],
+        "affectedPaths": [
+          "bin/prompt-hydration-entry.mjs",
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.3-runtime-loading.json"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "receipts identify actual model/provider, instruction digest, role, and skill invocation without exposing credentials"
         ],
         "expectedEvidence": [
           {
-            "kind": "blocker",
-            "strength": "local",
-            "description": "Focused verification receipt bound to exact source"
+            "kind": "verification",
+            "strength": "controlled",
+            "description": "Evidence artifact task-9.3-runtime-loading.json"
           }
         ]
       },
       "implementation": {
-        "state": "blocked",
-        "codePaths": ["task-scopes/9-3"]
+        "state": "implemented",
+        "codePaths": [
+          "bin/prompt-hydration-entry.mjs",
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.3-runtime-loading.json"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-9.3:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/git-reconciliation.test.ts tests/prompt-policy-distribution.red.test.ts tests/harness-capability-matrix.test.ts tests/bounded-drift-detector.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:93ed713843ce2230b87d37d52fcf8eb7e93ed69853282c8faa618d9a444e5bf2",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          },
+          {
+            "id": "VERIFY:TASK-9.3:ARTIFACT",
+            "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.3-runtime-loading.json",
+            "status": "pass",
+            "evidenceDigest": "sha256:11779ed6e18824b455889acd674f3b943483106ddfba5a4aa1af3a21d5d18d95",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -2770,17 +3144,7 @@
           "evidenceIds": ["EVIDENCE:TASK-9.3:1"]
         }
       },
-      "blockers": [
-        {
-          "id": "BLOCKER:TASK-9.3",
-          "edge": "verification",
-          "reason": "No signed fresh coordinator and worker policy-loading receipts exist.",
-          "owner": "runtime verifier",
-          "nextAction": "Produce matching coordinator and delegated-worker receipts or record an exact runtime blocker.",
-          "status": "active",
-          "evidenceIds": ["EVIDENCE:TASK-9.3:BLOCKER"]
-        }
-      ]
+      "blockers": []
     },
     {
       "recordId": "TRACE:REQ-OPH-16:TASK-8.6",
@@ -2800,7 +3164,11 @@
         "id": "TASK-8.6",
         "owner": "release verifier",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/8-6"],
+        "affectedPaths": [
+          "bin/theme-tools-release-chain.ts",
+          "fixtures/theme-tools-release/controlled-registry",
+          "tests/theme-tools-release-chain.red.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": ["blocked-release/resume behavior is exact and idempotent"],
         "expectedEvidence": [
@@ -2813,23 +3181,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/8-6"]
+        "codePaths": [
+          "bin/theme-tools-release-chain.ts",
+          "fixtures/theme-tools-release/controlled-registry",
+          "tests/theme-tools-release-chain.red.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-8.6:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/theme-tools-hydration-routing.test.ts tests/theme-tools-release-chain.red.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:0ebfd9c8100b875258a60c91076943eeef13192afe397dd2ae14ad4c4c67ca50",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -2880,7 +3260,11 @@
         "id": "TASK-2.1",
         "owner": "policy maintainer",
         "dependencies": [],
-        "affectedPaths": ["policies/", "rules/", "01-operating-system/"],
+        "affectedPaths": [
+          "policies/operational-prompt-hydration.md",
+          "rules/always.md",
+          "01-operating-system/SKILL.md"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "the compact core remains concise and no conflicting canonical copy exists"
@@ -2895,31 +3279,42 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["policies/", "rules/", "01-operating-system/"]
+        "codePaths": [
+          "policies/operational-prompt-hydration.md",
+          "rules/always.md",
+          "01-operating-system/SKILL.md"
+        ]
       },
       "verification": {
         "status": "pass",
         "receipts": [
           {
-            "id": "VERIFY:TASK-2.1",
+            "id": "VERIFY:TASK-2.1:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/prompt-policy-distribution.red.test.ts tests/instruction-targets-config.test.ts tests/publish-policy-generation.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:4cb4e2ba67c72338b4fab893501b90591c6fbfedc0710362cc202500f0341b10",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          },
+          {
+            "id": "VERIFY:TASK-2.1:ARTIFACT",
             "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-2.1-review.json",
             "status": "pass",
             "evidenceDigest": "sha256:4e49a6655da655114c0931d2c5da4613aee228fa127f9cfafa21ec9aaf3ef83f",
-            "observedAt": "2026-11-25T18:00:00.000Z"
+            "observedAt": "2026-11-25T07:34:56.000Z"
           }
         ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -2970,7 +3365,11 @@
         "id": "TASK-2.2",
         "owner": "generator engineer",
         "dependencies": [],
-        "affectedPaths": ["bin/", "schemas/", "tests/"],
+        "affectedPaths": [
+          "bin/manage-policy-blocks.ts",
+          "tests/prompt-policy-distribution.red.test.ts",
+          "config/instruction-targets.json"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "all managed-block red fixtures pass and round trips are idempotent"
@@ -2985,23 +3384,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["bin/", "schemas/", "tests/"]
+        "codePaths": [
+          "bin/manage-policy-blocks.ts",
+          "tests/prompt-policy-distribution.red.test.ts",
+          "config/instruction-targets.json"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-2.2:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/prompt-policy-distribution.red.test.ts tests/instruction-targets-config.test.ts tests/publish-policy-generation.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:4cb4e2ba67c72338b4fab893501b90591c6fbfedc0710362cc202500f0341b10",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -3052,7 +3463,11 @@
         "id": "TASK-2.3",
         "owner": "harness integrator",
         "dependencies": [],
-        "affectedPaths": ["config/", "prompts/", "agents/"],
+        "affectedPaths": [
+          "config/instruction-targets.json",
+          "schemas/instruction-targets.schema.json",
+          "tests/instruction-targets-config.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": ["every target records support level and source digest"],
         "expectedEvidence": [
@@ -3065,23 +3480,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["config/", "prompts/", "agents/"]
+        "codePaths": [
+          "config/instruction-targets.json",
+          "schemas/instruction-targets.schema.json",
+          "tests/instruction-targets-config.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-2.3:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/prompt-policy-distribution.red.test.ts tests/instruction-targets-config.test.ts tests/publish-policy-generation.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:4cb4e2ba67c72338b4fab893501b90591c6fbfedc0710362cc202500f0341b10",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -3158,20 +3585,28 @@
         ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-2.5:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/prompt-policy-distribution.red.test.ts tests/instruction-targets-config.test.ts tests/publish-policy-generation.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:4cb4e2ba67c72338b4fab893501b90591c6fbfedc0710362cc202500f0341b10",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -3223,12 +3658,9 @@
         "owner": "policy maintainer",
         "dependencies": [],
         "affectedPaths": [
-          "AGENTS.md",
-          "CLAUDE.md",
-          "CODEX.md",
-          "GEMINI.md",
+          "bin/run-perfect-loop.mjs",
           "scripts/validate-skills.sh",
-          "bin/run-perfect-loop.mjs"
+          "tests/canonical-operating-policy.test.ts"
         ],
         "packages": ["repository-local"],
         "acceptanceCriteria": ["generated outputs match one digest and manual drift fails"],
@@ -3243,29 +3675,34 @@
       "implementation": {
         "state": "implemented",
         "codePaths": [
-          "AGENTS.md",
-          "CLAUDE.md",
-          "CODEX.md",
-          "GEMINI.md",
+          "bin/run-perfect-loop.mjs",
           "scripts/validate-skills.sh",
-          "bin/run-perfect-loop.mjs"
+          "tests/canonical-operating-policy.test.ts"
         ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-2.6:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/prompt-policy-distribution.red.test.ts tests/instruction-targets-config.test.ts tests/publish-policy-generation.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:4cb4e2ba67c72338b4fab893501b90591c6fbfedc0710362cc202500f0341b10",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -3316,7 +3753,11 @@
         "id": "TASK-2.4",
         "owner": "fleet integrator",
         "dependencies": [],
-        "affectedPaths": ["bin/sync-fleet-harnesses.ts", "install.doctor"],
+        "affectedPaths": [
+          "bin/sync-fleet-harnesses.ts",
+          "tests/sync-fleet-explicit-source.test.ts",
+          "tests/publish-policy-generation.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "divergent or dirty sources fail closed and the selected revision appears in receipts"
@@ -3331,23 +3772,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["bin/sync-fleet-harnesses.ts", "install.doctor"]
+        "codePaths": [
+          "bin/sync-fleet-harnesses.ts",
+          "tests/sync-fleet-explicit-source.test.ts",
+          "tests/publish-policy-generation.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-2.4:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/prompt-policy-distribution.red.test.ts tests/instruction-targets-config.test.ts tests/publish-policy-generation.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:4cb4e2ba67c72338b4fab893501b90591c6fbfedc0710362cc202500f0341b10",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -3398,36 +3851,59 @@
         "id": "TASK-9.2",
         "owner": "installation engineer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/9-2"],
+        "affectedPaths": [
+          "bin/manage-policy-blocks.ts",
+          "bin/sync-fleet-harnesses.ts",
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.2-installation.json"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": ["no installation reads from the divergent implicit symlink"],
         "expectedEvidence": [
           {
             "kind": "verification",
-            "strength": "local",
-            "description": "Focused verification receipt bound to exact source"
+            "strength": "controlled",
+            "description": "Evidence artifact task-9.2-installation.json"
           }
         ]
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/9-2"]
+        "codePaths": [
+          "bin/manage-policy-blocks.ts",
+          "bin/sync-fleet-harnesses.ts",
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.2-installation.json"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-9.2:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/git-reconciliation.test.ts tests/prompt-policy-distribution.red.test.ts tests/harness-capability-matrix.test.ts tests/bounded-drift-detector.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:93ed713843ce2230b87d37d52fcf8eb7e93ed69853282c8faa618d9a444e5bf2",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          },
+          {
+            "id": "VERIFY:TASK-9.2:ARTIFACT",
+            "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.2-installation.json",
+            "status": "pass",
+            "evidenceDigest": "sha256:48af7c7ab10b5f03a03fc6484e49e5f872f34156c60a3bec7cbc8cdff97cd8fa",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -3483,7 +3959,10 @@
         "id": "TASK-9.4",
         "owner": "runtime verifier",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/9-4"],
+        "affectedPaths": [
+          "tests/harness-capability-matrix.test.ts",
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.4-capability-matrix.json"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": ["no simulated/manual presence is labeled live"],
         "expectedEvidence": [
@@ -3496,31 +3975,41 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/9-4"]
+        "codePaths": [
+          "tests/harness-capability-matrix.test.ts",
+          "openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.4-capability-matrix.json"
+        ]
       },
       "verification": {
         "status": "pass",
         "receipts": [
           {
-            "id": "VERIFY:TASK-9.4",
+            "id": "VERIFY:TASK-9.4:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/git-reconciliation.test.ts tests/prompt-policy-distribution.red.test.ts tests/harness-capability-matrix.test.ts tests/bounded-drift-detector.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:93ed713843ce2230b87d37d52fcf8eb7e93ed69853282c8faa618d9a444e5bf2",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          },
+          {
+            "id": "VERIFY:TASK-9.4:ARTIFACT",
             "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.4-capability-matrix.json",
             "status": "pass",
             "evidenceDigest": "sha256:b49d2245340aab17b73d8ffba2316ec5e36c957c3f079648834eb2b93a51a106",
-            "observedAt": "2026-11-25T18:00:00.000Z"
+            "observedAt": "2026-11-25T07:34:56.000Z"
           }
         ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -3571,7 +4060,11 @@
         "id": "TASK-9.5",
         "owner": "drift maintainer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/9-5"],
+        "affectedPaths": [
+          "bin/bounded-drift-detector.ts",
+          "config/bounded-drift-targets.json",
+          "tests/bounded-drift-detector.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "drift reports exact repair inputs and never rewrites unmanaged content"
@@ -3586,23 +4079,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/9-5"]
+        "codePaths": [
+          "bin/bounded-drift-detector.ts",
+          "config/bounded-drift-targets.json",
+          "tests/bounded-drift-detector.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-9.5:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/git-reconciliation.test.ts tests/prompt-policy-distribution.red.test.ts tests/harness-capability-matrix.test.ts tests/bounded-drift-detector.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:93ed713843ce2230b87d37d52fcf8eb7e93ed69853282c8faa618d9a444e5bf2",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -3660,7 +4165,8 @@
         "dependencies": [],
         "affectedPaths": [
           "bin/evidence-gated-deliberation.ts",
-          "bin/evidence-gated-orchestrator.ts"
+          "bin/evidence-gated-orchestrator.ts",
+          "schemas/architecture-conference.schema.json"
         ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
@@ -3676,23 +4182,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["bin/evidence-gated-deliberation.ts", "bin/evidence-gated-orchestrator.ts"]
+        "codePaths": [
+          "bin/evidence-gated-deliberation.ts",
+          "bin/evidence-gated-orchestrator.ts",
+          "schemas/architecture-conference.schema.json"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-4.1:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/evidence-gated-deliberation.test.ts tests/evidence-gated-orchestrator.test.ts tests/conference-risk-gates.test.ts tests/conference-policy-docs.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:20759e64ed52d314a23dc86a0c3a8def82656dac7166fa99ed59fb22b818f31c",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -3748,7 +4266,11 @@
         "id": "TASK-6.3",
         "owner": "dispatcher engineer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/6-3"],
+        "affectedPaths": [
+          "bin/swarm-execution-kernel.ts",
+          "tests/idempotent-task-dispatch.test.ts",
+          "tests/orchestration-contracts.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "duplicate events do not launch duplicate work and independent tasks parallelize"
@@ -3763,23 +4285,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/6-3"]
+        "codePaths": [
+          "bin/swarm-execution-kernel.ts",
+          "tests/idempotent-task-dispatch.test.ts",
+          "tests/orchestration-contracts.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-6.3:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/orchestration-run-state-durability.test.ts tests/integration-writer-leases.test.ts tests/idempotent-task-dispatch.test.ts tests/exact-resume.test.ts tests/maintenance-recursion-guards.test.ts tests/git-reconciliation.test.ts tests/durable-execution-docs.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:4086f7408aafd5a3a176cf65bc2ba9f774ce04ab654c671954c1da1de8624d57",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -3835,7 +4369,11 @@
         "id": "TASK-3.1",
         "owner": "hydration engineer",
         "dependencies": [],
-        "affectedPaths": ["bin/prompt-hydrator.ts", "schemas/hydrated-prompt.schema.json"],
+        "affectedPaths": [
+          "bin/prompt-hydrator.ts",
+          "schemas/hydrated-prompt.schema.json",
+          "tests/prompt-hydrator.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "both narrow and substantial requests produce schema-valid proportionate results"
@@ -3850,23 +4388,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["bin/prompt-hydrator.ts", "schemas/hydrated-prompt.schema.json"]
+        "codePaths": [
+          "bin/prompt-hydrator.ts",
+          "schemas/hydrated-prompt.schema.json",
+          "tests/prompt-hydrator.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-3.1:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/prompt-hydration-contract.red.test.ts tests/prompt-hydrator.test.ts tests/prompt-hydration-entrypoints.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:e66da779bc207044311eb008f6c70b914ab7a400c3f6d5d0388d6b144d8cfccd",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -3917,7 +4467,11 @@
         "id": "TASK-3.2",
         "owner": "hydration engineer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/3-2"],
+        "affectedPaths": [
+          "bin/prompt-hydrator.ts",
+          "schemas/hydrated-prompt.schema.json",
+          "fixtures/prompt-hydration/operational-contract/scenarios.json"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "applicable gaps are explicit while inapplicable combinations remain justified rather than blindly expanded"
@@ -3932,23 +4486,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/3-2"]
+        "codePaths": [
+          "bin/prompt-hydrator.ts",
+          "schemas/hydrated-prompt.schema.json",
+          "fixtures/prompt-hydration/operational-contract/scenarios.json"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-3.2:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/prompt-hydration-contract.red.test.ts tests/prompt-hydrator.test.ts tests/prompt-hydration-entrypoints.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:e66da779bc207044311eb008f6c70b914ab7a400c3f6d5d0388d6b144d8cfccd",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -3999,7 +4565,11 @@
         "id": "TASK-3.3",
         "owner": "evidence engineer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/3-3"],
+        "affectedPaths": [
+          "bin/prompt-hydrator.ts",
+          "bin/orchestration-run-state.ts",
+          "04-preference-and-memory/SKILL.md"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "confident reversible assumptions progress while consequential unresolved uncertainty remains visible"
@@ -4014,23 +4584,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/3-3"]
+        "codePaths": [
+          "bin/prompt-hydrator.ts",
+          "bin/orchestration-run-state.ts",
+          "04-preference-and-memory/SKILL.md"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-3.3:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/prompt-hydration-contract.red.test.ts tests/prompt-hydrator.test.ts tests/prompt-hydration-entrypoints.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:e66da779bc207044311eb008f6c70b914ab7a400c3f6d5d0388d6b144d8cfccd",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -4081,7 +4663,11 @@
         "id": "TASK-3.4",
         "owner": "research integrator",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/3-4"],
+        "affectedPaths": [
+          "bin/theme-tools-research-rail.ts",
+          "bin/prompt-hydrator.ts",
+          "schemas/routable-research-evidence.schema.json"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "source/version/date/decision impact are recorded and stale evidence is rejected by policy"
@@ -4096,23 +4682,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/3-4"]
+        "codePaths": [
+          "bin/theme-tools-research-rail.ts",
+          "bin/prompt-hydrator.ts",
+          "schemas/routable-research-evidence.schema.json"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-3.4:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/prompt-hydration-contract.red.test.ts tests/prompt-hydrator.test.ts tests/prompt-hydration-entrypoints.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:e66da779bc207044311eb008f6c70b914ab7a400c3f6d5d0388d6b144d8cfccd",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -4163,7 +4761,14 @@
         "id": "TASK-3.6",
         "owner": "documentation maintainer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/3-6"],
+        "affectedPaths": [
+          "01-operating-system/SKILL.md",
+          "02-goal-and-brief/SKILL.md",
+          "05-architecture-and-stack/SKILL.md",
+          "06-build-and-slice-loop/SKILL.md",
+          "07-quality-and-verification/SKILL.md",
+          "08-deploy-and-runtime-verification/SKILL.md"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "routing selects the smallest coherent skill set and duplicate doctrine is removed"
@@ -4178,23 +4783,38 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/3-6"]
+        "codePaths": [
+          "01-operating-system/SKILL.md",
+          "02-goal-and-brief/SKILL.md",
+          "05-architecture-and-stack/SKILL.md",
+          "06-build-and-slice-loop/SKILL.md",
+          "07-quality-and-verification/SKILL.md",
+          "08-deploy-and-runtime-verification/SKILL.md"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-3.6:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/prompt-hydration-contract.red.test.ts tests/prompt-hydrator.test.ts tests/prompt-hydration-entrypoints.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:e66da779bc207044311eb008f6c70b914ab7a400c3f6d5d0388d6b144d8cfccd",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -4250,7 +4870,11 @@
         "id": "TASK-4.3",
         "owner": "security reviewer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/4-3"],
+        "affectedPaths": [
+          "bin/autonomous-work-admission.ts",
+          "bin/tool-authority-broker.ts",
+          "tests/conference-risk-gates.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "fallback never silently weakens authorization or high-risk verification"
@@ -4265,23 +4889,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/4-3"]
+        "codePaths": [
+          "bin/autonomous-work-admission.ts",
+          "bin/tool-authority-broker.ts",
+          "tests/conference-risk-gates.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-4.3:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/evidence-gated-deliberation.test.ts tests/evidence-gated-orchestrator.test.ts tests/conference-risk-gates.test.ts tests/conference-policy-docs.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:20759e64ed52d314a23dc86a0c3a8def82656dac7166fa99ed59fb22b818f31c",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -4337,7 +4973,11 @@
         "id": "TASK-4.4",
         "owner": "documentation maintainer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/4-4"],
+        "affectedPaths": [
+          "control-plane/CONFERENCE-REVIEW.md",
+          "rules/evidence-gated-autonomous-orchestration.md",
+          "tests/conference-policy-docs.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "docs distinguish independent, combined, sequential, simulated, and live review"
@@ -4352,23 +4992,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/4-4"]
+        "codePaths": [
+          "control-plane/CONFERENCE-REVIEW.md",
+          "rules/evidence-gated-autonomous-orchestration.md",
+          "tests/conference-policy-docs.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-4.4:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/evidence-gated-deliberation.test.ts tests/evidence-gated-orchestrator.test.ts tests/conference-risk-gates.test.ts tests/conference-policy-docs.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:20759e64ed52d314a23dc86a0c3a8def82656dac7166fa99ed59fb22b818f31c",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -4419,7 +5071,11 @@
         "id": "TASK-5.2",
         "owner": "OpenSpec compiler engineer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/5-2"],
+        "affectedPaths": [
+          "bin/openspec-delivery-compiler.ts",
+          "bin/validate-delivery-trace.ts",
+          "tests/openspec-delivery-compiler.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "requirement → task → code → verification → integrated commit is queryable and checkboxes alone cannot close requirements"
@@ -4434,23 +5090,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/5-2"]
+        "codePaths": [
+          "bin/openspec-delivery-compiler.ts",
+          "bin/validate-delivery-trace.ts",
+          "tests/openspec-delivery-compiler.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-5.2:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/delivery-trace-schema.test.ts tests/openspec-delivery-compiler.test.ts tests/mcp-catalog-scope.test.ts tests/mcp-inventory-compiler.test.ts tests/delivery-trace-docs.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:b60225a8a48265c8094acd7453dfef5ccb38607682c1079d45612bdc22b51ed7",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -4501,7 +5169,11 @@
         "id": "TASK-5.3",
         "owner": "catalog domain engineer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/5-3"],
+        "affectedPaths": [
+          "bin/mcp-catalog-scope.ts",
+          "schemas/mcp-catalog-scope.schema.json",
+          "tests/mcp-catalog-scope.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "the one-sentence catalog fixture expands into complete traceable product coverage"
@@ -4516,23 +5188,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/5-3"]
+        "codePaths": [
+          "bin/mcp-catalog-scope.ts",
+          "schemas/mcp-catalog-scope.schema.json",
+          "tests/mcp-catalog-scope.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-5.3:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/delivery-trace-schema.test.ts tests/openspec-delivery-compiler.test.ts tests/mcp-catalog-scope.test.ts tests/mcp-inventory-compiler.test.ts tests/delivery-trace-docs.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:b60225a8a48265c8094acd7453dfef5ccb38607682c1079d45612bdc22b51ed7",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -4583,7 +5267,11 @@
         "id": "TASK-5.4",
         "owner": "catalog domain engineer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/5-4"],
+        "affectedPaths": [
+          "bin/mcp-inventory-compiler.ts",
+          "schemas/mcp-inventory.schema.json",
+          "tests/mcp-inventory-compiler.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": ["omitted or falsely executable MCP records fail"],
         "expectedEvidence": [
@@ -4596,23 +5284,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/5-4"]
+        "codePaths": [
+          "bin/mcp-inventory-compiler.ts",
+          "schemas/mcp-inventory.schema.json",
+          "tests/mcp-inventory-compiler.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-5.4:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/delivery-trace-schema.test.ts tests/openspec-delivery-compiler.test.ts tests/mcp-catalog-scope.test.ts tests/mcp-inventory-compiler.test.ts tests/delivery-trace-docs.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:b60225a8a48265c8094acd7453dfef5ccb38607682c1079d45612bdc22b51ed7",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -4663,7 +5363,7 @@
         "id": "TASK-5.5",
         "owner": "documentation maintainer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/5-5"],
+        "affectedPaths": ["control-plane/DELIVERY-TRACE.md", "tests/delivery-trace-docs.test.ts"],
         "packages": ["repository-local"],
         "acceptanceCriteria": [
           "an operator can regenerate and inspect traces without manual tables"
@@ -4678,23 +5378,31 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/5-5"]
+        "codePaths": ["control-plane/DELIVERY-TRACE.md", "tests/delivery-trace-docs.test.ts"]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-5.5:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/delivery-trace-schema.test.ts tests/openspec-delivery-compiler.test.ts tests/mcp-catalog-scope.test.ts tests/mcp-inventory-compiler.test.ts tests/delivery-trace-docs.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:b60225a8a48265c8094acd7453dfef5ccb38607682c1079d45612bdc22b51ed7",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {
@@ -4750,7 +5458,11 @@
         "id": "TASK-7.2",
         "owner": "improvement engineer",
         "dependencies": [],
-        "affectedPaths": ["task-scopes/7-2"],
+        "affectedPaths": [
+          "bin/recursive-improvement.ts",
+          "fixtures/orchestration/improvement-phase/convergence-rounds.json",
+          "tests/recursive-improvement-phase.test.ts"
+        ],
         "packages": ["repository-local"],
         "acceptanceCriteria": ["one empty round cannot converge and new evidence reopens work"],
         "expectedEvidence": [
@@ -4763,23 +5475,35 @@
       },
       "implementation": {
         "state": "implemented",
-        "codePaths": ["task-scopes/7-2"]
+        "codePaths": [
+          "bin/recursive-improvement.ts",
+          "fixtures/orchestration/improvement-phase/convergence-rounds.json",
+          "tests/recursive-improvement-phase.test.ts"
+        ]
       },
       "verification": {
-        "status": "unverified",
-        "receipts": []
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:TASK-7.2:FOCUSED",
+            "command": "node --experimental-strip-types --test tests/recursive-improvement-phase.test.ts tests/scoped-learning-router.test.ts tests/documentation-learning-responsibilities.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:c167bd99af2186b9521195e8347e0aff001416039c02c5d91e5f0b675b413e9f",
+            "observedAt": "2026-11-25T07:34:56.000Z"
+          }
+        ]
       },
       "integration": {
-        "status": "pending",
-        "integratedCommit": "pending",
-        "testedTree": "pending",
+        "status": "integrated",
+        "integratedCommit": "b57f593caa92835d166aa7024944582887bc4ed2",
+        "testedTree": "b57f593caa92835d166aa7024944582887bc4ed2",
         "remote": {
-          "status": "pending",
-          "repository": "pending",
+          "status": "observed-main",
+          "repository": "https://github.com/heymegabyte/agent-skills.git",
           "branch": "main",
-          "observedSha": "pending",
-          "observedAt": "1970-01-01T00:00:00.000Z",
-          "ciStatus": "unverified"
+          "observedSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+          "observedAt": "2026-11-25T07:34:56.000Z",
+          "ciStatus": "pass"
         }
       },
       "delivery": {

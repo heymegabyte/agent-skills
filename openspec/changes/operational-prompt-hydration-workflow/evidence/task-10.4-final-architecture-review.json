@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "receiptType": "independent-final-architecture-verification-review",
+  "changeId": "operational-prompt-hydration-workflow",
+  "taskId": "10.4",
+  "reviewer": {
+    "identity": "codex-independent-final-architecture-verifier",
+    "role": "architecture/verification",
+    "independent": true,
+    "reviewedAt": "2026-11-25T07:46:45Z",
+    "signatureMethod": "sha256-reviewer-time-input-digest",
+    "signatureInput": "codex-independent-final-architecture-verifier|2026-11-25T07:46:45Z|b57f593caa92835d166aa7024944582887bc4ed2|5289b6aa930b9894b4550b26a6f951067fd346acf90055df52c3dfbccdf7f118|PASS_WITH_BLOCKED_EXTERNAL_EDGE|false",
+    "signatureDigest": "sha256:b776fbea19c8e6a7f7b73fe396c37bde28f57a32a80ef4917087f74727456a9e"
+  },
+  "verdict": "PASS_WITH_BLOCKED_EXTERNAL_EDGE",
+  "archiveReady": false,
+  "actionableInternalFindings": [],
+  "reviewedEvidence": {
+    "editableHead": "7c80712809480734bdbb4c01889cc91bf14067d4",
+    "agentSkillsRemoteMain": "b57f593caa92835d166aa7024944582887bc4ed2",
+    "hostedCi": {
+      "runId": 45569136143,
+      "headSha": "b57f593caa92835d166aa7024944582887bc4ed2",
+      "conclusion": "success",
+      "url": "https://github.com/heymegabyte/agent-skills/actions/runs/45569136143"
+    },
+    "themeToolsSourceCommit": "5d716b6ccd8064abbafa3822e1210d0bfd50d0e4",
+    "deliveryTraceDigest": "sha256:5289b6aa930b9894b4550b26a6f951067fd346acf90055df52c3dfbccdf7f118",
+    "tasksDigest": "sha256:76df8dae3296b6b1c7d6f8be77a160dafe708093e91adf5a6a45e4388d391f5b",
+    "releaseBlockerDigest": "sha256:e210f52b319631a44e9f6f519d1d042e4d371018692025d50167f4445bfac3ac",
+    "installationReceiptDigest": "sha256:48af7c7ab10b5f03a03fc6484e49e5f872f34156c60a3bec7cbc8cdff97cd8fa",
+    "runtimeLoadingReceiptDigest": "sha256:11779ed6e18824b455889acd674f3b943483106ddfba5a4aa1af3a21d5d18d95",
+    "propagationEvaluationDigest": "sha256:c3ed47d043dce31dc58fec292b4821b44881d7312c792bd2466f17b9f2b57e0b"
+  },
+  "deliveryTraceAssessment": {
+    "status": "pass",
+    "requirements": 28,
+    "tasks": 56,
+    "implementedVerifiedIntegratedRemoteObserved": 49,
+    "pending": 7,
+    "pendingTaskIds": ["8.3", "8.4", "8.5", "10.4", "10.5", "10.6", "10.7"],
+    "placeholderPaths": 0,
+    "compilerReproducible": true,
+    "schemaValid": true
+  },
+  "installedAndLiveAssessment": {
+    "explicitCleanInstalledRevision": "89e5c7d747db31572768c0c449701f5b4a80d5b9",
+    "policyId": "operational-prompt-hydration",
+    "policyVersion": "1.0.0",
+    "policyDigest": "sha256:4833e290e756aecb61e14bdcff1be6f01137730bc3a27b7445eb1a78dcad960e",
+    "coordinatorLiveSubscriptionProbe": "pass",
+    "workerLiveSubscriptionProbe": "pass",
+    "providerControlledAuthorityClaimed": false
+  },
+  "blockedExternalEdge": {
+    "taskId": "8.3",
+    "state": "BLOCKED",
+    "package": "@theme.tools/sdk",
+    "expectedVersion": "1.0.1",
+    "observedVersion": "1.0.0",
+    "sourceCommit": "5d716b6ccd8064abbafa3822e1210d0bfd50d0e4",
+    "qualificationJobsStarted": false,
+    "reason": "GitHub Actions billing prevents qualification; the approved changeset remains unapplied and the authoritative registry does not expose 1.0.1.",
+    "nextAction": "After an authorized billing administrator restores Actions, apply the approved versioning path, require qualification to pass, publish only through the OIDC workflow, and observe immutable 1.0.1 before resuming consumers.",
+    "releaseClaimed": false,
+    "consumerAdoptionClaimed": false
+  },
+  "validation": {
+    "focusedTests": { "passed": 11, "failed": 0 },
+    "remoteMainExact": true,
+    "hostedCiExact": true,
+    "themeSourceExact": true,
+    "installedReceiptValid": true,
+    "liveReceiptValid": true,
+    "externalBlockerExact": true
+  },
+  "basis": "AV-007 is remediated: the regenerated ledger binds 49 completed tasks to non-placeholder paths, passing receipts, exact tested commits, observed remote main, and successful hosted CI, while exactly seven tasks remain pending. No actionable internal architecture or verification finding remains. Archive readiness stays false because the exact task-8.3 release edge and its dependent consumer tasks remain externally blocked, and task 10.4 plus final integration/archive steps remain unchecked."
+}

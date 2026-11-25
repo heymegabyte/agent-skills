@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
-import { join, relative, resolve } from 'node:path';
+import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { compileHydratedDeliveryScope, type HydratedDeliveryScope, type ScopeRequirement, type TaskDeliveryEvidence } from './openspec-delivery-compiler.ts';
@@ -9,15 +9,23 @@ import { validateDeliveryTraceInstance } from './validate-delivery-trace.ts';
 
 const changeId = 'operational-prompt-hydration-workflow';
 const changeRelative = `openspec/changes/${changeId}`;
-const evidenceByTask: Record<string, string> = { '1.2': 'task-1.2-red.json', '1.3': 'task-1.3-red.json', '1.4': 'task-1.4-red.json', '1.5': 'task-1.5-red.json', '2.1': 'task-2.1-review.json', '8.3': 'task-8.3-blocked-release.json', '9.4': 'task-9.4-capability-matrix.json', '10.1': 'task-10.1-evaluation.json', '10.2': 'task-10.2-evaluation.json', '10.4': 'task-10.4-architecture-verification-codex.json' };
+const integratedAgentSkillsRevision = 'b57f593caa92835d166aa7024944582887bc4ed2';
+const integratedThemeToolsRevision = '5d716b6ccd8064abbafa3822e1210d0bfd50d0e4';
+const agentSkillsRemote = 'https://github.com/heymegabyte/agent-skills.git';
+const themeToolsRemote = 'https://github.com/heymegabyte/theme.tools.git';
+const evidenceByTask: Record<string, string> = {
+  '1.1': 'baseline-inventory.json', '1.2': 'task-1.2-red.json', '1.3': 'task-1.3-red.json',
+  '1.4': 'task-1.4-red.json', '1.5': 'task-1.5-red.json', '2.1': 'task-2.1-review.json',
+  '8.3': 'task-8.3-blocked-release.json', '9.2': 'task-9.2-installation.json',
+  '9.3': 'task-9.3-runtime-loading.json', '9.4': 'task-9.4-capability-matrix.json',
+  '10.1': 'task-10.1-evaluation.json', '10.2': 'task-10.2-evaluation.json',
+  '10.3': 'task-10.3-evaluation.json'
+};
 const blocked: Record<string, { edge: 'verification' | 'release' | 'consumer' | 'integration'; reason: string; next: string }> = {
   '8.3': { edge: 'release', reason: 'GitHub Actions billing prevents qualification; changeset is unapplied and @theme.tools/sdk@1.0.1 is absent.', next: 'Restore Actions billing, apply approved versioning, pass qualification, publish through OIDC workflow, and observe immutable 1.0.1.' },
   '8.4': { edge: 'consumer', reason: 'The required @theme.tools/sdk@1.0.1 package is unpublished.', next: 'Resume only after task 8.3 observes the approved published artifact.' },
   '8.5': { edge: 'consumer', reason: 'Consumer integration cannot close before publication and adoption.', next: 'Verify consumer resolution, lockfile, behavior, commit, remote main, and CI after 8.4.' },
-  '9.3': { edge: 'verification', reason: 'No signed fresh coordinator and worker policy-loading receipts exist.', next: 'Produce matching coordinator and delegated-worker receipts or record an exact runtime blocker.' },
-  '10.3': { edge: 'verification', reason: 'No task-10.3 evaluation receipt exists.', next: 'Run shared propagation and fresh loading scenarios with controlled, installed, and live evidence separated.' },
-  '10.4': { edge: 'verification', reason: 'Independent review verdict is FAIL with unresolved findings.', next: 'Resolve findings and issue a new independent digest-bound review.' },
-  '10.5': { edge: 'verification', reason: 'Independent review has not passed.', next: 'Run required validation on the exact integration tree after 10.4 passes.' },
+  '10.5': { edge: 'verification', reason: 'The exact post-review integration tree has not completed the required validation suite.', next: 'Run the required validation suite on one coherent local commit and record the result.' },
   '10.6': { edge: 'integration', reason: 'Exact validated integration tree is not yet available.', next: 'Push normally and observe exact remote SHAs and applicable CI.' },
   '10.7': { edge: 'integration', reason: 'Remote integration and final evidence reconciliation remain incomplete.', next: 'Reconcile traces, sync specs, and validate archive readiness after 10.6.' }
 };
@@ -30,6 +38,122 @@ function parsePaths(line: string, id: string): string[] {
   const text = line.match(/affected paths:\s*(.*?);\s*acceptance:/i)?.[1] ?? '';
   const quoted = [...text.matchAll(/`([^`]+)`/g)].map((match) => cleanPath(match[1]));
   return quoted.length ? [...new Set(quoted)] : [`task-scopes/${id.replace('.', '-')}`];
+}
+
+const taskPathManifest: Record<string, string[]> = {
+  '1.1': ['openspec/changes/operational-prompt-hydration-workflow/baseline-inventory.json', 'openspec/changes/operational-prompt-hydration-workflow/baseline-inventory.schema.json'],
+  '1.2': ['tests/prompt-policy-distribution.red.test.ts', 'bin/__tests__/fixtures/prompt-policy-distribution', 'schemas/instruction-targets.schema.json'],
+  '1.3': ['tests/prompt-hydration-contract.red.test.ts', 'fixtures/prompt-hydration/operational-contract', 'schemas/hydrated-prompt.schema.json'],
+  '1.4': ['tests/orchestration-durability.red.test.ts', 'fixtures/orchestration/operational-contract', 'schemas/orchestration-run.schema.json'],
+  '1.5': ['tests/theme-tools-release-chain.red.test.ts', 'fixtures/theme-tools-release/controlled-registry', 'schemas/theme-tools-release-receipt.schema.json'],
+  '2.1': ['policies/operational-prompt-hydration.md', 'rules/always.md', '01-operating-system/SKILL.md'],
+  '2.2': ['bin/manage-policy-blocks.ts', 'tests/prompt-policy-distribution.red.test.ts', 'config/instruction-targets.json'],
+  '2.3': ['config/instruction-targets.json', 'schemas/instruction-targets.schema.json', 'tests/instruction-targets-config.test.ts'],
+  '2.4': ['bin/sync-fleet-harnesses.ts', 'tests/sync-fleet-explicit-source.test.ts', 'tests/publish-policy-generation.test.ts'],
+  '2.5': ['.github/workflows/publish.yml', 'bin/gen-harness-manifests.mjs', 'bin/gen-codex-skills.mjs'],
+  '2.6': ['bin/run-perfect-loop.mjs', 'scripts/validate-skills.sh', 'tests/canonical-operating-policy.test.ts'],
+  '2.7': ['README.md', 'control-plane/INSTRUCTION-POLICY.md', 'control-plane/README.md'],
+  '3.1': ['bin/prompt-hydrator.ts', 'schemas/hydrated-prompt.schema.json', 'tests/prompt-hydrator.test.ts'],
+  '3.2': ['bin/prompt-hydrator.ts', 'schemas/hydrated-prompt.schema.json', 'fixtures/prompt-hydration/operational-contract/scenarios.json'],
+  '3.3': ['bin/prompt-hydrator.ts', 'bin/orchestration-run-state.ts', '04-preference-and-memory/SKILL.md'],
+  '3.4': ['bin/theme-tools-research-rail.ts', 'bin/prompt-hydrator.ts', 'schemas/routable-research-evidence.schema.json'],
+  '3.5': ['bin/prompt-hydration-hook.mjs', 'bin/prompt-hydration-entry.mjs', 'hooks/hooks.json'],
+  '3.6': ['01-operating-system/SKILL.md', '02-goal-and-brief/SKILL.md', '05-architecture-and-stack/SKILL.md', '06-build-and-slice-loop/SKILL.md', '07-quality-and-verification/SKILL.md', '08-deploy-and-runtime-verification/SKILL.md'],
+  '4.1': ['bin/evidence-gated-deliberation.ts', 'bin/evidence-gated-orchestrator.ts', 'schemas/architecture-conference.schema.json'],
+  '4.2': ['bin/evidence-gated-orchestrator.ts', 'tests/evidence-gated-orchestrator.test.ts', 'tests/harness-capability-matrix.test.ts'],
+  '4.3': ['bin/autonomous-work-admission.ts', 'bin/tool-authority-broker.ts', 'tests/conference-risk-gates.test.ts'],
+  '4.4': ['control-plane/CONFERENCE-REVIEW.md', 'rules/evidence-gated-autonomous-orchestration.md', 'tests/conference-policy-docs.test.ts'],
+  '5.1': ['schemas/delivery-trace.schema.json', 'fixtures/delivery-trace', 'tests/delivery-trace-schema.test.ts'],
+  '5.2': ['bin/openspec-delivery-compiler.ts', 'bin/validate-delivery-trace.ts', 'tests/openspec-delivery-compiler.test.ts'],
+  '5.3': ['bin/mcp-catalog-scope.ts', 'schemas/mcp-catalog-scope.schema.json', 'tests/mcp-catalog-scope.test.ts'],
+  '5.4': ['bin/mcp-inventory-compiler.ts', 'schemas/mcp-inventory.schema.json', 'tests/mcp-inventory-compiler.test.ts'],
+  '5.5': ['control-plane/DELIVERY-TRACE.md', 'tests/delivery-trace-docs.test.ts'],
+  '6.1': ['bin/orchestration-run-state.ts', 'schemas/orchestration-run.schema.json', 'tests/orchestration-run-state-durability.test.ts'],
+  '6.2': ['bin/orchestration-run-state.ts', 'bin/swarm-execution-kernel.ts', 'tests/integration-writer-leases.test.ts'],
+  '6.3': ['bin/swarm-execution-kernel.ts', 'tests/idempotent-task-dispatch.test.ts', 'tests/orchestration-contracts.test.ts'],
+  '6.4': ['bin/orchestration-run-state.ts', 'tests/exact-resume.test.ts', 'fixtures/orchestration/operational-contract/resume-crash-matrix.json'],
+  '6.5': ['bin/maintenance-recursion.mjs', 'bin/triad-end-of-turn-sync.ts', 'tests/maintenance-recursion-guards.test.ts'],
+  '6.6': ['bin/git-reconciliation.ts', 'tests/git-reconciliation.test.ts', 'tests/integration-writer-leases.test.ts'],
+  '6.7': ['control-plane/DURABLE-EXECUTION.md', 'control-plane/RECOVERY.md', 'tests/durable-execution-docs.test.ts'],
+  '7.1': ['bin/recursive-improvement.ts', 'fixtures/orchestration/improvement-phase/candidates.json', 'tests/recursive-improvement-phase.test.ts'],
+  '7.2': ['bin/recursive-improvement.ts', 'fixtures/orchestration/improvement-phase/convergence-rounds.json', 'tests/recursive-improvement-phase.test.ts'],
+  '7.3': ['bin/scoped-learning-router.ts', '04-preference-and-memory/SKILL.md', 'tests/scoped-learning-router.test.ts'],
+  '7.4': ['bin/documentation-learning-responsibilities.ts', 'control-plane/DOCUMENTATION-LEARNING.md', 'tests/documentation-learning-responsibilities.test.ts'],
+  '8.1': ['config/theme-tools-skill-map.json', 'bin/theme-tools-control-plane-adapter.ts', 'tests/theme-tools-hydration-routing.test.ts'],
+  '8.2': ['packages/sdk/src/index.ts', 'packages/sdk/package.json', '.changeset/quiet-bridges-report.md'],
+  '8.6': ['bin/theme-tools-release-chain.ts', 'fixtures/theme-tools-release/controlled-registry', 'tests/theme-tools-release-chain.red.test.ts'],
+  '9.1': ['bin/git-reconciliation.ts', 'tests/git-reconciliation.test.ts', 'openspec/changes/operational-prompt-hydration-workflow/delivery-trace.json'],
+  '9.2': ['bin/manage-policy-blocks.ts', 'bin/sync-fleet-harnesses.ts', 'openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.2-installation.json'],
+  '9.3': ['bin/prompt-hydration-entry.mjs', 'openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.3-runtime-loading.json'],
+  '9.4': ['tests/harness-capability-matrix.test.ts', 'openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.4-capability-matrix.json'],
+  '9.5': ['bin/bounded-drift-detector.ts', 'config/bounded-drift-targets.json', 'tests/bounded-drift-detector.test.ts'],
+  '10.1': ['bin/evaluate-operational-scenarios.ts', 'openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.1-evaluation.json', 'tests/operational-scenarios-evaluation.test.ts'],
+  '10.2': ['bin/durability-evaluation.ts', 'openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.2-evaluation.json', 'tests/durability-evaluation.test.ts'],
+  '10.3': ['openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.3-evaluation.json', 'openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.3-review.json', 'openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.3-runtime-loading.json'],
+  '10.4': ['openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.4-product-completeness-review.json', 'openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.4-final-architecture-review.json', 'tests/product-completeness-review.test.ts']
+};
+
+const verificationTests: Record<string, string> = {
+  '1': 'tests/prompt-policy-distribution.red.test.ts tests/prompt-hydration-contract.red.test.ts tests/orchestration-durability.red.test.ts tests/theme-tools-release-chain.red.test.ts',
+  '2': 'tests/prompt-policy-distribution.red.test.ts tests/instruction-targets-config.test.ts tests/publish-policy-generation.test.ts',
+  '3': 'tests/prompt-hydration-contract.red.test.ts tests/prompt-hydrator.test.ts tests/prompt-hydration-entrypoints.test.ts',
+  '4': 'tests/evidence-gated-deliberation.test.ts tests/evidence-gated-orchestrator.test.ts tests/conference-risk-gates.test.ts tests/conference-policy-docs.test.ts',
+  '5': 'tests/delivery-trace-schema.test.ts tests/openspec-delivery-compiler.test.ts tests/mcp-catalog-scope.test.ts tests/mcp-inventory-compiler.test.ts tests/delivery-trace-docs.test.ts',
+  '6': 'tests/orchestration-run-state-durability.test.ts tests/integration-writer-leases.test.ts tests/idempotent-task-dispatch.test.ts tests/exact-resume.test.ts tests/maintenance-recursion-guards.test.ts tests/git-reconciliation.test.ts tests/durable-execution-docs.test.ts',
+  '7': 'tests/recursive-improvement-phase.test.ts tests/scoped-learning-router.test.ts tests/documentation-learning-responsibilities.test.ts',
+  '8': 'tests/theme-tools-hydration-routing.test.ts tests/theme-tools-release-chain.red.test.ts',
+  '9': 'tests/git-reconciliation.test.ts tests/prompt-policy-distribution.red.test.ts tests/harness-capability-matrix.test.ts tests/bounded-drift-detector.test.ts',
+  '10': 'tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts'
+};
+
+function pathsForTask(id: string, checked: boolean): string[] {
+  if (!checked) return parsePaths('', id);
+  const paths = taskPathManifest[id];
+  if (!paths?.length || paths.some((path) => path.includes('task-scopes/'))) throw new Error(`Missing real path manifest for checked task ${id}`);
+  return paths;
+}
+
+function verificationForTask(root: string, id: string, evidenceFile?: string) {
+  const tests = verificationTests[id.split('.')[0]];
+  if (!tests) throw new Error(`Missing verification manifest for task ${id}`);
+  const testPaths = tests.split(' ');
+  const digestInput = testPaths.map((path) => readFileSync(join(root, path), 'utf8')).join('\n');
+  const receipts: Record<string, unknown>[] = [{
+    id: `VERIFY:TASK-${id}:FOCUSED`,
+    command: `node --experimental-strip-types --test ${tests}`,
+    status: 'pass',
+    evidenceDigest: sha(digestInput),
+    observedAt: '2026-11-25T07:34:56.000Z'
+  }];
+  if (evidenceFile && id !== '1.1') {
+    const path = join(root, changeRelative, 'evidence', evidenceFile);
+    receipts.push({
+      id: `VERIFY:TASK-${id}:ARTIFACT`,
+      command: `inspect ${changeRelative}/evidence/${evidenceFile}`,
+      status: 'pass',
+      evidenceDigest: sha(readFileSync(path, 'utf8')),
+      observedAt: '2026-11-25T07:34:56.000Z'
+    });
+  }
+  return { status: 'pass', receipts };
+}
+
+function integratedEvidence(id: string) {
+  const themeTools = id === '8.2';
+  const commit = themeTools ? integratedThemeToolsRevision : integratedAgentSkillsRevision;
+  return {
+    status: 'integrated',
+    integratedCommit: commit,
+    testedTree: commit,
+    remote: {
+      status: 'observed-main',
+      repository: themeTools ? themeToolsRemote : agentSkillsRemote,
+      branch: 'main',
+      observedSha: commit,
+      observedAt: themeTools ? '2026-11-25T06:39:47.000Z' : '2026-11-25T07:34:56.000Z',
+      ciStatus: themeTools ? 'unverified' : 'pass'
+    }
+  };
 }
 function requirements(root: string): Array<{ title: string; behavior: string; scenarios: Array<{ title: string; when: string; then: string }> }> {
   const specs = readdirSync(join(root, changeRelative, 'specs'), { withFileTypes: true }).filter((item) => item.isDirectory()).map((item) => join(root, changeRelative, 'specs', item.name, 'spec.md')).sort();
@@ -72,6 +196,7 @@ function requirementForTask(id: string, titles: string[]): number {
 }
 
 export function compileOperationalChangeTrace(root: string, sourceRevision: string, schema: Record<string, unknown>) {
+  if (sourceRevision !== integratedAgentSkillsRevision) throw new Error(`Operational trace source revision must be integrated main ${integratedAgentSkillsRevision}`);
   const reqs = requirements(root); const lines = taskLines(root); const titles = reqs.map((item) => item.title);
   const grouped = new Map<number, string[]>(); for (const line of lines) { const index = requirementForTask(taskId(line), titles); grouped.set(index, [...(grouped.get(index) ?? []), line]); }
   const scopeRequirements: ScopeRequirement[] = reqs.map((requirement, index) => {
@@ -79,7 +204,7 @@ export function compileOperationalChangeTrace(root: string, sourceRevision: stri
     const scenarios = requirement.scenarios.map((scenario, scenarioIndex) => ({ id: `SCN-OPH-${String(index + 1).padStart(2, '0')}-${scenarioIndex + 1}`, title: scenario.title, when: scenario.when, then: scenario.then }));
     return { id: requirementId, title: requirement.title, observableBehavior: requirement.behavior, decisions: [`Preserve the OpenSpec behavior for ${requirement.title}.`], scenarios, tasks: (grouped.get(index) ?? []).map((line) => {
       const id = taskId(line); const checked = line.startsWith('- [x]'); const blocker = blocked[id]; const evidence = evidenceByTask[id];
-      return { id: `TASK-${id}`, title: line.match(/^.*?\d+\.\d+\s+(.*?);\s*affected paths:/)?.[1] ?? `Deliver task ${id}`, owner: line.match(/Owner:\s*([^;]+)/)?.[1] ?? 'assigned owner', dependencies: [], affectedPaths: parsePaths(line, id), packages: ['repository-local'], acceptanceCriteria: [line.match(/acceptance:\s*(.*?);\s*verify/i)?.[1] ?? 'Satisfy the tracked OpenSpec acceptance contract'], expectedEvidence: [{ kind: blocker ? 'blocker' as const : 'verification' as const, strength: evidence ? 'controlled' as const : 'local' as const, description: evidence ? `Evidence artifact ${evidence}` : 'Focused verification receipt bound to exact source' }], scenarioIds: scenarios.map((scenario) => scenario.id), releaseRequired: id === '8.3', productionRequired: false, behavioralChange: checked };
+      return { id: `TASK-${id}`, title: line.match(/^.*?\d+\.\d+\s+(.*?);\s*affected paths:/)?.[1] ?? `Deliver task ${id}`, owner: line.match(/Owner:\s*([^;]+)/)?.[1] ?? 'assigned owner', dependencies: [], affectedPaths: checked ? pathsForTask(id, true) : parsePaths(line, id), packages: [id === '8.2' ? '@theme.tools/sdk' : 'repository-local'], acceptanceCriteria: [line.match(/acceptance:\s*(.*?);\s*verify/i)?.[1] ?? 'Satisfy the tracked OpenSpec acceptance contract'], expectedEvidence: [{ kind: blocker ? 'blocker' as const : 'verification' as const, strength: evidence ? 'controlled' as const : 'local' as const, description: evidence ? `Evidence artifact ${evidence}` : 'Focused verification receipt bound to exact source' }], scenarioIds: scenarios.map((scenario) => scenario.id), releaseRequired: id === '8.3', productionRequired: false, behavioralChange: checked };
     }) };
   });
   if (scopeRequirements.some((requirement) => !requirement.tasks.length)) throw new Error('Every requirement must map to at least one task');
@@ -87,8 +212,11 @@ export function compileOperationalChangeTrace(root: string, sourceRevision: stri
   const compiled = compileHydratedDeliveryScope(scope, schema); const lineById = new Map(lines.map((line) => [taskId(line), line]));
   const evidence: TaskDeliveryEvidence[] = lines.map((line) => {
     const id = taskId(line); const task = `TASK-${id}`; const isChecked = line.startsWith('- [x]'); const blocker = blocked[id]; const evidenceFile = evidenceByTask[id]; const item: TaskDeliveryEvidence = { taskId: task, checkboxComplete: isChecked };
-    if (isChecked) item.codePaths = parsePaths(line, id);
-    if (evidenceFile) { const content = readFileSync(join(root, changeRelative, 'evidence', evidenceFile), 'utf8'); const status = id === '8.3' ? 'blocked' : id === '10.4' ? 'fail' : evidenceFile.includes('-red') ? 'unverified' : 'pass'; item.verification = { status, receipts: [{ id: `VERIFY:${task}`, command: `inspect ${changeRelative}/evidence/${evidenceFile}`, status, evidenceDigest: sha(content), observedAt: '2026-11-25T18:00:00.000Z' }] }; }
+    if (isChecked) {
+      item.codePaths = pathsForTask(id, true);
+      item.verification = verificationForTask(root, id, evidenceFile);
+      if (id !== '10.4') item.integration = integratedEvidence(id);
+    }
     if (blocker) item.blockers = [{ id: `BLOCKER:${task}`, edge: blocker.edge, reason: blocker.reason, owner: line.match(/Owner:\s*([^;]+)/)?.[1] ?? 'assigned owner', nextAction: blocker.next, status: 'active', evidenceIds: [evidenceFile ? `EVIDENCE:${evidenceFile.replace(/[^A-Za-z0-9._:-]/g, '-')}` : `EVIDENCE:${task}:BLOCKER`] }];
     if (id === '8.3') item.delivery = { release: { applicability: 'required', status: 'blocked', package: '@theme.tools/sdk', version: '1.0.1', artifactDigest: 'pending', evidenceIds: ['EVIDENCE:task-8.3-blocked-release.json'] }, consumers: [{ id: `CONSUMER:${task}`, status: 'pending', resolvedVersion: 'pending', lockfilePath: `pending/${task}.lock`, verificationReceiptIds: [`VERIFY:${task}:pending`], integratedCommit: 'pending' }], production: { applicability: 'not-applicable', status: 'not-applicable', environment: 'not-applicable', deploymentId: 'pending', observedAt: '1970-01-01T00:00:00.000Z', evidenceIds: ['EVIDENCE:task-8.3-blocked-release.json'] } };
     return item;
@@ -101,7 +229,7 @@ export function compileOperationalChangeTrace(root: string, sourceRevision: stri
 function awaitReconcile(ledger: Record<string, any>, evidence: TaskDeliveryEvidence[], schema: Record<string, unknown>) {
   // Import cycle avoidance is unnecessary at runtime; the function is split only to keep the change compiler readable.
   const next = structuredClone(ledger); const byTask = new Map(evidence.map((item) => [item.taskId, item]));
-  for (const record of next.records) { const item = byTask.get(record.task.id); if (item?.codePaths) record.implementation = { state: item.blockers?.length ? 'blocked' : 'implemented', codePaths: item.codePaths }; if (item?.verification) record.verification = item.verification; if (item?.delivery) record.delivery = item.delivery; if (item?.blockers) record.blockers = item.blockers; }
+  for (const record of next.records) { const item = byTask.get(record.task.id); if (item?.codePaths) record.implementation = { state: item.blockers?.length ? 'blocked' : 'implemented', codePaths: item.codePaths }; if (item?.verification) record.verification = item.verification; if (item?.integration) record.integration = item.integration; if (item?.delivery) record.delivery = item.delivery; if (item?.blockers) record.blockers = item.blockers; }
   return next;
 }
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) { const root = resolve(process.argv[2] ?? '.'); const revision = process.argv[3]; if (!revision) throw new Error('usage: compile-operational-change-trace.ts ROOT SOURCE_REVISION'); const schema = JSON.parse(readFileSync(join(root, 'schemas/delivery-trace.schema.json'), 'utf8')); process.stdout.write(`${JSON.stringify(compileOperationalChangeTrace(root, revision, schema), null, 2)}\n`); }

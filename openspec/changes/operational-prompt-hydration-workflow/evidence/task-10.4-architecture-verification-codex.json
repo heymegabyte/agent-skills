@@ -8,101 +8,172 @@
     "role": "architecture/verification",
     "independent": true
   },
-  "reviewedAt": "2026-11-25T18:00:00.000Z",
-  "verdict": "FAIL",
-  "evidenceStrength": "repository-inspection-plus-controlled-tests-plus-read-only-remote-and-installed-receipts",
+  "reviewedAt": "2026-11-25T18:35:00.000Z",
+  "verdict": "FAIL_PENDING_INDEPENDENT_REREVIEW",
+  "evidenceStrength": "repository-inspection-plus-controlled-tests-plus-live-installed-remote-and-hosted-ci-receipts",
   "sources": {
     "editableAgentSkillsHead": "7c80712809480734bdbb4c01889cc91bf14067d4",
-    "pushedAgentSkillsMain": "89e5c7d747db31572768c0c449701f5b4a80d5b9",
+    "integratedAgentSkillsMain": "b57f593caa92835d166aa7024944582887bc4ed2",
+    "hostedCiRunId": 45569136143,
+    "hostedCiConclusion": "SUCCESS",
+    "hostedCiHeadSha": "b57f593caa92835d166aa7024944582887bc4ed2",
     "pushedThemeToolsMain": "5d716b6ccd8064abbafa3822e1210d0bfd50d0e4",
-    "observedThemeToolsEditHead": "f04437f8cf96dd4c7bf41ab91ff65295435133d6",
     "tasksDigest": "sha256:76df8dae3296b6b1c7d6f8be77a160dafe708093e91adf5a6a45e4388d391f5b",
-    "specsDigest": "sha256:ed19a4651fe55fabe94ff03547452c1596c82e281c96d4c52d328dbcf6f7048d",
     "designDigest": "sha256:fd4c9bb5a9a0d2e1e25fd638ef51a5815b512061240880b6b18ab671a39925a5",
     "proposalDigest": "sha256:bb70bcb46779d3d426a07f07cab11fbe9205b4c8cc02e7cf6addcad8b0d17615",
-    "releaseBlockerDigest": "sha256:2bcd29af077d2504abd416ae16829bd08b2af76b3048698c2241d51972b534bd",
-    "installedCapabilityDigest": "sha256:14ac61d6931e115dc352bd053b4b02ee3916d21daeea09bf481fe65a2fbca15d"
+    "deliveryTraceDigest": "sha256:5289b6aa930b9894b4550b26a6f951067fd346acf90055df52c3dfbccdf7f118",
+    "releaseBlockerDigest": "sha256:e210f52b319631a44e9f6f519d1d042e4d371018692025d50167f4445bfac3ac",
+    "runtimeLoadingDigest": "sha256:11779ed6e18824b455889acd674f3b943483106ddfba5a4aa1af3a21d5d18d95",
+    "evaluationDigest": "sha256:c3ed47d043dce31dc58fec292b4821b44881d7312c792bd2466f17b9f2b57e0b",
+    "evaluationReviewDigest": "sha256:712e63dd07d8ba4148dd6500f08fd3b57277d1fd3033b16b2f6d630b44a20ecc",
+    "remediationDigest": "sha256:c0b0f57f7638d5be5a7fe205579e73ae03359f7466bc7a8ef437c276a1d51aeb"
   },
   "validation": {
     "openSpecStrict": "PASS",
-    "focusedBehavioralCommand": "node --experimental-strip-types --test tests/prompt-policy-distribution.red.test.ts tests/prompt-hydration-contract.red.test.ts tests/orchestration-durability.red.test.ts tests/theme-tools-release-chain.red.test.ts tests/evidence-gated-deliberation.test.ts tests/openspec-delivery-compiler.test.ts tests/idempotent-task-dispatch.test.ts tests/exact-resume.test.ts tests/recursive-improvement-phase.test.ts tests/scoped-learning-router.test.ts tests/documentation-learning-responsibilities.test.ts tests/bounded-drift-detector.test.ts",
-    "focusedBehavioralResult": { "status": "FAIL", "tests": 83, "passed": 82, "failed": 1 },
-    "failedAssertion": "an unpublished shared package preserves the exact resumable release edge: recordExternalDeliveryEdge is undefined"
+    "focusedBehavioralResult": { "status": "PASS", "tests": 92, "passed": 92, "failed": 0 },
+    "externalDeliveryEdge": "PASS_DURABLE_IDEMPOTENT_RESUMABLE",
+    "deliveryTraceSchema": "PASS_56_RECORDS_28_REQUIREMENTS",
+    "remoteMain": "PASS_EXACT_SHA",
+    "hostedCi": "PASS_EXACT_SHA"
   },
   "requirementReviews": [
-    { "requirement": "Repository integration has one leased writer", "status": "PASS_CONTROLLED" },
-    { "requirement": "Run checkpoints identify exact resumption", "status": "PASS_CONTROLLED" },
     {
-      "requirement": "Integrated commits close traced work",
-      "status": "FAIL_MISSING_CHANGE_LEDGER"
+      "id": "REQ-OPH-01",
+      "requirement": "Repository integration has one leased writer",
+      "status": "PASS_CONTROLLED"
     },
     {
+      "id": "REQ-OPH-02",
+      "requirement": "Run checkpoints identify exact resumption",
+      "status": "PASS_CONTROLLED"
+    },
+    {
+      "id": "REQ-OPH-03",
+      "requirement": "Integrated commits close traced work",
+      "status": "FAIL_STALE_TRACE_RECONCILIATION"
+    },
+    {
+      "id": "REQ-OPH-04",
       "requirement": "Scope expands moderately with accumulated evidence",
       "status": "PASS_CONTROLLED"
     },
-    { "requirement": "Expansion is outcome-limited", "status": "PASS_CONTROLLED" },
-    { "requirement": "Admission degrades capability honestly", "status": "PASS_CONTROLLED" },
-    { "requirement": "Maintenance admission suppresses recursion", "status": "PASS_CONTROLLED" },
     {
-      "requirement": "Trace records span the delivery chain",
-      "status": "FAIL_NO_DELIVERY_TRACE_LEDGER"
+      "id": "REQ-OPH-05",
+      "requirement": "Expansion is outcome-limited",
+      "status": "PASS_CONTROLLED"
     },
-    { "requirement": "Dispatch is idempotent and collision safe", "status": "PASS_CONTROLLED" },
-    { "requirement": "Maintenance cannot recursively launch itself", "status": "PASS_CONTROLLED" },
-    { "requirement": "Interruption resumes the next exact action", "status": "PASS_CONTROLLED" },
     {
+      "id": "REQ-OPH-06",
+      "requirement": "Admission degrades capability honestly",
+      "status": "PASS_CONTROLLED"
+    },
+    {
+      "id": "REQ-OPH-07",
+      "requirement": "Maintenance admission suppresses recursion",
+      "status": "PASS_CONTROLLED"
+    },
+    {
+      "id": "REQ-OPH-08",
+      "requirement": "Trace records span the delivery chain",
+      "status": "PASS_SCHEMA_FAIL_STALE_STATE"
+    },
+    {
+      "id": "REQ-OPH-09",
+      "requirement": "Dispatch is idempotent and collision safe",
+      "status": "PASS_CONTROLLED"
+    },
+    {
+      "id": "REQ-OPH-10",
+      "requirement": "Maintenance cannot recursively launch itself",
+      "status": "PASS_CONTROLLED"
+    },
+    {
+      "id": "REQ-OPH-11",
+      "requirement": "Interruption resumes the next exact action",
+      "status": "PASS_CONTROLLED"
+    },
+    {
+      "id": "REQ-OPH-12",
       "requirement": "Shared capabilities reach intended consumers",
       "status": "BLOCKED_EXACT_8_3_EDGE"
     },
     {
+      "id": "REQ-OPH-13",
       "requirement": "Git integration proves remote delivery",
-      "status": "INCOMPLETE_PENDING_10_6"
+      "status": "PASS_OBSERVED_BUT_TRACE_PENDING"
     },
-    { "requirement": "Evidence strength matches delivery claims", "status": "PASS_WITH_FINDINGS" },
     {
+      "id": "REQ-OPH-14",
+      "requirement": "Evidence strength matches delivery claims",
+      "status": "PASS"
+    },
+    {
+      "id": "REQ-OPH-15",
       "requirement": "Policy receipts bind runtime instructions",
-      "status": "FAIL_MISSING_9_3_RECEIPTS"
+      "status": "PASS_LIVE"
     },
     {
+      "id": "REQ-OPH-16",
       "requirement": "Shared release evidence is dependency closed",
       "status": "BLOCKED_EXACT_8_3_EDGE"
     },
     {
+      "id": "REQ-OPH-17",
       "requirement": "One canonical compact policy owns shared semantics",
       "status": "PASS_REPOSITORY_AND_INSTALLED"
     },
     {
+      "id": "REQ-OPH-18",
       "requirement": "Supported instruction surfaces are generated safely",
-      "status": "PASS_CONTROLLED_AND_INSTALLED"
+      "status": "PASS_CONTROLLED_INSTALLED_REMOTE_CI"
     },
-    { "requirement": "Installation uses an explicit verified source", "status": "PASS_INSTALLED" },
     {
+      "id": "REQ-OPH-19",
+      "requirement": "Installation uses an explicit verified source",
+      "status": "PASS_INSTALLED"
+    },
+    {
+      "id": "REQ-OPH-20",
       "requirement": "Runtime loading is proven by receipts",
-      "status": "FAIL_MISSING_COORDINATOR_WORKER_RECEIPTS"
+      "status": "PASS_LIVE_COORDINATOR_AND_WORKER"
     },
     {
+      "id": "REQ-OPH-21",
       "requirement": "Drift and destructive generation fail CI",
-      "status": "PASS_CONTROLLED_LOCAL_NOT_REMOTE"
+      "status": "PASS_CONTROLLED_AND_HOSTED_CI"
     },
     {
+      "id": "REQ-OPH-22",
       "requirement": "Frontier models converge independently",
       "status": "PASS_CONTROLLED_HONEST_FALLBACK"
     },
-    { "requirement": "Parallel work is collision-safe", "status": "PASS_CONTROLLED" },
     {
-      "requirement": "Prompt Hydration is the first engineering stage",
-      "status": "PASS_CONTROLLED_AND_INSTALLED_WRAPPER"
+      "id": "REQ-OPH-23",
+      "requirement": "Parallel work is collision-safe",
+      "status": "PASS_CONTROLLED"
     },
-    { "requirement": "Hydration produces sparse complete coverage", "status": "PASS_CONTROLLED" },
     {
+      "id": "REQ-OPH-24",
+      "requirement": "Prompt Hydration is the first engineering stage",
+      "status": "PASS_CONTROLLED_INSTALLED_LIVE"
+    },
+    {
+      "id": "REQ-OPH-25",
+      "requirement": "Hydration produces sparse complete coverage",
+      "status": "PASS_CONTROLLED"
+    },
+    {
+      "id": "REQ-OPH-26",
       "requirement": "Architecture conference adapts to available capacity",
       "status": "PASS_CONTROLLED"
     },
     {
+      "id": "REQ-OPH-27",
       "requirement": "OpenSpec coverage is traceable and executable",
-      "status": "FAIL_NO_CHANGE_DELIVERY_LEDGER"
+      "status": "PASS_COVERAGE_FAIL_STALE_STATE"
     },
     {
+      "id": "REQ-OPH-28",
       "requirement": "Improvement rounds converge from refreshed evidence",
       "status": "PASS_CONTROLLED"
     }
@@ -169,91 +240,84 @@
       "10.6",
       "10.7"
     ],
-    "checkedButNotWarranted": [
-      {
-        "taskId": "9.3",
-        "reason": "No coordinator/worker launch receipt artifact exists; implementation search found no typed policy-loading receipt interface carrying required fields."
-      },
-      {
-        "taskId": "10.3",
-        "reason": "No task-10.3 evaluation receipt exists for shared propagation plus fresh coordinator/worker loading."
-      }
-    ],
-    "legitimatelyBlocked": ["8.3"],
-    "waitingOnBlockedDependency": ["8.4", "8.5"],
+    "internallyImplementedAndVerified": ["9.3", "10.3"],
+    "legitimatelyBlockedExternal": ["8.3"],
+    "waitingOnBlockedExternalDependency": ["8.4", "8.5"],
     "reviewFailed": ["10.4"],
     "pendingAfterReview": ["10.5", "10.6", "10.7"]
   },
   "traceReview": {
-    "deliveryTraceLedgerPresent": false,
+    "deliveryTraceLedgerPresent": true,
+    "recordCount": 56,
+    "uniqueRequirementCount": 28,
     "checkboxesAcceptedAsCompletionEvidence": false,
+    "externalDeliveryEdgePrimitivePresent": true,
+    "externalDeliveryEdgeReplayIdempotent": true,
     "agentSkillsRemoteMainObserved": true,
-    "themeToolsRemoteMainObserved": true,
-    "installedRevisionObserved": true,
-    "liveProviderTurnsObserved": false,
+    "hostedCiObserved": true,
+    "liveCoordinatorWorkerReceiptsObserved": true,
     "packagePublicationObserved": false,
     "consumerAdoptionObserved": false,
-    "productionBehaviorObserved": false
+    "productionBehaviorObserved": false,
+    "staleActiveBlockers": [],
+    "integrationRecordsStillPending": 7,
+    "pendingTaskIds": [
+      "TASK-8.3",
+      "TASK-8.4",
+      "TASK-8.5",
+      "TASK-10.4",
+      "TASK-10.5",
+      "TASK-10.6",
+      "TASK-10.7"
+    ]
   },
-  "findings": [
+  "resolvedFindings": [
     {
       "id": "AV-001",
-      "severity": "critical",
-      "title": "Change has no machine-readable delivery trace ledger",
-      "evidence": "No delivery-trace.json or equivalent requirement-to-task-to-code-to-verification-to-integrated-commit ledger exists under the change.",
-      "impact": "Checked tasks cannot be proven against exact code, test receipts, pushed commits, releases, or consumers; core traceability requirements remain unsatisfied.",
-      "action": "Compile and reconcile the hydrated change into a schema-valid delivery trace, populate exact code paths/test receipts/integrated commits, and leave blocked release/consumer edges open."
+      "resolution": "A schema-valid 56-record delivery trace now covers all 28 requirements and 56 tasks."
     },
     {
       "id": "AV-002",
-      "severity": "high",
-      "title": "Blocked-release runtime contract remains red",
-      "evidence": "Focused suite failed 1/83 because recordExternalDeliveryEdge is undefined in the task-1.4 behavioral contract.",
-      "impact": "The runtime cannot demonstrate the typed idempotent external delivery-edge operation required for exact resume.",
-      "action": "Implement the typed operation against durable run state and make the controlled blocked-release assertion green without weakening the real 8.3 blocker."
+      "resolution": "The external-edge primitive persists, checkpoints, resumes, and replays idempotently."
     },
     {
       "id": "AV-003",
-      "severity": "high",
-      "title": "Task 9.3 is checked without runtime-loading receipts",
-      "evidence": "The evidence directory has no task-9.3 receipt; task 9.4 explicitly states live executions observed=0 and distinguishes wrapper fixtures from provider execution.",
-      "impact": "Runtime-loading and policy-receipt requirements are not proven for a fresh coordinator and worker.",
-      "action": "Produce signed coordinator and delegated-worker receipts with policy id/version/digest/source revision/surface/provenance and relevant skill invocation, or reopen task 9.3 with an exact blocker."
+      "resolution": "Task 9.3 has live coordinator and worker receipts with matching policy provenance."
     },
     {
       "id": "AV-004",
-      "severity": "high",
-      "title": "Task 10.3 is checked without its evaluation artifact",
-      "evidence": "No task-10.3 evidence file records shared-component propagation and fresh coordinator/worker loading; task 10.1 and 10.2 have receipts, making the omission explicit.",
-      "impact": "The prerequisite for this independent review is not evidenced and evidence strengths cannot be audited.",
-      "action": "Run and record the 10.3 scenarios with controlled/installed/live strengths separated; do not claim fresh live loading from wrapper presence."
-    },
-    {
-      "id": "AV-005",
-      "severity": "blocked-external",
-      "title": "theme.tools package release and consumer chain are correctly blocked",
-      "evidence": "The exact 8.3 receipt binds source 5d716b6c…, absent 1.0.1 publication, unstarted Actions jobs due billing, unapplied changeset, and registry 1.0.0.",
-      "impact": "Tasks 8.3–8.5 and release/consumer requirements cannot close.",
-      "action": "Use only the receipt's resumable approved release path after billing and versioning preconditions; do not direct-publish or mark adoption complete."
+      "resolution": "Task 10.3 has a digest-bound evaluation and independent review."
     },
     {
       "id": "AV-006",
-      "severity": "high",
-      "title": "Current editable changes are not remotely integrated",
-      "evidence": "agent-skills remote main is 89e5c7d… while editable HEAD is 7c807128… with extensive working-tree changes; bounded drift detector is absent from pushed main. theme.tools edit HEAD is f04437f… while remote main remains 5d716b6c… and the checkout is dirty.",
-      "impact": "No current-source test result can be labeled integrated remote delivery; dirty theme.tools state is unsuitable as release truth.",
-      "action": "After findings are resolved, use clean reconciliation worktrees, rerun invalidated checks, push normally, and bind remote observations to the exact tested commits under tasks 10.5–10.6."
+      "resolution": "Agent-skills main is b57f593caa92835d166aa7024944582887bc4ed2 and CI 45569136143 succeeded for that SHA."
+    },
+    {
+      "id": "AV-007",
+      "resolution": "The compiler now binds 49 checked tasks to real path manifests, passing verification receipts, exact tested/integrated/remote commits, and leaves only the seven specified blocked or pending tasks open."
+    }
+  ],
+  "findings": [
+    {
+      "id": "AV-005",
+      "severity": "blocked-external",
+      "title": "theme.tools release and consumer chain remain correctly blocked",
+      "evidence": "The 8.3 receipt binds source 5d716b6c..., absent 1.0.1, billing-blocked qualification, an unapplied changeset, and registry 1.0.0.",
+      "impact": "Tasks 8.3-8.5 and release/consumer requirements cannot close.",
+      "action": "Use only the receipt's approved resumable release path after billing and versioning preconditions."
     }
   ],
   "claimLimits": [
-    "This receipt is an independent read-only review, not task completion or authorization to release.",
-    "Controlled tests do not establish live provider execution, package publication, consumer adoption, remote integration, or production behavior.",
-    "The exact 8.3 external blocker is preserved and is not treated as a test failure.",
+    "This receipt is an independent review, not task completion or release authorization.",
+    "Remote integration and hosted CI do not establish package publication, consumer adoption, or production behavior.",
+    "The exact 8.3 external blocker is preserved.",
+    "PASS_WITH_BLOCKED_EXTERNAL_EDGE is not asserted by this remediation update; task 10.4 remains pending a fresh independent rereview.",
+    "Archive readiness is not claimed.",
     "No tasks.md checkbox was modified."
   ],
   "signature": {
     "algorithm": "sha256-canonical-json",
     "reviewerIdentity": "codex-independent-architecture-verifier",
-    "payloadDigest": "sha256:b17338d1bcb83521c1e27222b97a47d1868985a64fad6ef150e5e843c122f167"
+    "payloadDigest": "sha256:63f385d436f9377b547e11cda10503be30c234ab58c6b6db34ab2caf72a7a426"
   }
 }

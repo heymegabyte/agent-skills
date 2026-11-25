@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "taskId": "10.5",
+  "state": "validated-local-integration-candidate",
+  "baseRevision": "b57f593caa92835d166aa7024944582887bc4ed2",
+  "capturedAt": "2026-11-25T09:10:00Z",
+  "worktree": "/tmp/agent-skills-task-9.1.V5enqR/reconcile",
+  "results": [
+    {
+      "command": "python3 -m unittest bin/__tests__/skill_router_test.py -v",
+      "status": "PASS",
+      "summary": "31 passed"
+    },
+    { "command": "node bin/check-route-health.mjs", "status": "PASS" },
+    { "command": "node bin/gen-codex-skills.mjs --check", "status": "PASS" },
+    { "command": "node bin/check-package-closure.mjs", "status": "PASS" },
+    { "command": "scripts/validate-skills.sh", "status": "PASS" },
+    {
+      "command": "node scripts/validate-packs.mjs",
+      "status": "PASS",
+      "summary": "19 packs; two acknowledged non-blocking breadth warnings"
+    },
+    { "command": "node bin/run-perfect-loop.mjs", "status": "PASS", "summary": "11 checks passed" },
+    {
+      "command": "node --experimental-strip-types --test <focused review/trace/orchestration suite>",
+      "status": "PASS",
+      "summary": "34 passed"
+    },
+    {
+      "command": "openspec validate operational-prompt-hydration-workflow --strict",
+      "status": "PASS",
+      "summary": "valid; two informational archive-shape notices"
+    },
+    {
+      "command": "bounded installed-target drift observation",
+      "status": "UNVERIFIED",
+      "summary": "No installed root was supplied; canonical, generated, and publish targets passed without probing global state."
+    }
+  ],
+  "taskState": {
+    "completed": 50,
+    "remotelyIntegrated": 49,
+    "pendingIntegrationOrExternalEdges": ["8.3", "8.4", "8.5", "10.4", "10.5", "10.6", "10.7"],
+    "task10_5CheckboxChanged": false
+  },
+  "releaseBoundary": {
+    "task8_3": "BLOCKED",
+    "reason": "GitHub Actions billing, unapplied versioning, and absent @theme.tools/sdk@1.0.1 remain exact external preconditions.",
+    "archiveReady": false
+  },
+  "pushPerformed": false
+}
