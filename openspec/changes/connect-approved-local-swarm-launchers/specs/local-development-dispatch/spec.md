@@ -68,3 +68,9 @@ Local dispatch SHALL run explicitly queued development tasks through the canonic
 
 - **WHEN** local dispatch creates a worktree at the frozen full Git commit identity
 - **THEN** the worker starts in a clean detached checkout of that commit and the source checkout retains its concurrent edits
+
+#### Scenario: Provider capacity is lower than total host capacity
+
+- **WHEN** the host supplies a concurrency limit for a specific approved provider
+- **THEN** new and fallback launches on that provider wait for a slot without delaying launches on other providers
+- **AND** the total ready work remains bounded by the configured host limit

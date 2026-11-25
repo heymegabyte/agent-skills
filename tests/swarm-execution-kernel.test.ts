@@ -230,6 +230,38 @@ test('configured 8, 24 and 76 worker caps are enforced across a ready backlog', 
   }
 });
 
+test('provider launch limits isolate constrained rails and also fence fallbacks', async () => {
+  const { checkout, artifacts, assignment, nodes } = fixture();
+  nodes[1].dependsOn = [];
+  const contract = compileAndFreezeContract({
+    checkout, changeId: 'change', assignment, trustedAuthoritySourceDigest: assignment.authoritySourceDigest,
+    evidenceDigest: 'e', fixedPointDigest: 'f', unresolvedMaterialDeltas: [], artifacts, nodes,
+  });
+  const launched: string[] = [];
+  let codexActive = 0;
+  let codexPeak = 0;
+  const runner = adapter({
+    async launch(provider, node) {
+      launched.push(`${provider}:${node.id}`);
+      if (provider === 'opencode-deepseek') return processReceipt(1);
+      codexActive += 1;
+      codexPeak = Math.max(codexPeak, codexActive);
+      await new Promise<void>((resolve) => setImmediate(resolve));
+      codexActive -= 1;
+      return processReceipt();
+    },
+  });
+  const receipts = await executeFrozenContract(contract, runner, {
+    concurrency: 2, providerConcurrency: { codex: 1, 'opencode-deepseek': 1 },
+  });
+
+  assert.deepEqual(launched.slice(0, 2).sort(), ['codex:integrate', 'opencode-deepseek:bounded']);
+  assert(launched.includes('codex:bounded'));
+  assert.equal(codexPeak, 1);
+  assert.equal(receipts.filter(({ status }) => status === 'integrated').length, 2);
+  await assert.rejects(executeFrozenContract(contract, runner, { providerConcurrency: { claude: 0 } }), /positive integer/);
+});
+
 test('provider setup failures leave independent ready work running', async () => {
   const { checkout, artifacts, assignment, nodes } = fixture();
   nodes[0].maxAttempts = 1;

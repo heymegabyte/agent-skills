@@ -427,11 +427,17 @@ export async function executeFrozenContract(
     cancelled?: () => boolean;
     signal?: AbortSignal;
     concurrency?: number;
+    providerConcurrency?: Partial<Record<ExecutionProvider, number>>;
     reviewBeforeIntegration?: (node: ExecutionNode, receipt: Readonly<NodeExecutionReceipt>, signal: AbortSignal) => Promise<IndependentReviewReceipt>;
   } = {},
 ): Promise<NodeExecutionReceipt[]> {
   const concurrency = options.concurrency ?? 8;
   if (!Number.isSafeInteger(concurrency) || concurrency < 1) throw new Error('Concurrency must be a positive integer');
+  const providerConcurrency = { ...options.providerConcurrency };
+  for (const limit of Object.values(providerConcurrency)) {
+    if (!Number.isSafeInteger(limit) || limit < 1) throw new Error('Provider concurrency must be a positive integer');
+  }
+
   const nodes = structuredClone(contract.nodes);
   const frozenBaseRevision = contract.frozenBaseRevision;
   if (digest(nodes) !== contract.graphDigest || digest(contract.artifacts) !== contract.artifactDigest) {
@@ -450,6 +456,23 @@ export async function executeFrozenContract(
     integrationFence = new Promise<void>((resolveLock) => { release = resolveLock; });
     await prior; try { return await operation(); } finally { release(); }
   };
+  const launches = new Map<ExecutionProvider, { active: number; waiting: Array<() => void> }>();
+  const withProviderSlot = async (provider: ExecutionProvider, operation: () => Promise<ProcessReceipt>): Promise<ProcessReceipt> => {
+    const limit = providerConcurrency[provider];
+    if (limit === undefined) return operation();
+    const slots = launches.get(provider) ?? { active: 0, waiting: [] };
+    launches.set(provider, slots);
+    if (slots.active < limit) slots.active += 1;
+    else await new Promise<void>((resolve) => slots.waiting.push(resolve));
+    try {
+      controller.signal.throwIfAborted();
+      return await operation();
+    } finally {
+      const next = slots.waiting.shift();
+      if (next) next();
+      else slots.active -= 1;
+    }
+  };
   const remaining = new Map(nodes.map((node) => [node.id, node]));
   while (remaining.size) {
     if (options.cancelled?.() || controller.signal.aborted) {
@@ -457,7 +480,16 @@ export async function executeFrozenContract(
       for (const node of remaining.values()) receipts.push({ runId, nodeId: node.id, provider: node.provider, attempt: 0, status: 'cancelled', worktree: node.worktree, sourceDigestBefore: '', changedFiles: [], acceptance: [], failure: 'Run cancelled before launch' });
       break;
     }
-    const ready = [...remaining.values()].filter((node) => node.dependsOn.every((dep) => integrated.has(dep))).slice(0, concurrency);
+    const admitted = new Map<ExecutionProvider, number>();
+    const ready: ExecutionNode[] = [];
+    for (const node of remaining.values()) {
+      if (!node.dependsOn.every((dep) => integrated.has(dep))) continue;
+      const active = admitted.get(node.provider) ?? 0;
+      if (active >= (providerConcurrency[node.provider] ?? concurrency)) continue;
+      admitted.set(node.provider, active + 1);
+      ready.push(node);
+      if (ready.length === concurrency) break;
+    }
     if (!ready.length) {
       for (const node of remaining.values()) receipts.push({ runId, nodeId: node.id, provider: node.provider, attempt: 0, status: 'blocked', worktree: node.worktree, sourceDigestBefore: '', changedFiles: [], acceptance: [], failure: 'Dependency did not integrate' });
       break;
@@ -480,7 +512,8 @@ export async function executeFrozenContract(
           const created = await adapter.createWorktree(node, frozenBaseRevision);
           receipt.sourceDigestBefore = created.sourceDigest;
           controller.signal.throwIfAborted();
-          receipt.launcher = await adapter.launch(provider, node, `${runId}:${node.id}:${attempt}`, controller.signal);
+          receipt.launcher = await withProviderSlot(provider, () =>
+            adapter.launch(provider, node, `${runId}:${node.id}:${attempt}`, controller.signal));
           if (receipt.launcher.exitCode !== 0) throw new Error(`Launcher exited ${receipt.launcher.exitCode}`);
           receipt.changedFiles = await adapter.changedFiles(node);
           if (!pathsAreOwned(receipt.changedFiles, node.ownedPaths)) throw new Error('Worker changed files outside its ownership contract');
