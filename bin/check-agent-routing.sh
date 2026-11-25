@@ -38,7 +38,7 @@ cd "$SKILLS_ROOT" || exit 1
 declare -A AUTHORITATIVE
 for f in agents/*.md; do
   name=$(basename "$f" .md)
-  tier=$(awk -F': ' '/^model: / { print $2; exit }' "$f" | tr -d '"')
+  tier=$(awk -F': ' '/^model: / { print $2; exit }' "$f" | tr -d "\"'")
   [ -n "$tier" ] && AUTHORITATIVE["$name"]="$tier"
 done
 

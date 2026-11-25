@@ -204,6 +204,10 @@ const ALWAYS_LOAD_RULES = [
 
 const version = readVersion(ROOT);
 const skills = discoverSkills(ROOT);
+if (process.argv.includes('--list-skill-paths')) {
+  for (const skill of skills) console.log(skill.path);
+  process.exit(0);
+}
 const allRules = discoverRules(ROOT);
 const canonicalPolicySource = 'policies/operational-prompt-hydration.md';
 const canonicalPolicy = readFileSync(join(ROOT, canonicalPolicySource), 'utf8');

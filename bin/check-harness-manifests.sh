@@ -17,7 +17,8 @@ SKILLS_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$SKILLS_ROOT" || exit 1
 
 EXIT=0
-CATS_ACTUAL=$(find . -maxdepth 1 -type d -name '[0-9][0-9]-*' | wc -l | tr -d ' ')
+SKILLS_EXPECTED=$(node bin/gen-harness-manifests.mjs --list-skill-paths | LC_ALL=C sort)
+CATS_ACTUAL=$(printf '%s\n' "$SKILLS_EXPECTED" | grep -c 'SKILL\.md$')
 
 checkManifest() {
   mf="$1"
@@ -36,9 +37,9 @@ checkManifest() {
       EXIT=1
     fi
   done <<<"$(grep -oE '"(path|files)": ?"[^"]+"|^ *"[^"]+\.md",?$' "$mf" | grep -oE '[A-Za-z0-9_./-]+\.md')"
-  SKILL_COUNT=$(grep -c 'SKILL\.md' "$mf" | tr -d ' ')
-  if [ "$SKILL_COUNT" != "0" ] && [ "$SKILL_COUNT" != "$CATS_ACTUAL" ]; then
-    printf '✗ %s lists %s SKILL.md entries — actual categories %s (regen: node bin/gen-harness-manifests.mjs)\n' "$mf" "$SKILL_COUNT" "$CATS_ACTUAL" >&2
+  SKILLS_LISTED=$(grep -oE '[A-Za-z0-9_.-]+/SKILL\.md' "$mf" | LC_ALL=C sort)
+  if [ "$SKILLS_LISTED" != "$SKILLS_EXPECTED" ]; then
+    printf '✗ %s skill paths differ from the canonical list (regen: node bin/gen-harness-manifests.mjs)\n' "$mf" >&2
     EXIT=1
   fi
 }

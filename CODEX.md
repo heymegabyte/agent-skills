@@ -1,7 +1,7 @@
 # Emdash Skills for Codex
 
 Load CONVENTIONS.md for stack defaults. Load _router.md for skill routing.
-23 categories, 149 reference docs, 28 agents.
+23 categories, 149 reference docs, 52 agents.
 
 ## Stack
 
