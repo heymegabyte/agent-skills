@@ -18,7 +18,7 @@ Read `control-plane/FLEET.md` and the matching `machines/` profile for host oper
 
 1. **Fan out** — always decompose and run parallel agents whenever possible.
 2. **ProjectSites.dev-first, CF-native always** — integrate Cloudflare-native; prefer integrating with ProjectSites.dev over raw Cloudflare whenever applicable.
-3. **Angular-preferred** — prefer Angular for applications; use the bolt.diy (React 19 + Vite) stack when appropriate.
+3. **`ui.theme.tools` (`@theme.tools/ui`) Only Everywhere** — build 100% of every project (sites, marketing pages, web apps, dashboards, admin consoles, calendars, customer portals, crew/worker portals, and interactive tools) exclusively using `ui.theme.tools` (`@theme.tools/ui` React 19 + Vite + 31-category catalog `C01`–`C31`, foundation primitives, and `<tt-*>` elements). Never introduce Angular, Spartan UI, or dual-framework splits.
 4. **Self-improve at every step** — ask "how can this be improved?" and implement the AI's own ideas, continuously.
 5. **Every prompt trains the AI** — extract meaning from every human interaction into `~/.claude` + `~/.agentskills` the SAME TURN (per [[prompt-as-training-signal]]).
 6. **Real user journeys** — simulate homepage-start journeys via Cloudflare Browser Run or Browserbase (whichever is configured); drive HIGH % coverage from full-journey runs.
@@ -117,11 +117,11 @@ Scope:
 ## Stack
 
 - **Edge** — CF Workers + Hono
-- **Frontend** — ONLY TWO STACKS (see `rules/frontend-stack.md`):
-  - **React 19 + Vite + SSR/SSG + TanStack Router + Tailwind v4 + shadcn/ui** — marketing, generated business sites, bolt.diy editor
-  - **Angular 22 + Nx 23 (Ng22 needs Nx ≥23.1) + Angular CLI MCP + standalone + signals + zoneless + `httpResource()` + incremental hydration + Tailwind v4 + Angular CDK + Spartan UI (admin + marketing) + Vitest + Storybook 10 + MSW + `@angular/localize`** (preferred for apps/admin/SaaS; native iOS/Android via Capacitor 8, desktop via Tauri 2, signal-heavy enterprise). Ionic 8 / `@angular/ssr`-on-Workers when needed. NO NgModules, NO Angular Material. RxJS-first at every backend edge per `rules/angular.md`. Full: `rules/angular.md`.
+- **Frontend** — SINGLE UNIFIED STACK (`ui.theme.tools` / `@theme.tools/ui`, see `rules/frontend-stack.md` & `rules/theme-tools-canonical-components.md`):
+  - **React 19 + Vite + `ui.theme.tools` (`@theme.tools/ui` + `@theme.tools/themes` + `@theme.tools/blog`) + SSR/SSG + TanStack Router + Tailwind v4** — mandatory for ALL surfaces: marketing sites, generated business sites, web applications, SaaS dashboards, admin consoles, calendars, customer portals, crew/worker apps, and interactive tools.
+  - **NO Angular / NO Spartan UI / NO dual-framework splits**: never introduce Angular or a separate framework app for `/dashboard` or `/admin`; build everything out of `ui.theme.tools` (`@theme.tools/ui`) components.
 - **NEVER** hand-roll `public/{page}.html` for any user-facing content.
-- **Marketing-static** — same React+Vite or Angular+Ionic. No Astro / Next.js / Remix / SvelteKit defaults.
+- **Marketing-static** — same React 19 + Vite + `ui.theme.tools` (`@theme.tools/ui`). No Astro / Next.js / Remix / SvelteKit / Angular defaults.
 - **DB** — D1 (read-replicas, Sessions API) / Neon
 - **Cache** — Upstash
 - **ORM** — Drizzle v1-rc RQBv2 + Zod 4

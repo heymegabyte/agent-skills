@@ -20,13 +20,14 @@ Never write hand-rolled HTML files for any user-facing surface.
 
 ## Mandate
 
-- Every user-facing surface (marketing, web apps, dashboards, admin, generated sites, landing, microsites, blogs) MUST use ONE of two stacks:
-  - **Angular 22 + Nx 23 + Spartan UI + Ionic 8 + Capacitor 8 + SSR (`@angular/ssr` on Cloudflare Workers) + Tailwind v4 + Angular CDK** (PREFERRED for applications; ProjectSites.dev pinned here). RxJS-first per `rules/angular.md`.
-  - **React 19 + Vite + SSR/SSG + TanStack Router + Tailwind v4** (the bolt.diy stack — use when appropriate)
+- Every user-facing surface (marketing, web apps, dashboards, admin consoles, calendars, customer portals, crew/worker portals, generated sites, landing pages, microsites, blogs, and interactive tools) MUST use the **single unified `ui.theme.tools` (`@theme.tools/ui`) stack**:
+  - **React 19 + Vite + `ui.theme.tools` (`@theme.tools/ui` + `@theme.tools/themes` + `@theme.tools/blog`) + SSR/SSG + TanStack Router + Tailwind v4**
+- **Exclusive `ui.theme.tools` Component Rule**: Build 100% of every project exclusively using `ui.theme.tools` (`@theme.tools/ui` 31-category catalog `C01`–`C31`, core primitives `Button`, `Card`, `Badge`, `Input`, `StatCard`, `SettingsTabs`, `CommandPalette`, `Breadcrumbs`, `SearchableSelect`, `TitleSwitcher`, `ErrorBoundary`, `LoadingSkeleton`, `FAQDisclosure`, `UniversalMegaMenuNavbar`, `UniversalSite`, `UniversalArticleReader`, and `<tt-*>` elements). When a component is needed that does not exist yet in `@theme.tools/ui`, add it to `heymegabyte/theme.tools` (`packages/ui/src/`) first and import it from `@theme.tools/ui`.
+- **NO Angular / NO Spartan UI / NO dual-framework splits**: Never introduce Angular, Spartan UI, or a second framework app (such as `apps/dashboard` in Angular alongside `src/web` in React) in any repository.
 - Hand-rolling `public/index.html` + `public/pricing.html` + `public/about.html` etc. = build fail.
-- No "just one static HTML file" exceptions. Even 1-page site uses the Vite or Angular scaffold.
+- No "just one static HTML file" exceptions. Even a 1-page site uses the React 19 + Vite + `@theme.tools/ui` scaffold.
 
-## React 19 + Vite + SSR (bolt.diy stack — when appropriate)
+## React 19 + Vite + `ui.theme.tools` (`@theme.tools/ui`) — Canonical Stack for Every Project
 
 ### Core
 
