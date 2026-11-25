@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "1.0.0",
+  "taskId": "8.3-8.5-final-authority-safe-attempt",
+  "capturedAt": "2026-11-25T08:12:00Z",
+  "result": "BLOCKED",
+  "authorityDecision": "stop-without-improvising",
+  "themeTools": {
+    "cleanWorktree": "/tmp/theme-tools-release-audit.cMvYAR",
+    "reviewedRevision": "b671b032a57afad020c5d4683f5be48a2457ba21",
+    "originalFeatureSourceCommit": "5d716b6ccd8064abbafa3822e1210d0bfd50d0e4",
+    "sourceCommitIsAncestor": true,
+    "workingTreeClean": true,
+    "sdkManifestVersion": "1.0.0",
+    "sdkChangeset": ".changeset/quiet-bridges-report.md",
+    "sdkChangesetIntent": "patch"
+  },
+  "approvedReleaseProcess": {
+    "workflow": ".github/workflows/release-publish-oidc.yml",
+    "workflowScope": "44-packages",
+    "workflowAuthentication": "GitHub Actions OIDC or repository-scoped registry secret",
+    "workflowQualification": "pnpm package:required plus packed-consumer gates and SLSA attestation",
+    "localScript": "pnpm package:release:publish",
+    "localScriptScope": "pnpm -r publish across all 44 packages",
+    "localAuthorizationAccepted": [
+      "NEXUS_NPM_TOKEN",
+      "NPM_TOKEN",
+      "NODE_AUTH_TOKEN",
+      "GitHub Actions OIDC request token"
+    ],
+    "safeSdkOnlyLocalFallbackDocumented": false
+  },
+  "reviewedArtifactDigests": {
+    ".github/workflows/release-publish-oidc.yml": "sha256:e38fcb699f6d9bde4876a3627212f4aeff3eaf7245d1d3d87dc0a1d5759d0415",
+    "scripts/release-publish-44-packages.mjs": "sha256:a2df446a50560f9d198b45b6c981c244d1a59efcadf07c9f9df1b0e47a931ad2",
+    ".npmrc": "sha256:a95086cae9544b781601eb3a3f5f941709f876358aa742bb8ba0996fbbea5647",
+    "packages/sdk/package.json": "sha256:016f0f146b3584a8745376ef0ca99c42254671fff9c938c4b09afa18c921368b",
+    ".changeset/quiet-bridges-report.md": "sha256:34dac755631eab72639f29e1c1ebf6192855f78b8421aa5886099a1527ce5260"
+  },
+  "hostCapability": {
+    "registryCredentialEnvironmentPresent": false,
+    "oidcRequestEnvironmentPresent": false,
+    "authoritativeRegistryWhoami": "ENEEDAUTH",
+    "secretValuesInspectedOrPrinted": false
+  },
+  "hostedQualification": {
+    "latestRunId": 45572343883,
+    "latestJobId": 139061810526,
+    "sourceRevision": "b671b032a57afad020c5d4683f5be48a2457ba21",
+    "url": "https://github.com/heymegabyte/theme.tools/actions/runs/45572343883",
+    "status": "failure-before-steps",
+    "stepsStarted": 0,
+    "annotation": "The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings"
+  },
+  "originalSourceQualification": {
+    "runId": 45562007561,
+    "jobId": 139027695193,
+    "sourceRevision": "5d716b6ccd8064abbafa3822e1210d0bfd50d0e4",
+    "url": "https://github.com/heymegabyte/theme.tools/actions/runs/45562007561",
+    "status": "failure-before-steps",
+    "stepsStarted": 0,
+    "annotationMatchesLatest": true
+  },
+  "registryObservation": {
+    "readRegistry": "https://nexus.megabyte.space/repository/npm-group/",
+    "authoritativeHostedRegistry": "https://registry.megabyte.space/repository/npm-hosted/",
+    "observedVersion": "1.0.0",
+    "expectedNextVersion": "1.0.1",
+    "expectedVersionPublished": false,
+    "observedIntegrity": "sha512-pUqMOMZIqPSK2RG5U0Jmoyeli5b4AZUFbl1e1kOFER2fVkpSb3GsvkkGE+ThwHePovEw9ee4/ZSCQ3VXhfkGKA=="
+  },
+  "safety": {
+    "versionMetadataChanged": false,
+    "commitCreated": false,
+    "pushPerformed": false,
+    "tagCreated": false,
+    "packagePublished": false,
+    "consumerChanged": false,
+    "billingChanged": false,
+    "credentialCreated": false,
+    "publicNpmUsed": false,
+    "forceOperationUsed": false
+  },
+  "blocker": {
+    "classification": "external-auth-and-billing",
+    "reason": "The approved hosted qualification/release path cannot start because of the account billing/spending state. The repository documents no SDK-only local fallback, the only local publish script targets all 44 packages, and this host has no authenticated registry or OIDC context. Publishing only the SDK by inventing a command would bypass the documented provenance and qualification process; invoking the existing recursive script would violate the task's package scope.",
+    "resumableAction": "After an authorized billing administrator restores Actions, run the approved qualification on current main, apply the committed SDK patch changeset through the repository's versioning path, require exact-tree package and consumer gates to pass, invoke release-publish-oidc.yml, verify immutable @theme.tools/sdk@1.0.1 and its integrity in the authoritative hosted registry, then update and verify the intended controlled consumer before normal commits and pushes."
+  }
+}
