@@ -4,13 +4,23 @@
   "title": "Installed harness capability matrix",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "taskId", "observedAt", "installedSource", "probePolicy", "targets", "summary", "claimLimits"],
+  "required": [
+    "schemaVersion",
+    "taskId",
+    "observedAt",
+    "installedSource",
+    "probePolicy",
+    "targets",
+    "summary",
+    "claimLimits"
+  ],
   "properties": {
     "schemaVersion": { "const": 1 },
     "taskId": { "const": "9.4" },
     "observedAt": { "type": "string", "format": "date-time" },
     "installedSource": {
-      "type": "object", "additionalProperties": false,
+      "type": "object",
+      "additionalProperties": false,
       "required": ["path", "revision", "clean", "entrypointManifestDigest", "hookManifestDigest"],
       "properties": {
         "path": { "type": "string", "minLength": 1 },
@@ -21,7 +31,8 @@
       }
     },
     "probePolicy": {
-      "type": "object", "additionalProperties": false,
+      "type": "object",
+      "additionalProperties": false,
       "required": ["readOnly", "secretsExposed", "credentialsMutated", "liveTurnsRequested"],
       "properties": {
         "readOnly": { "const": true },
@@ -31,12 +42,22 @@
       }
     },
     "targets": {
-      "type": "array", "minItems": 6, "maxItems": 6, "uniqueItems": true,
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "uniqueItems": true,
       "items": { "$ref": "#/$defs/target" }
     },
     "summary": {
-      "type": "object", "additionalProperties": false,
-      "required": ["installedProfiles", "authenticatedAvailable", "controlledWrappersPassed", "nativeHooks", "liveExecutionsObserved"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "installedProfiles",
+        "authenticatedAvailable",
+        "controlledWrappersPassed",
+        "nativeHooks",
+        "liveExecutionsObserved"
+      ],
       "properties": {
         "installedProfiles": { "type": "integer", "minimum": 0 },
         "authenticatedAvailable": { "type": "integer", "minimum": 0 },
@@ -45,21 +66,50 @@
         "liveExecutionsObserved": { "const": 0 }
       }
     },
-    "claimLimits": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+    "claimLimits": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    }
   },
   "$defs": {
     "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
     "signal": {
-      "type": "object", "additionalProperties": false,
+      "type": "object",
+      "additionalProperties": false,
       "required": ["status", "evidence"],
       "properties": {
-        "status": { "enum": ["present", "absent", "available", "partial", "unavailable", "unverified", "passed", "not-supported", "not-run", "blocked"] },
+        "status": {
+          "enum": [
+            "present",
+            "absent",
+            "available",
+            "partial",
+            "unavailable",
+            "unverified",
+            "passed",
+            "not-supported",
+            "not-run",
+            "blocked"
+          ]
+        },
         "evidence": { "type": "string", "minLength": 1 }
       }
     },
     "target": {
-      "type": "object", "additionalProperties": false,
-      "required": ["id", "installedPresence", "nativePromptHook", "explicitWrapper", "authenticatedAvailability", "liveProviderExecution", "evidenceStrength", "blockers"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "installedPresence",
+        "nativePromptHook",
+        "explicitWrapper",
+        "authenticatedAvailability",
+        "liveProviderExecution",
+        "evidenceStrength",
+        "blockers"
+      ],
       "properties": {
         "id": { "enum": ["codex", "claude", "gemini", "opencode", "paperclip", "openclaw"] },
         "installedPresence": { "$ref": "#/$defs/signal" },
@@ -68,12 +118,25 @@
         "authenticatedAvailability": { "$ref": "#/$defs/signal" },
         "liveProviderExecution": { "$ref": "#/$defs/signal" },
         "evidenceStrength": {
-          "type": "array", "minItems": 1, "uniqueItems": true,
-          "items": { "enum": ["installed-presence", "authenticated-capability", "controlled-wrapper", "native-hook-fixture", "live-provider"] }
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "installed-presence",
+              "authenticated-capability",
+              "controlled-wrapper",
+              "native-hook-fixture",
+              "live-provider"
+            ]
+          }
         },
-        "blockers": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+        "blockers": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
       }
     }
   }
 }
-

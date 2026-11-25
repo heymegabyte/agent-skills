@@ -3505,7 +3505,7 @@
             "id": "VERIFY:TASK-9.4",
             "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.4-capability-matrix.json",
             "status": "pass",
-            "evidenceDigest": "sha256:14ac61d6931e115dc352bd053b4b02ee3916d21daeea09bf481fe65a2fbca15d",
+            "evidenceDigest": "sha256:b49d2245340aab17b73d8ffba2316ec5e36c957c3f079648834eb2b93a51a106",
             "observedAt": "2026-11-25T18:00:00.000Z"
           }
         ]

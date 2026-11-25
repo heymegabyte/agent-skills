@@ -10,7 +10,12 @@
     "traceId": { "$ref": "#/$defs/id" },
     "changeId": { "$ref": "#/$defs/id" },
     "sourceRevision": { "$ref": "#/$defs/commit" },
-    "records": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/record" } }
+    "records": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/record" }
+    }
   },
   "$defs": {
     "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,127}$" },
@@ -21,43 +26,106 @@
     "commitOrPending": { "type": "string", "pattern": "^(?:[a-f0-9]{40}|pending)$" },
     "digestOrPending": { "type": "string", "pattern": "^(?:sha256:[a-f0-9]{64}|pending)$" },
     "requirement": {
-      "type": "object", "additionalProperties": false,
+      "type": "object",
+      "additionalProperties": false,
       "required": ["id", "observableBehavior", "scenarios"],
       "properties": {
         "id": { "$ref": "#/$defs/id" },
         "observableBehavior": { "$ref": "#/$defs/text" },
-        "scenarios": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/scenario" } }
+        "scenarios": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/scenario" }
+        }
       }
     },
     "scenario": {
-      "type": "object", "additionalProperties": false,
+      "type": "object",
+      "additionalProperties": false,
       "required": ["id", "when", "then"],
-      "properties": { "id": { "$ref": "#/$defs/id" }, "when": { "$ref": "#/$defs/text" }, "then": { "$ref": "#/$defs/text" } }
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "when": { "$ref": "#/$defs/text" },
+        "then": { "$ref": "#/$defs/text" }
+      }
     },
     "task": {
-      "type": "object", "additionalProperties": false,
-      "required": ["id", "owner", "dependencies", "affectedPaths", "packages", "acceptanceCriteria", "expectedEvidence"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "owner",
+        "dependencies",
+        "affectedPaths",
+        "packages",
+        "acceptanceCriteria",
+        "expectedEvidence"
+      ],
       "properties": {
         "id": { "$ref": "#/$defs/id" },
         "owner": { "$ref": "#/$defs/text" },
         "dependencies": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/id" } },
-        "affectedPaths": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/path" } },
-        "packages": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/text" } },
-        "acceptanceCriteria": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/text" } },
-        "expectedEvidence": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/evidenceExpectation" } }
+        "affectedPaths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/path" }
+        },
+        "packages": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/text" }
+        },
+        "acceptanceCriteria": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/text" }
+        },
+        "expectedEvidence": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/evidenceExpectation" }
+        }
       }
     },
     "evidenceExpectation": {
-      "type": "object", "additionalProperties": false,
+      "type": "object",
+      "additionalProperties": false,
       "required": ["kind", "strength", "description"],
       "properties": {
-        "kind": { "enum": ["behavior", "verification", "commit", "remote", "release", "consumer", "production", "blocker"] },
-        "strength": { "enum": ["controlled", "local", "installed", "remote", "published", "consumer-adopted", "production-observed"] },
+        "kind": {
+          "enum": [
+            "behavior",
+            "verification",
+            "commit",
+            "remote",
+            "release",
+            "consumer",
+            "production",
+            "blocker"
+          ]
+        },
+        "strength": {
+          "enum": [
+            "controlled",
+            "local",
+            "installed",
+            "remote",
+            "published",
+            "consumer-adopted",
+            "production-observed"
+          ]
+        },
         "description": { "$ref": "#/$defs/text" }
       }
     },
     "implementation": {
-      "type": "object", "additionalProperties": false,
+      "type": "object",
+      "additionalProperties": false,
       "required": ["state", "codePaths"],
       "properties": {
         "state": { "enum": ["proposed", "implemented", "blocked"] },
@@ -65,15 +133,21 @@
       }
     },
     "verification": {
-      "type": "object", "additionalProperties": false,
+      "type": "object",
+      "additionalProperties": false,
       "required": ["status", "receipts"],
       "properties": {
         "status": { "enum": ["pass", "fail", "blocked", "unverified"] },
-        "receipts": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/verificationReceipt" } }
+        "receipts": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/verificationReceipt" }
+        }
       }
     },
     "verificationReceipt": {
-      "type": "object", "additionalProperties": false,
+      "type": "object",
+      "additionalProperties": false,
       "required": ["id", "command", "status", "evidenceDigest", "observedAt"],
       "properties": {
         "id": { "$ref": "#/$defs/id" },
@@ -84,7 +158,8 @@
       }
     },
     "integration": {
-      "type": "object", "additionalProperties": false,
+      "type": "object",
+      "additionalProperties": false,
       "required": ["status", "integratedCommit", "testedTree", "remote"],
       "properties": {
         "status": { "enum": ["integrated", "pending", "blocked", "rejected"] },
@@ -94,7 +169,8 @@
       }
     },
     "remoteResult": {
-      "type": "object", "additionalProperties": false,
+      "type": "object",
+      "additionalProperties": false,
       "required": ["status", "repository", "branch", "observedSha", "observedAt", "ciStatus"],
       "properties": {
         "status": { "enum": ["observed-main", "pending", "blocked", "rejected"] },
@@ -106,70 +182,149 @@
       }
     },
     "delivery": {
-      "type": "object", "additionalProperties": false,
+      "type": "object",
+      "additionalProperties": false,
       "required": ["release", "consumers", "production"],
       "properties": {
         "release": { "$ref": "#/$defs/release" },
-        "consumers": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/consumer" } },
+        "consumers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/consumer" }
+        },
         "production": { "$ref": "#/$defs/production" }
       }
     },
     "release": {
-      "type": "object", "additionalProperties": false,
-      "required": ["applicability", "status", "package", "version", "artifactDigest", "evidenceIds"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "applicability",
+        "status",
+        "package",
+        "version",
+        "artifactDigest",
+        "evidenceIds"
+      ],
       "properties": {
         "applicability": { "enum": ["required", "not-applicable"] },
         "status": { "enum": ["published", "pending", "blocked", "not-applicable"] },
         "package": { "$ref": "#/$defs/text" },
         "version": { "$ref": "#/$defs/text" },
         "artifactDigest": { "$ref": "#/$defs/digestOrPending" },
-        "evidenceIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/id" } }
+        "evidenceIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        }
       }
     },
     "consumer": {
-      "type": "object", "additionalProperties": false,
-      "required": ["id", "status", "resolvedVersion", "lockfilePath", "verificationReceiptIds", "integratedCommit"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "status",
+        "resolvedVersion",
+        "lockfilePath",
+        "verificationReceiptIds",
+        "integratedCommit"
+      ],
       "properties": {
         "id": { "$ref": "#/$defs/id" },
         "status": { "enum": ["adopted", "pending", "blocked", "not-applicable"] },
         "resolvedVersion": { "$ref": "#/$defs/text" },
         "lockfilePath": { "$ref": "#/$defs/path" },
-        "verificationReceiptIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/id" } },
+        "verificationReceiptIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        },
         "integratedCommit": { "$ref": "#/$defs/commitOrPending" }
       }
     },
     "production": {
-      "type": "object", "additionalProperties": false,
-      "required": ["applicability", "status", "environment", "deploymentId", "observedAt", "evidenceIds"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "applicability",
+        "status",
+        "environment",
+        "deploymentId",
+        "observedAt",
+        "evidenceIds"
+      ],
       "properties": {
         "applicability": { "enum": ["required", "not-applicable"] },
         "status": { "enum": ["observed", "pending", "blocked", "not-applicable"] },
         "environment": { "$ref": "#/$defs/text" },
         "deploymentId": { "$ref": "#/$defs/text" },
         "observedAt": { "type": "string", "format": "date-time" },
-        "evidenceIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/id" } }
+        "evidenceIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        }
       }
     },
     "blocker": {
-      "type": "object", "additionalProperties": false,
+      "type": "object",
+      "additionalProperties": false,
       "required": ["id", "edge", "reason", "owner", "nextAction", "status", "evidenceIds"],
       "properties": {
         "id": { "$ref": "#/$defs/id" },
-        "edge": { "enum": ["requirement", "task", "implementation", "verification", "integration", "remote", "release", "consumer", "production"] },
+        "edge": {
+          "enum": [
+            "requirement",
+            "task",
+            "implementation",
+            "verification",
+            "integration",
+            "remote",
+            "release",
+            "consumer",
+            "production"
+          ]
+        },
         "reason": { "$ref": "#/$defs/text" },
         "owner": { "$ref": "#/$defs/text" },
         "nextAction": { "$ref": "#/$defs/text" },
         "status": { "enum": ["active", "resolved"] },
-        "evidenceIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/id" } }
+        "evidenceIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        }
       }
     },
     "record": {
-      "type": "object", "additionalProperties": false,
-      "required": ["recordId", "requirement", "scenarioIds", "task", "implementation", "verification", "integration", "delivery", "blockers"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recordId",
+        "requirement",
+        "scenarioIds",
+        "task",
+        "implementation",
+        "verification",
+        "integration",
+        "delivery",
+        "blockers"
+      ],
       "properties": {
         "recordId": { "$ref": "#/$defs/id" },
         "requirement": { "$ref": "#/$defs/requirement" },
-        "scenarioIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/id" } },
+        "scenarioIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        },
         "task": { "$ref": "#/$defs/task" },
         "implementation": { "$ref": "#/$defs/implementation" },
         "verification": { "$ref": "#/$defs/verification" },

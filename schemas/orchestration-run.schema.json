@@ -4,7 +4,33 @@
   "title": "Evidence-gated orchestration run",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "runId", "changeId", "phase", "sequence", "stateDigest", "receipts", "phaseEvidence", "assumptionLedger", "evidence", "evidenceReferences", "providerInvocations", "architectAssignments", "deliberations", "taskGraph", "taskStates", "checkpoints", "maintenance", "integrationWriterLeases", "integrationWriterLeaseReceipts", "dispatchExecutions", "externalDeliveryEdges", "nodeExecutions", "integrations", "blockers"],
+  "required": [
+    "schemaVersion",
+    "runId",
+    "changeId",
+    "phase",
+    "sequence",
+    "stateDigest",
+    "receipts",
+    "phaseEvidence",
+    "assumptionLedger",
+    "evidence",
+    "evidenceReferences",
+    "providerInvocations",
+    "architectAssignments",
+    "deliberations",
+    "taskGraph",
+    "taskStates",
+    "checkpoints",
+    "maintenance",
+    "integrationWriterLeases",
+    "integrationWriterLeaseReceipts",
+    "dispatchExecutions",
+    "externalDeliveryEdges",
+    "nodeExecutions",
+    "integrations",
+    "blockers"
+  ],
   "properties": {
     "schemaVersion": { "const": 1 },
     "runId": { "$ref": "#/$defs/nonEmpty" },
@@ -13,10 +39,25 @@
     "sequence": { "type": "integer", "minimum": 0 },
     "stateDigest": { "$ref": "#/$defs/digest" },
     "receipts": { "type": "array", "items": { "$ref": "#/$defs/phaseReceipt" } },
-    "phaseEvidence": { "type": "object", "additionalProperties": { "type": "object", "additionalProperties": false, "required": ["inputDigest", "recordedAt"], "properties": { "inputDigest": { "$ref": "#/$defs/digest" }, "recordedAt": { "type": "string", "format": "date-time" } } } },
+    "phaseEvidence": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["inputDigest", "recordedAt"],
+        "properties": {
+          "inputDigest": { "$ref": "#/$defs/digest" },
+          "recordedAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
     "assumptionLedger": { "type": "array", "items": { "$ref": "#/$defs/assumptionLedgerEntry" } },
     "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } },
-    "evidenceReferences": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmpty" } },
+    "evidenceReferences": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/nonEmpty" }
+    },
     "providerInvocations": { "type": "array", "items": { "$ref": "#/$defs/providerInvocation" } },
     "architectAssignments": { "type": "array", "items": { "$ref": "#/$defs/architectAssignment" } },
     "deliberations": { "type": "array", "items": { "$ref": "#/$defs/deliberation" } },
@@ -24,10 +65,19 @@
     "taskStates": { "type": "array", "items": { "$ref": "#/$defs/durableTaskState" } },
     "checkpoints": { "type": "array", "items": { "$ref": "#/$defs/atomicCheckpoint" } },
     "maintenance": { "$ref": "#/$defs/maintenanceContext" },
-    "integrationWriterLeases": { "type": "array", "items": { "$ref": "#/$defs/integrationWriterLease" } },
-    "integrationWriterLeaseReceipts": { "type": "array", "items": { "$ref": "#/$defs/integrationWriterLeaseReceipt" } },
+    "integrationWriterLeases": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/integrationWriterLease" }
+    },
+    "integrationWriterLeaseReceipts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/integrationWriterLeaseReceipt" }
+    },
     "dispatchExecutions": { "type": "array", "items": { "$ref": "#/$defs/dispatchExecution" } },
-    "externalDeliveryEdges": { "type": "array", "items": { "$ref": "#/$defs/externalDeliveryEdge" } },
+    "externalDeliveryEdges": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/externalDeliveryEdge" }
+    },
     "nodeExecutions": { "type": "array", "items": { "$ref": "#/$defs/nodeExecution" } },
     "integrations": { "type": "array", "items": { "$ref": "#/$defs/integration" } },
     "blockers": { "type": "array", "items": { "$ref": "#/$defs/blocker" } }
@@ -35,127 +85,442 @@
   "$defs": {
     "nonEmpty": { "type": "string", "minLength": 1 },
     "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
-    "phase": { "enum": ["intake", "estate-inventory", "research", "saturation-gate", "independent-briefs", "heterogeneous-conference", "architecture-fixed-point", "architect-assignment", "openspec-compilation", "contract-freeze", "swarm-execution", "integration", "adversarial-verification", "complete"] },
+    "phase": {
+      "enum": [
+        "intake",
+        "estate-inventory",
+        "research",
+        "saturation-gate",
+        "independent-briefs",
+        "heterogeneous-conference",
+        "architecture-fixed-point",
+        "architect-assignment",
+        "openspec-compilation",
+        "contract-freeze",
+        "swarm-execution",
+        "integration",
+        "adversarial-verification",
+        "complete"
+      ]
+    },
     "phaseReceipt": {
-      "type": "object", "additionalProperties": false,
-      "required": ["receiptId", "runId", "sequence", "fromPhase", "toPhase", "priorStateDigest", "inputDigest", "stateDigest", "recordedAt"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "receiptId",
+        "runId",
+        "sequence",
+        "fromPhase",
+        "toPhase",
+        "priorStateDigest",
+        "inputDigest",
+        "stateDigest",
+        "recordedAt"
+      ],
       "properties": {
-        "receiptId": { "$ref": "#/$defs/digest" }, "runId": { "$ref": "#/$defs/nonEmpty" }, "sequence": { "type": "integer", "minimum": 1 },
-        "fromPhase": { "$ref": "#/$defs/phase" }, "toPhase": { "$ref": "#/$defs/phase" }, "priorStateDigest": { "$ref": "#/$defs/digest" },
-        "inputDigest": { "$ref": "#/$defs/digest" }, "stateDigest": { "$ref": "#/$defs/digest" }, "recordedAt": { "type": "string", "format": "date-time" }
+        "receiptId": { "$ref": "#/$defs/digest" },
+        "runId": { "$ref": "#/$defs/nonEmpty" },
+        "sequence": { "type": "integer", "minimum": 1 },
+        "fromPhase": { "$ref": "#/$defs/phase" },
+        "toPhase": { "$ref": "#/$defs/phase" },
+        "priorStateDigest": { "$ref": "#/$defs/digest" },
+        "inputDigest": { "$ref": "#/$defs/digest" },
+        "stateDigest": { "$ref": "#/$defs/digest" },
+        "recordedAt": { "type": "string", "format": "date-time" }
       }
     },
     "assumptionLedgerEntry": {
-      "type": "object", "additionalProperties": false,
-      "required": ["id", "assumption", "confidence", "reversibility", "basis", "consequence", "resolutionState", "correctionScope", "progressAllowed", "evidenceIds"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "assumption",
+        "confidence",
+        "reversibility",
+        "basis",
+        "consequence",
+        "resolutionState",
+        "correctionScope",
+        "progressAllowed",
+        "evidenceIds"
+      ],
       "properties": {
-        "id": { "$ref": "#/$defs/nonEmpty" }, "assumption": { "$ref": "#/$defs/nonEmpty" },
+        "id": { "$ref": "#/$defs/nonEmpty" },
+        "assumption": { "$ref": "#/$defs/nonEmpty" },
         "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
         "reversibility": { "enum": ["reversible", "costly", "irreversible"] },
-        "basis": { "$ref": "#/$defs/nonEmpty" }, "consequence": { "$ref": "#/$defs/nonEmpty" },
-        "resolutionState": { "enum": ["accepted-for-progress", "unresolved", "resolved", "rejected"] },
+        "basis": { "$ref": "#/$defs/nonEmpty" },
+        "consequence": { "$ref": "#/$defs/nonEmpty" },
+        "resolutionState": {
+          "enum": ["accepted-for-progress", "unresolved", "resolved", "rejected"]
+        },
         "correctionScope": { "enum": ["request", "project", "global"] },
         "progressAllowed": { "type": "boolean" },
         "evidenceIds": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmpty" } }
       }
     },
     "evidence": {
-      "type": "object", "additionalProperties": false, "required": ["id", "kind", "source", "capturedAt", "digest", "status"],
-      "properties": { "id": { "$ref": "#/$defs/nonEmpty" }, "kind": { "$ref": "#/$defs/nonEmpty" }, "source": { "$ref": "#/$defs/nonEmpty" }, "capturedAt": { "type": "string", "format": "date-time" }, "digest": { "$ref": "#/$defs/digest" }, "status": { "enum": ["verified", "blocked", "rejected"] } }
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "source", "capturedAt", "digest", "status"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmpty" },
+        "kind": { "$ref": "#/$defs/nonEmpty" },
+        "source": { "$ref": "#/$defs/nonEmpty" },
+        "capturedAt": { "type": "string", "format": "date-time" },
+        "digest": { "$ref": "#/$defs/digest" },
+        "status": { "enum": ["verified", "blocked", "rejected"] }
+      }
     },
     "providerInvocation": {
-      "type": "object", "additionalProperties": false, "required": ["id", "provider", "modelFamily", "launcher", "startedAt", "status", "inputDigest"],
-      "properties": { "id": { "$ref": "#/$defs/nonEmpty" }, "provider": { "$ref": "#/$defs/nonEmpty" }, "modelFamily": { "enum": ["claude", "codex", "gemini", "opencode-deepseek"] }, "launcher": { "$ref": "#/$defs/nonEmpty" }, "startedAt": { "type": "string", "format": "date-time" }, "status": { "enum": ["running", "succeeded", "failed", "cancelled", "blocked"] }, "inputDigest": { "$ref": "#/$defs/digest" }, "outputDigest": { "$ref": "#/$defs/digest" } }
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "provider",
+        "modelFamily",
+        "launcher",
+        "startedAt",
+        "status",
+        "inputDigest"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmpty" },
+        "provider": { "$ref": "#/$defs/nonEmpty" },
+        "modelFamily": { "enum": ["claude", "codex", "gemini", "opencode-deepseek"] },
+        "launcher": { "$ref": "#/$defs/nonEmpty" },
+        "startedAt": { "type": "string", "format": "date-time" },
+        "status": { "enum": ["running", "succeeded", "failed", "cancelled", "blocked"] },
+        "inputDigest": { "$ref": "#/$defs/digest" },
+        "outputDigest": { "$ref": "#/$defs/digest" }
+      }
     },
     "architectAssignment": {
-      "type": "object", "additionalProperties": false, "required": ["assignmentId", "changeId", "architectId", "modelFamily", "assignedBy", "authorityEvidence", "assignedAt", "status", "digest"],
-      "properties": { "assignmentId": { "$ref": "#/$defs/nonEmpty" }, "changeId": { "$ref": "#/$defs/nonEmpty" }, "architectId": { "$ref": "#/$defs/nonEmpty" }, "modelFamily": { "enum": ["claude", "codex", "gemini", "antigravity"] }, "assignedBy": { "$ref": "#/$defs/nonEmpty" }, "authorityEvidence": { "$ref": "#/$defs/nonEmpty" }, "assignedAt": { "type": "string", "format": "date-time" }, "status": { "const": "active" }, "digest": { "$ref": "#/$defs/digest" } }
-    },
-    "deliberation": { "type": "object", "required": ["id", "round", "participantInvocationIds", "briefDigests", "dissent", "materialDelta"], "properties": { "id": { "$ref": "#/$defs/nonEmpty" }, "round": { "type": "integer", "minimum": 1 }, "participantInvocationIds": { "type": "array", "minItems": 3, "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmpty" } }, "briefDigests": { "type": "array", "minItems": 3, "items": { "$ref": "#/$defs/digest" } }, "dissent": { "type": "array", "items": { "$ref": "#/$defs/nonEmpty" } }, "materialDelta": { "type": "boolean" } } },
-    "taskGraph": { "type": "object", "required": ["digest", "nodes"], "properties": { "digest": { "$ref": "#/$defs/digest" }, "nodes": { "type": "array", "items": { "type": "object", "required": ["id", "dependsOn", "ownedFiles", "providerTier", "acceptance"], "properties": { "id": { "$ref": "#/$defs/nonEmpty" }, "dependsOn": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmpty" } }, "ownedFiles": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmpty" } }, "providerTier": { "enum": ["frontier", "throughput-opencode-deepseek"] }, "acceptance": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmpty" } } } } } } },
-    "durableTaskState": {
-      "type": "object", "additionalProperties": false,
-      "required": ["taskId", "taskDigest", "dispatchId", "owner", "dependsOn", "dependencyReadiness", "status", "evidenceRefs"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assignmentId",
+        "changeId",
+        "architectId",
+        "modelFamily",
+        "assignedBy",
+        "authorityEvidence",
+        "assignedAt",
+        "status",
+        "digest"
+      ],
       "properties": {
-        "taskId": { "$ref": "#/$defs/nonEmpty" }, "taskDigest": { "$ref": "#/$defs/digest" }, "dispatchId": { "$ref": "#/$defs/digest" },
-        "owner": { "$ref": "#/$defs/nonEmpty" }, "dependsOn": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmpty" } },
-        "dependencyReadiness": { "enum": ["ready", "waiting", "blocked"] }, "status": { "enum": ["pending", "running", "succeeded", "failed", "blocked"] },
-        "evidenceRefs": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmpty" } }
+        "assignmentId": { "$ref": "#/$defs/nonEmpty" },
+        "changeId": { "$ref": "#/$defs/nonEmpty" },
+        "architectId": { "$ref": "#/$defs/nonEmpty" },
+        "modelFamily": { "enum": ["claude", "codex", "gemini", "antigravity"] },
+        "assignedBy": { "$ref": "#/$defs/nonEmpty" },
+        "authorityEvidence": { "$ref": "#/$defs/nonEmpty" },
+        "assignedAt": { "type": "string", "format": "date-time" },
+        "status": { "const": "active" },
+        "digest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "deliberation": {
+      "type": "object",
+      "required": [
+        "id",
+        "round",
+        "participantInvocationIds",
+        "briefDigests",
+        "dissent",
+        "materialDelta"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmpty" },
+        "round": { "type": "integer", "minimum": 1 },
+        "participantInvocationIds": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonEmpty" }
+        },
+        "briefDigests": { "type": "array", "minItems": 3, "items": { "$ref": "#/$defs/digest" } },
+        "dissent": { "type": "array", "items": { "$ref": "#/$defs/nonEmpty" } },
+        "materialDelta": { "type": "boolean" }
+      }
+    },
+    "taskGraph": {
+      "type": "object",
+      "required": ["digest", "nodes"],
+      "properties": {
+        "digest": { "$ref": "#/$defs/digest" },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "dependsOn", "ownedFiles", "providerTier", "acceptance"],
+            "properties": {
+              "id": { "$ref": "#/$defs/nonEmpty" },
+              "dependsOn": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": { "$ref": "#/$defs/nonEmpty" }
+              },
+              "ownedFiles": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "$ref": "#/$defs/nonEmpty" }
+              },
+              "providerTier": { "enum": ["frontier", "throughput-opencode-deepseek"] },
+              "acceptance": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "$ref": "#/$defs/nonEmpty" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "durableTaskState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "taskId",
+        "taskDigest",
+        "dispatchId",
+        "owner",
+        "dependsOn",
+        "dependencyReadiness",
+        "status",
+        "evidenceRefs"
+      ],
+      "properties": {
+        "taskId": { "$ref": "#/$defs/nonEmpty" },
+        "taskDigest": { "$ref": "#/$defs/digest" },
+        "dispatchId": { "$ref": "#/$defs/digest" },
+        "owner": { "$ref": "#/$defs/nonEmpty" },
+        "dependsOn": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonEmpty" }
+        },
+        "dependencyReadiness": { "enum": ["ready", "waiting", "blocked"] },
+        "status": { "enum": ["pending", "running", "succeeded", "failed", "blocked"] },
+        "evidenceRefs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonEmpty" }
+        }
       }
     },
     "atomicCheckpoint": {
-      "type": "object", "additionalProperties": false,
-      "required": ["checkpointId", "priorCheckpointId", "action", "phase", "taskStateDigest", "maintenanceDigest", "evidenceRefs", "taskStates", "maintenance", "evidenceReferences", "integrationWriterLeases", "integrationWriterLeaseReceipts", "dispatchExecutions", "externalDeliveryEdges", "recordedAt"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "checkpointId",
+        "priorCheckpointId",
+        "action",
+        "phase",
+        "taskStateDigest",
+        "maintenanceDigest",
+        "evidenceRefs",
+        "taskStates",
+        "maintenance",
+        "evidenceReferences",
+        "integrationWriterLeases",
+        "integrationWriterLeaseReceipts",
+        "dispatchExecutions",
+        "externalDeliveryEdges",
+        "recordedAt"
+      ],
       "properties": {
-        "checkpointId": { "$ref": "#/$defs/digest" }, "priorCheckpointId": { "type": ["string", "null"] }, "action": { "$ref": "#/$defs/nonEmpty" },
-        "phase": { "$ref": "#/$defs/phase" }, "taskStateDigest": { "$ref": "#/$defs/digest" }, "maintenanceDigest": { "$ref": "#/$defs/digest" },
-        "evidenceRefs": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmpty" } },
+        "checkpointId": { "$ref": "#/$defs/digest" },
+        "priorCheckpointId": { "type": ["string", "null"] },
+        "action": { "$ref": "#/$defs/nonEmpty" },
+        "phase": { "$ref": "#/$defs/phase" },
+        "taskStateDigest": { "$ref": "#/$defs/digest" },
+        "maintenanceDigest": { "$ref": "#/$defs/digest" },
+        "evidenceRefs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonEmpty" }
+        },
         "taskStates": { "type": "array", "items": { "$ref": "#/$defs/durableTaskState" } },
         "maintenance": { "$ref": "#/$defs/maintenanceContext" },
-        "evidenceReferences": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmpty" } },
-        "integrationWriterLeases": { "type": "array", "items": { "$ref": "#/$defs/integrationWriterLease" } },
-        "integrationWriterLeaseReceipts": { "type": "array", "items": { "$ref": "#/$defs/integrationWriterLeaseReceipt" } },
+        "evidenceReferences": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonEmpty" }
+        },
+        "integrationWriterLeases": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/integrationWriterLease" }
+        },
+        "integrationWriterLeaseReceipts": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/integrationWriterLeaseReceipt" }
+        },
         "dispatchExecutions": { "type": "array", "items": { "$ref": "#/$defs/dispatchExecution" } },
-        "externalDeliveryEdges": { "type": "array", "items": { "$ref": "#/$defs/externalDeliveryEdge" } },
+        "externalDeliveryEdges": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/externalDeliveryEdge" }
+        },
         "recordedAt": { "type": "string", "format": "date-time" }
       }
     },
     "maintenanceContext": {
-      "type": "object", "additionalProperties": false,
+      "type": "object",
+      "additionalProperties": false,
       "required": ["kind", "evidenceRevision", "triggerId", "recursionDepth", "coveredTriggerIds"],
-      "properties": { "kind": { "enum": ["maintenance", "learning", "triad-sync", "improvement", "prompt-hook", "run"] }, "evidenceRevision": { "$ref": "#/$defs/nonEmpty" }, "triggerId": { "$ref": "#/$defs/nonEmpty" }, "recursionDepth": { "type": "integer", "minimum": 0 }, "coveredTriggerIds": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmpty" } } }
+      "properties": {
+        "kind": {
+          "enum": ["maintenance", "learning", "triad-sync", "improvement", "prompt-hook", "run"]
+        },
+        "evidenceRevision": { "$ref": "#/$defs/nonEmpty" },
+        "triggerId": { "$ref": "#/$defs/nonEmpty" },
+        "recursionDepth": { "type": "integer", "minimum": 0 },
+        "coveredTriggerIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonEmpty" }
+        }
+      }
     },
     "externalDeliveryEdge": {
-      "type": "object", "additionalProperties": false,
-      "required": ["edgeId", "sourceCommit", "package", "publishedVersion", "consumer", "status", "nextAction", "resumable", "evidenceRefs"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "edgeId",
+        "sourceCommit",
+        "package",
+        "publishedVersion",
+        "consumer",
+        "status",
+        "nextAction",
+        "resumable",
+        "evidenceRefs"
+      ],
       "properties": {
-        "edgeId": { "$ref": "#/$defs/digest" }, "sourceCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
-        "package": { "$ref": "#/$defs/nonEmpty" }, "publishedVersion": { "type": ["string", "null"] }, "consumer": { "$ref": "#/$defs/nonEmpty" },
-        "status": { "enum": ["blocked", "ready"] }, "nextAction": { "enum": ["observe-published-version", "verify-consumer-adoption"] },
-        "resumable": { "const": true }, "evidenceRefs": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmpty" } }
+        "edgeId": { "$ref": "#/$defs/digest" },
+        "sourceCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "package": { "$ref": "#/$defs/nonEmpty" },
+        "publishedVersion": { "type": ["string", "null"] },
+        "consumer": { "$ref": "#/$defs/nonEmpty" },
+        "status": { "enum": ["blocked", "ready"] },
+        "nextAction": { "enum": ["observe-published-version", "verify-consumer-adoption"] },
+        "resumable": { "const": true },
+        "evidenceRefs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonEmpty" }
+        }
       }
     },
     "integrationWriterLease": {
-      "type": "object", "additionalProperties": false,
-      "required": ["leaseId", "repository", "holderRunId", "generation", "acquiredAt", "heartbeatAt", "expiresAt", "status"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "leaseId",
+        "repository",
+        "holderRunId",
+        "generation",
+        "acquiredAt",
+        "heartbeatAt",
+        "expiresAt",
+        "status"
+      ],
       "properties": {
-        "leaseId": { "$ref": "#/$defs/digest" }, "repository": { "$ref": "#/$defs/nonEmpty" }, "holderRunId": { "$ref": "#/$defs/nonEmpty" },
-        "generation": { "type": "integer", "minimum": 1 }, "acquiredAt": { "type": "string", "format": "date-time" },
-        "heartbeatAt": { "type": "string", "format": "date-time" }, "expiresAt": { "type": "string", "format": "date-time" },
+        "leaseId": { "$ref": "#/$defs/digest" },
+        "repository": { "$ref": "#/$defs/nonEmpty" },
+        "holderRunId": { "$ref": "#/$defs/nonEmpty" },
+        "generation": { "type": "integer", "minimum": 1 },
+        "acquiredAt": { "type": "string", "format": "date-time" },
+        "heartbeatAt": { "type": "string", "format": "date-time" },
+        "expiresAt": { "type": "string", "format": "date-time" },
         "status": { "enum": ["active", "released", "recovered"] }
       }
     },
     "integrationWriterLeaseReceipt": {
-      "type": "object", "additionalProperties": false,
-      "required": ["receiptId", "kind", "repository", "claimantRunId", "holderRunId", "leaseId", "generation", "recordedAt"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "receiptId",
+        "kind",
+        "repository",
+        "claimantRunId",
+        "holderRunId",
+        "leaseId",
+        "generation",
+        "recordedAt"
+      ],
       "properties": {
-        "receiptId": { "$ref": "#/$defs/digest" }, "kind": { "enum": ["claim", "collision", "heartbeat", "release", "recovery"] },
-        "repository": { "$ref": "#/$defs/nonEmpty" }, "claimantRunId": { "$ref": "#/$defs/nonEmpty" }, "holderRunId": { "$ref": "#/$defs/nonEmpty" },
-        "leaseId": { "$ref": "#/$defs/digest" }, "generation": { "type": "integer", "minimum": 1 }, "recordedAt": { "type": "string", "format": "date-time" }
+        "receiptId": { "$ref": "#/$defs/digest" },
+        "kind": { "enum": ["claim", "collision", "heartbeat", "release", "recovery"] },
+        "repository": { "$ref": "#/$defs/nonEmpty" },
+        "claimantRunId": { "$ref": "#/$defs/nonEmpty" },
+        "holderRunId": { "$ref": "#/$defs/nonEmpty" },
+        "leaseId": { "$ref": "#/$defs/digest" },
+        "generation": { "type": "integer", "minimum": 1 },
+        "recordedAt": { "type": "string", "format": "date-time" }
       }
     },
     "workerBrief": {
-      "type": "object", "additionalProperties": false,
-      "required": ["dispatchId", "taskId", "taskDigest", "objective", "owner", "ownedPaths", "acceptance", "evidenceRefs", "concurrentResponsibilities"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dispatchId",
+        "taskId",
+        "taskDigest",
+        "objective",
+        "owner",
+        "ownedPaths",
+        "acceptance",
+        "evidenceRefs",
+        "concurrentResponsibilities"
+      ],
       "properties": {
-        "dispatchId": { "$ref": "#/$defs/digest" }, "taskId": { "$ref": "#/$defs/nonEmpty" }, "taskDigest": { "$ref": "#/$defs/digest" },
-        "objective": { "$ref": "#/$defs/nonEmpty" }, "owner": { "$ref": "#/$defs/nonEmpty" },
-        "ownedPaths": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmpty" } },
+        "dispatchId": { "$ref": "#/$defs/digest" },
+        "taskId": { "$ref": "#/$defs/nonEmpty" },
+        "taskDigest": { "$ref": "#/$defs/digest" },
+        "objective": { "$ref": "#/$defs/nonEmpty" },
+        "owner": { "$ref": "#/$defs/nonEmpty" },
+        "ownedPaths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonEmpty" }
+        },
         "acceptance": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmpty" } },
-        "evidenceRefs": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmpty" } },
+        "evidenceRefs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonEmpty" }
+        },
         "concurrentResponsibilities": {
-          "type": "object", "additionalProperties": false, "required": ["behavioralChange", "responsibilities"],
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["behavioralChange", "responsibilities"],
           "properties": {
             "behavioralChange": { "type": "boolean" },
             "responsibilities": {
-              "type": "array", "minItems": 2, "maxItems": 2,
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
               "items": {
-                "type": "object", "additionalProperties": false, "required": ["kind", "applicability", "targets", "acceptance"],
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["kind", "applicability", "targets", "acceptance"],
                 "properties": {
                   "kind": { "enum": ["documentation", "learning"] },
                   "applicability": { "enum": ["required", "not-applicable"] },
-                  "targets": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/nonEmpty" } },
-                  "acceptance": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmpty" } }
+                  "targets": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": { "$ref": "#/$defs/nonEmpty" }
+                  },
+                  "acceptance": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": { "$ref": "#/$defs/nonEmpty" }
+                  }
                 }
               }
             }
@@ -164,18 +529,69 @@
       }
     },
     "dispatchExecution": {
-      "type": "object", "additionalProperties": false,
-      "required": ["dispatchId", "taskId", "taskDigest", "workerId", "attempt", "status", "brief", "assignedAt", "lastHeartbeatAt"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dispatchId",
+        "taskId",
+        "taskDigest",
+        "workerId",
+        "attempt",
+        "status",
+        "brief",
+        "assignedAt",
+        "lastHeartbeatAt"
+      ],
       "properties": {
-        "dispatchId": { "$ref": "#/$defs/digest" }, "taskId": { "$ref": "#/$defs/nonEmpty" }, "taskDigest": { "$ref": "#/$defs/digest" },
-        "workerId": { "$ref": "#/$defs/nonEmpty" }, "attempt": { "type": "integer", "minimum": 1 },
-        "status": { "enum": ["running", "completed", "stalled", "failed"] }, "brief": { "$ref": "#/$defs/workerBrief" },
-        "assignedAt": { "type": "string", "format": "date-time" }, "lastHeartbeatAt": { "type": "string", "format": "date-time" },
+        "dispatchId": { "$ref": "#/$defs/digest" },
+        "taskId": { "$ref": "#/$defs/nonEmpty" },
+        "taskDigest": { "$ref": "#/$defs/digest" },
+        "workerId": { "$ref": "#/$defs/nonEmpty" },
+        "attempt": { "type": "integer", "minimum": 1 },
+        "status": { "enum": ["running", "completed", "stalled", "failed"] },
+        "brief": { "$ref": "#/$defs/workerBrief" },
+        "assignedAt": { "type": "string", "format": "date-time" },
+        "lastHeartbeatAt": { "type": "string", "format": "date-time" },
         "completedReceiptRef": { "$ref": "#/$defs/nonEmpty" }
       }
     },
-    "nodeExecution": { "type": "object", "required": ["nodeId", "status", "worktree", "attempt", "receiptDigest"], "properties": { "nodeId": { "$ref": "#/$defs/nonEmpty" }, "status": { "enum": ["pending", "running", "succeeded", "failed", "cancelled", "blocked"] }, "worktree": { "$ref": "#/$defs/nonEmpty" }, "attempt": { "type": "integer", "minimum": 1 }, "receiptDigest": { "$ref": "#/$defs/digest" } } },
-    "integration": { "type": "object", "required": ["id", "sourceDigest", "status", "acceptanceDigest"], "properties": { "id": { "$ref": "#/$defs/nonEmpty" }, "sourceDigest": { "$ref": "#/$defs/digest" }, "status": { "enum": ["pending", "accepted", "rejected", "rolled-back"] }, "acceptanceDigest": { "$ref": "#/$defs/digest" } } },
-    "blocker": { "type": "object", "required": ["id", "phase", "reason", "authorityRequired", "independentPrerequisitesComplete"], "properties": { "id": { "$ref": "#/$defs/nonEmpty" }, "phase": { "$ref": "#/$defs/phase" }, "reason": { "$ref": "#/$defs/nonEmpty" }, "authorityRequired": { "$ref": "#/$defs/nonEmpty" }, "independentPrerequisitesComplete": { "type": "boolean" } } }
+    "nodeExecution": {
+      "type": "object",
+      "required": ["nodeId", "status", "worktree", "attempt", "receiptDigest"],
+      "properties": {
+        "nodeId": { "$ref": "#/$defs/nonEmpty" },
+        "status": { "enum": ["pending", "running", "succeeded", "failed", "cancelled", "blocked"] },
+        "worktree": { "$ref": "#/$defs/nonEmpty" },
+        "attempt": { "type": "integer", "minimum": 1 },
+        "receiptDigest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "integration": {
+      "type": "object",
+      "required": ["id", "sourceDigest", "status", "acceptanceDigest"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmpty" },
+        "sourceDigest": { "$ref": "#/$defs/digest" },
+        "status": { "enum": ["pending", "accepted", "rejected", "rolled-back"] },
+        "acceptanceDigest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "blocker": {
+      "type": "object",
+      "required": [
+        "id",
+        "phase",
+        "reason",
+        "authorityRequired",
+        "independentPrerequisitesComplete"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmpty" },
+        "phase": { "$ref": "#/$defs/phase" },
+        "reason": { "$ref": "#/$defs/nonEmpty" },
+        "authorityRequired": { "$ref": "#/$defs/nonEmpty" },
+        "independentPrerequisitesComplete": { "type": "boolean" }
+      }
+    }
   }
 }

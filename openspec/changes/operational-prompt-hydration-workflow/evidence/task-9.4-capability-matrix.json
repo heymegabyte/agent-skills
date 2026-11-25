@@ -39,7 +39,9 @@
         "evidence": "No Codex model turn was requested; authenticated availability is not live execution."
       },
       "evidenceStrength": ["installed-presence", "authenticated-capability", "controlled-wrapper"],
-      "blockers": ["Live provider execution belongs to the separately bounded runtime-loading probe."]
+      "blockers": [
+        "Live provider execution belongs to the separately bounded runtime-loading probe."
+      ]
     },
     {
       "id": "claude",
@@ -63,8 +65,15 @@
         "status": "not-run",
         "evidence": "No Claude model turn was requested; native-hook fixture execution is not provider execution."
       },
-      "evidenceStrength": ["installed-presence", "authenticated-capability", "controlled-wrapper", "native-hook-fixture"],
-      "blockers": ["Live provider execution belongs to the separately bounded runtime-loading probe."]
+      "evidenceStrength": [
+        "installed-presence",
+        "authenticated-capability",
+        "controlled-wrapper",
+        "native-hook-fixture"
+      ],
+      "blockers": [
+        "Live provider execution belongs to the separately bounded runtime-loading probe."
+      ]
     },
     {
       "id": "gemini",
@@ -89,7 +98,9 @@
         "evidence": "No executable provider entrypoint exists; wrapper behavior does not establish a live Gemini turn."
       },
       "evidenceStrength": ["installed-presence", "controlled-wrapper"],
-      "blockers": ["Install and authenticate a supported Gemini CLI before any live-provider claim."]
+      "blockers": [
+        "Install and authenticate a supported Gemini CLI before any live-provider claim."
+      ]
     },
     {
       "id": "opencode",
@@ -114,7 +125,9 @@
         "evidence": "No brokered DeepSeek turn was attempted because the approved secret-presence gate is false."
       },
       "evidenceStrength": ["installed-presence", "controlled-wrapper"],
-      "blockers": ["Provision the approved DeepSeek credential through the secret rail; do not substitute a paid or unapproved route."]
+      "blockers": [
+        "Provision the approved DeepSeek credential through the secret rail; do not substitute a paid or unapproved route."
+      ]
     },
     {
       "id": "paperclip",
@@ -139,7 +152,9 @@
         "evidence": "No Paperclip issue, wake, delegation, or provider turn was created."
       },
       "evidenceStrength": ["installed-presence", "controlled-wrapper"],
-      "blockers": ["A separately authorized live Paperclip profile/wake receipt is required for live execution evidence."]
+      "blockers": [
+        "A separately authorized live Paperclip profile/wake receipt is required for live execution evidence."
+      ]
     },
     {
       "id": "openclaw",
@@ -164,7 +179,9 @@
         "evidence": "No OpenClaw Gateway wake, profile execution, or downstream model turn was requested."
       },
       "evidenceStrength": ["installed-presence", "controlled-wrapper"],
-      "blockers": ["A host with the OpenClaw executable/Gateway and a separately authorized bounded profile run is required for live execution evidence."]
+      "blockers": [
+        "A host with the OpenClaw executable/Gateway and a separately authorized bounded profile run is required for live execution evidence."
+      ]
     }
   ],
   "summary": {
@@ -181,4 +198,3 @@
     "No secret value, account identifier, credential mutation, login flow, paid API substitution, or live model request is included."
   ]
 }
-
