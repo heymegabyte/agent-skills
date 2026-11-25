@@ -110,19 +110,16 @@ Below 0.70 → ask `AskUserQuestion` before persisting.
 - Surface for review before commit
 - Path: `<agent-home>/_omi-inbox/<timestamp>.md`
 
-## Capture protocol (every prompt)
+## Capture protocol
 
-1. Scan prompt for capture triggers
-2. Determine memory type
-3. Write file w/ frontmatter
-4. Add index entry to `MEMORY.md`
-5. Cross-link siblings via `[[name]]`
-6. Per `rules/prompt-as-training-signal.md` — extract BEFORE doing requested work
+Use the scoped learning router for durable capture. General procedures belong in canonical skills, project facts in project documentation, and explicit or sufficiently confident inferred preferences in the scoped preference store. Every write carries provenance, confidence, and source revision; corrections update only the exact destination, scope, project, and key. Never persist secrets, private context, or unresolved consequential assumptions.
 
-## Multi-Swarm Parallelization & OpenCode (DeepSeek) Offload Mandate
+Behavioral tasks carry documentation and learning as concurrent worker-brief responsibilities. Close each with a typed updated or verified-no-change receipt; a behavioral verification receipt alone is insufficient. The executable receipt contract lives in `bin/documentation-learning-responsibilities.ts` and must not be restated here.
 
-- **Domain Swarm Directive**: Preserve durable operator preferences across parallel worktree swarms: default to autonomous completion on `main`, full plugin catalog fan-out, and aggressive `opencode` (DeepSeek via LiteLLM) offloading to protect finite `claude`/`codex`/`gemini` subscription windows.
-- **Massive OpenCode (DeepSeek) Offload**: Whenever a task slice is throughput-safe (bounded implementation, plugin catalog shards, 100% unit test generation, Playwright E2E specs, migrations, or documentation), offload it to parallel **`opencode` swarms powered by DeepSeek** (`~/.agentskills/bin/opencode-deepseek.sh` via the LiteLLM 4-key pool `https://llm.megabyte.space/v1`) rather than consuming premium `claude`, `codex`, or `gemini` client quota.
-- **Tri-Frontier Parallel Swarms & Right-Sized SCRUM Quorum**: When complex architectural synthesis, speculative critical-path racing, or adversarial verification is needed, run `claude`, `codex`, and `gemini` in parallel across isolated Git worktrees (`bin/multi-swarm-orchestrator.ts`) guided by a right-sized collaborative SCRUM meeting (`bin/scrum-deliberation-quorum.ts`) of only the required specialist agents. See `rules/parallel-multi-swarm-orchestration.md`.
-- **End-of-Round Parallel Meaning & Preference Triad Extraction (`bin/triad-end-of-turn-sync.ts`)**: At the end of every prompt round (running in parallel with final verification, deployment, and reporting), extract any possible meaning, preference, architectural lesson, reusable site code, or system configuration from the current agent window and store it concurrently into **`heymegabyte/agent-skills`** (for AI skills/rules/prompts — always updated under the **Minimum-Prompt Ecosystem Completeness Assumption**: assuming the skills *should have already been written* so that we write **as few prompts as possible** to finish **as complete a product or multi-repo ecosystem as possible** via massive parallel agent swarms), **`heymegabyte/theme.tools`** (for reusable site/app code across the 28 canonical `@theme.tools/*` libraries), and **`heymegabyte/install.doctor`** (for reusable system/host code).
-- **Concurrent End-of-Prompt Delivery Closure**: Run documentation/comment reconciliation and bounded `theme.tools`, `install.doctor`, and `agent-skills` extraction reviews concurrently with proportional tests and release preparation. After reconciling those changes and generated outputs, revalidate the exact final tree. Commit only that tested tree, push it normally to `main`, promote it through the approved production rail, and run production smoke plus critical E2E verification. Fail closed without mutating production when authority, credentials, spending permission, review, recovery, validation, or provenance gates are missing; record the exact blocker instead.
+## Prompt Hydration learning handoff
+
+Consume `assumptionLedger` and correction scope from the stage-1 hydration artifact; do not duplicate hydration or orchestration procedure here. Persist only explicit preferences or later confirmed corrections at their recorded scope. Project facts stay in project documentation, reusable procedure stays in canonical skills, and unresolved consequential assumptions remain visible rather than becoming memory. Use evidence IDs as provenance.
+
+## Theme.tools ecosystem contract (required)
+
+Resolve shared memory/auth primitives through this skill's `config/theme-tools-skill-map.json` entry and the canonical `rules/theme-tools-skill-integration.md` procedure.

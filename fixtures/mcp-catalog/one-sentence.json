@@ -1,0 +1,5 @@
+{
+  "prompt": "Build a searchable MCP catalog with submissions and moderation",
+  "requiredCapabilities": ["discovery", "categories", "search-filter", "detail-pages", "ingestion", "deduplication", "updates", "submissions", "moderation", "administration", "installation-guidance", "accounts-integrations", "operational-qualities"],
+  "requiredOperationalQualities": ["accessibility", "performance", "security", "reliability", "data-freshness", "observability", "moderation-auditability", "maintenance", "cost"]
+}

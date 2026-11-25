@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenarios": {
+    "narrowFix": {
+      "prompt": "Fix the mega menu title changing on hover",
+      "expectedStage": "Prompt Hydration",
+      "requiredReviewSections": ["context", "impact", "regressionEvidence", "improvementReview"]
+    },
+    "materialProduct": {
+      "prompt": "Build a searchable MCP catalog with submissions and moderation",
+      "requiredCoverageDimensions": [
+        "repositories",
+        "capabilities",
+        "personas-and-journeys",
+        "screens-and-components",
+        "states",
+        "quality-concerns",
+        "dependencies",
+        "migrations",
+        "shared-ownership",
+        "operations",
+        "maintenance",
+        "cost"
+      ],
+      "requiredCatalogCapabilities": [
+        "discovery",
+        "categories",
+        "search-filter",
+        "detail-pages",
+        "ingestion",
+        "deduplication",
+        "updates",
+        "submissions",
+        "moderation",
+        "administration",
+        "installation-guidance"
+      ]
+    },
+    "scopedCorrection": {
+      "prompt": "Correction for this project only: use the existing catalog taxonomy; do not change my global preferences.",
+      "expectedScope": "project",
+      "forbiddenScopes": ["global", "other-projects"]
+    }
+  }
+}

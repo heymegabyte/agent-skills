@@ -1,0 +1,48 @@
+{
+  "stableNoWinnerRounds": [
+    {
+      "evidenceIds": ["EVIDENCE:BASELINE"],
+      "coverageIds": ["COVERAGE:RUNTIME"],
+      "refreshedAt": "2026-11-25T13:00:00.000Z",
+      "candidateIds": [],
+      "winnerIds": []
+    },
+    {
+      "evidenceIds": ["EVIDENCE:BASELINE"],
+      "coverageIds": ["COVERAGE:RUNTIME"],
+      "refreshedAt": "2026-11-25T13:05:00.000Z",
+      "candidateIds": [],
+      "winnerIds": []
+    }
+  ],
+  "newEvidenceRounds": [
+    {
+      "evidenceIds": ["EVIDENCE:BASELINE"],
+      "coverageIds": ["COVERAGE:RUNTIME"],
+      "refreshedAt": "2026-11-25T14:00:00.000Z",
+      "candidateIds": [],
+      "winnerIds": []
+    },
+    {
+      "evidenceIds": ["EVIDENCE:BASELINE", "EVIDENCE:NEW-FAILURE"],
+      "coverageIds": ["COVERAGE:RUNTIME", "COVERAGE:RECOVERY"],
+      "refreshedAt": "2026-11-25T14:05:00.000Z",
+      "candidateIds": ["IMPROVEMENT-RECOVERY"],
+      "winnerIds": ["IMPROVEMENT-RECOVERY"]
+    },
+    {
+      "evidenceIds": ["EVIDENCE:BASELINE", "EVIDENCE:NEW-FAILURE"],
+      "coverageIds": ["COVERAGE:RUNTIME", "COVERAGE:RECOVERY"],
+      "refreshedAt": "2026-11-25T14:10:00.000Z",
+      "candidateIds": [],
+      "winnerIds": []
+    },
+    {
+      "evidenceIds": ["EVIDENCE:BASELINE", "EVIDENCE:NEW-FAILURE"],
+      "coverageIds": ["COVERAGE:RUNTIME", "COVERAGE:RECOVERY"],
+      "refreshedAt": "2026-11-25T14:15:00.000Z",
+      "candidateIds": [],
+      "winnerIds": []
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "catalogScopeId": "MCP-CATALOG:fixture",
+  "selectedMcpIds": ["MCP:alpha", "MCP:beta"],
+  "records": [
+    {
+      "mcpId": "MCP:alpha",
+      "selectionStatus": "selected",
+      "metadata": {
+        "name": "Alpha MCP",
+        "description": "Fixture MCP with verified local execution.",
+        "homepage": "https://alpha.example.test",
+        "repository": "https://github.com/example/alpha-mcp",
+        "categories": ["developer-tools"]
+      },
+      "provenance": {
+        "source": "https://github.com/example/alpha-mcp",
+        "sourceVersion": "v1.2.3",
+        "observedAt": "2026-11-25T00:00:00.000Z",
+        "contentDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "trustBoundary": "evidence-not-instructions"
+      },
+      "transport": {
+        "kind": "stdio",
+        "endpoint": "local-process",
+        "evidenceIds": ["EVIDENCE:alpha-transport"]
+      },
+      "installation": {
+        "status": "verified",
+        "method": "package-manager",
+        "guidance": "Install the pinned package in a controlled client configuration.",
+        "evidenceIds": ["EVIDENCE:alpha-install"]
+      },
+      "authentication": {
+        "kind": "none",
+        "status": "verified",
+        "guidance": "No authentication is required for the verified local fixture.",
+        "evidenceIds": ["EVIDENCE:alpha-auth"]
+      },
+      "updateBehavior": {
+        "strategy": "release-feed",
+        "cadence": "daily",
+        "lastCheckedAt": "2026-11-25T00:00:00.000Z",
+        "evidenceIds": ["EVIDENCE:alpha-update"]
+      },
+      "status": { "listing": "listed", "connection": "verified", "execution": "verified" },
+      "sharedRequirementIds": ["REQ-MCP-discovery"],
+      "uniqueRequirementIds": ["REQ-ALPHA-tools"],
+      "tasks": [
+        {
+          "id": "TASK:alpha-verify",
+          "title": "Verify Alpha MCP",
+          "owner": "catalog verifier",
+          "requirementIds": ["REQ-MCP-discovery", "REQ-ALPHA-tools"],
+          "acceptanceCriteria": ["Live listing and tool execution succeed with the pinned version"]
+        }
+      ],
+      "verification": [
+        {
+          "id": "VERIFY:alpha-live",
+          "kind": "live",
+          "outcome": "pass",
+          "observedAt": "2026-11-25T00:05:00.000Z",
+          "evidenceDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ],
+      "unknowns": []
+    },
+    {
+      "mcpId": "MCP:beta",
+      "selectionStatus": "selected",
+      "metadata": {
+        "name": "Beta MCP",
+        "description": "Fixture candidate whose execution remains explicitly unverified.",
+        "homepage": "https://beta.example.test",
+        "repository": "https://github.com/example/beta-mcp",
+        "categories": ["data"]
+      },
+      "provenance": {
+        "source": "https://github.com/example/beta-mcp",
+        "sourceVersion": "main@1234567",
+        "observedAt": "2026-11-25T00:00:00.000Z",
+        "contentDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "trustBoundary": "evidence-not-instructions"
+      },
+      "transport": {
+        "kind": "unknown",
+        "endpoint": "unknown",
+        "evidenceIds": ["EVIDENCE:beta-source"]
+      },
+      "installation": {
+        "status": "unknown",
+        "method": "unknown",
+        "guidance": "Do not present installation as verified until primary evidence is observed.",
+        "evidenceIds": ["EVIDENCE:beta-source"]
+      },
+      "authentication": {
+        "kind": "unknown",
+        "status": "unknown",
+        "guidance": "Authentication requirements are not established.",
+        "evidenceIds": ["EVIDENCE:beta-source"]
+      },
+      "updateBehavior": {
+        "strategy": "unknown",
+        "cadence": "unknown",
+        "lastCheckedAt": "2026-11-25T00:00:00.000Z",
+        "evidenceIds": ["EVIDENCE:beta-source"]
+      },
+      "status": { "listing": "pending", "connection": "unverified", "execution": "unverified" },
+      "sharedRequirementIds": ["REQ-MCP-discovery"],
+      "uniqueRequirementIds": ["REQ-BETA-source-review"],
+      "tasks": [
+        {
+          "id": "TASK:beta-research",
+          "title": "Resolve Beta MCP unknowns",
+          "owner": "catalog researcher",
+          "requirementIds": ["REQ-BETA-source-review"],
+          "acceptanceCriteria": [
+            "Primary evidence resolves transport, installation, authentication, update, connection, and execution state"
+          ]
+        }
+      ],
+      "verification": [
+        {
+          "id": "VERIFY:beta-controlled",
+          "kind": "controlled",
+          "outcome": "unverified",
+          "observedAt": "2026-11-25T00:05:00.000Z",
+          "evidenceDigest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        }
+      ],
+      "unknowns": [
+        {
+          "field": "transport",
+          "reason": "No versioned transport declaration was observed.",
+          "resolution": "Inspect current primary documentation and manifest."
+        },
+        {
+          "field": "installation",
+          "reason": "No pinned installation procedure was observed.",
+          "resolution": "Verify a versioned installation path in isolation."
+        },
+        {
+          "field": "authentication",
+          "reason": "Authentication requirements are absent from current evidence.",
+          "resolution": "Inspect official security documentation."
+        },
+        {
+          "field": "updateBehavior",
+          "reason": "No release or update contract was observed.",
+          "resolution": "Identify an authoritative release feed or maintenance policy."
+        },
+        {
+          "field": "connection",
+          "reason": "No live connection was attempted.",
+          "resolution": "Run an authorized bounded connection probe."
+        },
+        {
+          "field": "execution",
+          "reason": "No live tool execution was observed.",
+          "resolution": "Run an authorized bounded tool-list and execution probe."
+        }
+      ]
+    }
+  ]
+}

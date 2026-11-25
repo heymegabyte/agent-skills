@@ -1,0 +1,73 @@
+{
+  "runId": "run-improvement-71",
+  "runStateDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "changeId": "control-plane-convergence",
+  "sourceRevision": "1111111111111111111111111111111111111111",
+  "evaluatedAt": "2026-11-25T12:00:00.000Z",
+  "policy": { "confidenceFloor": 0.7, "valueFloor": 0.6, "maxCost": 0.7, "maxWip": 2 },
+  "candidates": [
+    {
+      "id": "IMPROVEMENT-OBSERVABLE-RETRY",
+      "title": "Expose retry exhaustion receipts",
+      "summary": "Operators can observe a controlled receipt whenever retry capacity is exhausted.",
+      "evidence": 0.96,
+      "expectedValue": 0.92,
+      "novelty": 0.82,
+      "reversibility": 0.9,
+      "verifiability": 0.96,
+      "cost": 0.25,
+      "risk": 0.08,
+      "evidenceIds": ["EVIDENCE:RETRY-GAP"],
+      "authority": { "decision": "allowed", "evidenceIds": ["AUTHORITY:REPO-LOCAL"] },
+      "verification": {
+        "method": "A controlled exhausted retry emits a digest-bound receipt.",
+        "objective": true
+      },
+      "conflictsWith": [],
+      "affectedPaths": ["bin/retry-receipts.ts"],
+      "packages": ["repository-local"],
+      "acceptanceCriteria": ["The receipt identifies the exhausted operation and final attempt."]
+    },
+    {
+      "id": "IMPROVEMENT-EXTERNAL-DEPLOY",
+      "title": "Deploy an unapproved external integration",
+      "summary": "An external integration is deployed without confirmed authority.",
+      "evidence": 0.95,
+      "expectedValue": 0.9,
+      "novelty": 0.8,
+      "reversibility": 0.8,
+      "verifiability": 0.9,
+      "cost": 0.2,
+      "risk": 0.1,
+      "evidenceIds": ["EVIDENCE:EXTERNAL-IDEA"],
+      "authority": {
+        "decision": "requires-external-authority",
+        "evidenceIds": ["AUTHORITY:NOT-GRANTED"]
+      },
+      "verification": { "method": "Observe the external deployment.", "objective": true },
+      "conflictsWith": [],
+      "affectedPaths": ["deploy/external.ts"],
+      "packages": ["repository-local"],
+      "acceptanceCriteria": ["External deployment responds."]
+    },
+    {
+      "id": "IMPROVEMENT-CONFLICT",
+      "title": "Replace the accepted persistence engine",
+      "summary": "The accepted persistence decision is replaced during post-request improvement.",
+      "evidence": 0.94,
+      "expectedValue": 0.9,
+      "novelty": 0.9,
+      "reversibility": 0.8,
+      "verifiability": 0.9,
+      "cost": 0.3,
+      "risk": 0.1,
+      "evidenceIds": ["EVIDENCE:ALTERNATIVE-ENGINE"],
+      "authority": { "decision": "allowed", "evidenceIds": ["AUTHORITY:REPO-LOCAL"] },
+      "verification": { "method": "Persistence checks pass.", "objective": true },
+      "conflictsWith": ["DECISION:PERSISTENCE-ENGINE"],
+      "affectedPaths": ["bin/persistence.ts"],
+      "packages": ["repository-local"],
+      "acceptanceCriteria": ["Persistence checks pass."]
+    }
+  ]
+}

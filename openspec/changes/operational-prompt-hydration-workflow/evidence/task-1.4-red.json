@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "taskId": "1.4",
+  "capturedAt": "2026-11-25T00:00:00.000Z",
+  "command": "node --experimental-strip-types --test tests/orchestration-durability.red.test.ts",
+  "expectedStatus": "red",
+  "observedExitCode": 1,
+  "tests": 7,
+  "passed": 0,
+  "failed": 7,
+  "setupOrSyntaxFailure": false,
+  "controlledFailures": [
+    {
+      "scenario": "duplicate-dispatch",
+      "observed": "dispatchReadyTask is undefined",
+      "intendedGap": "stable idempotent dispatch operation is not implemented"
+    },
+    {
+      "scenario": "competing-integration-writers",
+      "observed": "claimIntegrationWriterLease is undefined",
+      "intendedGap": "renewable per-repository writer leases and collision receipts are not implemented"
+    },
+    {
+      "scenario": "interruption-resume",
+      "observed": "resumeReadyTasks is undefined",
+      "intendedGap": "digest-validated exact resume and completed-receipt reuse are not implemented"
+    },
+    {
+      "scenario": "maintenance-recursion",
+      "observed": "admitMaintenanceTrigger is undefined",
+      "intendedGap": "trigger identity and equivalent-maintenance suppression are not implemented"
+    },
+    {
+      "scenario": "blocked-release",
+      "observed": "recordExternalDeliveryEdge is undefined",
+      "intendedGap": "typed resumable source-to-release-to-consumer blockers are not implemented"
+    },
+    {
+      "scenario": "exact-git-traceability",
+      "observed": "recordGitIntegration is undefined",
+      "intendedGap": "tested/local/remote commit reconciliation is not implemented"
+    },
+    {
+      "scenario": "two-refreshed-no-winner-rounds",
+      "observed": "runBoundedImprovementRounds terminated after one empty round with confidence-floor",
+      "intendedGap": "convergence does not require two evidence-refreshed no-winner rounds"
+    }
+  ]
+}

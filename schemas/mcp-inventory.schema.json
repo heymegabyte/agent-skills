@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent.megabyte.space/schemas/mcp-inventory.schema.json",
+  "title": "Selected MCP traceability inventory",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "catalogScopeId", "selectedMcpIds", "records"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "catalogScopeId": { "$ref": "#/$defs/id" },
+    "selectedMcpIds": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/id" }
+    },
+    "records": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/record" }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,127}$" },
+    "text": { "type": "string", "minLength": 1 },
+    "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "description", "homepage", "repository", "categories"],
+      "properties": {
+        "name": { "$ref": "#/$defs/text" },
+        "description": { "$ref": "#/$defs/text" },
+        "homepage": { "$ref": "#/$defs/text" },
+        "repository": { "$ref": "#/$defs/text" },
+        "categories": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/text" }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "sourceVersion", "observedAt", "contentDigest", "trustBoundary"],
+      "properties": {
+        "source": { "$ref": "#/$defs/text" },
+        "sourceVersion": { "$ref": "#/$defs/text" },
+        "observedAt": { "type": "string", "format": "date-time" },
+        "contentDigest": { "$ref": "#/$defs/digest" },
+        "trustBoundary": { "const": "evidence-not-instructions" }
+      }
+    },
+    "transport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "endpoint", "evidenceIds"],
+      "properties": {
+        "kind": { "enum": ["stdio", "http", "sse", "streamable-http", "unknown"] },
+        "endpoint": { "$ref": "#/$defs/text" },
+        "evidenceIds": { "$ref": "#/$defs/idList" }
+      }
+    },
+    "installation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "method", "guidance", "evidenceIds"],
+      "properties": {
+        "status": { "enum": ["verified", "unverified", "unknown"] },
+        "method": { "$ref": "#/$defs/text" },
+        "guidance": { "$ref": "#/$defs/text" },
+        "evidenceIds": { "$ref": "#/$defs/idList" }
+      }
+    },
+    "authentication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "status", "guidance", "evidenceIds"],
+      "properties": {
+        "kind": { "enum": ["none", "oauth", "api-key", "custom", "unknown"] },
+        "status": { "enum": ["verified", "unverified", "unknown"] },
+        "guidance": { "$ref": "#/$defs/text" },
+        "evidenceIds": { "$ref": "#/$defs/idList" }
+      }
+    },
+    "updateBehavior": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strategy", "cadence", "lastCheckedAt", "evidenceIds"],
+      "properties": {
+        "strategy": { "enum": ["release-feed", "repository-poll", "manual", "unknown"] },
+        "cadence": { "$ref": "#/$defs/text" },
+        "lastCheckedAt": { "type": "string", "format": "date-time" },
+        "evidenceIds": { "$ref": "#/$defs/idList" }
+      }
+    },
+    "status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["listing", "connection", "execution"],
+      "properties": {
+        "listing": { "enum": ["listed", "pending", "rejected"] },
+        "connection": { "enum": ["verified", "failed", "unverified", "not-applicable"] },
+        "execution": { "enum": ["verified", "failed", "unverified", "not-applicable"] }
+      }
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "owner", "requirementIds", "acceptanceCriteria"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "title": { "$ref": "#/$defs/text" },
+        "owner": { "$ref": "#/$defs/text" },
+        "requirementIds": { "$ref": "#/$defs/idList" },
+        "acceptanceCriteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/text" }
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "outcome", "observedAt", "evidenceDigest"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "kind": { "enum": ["controlled", "live"] },
+        "outcome": { "enum": ["pass", "fail", "unverified"] },
+        "observedAt": { "type": "string", "format": "date-time" },
+        "evidenceDigest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "unknown": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "reason", "resolution"],
+      "properties": {
+        "field": {
+          "enum": [
+            "transport",
+            "installation",
+            "authentication",
+            "updateBehavior",
+            "connection",
+            "execution"
+          ]
+        },
+        "reason": { "$ref": "#/$defs/text" },
+        "resolution": { "$ref": "#/$defs/text" }
+      }
+    },
+    "idList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/id" }
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mcpId",
+        "selectionStatus",
+        "metadata",
+        "provenance",
+        "transport",
+        "installation",
+        "authentication",
+        "updateBehavior",
+        "status",
+        "sharedRequirementIds",
+        "uniqueRequirementIds",
+        "tasks",
+        "verification",
+        "unknowns"
+      ],
+      "properties": {
+        "mcpId": { "$ref": "#/$defs/id" },
+        "selectionStatus": { "const": "selected" },
+        "metadata": { "$ref": "#/$defs/metadata" },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "transport": { "$ref": "#/$defs/transport" },
+        "installation": { "$ref": "#/$defs/installation" },
+        "authentication": { "$ref": "#/$defs/authentication" },
+        "updateBehavior": { "$ref": "#/$defs/updateBehavior" },
+        "status": { "$ref": "#/$defs/status" },
+        "sharedRequirementIds": { "$ref": "#/$defs/idList" },
+        "uniqueRequirementIds": { "$ref": "#/$defs/idList" },
+        "tasks": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/task" }
+        },
+        "verification": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/verification" }
+        },
+        "unknowns": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/unknown" } }
+      }
+    }
+  }
+}

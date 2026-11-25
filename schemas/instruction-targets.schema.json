@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent.megabyte.space/schemas/instruction-targets.schema.json",
+  "title": "Supported instruction projection targets",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "canonicalPolicy", "authorityBoundary", "targets"],
+  "properties": {
+    "$schema": { "const": "../schemas/instruction-targets.schema.json" },
+    "schemaVersion": { "const": "1.0.0" },
+    "canonicalPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policyId", "policyVersion", "sourcePath", "sourceDigest", "coreDigest"],
+      "properties": {
+        "policyId": { "const": "operational-prompt-hydration" },
+        "policyVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "sourcePath": { "const": "policies/operational-prompt-hydration.md" },
+        "sourceDigest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "coreDigest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+      }
+    },
+    "authorityBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["instructionAuthority", "providerControlledAuthorityClaimed", "statement"],
+      "properties": {
+        "instructionAuthority": { "const": "user-controlled-customization-only" },
+        "providerControlledAuthorityClaimed": { "const": false },
+        "statement": { "type": "string", "minLength": 1 }
+      }
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 11,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/target" }
+    }
+  },
+  "$defs": {
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "surface",
+        "supportLevel",
+        "deliveryMechanism",
+        "nativePromptHook",
+        "canonicalSourceDigest",
+        "authority",
+        "evidenceRequired"
+      ],
+      "properties": {
+        "id": {
+          "enum": [
+            "repository",
+            "plugin",
+            "manifest",
+            "coordinator",
+            "worker",
+            "paperclip",
+            "openclaw",
+            "codex",
+            "claude",
+            "gemini",
+            "opencode"
+          ]
+        },
+        "surface": { "type": "string", "minLength": 1 },
+        "supportLevel": { "enum": ["generated", "installed", "launch-bound", "profile-wrapper"] },
+        "deliveryMechanism": {
+          "enum": [
+            "managed-block",
+            "plugin-bundle",
+            "generated-manifest",
+            "launch-receipt",
+            "explicit-wrapper"
+          ]
+        },
+        "nativePromptHook": { "type": "boolean" },
+        "canonicalSourceDigest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "authority": { "const": "user-controlled-customization-only" },
+        "evidenceRequired": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

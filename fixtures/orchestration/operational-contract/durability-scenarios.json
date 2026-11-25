@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "scenarios": [
+    {
+      "id": "duplicate-dispatch",
+      "operation": "dispatchReadyTask",
+      "input": {
+        "runId": "run-dispatch",
+        "taskId": "task-a",
+        "taskDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "expected": { "launchCount": 1, "secondDisposition": "existing-execution" }
+    },
+    {
+      "id": "competing-integration-writers",
+      "operation": "claimIntegrationWriterLease",
+      "input": {
+        "repository": "heymegabyte/agent-skills",
+        "claimants": ["run-a", "run-b"],
+        "now": "2026-11-25T00:00:00.000Z"
+      },
+      "expected": { "granted": 1, "waiting": 1, "collisionReceipt": true }
+    },
+    {
+      "id": "interruption-resume",
+      "operation": "resumeReadyTasks",
+      "input": {
+        "completedDispatchIds": ["dispatch-a"],
+        "unfinishedReadyDispatchIds": ["dispatch-b"],
+        "blockedDispatchIds": ["dispatch-c"]
+      },
+      "expected": {
+        "reused": ["dispatch-a"],
+        "launched": ["dispatch-b"],
+        "preservedBlocked": ["dispatch-c"]
+      }
+    },
+    {
+      "id": "maintenance-recursion",
+      "operation": "admitMaintenanceTrigger",
+      "input": {
+        "triggerId": "policy-sync:revision-a",
+        "recursionDepth": 1,
+        "seenTriggerIds": ["policy-sync:revision-a"]
+      },
+      "expected": { "admitted": false, "reason": "equivalent-trigger-covered" }
+    },
+    {
+      "id": "blocked-release",
+      "operation": "recordExternalDeliveryEdge",
+      "input": {
+        "sourceCommit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "package": "@theme.tools/ui",
+        "publishedVersion": null,
+        "consumer": "fixture-consumer"
+      },
+      "expected": {
+        "status": "blocked",
+        "nextAction": "observe-published-version",
+        "resumable": true
+      }
+    },
+    {
+      "id": "exact-git-traceability",
+      "operation": "recordGitIntegration",
+      "input": {
+        "testedTree": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "localCommit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "remoteCommit": "cccccccccccccccccccccccccccccccccccccccc"
+      },
+      "expected": { "complete": false, "reason": "remote-commit-mismatch" }
+    },
+    {
+      "id": "two-refreshed-no-winner-rounds",
+      "operation": "runBoundedImprovementRounds",
+      "input": { "initialCandidates": [], "refreshedCandidates": [] },
+      "expected": { "rounds": 2, "terminated": true, "reason": "two-refreshed-no-winner-rounds" }
+    }
+  ]
+}

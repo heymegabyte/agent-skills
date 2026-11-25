@@ -1,5 +1,11 @@
 {
   "_generated_by": "bin/gen-harness-manifests.mjs — do not edit directly",
+  "policy": {
+    "id": "operational-prompt-hydration",
+    "version": "1.0.0",
+    "source": "policies/operational-prompt-hydration.md",
+    "source_digest": "sha256:4833e290e756aecb61e14bdcff1be6f01137730bc3a27b7445eb1a78dcad960e"
+  },
   "name": "heymegabyte-skills",
   "version": "7.2.1",
   "locale": "zh-CN",
@@ -96,6 +102,10 @@
     {
       "path": "../28-cf-integrations-reference/SKILL.md",
       "id": "cf-integrations-reference"
+    },
+    {
+      "path": "../openclaw-integration/SKILL.md",
+      "id": "openclaw-integration"
     }
   ]
 }

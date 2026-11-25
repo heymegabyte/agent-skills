@@ -1,0 +1,19 @@
+{
+  "task": "2.1",
+  "policyId": "operational-prompt-hydration",
+  "policyVersion": "1.0.0",
+  "coreDigest": "05ee082f51394e1ad5e106e7991c504903412d64487eb7a62dcd2185bdb9bd65",
+  "review": {
+    "compactCoreVerbatim": true,
+    "singleCanonicalCopy": true,
+    "focusedProcedureLinks": true,
+    "providerInstructionBoundary": true,
+    "contradictionPatternsFound": []
+  },
+  "evidenceStrength": "repository-controlled",
+  "claimsExcluded": [
+    "generated target installation",
+    "runtime loading",
+    "provider-controlled instruction mutation"
+  ]
+}

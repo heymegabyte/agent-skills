@@ -1,0 +1,32 @@
+[
+  {
+    "taskId": "TASK-001",
+    "checkboxComplete": true,
+    "codePaths": ["bin/openspec-delivery-compiler.ts"],
+    "verification": {
+      "status": "pass",
+      "receipts": [
+        {
+          "id": "VERIFY:TASK-001",
+          "command": "node --test tests/openspec-delivery-compiler.test.ts",
+          "status": "pass",
+          "evidenceDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "observedAt": "2026-11-25T00:00:00.000Z"
+        }
+      ]
+    },
+    "integration": {
+      "status": "integrated",
+      "integratedCommit": "2222222222222222222222222222222222222222",
+      "testedTree": "2222222222222222222222222222222222222222",
+      "remote": {
+        "status": "observed-main",
+        "repository": "heymegabyte/agent-skills",
+        "branch": "main",
+        "observedSha": "2222222222222222222222222222222222222222",
+        "observedAt": "2026-11-25T00:05:00.000Z",
+        "ciStatus": "pass"
+      }
+    }
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "sourceRevision": "2222222222222222222222222222222222222222",
+  "recordedAt": "2026-11-25T16:00:00.000Z",
+  "candidates": [
+    { "id": "LEARN-PROCEDURE", "kind": "general-procedure", "key": "verify-retries", "value": "Verify exhausted retries with a controlled receipt.", "scope": "global", "explicit": true, "confidence": 0.98, "provenanceIds": ["EVIDENCE:PROCEDURE"], "privacy": "public" },
+    { "id": "LEARN-PROJECT", "kind": "project-fact", "key": "catalog-taxonomy", "value": "This project uses the existing catalog taxonomy.", "scope": "project", "projectId": "megabyte-space", "explicit": true, "confidence": 1, "provenanceIds": ["EVIDENCE:PROJECT-CORRECTION"], "privacy": "public" },
+    { "id": "LEARN-PREFERENCE", "kind": "preference", "key": "login-layout", "value": "Keep social sign-in methods on one login page.", "scope": "project", "projectId": "megabyte-space", "explicit": true, "confidence": 1, "provenanceIds": ["EVIDENCE:USER-PREFERENCE"], "privacy": "public" }
+  ]
+}

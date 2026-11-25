@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent.megabyte.space/schemas/prompt-hydration-baseline-inventory.json",
+  "title": "Operational Prompt Hydration baseline inventory",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "capturedAt",
+    "classificationPolicy",
+    "repositories",
+    "installedSource",
+    "instructionTargets",
+    "providerCapabilities",
+    "openspec",
+    "primitives",
+    "ownershipUncertainties"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "capturedAt": { "type": "string", "format": "date-time" },
+    "classificationPolicy": { "type": "string", "minLength": 1 },
+    "repositories": {
+      "type": "array",
+      "minItems": 3,
+      "items": { "$ref": "#/$defs/repository" }
+    },
+    "installedSource": { "$ref": "#/$defs/installedSource" },
+    "instructionTargets": {
+      "type": "array",
+      "minItems": 6,
+      "items": { "$ref": "#/$defs/instructionTarget" }
+    },
+    "providerCapabilities": {
+      "type": "array",
+      "minItems": 7,
+      "items": { "$ref": "#/$defs/capability" }
+    },
+    "openspec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "change", "state"],
+      "properties": {
+        "version": { "type": "string" },
+        "change": { "const": "operational-prompt-hydration-workflow" },
+        "state": { "enum": ["ready", "applying", "blocked", "complete"] }
+      }
+    },
+    "primitives": {
+      "type": "array",
+      "minItems": 8,
+      "items": { "$ref": "#/$defs/primitive" }
+    },
+    "ownershipUncertainties": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "$defs": {
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "path",
+        "branch",
+        "head",
+        "remoteMain",
+        "ahead",
+        "behind",
+        "remote",
+        "dirty",
+        "dirtyClassification",
+        "ownership"
+      ],
+      "properties": {
+        "name": { "type": "string" },
+        "path": { "type": "string" },
+        "branch": { "type": "string" },
+        "head": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "remoteMain": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "ahead": { "type": "integer", "minimum": 0 },
+        "behind": { "type": "integer", "minimum": 0 },
+        "remote": { "type": "string" },
+        "dirty": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        },
+        "dirtyClassification": { "type": "string", "minLength": 1 },
+        "ownership": { "enum": ["known-task", "pre-existing-user-or-agent", "mixed-or-unknown"] }
+      }
+    },
+    "installedSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "link",
+        "resolvedPath",
+        "head",
+        "remoteMain",
+        "ahead",
+        "behind",
+        "dirtyCount",
+        "classification"
+      ],
+      "properties": {
+        "link": { "type": "string" },
+        "resolvedPath": { "type": "string" },
+        "head": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "remoteMain": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "ahead": { "type": "integer", "minimum": 0 },
+        "behind": { "type": "integer", "minimum": 0 },
+        "dirtyCount": { "type": "integer", "minimum": 0 },
+        "classification": { "type": "string", "minLength": 1 }
+      }
+    },
+    "instructionTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "path", "present", "support", "classification"],
+      "properties": {
+        "name": { "type": "string" },
+        "path": { "type": "string" },
+        "present": { "type": "boolean" },
+        "digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "support": { "enum": ["native-file", "plugin", "wrapper-required", "missing"] },
+        "classification": { "type": "string", "minLength": 1 }
+      }
+    },
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "installed", "available", "probe", "classification"],
+      "properties": {
+        "name": { "type": "string" },
+        "installed": { "type": "boolean" },
+        "available": { "type": "boolean" },
+        "probe": { "type": "string" },
+        "classification": { "type": "string", "minLength": 1 }
+      }
+    },
+    "primitive": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "role", "present", "digest", "classification"],
+      "properties": {
+        "path": { "type": "string" },
+        "role": { "type": "string" },
+        "present": { "type": "boolean" },
+        "digest": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+        "classification": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

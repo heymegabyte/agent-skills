@@ -20,7 +20,7 @@ Run the 5-level verification pyramid (static→unit→E2E→AI visual→post-dep
 1. **Static** — TS strict + ESLint + oxlint + Prettier + knip (dead code)
 2. **Unit** — Vitest 5 (browser mode default, static test discovery, Playwright-trace links)
 3. **Playwright E2E** — homepage-first, 6 viewports × 3 browsers, hermetic, parallel
-4. **AI visual** — vision rubric ≥9/10 per route, 6bp screenshots
+4. **AI visual** — vision rubric ≥9/10 per route in focused one- or two-viewport critique passes; use 4+ simultaneously only for a documented breakpoint risk
 5. **Post-deploy** — `wrangler tail` clean + console-error-free + axe-clean + Lighthouse green
 
 ## 8-check quality gate (every PR)
@@ -110,10 +110,10 @@ After every deploy: browser console must show 0 CSP violations, 0 JS errors, 0 f
 
 ## See submodules: ai-vision-qa.md, multi-agent-testing.md, visual-regression.md.
 
-## Multi-Swarm Parallelization & OpenCode (DeepSeek) Offload Mandate
+## Prompt Hydration verification handoff
 
-- **Domain Swarm Directive**: Fan out test generation across parallel `opencode` (DeepSeek) swarms to achieve **100% unit test coverage** and **near-100% E2E coverage** executed in parallel via **Cloudflare Browser Run** (`@cloudflare/playwright` bound to `env.MYBROWSER` / `BROWSER`) across all 6 breakpoints and 16 OKLCH visual states, gated by cross-model `codex`/`gemini` adversarial review.
-- **Massive OpenCode (DeepSeek) Offload**: Whenever a task slice is throughput-safe (bounded implementation, plugin catalog shards, 100% unit test generation, Playwright E2E specs, migrations, or documentation), offload it to parallel **`opencode` swarms powered by DeepSeek** (`~/.agentskills/bin/opencode-deepseek.sh` via the LiteLLM 4-key pool `https://llm.megabyte.space/v1`) rather than consuming premium `claude`, `codex`, or `gemini` client quota.
-- **Tri-Frontier Parallel Swarms & Right-Sized SCRUM Quorum**: When complex architectural synthesis, speculative critical-path racing, or adversarial verification is needed, run `claude`, `codex`, and `gemini` in parallel across isolated Git worktrees (`bin/multi-swarm-orchestrator.ts`) guided by a right-sized collaborative SCRUM meeting (`bin/scrum-deliberation-quorum.ts`) of only the required specialist agents. See `rules/parallel-multi-swarm-orchestration.md`.
-- **End-of-Round Parallel Meaning & Preference Triad Extraction (`bin/triad-end-of-turn-sync.ts`)**: At the end of every prompt round (running in parallel with final verification, deployment, and reporting), extract any possible meaning, preference, architectural lesson, reusable site code, or system configuration from the current agent window and store it concurrently into **`heymegabyte/agent-skills`** (for AI skills/rules/prompts — always updated under the **Minimum-Prompt Ecosystem Completeness Assumption**: assuming the skills *should have already been written* so that we write **as few prompts as possible** to finish **as complete a product or multi-repo ecosystem as possible** via massive parallel agent swarms), **`heymegabyte/theme.tools`** (for reusable site/app code across the 28 canonical `@theme.tools/*` libraries), and **`heymegabyte/install.doctor`** (for reusable system/host code).
-- **Concurrent End-of-Prompt Delivery Closure**: Run documentation/comment reconciliation and bounded `theme.tools`, `install.doctor`, and `agent-skills` extraction reviews concurrently with proportional tests and release preparation. After reconciling those changes and generated outputs, revalidate the exact final tree. Commit only that tested tree, push it normally to `main`, promote it through the approved production rail, and run production smoke plus critical E2E verification. Fail closed without mutating production when authority, credentials, spending permission, review, recovery, validation, or provenance gates are missing; record the exact blocker instead.
+Derive tests from hydrated acceptance criteria, applicable `coverageMatrix` rows, and the narrow `focusedPlan.regressionEvidence` when present. Verify unresolved assumptions and stale research as blockers rather than silently converting them into expected behavior. Bind receipts to evidence IDs and report PASS, FAIL, SKIP, BLOCKED, and UNVERIFIED distinctly. Do not duplicate hydration, provider routing, or delivery procedure here; those remain in `bin/prompt-hydrator.ts` and `rules/evidence-gated-autonomous-orchestration.md`.
+
+## Theme.tools ecosystem contract (required)
+
+Use this skill's testing/telemetry packages from `config/theme-tools-skill-map.json`; canonical shared-harness procedure remains in `rules/theme-tools-skill-integration.md`.

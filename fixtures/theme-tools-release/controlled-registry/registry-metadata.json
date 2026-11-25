@@ -1,0 +1,14 @@
+{
+  "name": "@theme.tools/prompt-hydration-probe",
+  "dist-tags": { "latest": "1.0.1" },
+  "versions": {
+    "1.0.1": {
+      "name": "@theme.tools/prompt-hydration-probe",
+      "version": "1.0.1",
+      "dist": {
+        "integrity": "sha512-controlled-fixture",
+        "tarball": "http://127.0.0.1:0/@theme.tools/prompt-hydration-probe/-/prompt-hydration-probe-1.0.1.tgz"
+      }
+    }
+  }
+}

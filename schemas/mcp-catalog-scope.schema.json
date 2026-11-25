@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent.megabyte.space/schemas/mcp-catalog-scope.schema.json",
+  "title": "MCP catalog hydrated scope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "applicability",
+    "capabilities",
+    "accountsAndIntegrations",
+    "operationalQualities",
+    "requirements",
+    "records"
+  ],
+  "properties": {
+    "applicability": { "enum": ["applicable", "not-applicable"] },
+    "capabilities": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/capability" }
+    },
+    "accountsAndIntegrations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["applicability", "basis"],
+      "properties": {
+        "applicability": { "enum": ["applicable", "inapplicable"] },
+        "basis": { "type": "string", "minLength": 1 }
+      }
+    },
+    "operationalQualities": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "requirements": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/requirement" }
+    },
+    "records": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/selectionRecord" }
+    }
+  },
+  "$defs": {
+    "capability": {
+      "enum": [
+        "discovery",
+        "categories",
+        "search-filter",
+        "detail-pages",
+        "ingestion",
+        "deduplication",
+        "updates",
+        "submissions",
+        "moderation",
+        "administration",
+        "installation-guidance",
+        "accounts-integrations",
+        "operational-qualities"
+      ]
+    },
+    "requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capability",
+        "requirementId",
+        "taskId",
+        "observableBehavior",
+        "acceptanceCriteria",
+        "evidenceIds"
+      ],
+      "properties": {
+        "capability": { "$ref": "#/$defs/capability" },
+        "requirementId": { "type": "string", "pattern": "^REQ-MCP-[a-f0-9]{12}$" },
+        "taskId": { "type": "string", "pattern": "^TASK-MCP-[a-f0-9]{12}$" },
+        "observableBehavior": { "type": "string", "minLength": 1 },
+        "acceptanceCriteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "evidenceIds": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "selectionRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["selectionId", "status", "scopeRequirementIds"],
+      "properties": {
+        "selectionId": { "type": "string", "pattern": "^MCP-SELECTION-[a-f0-9]{12}$" },
+        "status": { "const": "selection-pending" },
+        "scopeRequirementIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^REQ-MCP-[a-f0-9]{12}$" }
+        }
+      }
+    }
+  }
+}

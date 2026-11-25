@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "1.0.0",
+  "task": "1.2",
+  "capturedAt": "2026-11-25T05:53:55Z",
+  "evidenceStrength": "controlled-red-fixture",
+  "command": "node --experimental-strip-types --test tests/prompt-policy-distribution.red.test.ts",
+  "exitCode": 1,
+  "summary": {
+    "tests": 10,
+    "passed": 0,
+    "failed": 10,
+    "setupFailures": 0
+  },
+  "intendedFailure": {
+    "missingPath": "bin/manage-policy-blocks.ts",
+    "classification": "missing-managed-policy-implementation",
+    "messagePrefix": "missing managed-policy implementation for",
+    "reason": "Every scenario reached its named test and failed on the absent managed-policy implementation before mutation. The TypeScript test runner, contract JSON, and all fixture inputs loaded successfully."
+  },
+  "scenarios": [
+    "canonical-render",
+    "byte-preservation",
+    "duplicate-delimiters",
+    "malformed-delimiters",
+    "foreign-digest",
+    "explicit-source-installation",
+    "publish-generation",
+    "installed-drift",
+    "coordinator-worker-loading",
+    "unsupported-native-hook"
+  ],
+  "digests": {
+    "test": "sha256:7f61dc0127d8293c301717e37c671885e2e05937855d9fe3d182df44a7699f34",
+    "contract": "sha256:429aacda9b816c3fa9e89265c4868b9c2921e1da6ffa44dacb9f8e6afec81808"
+  },
+  "claimLimits": [
+    "This proves the baseline is RED for the specified contracts; it does not prove implementation or installation.",
+    "Coordinator/worker and unsupported-hook scenarios are controlled fixtures, not live runtime evidence."
+  ]
+}

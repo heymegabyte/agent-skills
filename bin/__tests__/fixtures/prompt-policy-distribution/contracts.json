@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "1.0.0",
+  "canonical": "canonical-policy.md",
+  "cases": [
+    {
+      "id": "canonical-render",
+      "operation": "render",
+      "target": "target-unmanaged.md",
+      "expected": "one managed block with policy id, version, source revision, and SHA-256 digest"
+    },
+    {
+      "id": "byte-preservation",
+      "operation": "install",
+      "target": "target-unmanaged.md",
+      "expected": "prefix and suffix remain byte-identical outside the delimiters"
+    },
+    {
+      "id": "duplicate-delimiters",
+      "operation": "check",
+      "target": "target-duplicate.md",
+      "expected": "non-zero result classified duplicate-managed-block"
+    },
+    {
+      "id": "malformed-delimiters",
+      "operation": "check",
+      "target": "target-malformed.md",
+      "expected": "non-zero result classified malformed-managed-block"
+    },
+    {
+      "id": "foreign-digest",
+      "operation": "check",
+      "target": "target-foreign-digest.md",
+      "expected": "non-zero result classified foreign-managed-digest"
+    },
+    {
+      "id": "explicit-source-installation",
+      "operation": "install-source",
+      "target": "target-unmanaged.md",
+      "expected": "receipt binds sourceRoot and expectedRevision; ambiguous ~/.agentskills is rejected"
+    },
+    {
+      "id": "publish-generation",
+      "operation": "render-publish",
+      "target": "target-unmanaged.md",
+      "expected": "publish output derives from canonical digest without overwriting unmanaged bytes"
+    },
+    {
+      "id": "installed-drift",
+      "operation": "check-installed",
+      "target": "target-foreign-digest.md",
+      "expected": "drift result names canonical source, selected revision, target, and repair command"
+    },
+    {
+      "id": "coordinator-worker-loading",
+      "operation": "verify-runtime-receipts",
+      "target": "target-unmanaged.md",
+      "expected": "coordinator and worker receipts match policy id, version, digest, revision, surface, and launch provenance"
+    },
+    {
+      "id": "unsupported-native-hook",
+      "operation": "verify-capability",
+      "target": "target-unmanaged.md",
+      "expected": "wrapper-required is reported without claiming a native hook"
+    }
+  ]
+}

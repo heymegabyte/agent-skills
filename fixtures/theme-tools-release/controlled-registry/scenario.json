@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "package": "@theme.tools/prompt-hydration-probe",
+  "source": {
+    "repository": "heymegabyte/theme.tools",
+    "commit": "1111111111111111111111111111111111111111",
+    "version": "1.0.1",
+    "validated": true
+  },
+  "release": {
+    "registryPath": "/@theme.tools%2fprompt-hydration-probe",
+    "expectedVersion": "1.0.1",
+    "expectedIntegrity": "sha512-controlled-fixture"
+  },
+  "consumer": {
+    "repository": "heymegabyte/prompt-hydration-consumer",
+    "manifest": "fixtures/theme-tools-release/controlled-registry/consumer/package.json",
+    "lockfile": "fixtures/theme-tools-release/controlled-registry/consumer/package-lock.json",
+    "expectedCommit": "2222222222222222222222222222222222222222",
+    "verificationCommand": "node verify.mjs"
+  },
+  "requiredEvidence": [
+    "source-validation",
+    "source-commit",
+    "registry-publication",
+    "published-version-observation",
+    "consumer-manifest",
+    "consumer-lockfile",
+    "consumer-behavior",
+    "consumer-commit"
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "mutations": [
+    { "id": "missing-requirement-id", "path": "records.0.requirement.id", "operation": "delete" },
+    {
+      "id": "empty-observable-behavior",
+      "path": "records.0.requirement.observableBehavior",
+      "operation": "replace",
+      "value": ""
+    },
+    {
+      "id": "missing-scenarios",
+      "path": "records.0.requirement.scenarios",
+      "operation": "replace",
+      "value": []
+    },
+    { "id": "missing-task-owner", "path": "records.0.task.owner", "operation": "delete" },
+    {
+      "id": "ambiguous-dependency",
+      "path": "records.0.task.dependencies",
+      "operation": "replace",
+      "value": ["?"]
+    },
+    {
+      "id": "missing-affected-paths",
+      "path": "records.0.task.affectedPaths",
+      "operation": "replace",
+      "value": []
+    },
+    {
+      "id": "missing-packages",
+      "path": "records.0.task.packages",
+      "operation": "replace",
+      "value": []
+    },
+    {
+      "id": "missing-acceptance",
+      "path": "records.0.task.acceptanceCriteria",
+      "operation": "replace",
+      "value": []
+    },
+    {
+      "id": "missing-expected-evidence",
+      "path": "records.0.task.expectedEvidence",
+      "operation": "replace",
+      "value": []
+    },
+    {
+      "id": "missing-code-paths",
+      "path": "records.0.implementation.codePaths",
+      "operation": "replace",
+      "value": []
+    },
+    {
+      "id": "missing-verification-receipts",
+      "path": "records.0.verification.receipts",
+      "operation": "replace",
+      "value": []
+    },
+    {
+      "id": "invalid-integrated-commit",
+      "path": "records.0.integration.integratedCommit",
+      "operation": "replace",
+      "value": "local-only"
+    },
+    {
+      "id": "ambiguous-remote-result",
+      "path": "records.0.integration.remote.status",
+      "operation": "replace",
+      "value": "maybe"
+    },
+    {
+      "id": "missing-release-evidence",
+      "path": "records.0.delivery.release.evidenceIds",
+      "operation": "replace",
+      "value": []
+    },
+    {
+      "id": "missing-consumers",
+      "path": "records.0.delivery.consumers",
+      "operation": "replace",
+      "value": []
+    },
+    {
+      "id": "ambiguous-production",
+      "path": "records.0.delivery.production.status",
+      "operation": "replace",
+      "value": "unknown"
+    },
+    {
+      "id": "incomplete-blocker",
+      "path": "records.0.blockers.0.nextAction",
+      "operation": "delete"
+    },
+    {
+      "id": "unknown-trace-edge",
+      "path": "records.0.untrackedClaim",
+      "operation": "replace",
+      "value": true
+    },
+    {
+      "id": "unknown-scenario-reference",
+      "path": "records.0.scenarioIds",
+      "operation": "replace",
+      "value": ["SCN-999"]
+    },
+    {
+      "id": "self-dependency",
+      "path": "records.0.task.dependencies",
+      "operation": "replace",
+      "value": ["TASK-001"]
+    },
+    {
+      "id": "verification-aggregate-conflict",
+      "path": "records.0.verification.receipts.0.status",
+      "operation": "replace",
+      "value": "fail"
+    },
+    {
+      "id": "tested-tree-mismatch",
+      "path": "records.0.integration.testedTree",
+      "operation": "replace",
+      "value": "4444444444444444444444444444444444444444"
+    },
+    {
+      "id": "remote-sha-mismatch",
+      "path": "records.0.integration.remote.observedSha",
+      "operation": "replace",
+      "value": "5555555555555555555555555555555555555555"
+    },
+    {
+      "id": "consumer-version-mismatch",
+      "path": "records.0.delivery.consumers.0.resolvedVersion",
+      "operation": "replace",
+      "value": "7.9.9"
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent.megabyte.space/schemas/theme-tools-release-receipt.schema.json",
+  "title": "theme.tools blocked release receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "taskId",
+    "state",
+    "observedAt",
+    "package",
+    "registryObservation",
+    "releaseWorkflow",
+    "qualificationRuns",
+    "blockers",
+    "resumableAction",
+    "claimLimits"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "taskId": { "const": "8.3" },
+    "state": { "const": "BLOCKED" },
+    "observedAt": { "type": "string", "format": "date-time" },
+    "package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "sourceVersion",
+        "expectedNextVersion",
+        "sourceCommit",
+        "sourceRepository",
+        "changesetPath",
+        "changesetApplied"
+      ],
+      "properties": {
+        "name": { "const": "@theme.tools/sdk" },
+        "sourceVersion": { "type": "string", "minLength": 1 },
+        "expectedNextVersion": { "type": "string", "minLength": 1 },
+        "sourceCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "sourceRepository": { "type": "string", "minLength": 1 },
+        "changesetPath": { "type": "string", "minLength": 1 },
+        "changesetApplied": { "const": false }
+      }
+    },
+    "registryObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authoritativeRegistry",
+        "aliasRegistry",
+        "command",
+        "status",
+        "observedVersion",
+        "expectedVersionPresent",
+        "integrity",
+        "tarball"
+      ],
+      "properties": {
+        "authoritativeRegistry": { "type": "string", "minLength": 1 },
+        "aliasRegistry": { "type": "string", "minLength": 1 },
+        "command": { "type": "string", "minLength": 1 },
+        "status": { "const": "expected-version-absent" },
+        "observedVersion": { "type": "string", "minLength": 1 },
+        "expectedVersionPresent": { "const": false },
+        "integrity": { "type": "string", "minLength": 1 },
+        "tarball": { "type": "string", "minLength": 1 }
+      }
+    },
+    "releaseWorkflow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "approvedTriggers", "matchingRuns", "manualRerunSafe"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "approvedTriggers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "matchingRuns": { "type": "array", "items": { "type": "integer" } },
+        "manualRerunSafe": { "const": false }
+      }
+    },
+    "qualificationRuns": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "runId",
+          "jobId",
+          "url",
+          "sourceCommit",
+          "status",
+          "stepsStarted",
+          "annotation"
+        ],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "runId": { "type": "integer" },
+          "jobId": { "type": "integer" },
+          "url": { "type": "string", "minLength": 1 },
+          "sourceCommit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+          "status": { "const": "failure" },
+          "stepsStarted": { "const": false },
+          "annotation": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "owner", "reason"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "owner": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "resumableAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["owner", "preconditions", "steps", "stopCondition"],
+      "properties": {
+        "owner": { "type": "string", "minLength": 1 },
+        "preconditions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "stopCondition": { "type": "string", "minLength": 1 }
+      }
+    },
+    "claimLimits": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  }
+}

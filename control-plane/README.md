@@ -1,5 +1,9 @@
 # claude-bootstrap
 
+Policy projection and source-selection operations use the [instruction policy runbook](INSTRUCTION-POLICY.md). It defines supported user-controlled instruction layers, provider limits, managed-block ownership, explicit-source update/rollback, and troubleshooting without claiming provider-controlled prompt authority.
+
+Parallel task ownership, integration-writer leases, interruption/resume, handoff, clean-worktree reconciliation and failure recovery use the [durable execution runbook](DURABLE-EXECUTION.md).
+
 The canonical, portable **Claude Code control plane**. Vendor it into any GitHub
 repo and a Claude Code **web** session — an isolated cloud sandbox that clones the
 repo and where the laptop's `~/.claude` does **not** load — can autonomously

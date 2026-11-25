@@ -1,0 +1,7 @@
+<!-- EMDASH:POLICY:BEGIN -->
+first
+<!-- EMDASH:POLICY:END -->
+
+<!-- EMDASH:POLICY:BEGIN -->
+second
+<!-- EMDASH:POLICY:END -->

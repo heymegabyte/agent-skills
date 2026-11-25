@@ -1,7 +1,7 @@
 ---
 name: openspec-operating-contract
 description: Universal OpenSpec governance for every task and every durable repository mutation across Claude, Codex, Gemini, OpenCode, and agentskills-compatible harnesses.
-priority: 1
+priority: 3
 pack: "core"
 triggers: []
 paths:
@@ -9,6 +9,8 @@ paths:
 ---
 
 # OpenSpec Operating Contract
+
+Machine-readable requirement-to-delivery identifiers, lifecycle, query commands, sync/archive rules, and strict MCP inventory authoring are defined in `control-plane/DELIVERY-TRACE.md`. Regenerate and inspect `delivery-trace.json` through `bin/openspec-delivery-trace.ts`; do not maintain manual trace tables or treat checked tasks as delivery evidence.
 
 OpenSpec is the universal intake, planning, and evidence layer. **Every task** is classified against the resolved OpenSpec root before implementation begins.
 
@@ -33,7 +35,7 @@ Do not stop merely because proposal artifacts are ready, and never ask routine �
 
 Pause only for an approval-required action, new external authority or spend, an irreversible business/legal/brand decision, a genuine blocker, or material ambiguity with divergent outcomes that evidence cannot resolve. Complete every decision-independent slice before surfacing the gated remainder.
 
-When an applicable user, repository, change, or governance policy requires Figma, OpenSpec must reference the approved artifact before `apply`; proposal/design records its URL, node/version, approval evidence, responsive/state coverage and scope, and `verify` compares implementation with that revision. Otherwise, Figma is optional and OpenSpec records proportionate design evidence without inventing an approval dependency. See `[[figma-design-approval-gate]]`.
+For UI changes, OpenSpec records the theme.tools component/template/library selections, typed fixture contract, responsive and interaction states, browser-visible acceptance evidence, and the failing tests that drive feature implementation. Verification compares the rendered application with those acceptance criteria and does not invent an external design-approval dependency.
 
 Initialize or refresh from the repository root with the currently installed harnesses:
 
@@ -45,11 +47,12 @@ Use the native generated commands/skills; do not duplicate or hand-edit them. A 
 
 Enable the expanded profile for complex work (`openspec config profile`, then `openspec update`). Treat `openspec/specs/` as durable truth and `openspec/changes/` as in-flight deltas. Every design must cover observable acceptance, security/permissions, telemetry, rollout, rollback and operational ownership when applicable. Run strict validation and verification before archive. After upgrading OpenSpec, run `openspec update` and review its diff.
 
-## Frontier Architect Mandate (`claude` / `codex` / `antigravity` ONLY — NEVER `opencode`)
+## Frontier Architect Mandate (`claude` / `codex` / `gemini` / approved `antigravity` — NEVER `opencode`)
 
-- **Claude Code (`claude`) with a fully-loaded, informative hydrated context** (or **`codex`** / **`antigravity`** when operating in those frontier harnesses) is the **Architect** who authors OpenSpec specifications (`proposal.md`, `design.md`, `tasks.md`, and `specs/<capability>/spec.md`).
-- **NEVER spell out the architectural, business-rule, or application details of an OpenSpec with `opencode` (DeepSeek).** Always prefer `claude` (with full hydrated context), `codex`, or `antigravity` to author OpenSpec artifacts. `opencode` is strictly reserved for bounded mechanical execution *after* the Frontier Architect has authored and locked the OpenSpec contract.
-- Include `> **Architect:** claude | codex | antigravity` in `proposal.md` / `design.md` so automated verifiers (`~/.agentskills/bin/openspec-paperclip-sync.ts`) can enforce frontier authorship.
+- Claude, Codex, Gemini, or an approved Antigravity frontier harness may author OpenSpec specifications only after an explicit assignment is captured in a change-bound, digest-verified architect-assignment receipt conforming to `schemas/orchestration-run.schema.json` and validated by `bin/validate-architect-assignment.ts`.
+- A name, heading, `**Architect Role:** assigned` label, model identity, or self-assertion is not authority. The receipt must identify the change, assigner, architect and model family, authority evidence, active status, time, and digest.
+- **NEVER spell out the architectural, business-rule, or application details of an OpenSpec with `opencode` (DeepSeek).** OpenCode is strictly reserved for bounded execution after the assigned frontier architect has authored and locked the OpenSpec contract.
+- Human-readable architect metadata in `proposal.md` / `design.md` is an index into the receipt, not proof by itself. Validators fail closed when the receipt is absent, stale, mismatched, fabricated, or names an ineligible family.
 
 ## Parallel Triad OpenSpec & Paperclip Registration Mandate
 

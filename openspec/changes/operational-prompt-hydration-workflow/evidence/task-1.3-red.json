@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "1.0.0",
+  "task": "1.3",
+  "capturedAt": "2026-11-25T00:00:00.000Z",
+  "classification": "expected-red-contract",
+  "fixture": "fixtures/prompt-hydration/operational-contract/scenarios.json",
+  "test": "tests/prompt-hydration-contract.red.test.ts",
+  "focusedCommand": "node --experimental-strip-types --test tests/prompt-hydration-contract.red.test.ts",
+  "focusedResult": {
+    "status": "FAIL",
+    "exitCode": 1,
+    "tests": 7,
+    "passed": 0,
+    "failed": 7,
+    "failureContracts": [
+      {
+        "contract": "named Prompt Hydration first stage and intended outcome",
+        "observed": "stage and intendedOutcome are absent"
+      },
+      {
+        "contract": "sparse applicability coverage matrix",
+        "observed": "coverageMatrix is absent"
+      },
+      { "contract": "structured assumption ledger", "observed": "assumptionLedger is absent" },
+      {
+        "contract": "honest single-provider conference fallback",
+        "observed": "runtime unconditionally invokes unavailable Claude before the available Codex pass"
+      },
+      {
+        "contract": "MCP catalog capabilities and per-MCP records",
+        "observed": "domainInventory.mcpCatalog is absent"
+      },
+      {
+        "contract": "scoped preference correction",
+        "observed": "correction scope and excluded scopes are absent"
+      },
+      {
+        "contract": "narrow-fix impact, regression, and improvement plan",
+        "observed": "named stage and focusedPlan are absent"
+      }
+    ]
+  },
+  "baselineCommand": "node --experimental-strip-types --test tests/prompt-hydrator.test.ts tests/evidence-gated-deliberation.test.ts",
+  "baselineResult": {
+    "status": "PASS",
+    "exitCode": 0,
+    "tests": 17,
+    "passed": 17,
+    "failed": 0
+  },
+  "interpretation": "The existing hydrator and deliberation tests pass, while every new assertion fails on a missing observable contract. These are behavioral red fixtures, not syntax, import, timeout, or setup failures."
+}

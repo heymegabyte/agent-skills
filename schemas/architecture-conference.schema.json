@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent.megabyte.space/schemas/architecture-conference.schema.json",
+  "title": "Codex-led architecture conference resolution",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "receiptId",
+    "lead",
+    "exchanges",
+    "decisions",
+    "alternatives",
+    "disagreements",
+    "evidence",
+    "unresolvedAssumptions",
+    "converged"
+  ],
+  "properties": {
+    "receiptId": { "$ref": "#/$defs/digest" },
+    "lead": { "$ref": "#/$defs/assignment" },
+    "exchanges": { "type": "array", "minItems": 3, "items": { "$ref": "#/$defs/digest" } },
+    "decisions": { "type": "array", "items": { "$ref": "#/$defs/decision" } },
+    "alternatives": { "type": "array", "items": { "$ref": "#/$defs/alternative" } },
+    "disagreements": { "type": "array", "items": { "$ref": "#/$defs/disagreement" } },
+    "evidence": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "unresolvedAssumptions": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "converged": { "type": "boolean" }
+  },
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "assignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["participantId", "family", "responsibility"],
+      "properties": {
+        "participantId": { "type": "string", "minLength": 1 },
+        "family": { "const": "codex" },
+        "responsibility": { "const": "lead-resolution" }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["topic", "position"],
+      "properties": {
+        "topic": { "type": "string", "minLength": 1 },
+        "position": { "type": "string", "minLength": 1 }
+      }
+    },
+    "alternative": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["topic", "option", "disposition", "basis"],
+      "properties": {
+        "topic": { "type": "string", "minLength": 1 },
+        "option": { "type": "string", "minLength": 1 },
+        "disposition": { "enum": ["retain", "reject", "defer"] },
+        "basis": { "type": "string", "minLength": 1 }
+      }
+    },
+    "disagreement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["topic", "position", "evidence", "resolved"],
+      "properties": {
+        "topic": { "type": "string", "minLength": 1 },
+        "position": { "type": "string", "minLength": 1 },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "resolved": { "type": "boolean" }
+      }
+    }
+  }
+}

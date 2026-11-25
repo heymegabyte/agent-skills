@@ -10,9 +10,10 @@
  */
 
 import { spawn, spawnSync } from "node:child_process";
-import { chmodSync, existsSync, mkdirSync, readFileSync, symlinkSync, writeFileSync } from "node:fs";
+import { chmodSync, existsSync, lstatSync, mkdirSync, readFileSync, realpathSync, symlinkSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 interface MachineDescriptor {
   readonly machineId: string;
@@ -45,6 +46,108 @@ interface RemoteConvergencePayload {
 }
 
 const HOME = homedir();
+
+export interface SourceSelection {
+  readonly sourceRoot: string;
+  readonly expectedRevision: string;
+  readonly installedLink: string;
+}
+
+export interface SourceSelectionReceipt extends SourceSelection {
+  readonly status: "verified";
+  readonly actualRevision: string;
+  readonly remoteMainRevision: string;
+  readonly dirty: false;
+  readonly installedLinkState: "absent" | "selected-source";
+}
+
+export class FleetSourceError extends Error {
+  readonly classification: string;
+
+  constructor(classification: string, message: string) {
+    super(message);
+    this.name = "FleetSourceError";
+    this.classification = classification;
+  }
+}
+
+function git(sourceRoot: string, args: readonly string[]): string {
+  const result = spawnSync("git", ["-C", sourceRoot, ...args], { encoding: "utf8" });
+  if (result.status !== 0) {
+    throw new FleetSourceError("invalid-source-root", (result.stderr || result.stdout).trim() || `git ${args.join(" ")} failed`);
+  }
+  return result.stdout.trim();
+}
+
+export function verifyFleetSource(selection: SourceSelection): SourceSelectionReceipt {
+  const sourceRoot = realpathSync(selection.sourceRoot);
+  if (!/^[0-9a-f]{40}$/.test(selection.expectedRevision)) {
+    throw new FleetSourceError("invalid-expected-revision", "--expected-revision must be a full 40-character Git SHA");
+  }
+  const actualRevision = git(sourceRoot, ["rev-parse", "HEAD"]);
+  if (actualRevision !== selection.expectedRevision) {
+    throw new FleetSourceError("source-revision-mismatch", `selected source is ${actualRevision}, expected ${selection.expectedRevision}`);
+  }
+  const dirty = git(sourceRoot, ["status", "--porcelain=v1"]);
+  if (dirty) {
+    throw new FleetSourceError("dirty-selected-source", `selected source has ${dirty.split(/\r?\n/).length} dirty path(s)`);
+  }
+  const remoteMainRevision = git(sourceRoot, ["rev-parse", "--verify", "origin/main"]);
+  if (remoteMainRevision !== actualRevision) {
+    throw new FleetSourceError("divergent-selected-source", `selected source ${actualRevision} differs from origin/main ${remoteMainRevision}`);
+  }
+  let installedLinkState: SourceSelectionReceipt["installedLinkState"] = "absent";
+  if (existsSync(selection.installedLink)) {
+    if (!lstatSync(selection.installedLink).isSymbolicLink()) {
+      throw new FleetSourceError("ambiguous-installed-source", `${selection.installedLink} exists but is not a symbolic link`);
+    }
+    const installedSource = realpathSync(selection.installedLink);
+    if (installedSource !== sourceRoot) {
+      throw new FleetSourceError("ambiguous-installed-source", `${selection.installedLink} resolves to ${installedSource}, not selected source ${sourceRoot}`);
+    }
+    installedLinkState = "selected-source";
+  }
+  return {
+    sourceRoot,
+    expectedRevision: selection.expectedRevision,
+    installedLink: selection.installedLink,
+    status: "verified",
+    actualRevision,
+    remoteMainRevision,
+    dirty: false,
+    installedLinkState,
+  };
+}
+
+function parseSourceSelection(args: readonly string[]): { selection: SourceSelection; checkSource: boolean; json: boolean } {
+  const values = new Map<string, string>();
+  let checkSource = false;
+  let json = false;
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+    if (arg === "--check-source") checkSource = true;
+    else if (arg === "--json") json = true;
+    else if (["--source-root", "--expected-revision", "--installed-link"].includes(arg)) {
+      const value = args[++index];
+      if (!value || value.startsWith("--")) throw new FleetSourceError("invalid-arguments", `${arg} requires a value`);
+      values.set(arg, value);
+    } else throw new FleetSourceError("invalid-arguments", `unknown argument: ${arg}`);
+  }
+  const sourceRoot = values.get("--source-root");
+  const expectedRevision = values.get("--expected-revision");
+  if (!sourceRoot || !expectedRevision) {
+    throw new FleetSourceError("explicit-source-required", "--source-root and --expected-revision are required");
+  }
+  return {
+    selection: {
+      sourceRoot: resolve(sourceRoot),
+      expectedRevision,
+      installedLink: resolve(values.get("--installed-link") ?? join(HOME, ".agentskills")),
+    },
+    checkSource,
+    json,
+  };
+}
 
 const FLEET_TARGETS: readonly FleetHostTarget[] = [
   {
@@ -345,7 +448,14 @@ if (payload.cloudflareCaScriptBase64) {
 process.stdout.write("Converged " + os.hostname() + "\\n");
 `;
 
-async function main(): Promise<void> {
+async function main(args: readonly string[] = process.argv.slice(2)): Promise<void> {
+  const parsed = parseSourceSelection(args);
+  const sourceReceipt = verifyFleetSource(parsed.selection);
+  if (parsed.checkSource) {
+    process.stdout.write(parsed.json ? `${JSON.stringify(sourceReceipt)}\n` : `source verified: ${sourceReceipt.actualRevision}\n`);
+    return;
+  }
+  process.stdout.write(`Source verified: ${sourceReceipt.sourceRoot}@${sourceReceipt.actualRevision}\n`);
   const ghToken = runSyncCommand("gh", ["auth", "token"]).stdout.trim();
   const installDoctorRepo = join(HOME, "emdash", "repositories", "install.doctor");
   const cfCaScriptPath = join(installDoctorRepo, "home", "dot_local", "bin", "executable_ensure-cloudflare-zt-ca.sh");
@@ -380,9 +490,9 @@ async function main(): Promise<void> {
         const localLink = join(HOME, "ai", "repos", "agent-skills");
         mkdirSync(dirname(localLink), { recursive: true });
         if (!existsSync(localLink)) {
-          symlinkSync(join(HOME, ".agentskills"), localLink);
+          symlinkSync(sourceReceipt.sourceRoot, localLink);
         }
-        process.stdout.write("agentskills: local linked\n");
+        process.stdout.write(`agentskills: local linked from ${sourceReceipt.actualRevision}\n`);
         return;
       }
       const prepScript = `
@@ -403,10 +513,10 @@ async function main(): Promise<void> {
         "-az",
         "--delete",
         "--exclude=.git/objects/pack/*.tmp",
-        `${join(HOME, ".agentskills")}/`,
+        `${sourceReceipt.sourceRoot}/`,
         `${target.sshTarget}:~/ai/repos/agent-skills/`,
       ]);
-      process.stdout.write(`agentskills: ${target.key} rsynced\n`);
+      process.stdout.write(`agentskills: ${target.key} rsynced from ${sourceReceipt.actualRevision}\n`);
     }),
   );
 
@@ -440,4 +550,15 @@ async function main(): Promise<void> {
   }
 }
 
-void main();
+if (import.meta.url === pathToFileURL(process.argv[1] || "").href) {
+  main().catch((error) => {
+    const managed = error instanceof FleetSourceError
+      ? error
+      : new FleetSourceError("unexpected-error", error instanceof Error ? error.message : String(error));
+    const json = process.argv.includes("--json");
+    process.stderr.write(json
+      ? `${JSON.stringify({ ok: false, classification: managed.classification, message: managed.message })}\n`
+      : `${managed.classification}: ${managed.message}\n`);
+    process.exitCode = 1;
+  });
+}

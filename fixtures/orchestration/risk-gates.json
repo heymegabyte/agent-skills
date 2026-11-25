@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "id": "auth",
+      "prompt": "Change authentication and credential issuance",
+      "category": "auth-security"
+    },
+    { "id": "security", "prompt": "Modify tenant isolation security", "category": "auth-security" },
+    { "id": "payments", "prompt": "Charge a customer and issue a refund", "category": "payments" },
+    {
+      "id": "destructive",
+      "prompt": "Delete and purge production data irreversibly",
+      "category": "destructive-operation"
+    },
+    {
+      "id": "external-authority",
+      "prompt": "Purchase a service and send an email to a customer",
+      "category": "external-authority"
+    }
+  ]
+}

@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent.megabyte.space/schemas/operational-evaluation-report.schema.json",
+  "title": "Operational prompt hydration evaluation report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "evaluationId",
+    "changeId",
+    "evaluatedAt",
+    "execution",
+    "results",
+    "summary",
+    "claimLimits"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "evaluationId": { "$ref": "#/$defs/id" },
+    "changeId": { "$ref": "#/$defs/id" },
+    "evaluatedAt": { "type": "string", "format": "date-time" },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "runtimeRevision", "fixtureDigests", "networkUsed", "liveProvidersUsed"],
+      "properties": {
+        "mode": { "const": "controlled-deterministic" },
+        "runtimeRevision": { "type": "string", "minLength": 1 },
+        "fixtureDigests": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/digestRecord" }
+        },
+        "networkUsed": { "const": false },
+        "liveProvidersUsed": { "const": false }
+      }
+    },
+    "results": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/result" }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "passed", "failed"],
+      "properties": {
+        "status": { "const": "PASS" },
+        "passed": { "const": 4 },
+        "failed": { "const": 0 }
+      }
+    },
+    "claimLimits": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,127}$" },
+    "digestRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "status", "observed"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "status": { "const": "PASS" },
+        "observed": { "type": "string", "minLength": 1 }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strength", "runtime", "fixtures", "providerFamilies", "independent"],
+      "properties": {
+        "strength": { "const": "controlled" },
+        "runtime": { "type": "string", "minLength": 1 },
+        "fixtures": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "providerFamilies": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "independent": { "type": "boolean" }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scenarioId",
+        "requirementIds",
+        "status",
+        "assertions",
+        "proportionality",
+        "provenance"
+      ],
+      "properties": {
+        "scenarioId": {
+          "enum": [
+            "one-sentence-mcp-catalog",
+            "single-provider-fallback",
+            "narrow-bug-fix",
+            "scoped-correction"
+          ]
+        },
+        "requirementIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "status": { "const": "PASS" },
+        "assertions": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/assertion" }
+        },
+        "proportionality": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "basis"],
+          "properties": {
+            "status": { "const": "PASS" },
+            "basis": { "type": "string", "minLength": 1 }
+          }
+        },
+        "provenance": { "$ref": "#/$defs/provenance" }
+      }
+    }
+  }
+}

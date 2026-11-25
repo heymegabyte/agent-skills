@@ -1,0 +1,128 @@
+{
+  "$schema": "../schemas/instruction-targets.schema.json",
+  "schemaVersion": "1.0.0",
+  "canonicalPolicy": {
+    "policyId": "operational-prompt-hydration",
+    "policyVersion": "1.0.0",
+    "sourcePath": "policies/operational-prompt-hydration.md",
+    "sourceDigest": "sha256:4833e290e756aecb61e14bdcff1be6f01137730bc3a27b7445eb1a78dcad960e",
+    "coreDigest": "sha256:05ee082f51394e1ad5e106e7991c504903412d64487eb7a62dcd2185bdb9bd65"
+  },
+  "authorityBoundary": {
+    "instructionAuthority": "user-controlled-customization-only",
+    "providerControlledAuthorityClaimed": false,
+    "statement": "Targets project policy only through repository, plugin, manifest, global-file, profile, and approved launch surfaces. They do not replace or claim control over provider system or developer instructions."
+  },
+  "targets": [
+    {
+      "id": "repository",
+      "surface": "repository instruction entry files",
+      "supportLevel": "generated",
+      "deliveryMechanism": "managed-block",
+      "nativePromptHook": false,
+      "canonicalSourceDigest": "sha256:4833e290e756aecb61e14bdcff1be6f01137730bc3a27b7445eb1a78dcad960e",
+      "authority": "user-controlled-customization-only",
+      "evidenceRequired": "managed-block check bound to source revision"
+    },
+    {
+      "id": "plugin",
+      "surface": "agent-skills plugin bundle",
+      "supportLevel": "installed",
+      "deliveryMechanism": "plugin-bundle",
+      "nativePromptHook": false,
+      "canonicalSourceDigest": "sha256:4833e290e756aecb61e14bdcff1be6f01137730bc3a27b7445eb1a78dcad960e",
+      "authority": "user-controlled-customization-only",
+      "evidenceRequired": "installed bundle digest and explicit source revision"
+    },
+    {
+      "id": "manifest",
+      "surface": "generated harness manifests",
+      "supportLevel": "generated",
+      "deliveryMechanism": "generated-manifest",
+      "nativePromptHook": false,
+      "canonicalSourceDigest": "sha256:4833e290e756aecb61e14bdcff1be6f01137730bc3a27b7445eb1a78dcad960e",
+      "authority": "user-controlled-customization-only",
+      "evidenceRequired": "manifest schema and canonical digest check"
+    },
+    {
+      "id": "coordinator",
+      "surface": "approved coordinator launch profile",
+      "supportLevel": "launch-bound",
+      "deliveryMechanism": "launch-receipt",
+      "nativePromptHook": false,
+      "canonicalSourceDigest": "sha256:4833e290e756aecb61e14bdcff1be6f01137730bc3a27b7445eb1a78dcad960e",
+      "authority": "user-controlled-customization-only",
+      "evidenceRequired": "fresh launch receipt naming policy, digest, revision, role, and provenance"
+    },
+    {
+      "id": "worker",
+      "surface": "approved worker launch profile",
+      "supportLevel": "launch-bound",
+      "deliveryMechanism": "launch-receipt",
+      "nativePromptHook": false,
+      "canonicalSourceDigest": "sha256:4833e290e756aecb61e14bdcff1be6f01137730bc3a27b7445eb1a78dcad960e",
+      "authority": "user-controlled-customization-only",
+      "evidenceRequired": "fresh delegated launch receipt with matching coordinator digest and invoked skill"
+    },
+    {
+      "id": "paperclip",
+      "surface": "Paperclip agent profile",
+      "supportLevel": "profile-wrapper",
+      "deliveryMechanism": "explicit-wrapper",
+      "nativePromptHook": false,
+      "canonicalSourceDigest": "sha256:4833e290e756aecb61e14bdcff1be6f01137730bc3a27b7445eb1a78dcad960e",
+      "authority": "user-controlled-customization-only",
+      "evidenceRequired": "profile or wrapper fixture; native interception must not be claimed"
+    },
+    {
+      "id": "openclaw",
+      "surface": "OpenClaw agent profile",
+      "supportLevel": "profile-wrapper",
+      "deliveryMechanism": "explicit-wrapper",
+      "nativePromptHook": false,
+      "canonicalSourceDigest": "sha256:4833e290e756aecb61e14bdcff1be6f01137730bc3a27b7445eb1a78dcad960e",
+      "authority": "user-controlled-customization-only",
+      "evidenceRequired": "profile or wrapper fixture; native interception must not be claimed"
+    },
+    {
+      "id": "codex",
+      "surface": "Codex AGENTS.md and approved subscription wrapper",
+      "supportLevel": "installed",
+      "deliveryMechanism": "managed-block",
+      "nativePromptHook": false,
+      "canonicalSourceDigest": "sha256:4833e290e756aecb61e14bdcff1be6f01137730bc3a27b7445eb1a78dcad960e",
+      "authority": "user-controlled-customization-only",
+      "evidenceRequired": "installed-file digest plus bounded subscription-CLI loading receipt"
+    },
+    {
+      "id": "claude",
+      "surface": "Claude CLAUDE.md, plugin, and UserPromptSubmit hook",
+      "supportLevel": "installed",
+      "deliveryMechanism": "plugin-bundle",
+      "nativePromptHook": true,
+      "canonicalSourceDigest": "sha256:4833e290e756aecb61e14bdcff1be6f01137730bc3a27b7445eb1a78dcad960e",
+      "authority": "user-controlled-customization-only",
+      "evidenceRequired": "installed plugin digest, hook fixture, and bounded subscription-CLI loading receipt"
+    },
+    {
+      "id": "gemini",
+      "surface": "Gemini GEMINI.md and explicit entry wrapper",
+      "supportLevel": "installed",
+      "deliveryMechanism": "managed-block",
+      "nativePromptHook": false,
+      "canonicalSourceDigest": "sha256:4833e290e756aecb61e14bdcff1be6f01137730bc3a27b7445eb1a78dcad960e",
+      "authority": "user-controlled-customization-only",
+      "evidenceRequired": "installed-file digest and wrapper fixture; no live claim without executable provider probe"
+    },
+    {
+      "id": "opencode",
+      "surface": "OpenCode AGENTS.md and approved DeepSeek launcher",
+      "supportLevel": "installed",
+      "deliveryMechanism": "managed-block",
+      "nativePromptHook": false,
+      "canonicalSourceDigest": "sha256:4833e290e756aecb61e14bdcff1be6f01137730bc3a27b7445eb1a78dcad960e",
+      "authority": "user-controlled-customization-only",
+      "evidenceRequired": "installed-file digest plus brokered-launch receipt or explicit unavailable result"
+    }
+  ]
+}

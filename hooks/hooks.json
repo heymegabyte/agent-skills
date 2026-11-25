@@ -7,7 +7,7 @@
           {
             "type": "command",
             "command": "node ${CLAUDE_PLUGIN_ROOT}/bin/prompt-hydration-hook.mjs",
-            "timeout": 15
+            "timeout": 25
           }
         ]
       }

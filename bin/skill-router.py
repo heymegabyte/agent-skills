@@ -22,13 +22,18 @@ Usage:
 from __future__ import annotations
 
 import hashlib
+import hmac
+import ast
+import fnmatch
 import json
+import math
 import os
 import re
 import sqlite3
 import subprocess
 import sys
 import time
+from datetime import datetime
 from pathlib import Path
 from urllib.error import URLError
 from urllib.request import Request, urlopen
@@ -38,7 +43,8 @@ from urllib.request import Request, urlopen
 # -----------------------------------------------------------------------------
 HOME = Path.home()
 CLAUDE_DIR = HOME / ".claude"
-PLUGIN_DIR = CLAUDE_DIR / "plugins" / "heymegabyte-agent-skills"
+SOURCE_ROOT = Path(__file__).resolve().parents[1]
+PLUGIN_DIR = Path(os.environ.get("AGENT_SKILLS_ROOT", str(SOURCE_ROOT))).resolve()
 DATA_DIR = CLAUDE_DIR / "data"
 PROJECTS_DIR = CLAUDE_DIR / "projects"
 PACKS_DIR = PLUGIN_DIR / "_packs"
@@ -116,8 +122,14 @@ def parse_frontmatter(text: str) -> tuple[dict, str]:
             fm[key] = current_list
         else:
             current_list = None
-            # Strip enclosing quotes from val
-            fm[key] = val
+            if val.startswith("[") and val.endswith("]"):
+                try:
+                    parsed = ast.literal_eval(val)
+                    fm[key] = parsed if isinstance(parsed, list) else val
+                except (ValueError, SyntaxError):
+                    fm[key] = val
+            else:
+                fm[key] = val
     return fm, body
 
 
@@ -144,16 +156,18 @@ def discover_skills() -> list[dict]:
             continue
         fm, body = parse_frontmatter(text)
         skill_id = skill_md.parent.name
+        description = fm.get("description", "") or next((line[2:].strip() for line in body.splitlines() if line.startswith("# ")), "")
         out.append({
             "id": skill_id,
             "type": "skill",
             "path": str(skill_md.relative_to(PLUGIN_DIR)),
             "name": fm.get("name", skill_id),
-            "description": fm.get("description", ""),
+            "description": description,
             "priority": _parse_priority(fm.get("priority", 3)),
             "triggers": fm.get("triggers", []) if isinstance(fm.get("triggers"), list) else [],
             "paths": fm.get("paths", []) if isinstance(fm.get("paths"), list) else [],
             "pack": fm.get("pack", ""),
+            "depends_on": fm.get("dependsOn", []) if isinstance(fm.get("dependsOn"), list) else [],
             "body": body,
         })
     # Rule files
@@ -164,16 +178,18 @@ def discover_skills() -> list[dict]:
             continue
         fm, body = parse_frontmatter(text)
         rid = "rules/" + rule_md.stem
+        description = fm.get("description", "") or next((line[2:].strip() for line in body.splitlines() if line.startswith("# ")), "")
         out.append({
             "id": rid,
             "type": "rule",
             "path": str(rule_md.relative_to(PLUGIN_DIR)),
             "name": rule_md.stem,
-            "description": fm.get("description", ""),
+            "description": description,
             "priority": _parse_priority(fm.get("priority", 3)),
             "triggers": fm.get("triggers", []) if isinstance(fm.get("triggers"), list) else [],
             "paths": fm.get("paths", []) if isinstance(fm.get("paths"), list) else [],
             "pack": fm.get("pack", ""),
+            "depends_on": fm.get("dependsOn", []) if isinstance(fm.get("dependsOn"), list) else [],
             "body": body,
         })
     return out
@@ -187,16 +203,12 @@ def embed_text(text: str, api_key: str | None = None) -> list[float]:
     Auth: CF global key (X-Auth-Email + X-Auth-Key); account from env or const."""
     account = os.environ.get("CF_ACCOUNT_ID") or CF_ACCOUNT_ID
     cf_key = api_key or get_secret("CLOUDFLARE_API_KEY")
-    cf_email = os.environ.get("CLOUDFLARE_EMAIL") or "blzalewski@gmail.com"
+    account = os.environ.get("CLOUDFLARE_ACCOUNT_ID") or get_secret("CLOUDFLARE_ACCOUNT_ID") or account
     payload = json.dumps({"text": [text[:4000]]}).encode()
     req = Request(
         f"https://api.cloudflare.com/client/v4/accounts/{account}/ai/run/{CF_EMBED_MODEL}",
         data=payload,
-        headers={
-            "X-Auth-Email": cf_email,
-            "X-Auth-Key": cf_key or "",
-            "Content-Type": "application/json",
-        },
+        headers={"Authorization": f"Bearer {cf_key or ''}", "Content-Type": "application/json"},
         method="POST",
     )
     with urlopen(req, timeout=20) as r:
@@ -227,6 +239,7 @@ CREATE TABLE IF NOT EXISTS skills (
   triggers TEXT NOT NULL DEFAULT '[]',
   paths TEXT NOT NULL DEFAULT '[]',
   pack TEXT NOT NULL DEFAULT '',
+  depends_on TEXT NOT NULL DEFAULT '[]',
   body_hash TEXT NOT NULL,
   embedding TEXT,
   tokens INTEGER NOT NULL DEFAULT 0,
@@ -240,6 +253,9 @@ def db_open() -> sqlite3.Connection:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     conn.executescript(SCHEMA)
+    columns = {row[1] for row in conn.execute("PRAGMA table_info(skills)").fetchall()}
+    if "depends_on" not in columns:
+        conn.execute("ALTER TABLE skills ADD COLUMN depends_on TEXT NOT NULL DEFAULT '[]'")
     return conn
 
 
@@ -253,7 +269,12 @@ def estimate_tokens(s: str) -> int:
 
 
 
-def cmd_sync_metadata():
+def source_digest(skills: list[dict]) -> str:
+    payload = [{key: skill.get(key) for key in ("id", "name", "description", "priority", "triggers", "paths", "pack", "depends_on", "body")} for skill in skills]
+    return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+
+
+def cmd_sync_metadata(quiet: bool = False):
     """Fast, KEYLESS sync of routing metadata (priority/pack/triggers/paths/tokens)
     for every skill — no embeddings. Fixes the stale-DB rot: rebuild-index skips
     rows whose BODY is unchanged, so frontmatter-only edits (priority/pack) never
@@ -266,28 +287,35 @@ def cmd_sync_metadata():
         cur = conn.execute("SELECT id FROM skills WHERE id=?", (sk["id"],))
         if cur.fetchone():
             conn.execute(
-                """UPDATE skills SET priority=?, triggers=?, paths=?, pack=?, tokens=?, updated_at=?
+                """UPDATE skills SET name=?, description=?, priority=?, triggers=?, paths=?, pack=?, depends_on=?, tokens=?, updated_at=?
                    WHERE id=?""",
-                (sk["priority"], json.dumps(sk["triggers"]), json.dumps(sk["paths"]),
-                 sk["pack"], estimate_tokens(sk["body"]), int(time.time()), sk["id"]),
+                (sk["name"], sk["description"], sk["priority"], json.dumps(sk["triggers"]), json.dumps(sk["paths"]),
+                 sk["pack"], json.dumps(sk["depends_on"]), estimate_tokens(sk["body"]), int(time.time()), sk["id"]),
             )
         else:
             conn.execute(
-                """INSERT INTO skills (id,type,path,name,description,priority,triggers,paths,pack,body_hash,embedding,tokens,updated_at)
-                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                """INSERT INTO skills (id,type,path,name,description,priority,triggers,paths,pack,depends_on,body_hash,embedding,tokens,updated_at)
+                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                 (sk["id"], sk["type"], sk["path"], sk["name"], sk["description"], sk["priority"],
-                 json.dumps(sk["triggers"]), json.dumps(sk["paths"]), sk["pack"],
-                 body_hash(sk["body"]), None, estimate_tokens(sk["body"]), int(time.time())),
+                 json.dumps(sk["triggers"]), json.dumps(sk["paths"]), sk["pack"], json.dumps(sk["depends_on"]),
+                 "", None, estimate_tokens(sk["body"]), int(time.time())),
             )
         n += 1
+    discovered_ids = [skill["id"] for skill in skills]
+    if discovered_ids:
+        conn.execute(f"DELETE FROM skills WHERE id NOT IN ({','.join('?' * len(discovered_ids))})", discovered_ids)
+    else:
+        conn.execute("DELETE FROM skills")
     conn.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('last_metadata_sync', ?)", (str(int(time.time())),))
+    conn.execute("INSERT OR REPLACE INTO meta(key,value) VALUES('source_digest', ?)", (source_digest(skills),))
     conn.commit()
     conn.close()
-    print(f"[skill-router] metadata synced for {n} skills/rules (keyless, no embeddings)")
+    if not quiet:
+        print(f"[skill-router] metadata synced for {n} skills/rules (keyless, no embeddings)")
 
 
 def cmd_rebuild_index():
-    """Generate embeddings for every skill/rule. Idempotent — skips unchanged bodies."""
+    """Generate embeddings atomically; never publish a partially rebuilt index."""
     api_key = get_secret("CLOUDFLARE_API_KEY")
     if not api_key:
         print("ERROR: CLOUDFLARE_API_KEY not in get-secret (needed for Workers AI embeddings)", file=sys.stderr)
@@ -295,46 +323,49 @@ def cmd_rebuild_index():
     conn = db_open()
     skills = discover_skills()
     print(f"[skill-router] indexing {len(skills)} skills/rules")
-    updated = 0
+    staged = []
     skipped = 0
     for s in skills:
         h = body_hash(s["body"])
-        cur = conn.execute("SELECT body_hash FROM skills WHERE id=?", (s["id"],))
+        cur = conn.execute("SELECT body_hash, embedding FROM skills WHERE id=?", (s["id"],))
         row = cur.fetchone()
-        if row and row[0] == h:
+        if row and row[0] == h and row[1]:
             skipped += 1
             continue
         # Build embedding input: description + first 4000 chars of body
         embed_input = f"{s['name']}\n{s['description']}\n{s['body'][:4000]}"
         try:
             emb = embed_text(embed_input, api_key)
-        except URLError as e:
+        except Exception as e:
             print(f"[skill-router] embed failed for {s['id']}: {e}", file=sys.stderr)
-            continue
+            conn.close()
+            raise SystemExit(1) from e
+        staged.append((s, h, emb))
+    for s, h, emb in staged:
         conn.execute(
             """INSERT OR REPLACE INTO skills
-               (id, type, path, name, description, priority, triggers, paths, pack,
+               (id, type, path, name, description, priority, triggers, paths, pack, depends_on,
                 body_hash, embedding, tokens, updated_at)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 s["id"], s["type"], s["path"], s["name"], s["description"],
                 s["priority"],
                 json.dumps(s["triggers"]),
                 json.dumps(s["paths"]),
                 s["pack"],
+                json.dumps(s["depends_on"]),
                 h,
                 json.dumps(emb),
                 estimate_tokens(s["body"]),
                 int(time.time()),
             ),
         )
-        updated += 1
-        print(f"  [{updated}/{len(skills)}] {s['id']}", file=sys.stderr)
+        print(f"  [{len(staged)}/{len(skills)}] {s['id']}", file=sys.stderr)
     conn.execute("INSERT OR REPLACE INTO meta(key, value) VALUES('last_rebuild', ?)",
                  (str(int(time.time())),))
     conn.commit()
     conn.close()
-    print(f"[skill-router] done — {updated} updated, {skipped} skipped")
+    print(f"[skill-router] done — {len(staged)} updated, {skipped} skipped")
 
 
 # -----------------------------------------------------------------------------
@@ -398,23 +429,25 @@ def cmd_fingerprint(cwd: str | None = None) -> dict:
             if "@clerk/clerk-sdk-node" in deps or "@clerk/backend" in deps:
                 fp["has_auth"] = True
                 fp["concerns"].append("auth")
+            if "better-auth" in deps:
+                fp["has_auth"] = True
+                fp["concerns"].append("auth")
+            if "nx" in deps or "@nx/workspace" in deps:
+                fp["frameworks"].append("nx")
+                fp["concerns"].append("nx-workspace")
+            if pkg.get("workspaces"):
+                fp["concerns"].append("monorepo")
             if "@hono/zod-validator" in deps or "drizzle-orm" in deps:
                 fp["concerns"].append("hono-stack")
             if "playwright" in deps or "@playwright/test" in deps:
                 fp["concerns"].append("e2e-testing")
             if any(d in deps for d in ("@sentry/node", "@sentry/cloudflare", "posthog-node", "posthog-js", "@opentelemetry/api", "@axiomhq/js")):
                 fp["concerns"].append("observability")
-            if any(d in deps for d in ("@ag-ui/client", "@ag-ui/core", "@json-render/core", "@json-render/react", "@xyflow/react")):
-                fp["concerns"].append("agent-ui")
-            if any(d in deps for d in ("better-auth", "@nangohq/node", "@activepieces/pieces-framework", "@infisical/sdk")):
-                fp["concerns"].append("identity-knowledge-integrations")
-            if any(d in deps for d in ("@udecode/plate", "platejs", "remotion", "@remotion/player", "@remotion/renderer")):
-                fp["concerns"].append("content-media")
-            if any(d.startswith("@theme.tools/") or d.startswith("@theme-tools/") for d in deps):
-                fp["concerns"].append("shared-platform")
             if any(d in deps for d in ("yjs", "@automerge/automerge", "@liveblocks/client", "partykit", "partysocket")):
                 fp["concerns"].append("realtime")
             fp["languages"].append("typescript" if (cwd_p / "tsconfig.json").exists() else "javascript")
+            if (cwd_p / "tsconfig.json").exists():
+                fp["concerns"].append("typescript")
         except Exception:
             pass
 
@@ -440,6 +473,10 @@ def cmd_fingerprint(cwd: str | None = None) -> dict:
         fp["languages"].append("python")
         if fp["stack"] == "unknown":
             fp["stack"] = "python"
+    if (cwd_p / "bun.lock").exists() or (cwd_p / "bun.lockb").exists():
+        fp["concerns"].append("bun")
+    if (cwd_p / "package.json").exists():
+        fp["concerns"].append("software-project")
 
     # Marker file signals
     for f in cwd_p.iterdir():
@@ -451,8 +488,6 @@ def cmd_fingerprint(cwd: str | None = None) -> dict:
             fp["concerns"].append("website-build")
         if name in {"form_990.pdf", "_nonprofit.json"} or "nonprofit" in name:
             fp["is_nonprofit"] = True
-        if name in {"theme.tools.json", "platform-stack.json"}:
-            fp["concerns"].append("shared-platform")
 
     # CLAUDE.md signals
     claude_md = cwd_p / "CLAUDE.md"
@@ -482,9 +517,11 @@ def fingerprint_path(cwd: str) -> Path:
     return PROJECTS_DIR / encoded / "fingerprint.json"
 
 
-def session_cache_path(cwd: str, session_id: str = "default") -> Path:
+def session_cache_path(cwd: str, session_id: str | None = None) -> Path:
     encoded = cwd.replace("/", "-").lstrip("-")
-    return PROJECTS_DIR / encoded / f"active-skills-{session_id}.json"
+    raw_session = session_id or os.environ.get("AGENT_SKILLS_SESSION_ID", "default")
+    safe_session = re.sub(r"[^A-Za-z0-9_.-]+", "-", raw_session).replace("..", "-").strip("-.") or "default"
+    return PROJECTS_DIR / encoded / f"active-skills-{safe_session}.json"
 
 
 # -----------------------------------------------------------------------------
@@ -520,9 +557,9 @@ def all_packs() -> dict[str, list[str]]:
 # -----------------------------------------------------------------------------
 TOOL_TO_SKILLS = {
     # Playwright tools → testing skills
-    "mcp__playwright__": ["07-quality-and-verification", "rules/e2e-tdd-organization",
-                          "rules/e2e-visual-inspection", "rules/verification-loop"],
-    "mcp__plugin_playwright_": ["07-quality-and-verification", "rules/e2e-tdd-organization"],
+    "mcp__playwright__": ["07-quality-and-verification", "rules/e2e-testing",
+                          "rules/verification-loop"],
+    "mcp__plugin_playwright_": ["07-quality-and-verification", "rules/e2e-testing"],
     # CF tools → CF skills
     "mcp__plugin_cloudflare_": ["05-architecture-and-stack", "rules/cloudflare-lock-in-is-leverage",
                                  "rules/hono-api", "08-deploy-and-runtime-verification"],
@@ -584,8 +621,9 @@ def match_triggers(prompt: str, conn: sqlite3.Connection) -> list[str]:
         for trig in triggers:
             t = trig.lower()
             # Support {placeholder} = wildcard
-            pattern = re.escape(t).replace(r"\{[^}]+\}", r"[^\s]+")
-            if re.search(pattern, prompt_lower):
+            parts = re.split(r"(\{[^}]+\})", t)
+            pattern = "".join(r"[^\s]+" if part.startswith("{") else re.escape(part) for part in parts)
+            if re.search(rf"(?<![a-z0-9]){pattern}(?![a-z0-9])", prompt_lower):
                 out.append(sid)
                 break
     return out
@@ -596,6 +634,8 @@ def match_triggers(prompt: str, conn: sqlite3.Connection) -> list[str]:
 # -----------------------------------------------------------------------------
 def embedding_topk(prompt: str, conn: sqlite3.Connection, k: int = 8) -> list[tuple[str, float]]:
     """Return [(skill_id, similarity)] sorted desc."""
+    if os.environ.get("AGENT_SKILLS_DISABLE_EMBEDDINGS") == "1":
+        return []
     api_key = get_secret("CLOUDFLARE_API_KEY")
     if not api_key:
         return []
@@ -614,6 +654,47 @@ def embedding_topk(prompt: str, conn: sqlite3.Connection, k: int = 8) -> list[tu
         out.append((sid, sim))
     out.sort(key=lambda x: -x[1])
     return out[:k]
+
+
+def _lexical_terms(value: str) -> list[str]:
+    """Normalize deterministic router terms without network or model dependencies."""
+    return re.findall(r"[a-z0-9]+(?:-[a-z0-9]+)*", value.lower())
+
+
+def lexical_topk(prompt: str, conn: sqlite3.Connection, k: int = 8) -> list[tuple[str, float]]:
+    """Rank names, descriptions, and triggers with BM25 as the keyless fallback."""
+    query_terms = _lexical_terms(prompt)
+    if not query_terms:
+        return []
+    documents = []
+    document_frequency: dict[str, int] = {}
+    for sid, name, description, triggers_json in conn.execute("SELECT id,name,description,triggers FROM skills"):
+        try:
+            triggers = json.loads(triggers_json)
+        except json.JSONDecodeError:
+            triggers = []
+        terms = _lexical_terms(f"{name} {name} {description} {' '.join(triggers)}")
+        documents.append((sid, terms))
+        for term in set(terms):
+            document_frequency[term] = document_frequency.get(term, 0) + 1
+    if not documents:
+        return []
+    average_length = sum(len(terms) for _, terms in documents) / len(documents) or 1.0
+    unique_query_terms = sorted(set(query_terms))
+    ranked = []
+    for sid, terms in documents:
+        frequencies = {term: terms.count(term) for term in unique_query_terms}
+        score = 0.0
+        for term, frequency in frequencies.items():
+            if frequency == 0:
+                continue
+            containing = document_frequency.get(term, 0)
+            inverse_document_frequency = math.log(1 + (len(documents) - containing + 0.5) / (containing + 0.5))
+            normalization = frequency + 1.2 * (1 - 0.75 + 0.75 * len(terms) / average_length)
+            score += inverse_document_frequency * (frequency * 2.2) / normalization
+        if score > 0:
+            ranked.append((sid, score))
+    return sorted(ranked, key=lambda item: (-item[1], item[0]))[:k]
 
 
 # -----------------------------------------------------------------------------
@@ -692,14 +773,143 @@ def path_match(skill_paths: list[str], fingerprint: dict) -> bool:
             return True
         elif pattern == "*":
             return True
+        elif fnmatch.fnmatch(cwd, pattern) or fnmatch.fnmatch(Path(cwd).name, pattern):
+            return True
     return False
 
 
 # -----------------------------------------------------------------------------
 # Main router — unified route command
 # -----------------------------------------------------------------------------
+ROUTABLE_EVIDENCE_READINESS = {"declared", "locally_tested", "sandbox_verified", "production_observed"}
+ROUTABLE_EVIDENCE_BUDGET_STATES = {"within_budget", "partial", "exhausted", "cancelled"}
+ROUTABLE_EVIDENCE_IDENTIFIER = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$")
+
+
+def _parse_routable_timestamp(value, field: str) -> int:
+    try:
+        parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        if parsed.tzinfo is None:
+            raise ValueError
+        return int(parsed.timestamp())
+    except (TypeError, ValueError):
+        raise ValueError(f"research evidence {field} is invalid") from None
+
+
+def _validate_identifier(value, field: str) -> str:
+    if not isinstance(value, str) or not ROUTABLE_EVIDENCE_IDENTIFIER.fullmatch(value):
+        raise ValueError(f"research evidence {field} is invalid")
+    return value
+
+
+def _validate_identifier_list(value, field: str, require_nonempty: bool = False) -> list[str]:
+    if not isinstance(value, list) or (require_nonempty and not value):
+        raise ValueError(f"research evidence {field} is invalid")
+    identifiers = [_validate_identifier(item, field) for item in value]
+    if len(identifiers) != len(set(identifiers)):
+        raise ValueError(f"research evidence {field} contains duplicates")
+    return identifiers
+
+
+def load_routable_evidence(path: str, expected_tenant: str = "", expected_environment: str = "",
+                           now: int | None = None) -> dict:
+    artifact = json.loads(Path(path).read_text())
+    required = {"schemaVersion", "artifactId", "tenantId", "environmentId", "generatedAt", "expiresAt", "readiness",
+                "evidence", "contradictions", "unresolvedQuestions", "budgetStatus", "integrityDigest"}
+    if not required.issubset(artifact):
+        raise ValueError(f"research evidence missing fields: {sorted(required - set(artifact))}")
+    if artifact["schemaVersion"] != "1.0.0":
+        raise ValueError("unsupported research evidence schemaVersion")
+    _validate_identifier(artifact["artifactId"], "artifactId")
+    _validate_identifier(artifact["tenantId"], "tenantId")
+    _validate_identifier(artifact["environmentId"], "environmentId")
+    if expected_tenant and artifact["tenantId"] != expected_tenant:
+        raise ValueError("research evidence tenant scope mismatch")
+    if expected_environment and artifact["environmentId"] != expected_environment:
+        raise ValueError("research evidence environment scope mismatch")
+    canonical = {key: value for key, value in artifact.items() if key != "integrityDigest"}
+    digest = hashlib.sha256(json.dumps(canonical, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    if not hmac.compare_digest(digest, artifact["integrityDigest"]):
+        raise ValueError("research evidence integrity mismatch")
+    current = int(time.time()) if now is None else now
+    generated = _parse_routable_timestamp(artifact["generatedAt"], "generatedAt")
+    expires = _parse_routable_timestamp(artifact["expiresAt"], "expiresAt")
+    if generated > current + 300:
+        raise ValueError("research evidence generatedAt is in the future")
+    if expires <= current:
+        raise ValueError("research evidence is stale")
+    if expires <= generated:
+        raise ValueError("research evidence expiry must follow generation")
+    if artifact["readiness"] not in ROUTABLE_EVIDENCE_READINESS:
+        raise ValueError("research evidence readiness is invalid")
+    if artifact["budgetStatus"] not in ROUTABLE_EVIDENCE_BUDGET_STATES:
+        raise ValueError("research evidence budgetStatus is invalid")
+    contradictions = artifact["contradictions"]
+    if not isinstance(contradictions, list):
+        raise ValueError("research evidence contradictions is invalid")
+    contradiction_ids = set()
+    for index, contradiction in enumerate(contradictions):
+        if not isinstance(contradiction, dict):
+            raise ValueError(f"research evidence contradictions[{index}] is invalid")
+        contradiction_id = _validate_identifier(contradiction.get("id"), f"contradictions[{index}].id")
+        if contradiction_id in contradiction_ids:
+            raise ValueError("research evidence contradiction ids contain duplicates")
+        if not isinstance(contradiction.get("summary"), str) or not contradiction["summary"].strip():
+            raise ValueError(f"research evidence contradictions[{index}].summary is invalid")
+        contradiction_ids.add(contradiction_id)
+    unresolved = artifact["unresolvedQuestions"]
+    if not isinstance(unresolved, list) or any(not isinstance(item, str) or not item.strip() for item in unresolved):
+        raise ValueError("research evidence unresolvedQuestions is invalid")
+    evidence = artifact["evidence"]
+    if not isinstance(evidence, list) or not evidence:
+        raise ValueError("research evidence evidence is invalid")
+    evidence_ids = set()
+    for index, item in enumerate(evidence):
+        if not isinstance(item, dict):
+            raise ValueError(f"research evidence evidence[{index}] is invalid")
+        evidence_id = _validate_identifier(item.get("id"), f"evidence[{index}].id")
+        if evidence_id in evidence_ids:
+            raise ValueError("research evidence ids contain duplicates")
+        evidence_ids.add(evidence_id)
+        _validate_identifier_list(item.get("skillIds"), f"evidence[{index}].skillIds")
+        _validate_identifier_list(item.get("routingTags"), f"evidence[{index}].routingTags")
+        _validate_identifier_list(item.get("citationIds"), f"evidence[{index}].citationIds", require_nonempty=True)
+        referenced_contradictions = _validate_identifier_list(item.get("contradictionIds"), f"evidence[{index}].contradictionIds")
+        if any(identifier not in contradiction_ids for identifier in referenced_contradictions):
+            raise ValueError(f"research evidence evidence[{index}].contradictionIds references an unknown contradiction")
+        if not isinstance(item.get("sourceVersion"), str) or not item["sourceVersion"].strip():
+            raise ValueError(f"research evidence evidence[{index}].sourceVersion is invalid")
+        research_date = item.get("researchDate")
+        if not isinstance(research_date, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", research_date):
+            raise ValueError(f"research evidence evidence[{index}].researchDate is invalid")
+        try:
+            datetime.strptime(research_date, "%Y-%m-%d")
+        except ValueError:
+            raise ValueError(f"research evidence evidence[{index}].researchDate is invalid") from None
+        confidence = item.get("confidence")
+        if isinstance(confidence, bool) or not isinstance(confidence, (int, float)) or not 0 <= confidence <= 1:
+            raise ValueError(f"research evidence evidence[{index}].confidence is invalid")
+    return artifact
+
+
+def evidence_for_skill(skill_id: str, artifact: dict | None, limit: int = 8) -> list[str]:
+    if not artifact:
+        return []
+    selected = []
+    for item in artifact.get("evidence", []):
+        if not isinstance(item, dict) or not isinstance(item.get("id"), str):
+            continue
+        skill_ids = item.get("skillIds", [])
+        routing_tags = item.get("routingTags", [])
+        if skill_id in skill_ids or skill_id.split("/")[-1] in routing_tags or "all" in routing_tags:
+            selected.append(item["id"])
+    return sorted(set(selected))[:limit]
+
+
 def cmd_route(prompt: str, cwd: str | None = None, cache_only: bool = False,
-              tool: str = "", command: str = "") -> dict:
+              tool: str = "", command: str = "", evidence_path: str = "",
+              route_pass: str = "initial", expected_tenant: str = "", expected_environment: str = "",
+              offline: bool = False) -> dict:
     """
     Return {selected_skills, fingerprint, reasons, total_tokens}.
     Selection order:
@@ -712,7 +922,15 @@ def cmd_route(prompt: str, cwd: str | None = None, cache_only: bool = False,
       7. Embedding top-K (#1) — only if budget allows
     Then apply tier budget (#4).
     """
+    if route_pass not in {"initial", "post-research"}:
+        raise ValueError("route_pass must be initial or post-research")
+    if route_pass == "post-research" and not evidence_path:
+        raise ValueError("post-research routing requires a validated evidence artifact")
+    if route_pass == "post-research" and (not expected_tenant or not expected_environment):
+        raise ValueError("post-research routing requires expected tenant and environment scope")
+    artifact = load_routable_evidence(evidence_path, expected_tenant, expected_environment) if evidence_path else None
     cwd = cwd or os.getcwd()
+    cmd_sync_metadata(quiet=True)
     conn = db_open()
 
     # Fingerprint
@@ -818,12 +1036,49 @@ def cmd_route(prompt: str, cwd: str | None = None, cache_only: bool = False,
                 upgrade_reason(sid, f"tool:{tool}")
 
         # 7. Embedding top-K — only if we have budget
+        embedding_results = []
+        if not offline:
+            try:
+                embedding_results = embedding_topk(prompt, conn, k=8)
+                for sid, score in embedding_results:
+                    if score > 0.35:
+                        upgrade_reason(sid, f"semantic({score:.2f})")
+            except Exception:
+                pass
+        if not embedding_results:
+            for sid, score in lexical_topk(prompt, conn, k=8):
+                upgrade_reason(sid, f"lexical-bm25({score:.3f})")
+
+        if artifact:
+            for item in artifact.get("evidence", []):
+                if not isinstance(item, dict):
+                    continue
+                routed_ids = set(item.get("skillIds", []))
+                for routing_tag in item.get("routingTags", []):
+                    routed_ids.add(routing_tag)
+                    routed_ids.add(f"rules/{routing_tag}")
+                for sid in sorted(routed_ids):
+                    if conn.execute("SELECT 1 FROM skills WHERE id=?", (sid,)).fetchone():
+                        upgrade_reason(sid, f"research-evidence:{item.get('id', 'unknown')}")
+
+    dependency_errors = []
+    pending_dependencies = list(selected)
+    while pending_dependencies:
+        owner = pending_dependencies.pop()
+        row = conn.execute("SELECT depends_on FROM skills WHERE id=?", (owner,)).fetchone()
+        if not row:
+            continue
         try:
-            for sid, score in embedding_topk(prompt, conn, k=8):
-                if score > 0.35:
-                    upgrade_reason(sid, f"semantic({score:.2f})")
-        except Exception:
-            pass
+            dependencies = json.loads(row[0])
+        except json.JSONDecodeError:
+            dependencies = []
+        for dependency in dependencies:
+            exists = conn.execute("SELECT 1 FROM skills WHERE id=?", (dependency,)).fetchone()
+            if not exists:
+                dependency_errors.append({"code": "missing-dependency", "owner": owner, "dependency": dependency})
+            elif dependency not in selected:
+                selected[dependency] = f"dependency:{owner}"
+                pending_dependencies.append(dependency)
 
     # Apply tier budget — reason-aware priority bumps
     final = apply_budget(list(selected.items()), conn, DEFAULT_BUDGET_TOKENS)
@@ -842,12 +1097,26 @@ def cmd_route(prompt: str, cwd: str | None = None, cache_only: bool = False,
 
     conn.close()
 
+    telemetry_path = os.environ.get("AGENT_SKILLS_TELEMETRY_PATH")
+    if telemetry_path:
+        Path(telemetry_path).parent.mkdir(parents=True, exist_ok=True)
+        with Path(telemetry_path).open("a") as telemetry:
+            telemetry.write(json.dumps({
+                "at": int(time.time()),
+                "prompt_hash": hashlib.sha256(prompt.encode()).hexdigest(),
+                "selected": final,
+                "dropped": dropped,
+            }) + "\n")
+
     return {
-        "selected": [{"id": sid, "reason": selected[sid]} for sid in final],
+        "selected": [{"id": sid, "reason": selected[sid], "evidence_ids": evidence_for_skill(sid, artifact)} for sid in final],
         "dropped_for_budget": dropped,
         "fingerprint": fp,
         "total_tokens": total,
         "budget": DEFAULT_BUDGET_TOKENS,
+        "dependency_errors": dependency_errors,
+        "route_pass": route_pass,
+        "evidence_artifact_id": artifact.get("artifactId") if artifact else None,
     }
 
 
@@ -894,6 +1163,11 @@ def main(argv: list[str]) -> int:
         cwd = None
         tool = ""
         command = ""
+        evidence_path = ""
+        route_pass = "initial"
+        expected_tenant = ""
+        expected_environment = ""
+        offline = False
         for i, arg in enumerate(argv[3:], start=3):
             if arg == "--cwd" and i + 1 < len(argv):
                 cwd = argv[i + 1]
@@ -901,7 +1175,17 @@ def main(argv: list[str]) -> int:
                 tool = argv[i + 1]
             elif arg == "--command" and i + 1 < len(argv):
                 command = argv[i + 1]
-        result = cmd_route(prompt, cwd=cwd, tool=tool, command=command)
+            elif arg == "--evidence" and i + 1 < len(argv):
+                evidence_path = argv[i + 1]
+            elif arg == "--pass" and i + 1 < len(argv):
+                route_pass = argv[i + 1]
+            elif arg == "--tenant" and i + 1 < len(argv):
+                expected_tenant = argv[i + 1]
+            elif arg == "--environment" and i + 1 < len(argv):
+                expected_environment = argv[i + 1]
+            elif arg == "--offline":
+                offline = True
+        result = cmd_route(prompt, cwd=cwd, tool=tool, command=command, evidence_path=evidence_path, route_pass=route_pass, expected_tenant=expected_tenant, expected_environment=expected_environment, offline=offline)
         print(json.dumps(result, indent=2))
         return 0
     if cmd == "track":

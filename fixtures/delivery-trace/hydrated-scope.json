@@ -1,0 +1,52 @@
+{
+  "changeId": "compiled-delivery",
+  "title": "Compile traceable delivery",
+  "summary": "Turn hydrated outcome requirements into distinct OpenSpec artifacts and an evidence ledger.",
+  "sourceRevision": "1111111111111111111111111111111111111111",
+  "architectIdentity": "codex-architect",
+  "evidenceIds": ["EVIDENCE:hydration-001"],
+  "requirements": [
+    {
+      "id": "REQ-001",
+      "title": "Traceable delivery",
+      "observableBehavior": "Operators can query every task from requirement through remote and delivery evidence.",
+      "decisions": [
+        "Keep proposed and implemented state distinct.",
+        "Do not treat task checkboxes as delivery evidence."
+      ],
+      "scenarios": [
+        {
+          "id": "SCN-001",
+          "title": "Evidence closes the trace",
+          "when": "All required delivery evidence is observed",
+          "then": "The requirement becomes complete"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "TASK-001",
+          "title": "Implement the trace compiler",
+          "owner": "OpenSpec compiler engineer",
+          "dependencies": [],
+          "affectedPaths": ["bin/openspec-delivery-compiler.ts"],
+          "packages": ["repository-local"],
+          "scenarioIds": ["SCN-001"],
+          "acceptanceCriteria": [
+            "Distinct proposal, design, specification, and task artifacts are emitted",
+            "The ledger remains incomplete until integrated remote evidence exists"
+          ],
+          "expectedEvidence": [
+            { "kind": "verification", "strength": "local", "description": "Compiler tests pass" },
+            {
+              "kind": "remote",
+              "strength": "remote",
+              "description": "Tested commit is observed on remote main"
+            }
+          ],
+          "releaseRequired": false,
+          "productionRequired": false
+        }
+      ]
+    }
+  ]
+}

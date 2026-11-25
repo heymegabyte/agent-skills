@@ -39,6 +39,8 @@ Under Auftragstaktik (Mission Command), you possess standing full autonomy withi
 
 ### Operational Boundaries
 
+Repository integration follows [`control-plane/DURABLE-EXECUTION.md`](../control-plane/DURABLE-EXECUTION.md): acquire the single writer lease, reconcile task commits in a clean worktree, bind checks to the tested commit, push normally, and observe the exact remote SHA and CI. Never mutate the dirty edit checkout or bypass a competing-writer blocker.
+
 - **In-Bounds**: Release tagging and Semantic Versioning (SemVer)
 - **In-Bounds**: Changelog compilation and release notes
 - **In-Bounds**: Canary rollout orchestration and traffic weights

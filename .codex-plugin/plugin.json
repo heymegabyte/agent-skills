@@ -1,10 +1,18 @@
 {
   "_generated_by": "bin/gen-harness-manifests.mjs — do not edit directly",
+  "policy": {
+    "id": "operational-prompt-hydration",
+    "version": "1.0.0",
+    "source": "policies/operational-prompt-hydration.md",
+    "source_digest": "sha256:4833e290e756aecb61e14bdcff1be6f01137730bc3a27b7445eb1a78dcad960e"
+  },
   "name": "heymegabyte-skills",
   "version": "7.2.1",
   "instructions": "Load rules/ directory. Each .md file is a standing instruction.",
   "files": [
     "rules/always.md",
+    "rules/evidence-gated-autonomous-orchestration.md",
+    "rules/autonomous-mission-policy.md",
     "rules/autonomous-engineering.md",
     "rules/code-style.md",
     "rules/feature-flags.md",
@@ -20,10 +28,10 @@
     "rules/prompt-as-training-signal.md",
     "rules/intent-complete-delivery.md",
     "rules/context-hydration.md",
+    "rules/production-delivery-closure.md",
     "rules/greenfield-saas-prompt-hydration.md",
     "rules/parallel-multi-swarm-orchestration.md",
     "rules/total-convergence-and-openspec-handoff.md",
-    "rules/production-delivery-closure.md",
     "01-operating-system/SKILL.md",
     "02-goal-and-brief/SKILL.md",
     "04-preference-and-memory/SKILL.md",
@@ -46,6 +54,7 @@
     "25-quality-performance/SKILL.md",
     "26-platform-delivery/SKILL.md",
     "27-trust-compliance/SKILL.md",
-    "28-cf-integrations-reference/SKILL.md"
+    "28-cf-integrations-reference/SKILL.md",
+    "openclaw-integration/SKILL.md"
   ]
 }

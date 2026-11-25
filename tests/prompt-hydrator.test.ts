@@ -34,6 +34,8 @@ test('hydrates live context before execution and preserves evidence safely', asy
 
   assert.equal(first.originalRequest, prompt);
   assert.equal(first.route, 'greenfield-saas');
+  assert.equal(first.researchDecision.mode, 'required');
+  assert.equal(first.researchDecision.freshnessRequired, true);
   assert.ok(first.context.instructions.some((entry) => entry.path === 'AGENTS.md'));
   assert.deepEqual(first.context.activeOpenSpecChanges, ['active-change']);
   assert.equal(first.context.dependencies.hono, '4.13.0');
@@ -55,9 +57,20 @@ test('hydrates live context before execution and preserves evidence safely', asy
 
 test('clone Notion recursively expands into traceable research and OpenSpec', async () => {
   const hydrated = await hydratePrompt({
-    prompt: 'clone Notion',
+    prompt: 'You are explicitly assigned the architect. Clone Notion',
     checkout: fixtureCheckout(),
     now: '2026-11-15T00:00:00.000Z',
+    architectAssignmentEvidence: 'Explicit assignment in the test request.',
+    verifiedDecisionDomains: [
+      'instructions-and-authority',
+      'openspec-and-architecture',
+      'implementation-and-tests',
+      'dependency-documentation',
+      'market-and-users',
+      'competitors-and-alternatives',
+      'operations-and-cloudflare',
+      'shared-platform-ownership',
+    ],
   });
   const cascade = buildGreenfieldCascade(hydrated);
   const labels = cascade.workflows.map((workflow) => workflow.name.toLowerCase());
@@ -78,12 +91,12 @@ test('clone Notion recursively expands into traceable research and OpenSpec', as
   assert.ok(cascade.traceability.every((trace) => trace.goalId && trace.testId && trace.verificationId));
   assert.ok(cascade.gapReview.queued.length >= 1);
   assert.ok(cascade.gapReview.queued.some((gap) => /export/i.test(gap.workflow)));
-  assert.ok(hydrated.researchFindings.some((finding) => finding.provenance === 'https://www.notion.com/help/account-settings' && finding.status === 'verified'));
+  assert.ok(hydrated.researchFindings.some((finding) => finding.provenance === 'https://www.notion.com/help/account-settings' && finding.status === 'unverified'));
   assert.ok(hydrated.researchFindings.some((finding) => /invitation-revocation/.test(finding.provenance) && finding.status === 'unverified'));
 
   const output = join(mkdtempSync(join(tmpdir(), 'notion-openspec-')), 'clone-notion');
   writeOpenSpecFixture(cascade, output);
-  assert.match(readFileSync(join(output, 'proposal.md'), 'utf8'), /Architect Role:\*\* assigned/);
+  assert.match(readFileSync(join(output, 'proposal.md'), 'utf8'), /Architect Role:\*\* assigned \(verified by hydration evidence\)/);
   assert.match(readFileSync(join(output, 'design.md'), 'utf8'), /Requirement-to-test trace/);
   assert.match(readFileSync(join(output, 'specs', 'notion-clone', 'spec.md'), 'utf8'), /### Requirement:/);
   assert.match(readFileSync(join(output, 'tasks.md'), 'utf8'), /browser/i);
@@ -96,8 +109,30 @@ test('narrow bug fixes do not trigger greenfield fan-out', async () => {
     now: '2026-11-15T00:00:00.000Z',
   });
   assert.equal(hydrated.route, 'focused-change');
+  assert.equal(hydrated.executionMode, 'focused-swarm');
+  assert.equal(hydrated.researchDecision.mode, 'none');
   assert.equal(hydrated.inferredRequirements.length, 0);
+  assert.equal(hydrated.productAudit.missingOrIncompleteSurfaces.length, 0);
+  assert.equal(hydrated.swarmExecutionPlan.opencodeDeepseekOffload.enabled, false);
+  assert.deepEqual(hydrated.handoff.pendingWorkIds, ['implement-focused-change', 'run-focused-verification']);
   assert.equal(hydrated.decisionReadiness.requirements.find((item) => item.domain === 'market-and-users')?.status, 'not-applicable');
+});
+
+test('research classifier distinguishes unstable and high-stakes decisions', async () => {
+  const unstable = await hydratePrompt({
+    prompt: 'Compare the current pricing and quotas for search providers',
+    checkout: fixtureCheckout(),
+  });
+  assert.equal(unstable.researchDecision.mode, 'refresh');
+  assert.equal(unstable.researchDecision.freshnessRequired, true);
+
+  const security = await hydratePrompt({
+    prompt: 'Fix authentication tenant isolation architecture',
+    checkout: fixtureCheckout(),
+  });
+  assert.equal(security.researchDecision.mode, 'required');
+  assert.equal(security.researchDecision.risk, 'high');
+  assert.ok(security.researchDecision.maximumSources >= 24);
 });
 
 test('material decisions are gated on loaded evidence rather than provider availability or filenames', async () => {
@@ -128,11 +163,11 @@ test('Claude UserPromptSubmit adapter hydrates before execution', () => {
   const output = JSON.parse(result.stdout) as { hookSpecificOutput: { hookEventName: string; additionalContext: string } };
   assert.equal(output.hookSpecificOutput.hookEventName, 'UserPromptSubmit');
   assert.match(output.hookSpecificOutput.additionalContext, /Route: \*\*greenfield-saas\*\*/);
-  assert.match(output.hookSpecificOutput.additionalContext, /966 research prompts/);
+  assert.doesNotMatch(output.hookSpecificOutput.additionalContext, /research prompts/);
   assert.match(output.hookSpecificOutput.additionalContext, /Product & Architecture Gap Audit/);
   assert.match(output.hookSpecificOutput.additionalContext, /Settings & Preferences/);
   assert.match(output.hookSpecificOutput.additionalContext, /Right-Sized Collaborative SCRUM Deliberation Quorum/);
-  assert.match(output.hookSpecificOutput.additionalContext, /OpenCode \(DeepSeek\) Offload/);
+  assert.match(output.hookSpecificOutput.additionalContext, /OpenCode \(DeepSeek\) Offload\*\*: \*\*0%\*\*/);
   assert.match(output.hookSpecificOutput.additionalContext, /Architecture ready: \*\*false\*\*/);
   assert.match(output.hookSpecificOutput.additionalContext, /Bounded fixed-point improvement loop/);
 });
@@ -150,10 +185,27 @@ test('product gap audit, SCRUM deliberation quorum, and 15-strategy multi-swarm 
   assert.ok(hydrated.scrumQuorum.selectedAgents.length >= 4 && hydrated.scrumQuorum.selectedAgents.length <= 7);
   assert.ok(hydrated.scrumQuorum.excludedAgentCount >= 21);
   assert.equal(hydrated.swarmExecutionPlan.top15ActiveStrategies.length, 15);
-  assert.ok(hydrated.swarmExecutionPlan.opencodeDeepseekOffload.targetOffloadRatio >= 0.7);
+  assert.equal(hydrated.swarmExecutionPlan.opencodeDeepseekOffload.targetOffloadRatio, 0);
+  assert.equal(hydrated.swarmExecutionPlan.opencodeDeepseekOffload.enabled, false);
   assert.equal(hydrated.swarmExecutionPlan.finishLineContract.unitTestCoverageTarget, '100%');
   assert.equal(hydrated.swarmExecutionPlan.finishLineContract.e2eRunner, 'cloudflare-browser-run-parallel');
   assert.equal(hydrated.swarmExecutionPlan.finishLineContract.gitBranch, 'main');
   assert.ok(hydrated.handoff.pendingWorkIds.includes('parallel-end-of-round-triad-meaning-extraction'));
   assert.match(formatHydratedBrief(hydrated), /Minimum-Prompt Ecosystem Completeness Assumption/);
+});
+
+test('fail-closed hydration refuses OpenSpec and false deployment claims', async () => {
+  const hydrated = await hydratePrompt({
+    prompt: 'Build a SaaS like Notion',
+    checkout: fixtureCheckout(),
+    now: '2026-11-22T00:00:00.000Z',
+  });
+
+  assert.equal(hydrated.decisionReadiness.architectureReady, false);
+  assert.equal(hydrated.decisionReadiness.architectAssignmentVerified, false);
+  assert.throws(() => buildGreenfieldCascade(hydrated), /explicit architect assignment/);
+  assert.equal(hydrated.swarmExecutionPlan.finishLineContract.productionDeployed, 'unverified');
+  assert.equal(hydrated.swarmExecutionPlan.finishLineContract.customDomainConnected, 'unverified');
+  assert.equal(hydrated.improvementConvergence.round.status, 'blocked-on-context');
+  assert.deepEqual(hydrated.improvementConvergence.candidates, []);
 });

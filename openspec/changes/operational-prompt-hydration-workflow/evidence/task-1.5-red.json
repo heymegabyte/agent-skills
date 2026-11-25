@@ -1,0 +1,37 @@
+{
+  "task": "1.5",
+  "capturedAt": "2026-11-25T05:50:35Z",
+  "command": "node --experimental-strip-types --test tests/theme-tools-release-chain.red.test.ts",
+  "exitCode": 1,
+  "result": "RED",
+  "tests": { "total": 2, "passed": 1, "failed": 1 },
+  "intendedFailure": {
+    "scenario": "controlled registry closes source, publication, consumer, behavior, and commit evidence",
+    "reason": "The release-chain verifier bin/theme-tools-release-chain.ts does not exist, so the current runtime cannot observe the controlled registry or close the source-to-consumer evidence chain.",
+    "missingBehavior": [
+      "published-version observation",
+      "consumer manifest and lockfile verification",
+      "consumer behavior execution",
+      "source and consumer commit evidence"
+    ]
+  },
+  "negativeControl": {
+    "scenario": "source-only evidence cannot satisfy the release-to-consumer chain",
+    "result": "PASS",
+    "missingEdges": [
+      "registry-publication",
+      "published-version-observation",
+      "consumer-manifest",
+      "consumer-lockfile",
+      "consumer-behavior",
+      "consumer-commit"
+    ]
+  },
+  "evidenceStrength": "controlled-local-fixture",
+  "claimsExcluded": [
+    "live package publication",
+    "live consumer adoption",
+    "remote Git integration",
+    "production behavior"
+  ]
+}

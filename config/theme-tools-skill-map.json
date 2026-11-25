@@ -1,0 +1,177 @@
+{
+  "$schema": "../schemas/theme-tools-skill-map.schema.json",
+  "version": 1,
+  "defaultContract": "rules/theme-tools-skill-integration.md",
+  "skills": {
+    "01-operating-system": {
+      "packages": ["@theme.tools/sdk", "@theme.tools/telemetry"],
+      "consumerOwns": ["task policy", "product configuration"],
+      "contributeWhen": ["shared agent or application workflow emerges"]
+    },
+    "02-goal-and-brief": {
+      "packages": ["@theme.tools/catalog", "@theme.tools/sdk"],
+      "consumerOwns": ["business brief", "product decisions"],
+      "contributeWhen": ["reusable brief schema or estimator emerges"]
+    },
+    "04-preference-and-memory": {
+      "packages": ["@theme.tools/agent-memory", "@theme.tools/auth"],
+      "consumerOwns": ["user preferences", "retention policy"],
+      "contributeWhen": ["reusable preference or consent primitive emerges"]
+    },
+    "05-architecture-and-stack": {
+      "packages": ["@theme.tools/sdk", "@theme.tools/site-delivery", "@theme.tools/telemetry"],
+      "consumerOwns": ["deployment topology", "product policy"],
+      "contributeWhen": ["shared runtime or package boundary emerges"]
+    },
+    "06-build-and-slice-loop": {
+      "packages": ["@theme.tools/sdk", "@theme.tools/testing", "@theme.tools/telemetry"],
+      "consumerOwns": ["feature composition"],
+      "contributeWhen": ["reusable implementation slice emerges"]
+    },
+    "07-quality-and-verification": {
+      "packages": ["@theme.tools/testing", "@theme.tools/telemetry"],
+      "consumerOwns": ["product acceptance fixtures"],
+      "contributeWhen": ["reusable harness or invariant emerges"]
+    },
+    "08-deploy-and-runtime-verification": {
+      "packages": ["@theme.tools/site-delivery", "@theme.tools/status", "@theme.tools/telemetry"],
+      "consumerOwns": ["deployment bindings"],
+      "contributeWhen": ["reusable health or rollout capability emerges"]
+    },
+    "09-brand-and-content-system": {
+      "packages": ["@theme-tools/themes", "@theme-tools/ui", "@theme.tools/blog"],
+      "consumerOwns": ["brand choices", "content"],
+      "contributeWhen": ["reusable theme, editorial component, or template emerges"]
+    },
+    "10-experience-and-design-system": {
+      "packages": ["@theme-tools/ui", "@theme-tools/themes", "@theme.tools/catalog"],
+      "consumerOwns": ["approved composition"],
+      "contributeWhen": ["reusable component, token, layout, or state emerges"]
+    },
+    "11-motion-and-interaction-system": {
+      "packages": ["@theme-tools/ui", "@theme-tools/themes", "@theme.tools/i18n-a11y"],
+      "consumerOwns": ["approved motion intent"],
+      "contributeWhen": ["reusable interaction or motion primitive emerges"]
+    },
+    "12-media-orchestration": {
+      "packages": ["@theme.tools/media-video", "@theme-tools/ui"],
+      "consumerOwns": ["licensed media", "editorial selection"],
+      "contributeWhen": ["reusable media renderer or workflow emerges"]
+    },
+    "13-observability-and-growth": {
+      "packages": ["@theme.tools/telemetry", "@theme.tools/flags"],
+      "consumerOwns": ["measurement plan", "consent policy", "site identifiers"],
+      "contributeWhen": ["reusable event, adapter, consent, or health surface emerges"]
+    },
+    "14-independent-idea-engine": {
+      "packages": ["@theme.tools/catalog", "@theme.tools/sdk"],
+      "consumerOwns": ["product prioritization"],
+      "contributeWhen": ["reusable advisor, calculator, or validator emerges"]
+    },
+    "15-site-generation": {
+      "packages": [
+        "@theme-tools/ui",
+        "@theme-tools/themes",
+        "@theme.tools/site-delivery",
+        "@theme.tools/seo-geo"
+      ],
+      "consumerOwns": ["site content", "routes", "bindings"],
+      "contributeWhen": ["reusable site component, preset, or template emerges"]
+    },
+    "16-cinematic-website-prime-directive": {
+      "packages": [
+        "@theme-tools/ui",
+        "@theme-tools/themes",
+        "@theme.tools/media-video",
+        "@theme.tools/telemetry"
+      ],
+      "consumerOwns": ["approved narrative and composition"],
+      "contributeWhen": ["reusable cinematic component or template emerges"]
+    },
+    "21-app-foundation": {
+      "packages": [
+        "@theme-tools/ui",
+        "@theme.tools/auth",
+        "@theme.tools/telemetry",
+        "@theme.tools/sdk"
+      ],
+      "consumerOwns": ["product routes", "business policy"],
+      "contributeWhen": ["reusable application shell or service emerges"]
+    },
+    "22-visual-experience": {
+      "packages": ["@theme-tools/ui", "@theme-tools/themes", "@theme.tools/i18n-a11y"],
+      "consumerOwns": ["approved composition"],
+      "contributeWhen": ["reusable visual primitive or state emerges"]
+    },
+    "23-content-seo": {
+      "packages": ["@theme.tools/blog", "@theme.tools/seo-geo", "@theme-tools/ui"],
+      "consumerOwns": ["claims", "content", "editorial approval"],
+      "contributeWhen": ["reusable editorial or structured-data component emerges"]
+    },
+    "24-functional": {
+      "packages": ["@theme.tools/workflows", "@theme.tools/integrations", "@theme.tools/forms"],
+      "consumerOwns": ["business rules", "provider configuration"],
+      "contributeWhen": ["reusable workflow, integration, or validator emerges"]
+    },
+    "25-quality-performance": {
+      "packages": ["@theme.tools/testing", "@theme.tools/telemetry", "@theme.tools/status"],
+      "consumerOwns": ["product budgets"],
+      "contributeWhen": ["reusable benchmark or performance guard emerges"]
+    },
+    "26-platform-delivery": {
+      "packages": ["@theme.tools/site-delivery", "@theme.tools/sdk", "@theme.tools/telemetry"],
+      "consumerOwns": ["environment bindings"],
+      "contributeWhen": ["reusable delivery or migration capability emerges"]
+    },
+    "27-trust-compliance": {
+      "packages": [
+        "@theme.tools/auth",
+        "@theme.tools/audit",
+        "@theme.tools/permissions",
+        "@theme.tools/i18n-a11y"
+      ],
+      "consumerOwns": ["legal policy", "data classification"],
+      "contributeWhen": ["reusable trust, consent, or audit control emerges"]
+    },
+    "28-cf-integrations-reference": {
+      "packages": ["@theme.tools/integrations", "@theme.tools/workflows", "@theme.tools/telemetry"],
+      "consumerOwns": ["provider credentials", "product grants"],
+      "contributeWhen": ["reusable connector, trigger, sync, or action emerges"]
+    },
+    "openclaw-integration": {
+      "packages": [
+        "@theme.tools/integrations",
+        "@theme.tools/workflows",
+        "@theme.tools/agent-ui",
+        "@theme.tools/telemetry"
+      ],
+      "consumerOwns": ["agent policy", "tool grants"],
+      "contributeWhen": ["reusable agent adapter or workflow emerges"]
+    },
+    "provider-api-skill": {
+      "packages": ["@theme.tools/integrations", "@theme.tools/telemetry"],
+      "consumerOwns": ["provider credentials", "product policy"],
+      "contributeWhen": ["reusable provider action, trigger, sync, or schema emerges"]
+    },
+    "blog-publishing": {
+      "packages": ["@theme.tools/blog", "@theme-tools/ui", "@theme.tools/telemetry"],
+      "consumerOwns": ["content", "publication policy"],
+      "contributeWhen": ["reusable editorial workflow or component emerges"]
+    },
+    "paperclip": {
+      "packages": ["@theme.tools/workflows", "@theme.tools/agent-ui", "@theme.tools/telemetry"],
+      "consumerOwns": ["project policy"],
+      "contributeWhen": ["reusable orchestration adapter emerges"]
+    },
+    "tdd-and-verification": {
+      "packages": ["@theme.tools/testing", "@theme.tools/telemetry"],
+      "consumerOwns": ["product fixtures"],
+      "contributeWhen": ["reusable test harness emerges"]
+    },
+    "tri-harness-deepseek-ollama-routing": {
+      "packages": ["@theme.tools/agent-ui", "@theme.tools/telemetry"],
+      "consumerOwns": ["model routing policy"],
+      "contributeWhen": ["reusable agent routing capability emerges"]
+    }
+  }
+}

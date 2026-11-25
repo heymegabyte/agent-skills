@@ -1,0 +1,22 @@
+{
+  "reusable": {
+    "prompt": "Build reusable components, design tokens, themes, templates, hooks, utilities, and a shared library for application shells",
+    "expectedKinds": ["component", "token", "theme", "template", "hook", "utility", "library"],
+    "expectedRoutes": [
+      "05-architecture-and-stack",
+      "06-build-and-slice-loop",
+      "10-experience-and-design-system",
+      "15-site-generation"
+    ],
+    "expectedPackages": [
+      "@theme-tools/themes",
+      "@theme-tools/ui",
+      "@theme.tools/sdk",
+      "@theme.tools/site-delivery"
+    ]
+  },
+  "local": {
+    "prompt": "Change the product-specific checkout component route binding and editorial content for Acme's campaign",
+    "expectedOwner": "repository:consumer"
+  }
+}

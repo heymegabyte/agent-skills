@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "traceId": "TRACE:delivery-001",
+  "changeId": "operational-prompt-hydration-workflow",
+  "sourceRevision": "1111111111111111111111111111111111111111",
+  "records": [
+    {
+      "recordId": "TRACE:REQ-001:TASK-001",
+      "requirement": {
+        "id": "REQ-001",
+        "observableBehavior": "A selected shared package reaches the intended consumer and production evidence is recorded.",
+        "scenarios": [
+          {
+            "id": "SCN-001",
+            "when": "The package release is observed",
+            "then": "The consumer resolves that exact version and verifies behavior"
+          }
+        ]
+      },
+      "scenarioIds": ["SCN-001"],
+      "task": {
+        "id": "TASK-001",
+        "owner": "integration writer",
+        "dependencies": ["TASK-000"],
+        "affectedPaths": ["packages/ui/src/index.ts", "fixtures/consumer/package.json"],
+        "packages": ["@theme.tools/ui"],
+        "acceptanceCriteria": [
+          "Published package digest matches the tested source commit",
+          "Consumer resolves and exercises the published version"
+        ],
+        "expectedEvidence": [
+          {
+            "kind": "verification",
+            "strength": "local",
+            "description": "Focused package and consumer tests pass"
+          },
+          {
+            "kind": "remote",
+            "strength": "remote",
+            "description": "Remote main contains the tested commit"
+          },
+          {
+            "kind": "release",
+            "strength": "published",
+            "description": "Registry reports the exact version and digest"
+          },
+          {
+            "kind": "consumer",
+            "strength": "consumer-adopted",
+            "description": "Consumer lockfile and behavior resolve the release"
+          },
+          {
+            "kind": "production",
+            "strength": "production-observed",
+            "description": "Production smoke observes the adopted behavior"
+          }
+        ]
+      },
+      "implementation": {
+        "state": "implemented",
+        "codePaths": ["packages/ui/src/index.ts", "fixtures/consumer/src/app.ts"]
+      },
+      "verification": {
+        "status": "pass",
+        "receipts": [
+          {
+            "id": "VERIFY:package-consumer",
+            "command": "node --test tests/package-consumer.test.ts",
+            "status": "pass",
+            "evidenceDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observedAt": "2026-11-25T00:00:00.000Z"
+          }
+        ]
+      },
+      "integration": {
+        "status": "integrated",
+        "integratedCommit": "2222222222222222222222222222222222222222",
+        "testedTree": "2222222222222222222222222222222222222222",
+        "remote": {
+          "status": "observed-main",
+          "repository": "heymegabyte/theme.tools",
+          "branch": "main",
+          "observedSha": "2222222222222222222222222222222222222222",
+          "observedAt": "2026-11-25T00:05:00.000Z",
+          "ciStatus": "pass"
+        }
+      },
+      "delivery": {
+        "release": {
+          "applicability": "required",
+          "status": "published",
+          "package": "@theme.tools/ui",
+          "version": "8.0.0",
+          "artifactDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "evidenceIds": ["EVIDENCE:registry-001"]
+        },
+        "consumers": [
+          {
+            "id": "CONSUMER:fixture",
+            "status": "adopted",
+            "resolvedVersion": "8.0.0",
+            "lockfilePath": "fixtures/consumer/pnpm-lock.yaml",
+            "verificationReceiptIds": ["VERIFY:package-consumer"],
+            "integratedCommit": "3333333333333333333333333333333333333333"
+          }
+        ],
+        "production": {
+          "applicability": "required",
+          "status": "observed",
+          "environment": "production",
+          "deploymentId": "DEPLOY:consumer-001",
+          "observedAt": "2026-11-25T00:10:00.000Z",
+          "evidenceIds": ["EVIDENCE:smoke-001"]
+        }
+      },
+      "blockers": [
+        {
+          "id": "BLOCKER:release-resolved",
+          "edge": "release",
+          "reason": "Registry propagation was pending during the first observation",
+          "owner": "release verifier",
+          "nextAction": "No action; published version is now observed",
+          "status": "resolved",
+          "evidenceIds": ["EVIDENCE:registry-001"]
+        }
+      ]
+    }
+  ]
+}

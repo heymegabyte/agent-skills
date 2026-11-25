@@ -15,6 +15,7 @@
   "license": "SEE LICENSE IN LICENSE",
   "bin": {
     "emdash-cost-check": "bin/emdash-cost-check",
+    "emdash-hydrate-prompt": "bin/prompt-hydrator.ts",
     "emdash-quick-lint": "bin/emdash-quick-lint",
     "emdash-secret-scan": "bin/emdash-secret-scan"
   },
@@ -37,9 +38,6 @@
     "check:pack-frontmatter:json": "bash bin/check-pack-frontmatter.sh --json",
     "check:agent-fallback": "bash bin/check-agent-fallback.sh",
     "check:agent-fallback:json": "bash bin/check-agent-fallback.sh --json",
-    "check:deepseek-routing": "bash bin/deepseek-routing.sh agent-coverage",
-    "check:deepseek-routing:json": "bash bin/deepseek-routing.sh agent-coverage --json",
-    "cost:deepseek": "python3 bin/deepseek-cost-model.py --prices docs/deepseek-prices.example.json",
     "check:deprecated-models": "bash bin/check-deprecated-models.sh",
     "check:deprecated-models:json": "bash bin/check-deprecated-models.sh --json",
     "check:skill-required-fields": "bash bin/check-skill-required-fields.sh",
@@ -55,12 +53,13 @@
     "check:doc-counts:json": "bash bin/check-doc-counts.sh --json",
     "health": "bash bin/lint-all.sh && bash bin/check-ci-status.sh",
     "lint:fix": "npx --yes markdownlint-cli2@^0.18.1 --fix '**/*.md' && npx --yes prettier@3 --config .prettierrc.json --write '**/*.{json,jsonc,yml,yaml}' && shfmt -i 2 -ci -bn -w bin/*.sh bin/lib/*.sh scripts/*.sh",
-    "validate": "bash scripts/validate-skills.sh && node scripts/validate-packs.mjs && python3 scripts/check-platform-policy.py",
+    "validate": "bash scripts/validate-skills.sh && node scripts/validate-packs.mjs && python3 scripts/check-platform-policy.py && node bin/check-theme-tools-skill-integration.mjs",
     "check:platform-policy": "python3 scripts/check-platform-policy.py",
     "test:platform-policy": "python3 -m unittest discover -s scripts -p 'test_platform_policy.py'",
     "validate:packs": "node scripts/validate-packs.mjs",
     "sha-pin": "node scripts/sha-pin-actions.mjs .github/workflows/*.yml",
-    "sha-pin:check": "node scripts/sha-pin-actions.mjs --check .github/workflows/*.yml"
+    "sha-pin:check": "node scripts/sha-pin-actions.mjs --check .github/workflows/*.yml",
+    "verify:theme-tools": "node --experimental-strip-types src/theme-tools-thin-shell.ts --verify"
   },
   "keywords": [
     "claude-code",
@@ -95,16 +94,29 @@
     "12-*/**",
     "13-*/**",
     "14-*/**",
+    "15-*/**",
+    "16-*/**",
+    "21-*/**",
+    "22-*/**",
+    "23-*/**",
+    "24-*/**",
+    "25-*/**",
+    "26-*/**",
+    "27-*/**",
+    "28-*/**",
     "rules/**",
     "_packs/**",
     "_kernel/**",
     "prompts/platform-convergence.md",
     "reference/platform-stack.json",
+    "hooks/**",
     "reference/remotion-upstream.json",
     "reference/platform-research-2026-10-31.md",
     "control-plane/RUNTIME.md",
     "agents/**",
     "templates/**",
+    "fixtures/**",
+    "schemas/**",
     "scripts/**",
     "bin/**",
     "CONVENTIONS.md",
@@ -151,5 +163,11 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "themeTools": {
+    "schemaVersion": 2,
+    "consumerMode": "thin-shell",
+    "canonicalPackages": 28,
+    "voiceProvider": "voicekit-17k-grant"
   }
 }

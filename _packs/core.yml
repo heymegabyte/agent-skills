@@ -10,6 +10,8 @@ members:
   - rules/always
   - rules/full-autonomy
   - rules/autonomous-engineering
+  - rules/autonomous-mission-policy
+  - rules/evidence-gated-autonomous-orchestration
   - rules/verification-loop
   - rules/monitor-orchestration
   - rules/split-work-into-ledger

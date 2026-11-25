@@ -1,0 +1,10 @@
+{
+  "name": "prompt-hydration-controlled-consumer",
+  "private": true,
+  "dependencies": {
+    "@theme.tools/prompt-hydration-probe": "1.0.1"
+  },
+  "scripts": {
+    "verify": "node verify.mjs"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "tdd-feature",
+      "prompt": "implement a feature using test driven development",
+      "required": ["07-quality-and-verification"],
+      "forbidden_trigger_matches": ["rules/payments"]
+    },
+    {
+      "id": "payments",
+      "prompt": "configure stripe checkout and webhook billing",
+      "required": ["rules/payments"],
+      "forbidden_trigger_matches": ["rules/content-linking"]
+    },
+    {
+      "id": "trigger-boundary",
+      "prompt": "reoptimize a database query",
+      "required": ["rules/database-data-supervisor"],
+      "forbidden_trigger_matches": ["rules/source-site-enhancement"]
+    },
+    {
+      "id": "greenfield-saas-hydration",
+      "prompt": "clone Notion",
+      "required": [
+        "rules/greenfield-saas-prompt-hydration",
+        "rules/context-hydration",
+        "01-operating-system"
+      ],
+      "forbidden_trigger_matches": []
+    },
+    {
+      "id": "focused-fix-stays-narrow",
+      "prompt": "fix the mega menu title changing on hover",
+      "required": ["01-operating-system"],
+      "forbidden_trigger_matches": ["rules/greenfield-saas-prompt-hydration"]
+    }
+  ]
+}

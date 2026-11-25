@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "1.0.0",
+  "stage": "Prompt Hydration",
+  "entrypoints": [
+    {
+      "harness": "claude",
+      "support": "native-hook",
+      "nativePromptHook": true,
+      "command": "node bin/prompt-hydration-hook.mjs"
+    },
+    {
+      "harness": "codex",
+      "support": "explicit-wrapper",
+      "nativePromptHook": false,
+      "command": "node bin/prompt-hydration-entry.mjs --harness codex"
+    },
+    {
+      "harness": "gemini",
+      "support": "explicit-wrapper",
+      "nativePromptHook": false,
+      "command": "node bin/prompt-hydration-entry.mjs --harness gemini"
+    },
+    {
+      "harness": "opencode",
+      "support": "explicit-wrapper",
+      "nativePromptHook": false,
+      "command": "node bin/prompt-hydration-entry.mjs --harness opencode"
+    },
+    {
+      "harness": "paperclip",
+      "support": "explicit-wrapper",
+      "nativePromptHook": false,
+      "command": "node bin/prompt-hydration-entry.mjs --harness paperclip"
+    },
+    {
+      "harness": "openclaw",
+      "support": "explicit-wrapper",
+      "nativePromptHook": false,
+      "command": "node bin/prompt-hydration-entry.mjs --harness openclaw"
+    },
+    {
+      "harness": "coordinator",
+      "support": "explicit-wrapper",
+      "nativePromptHook": false,
+      "command": "node bin/prompt-hydration-entry.mjs --harness coordinator"
+    },
+    {
+      "harness": "worker",
+      "support": "explicit-wrapper",
+      "nativePromptHook": false,
+      "command": "node bin/prompt-hydration-entry.mjs --harness worker"
+    }
+  ]
+}

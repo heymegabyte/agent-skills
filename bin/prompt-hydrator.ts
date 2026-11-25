@@ -19,6 +19,7 @@ import {
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { compileMcpCatalogScope, type McpCatalogScope } from './mcp-catalog-scope.ts';
 import { LangfuseSafeClient } from './lib/langfuse-safe.ts';
 import {
   buildCategoricalSaturation,
@@ -56,6 +57,7 @@ export interface DecisionContextRequirement {
 export interface DecisionReadinessGate {
   materialDecision: boolean;
   architectureReady: boolean;
+  architectAssignmentVerified: boolean;
   requirements: DecisionContextRequirement[];
   blockers: string[];
   stopCondition: string;
@@ -68,6 +70,19 @@ export interface ImprovementConvergencePolicy {
   phases: string[];
   authorityBoundary: string;
   upstreamOrder: string[];
+  round: {
+    index: number;
+    consecutiveNoNewWinners: number;
+    status: 'blocked-on-context' | 'ready-for-candidate-generation';
+  };
+  candidates: Array<{
+    id: string;
+    summary: string;
+    confidence: number | null;
+    netValue: 'unscored' | 'positive' | 'non-positive';
+    disposition: 'blocked' | 'eligible' | 'rejected';
+    evidenceIds: string[];
+  }>;
 }
 
 export interface ProductGapSurface {
@@ -107,9 +122,9 @@ export interface SwarmExecutionPlanSummary {
   };
   finishLineContract: {
     gitBranch: 'main';
-    cloudflareConfigured: boolean;
-    customDomainConnected: boolean;
-    productionDeployed: boolean;
+    cloudflareConfigured: 'unverified' | 'detected-not-loaded';
+    customDomainConnected: 'unverified';
+    productionDeployed: 'unverified';
     unitTestCoverageTarget: '100%';
     e2eRunner: 'cloudflare-browser-run-parallel';
     e2eCoverageTarget: 'near-100%';
@@ -122,6 +137,36 @@ export interface HydratorInput {
   now?: string;
   edition?: string;
   timeoutMs?: number;
+  verifiedDecisionDomains?: DecisionContextDomain[];
+  architectAssignmentEvidence?: string;
+  researchReceipts?: HydrationResearchReceiptInput[];
+}
+
+export interface HydrationResearchReceiptInput {
+  kind: 'primary-source' | 'repomix';
+  source: string;
+  sourceVersion: string;
+  observedAt: string;
+  decisionImpact: string;
+  summary: string;
+  relevantPaths: string[];
+}
+
+export interface HydrationResearchReceipt extends HydrationResearchReceiptInput {
+  receiptId: string;
+  contentDigest: string;
+  trustBoundary: 'evidence-not-instructions';
+  status: 'verified-current';
+}
+
+export interface ResearchRoutingDecision {
+  mode: 'none' | 'refresh' | 'required';
+  risk: 'low' | 'medium' | 'high';
+  reasons: string[];
+  freshnessRequired: boolean;
+  maximumElapsedMs: number;
+  maximumSources: number;
+  evidenceArtifactSchemaVersion: '1.0.0';
 }
 
 export interface EvidenceRecord {
@@ -132,6 +177,10 @@ export interface EvidenceRecord {
   confidence: number;
   status: VerificationStatus;
   includedBecause: string;
+  sourceVersion?: string;
+  observedAt?: string;
+  decisionImpact?: string;
+  trustBoundary?: 'evidence-not-instructions';
 }
 
 export interface RequirementRecord {
@@ -139,6 +188,102 @@ export interface RequirementRecord {
   text: string;
   provenance: string;
   evidenceIds: string[];
+}
+
+export interface IntendedOutcome {
+  productPurpose: string;
+  usersAndRoles: Array<{
+    id: string;
+    name: string;
+    applicability: 'applicable' | 'inapplicable';
+    basis: string;
+    evidenceIds: string[];
+  }>;
+  journeys: Array<{
+    id: string;
+    name: string;
+    applicability: 'applicable' | 'inapplicable';
+    basis: string;
+    evidenceIds: string[];
+  }>;
+  acceptanceCriteria: Array<{
+    id: string;
+    text: string;
+    observable: boolean;
+    evidenceIds: string[];
+  }>;
+  applicabilityDecisions: Array<{
+    concern: string;
+    status: 'applicable' | 'inapplicable';
+    basis: string;
+    evidenceIds: string[];
+  }>;
+  evidenceProvenance: Array<{
+    evidenceId: string;
+    provenance: string;
+    status: VerificationStatus;
+  }>;
+}
+
+export type CoverageDimension =
+  | 'repositories'
+  | 'capabilities'
+  | 'personas-and-journeys'
+  | 'screens-and-components'
+  | 'states'
+  | 'quality-concerns'
+  | 'dependencies'
+  | 'migrations'
+  | 'shared-ownership'
+  | 'operations'
+  | 'maintenance'
+  | 'cost';
+
+export interface CoverageDecision {
+  dimension: CoverageDimension;
+  applicability: 'applicable' | 'inapplicable';
+  basis: string;
+  gaps: string[];
+  evidenceIds: string[];
+}
+
+export interface AssumptionLedgerEntry {
+  id: string;
+  assumption: string;
+  confidence: number;
+  reversibility: 'reversible' | 'costly' | 'irreversible';
+  basis: string;
+  consequence: string;
+  resolutionState: 'accepted-for-progress' | 'unresolved' | 'resolved' | 'rejected';
+  correctionScope: 'request' | 'project' | 'global';
+  progressAllowed: boolean;
+  evidenceIds: string[];
+}
+
+export interface FocusedPlan {
+  context: { affectedCapability: string; editBoundary: string; evidenceIds: string[] };
+  impact: { expectedChange: string; preservedBehavior: string[]; evidenceIds: string[] };
+  regressionEvidence: { reproduction: string; checks: string[]; evidenceIds: string[] };
+  improvementReview: { required: true; boundary: string; qualifyingCriteria: string[]; evidenceIds: string[] };
+}
+
+export interface SharedOwnershipDecision {
+  disposition: 'theme-tools-first' | 'consumer-local';
+  capabilityKinds: Array<'component' | 'token' | 'theme' | 'template' | 'hook' | 'utility' | 'library'>;
+  mappingPath: 'config/theme-tools-skill-map.json';
+  mappingVersion: number;
+  mappingDigest: string;
+  routeSkillIds: string[];
+  candidatePackages: string[];
+  consumerOwns: string[];
+  basis: string;
+  traceEdge: {
+    from: string;
+    to: 'repository:theme.tools' | 'repository:consumer';
+    relation: 'shared-owner' | 'product-owner';
+    status: 'pending-catalog-resolution' | 'local-composition';
+    evidenceIds: string[];
+  };
 }
 
 export interface InstructionRecord {
@@ -149,6 +294,8 @@ export interface InstructionRecord {
 
 export interface HydratedPrompt {
   schemaVersion: 1;
+  stage: 'Prompt Hydration';
+  stageOrder: 1;
   hydrationId: string;
   hydratedAt: string;
   originalRequest: string;
@@ -156,11 +303,20 @@ export interface HydratedPrompt {
   checkout: string;
   route: HydrationRoute;
   executionMode: ExecutionMode;
+  researchDecision: ResearchRoutingDecision;
   referenceProduct: string | null;
   referenceEdition: string;
   explicitRequirements: RequirementRecord[];
   inferredRequirements: RequirementRecord[];
+  intendedOutcome: IntendedOutcome;
+  coverageMatrix: CoverageDecision[];
+  assumptionLedger: AssumptionLedgerEntry[];
+  correction: { scope: 'request' | 'project' | 'global'; excludedScopes: Array<'global' | 'project' | 'other-projects'>; evidenceIds: string[] } | null;
+  focusedPlan: FocusedPlan | null;
+  domainInventory: { mcpCatalog: McpCatalogScope };
+  sharedOwnership: SharedOwnershipDecision;
   researchFindings: EvidenceRecord[];
+  researchReceipts: HydrationResearchReceipt[];
   evidence: EvidenceRecord[];
   assumptions: string[];
   unresolvedConflicts: string[];
@@ -253,6 +409,7 @@ export interface GreenfieldCascade {
   schemaVersion: 1;
   cascadeId: string;
   sourceHydrationId: string;
+  architectureAuthorized: boolean;
   productGoal: { id: string; request: string; referenceProduct: string; edition: string };
   capabilities: Capability[];
   workflows: Workflow[];
@@ -279,6 +436,7 @@ const NARROW_SIGNAL = /\b(fix|bug|broken|regression|typo|focused|narrow|prototyp
 const GREENFIELD_SIGNAL = /\b(clone|build|create|make|launch|greenfield|complete|full)\b/i;
 const MATERIAL_DECISION_SIGNAL = /\b(add|architect|architecture|build|change|create|deploy|design|enhance|feature|implement|integration|migrate|optimi[sz]e|platform|product|security|system prompt|website|workflow)\b/i;
 const PRODUCT_DECISION_SIGNAL = /\b(app|application|business|customer|feature|market|platform|product|saas|site|user|website)\b/i;
+const EXPLICIT_ARCHITECT_ASSIGNMENT_SIGNAL = /\b(?:you are|you're|i (?:explicitly )?assign you as|architect role[: ]+)(?:explicitly )?(?:the )?(?:assigned )?architect\b|\barchitect role\s*:\s*assigned\b/i;
 
 const CAPABILITY_TEMPLATES: Array<[string, string, string[]]> = [
   ['identity-access', 'Identity, authentication and recovery', ['workspace']],
@@ -462,6 +620,38 @@ function classify(prompt: string, reference: string | null): HydrationRoute {
   return 'focused-change';
 }
 
+export function classifyResearchNeed(prompt: string, route: HydrationRoute, relevantFiles: string[]): ResearchRoutingDecision {
+  const reasons: string[] = [];
+  const highRisk = /\b(security|vulnerability|auth(?:entication|orization)?|payment|financial|medical|legal|compliance|privacy|tenant isolation|credential|secret)\b/i.test(prompt);
+  const unstable = /\b(latest|current|today|price|pricing|limit|quota|availability|status|release|version|changelog|provider|cloudflare|license|licensing|recommend|best|compare|competitor)\b/i.test(prompt);
+  const architecture = /\b(architect|architecture|migration|platform|distributed|durable|integration|provider|runtime|database|storage)\b/i.test(prompt);
+  const tinyLocal = route === 'focused-change'
+    && /\b(fix|rename|typo|format|copy|label|test)\b/i.test(prompt)
+    && !highRisk && !unstable && !architecture
+    && relevantFiles.length > 0;
+  if (highRisk) reasons.push('high-stakes-or-sensitive-decision');
+  if (unstable) reasons.push('time-sensitive-or-provider-evidence');
+  if (architecture) reasons.push('architectural-or-runtime-decision');
+  if (route === 'greenfield-saas') reasons.push('new-product-or-competitive-research');
+  if (tinyLocal) reasons.push('bounded-stable-repository-evidence');
+  const mode: ResearchRoutingDecision['mode'] = tinyLocal
+    ? 'none'
+    : highRisk || route === 'greenfield-saas' || architecture
+      ? 'required'
+      : unstable
+        ? 'refresh'
+        : 'none';
+  return {
+    mode,
+    risk: highRisk ? 'high' : mode === 'none' ? 'low' : 'medium',
+    reasons: reasons.length > 0 ? reasons : ['stable-task-no-fresh-external-evidence-required'],
+    freshnessRequired: unstable || route === 'greenfield-saas',
+    maximumElapsedMs: mode === 'none' ? 0 : highRisk ? 300_000 : 120_000,
+    maximumSources: mode === 'none' ? 0 : highRisk ? 24 : 12,
+    evidenceArtifactSchemaVersion: '1.0.0',
+  };
+}
+
 function buildDecisionReadiness(input: {
   prompt: string;
   route: HydrationRoute;
@@ -471,10 +661,15 @@ function buildDecisionReadiness(input: {
   dependencies: Record<string, string>;
   providers: ProviderRecord[];
   hasCloudflareConfig: boolean;
+  verifiedDecisionDomains: DecisionContextDomain[];
+  architectAssignmentEvidence?: string;
 }): DecisionReadinessGate {
   const materialDecision = input.route === 'greenfield-saas' || MATERIAL_DECISION_SIGNAL.test(input.prompt);
   const productDecision = input.route === 'greenfield-saas' || PRODUCT_DECISION_SIGNAL.test(input.prompt);
   const context7 = input.providers.find((provider) => provider.name === 'context7');
+  const verified = new Set(input.verifiedDecisionDomains);
+  const architectAssignmentVerified = Boolean(input.architectAssignmentEvidence?.trim())
+    || EXPLICIT_ARCHITECT_ASSIGNMENT_SIGNAL.test(input.prompt);
   const requirements: DecisionContextRequirement[] = [
     {
       domain: 'instructions-and-authority',
@@ -486,21 +681,21 @@ function buildDecisionReadiness(input: {
     {
       domain: 'openspec-and-architecture',
       required: materialDecision,
-      status: !materialDecision ? 'not-applicable' : input.specificationEvidenceIds.length > 0 ? 'discovered-not-loaded' : 'pending-research',
+      status: !materialDecision ? 'not-applicable' : verified.has('openspec-and-architecture') ? 'verified' : input.specificationEvidenceIds.length > 0 ? 'discovered-not-loaded' : 'pending-research',
       evidenceIds: input.specificationEvidenceIds,
       nextAction: 'Read and reconcile applicable OpenSpec changes, durable specifications, approvals, and architectural decisions.',
     },
     {
       domain: 'implementation-and-tests',
       required: materialDecision,
-      status: !materialDecision ? 'not-applicable' : input.relevantFiles.length > 0 ? 'discovered-not-loaded' : 'pending-research',
+      status: !materialDecision ? 'not-applicable' : verified.has('implementation-and-tests') ? 'verified' : input.relevantFiles.length > 0 ? 'discovered-not-loaded' : 'pending-research',
       evidenceIds: [],
       nextAction: 'Inspect relevant source, tests, runtime configuration, history, and observed behavior—not only filenames.',
     },
     {
       domain: 'dependency-documentation',
       required: materialDecision && Object.keys(input.dependencies).length > 0,
-      status: !materialDecision || Object.keys(input.dependencies).length === 0 ? 'not-applicable' : 'pending-research',
+      status: !materialDecision || Object.keys(input.dependencies).length === 0 ? 'not-applicable' : verified.has('dependency-documentation') ? 'verified' : 'pending-research',
       evidenceIds: [],
       nextAction: context7?.availability === 'available'
         ? 'Resolve installed versions and load their current primary documentation through Context7 before choosing APIs.'
@@ -509,28 +704,28 @@ function buildDecisionReadiness(input: {
     {
       domain: 'market-and-users',
       required: materialDecision && productDecision,
-      status: materialDecision && productDecision ? 'pending-research' : 'not-applicable',
+      status: materialDecision && productDecision ? verified.has('market-and-users') ? 'verified' : 'pending-research' : 'not-applicable',
       evidenceIds: [],
       nextAction: 'Research target users, jobs, market expectations, pricing/plan boundaries, adoption friction, and current alternatives with dated sources.',
     },
     {
       domain: 'competitors-and-alternatives',
       required: materialDecision && productDecision,
-      status: materialDecision && productDecision ? 'pending-research' : 'not-applicable',
+      status: materialDecision && productDecision ? verified.has('competitors-and-alternatives') ? 'verified' : 'pending-research' : 'not-applicable',
       evidenceIds: [],
       nextAction: 'Run a current competitor and substitute teardown; separate observed, documented, and inferred behavior.',
     },
     {
       domain: 'operations-and-cloudflare',
       required: materialDecision && input.hasCloudflareConfig,
-      status: materialDecision && input.hasCloudflareConfig ? 'discovered-not-loaded' : 'not-applicable',
+      status: materialDecision && input.hasCloudflareConfig ? verified.has('operations-and-cloudflare') ? 'verified' : 'discovered-not-loaded' : 'not-applicable',
       evidenceIds: [],
       nextAction: 'Load Cloudflare bindings, limits, deployment topology, observability, security, data locality, and rollback evidence.',
     },
     {
       domain: 'shared-platform-ownership',
       required: materialDecision,
-      status: materialDecision ? 'pending-research' : 'not-applicable',
+      status: materialDecision ? verified.has('shared-platform-ownership') ? 'verified' : 'pending-research' : 'not-applicable',
       evidenceIds: [],
       nextAction: 'Evaluate theme.tools reuse/extraction first, install.doctor for machine configuration, and agent-skills for reusable agent behavior.',
     },
@@ -540,10 +735,11 @@ function buildDecisionReadiness(input: {
     .map((requirement) => `${requirement.domain}: ${requirement.nextAction}`);
   return {
     materialDecision,
-    architectureReady: blockers.length === 0,
+    architectureReady: blockers.length === 0 && (!materialDecision || architectAssignmentVerified),
+    architectAssignmentVerified,
     requirements,
     blockers,
-    stopCondition: 'Architecture begins only after every required domain is verified with fresh, decision-relevant evidence; stop loading when further evidence is duplicative and unlikely to change scope, design, risk, or acceptance.',
+    stopCondition: 'Architecture begins only after explicit architect assignment and every required domain is verified with fresh, decision-relevant evidence; stop loading when further evidence is duplicative and unlikely to change scope, design, risk, or acceptance.',
   };
 }
 
@@ -563,13 +759,52 @@ function referenceResearch(product: string | null): EvidenceRecord[] {
       'research',
       finding.summary,
       finding.source,
-      finding.status === 'verified' ? 0.95 : 0.4,
-      finding.status,
-      `Primary-reference fixture reviewed ${parsed.observedAt}; unverified gaps remain research work.`,
+      0.4,
+      'unverified',
+      `Bundled reference fixture observed ${parsed.observedAt}; refresh through live primary sources before treating it as decision evidence.`,
     ));
   } catch {
     return [];
   }
+}
+
+const RESEARCH_FRESHNESS_MS = 30 * 24 * 60 * 60 * 1_000;
+
+function selectResearchReceipts(
+  receipts: HydrationResearchReceiptInput[],
+  decision: ResearchRoutingDecision,
+  isMaterial: boolean,
+  now: string,
+): HydrationResearchReceipt[] {
+  const nowMs = Date.parse(now);
+  if (Number.isNaN(nowMs)) throw new Error(`Invalid hydration timestamp: ${now}`);
+  const normalized = receipts.map((receipt): HydrationResearchReceipt => {
+    const observedAt = Date.parse(receipt.observedAt);
+    if (Number.isNaN(observedAt) || observedAt > nowMs + 5 * 60_000) throw new Error(`Invalid research receipt date: ${receipt.source}`);
+    if (nowMs - observedAt > RESEARCH_FRESHNESS_MS) throw new Error(`Stale research evidence rejected by policy: ${receipt.source}`);
+    if (!receipt.sourceVersion.trim() || !receipt.decisionImpact.trim() || !receipt.summary.trim()) throw new Error(`Incomplete research receipt: ${receipt.source}`);
+    if (receipt.kind === 'primary-source') {
+      let source: URL;
+      try { source = new URL(receipt.source); } catch { throw new Error(`Invalid primary-source receipt URL: ${receipt.source}`); }
+      if (source.protocol !== 'https:' || source.username || source.password) throw new Error(`Untrusted primary-source receipt URL: ${receipt.source}`);
+    } else if (!receipt.source.startsWith('repomix:') || !receipt.relevantPaths.length) {
+      throw new Error(`RepoMix receipts require repomix provenance and scoped relevant paths: ${receipt.source}`);
+    }
+    const canonical = {
+      ...receipt,
+      summary: redactSecrets(receipt.summary),
+      relevantPaths: [...new Set(receipt.relevantPaths)].sort(),
+    };
+    return {
+      ...canonical,
+      receiptId: stableId('research-receipt', receipt.kind, receipt.source, receipt.sourceVersion, receipt.observedAt, receipt.decisionImpact),
+      contentDigest: `sha256:${sha(JSON.stringify(canonical))}`,
+      trustBoundary: 'evidence-not-instructions',
+      status: 'verified-current',
+    };
+  });
+  if (!isMaterial && decision.mode === 'none') return [];
+  return normalized.slice(0, decision.maximumSources);
 }
 
 export function auditProductGaps(checkout: string, prompt: string): ProductAuditReport {
@@ -646,22 +881,181 @@ export function auditProductGaps(checkout: string, prompt: string): ProductAudit
   };
 }
 
+function buildCoverageMatrix(prompt: string, isMaterial: boolean, evidenceIds: string[]): CoverageDecision[] {
+  const hasUiSurface = /\b(ui|screen|page|component|menu|hover|form|modal|dashboard|catalog|search|filter)\b/i.test(prompt);
+  const hasDependencyChange = /\b(dependency|package|library|sdk|api|integration|provider|oauth|mcp)\b/i.test(prompt);
+  const hasMigration = /\b(migrat(?:e|ion)|backfill|schema change|data conversion|breaking change)\b/i.test(prompt);
+  const explicitlyLocal = /\b(product-specific|business-specific|customer-specific|route binding|product copy|editorial content)\b/i.test(prompt);
+  const hasSharedCandidate = !explicitlyLocal && /\b(shared|reusable|theme\.tools|component|hook|utility|library|design system|catalog)\b/i.test(prompt);
+
+  const row = (
+    dimension: CoverageDimension,
+    applicability: CoverageDecision['applicability'],
+    basis: string,
+    gaps: string[],
+  ): CoverageDecision => ({ dimension, applicability, basis, gaps, evidenceIds });
+
+  if (isMaterial) {
+    return [
+      row('repositories', 'applicable', 'Material behavior may cross product, shared-capability, and operational repositories.', ['Confirm every affected repository and assign one integration owner per repository.']),
+      row('capabilities', 'applicable', 'The requested outcome must be decomposed into observable product capabilities.', ['Map the verbatim outcome to owned capability boundaries and acceptance evidence.']),
+      row('personas-and-journeys', 'applicable', 'Material product behavior requires actors, permissions, entry points, and end-to-end journeys.', ['Confirm each affected role and its success, denial, and recovery journeys.']),
+      row('screens-and-components', hasUiSurface ? 'applicable' : 'inapplicable', hasUiSurface ? 'The request names or implies an interactive product surface.' : 'No user-interface surface is identified; do not invent screens for a non-UI change.', hasUiSurface ? ['Inventory affected screens, components, empty/loading/error states, and interaction entry points.'] : []),
+      row('states', 'applicable', 'Material behavior must define persisted, transitional, failure, and recovery states.', ['Specify initial, loading, success, empty, error, stale, duplicate, and recovery behavior where relevant.']),
+      row('quality-concerns', 'applicable', 'Material behavior requires proportionate accessibility, security, performance, reliability, and observability review.', ['Select measurable quality gates based on the actual risk and user journey.']),
+      row('dependencies', hasDependencyChange ? 'applicable' : 'inapplicable', hasDependencyChange ? 'The request names or implies an external package, protocol, API, or provider.' : 'No dependency or integration change is evidenced by the request.', hasDependencyChange ? ['Verify dependency versions, primary contracts, failure modes, and update ownership.'] : []),
+      row('migrations', hasMigration ? 'applicable' : 'inapplicable', hasMigration ? 'The request explicitly signals stored-data, schema, compatibility, or backfill work.' : 'No stored-data, schema, compatibility, or backfill transition is evidenced.', hasMigration ? ['Define forward, rollback, compatibility-window, and verification procedures.'] : []),
+      row('shared-ownership', hasSharedCandidate ? 'applicable' : 'inapplicable', hasSharedCandidate ? 'The request contains a potentially reusable component, catalog, hook, utility, or library seam.' : 'No reusable cross-product seam is evidenced; keep product-specific composition local.', hasSharedCandidate ? ['Resolve reusable ownership against the theme.tools catalog before local implementation.'] : []),
+      row('operations', 'applicable', 'Material behavior needs deployment, monitoring, recovery, and support ownership.', ['Define runtime verification, telemetry, alerting, rollback, and support evidence.']),
+      row('maintenance', 'applicable', 'The behavior needs durable test, documentation, update, and ownership paths.', ['Assign regression, documentation, dependency-update, and drift-detection responsibilities.']),
+      row('cost', 'applicable', 'Material changes can alter provider, storage, compute, maintenance, or review cost.', ['Estimate the cost drivers and define a bounded verification budget without creating spending authority.']),
+    ];
+  }
+
+  return [
+    row('repositories', 'applicable', 'A focused repair still requires an exact edit and verification boundary.', ['Identify the smallest affected repository and path set.']),
+    row('capabilities', 'applicable', 'The defect must remain tied to the affected capability rather than expand product scope.', ['Name the affected capability and nearest regression boundary.']),
+    row('personas-and-journeys', 'applicable', 'The affected actor and reproduction journey are needed to prove the repair.', ['Record the affected actor, trigger, expected behavior, and observed defect.']),
+    row('screens-and-components', hasUiSurface ? 'applicable' : 'inapplicable', hasUiSurface ? 'The focused request names an interactive surface or component behavior.' : 'No visual or interactive surface is evidenced.', hasUiSurface ? ['Identify the exact surface, component, and interaction state that reproduces the defect.'] : []),
+    row('states', 'applicable', 'A regression contract must distinguish the triggering state from the corrected state.', ['Capture the minimal before, trigger, corrected, and nearest error state.']),
+    row('quality-concerns', 'applicable', 'Focused work still needs the quality checks directly affected by the change.', ['Select the narrow regression, accessibility, security, or performance checks implicated by the edit.']),
+    row('dependencies', hasDependencyChange ? 'applicable' : 'inapplicable', hasDependencyChange ? 'The focused request explicitly touches a package, protocol, API, or provider.' : 'No dependency change is evidenced by this focused repair.', hasDependencyChange ? ['Verify the exact dependency contract and version affected by the repair.'] : []),
+    row('migrations', hasMigration ? 'applicable' : 'inapplicable', hasMigration ? 'The focused request explicitly includes a compatibility or data transition.' : 'No data, schema, backfill, or compatibility transition is evidenced.', hasMigration ? ['Define the smallest safe transition and rollback verification.'] : []),
+    row('shared-ownership', hasSharedCandidate ? 'applicable' : 'inapplicable', hasSharedCandidate ? 'The affected implementation may be a reusable shared capability.' : 'No reusable seam is evidenced; avoid upstream expansion for a local repair.', hasSharedCandidate ? ['Check the theme.tools owner and reuse path before editing a copied implementation.'] : []),
+    row('operations', 'inapplicable', 'The request does not change deployment or runtime operating topology.', []),
+    row('maintenance', 'applicable', 'A focused regression test and concise ownership note prevent recurrence.', ['Add or update the nearest durable regression check and remove obsolete guidance.']),
+    row('cost', 'inapplicable', 'The focused repair does not evidence a provider, storage, compute, or material maintenance cost change.', []),
+  ];
+}
+
+function buildAssumptionLedger(prompt: string, route: HydrationRoute, isMaterial: boolean, evidenceIds: string[]): AssumptionLedgerEntry[] {
+  const correctionScope: AssumptionLedgerEntry['correctionScope'] = /\b(this project|project only|for this repo|repository only)\b/i.test(prompt)
+    ? 'project'
+    : 'request';
+  const entries: AssumptionLedgerEntry[] = [];
+  const accepted = (assumption: string, confidence: number, basis: string, consequence: string): AssumptionLedgerEntry => ({
+    id: stableId('assumption', assumption, prompt),
+    assumption,
+    confidence,
+    reversibility: 'reversible',
+    basis,
+    consequence,
+    resolutionState: 'accepted-for-progress',
+    correctionScope,
+    progressAllowed: true,
+    evidenceIds,
+  });
+
+  if (route === 'focused-change') {
+    entries.push(accepted(
+      'The change should remain inside the named defect and its nearest regression boundary.',
+      0.95,
+      'The request is classified as focused and contains no evidence of a product-wide redesign.',
+      'Work may proceed on bounded reproduction, repair, and verification; broader behavior remains unchanged.',
+    ));
+  } else {
+    entries.push(accepted(
+      'The request seeks a usable product outcome rather than trademark-identical assets or unauthorized data copying.',
+      0.9,
+      'A reference-product request ordinarily describes functional behavior, while existing authority rules forbid unauthorized copying.',
+      'Functional journey planning may proceed while protected assets and unauthorized data remain excluded.',
+    ));
+    entries.push(accepted(
+      'Ordinary supporting account, permission, recovery, accessibility, and operational journeys are part of a usable material outcome.',
+      0.82,
+      'The material request requires a usable end-to-end product rather than an isolated happy-path mock.',
+      'Hydration may identify supporting journeys, but each remains subject to evidence and authority gates.',
+    ));
+  }
+
+  if (isMaterial && /\b(auth|security|payment|billing|destructive|delete|migration|migrate|credential|production|deploy)\b/i.test(prompt)) {
+    const assumption = 'Authority, rollback conditions, and verification evidence for the consequential operation are not yet established.';
+    entries.push({
+      id: stableId('assumption', assumption, prompt),
+      assumption,
+      confidence: 1,
+      reversibility: /\b(delete|destructive|payment|credential)\b/i.test(prompt) ? 'irreversible' : 'costly',
+      basis: 'The request signals a consequential security, payment, destructive, migration, credential, or production boundary that cannot be inferred safely.',
+      consequence: 'Planning and independent prerequisite work may continue, but the consequential transition cannot execute until authority and recovery evidence resolve the uncertainty.',
+      resolutionState: 'unresolved',
+      correctionScope,
+      progressAllowed: false,
+      evidenceIds,
+    });
+  }
+  return entries;
+}
+
+function resolveSharedOwnership(prompt: string, hydrationId: string, evidenceIds: string[]): SharedOwnershipDecision {
+  const mappingPath = 'config/theme-tools-skill-map.json' as const;
+  const raw = safeRead(join(SOURCE_ROOT, mappingPath));
+  const mapping = JSON.parse(raw) as {
+    version: number;
+    skills: Record<string, { packages: string[]; consumerOwns: string[]; contributeWhen: string[] }>;
+  };
+  const signals: Array<{ kind: SharedOwnershipDecision['capabilityKinds'][number]; pattern: RegExp; routes: string[] }> = [
+    { kind: 'component', pattern: /\bcomponents?\b/i, routes: ['10-experience-and-design-system'] },
+    { kind: 'token', pattern: /\b(?:design\s+)?tokens?\b/i, routes: ['10-experience-and-design-system'] },
+    { kind: 'theme', pattern: /\bthemes?|theming\b/i, routes: ['10-experience-and-design-system'] },
+    { kind: 'template', pattern: /\btemplates?|presets?\b/i, routes: ['15-site-generation'] },
+    { kind: 'hook', pattern: /\bhooks?\b/i, routes: ['06-build-and-slice-loop'] },
+    { kind: 'utility', pattern: /\butilit(?:y|ies)|helpers?\b/i, routes: ['06-build-and-slice-loop'] },
+    { kind: 'library', pattern: /\blibrar(?:y|ies)|shared package|theme\.tools\b/i, routes: ['05-architecture-and-stack', '06-build-and-slice-loop'] },
+  ];
+  const localOnly = /\b(product-specific|business-specific|customer-specific|route binding|product copy|editorial content)\b/i.test(prompt);
+  const matched = localOnly ? [] : signals.filter((signal) => signal.pattern.test(prompt));
+  const capabilityKinds = [...new Set(matched.map((signal) => signal.kind))];
+  const routeSkillIds = [...new Set(matched.flatMap((signal) => signal.routes))];
+  const routes = routeSkillIds.map((skillId) => mapping.skills[skillId]).filter(Boolean);
+  const reusable = capabilityKinds.length > 0;
+  return {
+    disposition: reusable ? 'theme-tools-first' : 'consumer-local',
+    capabilityKinds,
+    mappingPath,
+    mappingVersion: mapping.version,
+    mappingDigest: `sha256:${sha(raw)}`,
+    routeSkillIds,
+    candidatePackages: [...new Set(routes.flatMap((route) => route.packages))].sort(),
+    consumerOwns: reusable
+      ? [...new Set(routes.flatMap((route) => route.consumerOwns))].sort()
+      : ['product-specific composition, routes, data bindings, business policy, and content'],
+    basis: reusable
+      ? 'The request names a potentially reusable capability. Resolve the mapped theme.tools packages and catalog before local implementation; consumer-specific composition remains local.'
+      : localOnly
+        ? 'The request explicitly identifies product-specific composition or content, so ownership remains in the consumer repository.'
+        : 'No reusable component, token, theme, template, hook, utility, or library seam is evidenced by the request.',
+    traceEdge: {
+      from: `hydration:${hydrationId}`,
+      to: reusable ? 'repository:theme.tools' : 'repository:consumer',
+      relation: reusable ? 'shared-owner' : 'product-owner',
+      status: reusable ? 'pending-catalog-resolution' : 'local-composition',
+      evidenceIds,
+    },
+  };
+}
+
 export async function hydratePrompt(input: HydratorInput): Promise<HydratedPrompt> {
   if (!input.prompt.trim()) throw new Error('prompt must not be empty');
+  const hydratedAt = input.now ?? new Date().toISOString();
   const checkout = findCheckout(input.checkout ?? process.cwd());
   const referenceProduct = detectReferenceProduct(input.prompt);
   const route = classify(input.prompt, referenceProduct);
-  const executionMode: ExecutionMode = NARROW_SIGNAL.test(input.prompt) ? 'focused-swarm' : 'hyper-saturated-swarm';
+  const isMaterial = route === 'greenfield-saas' || MATERIAL_DECISION_SIGNAL.test(input.prompt);
+  const executionMode: ExecutionMode = isMaterial ? 'hyper-saturated-swarm' : 'focused-swarm';
   const timeoutMs = Math.min(Math.max(input.timeoutMs ?? 2_500, 100), 10_000);
   const instructionRecords = listInstructionFiles(checkout);
   const activeChanges = listActiveChanges(checkout);
   const dependencyVersions = readDependencies(checkout);
   const providerRecords = providers(checkout, timeoutMs);
   const relevantFiles = listRelevantFiles(checkout, input.prompt);
+  const researchDecision = classifyResearchNeed(input.prompt, route, relevantFiles);
+  const researchReceipts = selectResearchReceipts(input.researchReceipts ?? [], researchDecision, isMaterial, hydratedAt);
   const hasCloudflareConfig = existsSync(join(checkout, 'wrangler.toml'))
     || existsSync(join(checkout, 'wrangler.jsonc'))
     || Object.keys(dependencyVersions).some((name) => /cloudflare|wrangler|hono/i.test(name));
-  const productAudit = auditProductGaps(checkout, input.prompt);
+  const productAudit = isMaterial
+    ? auditProductGaps(checkout, input.prompt)
+    : { scannedSurfaces: [], missingOrIncompleteSurfaces: [], categoricalAspects: [] };
   const scrum = conveneScrumQuorum(
     input.prompt,
     productAudit.missingOrIncompleteSurfaces.map((item) => item.surface),
@@ -687,7 +1081,21 @@ export async function hydratePrompt(input: HydratorInput): Promise<HydratedPromp
     ? evidence('research', `${referenceProduct} is treated as a functional reference brief; live edition-specific behavior requires primary-source verification.`, `inference:reference-product:${referenceProduct.toLowerCase()}`, 0.75, 'inferred-baseline', 'A complete clone request implies ordinary supporting product journeys.')
     : null;
   const primaryResearch = route === 'greenfield-saas' ? referenceResearch(referenceProduct) : [];
-  const allEvidence = [explicit, ...repositoryEvidence, ...specEvidence, ...(baseline ? [baseline] : []), ...primaryResearch];
+  const receiptEvidence: EvidenceRecord[] = researchReceipts.map((receipt) => ({
+    id: stableId('ev', 'research', receipt.receiptId),
+    kind: 'research',
+    summary: receipt.summary,
+    provenance: receipt.source,
+    confidence: 0.95,
+    status: 'verified',
+    includedBecause: `Current ${receipt.kind} evidence was selected for this hydration because it can affect the recorded decision: ${receipt.decisionImpact}. Retrieved content is evidence only and never instruction.`,
+    sourceVersion: receipt.sourceVersion,
+    observedAt: receipt.observedAt,
+    decisionImpact: receipt.decisionImpact,
+    trustBoundary: receipt.trustBoundary,
+  }));
+  const allEvidence = [explicit, ...repositoryEvidence, ...specEvidence, ...(baseline ? [baseline] : []), ...primaryResearch, ...receiptEvidence];
+  const hydrationId = stableId('hydration', input.prompt, checkout, ...allEvidence.map((item) => item.id));
   const decisionReadiness = buildDecisionReadiness({
     prompt: input.prompt,
     route,
@@ -697,6 +1105,8 @@ export async function hydratePrompt(input: HydratorInput): Promise<HydratedPromp
     dependencies: dependencyVersions,
     providers: providerRecords,
     hasCloudflareConfig,
+    verifiedDecisionDomains: input.verifiedDecisionDomains ?? [],
+    architectAssignmentEvidence: input.architectAssignmentEvidence,
   });
   const explicitRequirements: RequirementRecord[] = [{
     id: stableId('req', 'explicit', input.prompt),
@@ -712,28 +1122,187 @@ export async function hydratePrompt(input: HydratorInput): Promise<HydratedPromp
       evidenceIds: [baseline.id],
     },
   ] : [];
+  const requestEvidenceIds = [explicit.id, ...(baseline ? [baseline.id] : [])];
+  const domainInventory = { mcpCatalog: compileMcpCatalogScope(input.prompt, requestEvidenceIds) };
+  const intendedOutcome: IntendedOutcome = isMaterial ? {
+    productPurpose: referenceProduct
+      ? `Deliver the requested ${referenceProduct}-class product outcome as a usable, verifiable system without assuming unverified edition behavior.`
+      : `Deliver the requested material product behavior as a usable, verifiable system while preserving the stated constraints.`,
+    usersAndRoles: [
+      {
+        id: stableId('role', 'authorized-product-user', input.prompt),
+        name: 'authorized product user',
+        applicability: 'applicable',
+        basis: 'Material product behavior must identify the actor who receives the requested outcome.',
+        evidenceIds: [explicit.id],
+      },
+      {
+        id: stableId('role', 'operator-maintainer', input.prompt),
+        name: 'operator or maintainer',
+        applicability: 'applicable',
+        basis: 'Material behavior requires an owner who can verify and operate the resulting system.',
+        evidenceIds: [explicit.id],
+      },
+    ],
+    journeys: [
+      {
+        id: stableId('journey', 'requested-outcome', input.prompt),
+        name: 'complete the requested outcome from entry point through persisted result',
+        applicability: 'applicable',
+        basis: 'The verbatim request defines the delivery floor and must map to an observable end-to-end result.',
+        evidenceIds: [explicit.id],
+      },
+      {
+        id: stableId('journey', 'safe-failure', input.prompt),
+        name: 'recover safely when the requested operation cannot complete',
+        applicability: 'applicable',
+        basis: 'Material changes require observable failure and recovery behavior rather than success-path-only planning.',
+        evidenceIds: [explicit.id],
+      },
+    ],
+    acceptanceCriteria: [
+      {
+        id: stableId('acceptance', 'verbatim-outcome', input.prompt),
+        text: 'The verbatim requested outcome is observable through the affected product surface and persists where the behavior requires persistence.',
+        observable: true,
+        evidenceIds: [explicit.id],
+      },
+      {
+        id: stableId('acceptance', 'constraints', input.prompt),
+        text: 'Explicit constraints and authority boundaries remain satisfied without treating inferred or researched context as user instruction.',
+        observable: true,
+        evidenceIds: requestEvidenceIds,
+      },
+      {
+        id: stableId('acceptance', 'verification', input.prompt),
+        text: 'Relevant automated or runtime verification demonstrates the outcome and its principal failure behavior.',
+        observable: true,
+        evidenceIds: [explicit.id],
+      },
+    ],
+    applicabilityDecisions: [
+      {
+        concern: 'product journeys and actor roles',
+        status: 'applicable',
+        basis: 'The request changes material product behavior and therefore needs outcome, actor, and journey coverage.',
+        evidenceIds: [explicit.id],
+      },
+      {
+        concern: 'focused-change-only planning',
+        status: 'inapplicable',
+        basis: 'Material behavior cannot be reduced to a local regression-only contract.',
+        evidenceIds: [explicit.id],
+      },
+    ],
+    evidenceProvenance: allEvidence.map(({ id, provenance, status }) => ({ evidenceId: id, provenance, status })),
+  } : {
+    productPurpose: 'Repair the requested focused behavior while preserving adjacent product behavior and avoiding unrelated product expansion.',
+    usersAndRoles: [{
+      id: stableId('role', 'affected-user', input.prompt),
+      name: 'user affected by the reported defect',
+      applicability: 'applicable',
+      basis: 'The focused request identifies a user-visible or maintainer-observable defect.',
+      evidenceIds: [explicit.id],
+    }],
+    journeys: [{
+      id: stableId('journey', 'focused-regression', input.prompt),
+      name: 'reproduce the defect, apply the repair, and verify the affected interaction',
+      applicability: 'applicable',
+      basis: 'A narrow fix needs a bounded reproduction-to-verification journey rather than product-wide fan-out.',
+      evidenceIds: [explicit.id],
+    }],
+    acceptanceCriteria: [
+      {
+        id: stableId('acceptance', 'focused-fix', input.prompt),
+        text: 'The reported defect no longer reproduces under the original triggering conditions.',
+        observable: true,
+        evidenceIds: [explicit.id],
+      },
+      {
+        id: stableId('acceptance', 'focused-regression', input.prompt),
+        text: 'The nearest affected behavior remains covered by a regression check and no unrelated redesign is introduced.',
+        observable: true,
+        evidenceIds: [explicit.id],
+      },
+    ],
+    applicabilityDecisions: [
+      {
+        concern: 'focused impact and regression review',
+        status: 'applicable',
+        basis: 'Every focused repair still requires impact and verification evidence.',
+        evidenceIds: [explicit.id],
+      },
+      {
+        concern: 'product-wide journey expansion',
+        status: 'inapplicable',
+        basis: 'The request is a narrow defect repair with no evidence of a material product redesign.',
+        evidenceIds: [explicit.id],
+      },
+    ],
+    evidenceProvenance: allEvidence.map(({ id, provenance, status }) => ({ evidenceId: id, provenance, status })),
+  };
+  const coverageMatrix = buildCoverageMatrix(input.prompt, isMaterial, requestEvidenceIds);
+  const assumptionLedger = buildAssumptionLedger(input.prompt, route, isMaterial, requestEvidenceIds);
+  const correctionScope: 'request' | 'project' | 'global' = /\b(this project|project only|for this repo|repository only)\b/i.test(input.prompt)
+    ? 'project' : /\b(global|all projects|every project)\b/i.test(input.prompt) ? 'global' : 'request';
+  const correction = /\b(correction|correct|instead|do not change|don't change)\b/i.test(input.prompt) ? {
+    scope: correctionScope,
+    excludedScopes: correctionScope === 'project' ? ['global' as const, 'other-projects' as const] : correctionScope === 'request' ? ['global' as const, 'project' as const, 'other-projects' as const] : [],
+    evidenceIds: requestEvidenceIds,
+  } : null;
+  const focusedPlan: FocusedPlan | null = !isMaterial ? {
+    context: {
+      affectedCapability: 'The smallest capability that reproduces the verbatim reported behavior.',
+      editBoundary: 'Limit mutation to the identified implementation and its nearest regression surface.',
+      evidenceIds: requestEvidenceIds,
+    },
+    impact: {
+      expectedChange: 'The reported defect no longer reproduces under its original trigger.',
+      preservedBehavior: ['Adjacent interaction states remain unchanged.', 'No unrelated product redesign or dependency migration is introduced.'],
+      evidenceIds: requestEvidenceIds,
+    },
+    regressionEvidence: {
+      reproduction: input.prompt,
+      checks: ['Fail before the repair for the intended behavioral reason.', 'Pass after the repair.', 'Exercise the nearest adjacent state or interaction.'],
+      evidenceIds: requestEvidenceIds,
+    },
+    improvementReview: {
+      required: true,
+      boundary: 'Review only evidence-backed, reversible improvements adjacent to the repaired behavior.',
+      qualifyingCriteria: ['positive user or maintenance value', 'bounded effort', 'objective verification', 'no authority or scope expansion'],
+      evidenceIds: requestEvidenceIds,
+    },
+  } : null;
+  const sharedOwnership = resolveSharedOwnership(input.prompt, hydrationId, requestEvidenceIds);
   const omissions = providerRecords.filter((provider) => provider.availability === 'unavailable')
     .map((provider) => `${provider.name} unavailable; fallback: ${provider.fallback}`);
-  const hydrationId = stableId('hydration', input.prompt, checkout, ...allEvidence.map((item) => item.id));
   return {
     schemaVersion: 1,
+    stage: 'Prompt Hydration',
+    stageOrder: 1,
     hydrationId,
-    hydratedAt: input.now ?? new Date().toISOString(),
+    hydratedAt,
     originalRequest: input.prompt,
     diagnosticRequest: redactSecrets(input.prompt),
     checkout,
     route,
     executionMode,
+    researchDecision,
     referenceProduct,
     referenceEdition: input.edition ?? (referenceProduct ? `${referenceProduct} current public SaaS edition; plan-specific behavior unverified` : 'not applicable'),
     explicitRequirements,
     inferredRequirements,
-    researchFindings: [...(baseline ? [baseline] : []), ...primaryResearch],
+    intendedOutcome,
+    coverageMatrix,
+    assumptionLedger,
+    correction,
+    focusedPlan,
+    domainInventory,
+    sharedOwnership,
+    researchFindings: [...(baseline ? [baseline] : []), ...primaryResearch, ...receiptEvidence],
+    researchReceipts,
     evidence: allEvidence,
-    assumptions: route === 'greenfield-saas' ? [
-      'The request is for a new usable SaaS, not trademark-identical assets or unauthorized data copying.',
-      'Ordinary supporting workflows are in scope; paid, destructive, credentialed and production actions remain separately permissioned.',
-    ] : [],
+    assumptions: assumptionLedger.map((entry) => entry.assumption),
     unresolvedConflicts: [],
     omissions,
     context: {
@@ -763,6 +1332,12 @@ export async function hydratePrompt(input: HydratorInput): Promise<HydratedPromp
         'install.doctor for reusable machine and tool configuration',
         'consumer repository only for product-specific composition, bindings, routes, and content',
       ],
+      round: {
+        index: 0,
+        consecutiveNoNewWinners: 0,
+        status: decisionReadiness.architectureReady ? 'ready-for-candidate-generation' : 'blocked-on-context',
+      },
+      candidates: [],
     },
     productAudit,
     scrumQuorum: {
@@ -774,27 +1349,31 @@ export async function hydratePrompt(input: HydratorInput): Promise<HydratedPromp
         reasonIncluded,
       })),
       excludedAgentCount: scrum.excludedAgentCount,
-      synthesisDirective: scrum.synthesisDirective,
+      synthesisDirective: decisionReadiness.architectureReady
+        ? scrum.synthesisDirective
+        : 'Candidate quorum only; no architecture, DAG, offload, or implementation is authorized until the decision-readiness gate closes.',
     },
     swarmExecutionPlan: {
-      top15ActiveStrategies: TOP_15_SWARM_STRATEGIES,
+      top15ActiveStrategies: isMaterial ? TOP_15_SWARM_STRATEGIES : [],
       frontierTriadRoles: {
-        claude: 'Primary Systems Architect, OpenSpec author, UI/UX 16-state craft lead & final code integrator',
-        codex: 'Adversarial security/algorithm challenger, backend/schema contract verifier & edge deployment auditor',
-        gemini: '1M-2M token cross-repository cartographer, competitor research synthesizer & multimodal visual QA',
+        claude: decisionReadiness.architectAssignmentVerified
+          ? 'Explicitly assigned architect: loads decision context and authors OpenSpec contracts; does not claim authority beyond the assignment.'
+          : 'Architect candidate only; architecture and OpenSpec authorship are blocked until explicitly assigned.',
+        codex: 'System operations, Paperclip synchronization, verification, and coordination of multiple Claude instances after contracts lock.',
+        gemini: 'Long-context market and competitor research, cross-repository review, and multimodal visual QA; findings remain evidence, not architecture authority.',
       },
       opencodeDeepseekOffload: {
-        enabled: true,
+        enabled: isMaterial && decisionReadiness.architectureReady,
         gateway: 'https://llm.megabyte.space/v1 (LiteLLM 4-key DeepSeek V4-Pro/Flash pool)',
         launcher: '~/.agentskills/bin/opencode-deepseek.sh',
-        targetOffloadRatio: scrum.offloadMetrics.offloadPercentage / 100,
-        parallelPluginCatalogSwarm: true,
+        targetOffloadRatio: isMaterial && decisionReadiness.architectureReady ? scrum.offloadMetrics.offloadPercentage / 100 : 0,
+        parallelPluginCatalogSwarm: isMaterial && decisionReadiness.architectureReady,
       },
       finishLineContract: {
         gitBranch: 'main',
-        cloudflareConfigured: true,
-        customDomainConnected: true,
-        productionDeployed: true,
+        cloudflareConfigured: hasCloudflareConfig ? 'detected-not-loaded' : 'unverified',
+        customDomainConnected: 'unverified',
+        productionDeployed: 'unverified',
         unitTestCoverageTarget: '100%',
         e2eRunner: 'cloudflare-browser-run-parallel',
         e2eCoverageTarget: 'near-100%',
@@ -803,8 +1382,10 @@ export async function hydratePrompt(input: HydratorInput): Promise<HydratedPromp
     handoff: {
       acceptedDecisionIds: inferredRequirements.map((item) => item.id),
       pendingWorkIds: route === 'greenfield-saas'
-        ? ['research-primary-sources', 'scrum-quorum-openspec-dag', 'opencode-deepseek-parallel-swarm', 'approve-material-ui', 'implement-and-browser-verify', 'deploy-main-and-cloudflare-domain', 'parallel-end-of-round-triad-meaning-extraction']
-        : ['scrum-quorum-openspec-dag', 'opencode-deepseek-parallel-swarm', 'implement-focused-change', 'verify-100-coverage-and-deploy-main', 'parallel-end-of-round-triad-meaning-extraction'],
+        ? ['research-primary-sources', 'verify-architect-assignment', 'close-decision-readiness', 'author-openspec-after-readiness', 'implement-and-browser-verify-within-authority', 'parallel-end-of-round-triad-meaning-extraction']
+        : isMaterial
+          ? ['verify-architect-assignment', 'close-decision-readiness', 'author-openspec-after-readiness', 'implement-material-change-within-authority', 'parallel-end-of-round-triad-meaning-extraction']
+          : ['implement-focused-change', 'run-focused-verification'],
       continuationToken: stableId('continue', hydrationId, input.now ?? 'stable'),
     },
   };
@@ -813,6 +1394,8 @@ export async function hydratePrompt(input: HydratorInput): Promise<HydratedPromp
 export function formatHydratedBrief(hydrated: HydratedPrompt): string {
   const lines = [
     '# Hydrated Product Brief',
+    '',
+    `## Stage ${hydrated.stageOrder}: ${hydrated.stage}`,
     '',
     '## Original request (verbatim)',
     '',
@@ -832,6 +1415,7 @@ export function formatHydratedBrief(hydrated: HydratedPrompt): string {
     '',
     `- Material decision: **${hydrated.decisionReadiness.materialDecision}**`,
     `- Architecture ready: **${hydrated.decisionReadiness.architectureReady}**`,
+    `- Explicit architect assignment verified: **${hydrated.decisionReadiness.architectAssignmentVerified}**`,
     `- Stop condition: ${hydrated.decisionReadiness.stopCondition}`,
     ...hydrated.decisionReadiness.requirements.map((item) => `- **${item.domain}**: ${item.status}${item.required ? ' (required)' : ''} — ${item.nextAction}`),
     '',
@@ -840,6 +1424,7 @@ export function formatHydratedBrief(hydrated: HydratedPrompt): string {
     `- Implement candidates only at confidence ≥ ${hydrated.improvementConvergence.confidenceThreshold} with ${hydrated.improvementConvergence.minimumNetValue.replaceAll('-', ' ')}.`,
     `- Stop after ${hydrated.improvementConvergence.maxConsecutiveNoNewWinners} consecutive evidence-refresh rounds produce no new qualifying winner.`,
     `- ${hydrated.improvementConvergence.authorityBoundary}`,
+    `- Round ${hydrated.improvementConvergence.round.index}: **${hydrated.improvementConvergence.round.status}**; ${hydrated.improvementConvergence.candidates.length} scored candidate(s). Empty candidates are not evidence that a convergence round executed.`,
     '',
     '## Inferred requirements',
     '',
@@ -875,7 +1460,7 @@ export function formatHydratedBrief(hydrated: HydratedPrompt): string {
     `- **OpenCode (DeepSeek) Offload**: **${Math.round(hydrated.swarmExecutionPlan.opencodeDeepseekOffload.targetOffloadRatio * 100)}%** of DAG tasks routed to \`${hydrated.swarmExecutionPlan.opencodeDeepseekOffload.launcher}\` via \`${hydrated.swarmExecutionPlan.opencodeDeepseekOffload.gateway}\` (Parallel Plugin Catalog Swarm: \`${hydrated.swarmExecutionPlan.opencodeDeepseekOffload.parallelPluginCatalogSwarm}\`)`,
     `- **Production Finish Line**: Branch=\`${hydrated.swarmExecutionPlan.finishLineContract.gitBranch}\` · Unit Coverage=\`${hydrated.swarmExecutionPlan.finishLineContract.unitTestCoverageTarget}\` · E2E=\`${hydrated.swarmExecutionPlan.finishLineContract.e2eRunner}\` (\`${hydrated.swarmExecutionPlan.finishLineContract.e2eCoverageTarget}\`) · Cloudflare+Domain Deployed=\`${hydrated.swarmExecutionPlan.finishLineContract.productionDeployed}\``,
     `- **End-of-Round Parallel Triad Meaning Extraction (\`bin/triad-end-of-turn-sync.ts\`)**: Extract any possible meaning or preference from the current agent window in parallel at the end of the round into \`agent-skills\` (AI skills under the Minimum-Prompt Ecosystem Completeness Assumption: finish complete products/ecosystems in as few prompts as possible via massive parallelization), \`theme.tools\` (reusable site/app code), and \`install.doctor\` (reusable system code).`,
-    `- **Concurrent End-of-Prompt Delivery Closure**: Reconcile documentation/comments, generated outputs, and bounded \`theme.tools\`/\`install.doctor\`/\`agent-skills\` extraction reviews while proportional tests and release preparation run. Revalidate the exact final tree after reconciliation, commit only that tested tree, push it normally to \`main\`, promote through the approved production rail, then run production smoke and critical E2E checks. Fail closed and record the exact blocker when an authority, credential, spend, review, recovery, validation, or provenance gate is missing.`,
+    '- **Concurrent End-of-Prompt Delivery Closure**: While proportional tests and release preparation run, reconcile documentation/comments and perform bounded `theme.tools`, `install.doctor`, and `agent-skills` extraction reviews. Then serialize exact-tested-source commit and normal `main` push, approved production promotion, and production smoke plus critical E2E. Fail closed on missing authority, credentials, spending permission, review, recovery, validation, or provenance, and report the exact blocker.',
     '',
     '## Consequential assumptions',
     '',
@@ -977,6 +1562,9 @@ export function buildGreenfieldCascade(hydrated: HydratedPrompt): GreenfieldCasc
   if (hydrated.route !== 'greenfield-saas') {
     throw new Error('greenfield cascade requires a hydrated greenfield SaaS request');
   }
+  if (!hydrated.decisionReadiness.architectureReady || !hydrated.decisionReadiness.architectAssignmentVerified) {
+    throw new Error('greenfield cascade requires explicit architect assignment and fully verified decision-readiness evidence');
+  }
   const referenceProduct = hydrated.referenceProduct ?? 'Enterprise-SaaS';
   const evidenceIds = hydrated.evidence.map((item) => item.id);
   const capabilities = CAPABILITY_TEMPLATES.map(([id, name, dependencies]) => ({ id: `cap-${id}`, name, owner: `product:${id}`, evidenceIds, dependencies: dependencies.map((dependency) => `cap-${dependency}`) }));
@@ -1028,6 +1616,7 @@ export function buildGreenfieldCascade(hydrated: HydratedPrompt): GreenfieldCasc
     schemaVersion: 1,
     cascadeId: stableId('cascade', hydrated.hydrationId, referenceProduct),
     sourceHydrationId: hydrated.hydrationId,
+    architectureAuthorized: true,
     productGoal: { id: 'goal-greenfield-product', request: hydrated.originalRequest, referenceProduct, edition: hydrated.referenceEdition },
     capabilities,
     workflows,
@@ -1052,18 +1641,27 @@ function md(value: string): string {
 }
 
 export function writeOpenSpecFixture(cascade: GreenfieldCascade, outputDirectory: string): void {
+  if (!cascade.architectureAuthorized) {
+    throw new Error('OpenSpec output requires verified architect assignment and decision readiness');
+  }
   const output = resolve(outputDirectory);
   const specDirectory = join(output, 'specs', `${cascade.productGoal.referenceProduct.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-clone`);
   mkdirSync(specDirectory, { recursive: true });
   writeFileSync(join(output, '.openspec.yaml'), 'schema: spec-driven\n', 'utf8');
-  writeFileSync(join(output, 'proposal.md'), `# Proposal: ${cascade.productGoal.referenceProduct}-class greenfield SaaS\n\n**Architect:** codex\n\n**Architect Role:** assigned\n\n## Why\n\nHydrate and deliver the verbatim request: ${md(cascade.productGoal.request)}\n\n## Scope\n\n${cascade.capabilities.map((item) => `- ${item.name}`).join('\n')}\n`, 'utf8');
-  writeFileSync(join(output, 'design.md'), `# Design: ${cascade.productGoal.referenceProduct}-class workflow architecture\n\n**Architect:** codex\n\n**Architect Role:** assigned\n\n## Requirement-to-test trace\n\nEvery workflow is linked through goal → capability → workflow → requirement → scenario → test → verification in \`traceability.json\`. Research evidence remains distinct from inferred decisions.\n`, 'utf8');
-  writeFileSync(join(output, 'tasks.md'), `# Tasks\n\n- [ ] Complete primary-source research and accept edition-specific decisions.\n- [ ] Implement dependency-ordered workflow slices with failing tests first.\n- [ ] Verify every golden path and recovery path through API and browser.\n- [ ] Run independent gap review and close every unblocked finding.\n`, 'utf8');
+  writeFileSync(join(output, 'proposal.md'), `# Proposal: ${cascade.productGoal.referenceProduct}-class greenfield SaaS\n\n**Architect Role:** assigned (verified by hydration evidence)\n\n## Why\n\nHydrate and deliver the verbatim request: ${md(cascade.productGoal.request)}\n\n## Scope\n\n${cascade.capabilities.map((item) => `- ${item.name}`).join('\n')}\n`, 'utf8');
+  writeFileSync(join(output, 'design.md'), `# Design: ${cascade.productGoal.referenceProduct}-class workflow architecture\n\n**Architect Role:** assigned (verified by hydration evidence)\n\n## Context\n\nThe hydrated product workflows require repository-specific contracts and evidence-bound execution.\n\n## Goals / Non-Goals\n\nDeliver every traced workflow without treating inferred research or generated plans as execution proof.\n\n## Decisions\n\n### Requirement-to-test trace\n\nEvery workflow is linked through goal → capability → workflow → requirement → scenario → test → verification in \`traceability.json\`. Research evidence remains distinct from inferred decisions.\n`, 'utf8');
+  const taskLines = cascade.implementationQueue.map((task) => {
+    const traces = cascade.traceability.filter((trace) => trace.workflowId === task.workflowId);
+    const requirements = [...new Set(traces.map((trace) => trace.requirementId))];
+    const scenarios = [...new Set(traces.map((trace) => trace.scenarioId))];
+    return `- [ ] [${task.id}] Implement and verify the traced workflow slice through API and browser evidence. (requirements: ${requirements.join(', ')}; scenarios: ${scenarios.join(', ')})`;
+  });
+  writeFileSync(join(output, 'tasks.md'), `# Tasks\n\n${taskLines.join('\n')}\n`, 'utf8');
   const spec = ['# Spec Delta', '', '## ADDED Requirements', ''];
   for (const requirement of cascade.requirements) {
     spec.push(`### Requirement: ${requirement.id}`, requirement.text, '');
     for (const scenario of cascade.scenarios.filter((item) => item.requirementId === requirement.id)) {
-      spec.push(`#### Scenario: ${scenario.name}`, `- **GIVEN** ${scenario.given}`, `- **WHEN** ${scenario.when}`, `- **THEN** ${scenario.then}`, '');
+      spec.push(`#### Scenario: ${scenario.id}`, `**${scenario.name}**`, `- **GIVEN** ${scenario.given}`, `- **WHEN** ${scenario.when}`, `- **THEN** ${scenario.then}`, '');
     }
   }
   writeFileSync(join(specDirectory, 'spec.md'), `${spec.join('\n')}\n`, 'utf8');
@@ -1109,7 +1707,12 @@ function parseCli(argv: string[]): CliOptions {
 async function main(): Promise<void> {
   const options = parseCli(process.argv.slice(2));
   const hydrated = await hydratePrompt({ prompt: options.prompt, checkout: options.checkout });
-  const cascade = options.cascade && hydrated.route === 'greenfield-saas' ? buildGreenfieldCascade(hydrated) : null;
+  const cascade = options.cascade
+    && hydrated.route === 'greenfield-saas'
+    && hydrated.decisionReadiness.architectureReady
+    && hydrated.decisionReadiness.architectAssignmentVerified
+    ? buildGreenfieldCascade(hydrated)
+    : null;
   await new LangfuseSafeClient({ timeoutMs: 2_500 }).traceSafe({
     id: stableId('trace', hydrated.hydrationId),
     name: 'prompt-hydration',

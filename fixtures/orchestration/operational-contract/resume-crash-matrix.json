@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "1.0.0",
+  "cases": [
+    { "id": "before-first-dispatch", "expected": { "launched": 1, "reused": 0, "inFlight": 0 } },
+    {
+      "id": "after-dispatch-before-receipt",
+      "expected": { "launched": 0, "reused": 0, "inFlight": 1 }
+    },
+    { "id": "after-stall", "expected": { "launched": 1, "reused": 0, "inFlight": 0 } },
+    { "id": "after-completion-receipt", "expected": { "launched": 0, "reused": 1, "inFlight": 0 } },
+    { "id": "blocked-external-edge", "expected": { "preserved": true } },
+    { "id": "lease-boundary", "expected": { "restored": 1, "recoverable": 1 } }
+  ]
+}

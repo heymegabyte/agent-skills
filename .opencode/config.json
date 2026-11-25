@@ -1,7 +1,15 @@
 {
   "_generated_by": "bin/gen-harness-manifests.mjs — do not edit directly",
+  "policy": {
+    "id": "operational-prompt-hydration",
+    "version": "1.0.0",
+    "source": "policies/operational-prompt-hydration.md",
+    "source_digest": "sha256:4833e290e756aecb61e14bdcff1be6f01137730bc3a27b7445eb1a78dcad960e"
+  },
   "instructions": [
     "rules/always.md",
+    "rules/evidence-gated-autonomous-orchestration.md",
+    "rules/autonomous-mission-policy.md",
     "rules/autonomous-engineering.md",
     "rules/code-style.md",
     "rules/feature-flags.md",
@@ -17,10 +25,10 @@
     "rules/prompt-as-training-signal.md",
     "rules/intent-complete-delivery.md",
     "rules/context-hydration.md",
+    "rules/production-delivery-closure.md",
     "rules/greenfield-saas-prompt-hydration.md",
     "rules/parallel-multi-swarm-orchestration.md",
-    "rules/total-convergence-and-openspec-handoff.md",
-    "rules/production-delivery-closure.md"
+    "rules/total-convergence-and-openspec-handoff.md"
   ],
   "skills": [
     {
@@ -91,6 +99,9 @@
     },
     {
       "path": "28-cf-integrations-reference/SKILL.md"
+    },
+    {
+      "path": "openclaw-integration/SKILL.md"
     }
   ]
 }

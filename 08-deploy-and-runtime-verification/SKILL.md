@@ -35,18 +35,21 @@ paths:
 
 # 08 — Deploy and Runtime Verification
 
-Enforce the mandatory typecheck→deploy→CDN-purge→prod-E2E→visual-verify loop after every code change; never mark done without a live PROD assertion.
+Enforce `rules/production-delivery-closure.md` after every authorized code-changing prompt: validate → exact tested commit → normal main push → established deploy → exact-commit production E2E. Fail closed rather than bypassing authority or evidence gates.
 
 ## Mandatory deploy loop (every code change)
 
+Activate this loop only for authorized repository changes. Read-only prompts, explicit local-only requests, prohibited deployment, unavailable authority/credentials, destructive approval gaps, failed required validation, and required PR/review are `BLOCKED`, not reasons to bypass controls.
+
 1. Build + typecheck
-2. `wrangler deploy` (or platform equivalent)
-3. Purge CDN (`wrangler cache purge` or `curl -X POST https://api.cloudflare.com/client/v4/zones/{id}/purge_cache`)
-4. Fetch each changed route on PROD URL via curl + Playwright
-5. Assert new content / headers / JSON-LD / status live
-6. AI vision QA at 6 viewports (per `_kernel/standards.md#breakpoints`)
-7. Fix-forward (max 3 redeploys) — never silently fail
-8. Only then mark DONE
+2. Commit only the intended tested tree and push that exact commit normally to `main`
+3. `wrangler deploy` (or the repository's established platform equivalent) for that exact commit
+4. Purge CDN only through the established authorized path when required
+5. Fetch each changed route on PROD URL via curl + Playwright
+6. Assert new content / headers / JSON-LD / status and deployed commit/version live
+7. AI vision QA at 6 viewports (per `_kernel/standards.md#breakpoints`)
+8. Fix-forward (max 3 redeploys) or execute the documented rollback — never silently fail
+9. Only then mark DONE
 
 "Local typecheck + build pass" is NOT done. Per `rules/verification-loop.md`.
 
@@ -134,10 +137,10 @@ Every deploy logs to `CHANGELOG.md` (`## [version] — YYYY-MM-DD` / `### Added 
 
 ## See submodules: workers-builds.md, d1-backups.md, rollback.md, github-config.md.
 
-## Multi-Swarm Parallelization & OpenCode (DeepSeek) Offload Mandate
+## Prompt Hydration deployment handoff
 
-- **Domain Swarm Directive**: Run pre-deploy contract gates in parallel, fold verified swarm worktrees cleanly onto `main`, provision Cloudflare Worker bindings (`wrangler.toml`) and custom domain SSL routing, deploy to production, purge the Cloudflare CDN cache, and run parallel post-deploy Browser Run smoke probes.
-- **Massive OpenCode (DeepSeek) Offload**: Whenever a task slice is throughput-safe (bounded implementation, plugin catalog shards, 100% unit test generation, Playwright E2E specs, migrations, or documentation), offload it to parallel **`opencode` swarms powered by DeepSeek** (`~/.agentskills/bin/opencode-deepseek.sh` via the LiteLLM 4-key pool `https://llm.megabyte.space/v1`) rather than consuming premium `claude`, `codex`, or `gemini` client quota.
-- **Tri-Frontier Parallel Swarms & Right-Sized SCRUM Quorum**: When complex architectural synthesis, speculative critical-path racing, or adversarial verification is needed, run `claude`, `codex`, and `gemini` in parallel across isolated Git worktrees (`bin/multi-swarm-orchestrator.ts`) guided by a right-sized collaborative SCRUM meeting (`bin/scrum-deliberation-quorum.ts`) of only the required specialist agents. See `rules/parallel-multi-swarm-orchestration.md`.
-- **End-of-Round Parallel Meaning & Preference Triad Extraction (`bin/triad-end-of-turn-sync.ts`)**: At the end of every prompt round (running in parallel with final verification, deployment, and reporting), extract any possible meaning, preference, architectural lesson, reusable site code, or system configuration from the current agent window and store it concurrently into **`heymegabyte/agent-skills`** (for AI skills/rules/prompts — always updated under the **Minimum-Prompt Ecosystem Completeness Assumption**: assuming the skills *should have already been written* so that we write **as few prompts as possible** to finish **as complete a product or multi-repo ecosystem as possible** via massive parallel agent swarms), **`heymegabyte/theme.tools`** (for reusable site/app code across the 28 canonical `@theme.tools/*` libraries), and **`heymegabyte/install.doctor`** (for reusable system/host code).
-- **Concurrent End-of-Prompt Delivery Closure**: Run documentation/comment reconciliation and bounded `theme.tools`, `install.doctor`, and `agent-skills` extraction reviews concurrently with proportional tests and release preparation. After reconciling those changes and generated outputs, revalidate the exact final tree. Commit only that tested tree, push it normally to `main`, promote it through the approved production rail, and run production smoke plus critical E2E verification. Fail closed without mutating production when authority, credentials, spending permission, review, recovery, validation, or provenance gates are missing; record the exact blocker instead.
+Deploy only when the hydrated acceptance evidence and subsequent verification receipts authorize the production edge. Use applicable operations, migration, maintenance, and cost rows from `coverageMatrix`; unresolved consequential assumptions remain blockers. Record the exact tested commit, deployment version, production checks, rollback state, and evidence IDs. This skill owns deployment procedure only—it does not repeat hydration, architecture conference, worker routing, or improvement logic.
+
+## Theme.tools ecosystem contract (required)
+
+Use the delivery/status/telemetry packages mapped in `config/theme-tools-skill-map.json`; canonical shared-capability procedure remains in `rules/theme-tools-skill-integration.md`.

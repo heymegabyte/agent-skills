@@ -18,7 +18,7 @@
 <br/>
 
 <div align="center">
-  <code>23 categories</code> · <code>209 doctrine rules</code> · <code>52 agents</code> · <code>37 commands</code> · <code>37 platform variants</code><br/>
+  <code>23 categories</code> · <code>170 doctrine rules</code> · <code>28 agents</code> · <code>35 commands</code> · <code>37 platform variants</code><br/>
   <a href="https://agent.megabyte.space"><strong>Showcase Website</strong></a>
 </div>
 
@@ -101,6 +101,8 @@ GitHub schedules project loops on the persistent Ubuntu host. OpenClaw routes of
 
 ## Install
 
+The package/plugin commands below install tool content. Canonical policy projection, explicit-source fleet synchronization, updates, rollback, managed-block ownership and provider limitations are documented in the [instruction policy operations runbook](control-plane/INSTRUCTION-POLICY.md). These user-controlled files and wrappers do not replace provider-controlled system or developer instructions.
+
 ```bash
 # GitHub Skills (recommended)
 gh skill install heymegabyte/agent-skills
@@ -117,8 +119,9 @@ npx jsr add @heymegabyte/agent-skills
 # OpenAI Codex
 git clone https://github.com/heymegabyte/agent-skills ~/.codex/skills
 
-# Manual
-git clone https://github.com/heymegabyte/agent-skills ~/.agentskills
+# Manual explicit checkout (do not make ~/.agentskills an ambiguous source)
+git clone https://github.com/heymegabyte/agent-skills agent-skills
+git -C agent-skills rev-parse HEAD
 ```
 
 ## Cross-Platform Support (32 variants)

@@ -1,0 +1,226 @@
+{
+  "schemaVersion": "1.0.0",
+  "taskId": "10.2",
+  "generatedAt": "2026-11-25T16:00:00.000Z",
+  "evidenceStrength": "controlled-deterministic-simulation",
+  "scenarios": [
+    {
+      "scenarioId": "interruption-resume",
+      "fault": "coordinator stops after one completed receipt and before the next ready dispatch",
+      "status": "pass",
+      "observations": [
+        {
+          "sequence": 1,
+          "state": {
+            "disposition": "resumed-ready-only",
+            "stateDigest": "sha256:848b09aab6742c94f8e5734fa3c8cb47692b3f35652f12cb2d934fb345c4744f",
+            "checkpointRef": "sha256:087302362d62a27b530af3f025021876cbe9ef5aab0fb81c4720f27f36e6ab8b",
+            "blockedEdges": ["release:@theme.tools/ui:published-version"]
+          },
+          "ownership": {
+            "repository": "heymegabyte/agent-skills",
+            "activeOwner": "worker-ready",
+            "waitingOwners": [],
+            "taskOwners": ["worker-completed", "worker-ready"]
+          },
+          "evidence": [
+            {
+              "evidenceId": "resume-result",
+              "digest": "sha256:9ac1b64a3c7d5b046695c9feebc6d5bf76d57b9007abd7508ee76135c16ff80e",
+              "observation": "completed receipt reused; only unfinished ready task launched; external release edge preserved"
+            }
+          ],
+          "nextAction": {
+            "action": "await-running-dispatch-and-release-observation",
+            "target": "sha256:ea7581b27f1242519075375150767da19fc26769510d7a1cb2d9ef5abfecae5a",
+            "resumable": true
+          }
+        }
+      ]
+    },
+    {
+      "scenarioId": "duplicate-dispatch",
+      "fault": "the same stable dispatch identity is delivered twice",
+      "status": "pass",
+      "observations": [
+        {
+          "sequence": 1,
+          "state": {
+            "disposition": "existing-execution",
+            "stateDigest": "sha256:fd65fddc52b748cc88daedfa5a451f2f9c695fdf5829a3c96350ccae58bc6034",
+            "checkpointRef": "sha256:8ab8c637425fc4dd3ce8c99291a1d53e3e4f66ab5109f128ddfc7aec6308e4f3",
+            "blockedEdges": []
+          },
+          "ownership": {
+            "repository": "heymegabyte/agent-skills",
+            "activeOwner": "worker-a",
+            "waitingOwners": [],
+            "taskOwners": ["worker-a"]
+          },
+          "evidence": [
+            {
+              "evidenceId": "duplicate-dispatch-result",
+              "digest": "sha256:c969af836d6b6bd8e2a7372bbc0c9e34228c380484a3629b95a3e7cbe3d6faab",
+              "observation": "one execution exists and the duplicate returns the existing execution"
+            }
+          ],
+          "nextAction": {
+            "action": "continue-existing-execution",
+            "target": "sha256:60bbbd2dec5fbb21288d15ca12ade0028b0f049484fc1587c3e1ffb4f6867f31",
+            "resumable": true
+          }
+        }
+      ]
+    },
+    {
+      "scenarioId": "competing-writers",
+      "fault": "a second run claims a repository with an unexpired writer lease",
+      "status": "pass",
+      "observations": [
+        {
+          "sequence": 1,
+          "state": {
+            "disposition": "collision-waiting",
+            "stateDigest": "sha256:17d39117b5446826d4a4f2da1564df1186d3f466a5491c8c23a1f914cef1b5c2",
+            "checkpointRef": "sha256:04d557387007d2c7e42f7de9855aaa1ba340afe3d77734d2b334f877825d8c60",
+            "blockedEdges": ["writer-lease:heymegabyte/agent-skills:held-by:run-a"]
+          },
+          "ownership": {
+            "repository": "heymegabyte/agent-skills",
+            "activeOwner": "run-a",
+            "waitingOwners": ["run-b"],
+            "taskOwners": []
+          },
+          "evidence": [
+            {
+              "evidenceId": "writer-collision-receipt",
+              "digest": "sha256:a2872131d4b56344ebaf18dc136112963da28626d8913d0f0d4ea7a2f598874b",
+              "observation": "run-a remains the sole writer and run-b has an attributable collision receipt"
+            }
+          ],
+          "nextAction": {
+            "action": "wait-for-lease-release-or-expiry",
+            "target": "sha256:3e2ee796426a5e52179d9f5ac33171e39c158e3b6e2bc2ae9f4817123e09a923",
+            "resumable": true
+          }
+        }
+      ]
+    },
+    {
+      "scenarioId": "blocked-release",
+      "fault": "source validation exists but registry and consumer evidence are unavailable",
+      "status": "pass",
+      "observations": [
+        {
+          "sequence": 1,
+          "state": {
+            "disposition": "blocked",
+            "stateDigest": "sha256:ca01a78fe5cb2f2b6c9df4a36dc4d0b9e07581445c69238604235d33955c57b0",
+            "checkpointRef": "@theme.tools/prompt-hydration-probe:1111111111111111111111111111111111111111:2222222222222222222222222222222222222222",
+            "blockedEdges": ["@theme.tools/prompt-hydration-probe@1.0.1:release-to-consumer"]
+          },
+          "ownership": {
+            "repository": "@theme.tools/prompt-hydration-probe",
+            "activeOwner": "release-verifier",
+            "waitingOwners": ["consumer-integration-writer"],
+            "taskOwners": ["release-verifier"]
+          },
+          "evidence": [
+            {
+              "evidenceId": "blocked-release-receipt",
+              "digest": "sha256:ca01a78fe5cb2f2b6c9df4a36dc4d0b9e07581445c69238604235d33955c57b0",
+              "observation": "the exact release-to-consumer edge remains blocked and idempotently resumable"
+            }
+          ],
+          "nextAction": {
+            "action": "observe-published-version-and-consumer-chain",
+            "target": "node --experimental-strip-types bin/theme-tools-release-chain.ts verify --scenario <scenario> --registry <registry-url> --json",
+            "resumable": true
+          }
+        }
+      ]
+    },
+    {
+      "scenarioId": "remote-main-advance",
+      "fault": "remote main advances after the integration tree is tested",
+      "status": "pass",
+      "observations": [
+        {
+          "sequence": 1,
+          "state": {
+            "disposition": "remote-commit-mismatch",
+            "stateDigest": "sha256:ecf02afece261bacb58404096724e86627ed245ec89df0e35743cc1279dd57f7",
+            "checkpointRef": "tested-tree:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "blockedEdges": ["remote-main:cccccccccccccccccccccccccccccccccccccccc"]
+          },
+          "ownership": {
+            "repository": "heymegabyte/agent-skills",
+            "activeOwner": "integration-writer",
+            "waitingOwners": [],
+            "taskOwners": ["integration-writer"]
+          },
+          "evidence": [
+            {
+              "evidenceId": "remote-main-observation",
+              "digest": "sha256:ecf02afece261bacb58404096724e86627ed245ec89df0e35743cc1279dd57f7",
+              "observation": "remote commit differs from the exact tested local commit; delivery remains incomplete"
+            }
+          ],
+          "nextAction": {
+            "action": "reconcile-current-main-and-rerun-invalidated-checks",
+            "target": "cccccccccccccccccccccccccccccccccccccccc",
+            "resumable": true
+          }
+        }
+      ]
+    },
+    {
+      "scenarioId": "maintenance-recursion",
+      "fault": "maintenance emits an equivalent trigger for the same evidence revision",
+      "status": "pass",
+      "observations": [
+        {
+          "sequence": 1,
+          "state": {
+            "disposition": "equivalent-trigger-covered",
+            "stateDigest": "sha256:18036905802151d46dc4971a91b1b2b23bff1961388694c83427eb6acdcc1167",
+            "checkpointRef": "sha256:9f0d28a9c63c3e8c260c1b82f8e66ca1b57b4fca39ae0d5590c5ae9863f6c38e",
+            "blockedEdges": []
+          },
+          "ownership": {
+            "repository": "heymegabyte/agent-skills",
+            "activeOwner": "maintenance-coordinator",
+            "waitingOwners": [],
+            "taskOwners": []
+          },
+          "evidence": [
+            {
+              "evidenceId": "maintenance-admission",
+              "digest": "sha256:fb6c744706674381ce9bd3379bebf5cae0bb99a28243f8f27dadd88f050a6fa1",
+              "observation": "equivalent maintenance is suppressed without inventing a second run"
+            }
+          ],
+          "nextAction": {
+            "action": "continue-unrelated-ready-work",
+            "target": "scheduler:ready-queue",
+            "resumable": true
+          }
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total": 6,
+    "passed": 6,
+    "failed": 0,
+    "scenarioIds": [
+      "interruption-resume",
+      "duplicate-dispatch",
+      "competing-writers",
+      "blocked-release",
+      "remote-main-advance",
+      "maintenance-recursion"
+    ]
+  },
+  "evaluationId": "sha256:054c98ab78375435f6a321da0bf0b45f629782b82560090b3980757dc7c19b55"
+}

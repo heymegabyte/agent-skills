@@ -1,0 +1,248 @@
+{
+  "schemaVersion": "1.0.0",
+  "capturedAt": "2026-11-25T05:50:35Z",
+  "classificationPolicy": "Read-only snapshot. Every path reported dirty by git status at capture time is classified as pre-existing user-or-agent work unless a later task receipt proves task ownership; no dirty path is safe to overwrite, stage, discard, or publish merely because it appears here. Status-code counts cover the complete porcelain listing; sample paths remain in command receipts rather than being treated as exhaustive.",
+  "repositories": [
+    {
+      "name": "agent-skills",
+      "path": "/Users/Apple/emdash/repositories/agent-skills",
+      "branch": "main",
+      "head": "7c80712809480734bdbb4c01889cc91bf14067d4",
+      "remoteMain": "6e37050bfe6565cc8e60f2dc6c4980f2da7f7d30",
+      "ahead": 4,
+      "behind": 57,
+      "remote": "https://github.com/heymegabyte/agent-skills",
+      "dirty": { "worktreeModified": 174, "untracked": 222, "total": 396 },
+      "dirtyClassification": "Complete git-status population is mixed-or-unknown pre-existing work. Generated .agents/ outputs and canonical/runtime/OpenSpec edits overlap; provenance must be reconciled by task patch in a clean worktree.",
+      "ownership": "mixed-or-unknown"
+    },
+    {
+      "name": "theme.tools",
+      "path": "/Users/Apple/emdash/repositories/theme.tools",
+      "branch": "main",
+      "head": "f04437f8cf96dd4c7bf41ab91ff65295435133d6",
+      "remoteMain": "f04437f8cf96dd4c7bf41ab91ff65295435133d6",
+      "ahead": 0,
+      "behind": 0,
+      "remote": "https://github.com/heymegabyte/theme.tools",
+      "dirty": {
+        "worktreeDeleted": 63,
+        "worktreeModified": 284,
+        "untracked": 494,
+        "indexAdded": 7,
+        "indexAndWorktreeModified": 3,
+        "indexModified": 5,
+        "total": 852
+      },
+      "dirtyClassification": "Complete git-status population is pre-existing user-or-agent work with staged and unstaged changes. No shared-package mutation may reuse this checkout; task 8 requires a clean isolated worktree.",
+      "ownership": "pre-existing-user-or-agent"
+    },
+    {
+      "name": "install.doctor",
+      "path": "/Users/Apple/emdash/repositories/install.doctor",
+      "branch": "master",
+      "head": "058d22f5a9c0b3dfd375f6928b7be92009dedddf",
+      "remoteMain": "058d22f5a9c0b3dfd375f6928b7be92009dedddf",
+      "ahead": 0,
+      "behind": 0,
+      "remote": "https://github.com/heymegabyte/install.doctor",
+      "dirty": { "worktreeModified": 5, "untracked": 4, "total": 9 },
+      "dirtyClassification": "Complete git-status population is pre-existing user-or-agent work, including workstation doctor, theme.tools adoption, documentation, and an OpenSpec change. Preserve and reconcile separately.",
+      "ownership": "pre-existing-user-or-agent"
+    }
+  ],
+  "installedSource": {
+    "link": "/Users/Apple/.agentskills",
+    "resolvedPath": "/Users/Apple/.claude/plugins/heymegabyte-agent-skills",
+    "head": "0a2d743c16063ebc199a136cdc320663b0c79f74",
+    "remoteMain": "35512791afcb99b8e5b047157433168727c66a0c",
+    "ahead": 1,
+    "behind": 1,
+    "dirtyCount": 3,
+    "classification": "Ambiguous divergent installed source. It is neither the canonical edit checkout nor clean remote main; explicit source and expected revision are required before installation. Dirty paths are AGENTS.md and two rules files and remain pre-existing/unknown ownership."
+  },
+  "instructionTargets": [
+    {
+      "name": "Codex",
+      "path": "/Users/Apple/.codex/AGENTS.md",
+      "present": true,
+      "digest": "d05b42b62a7ce57869b81029afc47db3c5ea12b58857e6d502d650d3b7c8d7b1",
+      "support": "native-file",
+      "classification": "Present global instruction file; digest differs from other targets and loading is not yet proven."
+    },
+    {
+      "name": "Claude",
+      "path": "/Users/Apple/.claude/CLAUDE.md",
+      "present": true,
+      "digest": "76c762ba53e231828b6d39bb54d0d581ae5859d593f0a4e6212a81e869203542",
+      "support": "native-file",
+      "classification": "Present global instruction file; Claude also has the only observed native prompt interception hook."
+    },
+    {
+      "name": "Gemini",
+      "path": "/Users/Apple/.gemini/GEMINI.md",
+      "present": true,
+      "digest": "bd39e1775ec5d616780cc017ab63ff0bf29550ec60ed96a32f70286c1c9e305d",
+      "support": "native-file",
+      "classification": "Present global instruction file; CLI executable and runtime loading were not observed."
+    },
+    {
+      "name": "OpenCode",
+      "path": "/Users/Apple/.config/opencode/AGENTS.md",
+      "present": true,
+      "digest": "3c9a242f36acf164a3fb6955e18b64c3527cd022d202933bafb14858a6b2a1b4",
+      "support": "native-file",
+      "classification": "Present global instruction file; approved DeepSeek launcher exists but credential capability probe is currently unavailable."
+    },
+    {
+      "name": "OpenClaw",
+      "path": "/Users/Apple/.openclaw/AGENTS.md",
+      "present": false,
+      "support": "wrapper-required",
+      "classification": "No instruction file or CLI observed; fleet-mcp-config.json exists, so supported profile/wrapper ownership remains unresolved."
+    },
+    {
+      "name": "Paperclip",
+      "path": "/Users/Apple/.paperclip/AGENTS.md",
+      "present": false,
+      "support": "wrapper-required",
+      "classification": "No instruction file or CLI observed; telemetry/config snapshots exist, so supported profile/wrapper ownership remains unresolved."
+    }
+  ],
+  "providerCapabilities": [
+    {
+      "name": "Codex subscription CLI",
+      "installed": true,
+      "available": true,
+      "probe": "bin/provider-capability.sh",
+      "classification": "Authenticated codex-cli 0.172.0; approved subscription route."
+    },
+    {
+      "name": "Claude subscription CLI",
+      "installed": true,
+      "available": true,
+      "probe": "bin/provider-capability.sh",
+      "classification": "Claude Code 2.1.197 installed; availability is installation-level only because the probe does not report authenticated runtime status."
+    },
+    {
+      "name": "OpenCode",
+      "installed": true,
+      "available": true,
+      "probe": "bin/provider-capability.sh",
+      "classification": "OpenCode 1.19.4 installed with DeepSeek model routes."
+    },
+    {
+      "name": "DeepSeek broker credential",
+      "installed": false,
+      "available": false,
+      "probe": "bin/provider-capability.sh",
+      "classification": "get-secret exists but DEEPSEEK_API_KEY probe is absent; provider policy_ok is false and execution must fail closed or use an approved subscription fallback."
+    },
+    {
+      "name": "Gemini CLI",
+      "installed": false,
+      "available": false,
+      "probe": "command -v gemini; gemini --version",
+      "classification": "No executable observed; instruction-file presence is not runtime capability."
+    },
+    {
+      "name": "OpenClaw CLI",
+      "installed": false,
+      "available": false,
+      "probe": "command -v openclaw; openclaw --version",
+      "classification": "No executable observed; config presence is not live capability."
+    },
+    {
+      "name": "Paperclip CLI",
+      "installed": false,
+      "available": false,
+      "probe": "command -v paperclip; paperclip --version",
+      "classification": "No executable observed; telemetry/config presence is not live capability."
+    }
+  ],
+  "openspec": {
+    "version": "1.15.0",
+    "change": "operational-prompt-hydration-workflow",
+    "state": "applying"
+  },
+  "primitives": [
+    {
+      "path": "bin/prompt-hydrator.ts",
+      "role": "prompt hydration and evidence routing",
+      "present": true,
+      "digest": "99b116e941019ff829c475b5f63d8a423b0ef433e323f57c43e2a66798f1ad9a",
+      "classification": "Existing implementation; proportional first-stage contract is incomplete."
+    },
+    {
+      "path": "bin/prompt-hydration-hook.mjs",
+      "role": "Claude-native prompt interception and fail-closed context injection",
+      "present": true,
+      "digest": "f1dd4a500b30574f1a76149b6e5a9b40158dd744d7752ef5b40331450d1da155",
+      "classification": "Executable hook observed; cross-harness wrapper coverage is incomplete."
+    },
+    {
+      "path": "bin/evidence-gated-deliberation.ts",
+      "role": "research, review, and convergence primitives",
+      "present": true,
+      "digest": "adf94703556229ec6901d5452fc36308dbe52dc3ab80a124dd18c41567b240f8",
+      "classification": "Controlled deliberation primitive; honest single-provider fallback is incomplete."
+    },
+    {
+      "path": "bin/evidence-gated-orchestrator.ts",
+      "role": "pipeline composition root",
+      "present": true,
+      "digest": "84dd88888b89db3d35ec2542b79092ece0cd1ff569ea0517d9bf55313c955be7",
+      "classification": "Existing composition root; current provider-family gate is too strict."
+    },
+    {
+      "path": "bin/orchestration-run-state.ts",
+      "role": "durable run-state transitions",
+      "present": true,
+      "digest": "4dce12bf77c159b8a0619f28622558880604a78ffa334331898d4129d314c2d1",
+      "classification": "Existing state primitive; leases, stable dispatch, recursion identity, and exact resume require extension."
+    },
+    {
+      "path": "schemas/orchestration-run.schema.json",
+      "role": "run-state validation",
+      "present": true,
+      "digest": "3d9a6fa7b007c06d26b60a58721ebe6158fd65420fa615b4914451cbf7820db9",
+      "classification": "Existing schema; delivery-chain fields are incomplete."
+    },
+    {
+      "path": "bin/sync-fleet-harnesses.ts",
+      "role": "fleet instruction synchronization",
+      "present": true,
+      "digest": "09520d771db1fb8b52e7e8acce44445b468d91a3aaa234f0f7735d61f53b2820",
+      "classification": "Existing synchronizer reads ambiguous ~/.agentskills source and requires explicit source/revision."
+    },
+    {
+      "path": "bin/recursive-improvement.ts",
+      "role": "post-delivery improvement scoring",
+      "present": true,
+      "digest": "0702eb280355d0bf5ca940558a1127b15520a95df65a061cc4d5a072dd0d841c",
+      "classification": "Existing scorer; persisted refreshed two-no-winner convergence is incomplete."
+    },
+    {
+      "path": "bin/opencode-deepseek.sh",
+      "role": "approved brokered OpenCode/DeepSeek launcher",
+      "present": true,
+      "digest": "a2d23c93a05a66bc86c3700077f9db1f908b168f7a85a40d7f80f607e386025b",
+      "classification": "Approved launcher present; current credential capability is unavailable."
+    },
+    {
+      "path": "bin/with-subscription-cli.sh",
+      "role": "subscription-only Claude/Codex launcher",
+      "present": true,
+      "digest": "ad1d55f2b9fa8a598498ac399b5caea7830bccc208ec556c3cb5f902d0a7f1f6",
+      "classification": "Approved subscription wrapper present; bounded live loading proof remains pending."
+    }
+  ],
+  "ownershipUncertainties": [
+    "The 396-path agent-skills dirty tree contains overlapping generated and canonical changes with no complete task-level provenance ledger.",
+    "The 852-path theme.tools dirty tree includes staged, unstaged, deleted, and untracked work and cannot be used as an integration surface.",
+    "The installed plugin is a separate one-ahead/one-behind dirty checkout and cannot define canonical policy.",
+    "Paperclip and OpenClaw expose local configuration artifacts but no observed CLI or supported instruction target; capability must be represented as wrapper/profile support until proven.",
+    "Global instruction digests differ and presence does not prove that any fresh coordinator or worker loaded them.",
+    "The provider capability probe reports policy_ok=false because the brokered DeepSeek secret is unavailable; OpenCode delegation is currently blocked rather than silently rerouted to PAYG APIs."
+  ]
+}

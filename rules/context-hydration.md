@@ -11,6 +11,8 @@ triggers:
   - "before architecting"
   - "openspec microtasks"
   - "hydrate context"
+paths:
+  - "*"
 ---
 
 # Context-Hydrated Architecture

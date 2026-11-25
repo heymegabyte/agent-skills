@@ -94,3 +94,9 @@ if failures:
 
 print("Skill validation passed.")
 PY
+
+SOURCE_REVISION=$(git -C "$ROOT" rev-parse HEAD)
+node --experimental-strip-types "$ROOT/bin/gen-harness-manifests.mjs" \
+  --check-publish-instructions \
+  --source-root "$ROOT" \
+  --expected-revision "$SOURCE_REVISION"

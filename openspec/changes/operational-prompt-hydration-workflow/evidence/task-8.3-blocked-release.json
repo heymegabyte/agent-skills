@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "taskId": "8.3",
+  "state": "BLOCKED",
+  "observedAt": "2026-11-25T06:39:47Z",
+  "package": {
+    "name": "@theme.tools/sdk",
+    "sourceVersion": "1.0.0",
+    "expectedNextVersion": "1.0.1",
+    "sourceCommit": "5d716b6ccd8064abbafa3822e1210d0bfd50d0e4",
+    "sourceRepository": "https://github.com/heymegabyte/theme.tools",
+    "changesetPath": ".changeset/quiet-bridges-report.md",
+    "changesetApplied": false
+  },
+  "registryObservation": {
+    "authoritativeRegistry": "https://nexus.megabyte.space/repository/npm-group/",
+    "aliasRegistry": "https://registry.megabyte.space/repository/npm-group/",
+    "command": "npm view @theme.tools/sdk version dist.integrity dist.tarball --json --registry=<registry>",
+    "status": "expected-version-absent",
+    "observedVersion": "1.0.0",
+    "expectedVersionPresent": false,
+    "integrity": "sha512-pUqMOMZIqPSK2RG5U0Jmoyeli5b4AZUFbl1e1kOFER2fVkpSb3GsvkkGE+ThwHePovEw9ee4/ZSCQ3VXhfkGKA==",
+    "tarball": "https://nexus.megabyte.space/repository/npm-group/@theme.tools/sdk/-/sdk-1.0.0.tgz"
+  },
+  "releaseWorkflow": {
+    "path": ".github/workflows/release-publish-oidc.yml",
+    "approvedTriggers": ["push tag v*.*.*", "workflow_dispatch"],
+    "matchingRuns": [],
+    "manualRerunSafe": false
+  },
+  "qualificationRuns": [
+    {
+      "name": "Registry spec",
+      "runId": 45562007462,
+      "jobId": 139027694773,
+      "url": "https://github.com/heymegabyte/theme.tools/actions/runs/45562007462",
+      "sourceCommit": "5d716b6ccd8064abbafa3822e1210d0bfd50d0e4",
+      "status": "failure",
+      "stepsStarted": false,
+      "annotation": "The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings"
+    },
+    {
+      "name": "Naming hygiene",
+      "runId": 45562007481,
+      "jobId": 139027694838,
+      "url": "https://github.com/heymegabyte/theme.tools/actions/runs/45562007481",
+      "sourceCommit": "5d716b6ccd8064abbafa3822e1210d0bfd50d0e4",
+      "status": "failure",
+      "stepsStarted": false,
+      "annotation": "The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings"
+    },
+    {
+      "name": "Package distribution contract",
+      "runId": 45562007561,
+      "jobId": 139027695193,
+      "url": "https://github.com/heymegabyte/theme.tools/actions/runs/45562007561",
+      "sourceCommit": "5d716b6ccd8064abbafa3822e1210d0bfd50d0e4",
+      "status": "failure",
+      "stepsStarted": false,
+      "annotation": "The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "github-actions-billing",
+      "owner": "GitHub organization billing administrator",
+      "reason": "GitHub refuses to start every qualification job because recent account payments failed or the Actions spending limit must be increased."
+    },
+    {
+      "id": "changeset-version-not-applied",
+      "owner": "theme.tools release maintainer",
+      "reason": "The SDK patch Changeset remains present on main while packages/sdk/package.json is still 1.0.0; dispatching publication now would not publish the expected 1.0.1 artifact."
+    },
+    {
+      "id": "published-version-absent",
+      "owner": "theme.tools release maintainer",
+      "reason": "Both authoritative Nexus group endpoints return 1.0.0 and no approved release workflow run exists for source commit 5d716b6ccd8064abbafa3822e1210d0bfd50d0e4."
+    }
+  ],
+  "resumableAction": {
+    "owner": "theme.tools release maintainer with GitHub billing and registry release authority",
+    "preconditions": [
+      "Restore GitHub Actions billing or raise the organization spending limit without changing repository code.",
+      "Apply the committed SDK and UI Changesets through the approved versioning path and commit the resulting 1.0.1 SDK version on current main.",
+      "Rerun the failed qualification workflows and require all jobs to start and pass."
+    ],
+    "steps": [
+      "Fetch current main and confirm it contains source commit 5d716b6ccd8064abbafa3822e1210d0bfd50d0e4 plus the approved versioning commit.",
+      "Invoke .github/workflows/release-publish-oidc.yml through its approved trigger; do not bypass it with a direct registry publish.",
+      "Observe a successful workflow run and fetch @theme.tools/sdk@1.0.1 from https://nexus.megabyte.space/repository/npm-group/.",
+      "Inspect the fetched package version, integrity, exports, and release-chain contract before unblocking consumer task 8.4."
+    ],
+    "stopCondition": "Remain BLOCKED if Actions cannot start, qualification does not pass, the versioning commit is absent, the release workflow fails, or the authoritative registry does not return immutable @theme.tools/sdk@1.0.1 contents matching the approved source."
+  },
+  "claimLimits": [
+    "No release tag was created.",
+    "No workflow dispatch or manual registry publish was attempted.",
+    "No billing or spending setting was changed.",
+    "Package publication and consumer adoption are not claimed."
+  ]
+}

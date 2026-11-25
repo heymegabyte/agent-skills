@@ -1,0 +1,48 @@
+{
+  "mutations": [
+    { "id": "omitted-record", "path": "records.1", "operation": "delete-array" },
+    { "id": "missing-metadata", "path": "records.0.metadata", "operation": "delete" },
+    { "id": "missing-provenance", "path": "records.0.provenance", "operation": "delete" },
+    { "id": "missing-transport", "path": "records.0.transport", "operation": "delete" },
+    { "id": "missing-installation", "path": "records.0.installation", "operation": "delete" },
+    { "id": "missing-authentication", "path": "records.0.authentication", "operation": "delete" },
+    { "id": "missing-update-behavior", "path": "records.0.updateBehavior", "operation": "delete" },
+    { "id": "missing-status", "path": "records.0.status", "operation": "delete" },
+    {
+      "id": "missing-shared-requirements",
+      "path": "records.0.sharedRequirementIds",
+      "operation": "delete"
+    },
+    {
+      "id": "missing-unique-requirements",
+      "path": "records.0.uniqueRequirementIds",
+      "operation": "delete"
+    },
+    { "id": "missing-tasks", "path": "records.0.tasks", "operation": "replace", "value": [] },
+    {
+      "id": "missing-verification",
+      "path": "records.0.verification",
+      "operation": "replace",
+      "value": []
+    },
+    { "id": "missing-unknowns", "path": "records.1.unknowns", "operation": "replace", "value": [] },
+    {
+      "id": "false-execution-connection",
+      "path": "records.0.status.connection",
+      "operation": "replace",
+      "value": "unverified"
+    },
+    {
+      "id": "false-execution-no-live",
+      "path": "records.0.verification.0.kind",
+      "operation": "replace",
+      "value": "controlled"
+    },
+    {
+      "id": "pending-selection-as-record",
+      "path": "records.0.selectionStatus",
+      "operation": "replace",
+      "value": "selection-pending"
+    }
+  ]
+}

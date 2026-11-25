@@ -16,12 +16,77 @@
  */
 
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
-import { join, dirname } from 'node:path';
+import { createHash } from 'node:crypto';
+import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const ROOT = join(__dirname, '..');
+
+export const PUBLISH_INSTRUCTION_TARGETS = [
+  'AGENTS.md', '.cursorrules', '.windsurfrules', '.clinerules', 'GEMINI.md',
+  'CLAUDE.md',
+  '.github/copilot-instructions.md', '.amazonq/rules/cloudflare-workers-hono-angular-saas.md',
+  '.rules', '.junie/guidelines.md', '.augment-guidelines', '.aider-conventions.md',
+  'AMP.md', 'CODEX.md', '.trae/rules/project_rules.md',
+  '.tabnine/guidelines/guidelines.md', '.kilo/rules/cloudflare-workers-hono-angular-saas.md',
+  '.roo/rules/cloudflare-workers-hono-angular-saas.md',
+  '.continue/rules/cloudflare-workers-hono-angular-saas.md', 'replit.md',
+  '.cursor/rules/emdash-skills.mdc', '.windsurf/rules/emdash-skills.md',
+  '.augment/rules/emdash-skills.md', '.github/instructions/emdash-skills.instructions.md',
+  '.openhands/microagents/repo.md', '.aiassistant/rules/emdash-skills.md',
+  '.kiro/steering/emdash-skills.md', '.void/rules/emdash-skills.md', 'QODO.MD',
+  '.bolt/promptfile', '.cursor/BUGBOT.md', '.devin/skills/emdash/SKILL.md',
+];
+
+function argumentValue(name) {
+  const index = process.argv.indexOf(name);
+  return index === -1 ? null : process.argv[index + 1] ?? null;
+}
+
+async function projectPublishInstructions(mode) {
+  const sourceRoot = argumentValue('--source-root');
+  const expectedRevision = argumentValue('--expected-revision');
+  if (!sourceRoot || !expectedRevision) {
+    console.error('gen-harness-manifests: --source-root and --expected-revision are required for --publish-instructions');
+    process.exit(1);
+  }
+  const selectedRoot = resolve(sourceRoot);
+  const canonical = join(selectedRoot, 'policies', 'operational-prompt-hydration.md');
+  const generator = await import(new URL('./manage-policy-blocks.ts', import.meta.url));
+  generator.verifySourceRevision(selectedRoot, expectedRevision);
+  const canonicalContent = readFileSync(canonical, 'utf8');
+  const policySourceRevision = generator.canonicalSourceRevision(canonicalContent);
+  const receipts = [];
+  for (const relativeTarget of PUBLISH_INSTRUCTION_TARGETS) {
+    const target = join(selectedRoot, relativeTarget);
+    if (!existsSync(target)) {
+      console.error(`gen-harness-manifests: publish target is missing: ${relativeTarget}`);
+      process.exit(1);
+    }
+    const targetContent = readFileSync(target, 'utf8');
+    const projection = mode === 'check'
+      ? generator.checkManagedPolicy(targetContent, canonicalContent, policySourceRevision)
+      : generator.projectManagedPolicy(targetContent, canonicalContent, policySourceRevision);
+    if (mode === 'install') writeFileSync(target, projection.content);
+    receipts.push({
+      target: relativeTarget,
+      changed: projection.changed,
+      policyId: projection.metadata.policyId,
+      version: projection.metadata.version,
+      digest: `sha256:${projection.metadata.digest}`,
+      sourceRevision: projection.metadata.sourceRevision,
+    });
+  }
+  if (process.argv.includes('--json')) process.stdout.write(`${JSON.stringify({ ok: true, mode, expectedRevision, policySourceRevision, targets: receipts })}\n`);
+  else console.log(`gen-harness-manifests: ${mode === 'check' ? 'verified' : 'projected'} canonical policy ${mode === 'check' ? 'across' : 'into'} ${receipts.length} instruction targets at ${expectedRevision}`);
+}
+
+if (process.argv.includes('--publish-instructions') || process.argv.includes('--check-publish-instructions')) {
+  await projectPublishInstructions(process.argv.includes('--check-publish-instructions') ? 'check' : 'install');
+  process.exit(0);
+}
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 
@@ -58,7 +123,7 @@ function readVersion(root) {
 }
 
 /**
- * Discover all numbered skill directories (NN-*) that contain a SKILL.md.
+ * Discover all canonical numbered skills plus approved named skills.
  *
  * @param {string} root - Repo root path.
  * @returns {Array<{ dir: string; path: string; name: string; description: string }>}
@@ -68,7 +133,7 @@ function discoverSkills(root) {
   const skills = [];
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
-    if (!/^\d{2}-/.test(entry.name)) continue;
+    if (!/^\d{2}-/.test(entry.name) && entry.name !== 'openclaw-integration') continue;
     const skillPath = join(root, entry.name, 'SKILL.md');
     if (!existsSync(skillPath)) continue;
     const src = readFileSync(skillPath, 'utf8');
@@ -112,6 +177,8 @@ function writeJson(filePath, data) {
 /** Rules to always include in every harness manifest (ordered by priority). */
 const ALWAYS_LOAD_RULES = [
   'rules/always.md',
+  'rules/evidence-gated-autonomous-orchestration.md',
+  'rules/autonomous-mission-policy.md',
   'rules/autonomous-engineering.md',
   'rules/code-style.md',
   'rules/feature-flags.md',
@@ -127,10 +194,10 @@ const ALWAYS_LOAD_RULES = [
   'rules/prompt-as-training-signal.md',
   'rules/intent-complete-delivery.md',
   'rules/context-hydration.md',
+  'rules/production-delivery-closure.md',
   'rules/greenfield-saas-prompt-hydration.md',
   'rules/parallel-multi-swarm-orchestration.md',
   'rules/total-convergence-and-openspec-handoff.md',
-  'rules/production-delivery-closure.md',
 ];
 
 // ─── main ────────────────────────────────────────────────────────────────────
@@ -138,6 +205,17 @@ const ALWAYS_LOAD_RULES = [
 const version = readVersion(ROOT);
 const skills = discoverSkills(ROOT);
 const allRules = discoverRules(ROOT);
+const canonicalPolicySource = 'policies/operational-prompt-hydration.md';
+const canonicalPolicy = readFileSync(join(ROOT, canonicalPolicySource), 'utf8');
+const canonicalPolicyMetadata = {
+  id: canonicalPolicy.match(/^policy_id:\s*([^\n]+)$/m)?.[1]?.trim(),
+  version: canonicalPolicy.match(/^policy_version:\s*([^\n]+)$/m)?.[1]?.trim(),
+  source: canonicalPolicySource,
+  source_digest: `sha256:${createHash('sha256').update(canonicalPolicy).digest('hex')}`,
+};
+if (!canonicalPolicyMetadata.id || !canonicalPolicyMetadata.version) {
+  throw new Error(`${canonicalPolicySource} requires policy_id and policy_version`);
+}
 
 // Filter always-load rules to only those actually present on disk
 const alwaysLoadRules = ALWAYS_LOAD_RULES.filter((r) => allRules.includes(r));
@@ -159,6 +237,7 @@ const domainFiles = skills
  */
 const codexManifest = {
   _generated_by: 'bin/gen-harness-manifests.mjs — do not edit directly',
+  policy: canonicalPolicyMetadata,
   name: 'heymegabyte-skills',
   version,
   instructions: 'Load rules/ directory. Each .md file is a standing instruction.',
@@ -175,6 +254,7 @@ writeJson(join(ROOT, '.codex-plugin', 'plugin.json'), codexManifest);
  */
 const opencodeConfig = {
   _generated_by: 'bin/gen-harness-manifests.mjs — do not edit directly',
+  policy: canonicalPolicyMetadata,
   instructions: alwaysLoadRules,
   skills: skills.map((s) => ({ path: s.path })),
 };
@@ -190,6 +270,7 @@ writeJson(join(ROOT, '.opencode', 'config.json'), opencodeConfig);
  */
 const kimiManifest = {
   _generated_by: 'bin/gen-harness-manifests.mjs — do not edit directly',
+  policy: canonicalPolicyMetadata,
   name: 'heymegabyte-skills',
   version,
   locale: 'zh-CN',
