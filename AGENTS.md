@@ -10,6 +10,10 @@ CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan U
 
 Load skills on demand via the skill router (`_router.md`). Each category has a `SKILL.md` with submodules listed in frontmatter.
 
+## Temporary workspace cleanup
+
+At task closeout, preserve unpublished work and required verification evidence, then remove disposable temporary folders and finished worktrees. Check for active users and concurrent work before removing anything. Use Git to remove worktrees and record why any temporary folder must stay.
+
 ## Key Files
 
 - `CONVENTIONS.md` — shared constants, patterns, stack config

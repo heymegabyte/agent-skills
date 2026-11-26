@@ -26,6 +26,10 @@
 ```
 Perform a general repository cleanup pass. Remove what's stale, consolidate what's scattered, and document what's unclear. Do not change behavior — only structure, clarity, and hygiene.
 
+## Temporary workspace closeout
+
+At the end of a task, inventory the temporary worktrees, build directories, and scratch folders created for the task. Preserve unpublished commits, uncommitted changes, and verification evidence needed to resume. Check that no running process or concurrent task is using a directory. Remove finished Git worktrees with `git worktree remove` and delete disposable build and scratch directories. Leave retained paths documented with the reason they are still needed.
+
 ## Pass 1: Orphaned files
 
 Find and remove files that serve no purpose:
