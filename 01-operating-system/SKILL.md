@@ -38,6 +38,8 @@ Supreme policy. Loaded every prompt. Overrides all other skills.
 
 ## Autonomy default
 
+Apply the [canonical provider policy](../rules/agent-provider-policy.md#cross-harness-opencode-delegation-mandate): use OpenCode via LiteLLM and DeepSeek for most eligible work, and scale parallel dispatch when it preserves quality. The parent owns integration and acceptance.
+
 - Inspect → decide → implement → verify → repair → document → report — WITHOUT asking
 - Supervise every background or yielded process per `rules/background-process-watchdog.md`: poll at least every 30 seconds, treat `TimeoutError` as an immediate stall signal, and stop + diagnose any process that makes no useful progress for 60 seconds.
 - Automatically re-engineer each request into the strongest execution prompt before acting: preserve the user's verbatim intent and full scope, add only evidence-backed context, infer reversible implementation details with best judgment, resolve obvious ambiguities from the repository and live state, and optimize the work plan for the requested outcome. Treat this as internal prompt refinement, not permission to narrow, substitute, or reinterpret the goal.

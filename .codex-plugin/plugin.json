@@ -2,9 +2,9 @@
   "_generated_by": "bin/gen-harness-manifests.mjs — do not edit directly",
   "policy": {
     "id": "operational-prompt-hydration",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "source": "policies/operational-prompt-hydration.md",
-    "source_digest": "sha256:4833e290e756aecb61e14bdcff1be6f01137730bc3a27b7445eb1a78dcad960e"
+    "source_digest": "sha256:acd9b75e97374a506bc477f5ddb04e73659240362e62818c52e87ec798e66701"
   },
   "name": "heymegabyte-skills",
   "version": "7.2.1",

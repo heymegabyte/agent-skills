@@ -16,6 +16,7 @@ members:
   - rules/machine-recovery-repo
   - rules/automated-alert-hygiene-and-hysteresis
   - rules/workstation-shared-provisioning-policy
+  - rules/paperclip-openclaw-agentskills-synergy
   - rules/terminal-styling
   - rules/idempotency-by-default
   - rules/tail-worker-agent-observability
