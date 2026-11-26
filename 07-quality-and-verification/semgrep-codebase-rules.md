@@ -15,6 +15,12 @@ Use Semgrep for patterns the configured language and engine can establish. Check
 - Use Semgrep for supported syntax and explicitly modeled data flow. Treat incomplete cross-file analysis as a limit. Verify authorization, schema validation, and runtime behavior with behavioral tests.
 - Use workflow, schema, and secret scanners for their own formats. Choose each tool from the failure you need to detect.
 
+## Structural audits and configuration policies
+
+- Use ast-grep to identify syntax when the result does not depend on symbol identity. The shared `@theme-tools/testing/ast-grep/json-parse-assertion.yaml` rule audits TypeScript assertions on parsed JSON. Choose and test the runtime validator before repairing a finding.
+- Use Conftest for policy on parsed configuration. The shared `@theme-tools/testing/conftest/pull-request-permissions.rego` policy checks workflow- and job-level permissions on pull request workflows. Test an actual YAML fixture as well as Rego objects so key normalization and parser behavior are covered.
+- Resolve these assets through the installed package's public exports. Check the artifact version and confirm the export exists before running the scanner. Use a qualified local tarball when the registry is unavailable.
+
 ## Verify rules and repairs
 
 Record each rule's trigger, affected languages, engine version, diagnostic, and exclusions. Add matching and nonmatching fixtures, including realistic aliases or wrappers if supported. Run the pinned Semgrep rule tests before enabling the policy. Use suggestions when a repair depends on intent. For an automatic fix, test exact output, parser validity, comments, behavior, and a second pass with no changes.
