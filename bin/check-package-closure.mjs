@@ -36,14 +36,15 @@ for (const file of claudeManifest.outputStyles) {
 for (const entry of readdirSync(join(ROOT, 'agents'), { withFileTypes: true })) {
   if (entry.isFile() && entry.name.endsWith('.md')) required.add(`agents/${entry.name}`);
 }
-for (const directory of claudeManifest.skills) {
-  required.add(posix.join(directory, 'SKILL.md'));
-}
+const claudeSkillDirectories = new Set(claudeManifest.skills.map((directory) => posix.normalize(directory)));
 
 for (const entry of readdirSync(ROOT, { withFileTypes: true })) {
   if (!entry.isDirectory() || !/^(?:\d\d-|openclaw-integration$)/.test(entry.name)) continue;
   const canonical = `${entry.name}/SKILL.md`;
   if (!existsSync(join(ROOT, canonical))) continue;
+  if (!claudeSkillDirectories.delete(entry.name)) {
+    throw new Error(`Missing Claude skill entry for ${canonical}`);
+  }
   const text = readFileSync(join(ROOT, canonical), 'utf8');
   const name = text.match(/^name:\s*["']?([a-z0-9-]+)["']?\s*$/m)?.[1];
   if (!name) throw new Error(`Missing skill name in ${canonical}`);
@@ -54,6 +55,9 @@ for (const entry of readdirSync(ROOT, { withFileTypes: true })) {
   for (const [, file] of submodules.matchAll(/^  - ([^\s]+\.md)$/gm)) {
     required.add(`${entry.name}/${file}`);
   }
+}
+if (claudeSkillDirectories.size) {
+  throw new Error(`Unknown Claude skill directories: ${[...claudeSkillDirectories].join(", ")}`);
 }
 for (const pack of readdirSync(join(ROOT, '_packs')).filter((name) => name.endsWith('.yml'))) {
   const text = readFileSync(join(ROOT, '_packs', pack), 'utf8');

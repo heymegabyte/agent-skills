@@ -48,7 +48,8 @@
     "./25-quality-performance",
     "./26-platform-delivery",
     "./27-trust-compliance",
-    "./28-cf-integrations-reference"
+    "./28-cf-integrations-reference",
+    "./openclaw-integration"
   ],
   "outputStyles": ["./output-styles/emdash-concise.md"]
 }

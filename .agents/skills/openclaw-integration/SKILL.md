@@ -11,6 +11,8 @@ source: "openclaw-integration/SKILL.md (heymegabyte/agent-skills)"
      (Claude Code: ~/.claude · Codex: ~/.codex · others: see your tool's docs). -->
 # OpenClaw fleet integration
 
+Run fleet diagnostics from a trusted `heymegabyte/agent-skills` checkout at the configured revision. The npm archive carries the skill for discovery. Resolve the references and commands below relative to the canonical `openclaw-integration/` directory in that checkout.
+
 Read `../control-plane/RUNTIME.md` for a coding turn; read `../control-plane/FLEET.md` only for configuration changes. Machine identity is `~/.config/agent-fleet/machine.json`; live observations outrank old inventory prose.
 
 Start diagnosis with `node --experimental-strip-types ../control-plane/fleet-control.ts status` and `node --experimental-strip-types ../control-plane/fleet-control.ts promptfoo-eval`. Distinguish installed, configured, authenticated, eligible, executing, and verified: none implies the next.
