@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "taskId": "8.3",
   "state": "BLOCKED",
-  "observedAt": "2026-11-26T02:09:17Z",
+  "observedAt": "2026-11-26T02:17:33Z",
   "package": {
     "name": "@theme.tools/sdk",
     "sourceVersion": "1.0.0",
@@ -52,19 +52,19 @@
     {
       "name": "Package distribution contract",
       "runId": 45740312388,
-      "jobId": 139643398907,
+      "jobId": 139647107207,
       "url": "https://github.com/heymegabyte/theme.tools/actions/runs/45740312388",
       "sourceCommit": "063a210a41e5301f7f3d582cc1f6faf343b5b502",
       "status": "failure",
       "stepsStarted": false,
-      "annotation": "The current-main package qualification job failed with zero executed steps; the API returned no job log, matching the previously captured account billing/spending pre-step failure mode."
+      "annotation": "Attempt 2 failed with zero executed steps. GitHub's check-run annotation states: The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings"
     }
   ],
   "blockers": [
     {
       "id": "github-actions-billing",
       "owner": "GitHub organization billing administrator",
-      "reason": "Current-main qualification jobs still fail before any step executes; prior exact annotations identified the organization account billing/spending state, and the current jobs reproduce that pre-step failure signature."
+      "reason": "Current-main qualification attempt 2 failed before any step executed; GitHub's current check-run annotation explicitly identifies recent account payment failure or the Actions spending limit."
     },
     {
       "id": "changeset-version-not-applied",

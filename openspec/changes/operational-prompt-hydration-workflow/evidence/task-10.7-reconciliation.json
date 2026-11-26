@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "taskId": "10.7",
-  "observedAt": "2026-11-26T02:09:17Z",
+  "observedAt": "2026-11-26T02:17:33Z",
   "status": "BLOCKED_PLANNING_RECONCILIATION",
   "changeId": "operational-prompt-hydration-workflow",
   "sourceRevision": "4f87b02d7c7285c26ae45e20710b3a6c9e6703f6",
@@ -24,7 +24,7 @@
     {
       "id": "task-8.3-live-release-observation",
       "status": "BLOCKED",
-      "evidence": "theme.tools current main 063a210a41e5301f7f3d582cc1f6faf343b5b502 retains the unapplied SDK patch changeset; @theme.tools/sdk remains 1.0.0; current qualification jobs fail with zero steps; npm whoami returns ENEEDAUTH."
+      "evidence": "theme.tools current main 063a210a41e5301f7f3d582cc1f6faf343b5b502 retains the unapplied SDK patch changeset; @theme.tools/sdk remains 1.0.0; qualification rerun attempt 2 (job 139647107207) failed with zero steps and a current GitHub billing/spending annotation; npm whoami and all approved get-secret registry-token probes are unauthenticated."
     }
   ],
   "specSync": {
