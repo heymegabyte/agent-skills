@@ -406,6 +406,36 @@ if (existsSync(openclawDir)) {
         command: nodeBin,
         args: [runnerPath, "cua-driver"],
       },
+      "stripe-hardened-mcp": {
+        type: "stdio",
+        command: nodeBin,
+        args: [runnerPath, "stripe-hardened-mcp"],
+      },
+      "supabase-mcp": {
+        type: "stdio",
+        command: nodeBin,
+        args: [runnerPath, "supabase-mcp"],
+      },
+      "supermemory-mcp": {
+        type: "stdio",
+        command: nodeBin,
+        args: [runnerPath, "supermemory-mcp"],
+      },
+      "composio-mcp": {
+        type: "stdio",
+        command: nodeBin,
+        args: [runnerPath, "composio-mcp"],
+      },
+      "mem0-mcp": {
+        type: "stdio",
+        command: nodeBin,
+        args: [runnerPath, "mem0-mcp"],
+      },
+      "shopify-mcp": {
+        type: "stdio",
+        command: nodeBin,
+        args: [runnerPath, "shopify-mcp"],
+      },
     },
   };
   writeFileSync(
