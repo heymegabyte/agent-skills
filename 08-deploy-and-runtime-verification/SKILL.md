@@ -29,6 +29,8 @@ triggers:
   - "deploy"
   - "wrangler deploy"
   - "rollback"
+  - "release provenance"
+  - "registry publication"
 paths:
   - "concern:cloudflare-workers"
 ---
@@ -36,6 +38,8 @@ paths:
 # 08 — Deploy and Runtime Verification
 
 Enforce `rules/production-delivery-closure.md` after every authorized code-changing prompt: validate → exact tested commit → normal main push → established deploy → exact-commit production E2E. Fail closed rather than bypassing authority or evidence gates.
+
+For package qualification and registry publication, load `08-deploy-and-runtime-verification/changelog-and-releases.md` for archive verification and publication evidence.
 
 ## Mandatory deploy loop (every code change)
 

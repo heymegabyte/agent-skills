@@ -15,6 +15,8 @@ source: "08-deploy-and-runtime-verification/SKILL.md (heymegabyte/agent-skills)"
 
 Enforce `rules/production-delivery-closure.md` after every authorized code-changing prompt: validate → exact tested commit → normal main push → established deploy → exact-commit production E2E. Fail closed rather than bypassing authority or evidence gates.
 
+For package qualification and registry publication, load `08-deploy-and-runtime-verification/changelog-and-releases.md` for archive verification and publication evidence.
+
 ## Mandatory deploy loop (every code change)
 
 Activate this loop only for authorized repository changes. Read-only prompts, explicit local-only requests, prohibited deployment, unavailable authority/credentials, destructive approval gaps, failed required validation, and required PR/review are `BLOCKED`, not reasons to bypass controls.
