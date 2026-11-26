@@ -17,6 +17,16 @@ description: "Zod schema validation against live Hono API endpoints. Runtime typ
 Define Zod schema → fetch live endpoint → z.parse(response) → fail on mismatch
 ```
 
+## TypeScript Contract Changes
+
+1. Record the project root, effective tsconfig, compiler version and semantic backend. Confirm the backend includes the changed files and the current revision. Refresh stale indexes before relying on references.
+2. Resolve the declaration, signature, references and rename locations with the TypeScript language service, a compatible Serena backend, or a TypeScript-aware migration. Use ripgrep for text and ast-grep for syntax. Check package exports, conditional entry points, tests and consumers independently. An unsupported reference query provides no absence evidence.
+3. Decide which public exports, object keys, serialized fields, persisted data and string references must keep their names. Use compiler-assisted renames for symbols and explicit migrations for wire or storage changes.
+4. Add compile-only assertions to the actual typecheck input. For Hono RPC, infer the client from the constructed app and check required request fields and status-specific responses. Prove the assertion reacts to drift with a failing fixture, then verify the restored candidate.
+5. Pair compile checks with relevant runtime validation. Test malformed external inputs and preserved authorization behavior. Include clean packed-consumer checks when changing published exports or declarations.
+
+[TypeScript language service](https://github.com/microsoft/TypeScript/wiki/Using-the-Language-Service-API) · [Hono RPC](https://hono.dev/docs/guides/rpc)
+
 ## Drizzle v1 Schema-to-Zod (Auto-Derive Contracts)
 
 Drizzle v1 (`drizzle-zod`) generates Zod schemas directly from table definitions — contracts stay in sync with DB schema automatically:
