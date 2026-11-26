@@ -68,6 +68,16 @@ EOF
 )"
 ```
 
+## Package Artifact Qualification
+
+Generate the qualification receipt from the clean release revision. Compare the
+revision, package versions, archive filenames, and archive digests before
+attestation or upload. For a registry that accepts prebuilt tarballs, rehearse
+the exact artifacts with the pinned package manager and explicit destination.
+Treat a dry run as evidence of local archive acceptance and routing. After an
+authorized publish, verify the registry archive digest and install the exact
+version in a clean consumer before recording adoption.
+
 ## Semantic Versioning
 
 - **Major** (1.0.0 → 2.0.0) — breaking changes, redesign
