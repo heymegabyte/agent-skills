@@ -8,9 +8,7 @@ on:
     branches: [master, main]
 
 permissions:
-  contents: write
-  id-token: write
-  packages: write
+  contents: read
 
 jobs:
   validate:
@@ -119,6 +117,8 @@ jobs:
 
   sync-cross-platform:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     needs: validate
     if: github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/')
     steps:
@@ -191,6 +191,8 @@ jobs:
 
   publish-github-release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     needs: validate
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
@@ -236,6 +238,9 @@ jobs:
 
   publish-github-skills:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
     needs: validate
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
