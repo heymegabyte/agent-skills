@@ -1,32 +1,26 @@
 #!/usr/bin/env node
 /** Verify that canonical skills and pack members are both present and publishable. */
+import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'));
-const patterns = pkg.files || [];
-
-function patternRegex(pattern) {
-  let source = '';
-  for (let index = 0; index < pattern.length; index += 1) {
-    const char = pattern[index];
-    if (char === '*' && pattern[index + 1] === '*') { source += '.*'; index += 1; }
-    else if (char === '*') source += '[^/]*';
-    else if (char === '?') source += '[^/]';
-    else source += char.replace(/[.+^${}()|[\]\\]/g, '\\$&');
-  }
-  return new RegExp(`^${source}$`);
-}
-
-const matchers = patterns.map(patternRegex);
-const publishable = (path) => matchers.some((matcher) => matcher.test(path));
 const required = new Set(['package.json', 'README.md', 'LICENSE']);
 
 for (const entry of readdirSync(ROOT, { withFileTypes: true })) {
-  if (entry.isDirectory() && /^\d\d-/.test(entry.name) && existsSync(join(ROOT, entry.name, 'SKILL.md'))) {
-    required.add(`${entry.name}/SKILL.md`);
+  if (!entry.isDirectory() || !/^(?:\d\d-|openclaw-integration$)/.test(entry.name)) continue;
+  const canonical = `${entry.name}/SKILL.md`;
+  if (!existsSync(join(ROOT, canonical))) continue;
+  const text = readFileSync(join(ROOT, canonical), 'utf8');
+  const name = text.match(/^name:\s*["']?([a-z0-9-]+)["']?\s*$/m)?.[1];
+  if (!name) throw new Error(`Missing skill name in ${canonical}`);
+  required.add(canonical);
+  required.add(`.agents/skills/${entry.name}.md`);
+  required.add(`.agents/skills/${name}/SKILL.md`);
+  const submodules = text.match(/^submodules:\n((?:  - [^\n]+\n)+)/m)?.[1] ?? '';
+  for (const [, file] of submodules.matchAll(/^  - ([^\s]+\.md)$/gm)) {
+    required.add(`${entry.name}/${file}`);
   }
 }
 for (const pack of readdirSync(join(ROOT, '_packs')).filter((name) => name.endsWith('.yml'))) {
@@ -44,9 +38,14 @@ for (const pack of readdirSync(join(ROOT, '_packs')).filter((name) => name.endsW
 }
 
 const missing = [...required].filter((path) => !existsSync(join(ROOT, path)));
-const excluded = [...required].filter((path) => !['package.json', 'README.md', 'LICENSE'].includes(path) && !publishable(path));
+const [archive] = JSON.parse(execFileSync('npm', ['pack', '--dry-run', '--ignore-scripts', '--json'], {
+  cwd: ROOT,
+  encoding: 'utf8',
+}));
+const archivePaths = new Set(archive.files.map(({ path }) => path));
+const excluded = [...required].filter((path) => !archivePaths.has(path));
 if (missing.length || excluded.length) {
   console.error(JSON.stringify({ status: 'fail', missing, excluded }, null, 2));
   process.exit(1);
 }
-console.log(`✓ package closure: ${required.size} required files exist and are covered by package.json files`);
+console.log(`✓ package closure: ${required.size} required files are present in the npm pack manifest`);

@@ -19,6 +19,9 @@ jobs:
       - name: Validate skills
         run: bash scripts/validate-skills.sh
 
+      - name: Verify npm package closure
+        run: node bin/check-package-closure.mjs
+
       - name: Validate theme.tools skill integration
         run: node bin/check-theme-tools-skill-integration.mjs
 

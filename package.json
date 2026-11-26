@@ -140,6 +140,7 @@
     ".roo/**",
     ".continue/**",
     ".agents/**",
+    "openclaw-integration/SKILL.md",
     ".claude-plugin/**",
     ".cursor/**",
     ".windsurf/**",
