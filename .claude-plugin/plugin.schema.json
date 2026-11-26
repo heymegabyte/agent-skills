@@ -4,7 +4,7 @@
   "title": "Claude Code Plugin Manifest",
   "description": "Validates .claude-plugin/plugin.json. Pattern from secondsky/claude-skills.",
   "type": "object",
-  "required": ["name", "description", "version", "author", "skills", "agents"],
+  "required": ["name", "description", "version", "author", "skills"],
   "additionalProperties": true,
   "properties": {
     "name": {

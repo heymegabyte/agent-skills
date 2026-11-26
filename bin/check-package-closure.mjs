@@ -29,8 +29,12 @@ const claudeManifestPath = '.claude-plugin/plugin.json';
 required.add(claudeManifestPath);
 required.add('.claude-plugin/marketplace.json');
 const claudeManifest = JSON.parse(readFileSync(join(ROOT, claudeManifestPath), 'utf8'));
-for (const file of [...claudeManifest.agents, ...claudeManifest.outputStyles]) {
+for (const file of claudeManifest.outputStyles) {
   required.add(posix.normalize(file));
+}
+// Claude discovers agents in its default directory. npm excludes symlink aliases.
+for (const entry of readdirSync(join(ROOT, 'agents'), { withFileTypes: true })) {
+  if (entry.isFile() && entry.name.endsWith('.md')) required.add(`agents/${entry.name}`);
 }
 for (const directory of claudeManifest.skills) {
   required.add(posix.join(directory, 'SKILL.md'));
