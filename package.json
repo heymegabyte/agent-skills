@@ -114,6 +114,7 @@
     "reference/platform-research-2026-10-31.md",
     "control-plane/RUNTIME.md",
     "agents/**",
+    "skills/tdd-and-verification/**",
     "output-styles/**",
     "templates/**",
     "fixtures/**",

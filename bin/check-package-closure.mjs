@@ -73,6 +73,12 @@ for (const pack of readdirSync(join(ROOT, '_packs')).filter((name) => name.endsW
   }
 }
 
+const tddSkill = 'skills/tdd-and-verification';
+required.add(`${tddSkill}/SKILL.md`);
+for (const entry of readdirSync(join(ROOT, tddSkill, 'references'), { withFileTypes: true })) {
+  if (entry.isFile() && entry.name.endsWith('.md')) required.add(`${tddSkill}/references/${entry.name}`);
+}
+
 const missing = [...required].filter((path) => !existsSync(join(ROOT, path)));
 const [archive] = JSON.parse(execFileSync('npm', ['pack', '--dry-run', '--ignore-scripts', '--json'], {
   cwd: ROOT,

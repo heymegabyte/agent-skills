@@ -24,6 +24,7 @@
       "13-*/**",
       "14-*/**",
       "agents/**",
+      "skills/tdd-and-verification/**",
       "templates/**",
       "scripts/**",
       "bin/**",
