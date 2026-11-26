@@ -151,3 +151,7 @@ Build only owned work traced from the stage-1 artifact and its accepted OpenSpec
 ## Theme.tools ecosystem contract (required)
 
 Use this skill's `config/theme-tools-skill-map.json` packages before local implementation; canonical reuse and contribution procedure remains in `rules/theme-tools-skill-integration.md`.
+
+## Temporary workspace closeout
+
+Before closing a task, inventory the Git worktrees, scratch directories, and build outputs it created. Save unpublished commits, local edits, and verification evidence in a durable location before retiring a workspace. Check for active processes and concurrent owners. Remove finished worktrees with `git worktree remove` and delete disposable task directories. Record the path and reason for anything retained.

@@ -94,7 +94,6 @@ before installing from the local bundle and a warmed pnpm store.
 Record the result as offline consumer evidence. Verify registry access
 and publication separately.
 
-
 ## Semantic Versioning
 
 - **Major** (1.0.0 → 2.0.0) — breaking changes, redesign
