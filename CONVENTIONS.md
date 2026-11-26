@@ -217,7 +217,17 @@ Full Linux containers co-located with Workers.
 - **Nonprofits** — $10 / $25 / $50 / $100 / $250 / $500 presets
 - **Stripe** — 2.9% + $0.30 per card, +0.7% per recurring (Billing)
 
-## Deploy
+## Deploy & Atomic `Commit → Push → Publish (Live Deploy + CDN Purge) → Live Edge Verify` Mandate
+
+- **Atomic Live Publication Rule (Never Stop at `git push`)**: Every prompt touching a site, worker, or app MUST automatically build, commit, push to `origin/main`, **publish/deploy live (`pnpm deploy` / `npx wrangler deploy`)**, purge the Cloudflare CDN cache, and verify the live production domain (`https://<domain>/`, `/api/health`, `/og.png`, `/favicon.svg`, `/apple-touch-icon.png`) in the same turn, while parallel subagents extract inferred value into `heymegabyte/theme.tools`, `heymegabyte/install.doctor`, and `heymegabyte/agent-skills`.
+- **Canonical Brand Logo, Favicon, Apple Touch Icon & OG Registry**:
+  - **`voice.build`**: `/logos/10-sovereign-voice-crown-signature-ideogram.png` (`/favicon.svg`, `/apple-touch-icon.png`, `home.megabyte.space` `/icons/voice-build.png`).
+  - **`qubes.cloud`**: `/logos/10-sovereign-voice-crown-signature-ideogram.png` (`10-sovereign-qubes-crown-signature-ideogram.png`, `/favicon.svg`, `/apple-touch-icon.png`, `home.megabyte.space` `/icons/qubes-cloud.png`).
+  - **`publish.engineer`**: `/logos/08-sacred-folio-lissajous.png` (`/favicon.svg`, `/apple-touch-icon.png`, `home.megabyte.space` `/icons/publish-engineer.png`).
+  - **`post.vision`**: `/logos/06-chronos-timeline-horizon-ideogram.png` (`/favicon.svg`, `/apple-touch-icon.png`, `home.megabyte.space` `/icons/post-vision.png`).
+  - **`template.company`**: `/logos/05-titanium-company-foundry-ideogram.png` (`05-titanium-company-foundry-transparent.png`, `/favicon.svg`, `/apple-touch-icon.png`, `home.megabyte.space` `/icons/template-company.png`).
+  - **`status.charity`**: `/logos/06-verifiable-altruism-spectrogram-ideogram.png` (`06-verifiable-altruism-spectrogram-transparent.png`, `/favicon.svg`, `/apple-touch-icon.png`, `home.megabyte.space` `/icons/status-charity.png`).
+  - **`questionl.ink`**: `/logos/10-sovereign-questionlink-crown-ideogram.png` (`10-sovereign-questionlink-crown-transparent.png`, dark-navy `#181B2E` squircle with electric-cyan `#19B5FE` question-mark equalizer waveform bars `/favicon.svg` & `/apple-touch-icon.png`, `1200x630` `/og.png` with `"Train repositories by answering questions"`, and `home.megabyte.space` `/icons/question-link.png`).
 
 ```bash
 npx wrangler deploy

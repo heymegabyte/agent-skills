@@ -68,9 +68,10 @@ CREATE → RENDER / EXECUTE → EXPERIENCE → CRITIQUE → MODIFY → COMPARE
   7. **Observability** (PostHog + GA4 + Sentry + **Langfuse with graceful timeout fallback**)
   8. **AI Execution Quality** (frontier architecture, parallel swarm throughput, deterministic verification)
 
-### C. The Organization Loop (End-of-Prompt Parallel Triad Sync)
+### C. The Organization Loop (End-of-Prompt Parallel Triad Sync & Atomic Live Publish)
 
-- Every prompt trains the organization. Before concluding any turn, execute Section 2 below in parallel.
+- **Atomic `Commit → Push → Publish (Live Deploy + CDN Purge) → Live Edge Verify` Mandate**: Every prompt touching a site, worker, or app MUST automatically build, commit, push to `origin/main`, **publish/deploy live (`pnpm deploy` / `npx wrangler deploy`)**, purge the Cloudflare CDN cache, and verify the live production domain (`https://<domain>/`, `/api/health`, `/og.png`, `/favicon.svg`, `/apple-touch-icon.png`) in the same turn. Never treat `git push` alone as completion without publishing live.
+- **Mandatory Parallel Subagent Execution (`invoke_subagent`)**: Every prompt trains the organization. Hydrate the 12-dimension MECH prompt context, author/update OpenSpec (`openspec/changes/<change-id>/{proposal.md,design.md,tasks.md}`), and spawn parallel subagents to execute Section 2 below concurrently across `heymegabyte/theme.tools`, `heymegabyte/install.doctor`, and `heymegabyte/agent-skills`.
 - Run documentation/comment reconciliation and bounded `theme.tools`, `install.doctor`, and `agent-skills` extraction reviews concurrently with proportional tests and release preparation. After reconciling those changes and generated outputs, revalidate the exact final tree; commit only that tested tree, push it normally to `main`, promote it through the approved production rail, and run production smoke plus critical E2E verification. Fail closed without mutating production when an authority, credential, spending, review, recovery, validation, or provenance gate is missing, and record the exact blocker.
 
 ---

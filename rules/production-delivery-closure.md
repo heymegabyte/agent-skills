@@ -18,7 +18,8 @@ paths:
 
 # Production Delivery Closure
 
-For every implementation turn, run proportional tests, documentation/comment reconciliation, release preparation, and bounded extraction reviews for `theme.tools`, `install.doctor`, `agent-skills`, and materially touched repositories concurrently where dependencies permit.
+- **Atomic `Commit → Push → Publish (Live Deploy + CDN Purge) → Live Edge Verify` Mandate**: Every prompt touching a site, worker, or app MUST automatically build, commit, push to `origin/main`, **publish/deploy live (`pnpm deploy` / `npx wrangler deploy`)**, purge the Cloudflare CDN cache, and verify the live production domain (`https://<domain>/`, `/api/health`, `/og.png`, `/favicon.svg`, `/apple-touch-icon.png`) in the same turn. Never treat `git push` alone as completion without publishing live.
+- **Mandatory Parallel Subagent Execution (`invoke_subagent`) for Prompt Hydration, OpenSpec & Sovereign Triad Value Absorption (`theme.tools` + `install.doctor` + `agent-skills`)**: For every implementation turn, hydrate the 12-dimension MECH prompt context, author/update OpenSpec (`openspec/changes/<change-id>/{proposal.md,design.md,tasks.md}`), and spawn parallel subagents to run proportional tests, documentation/comment reconciliation, release preparation, and bounded extraction commits/pushes for `heymegabyte/theme.tools`, `heymegabyte/install.doctor`, `heymegabyte/agent-skills`, and materially touched repositories concurrently.
 
 Serialize the integrity boundary after those lanes reconcile:
 
