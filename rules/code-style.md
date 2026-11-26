@@ -11,7 +11,7 @@ superseded_by: null
 
 # Code Style
 
-Enforce TS 7.0 strict mode, Google TS Style, ESM-only imports, and Cloudflare Workers-compatible patterns across all TypeScript and Angular code.
+Use strict TypeScript, Google TypeScript style, and module settings that match the deployed runtime. Check the repository's lockfile, compiler, and effective project configuration before applying a version-specific recommendation.
 
 ## Language selection order
 
@@ -21,7 +21,8 @@ Enforce TS 7.0 strict mode, Google TS Style, ESM-only imports, and Cloudflare Wo
 
 ## TypeScript (Google TS Style)
 
-- **TS 7.0** (native Go compiler, ~8–12× faster; alias TS 6.x for typescript-eslint/ts-morph/transformers until 7.1, stable ~2026-11-24, beta 10/6) — `strictInference: true`, `isolatedDeclarations: true`, `erasableSyntaxOnly` for Node 24 native TS.
+- Keep the pinned project compiler authoritative. Evaluate native compiler upgrades against actual diagnostics, declaration emit, and semantic tooling compatibility. Enable `isolatedDeclarations` and `erasableSyntaxOnly` where the supported compiler, package contract, and runtime justify them.
+- For shared compiler and lint configuration, inspect the installed theme.tools exports first. Select profiles by runtime and keep path mappings, bindings, project roots, and exceptions in the consumer. Verify effective options and a failing fixture before adopting a profile.
 - camelCase vars/fns · PascalCase types · CONSTANT_CASE consts.
 - `interface` over `type`. Relative imports. Never `any` — use `unknown`. Never `@ts-ignore`.
 - `readonly` when not reassigned. `undefined` over `null`.
@@ -35,7 +36,7 @@ Enforce TS 7.0 strict mode, Google TS Style, ESM-only imports, and Cloudflare Wo
 
 ### Lint
 
-- ESLint 10 flat config (`eslint.config.ts`) + typescript-eslint ≥8.56 + angular-eslint + eslint-plugin-perfectionist + eslint-plugin-security + `--fix` on save.
+- Use the supported ESLint flat-config and typescript-eslint versions for the project. Set project service to the consumer's absolute root, include linted TypeScript files in their project, and use the shared strict or migration profile from `@theme-tools/testing/typed-eslint-config` where installed. Verify that valid TypeScript parses and a type-aware rule detects a planted violation.
 - **oxlint** pre-commit speed pass (50-100× ESLint, no formatting).
 - **knip** dead code/unused deps (CI weekly). **jscpd** duplicate detection (≤1%). **dependency-cruiser** architecture rules.
 - Prettier formats (`.prettierrc`). Pre-commit: `oxlint && eslint --fix && prettier --write`.
