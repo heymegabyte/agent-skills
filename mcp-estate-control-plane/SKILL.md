@@ -9,11 +9,13 @@ Use `heymegabyte/mcp.megabyte.space` as the secret-free source of truth for serv
 
 ## Routing contract
 
+0. Use the endpoint by caller and risk: `mcp.megabyte.space/mcp` for approved humans, `automation.mcp.megabyte.space/mcp` for unattended workloads with a unique Access service token, `sandbox.mcp.megabyte.space/mcp` for non-production human testing, `ops.mcp.megabyte.space/mcp` for narrow privileged human operations, and `canary.mcp.megabyte.space/mcp` before promotion. Never substitute one endpoint merely because it has a broader tool list.
 1. Put shared remote HTTP MCPs behind Cloudflare Access MCP Portal when they benefit from centralized OAuth, device posture, tool curation, context optimization, DLP, or audit.
 2. Use LiteLLM for model routing and narrowly scoped application-side MCP execution. Enable `require_key_mcp_access_defined`; give model-only keys no MCP servers.
 3. Do not route the same upstream through both planes unless caller identity survives both authorization decisions.
 4. Keep CUA, local BrowserMCP, filesystem, shell, and other host-control servers local and lazy.
 5. Keep Cloudflare's own Code Mode MCP direct; nested Code Mode is unsupported. Start portal Code Mode opt-in.
+6. The Cloudflare-native baseline must initialize, discover tools, execute an allowed read-only call, and deny an unauthorized call when home Internet, Coolify, Proxmox, LAN origins, tunnels to those origins, and workstation sessions are unavailable. Keep those dependencies in explicitly extended/local profiles, never the baseline.
 
 ## Identity contract
 
