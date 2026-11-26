@@ -211,23 +211,11 @@ export const CANONICAL_PROJECT_MAP: Record<string, PaperclipProjectMapping> = {
     defaultBranch: 'master',
     defaultAssigneeAgentId: PAPERCLIP_SPECIALIST_AGENTS.devSecOps,
   },
-  'issuel.ink': {
-    projectId: '0bf6ec92-0581-492c-9a10-cc2d35ad20a2',
-    githubRepo: 'heymegabyte/issuel.ink',
-    defaultBranch: 'main',
-    defaultAssigneeAgentId: PAPERCLIP_SPECIALIST_AGENTS.fullStackEngineer,
-  },
   'legion.megabyte.space': {
     projectId: 'd87802d3-48b3-442a-998c-720951c119db',
     githubRepo: 'heymegabyte/legion.megabyte.space',
     defaultBranch: 'main',
     defaultAssigneeAgentId: PAPERCLIP_SPECIALIST_AGENTS.devSecOps,
-  },
-  'linkbl.ink': {
-    projectId: 'ca634f2a-f745-41d1-9f6b-b868d9b50e10',
-    githubRepo: 'heymegabyte/linkbl.ink',
-    defaultBranch: 'main',
-    defaultAssigneeAgentId: PAPERCLIP_SPECIALIST_AGENTS.fullStackEngineer,
   },
   'lonemountainglobal.com': {
     projectId: 'a871c370-37ff-4400-a5f2-cb306228c881',

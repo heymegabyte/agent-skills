@@ -55,7 +55,7 @@ Default stack: `_kernel/standards.md#stack`. Override conditions below.
 - Pursue mail-authentication diagnostics, routing/matching, structured diffing, bounded XLSX processing, restic/rclone-backed backup/transfer jobs, conditional Markdown acceleration and fast incremental previews where the product needs them. Reuse mature implementations; keep secrets/network access in the appropriate host.
 - Exclude from this rollout: a new unified `mb` CLI, standalone doctor/benchmark/deployment-planning CLIs, custom MIME or shared-redaction WASM, a shared Go-hosted WASM engine, DuckDB product querying, SVG-card generation, dedicated analytics kernels and a separate telemetry CLI. These are scope decisions, not a ban on existing upstream capabilities.
 - Defer event replay tooling. Reconnecting a live build stream to reconstruct its UI remains part of build correctness and does not authorize operational job replay.
-- Resolve product identity and repository ownership from current source; do not assign a product role from a domain name alone. **issuel.ink's purpose remains undecided**; no earlier suggested product role is approved by implication.
+- Resolve product identity and repository ownership from current source; do not assign a product role from a domain name alone; no earlier suggested product role is approved by implication.
 
 Sources: [Workers WebAssembly](https://developers.cloudflare.com/workers/runtime-apis/webassembly/), [workers-rs](https://github.com/cloudflare/workers-rs), [Charm CLI guidance](../rules/terminal-styling.md).
 

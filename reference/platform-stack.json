@@ -8,8 +8,7 @@
     "desktop.management",
     "inbox.vision",
     "pdf.kitchen",
-    "status.charity",
-    "linkbl.ink"
+    "status.charity"
   ],
   "migrationSources": ["projectsites.dev"],
   "rules": [

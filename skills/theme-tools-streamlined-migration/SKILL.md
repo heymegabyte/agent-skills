@@ -14,7 +14,7 @@ Every repository in the 55-repository fleet operates as a **streamlined thin-she
 
 ## 2. The 5 Repository Archetypes (`@theme.tools/sdk/streamlined-thin-shell-composer`)
 
-1. **`saas-shortener-link-engine`** (`aidl.ink`, `deskl.ink`, `draftl.ink`, `fundl.ink`, `gitl.ink`, `inboxl.ink`, `issuel.ink`, `linkbl.ink`, `skillsl.ink`, `soupl.ink`):
+1. **`saas-shortener-link-engine`** (`aidl.ink`, `deskl.ink`, `draftl.ink`, `fundl.ink`, `gitl.ink`, `inboxl.ink`, `skillsl.ink`, `soupl.ink`):
    - Core Tier 1 + Tier 3 + `@theme.tools/links`, `@theme.tools/keys`, `@theme.tools/billing`, `@theme.tools/workflows`, `@theme.tools/integrations`, `@theme.tools/notifications`, `@theme.tools/status`, `@theme.tools/kb`.
 2. **`control-plane-and-observability`** (`swarml.ink`, `coolify.megabyte.space`, `grafana.megabyte.space`, `health.megabyte.space`, `legion.megabyte.space`, `megabyte.space`, `omen.megabyte.space`, `proxmox.megabyte.space`, `pulse.megabyte.space`, `status.megabyte.space`, `ubuntu.megabyte.space`, `zen.megabyte.space`):
    - Core Tier 1 + Tier 3 + `@theme.tools/status`, `@theme.tools/workflows`, `@theme.tools/integrations`, `@theme.tools/keys`, `@theme.tools/notifications`, `@theme.tools/kb`, `@theme.tools/dataplane`, `@theme.tools/billing`.

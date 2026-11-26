@@ -5760,7 +5760,7 @@ EOF
     {
       id: 385,
       round: 29,
-      title: "Converge SaaS Link & Shortener family repositories (`aidl.ink`, `deskl.ink`, `draftl.ink`, `fundl.ink`, `gitl.ink`, `inboxl.ink`, `issuel.ink`, `linkbl.ink`, `skillsl.ink`, `soupl.ink`, `swarml.ink`) to 100% 8-axis parity",
+      title: "Converge SaaS Link & Shortener family repositories (`aidl.ink`, `deskl.ink`, `draftl.ink`, `fundl.ink`, `gitl.ink`, `inboxl.ink`, `skillsl.ink`, `soupl.ink`, `swarml.ink`) to 100% 8-axis parity",
       confidence: 9.9,
       status: "IMPLEMENTED",
       evidenceBefore: "9 of 11 *.ink repositories lacked AGENTS.md, openspec/project.md, security.txt, and llms.txt",
@@ -6031,11 +6031,11 @@ EOF
     {
       id: 412,
       round: 31,
-      title: "Upgrade all 10 `saas-shortener-link-engine` repositories (`aidl.ink`, `deskl.ink`, `draftl.ink`, `fundl.ink`, `gitl.ink`, `inboxl.ink`, `issuel.ink`, `linkbl.ink`, `skillsl.ink`, `soupl.ink`) to bind `@theme.tools/links`, `@theme.tools/keys`, `@theme.tools/billing`, `@theme.tools/workflows`, `@theme.tools/integrations`, `@theme.tools/notifications`, `@theme.tools/status`, and `@theme.tools/kb`",
+      title: "Upgrade all 8 `saas-shortener-link-engine` repositories (`aidl.ink`, `deskl.ink`, `draftl.ink`, `fundl.ink`, `gitl.ink`, `inboxl.ink`, `skillsl.ink`, `soupl.ink`) to bind `@theme.tools/links`, `@theme.tools/keys`, `@theme.tools/billing`, `@theme.tools/workflows`, `@theme.tools/integrations`, `@theme.tools/notifications`, `@theme.tools/status`, and `@theme.tools/kb`",
       confidence: 10.0,
       status: "IMPLEMENTED",
-      evidenceBefore: "9 of 10 *.ink repositories bound only 7 generic packages",
-      evidenceAfter: "10/10 *.ink repositories bind 21 archetype-specific @theme.tools/* libraries + src/theme-tools-thin-shell.ts",
+      evidenceBefore: "7 of 8 *.ink repositories bound only 7 generic packages",
+      evidenceAfter: "8/8 *.ink repositories bind 21 archetype-specific @theme.tools/* libraries + src/theme-tools-thin-shell.ts",
     },
     {
       id: 413,
@@ -6089,7 +6089,7 @@ EOF
       confidence: 10.0,
       status: "IMPLEMENTED",
       evidenceBefore: "New composer module added to @theme.tools/sdk",
-      evidenceAfter: "verifyThinShellProjectConformance() returns ok: true for linkbl.ink, swarml.ink, bz.rocks, bricklabor.com, and install.doctor",
+      evidenceAfter: "verifyThinShellProjectConformance() returns ok: true for gitl.ink, swarml.ink, bz.rocks, bricklabor.com, and install.doctor",
     },
     {
       id: 419,

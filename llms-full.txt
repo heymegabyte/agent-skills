@@ -120,7 +120,6 @@ Dark theme FIRST. Purple for cosmic/space only.
 - fundl.ink
 - gitl.ink
 - deskl.ink
-- linkbl.ink
 - thebestsites.com
 - install.doctor
 - claimyour.site
