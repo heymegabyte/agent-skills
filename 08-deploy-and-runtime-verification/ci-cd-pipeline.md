@@ -11,6 +11,22 @@ description: "Workers Builds (native, preferred) + GitHub Actions fallback. Auto
 
 Brian deploys live from CLI (`npx wrangler deploy`). This pipeline exists for: contributor PRs, auto-test-on-push safety net, branch previews, Lighthouse tracking over time.
 
+## Check a saved OpenTofu plan
+
+When the project uses OpenTofu, use its existing plan and review procedure.
+Render the full saved plan with `tofu show -json` in private temporary
+storage. Use the project's own Conftest policy and the shared
+`@theme-tools/testing/conftest/opentofu-plan-safety.rego` export where
+applicable. Keep OpenTofu policies separate from workflow-permissions
+policies when invoking Conftest. Fail the gate if rendering or policy
+evaluation fails. Capture the saved binary plan's SHA-256 with the
+review and verify it again before any authorized apply.
+
+For the MCP Cloudflare infrastructure, `npm run plan:check -- <saved-plan>`
+performs the read-only check and prints the digest. The MCP runbook
+documents the offline procedure for the qualified package bundle,
+prepared lockfile, and preinstalled provider plugins.
+
 ## GitHub Actions Workflow
 
 ### `.github/workflows/deploy.yml`
