@@ -1,6 +1,6 @@
 # Emdash Skills — AI + Human Entrypoint (start here)
 
-> Solo-founder product-building OS for Cloudflare Workers: one-line prompts → deployed products. 23 skill categories · 212 doctrinal rules (`rules/`) · 149 reference docs · 52 agents · 36 templates · 37 commands. Load the SMALLEST useful subset per the router below — never the whole mesh.
+> Solo-founder product-building OS for Cloudflare Workers: one-line prompts → deployed products. 23 skill categories · 214 doctrinal rules (`rules/`) · 149 reference docs · 52 agents · 36 templates · 37 commands. Load the SMALLEST useful subset per the router below — never the whole mesh.
 
 > Full unabridged index: [llms-full.txt](llms-full.txt) · Human README: [README.md](README.md)
 
@@ -295,7 +295,18 @@ Full Linux containers co-located with Workers.
 - **Nonprofits** — $10 / $25 / $50 / $100 / $250 / $500 presets
 - **Stripe** — 2.9% + $0.30 per card, +0.7% per recurring (Billing)
 
-## Deploy
+## Deploy & Atomic `Commit → Push → Publish (Live Deploy + CDN Purge) → Live Edge Verify` Mandate
+
+- **Atomic Live Publication Rule (Never Stop at `git push`)**: Every prompt touching a site, worker, or app MUST automatically build, commit, push to `origin/main`, **publish/deploy live (`pnpm deploy` / `npx wrangler deploy`)**, purge the Cloudflare CDN cache, and verify the live production domain (`https://<domain>/`, `/api/health`, `/og.png`, `/favicon.svg`, `/apple-touch-icon.png`) in the same turn, while parallel subagents extract inferred value into `heymegabyte/theme.tools`, `heymegabyte/install.doctor`, and `heymegabyte/agent-skills`.
+- **Canonical Brand Logo, Favicon, Apple Touch Icon & OG Registry**:
+  - **`voice.build`**: `/logos/10-sovereign-voice-crown-signature-ideogram.png` (`/favicon.svg`, `/apple-touch-icon.png`, `home.megabyte.space` `/icons/voice-build.png`).
+  - **`qubes.cloud`**: `/logos/10-sovereign-voice-crown-signature-ideogram.png` (`10-sovereign-qubes-crown-signature-ideogram.png`, `/favicon.svg`, `/apple-touch-icon.png`, `home.megabyte.space` `/icons/qubes-cloud.png`).
+  - **`publish.engineer`**: `/logos/08-sacred-folio-lissajous.png` (`/favicon.svg`, `/apple-touch-icon.png`, `home.megabyte.space` `/icons/publish-engineer.png`).
+  - **`post.vision`**: `/logos/06-chronos-timeline-horizon-ideogram.png` (`/favicon.svg`, `/apple-touch-icon.png`, `home.megabyte.space` `/icons/post-vision.png`).
+  - **`template.company`**: `/logos/05-titanium-company-foundry-ideogram.png` (`05-titanium-company-foundry-transparent.png`, `/favicon.svg`, `/apple-touch-icon.png`, `home.megabyte.space` `/icons/template-company.png`).
+  - **`status.charity`**: `/logos/06-verifiable-altruism-spectrogram-ideogram.png` (`06-verifiable-altruism-spectrogram-transparent.png`, `/favicon.svg`, `/apple-touch-icon.png`, `home.megabyte.space` `/icons/status-charity.png`).
+  - **`questionl.ink`**: `/logos/08-sacred-dialectic-lissajous-ideogram.png` (`08-sacred-dialectic-lissajous-transparent.png`, recolored to the website's `#060610` canvas, `#0B0B18` card, `#00E5FF` cyan, and `#7C3AED` violet OKLCH palette with zero pink/magenta; Question-Mark Equalizer Waveform icon from Edition 10 adapted to `#060610`/`#00E5FF`/`#7C3AED` with Lissajous orbital rings for `/favicon.svg`, `/apple-touch-icon.png`, `/android-chrome-192x192.png`, `/android-chrome-512x512.png`, `/icon-192.png`, `/icon-512.png`, and `home.megabyte.space` `/icons/question-link.png` — used ONLY for the app icon & favicon, while the navbar displays only the `QUESTIONL.INK` wordmark without the icon; and `1200x630` `/og.png` & `/featured-image.png` with `"Train repositories by answering questions"`).
+  - **`radiant.website`**: `/logos/06-chromatic-raytrace-spectrogram-ideogram.png` (square horizontal-line gradient spectrogram `/favicon.svg` & `/apple-touch-icon.png`, and `home.megabyte.space` `/icons/radiant-website.png`).
 
 ```bash
 npx wrangler deploy
