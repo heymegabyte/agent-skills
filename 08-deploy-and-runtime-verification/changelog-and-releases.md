@@ -86,6 +86,15 @@ integrity, resolve the collision with a version allowed by the project release
 policy, then rebuild and requalify the affected dependency graph. A metadata
 error needs a fresh successful check before publishing.
 
+For a theme.tools registry outage rehearsal, use
+`pnpm package:consumer --offline --bundle <directory> --receipt-sha256 <digest>`.
+Use the receipt digest recorded separately during qualification. The
+gate checks the receipt, package inventory, and exact archive digests
+before installing from the local bundle and a warmed pnpm store.
+Record the result as offline consumer evidence. Verify registry access
+and publication separately.
+
+
 ## Semantic Versioning
 
 - **Major** (1.0.0 → 2.0.0) — breaking changes, redesign

@@ -26,11 +26,15 @@ Define Zod schema → fetch live endpoint → z.parse(response) → fail on mism
 5. Pair compile checks with relevant runtime validation. Test malformed external inputs and preserved authorization behavior. Include clean packed-consumer checks when changing published exports or declarations.
 
 When the installed shared testing package exposes `theme-ts-references`, run
-`pnpm exec theme-ts-references <tsconfig> <file> <line> <column> --rename-locations`
-to preview a rename. Match the preview's source digests against the current
-compiler-decoded text before applying edits. Keep the compiler's prefix and
-suffix text so shorthand properties and aliases retain their intended names.
-Typecheck the edited projects and verify any affected package exports.
+`pnpm exec theme-ts-references <tsconfig> <file> <line> <column>` for references.
+Recent qualified builds include the SHA-256 of the compiler-decoded UTF-8
+text for each file in the report. Compare those digests before reusing a
+saved report and rerun the query when a fingerprint is absent or changed.
+
+Add `--rename-locations` to preview a rename. Match the preview's source
+digests before applying edits and keep the compiler's prefix and suffix text
+so shorthand properties and aliases retain their intended names. Typecheck
+the edited projects and verify affected package exports.
 
 [TypeScript language service](https://github.com/microsoft/TypeScript/wiki/Using-the-Language-Service-API) · [Hono RPC](https://hono.dev/docs/guides/rpc)
 
