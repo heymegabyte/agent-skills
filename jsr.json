@@ -3,9 +3,9 @@
   "version": "7.2.1",
   "description": "14-category autonomous product-building OS for AI coding tools. One-line prompts to deployed products on Cloudflare Workers.",
   "exports": {
-    ".": "./_router.md",
-    "./conventions": "./CONVENTIONS.md",
-    "./profiles": "./SKILL_PROFILES.md"
+    ".": "./jsr/router.ts",
+    "./conventions": "./jsr/conventions.ts",
+    "./profiles": "./jsr/profiles.ts"
   },
   "publish": {
     "include": [
@@ -61,6 +61,7 @@
       "CODEX.md",
       "replit.md",
       "jsr.json",
+      "jsr/*.ts",
       "CONVENTIONS.md",
       "SKILL_PROFILES.md",
       "_router.md",

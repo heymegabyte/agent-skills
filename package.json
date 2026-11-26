@@ -166,6 +166,7 @@
     "AMP.md",
     "CODEX.md",
     "jsr.json",
+    "jsr/*.ts",
     "replit.md",
     "README.md",
     "LICENSE"

@@ -73,6 +73,9 @@ for (const pack of readdirSync(join(ROOT, '_packs')).filter((name) => name.endsW
   }
 }
 
+const jsrManifest = JSON.parse(readFileSync(join(ROOT, 'jsr.json'), 'utf8'));
+for (const file of Object.values(jsrManifest.exports)) required.add(posix.normalize(file));
+
 const tddSkill = 'skills/tdd-and-verification';
 required.add(`${tddSkill}/SKILL.md`);
 for (const entry of readdirSync(join(ROOT, tddSkill, 'references'), { withFileTypes: true })) {
