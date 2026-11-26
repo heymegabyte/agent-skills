@@ -15,11 +15,11 @@
       },
       {
         "path": "fixtures/mcp-catalog/one-sentence.json",
-        "sha256": "ae693b9355446bb025d9e35970c7dd81c18275e715db6a26cb2a0664a18544a2"
+        "sha256": "515d979b10266f609997591668e395a9c09737d5630342a67b658ae014609223"
       },
       {
         "path": "fixtures/prompt-hydration/operational-contract/scoped-learning.json",
-        "sha256": "c0a821536c3a5ec09997856ccc5d2275b4e0452284a045e6543f2ee10ebbd0c9"
+        "sha256": "a8802581a18d2ee7f979ca6e72bf8f094165e8d1ac555a89c199e9f0da0b4df9"
       }
     ]
   },

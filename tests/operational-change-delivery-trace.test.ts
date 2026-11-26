@@ -35,7 +35,7 @@ test('checked tasks use real paths, passing verification, and exact remote integ
     assert.ok(record.verification.receipts.length > 0, record.task.id);
     assert.equal(record.verification.receipts.every((receipt: any) => receipt.status === 'pass'), true, record.task.id);
     assert.equal(record.integration.status, 'integrated', record.task.id);
-    const expected = record.task.id === 'TASK-8.2' ? '5d716b6ccd8064abbafa3822e1210d0bfd50d0e4' : record.task.id === 'TASK-10.6' ? '6169d32967677d876488a2268004f8374c5d7f0a' : ['TASK-10.4', 'TASK-10.5'].includes(record.task.id) ? '04490ce5d118939a051b0c6fb51c786bec96c2f9' : 'b57f593caa92835d166aa7024944582887bc4ed2';
+    const expected = record.task.id === 'TASK-8.2' ? '43e1cd10c3cc5bf0b76f06ddcdcd179e511a3295' : record.task.id === 'TASK-10.6' ? '6169d32967677d876488a2268004f8374c5d7f0a' : ['TASK-10.4', 'TASK-10.5'].includes(record.task.id) ? '04490ce5d118939a051b0c6fb51c786bec96c2f9' : 'b57f593caa92835d166aa7024944582887bc4ed2';
     assert.equal(record.integration.integratedCommit, expected, record.task.id);
     assert.equal(record.integration.testedTree, expected, record.task.id);
     assert.equal(record.integration.remote.status, 'observed-main', record.task.id);

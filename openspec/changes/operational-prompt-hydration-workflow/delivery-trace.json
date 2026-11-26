@@ -440,7 +440,7 @@
             "id": "VERIFY:TASK-10.4:FOCUSED",
             "command": "node --experimental-strip-types --test tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts",
             "status": "pass",
-            "evidenceDigest": "sha256:4b9e78aba4904a84858d95807e3bc566b310de11079e8b4ee8d4e483aa8242fa",
+            "evidenceDigest": "sha256:c68ba69852d2902623bb2dcec1694cafc2cbe1cfb4784da5fa38e0ab11324819",
             "observedAt": "2026-11-25T07:34:56.000Z"
           }
         ]
@@ -538,7 +538,7 @@
             "id": "VERIFY:TASK-10.5:FOCUSED",
             "command": "node --experimental-strip-types --test tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts",
             "status": "pass",
-            "evidenceDigest": "sha256:4b9e78aba4904a84858d95807e3bc566b310de11079e8b4ee8d4e483aa8242fa",
+            "evidenceDigest": "sha256:c68ba69852d2902623bb2dcec1694cafc2cbe1cfb4784da5fa38e0ab11324819",
             "observedAt": "2026-11-25T07:34:56.000Z"
           },
           {
@@ -643,7 +643,7 @@
             "id": "VERIFY:TASK-10.6:FOCUSED",
             "command": "node --experimental-strip-types --test tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts",
             "status": "pass",
-            "evidenceDigest": "sha256:4b9e78aba4904a84858d95807e3bc566b310de11079e8b4ee8d4e483aa8242fa",
+            "evidenceDigest": "sha256:c68ba69852d2902623bb2dcec1694cafc2cbe1cfb4784da5fa38e0ab11324819",
             "observedAt": "2026-11-25T07:34:56.000Z"
           },
           {
@@ -1142,7 +1142,7 @@
             "id": "VERIFY:TASK-4.2:FOCUSED",
             "command": "node --experimental-strip-types --test tests/evidence-gated-deliberation.test.ts tests/evidence-gated-orchestrator.test.ts tests/conference-risk-gates.test.ts tests/conference-policy-docs.test.ts",
             "status": "pass",
-            "evidenceDigest": "sha256:20759e64ed52d314a23dc86a0c3a8def82656dac7166fa99ed59fb22b818f31c",
+            "evidenceDigest": "sha256:bf79bb7418dac08883af58d1fdfe405f6d912abf3aa2f3454b0557d5f548ec3c",
             "observedAt": "2026-11-25T07:34:56.000Z"
           }
         ]
@@ -1802,7 +1802,10 @@
         "owner": "theme.tools integration writer",
         "dependencies": [],
         "affectedPaths": [
-          "packages/sdk/src/index.ts",
+          "packages/sdk/src/shared-capability-release-chain.ts",
+          "packages/sdk/src/release-lineage-registry.ts",
+          "packages/sdk/test/shared-capability-release-chain.test.ts",
+          "packages/sdk/README.md",
           "packages/sdk/package.json",
           ".changeset/quiet-bridges-report.md"
         ],
@@ -1821,7 +1824,10 @@
       "implementation": {
         "state": "implemented",
         "codePaths": [
-          "packages/sdk/src/index.ts",
+          "packages/sdk/src/shared-capability-release-chain.ts",
+          "packages/sdk/src/release-lineage-registry.ts",
+          "packages/sdk/test/shared-capability-release-chain.test.ts",
+          "packages/sdk/README.md",
           "packages/sdk/package.json",
           ".changeset/quiet-bridges-report.md"
         ]
@@ -1840,13 +1846,13 @@
       },
       "integration": {
         "status": "integrated",
-        "integratedCommit": "5d716b6ccd8064abbafa3822e1210d0bfd50d0e4",
-        "testedTree": "5d716b6ccd8064abbafa3822e1210d0bfd50d0e4",
+        "integratedCommit": "43e1cd10c3cc5bf0b76f06ddcdcd179e511a3295",
+        "testedTree": "43e1cd10c3cc5bf0b76f06ddcdcd179e511a3295",
         "remote": {
           "status": "observed-main",
           "repository": "https://github.com/heymegabyte/theme.tools.git",
           "branch": "main",
-          "observedSha": "5d716b6ccd8064abbafa3822e1210d0bfd50d0e4",
+          "observedSha": "43e1cd10c3cc5bf0b76f06ddcdcd179e511a3295",
           "observedAt": "2026-11-25T06:39:47.000Z",
           "ciStatus": "unverified"
         }
@@ -2806,14 +2812,14 @@
             "id": "VERIFY:TASK-10.1:FOCUSED",
             "command": "node --experimental-strip-types --test tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts",
             "status": "pass",
-            "evidenceDigest": "sha256:4b9e78aba4904a84858d95807e3bc566b310de11079e8b4ee8d4e483aa8242fa",
+            "evidenceDigest": "sha256:c68ba69852d2902623bb2dcec1694cafc2cbe1cfb4784da5fa38e0ab11324819",
             "observedAt": "2026-11-25T07:34:56.000Z"
           },
           {
             "id": "VERIFY:TASK-10.1:ARTIFACT",
             "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.1-evaluation.json",
             "status": "pass",
-            "evidenceDigest": "sha256:10c3609b48ef5bf2cef3f653772ce208877e730565611b114a4126563003e54e",
+            "evidenceDigest": "sha256:f0dd95695065b837fd2f7be24806d1a42c12ce093b1c63c92314569fd27e396f",
             "observedAt": "2026-11-25T07:34:56.000Z"
           }
         ]
@@ -2911,14 +2917,14 @@
             "id": "VERIFY:TASK-10.2:FOCUSED",
             "command": "node --experimental-strip-types --test tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts",
             "status": "pass",
-            "evidenceDigest": "sha256:4b9e78aba4904a84858d95807e3bc566b310de11079e8b4ee8d4e483aa8242fa",
+            "evidenceDigest": "sha256:c68ba69852d2902623bb2dcec1694cafc2cbe1cfb4784da5fa38e0ab11324819",
             "observedAt": "2026-11-25T07:34:56.000Z"
           },
           {
             "id": "VERIFY:TASK-10.2:ARTIFACT",
             "command": "inspect openspec/changes/operational-prompt-hydration-workflow/evidence/task-10.2-evaluation.json",
             "status": "pass",
-            "evidenceDigest": "sha256:edab6f9761a07f994dbd92ca23c7667a25773c042fc053d4d2d71d914d0dc7dc",
+            "evidenceDigest": "sha256:14fdfc53069c5222a130e52d8c05cb8ad34b8a56b3e1a83536af1db969972224",
             "observedAt": "2026-11-25T07:34:56.000Z"
           }
         ]
@@ -3014,7 +3020,7 @@
             "id": "VERIFY:TASK-10.3:FOCUSED",
             "command": "node --experimental-strip-types --test tests/operational-scenarios-evaluation.test.ts tests/orchestration-durability.red.test.ts tests/operational-change-delivery-trace.test.ts",
             "status": "pass",
-            "evidenceDigest": "sha256:4b9e78aba4904a84858d95807e3bc566b310de11079e8b4ee8d4e483aa8242fa",
+            "evidenceDigest": "sha256:c68ba69852d2902623bb2dcec1694cafc2cbe1cfb4784da5fa38e0ab11324819",
             "observedAt": "2026-11-25T07:34:56.000Z"
           },
           {
@@ -4221,7 +4227,7 @@
             "id": "VERIFY:TASK-4.1:FOCUSED",
             "command": "node --experimental-strip-types --test tests/evidence-gated-deliberation.test.ts tests/evidence-gated-orchestrator.test.ts tests/conference-risk-gates.test.ts tests/conference-policy-docs.test.ts",
             "status": "pass",
-            "evidenceDigest": "sha256:20759e64ed52d314a23dc86a0c3a8def82656dac7166fa99ed59fb22b818f31c",
+            "evidenceDigest": "sha256:bf79bb7418dac08883af58d1fdfe405f6d912abf3aa2f3454b0557d5f548ec3c",
             "observedAt": "2026-11-25T07:34:56.000Z"
           }
         ]
@@ -4928,7 +4934,7 @@
             "id": "VERIFY:TASK-4.3:FOCUSED",
             "command": "node --experimental-strip-types --test tests/evidence-gated-deliberation.test.ts tests/evidence-gated-orchestrator.test.ts tests/conference-risk-gates.test.ts tests/conference-policy-docs.test.ts",
             "status": "pass",
-            "evidenceDigest": "sha256:20759e64ed52d314a23dc86a0c3a8def82656dac7166fa99ed59fb22b818f31c",
+            "evidenceDigest": "sha256:bf79bb7418dac08883af58d1fdfe405f6d912abf3aa2f3454b0557d5f548ec3c",
             "observedAt": "2026-11-25T07:34:56.000Z"
           }
         ]
@@ -5031,7 +5037,7 @@
             "id": "VERIFY:TASK-4.4:FOCUSED",
             "command": "node --experimental-strip-types --test tests/evidence-gated-deliberation.test.ts tests/evidence-gated-orchestrator.test.ts tests/conference-risk-gates.test.ts tests/conference-policy-docs.test.ts",
             "status": "pass",
-            "evidenceDigest": "sha256:20759e64ed52d314a23dc86a0c3a8def82656dac7166fa99ed59fb22b818f31c",
+            "evidenceDigest": "sha256:bf79bb7418dac08883af58d1fdfe405f6d912abf3aa2f3454b0557d5f548ec3c",
             "observedAt": "2026-11-25T07:34:56.000Z"
           }
         ]

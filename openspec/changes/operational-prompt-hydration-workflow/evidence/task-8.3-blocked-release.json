@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "taskId": "8.3",
   "state": "BLOCKED",
-  "observedAt": "2026-11-25T06:39:47Z",
+  "observedAt": "2026-11-26T02:09:17Z",
   "package": {
     "name": "@theme.tools/sdk",
     "sourceVersion": "1.0.0",
     "expectedNextVersion": "1.0.1",
-    "sourceCommit": "5d716b6ccd8064abbafa3822e1210d0bfd50d0e4",
+    "sourceCommit": "43e1cd10c3cc5bf0b76f06ddcdcd179e511a3295",
     "sourceRepository": "https://github.com/heymegabyte/theme.tools",
     "changesetPath": ".changeset/quiet-bridges-report.md",
     "changesetApplied": false
@@ -31,40 +31,40 @@
   "qualificationRuns": [
     {
       "name": "Registry spec",
-      "runId": 45562007462,
-      "jobId": 139027694773,
-      "url": "https://github.com/heymegabyte/theme.tools/actions/runs/45562007462",
-      "sourceCommit": "5d716b6ccd8064abbafa3822e1210d0bfd50d0e4",
+      "runId": 45740312346,
+      "jobId": 139643399036,
+      "url": "https://github.com/heymegabyte/theme.tools/actions/runs/45740312346",
+      "sourceCommit": "063a210a41e5301f7f3d582cc1f6faf343b5b502",
       "status": "failure",
       "stepsStarted": false,
-      "annotation": "The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings"
+      "annotation": "The current-main registry job failed with zero executed steps; the API returned no job log, matching the previously captured account billing/spending pre-step failure mode."
     },
     {
       "name": "Naming hygiene",
-      "runId": 45562007481,
-      "jobId": 139027694838,
-      "url": "https://github.com/heymegabyte/theme.tools/actions/runs/45562007481",
-      "sourceCommit": "5d716b6ccd8064abbafa3822e1210d0bfd50d0e4",
+      "runId": 45740312328,
+      "jobId": 139643398894,
+      "url": "https://github.com/heymegabyte/theme.tools/actions/runs/45740312328",
+      "sourceCommit": "063a210a41e5301f7f3d582cc1f6faf343b5b502",
       "status": "failure",
       "stepsStarted": false,
-      "annotation": "The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings"
+      "annotation": "The current-main naming job failed with zero executed steps; the API returned no job log, matching the previously captured account billing/spending pre-step failure mode."
     },
     {
       "name": "Package distribution contract",
-      "runId": 45562007561,
-      "jobId": 139027695193,
-      "url": "https://github.com/heymegabyte/theme.tools/actions/runs/45562007561",
-      "sourceCommit": "5d716b6ccd8064abbafa3822e1210d0bfd50d0e4",
+      "runId": 45740312388,
+      "jobId": 139643398907,
+      "url": "https://github.com/heymegabyte/theme.tools/actions/runs/45740312388",
+      "sourceCommit": "063a210a41e5301f7f3d582cc1f6faf343b5b502",
       "status": "failure",
       "stepsStarted": false,
-      "annotation": "The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings"
+      "annotation": "The current-main package qualification job failed with zero executed steps; the API returned no job log, matching the previously captured account billing/spending pre-step failure mode."
     }
   ],
   "blockers": [
     {
       "id": "github-actions-billing",
       "owner": "GitHub organization billing administrator",
-      "reason": "GitHub refuses to start every qualification job because recent account payments failed or the Actions spending limit must be increased."
+      "reason": "Current-main qualification jobs still fail before any step executes; prior exact annotations identified the organization account billing/spending state, and the current jobs reproduce that pre-step failure signature."
     },
     {
       "id": "changeset-version-not-applied",
@@ -74,7 +74,7 @@
     {
       "id": "published-version-absent",
       "owner": "theme.tools release maintainer",
-      "reason": "Both authoritative Nexus group endpoints return 1.0.0 and no approved release workflow run exists for source commit 5d716b6ccd8064abbafa3822e1210d0bfd50d0e4."
+      "reason": "The authoritative registry returns 1.0.0, no approved release workflow run published 1.0.1, and this host is not authenticated to npm."
     }
   ],
   "resumableAction": {
@@ -85,7 +85,7 @@
       "Rerun the failed qualification workflows and require all jobs to start and pass."
     ],
     "steps": [
-      "Fetch current main and confirm it contains source commit 5d716b6ccd8064abbafa3822e1210d0bfd50d0e4 plus the approved versioning commit.",
+      "Fetch current main and confirm it contains feature source commit 43e1cd10c3cc5bf0b76f06ddcdcd179e511a3295 plus the approved versioning commit.",
       "Invoke .github/workflows/release-publish-oidc.yml through its approved trigger; do not bypass it with a direct registry publish.",
       "Observe a successful workflow run and fetch @theme.tools/sdk@1.0.1 from https://nexus.megabyte.space/repository/npm-group/.",
       "Inspect the fetched package version, integrity, exports, and release-chain contract before unblocking consumer task 8.4."

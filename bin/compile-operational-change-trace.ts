@@ -10,7 +10,7 @@ import { validateDeliveryTraceInstance } from './validate-delivery-trace.ts';
 const changeId = 'operational-prompt-hydration-workflow';
 const changeRelative = `openspec/changes/${changeId}`;
 const integratedAgentSkillsRevision = 'b57f593caa92835d166aa7024944582887bc4ed2';
-const integratedThemeToolsRevision = '5d716b6ccd8064abbafa3822e1210d0bfd50d0e4';
+const integratedThemeToolsRevision = '43e1cd10c3cc5bf0b76f06ddcdcd179e511a3295';
 const postReviewValidationRevision = '04490ce5d118939a051b0c6fb51c786bec96c2f9';
 const remoteIntegrationRevision = '6169d32967677d876488a2268004f8374c5d7f0a';
 const agentSkillsRemote = 'https://github.com/heymegabyte/agent-skills.git';
@@ -81,7 +81,7 @@ const taskPathManifest: Record<string, string[]> = {
   '7.3': ['bin/scoped-learning-router.ts', '04-preference-and-memory/SKILL.md', 'tests/scoped-learning-router.test.ts'],
   '7.4': ['bin/documentation-learning-responsibilities.ts', 'control-plane/DOCUMENTATION-LEARNING.md', 'tests/documentation-learning-responsibilities.test.ts'],
   '8.1': ['config/theme-tools-skill-map.json', 'bin/theme-tools-control-plane-adapter.ts', 'tests/theme-tools-hydration-routing.test.ts'],
-  '8.2': ['packages/sdk/src/index.ts', 'packages/sdk/package.json', '.changeset/quiet-bridges-report.md'],
+  '8.2': ['packages/sdk/src/shared-capability-release-chain.ts', 'packages/sdk/src/release-lineage-registry.ts', 'packages/sdk/test/shared-capability-release-chain.test.ts', 'packages/sdk/README.md', 'packages/sdk/package.json', '.changeset/quiet-bridges-report.md'],
   '8.6': ['bin/theme-tools-release-chain.ts', 'fixtures/theme-tools-release/controlled-registry', 'tests/theme-tools-release-chain.red.test.ts'],
   '9.1': ['bin/git-reconciliation.ts', 'tests/git-reconciliation.test.ts', 'openspec/changes/operational-prompt-hydration-workflow/delivery-trace.json'],
   '9.2': ['bin/manage-policy-blocks.ts', 'bin/sync-fleet-harnesses.ts', 'openspec/changes/operational-prompt-hydration-workflow/evidence/task-9.2-installation.json'],

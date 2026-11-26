@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "taskId": "10.7",
+  "observedAt": "2026-11-26T02:09:17Z",
+  "status": "BLOCKED_PLANNING_RECONCILIATION",
+  "changeId": "operational-prompt-hydration-workflow",
+  "sourceRevision": "4f87b02d7c7285c26ae45e20710b3a6c9e6703f6",
+  "verifiedRepairs": [
+    {
+      "id": "task-10.1-current-fixture-digests",
+      "status": "PASS",
+      "evidence": "The committed evaluation now matches the current MCP catalog and scoped-learning fixtures."
+    },
+    {
+      "id": "task-10.2-current-runtime-digests",
+      "status": "PASS",
+      "evidence": "The durability report was deterministically regenerated from the current run-state runtime."
+    },
+    {
+      "id": "task-8.2-source-provenance",
+      "status": "PASS",
+      "evidence": "The delivery compiler binds the shared release-chain contract to feature commit 43e1cd10c3cc5bf0b76f06ddcdcd179e511a3295 and its actual SDK paths, replacing unrelated commit 5d716b6c."
+    },
+    {
+      "id": "task-8.3-live-release-observation",
+      "status": "BLOCKED",
+      "evidence": "theme.tools current main 063a210a41e5301f7f3d582cc1f6faf343b5b502 retains the unapplied SDK patch changeset; @theme.tools/sdk remains 1.0.0; current qualification jobs fail with zero steps; npm whoami returns ENEEDAUTH."
+    }
+  ],
+  "specSync": {
+    "status": "BLOCKED",
+    "syncedCapabilities": [
+      "authoritative-work-ledger",
+      "autonomous-work-admission",
+      "delivery-traceability",
+      "evidence-integrity",
+      "instruction-policy-distribution",
+      "prompt-hydration-workflow"
+    ],
+    "unchangedBecauseAlreadySynchronized": true,
+    "blockedCapabilities": [
+      {
+        "capability": "autonomous-mission-expansion",
+        "reason": "The delta uses MODIFIED Requirements but no authoritative main spec exists. The sync workflow forbids inventing a missing requirement."
+      },
+      {
+        "capability": "multi-model-convergence",
+        "reason": "The delta uses MODIFIED Requirements but no authoritative main spec exists. The sync workflow forbids inventing a missing requirement."
+      }
+    ]
+  },
+  "nextAction": "An explicitly confirmed OpenSpec planning update must reclassify the two missing capabilities as new ADDED requirements (or identify their authoritative existing spec paths), after which sync, strict validation, task 10.7 completion, and archive-readiness verification can resume.",
+  "claimLimits": [
+    "Task 10.7 is not complete.",
+    "The change is not archive-ready.",
+    "Tasks 8.3 through 8.5 remain blocked and no package publication or consumer adoption is claimed."
+  ]
+}
