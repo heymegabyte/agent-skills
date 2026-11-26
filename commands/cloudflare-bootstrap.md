@@ -1,5 +1,5 @@
 ---
-description: Reconcile the Cloudflare agent fabric: official skills, API MCP, MCP Portal candidates, AI Search, Secrets Store, Dynamic Routes, Browser Run and telemetry.
+description: "Reconcile the Cloudflare agent fabric: official skills, API MCP, MCP Portal candidates, AI Search, Secrets Store, Dynamic Routes, Browser Run and telemetry."
 argument-hint: "(optional project/domain)"
 ---
 

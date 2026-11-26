@@ -25,6 +25,17 @@ for (const path of ['.codex-plugin/plugin.json', '.opencode/config.json', '.kimi
 }
 
 
+const claudeManifestPath = '.claude-plugin/plugin.json';
+required.add(claudeManifestPath);
+required.add('.claude-plugin/marketplace.json');
+const claudeManifest = JSON.parse(readFileSync(join(ROOT, claudeManifestPath), 'utf8'));
+for (const file of [...claudeManifest.agents, ...claudeManifest.outputStyles]) {
+  required.add(posix.normalize(file));
+}
+for (const directory of claudeManifest.skills) {
+  required.add(posix.join(directory, 'SKILL.md'));
+}
+
 for (const entry of readdirSync(ROOT, { withFileTypes: true })) {
   if (!entry.isDirectory() || !/^(?:\d\d-|openclaw-integration$)/.test(entry.name)) continue;
   const canonical = `${entry.name}/SKILL.md`;

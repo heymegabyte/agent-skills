@@ -1,6 +1,6 @@
 ---
 description: Audit whether user-visible changes in the current session have matching CHANGELOG.md entries; report MISSING with suggested lines; --fix auto-appends
-argument-hint: [--fix] [--base <ref>] [--changelog <path>]
+argument-hint: "[--fix] [--base <ref>] [--changelog <path>]"
 ---
 
 <!-- <SUBAGENT-STOP>: skip this skill when running inside a subagent. Meta-skills must not leak into spawned subagent contexts. -->

@@ -1,6 +1,6 @@
 ---
 description: Batch-run all LLM eval cases in tools/evals/cases/*.json; aggregate pass/fail, cost, regression vs last run; exit nonzero in CI mode
-argument-hint: [--ci] [--slug <slug>] [--tag <tag>] [--judge-model <model>]
+argument-hint: "[--ci] [--slug <slug>] [--tag <tag>] [--judge-model <model>]"
 ---
 
 <!-- <SUBAGENT-STOP>: skip this skill when running inside a subagent. Meta-skills must not leak into spawned subagent contexts. -->

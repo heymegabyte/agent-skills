@@ -1,6 +1,6 @@
 ---
 name: session-recap
-description: Summarize recent CHANGELOG.md entries for context restoration. Parses the canonical heading shape `## YYYY-MM-DD — pass-N — summary`. Filters: last N (default 10), YYYY-MM date prefix, or "today". Supports --json for machine-readable output.
+description: "Summarize recent CHANGELOG.md entries for context restoration. Parses the canonical heading shape `## YYYY-MM-DD — pass-N — summary`. Filters: last N (default 10), YYYY-MM date prefix, or \"today\". Supports --json for machine-readable output."
 argument-hint: "[filter] [--json]"
 user-invocable: true
 ---

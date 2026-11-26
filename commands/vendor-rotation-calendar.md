@@ -1,6 +1,6 @@
 ---
 description: Generate a quarterly vendor secret-rotation calendar for all load-bearing vendors; emit .ics + ROTATIONS-DUE-NEXT-30-DAYS table; optionally create Google Calendar events
-argument-hint: [--project-dir <path>] [--gcal] [--out <path/to/output.ics>]
+argument-hint: "[--project-dir <path>] [--gcal] [--out <path/to/output.ics>]"
 ---
 
 <!-- <SUBAGENT-STOP>: skip this skill when running inside a subagent. Meta-skills must not leak into spawned subagent contexts. -->
