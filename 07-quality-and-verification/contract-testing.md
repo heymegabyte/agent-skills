@@ -31,10 +31,14 @@ Recent qualified builds include the SHA-256 of the compiler-decoded UTF-8
 text for each file in the report. Compare those digests before reusing a
 saved report and rerun the query when a fingerprint is absent or changed.
 
-Add `--rename-locations` to preview a rename. Match the preview's source
-digests before applying edits and keep the compiler's prefix and suffix text
-so shorthand properties and aliases retain their intended names. Typecheck
-the edited projects and verify affected package exports.
+Add `--rename-locations` to preview a rename and save the JSON output. Before
+applying those edits, repeat the same project, file, line, and column query
+with `--check-rename <preview.json>` on builds that support it. If the verifier
+rejects the preview, regenerate it and review the new edit list. On older
+builds, rerun the query and compare the compiler, source digests, and full
+edit list. Keep the compiler's prefix and suffix text so shorthand properties
+and aliases retain their intended names. Typecheck the edited projects and
+verify affected package exports.
 
 [TypeScript language service](https://github.com/microsoft/TypeScript/wiki/Using-the-Language-Service-API) · [Hono RPC](https://hono.dev/docs/guides/rpc)
 
