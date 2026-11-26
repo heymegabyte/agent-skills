@@ -373,6 +373,30 @@ class SkillRouterTest(unittest.TestCase):
         self.assertIn("rules/greenfield-saas", {item["id"] for item in clone["selected"]})
         self.assertNotIn("rules/greenfield-saas", {item["id"] for item in fix["selected"]})
 
+    def test_engineering_prompts_trigger_canonical_guidance(self):
+        repo_root = ROUTER_PATH.parent.parent
+        sources = (
+            Path("rules/code-style.md"),
+            Path("08-deploy-and-runtime-verification/SKILL.md"),
+        )
+        for source in sources:
+            destination = self.skills / source
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes((repo_root / source).read_bytes())
+
+        cases = (
+            ("Add a TypeScript runtime schema to this Worker", "rules/code-style"),
+            ("Rename a TypeScript symbol across packages", "rules/code-style"),
+            ("Write a custom typed ESLint rule with an autofix", "rules/code-style"),
+            ("Review release provenance before publishing", "08-deploy-and-runtime-verification"),
+            ("Review a saved OpenTofu plan", "08-deploy-and-runtime-verification"),
+        )
+        for prompt, skill in cases:
+            with self.subTest(prompt=prompt):
+                result = router.cmd_route(prompt, cwd=self.temp.name, offline=True)
+                selected = {item["id"]: item["reason"] for item in result["selected"]}
+                self.assertEqual(selected.get(skill), "trigger-match")
+
     def test_telemetry_is_prompt_redacted(self):
         self.write_rule(name="feature", trigger="secret prompt")
         telemetry = Path(self.temp.name) / "telemetry.jsonl"

@@ -5,7 +5,9 @@ pack: "core"
 triggers:
   - "typescript runtime schema"
   - "semantic typescript rename"
+  - "rename a typescript symbol"
   - "typed eslint custom rule"
+  - "custom typed eslint rule"
 paths:
   - "*"
 last_reviewed: 2026-10-26
