@@ -227,7 +227,7 @@ Full Linux containers co-located with Workers.
   - **`post.vision`**: `/logos/06-chronos-timeline-horizon-ideogram.png` (`/favicon.svg`, `/apple-touch-icon.png`, `home.megabyte.space` `/icons/post-vision.png`).
   - **`template.company`**: `/logos/05-titanium-company-foundry-ideogram.png` (`05-titanium-company-foundry-transparent.png`, `/favicon.svg`, `/apple-touch-icon.png`, `home.megabyte.space` `/icons/template-company.png`).
   - **`status.charity`**: `/logos/06-verifiable-altruism-spectrogram-ideogram.png` (`06-verifiable-altruism-spectrogram-transparent.png`, `/favicon.svg`, `/apple-touch-icon.png`, `home.megabyte.space` `/icons/status-charity.png`).
-  - **`questionl.ink`**: `/logos/10-sovereign-questionlink-crown-ideogram.png` (`10-sovereign-questionlink-crown-transparent.png`, dark-navy `#181B2E` squircle with electric-cyan `#19B5FE` question-mark equalizer waveform bars `/favicon.svg` & `/apple-touch-icon.png`, `1200x630` `/og.png` with `"Train repositories by answering questions"`, and `home.megabyte.space` `/icons/question-link.png`).
+  - **`questionl.ink`**: `/logos/08-sacred-dialectic-lissajous-ideogram.png` (`08-sacred-dialectic-lissajous-transparent.png`, 4-concentric-line neon `Q.I` monogram `/favicon.svg`, two-line stacked `QUESTIONL.` / `INK` `/apple-touch-icon.png` & `/android-chrome-192x192.png`, `1200x630` `/og.png` & `/featured-image.png` with `"Train repositories by answering questions"`, and `home.megabyte.space` `/icons/question-link.png`).
 
 ```bash
 npx wrangler deploy
