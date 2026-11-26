@@ -17,6 +17,8 @@ Enforce `rules/production-delivery-closure.md` after every authorized code-chang
 
 For package qualification and registry publication, load `08-deploy-and-runtime-verification/changelog-and-releases.md` for archive verification and publication evidence.
 
+For OpenTofu plan review, load `08-deploy-and-runtime-verification/ci-cd-pipeline.md` for private rendering, Conftest validation, and saved-plan identity checks.
+
 ## Mandatory deploy loop (every code change)
 
 Activate this loop only for authorized repository changes. Read-only prompts, explicit local-only requests, prohibited deployment, unavailable authority/credentials, destructive approval gaps, failed required validation, and required PR/review are `BLOCKED`, not reasons to bypass controls.
