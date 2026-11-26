@@ -81,6 +81,16 @@
 
 Shared constants and patterns. Reference instead of re-deriving.
 
+## TypeScript engineering
+
+Match the compiler and lint profile to the project's pinned runtime.
+Resolve declarations and consumers before changing a public contract,
+then verify the packed export or deployed revision at its actual entry point.
+Use [code style](rules/code-style.md) for profile selection and semantic
+changes, [contract verification](07-quality-and-verification/contract-testing.md)
+for boundary checks, and [release verification](08-deploy-and-runtime-verification/changelog-and-releases.md)
+for package evidence.
+
 ## Brand Tokens
 
 Canonical: `_kernel/standards.md#brand` — cite, never restate. Font roles: Sora = body, Space Grotesk = headings (past drift point).
