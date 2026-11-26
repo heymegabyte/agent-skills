@@ -221,12 +221,13 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+      - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
         with:
-          node-version: "24"
+          deno-version: v2.9.7
+      - name: Validate the JSR package
+        run: deno publish --dry-run --config jsr.json
       - name: Publish to JSR
-        run: npx jsr publish --allow-dirty
-        continue-on-error: true
+        run: deno publish --config jsr.json
 
   publish-continue-hub:
     runs-on: ubuntu-latest
