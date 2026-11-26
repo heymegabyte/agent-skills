@@ -23,6 +23,8 @@ paths:
 
 Pick auth at MCP design time — retrofitting is painful. Decision is driven by transport, caller identity, and blast radius.
 
+For estate-wide routing and profiles, load `mcp-estate-control-plane`. Distinguish portal authentication, upstream user delegation, direct Worker authentication, and LiteLLM virtual-key authorization. They are not interchangeable.
+
 - **Spec 2026-07-28**: authorization metadata MUST name an explicit issuer (OAuth 2.1/OIDC alignment) — set it on every HTTP MCP; clients reject ambiguous issuer metadata.
 
 ## Transport determines the auth floor
@@ -76,6 +78,8 @@ app.use(
 ```
 
 CF Access blocks unauthenticated requests at the edge — the Worker never sees them.
+
+When this server is linked through a Cloudflare MCP Portal, portal OAuth authenticates humans. WARP may be required as device posture but does not replace browser OAuth. A service-token workload must be authorized at both the portal and upstream Access application; an admin-credential mapping uses `on_behalf=false` and must be explicitly approved.
 
 Cross-link: `[[cf-zero-trust-access]]`
 
@@ -149,6 +153,9 @@ Per `[[mcp-server-hardening]]` and `[[blast-radius-minimization]]`.
 - CF Access on a public-facing MCP that customers call — wrong tool; use OAuth
 - Storing raw Bearer tokens in wrangler.toml — use `wrangler secret put MCP_BEARER_TOKEN_HASH`
 - No auth on an HTTP MCP "because it's internal" — network-adjacent callers can reach it; always add CF Access at minimum
+- Treating WARP as the MCP credential — it is posture/private routing, while portal OAuth or service-token headers authenticate the caller
+- Assuming a portal tool allowlist protects a directly reachable upstream — enforce authorization at the upstream too
+- Sharing one LiteLLM key behind a portal — this collapses caller identity and revocation; map identities or keep the planes separate
 
 ## See also
 

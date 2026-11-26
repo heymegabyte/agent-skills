@@ -131,9 +131,10 @@ function readVersion(root) {
 function discoverSkills(root) {
   const entries = readdirSync(root, { withFileTypes: true });
   const skills = [];
+  const approvedNamedSkills = new Set(['openclaw-integration', 'mcp-estate-control-plane']);
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
-    if (!/^\d{2}-/.test(entry.name) && entry.name !== 'openclaw-integration') continue;
+    if (!/^\d{2}-/.test(entry.name) && !approvedNamedSkills.has(entry.name)) continue;
     const skillPath = join(root, entry.name, 'SKILL.md');
     if (!existsSync(skillPath)) continue;
     const src = readFileSync(skillPath, 'utf8');

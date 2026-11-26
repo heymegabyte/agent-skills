@@ -15,7 +15,8 @@ updated: '2026-10-06'
 - Run `node bin/audit-cloudflare-mcp-fleet.mjs` to inventory project/global MCP configs without printing secret values.
 - Remote HTTP MCPs used across projects are candidates for Cloudflare MCP Server Portal; local stdio/localhost tools stay local unless deliberately re-hosted.
 - Keep the Cloudflare API Code Mode MCP direct to avoid nested Code Mode.
-- Large portal: Code Mode `default_on`; small predictable server: direct tools are fine.
+- Start portal Code Mode `opt_in`; move toward a stronger default only after client compatibility and destructive-tool controls are verified. Small predictable servers may expose direct tools.
+- `mcp.megabyte.space` is the canonical registry/configuration repository. Use the `mcp-estate-control-plane` skill for routing, identity, migration, and verification.
 - See `[[cloudflare-agent-fabric]]`.
 
 ### Scan Locations
@@ -98,6 +99,10 @@ Do not portal-wrap:
 - an upstream forced into Code Mode when the portal would also force Code Mode.
 
 Autonomous M2M agents use service-token/Access policy only when the server's authorization model permits it. Per-user OAuth remains per-user.
+
+WARP supplies device-posture checks and private upstream routing; it does not authenticate an MCP client. Humans still complete the portal's browser OAuth flow. Machine workloads use unique service tokens that must pass Service Auth at both the portal and linked upstream.
+
+LiteLLM is the model/application execution plane, not a second public portal. Set `require_key_mcp_access_defined: true`, give model-only keys no MCP servers, and do not proxy an upstream through both systems unless caller identity remains enforceable end to end.
 
 ## Secret Hygiene
 

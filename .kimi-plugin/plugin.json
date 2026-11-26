@@ -104,6 +104,10 @@
       "id": "cf-integrations-reference"
     },
     {
+      "path": "../mcp-estate-control-plane/SKILL.md",
+      "id": "mcp-estate-control-plane"
+    },
+    {
       "path": "../openclaw-integration/SKILL.md",
       "id": "openclaw-integration"
     }

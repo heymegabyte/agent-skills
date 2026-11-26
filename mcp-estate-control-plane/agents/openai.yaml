@@ -1,0 +1,4 @@
+interface:
+  display_name: "MCP Estate Control Plane"
+  short_description: "Route and secure the Megabyte MCP estate"
+  default_prompt: "Audit or change MCP routing through the canonical Cloudflare Portal and LiteLLM control plane."
