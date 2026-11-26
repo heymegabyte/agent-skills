@@ -14,6 +14,9 @@ triggers:
     'ubuntu.megabyte.space',
     'chezmoi',
     'megabyte-local-proxy',
+    'mcp singleton',
+    'launchd mcp',
+    'shared mcp process',
     'strip-types',
     'ollama-auth-proxy',
     'workstation-hw-exporter',
@@ -161,3 +164,10 @@ These invariants were proven on live fleet hosts in pass 1. Each one silently re
    - **Guarded Chaos Drill & OpenTelemetry GenAI Langfuse Spool Drainer (`EPIC-48`, `EPIC-49`, `EPIC-50`)**: Verify 3-strike circuit-breaker trip + `drainSpool()` recovery, `gen_ai.*` semantic attributes, and 7-scenario `chaos-drill.ts` in `dr-drill.sh`.
 2. **Never Recommend Blocklisted or Over-Engineered Heavy Daemons on Workstations**:
    - Never recommend `fido2`/`onlykey` interactive hardware-key prompts (which break unattended SSH/agent automation), non-Cloudflare VPN overlays (`WireGuard`/`Tailscale`), encrypted root ZFS pools that block unattended reboots, or replacing the live `gnome-remote-desktop -> Xkasmvnc` physical session bridge.
+
+## 11. MCP Transport Ownership and Per-User Singletons
+
+1. **Remote-first for network services**: Prefer governed, authenticated Streamable HTTP endpoints for MCPs whose work already depends on the Internet. Preserve native remote transports such as DataForSEO rather than wrapping them in an additional local broker.
+2. **One supervised backend for session-independent local MCPs**: On macOS, run eligible local wrappers once per user under `launchd`, expose private Unix sockets below `~/.local/state/mcp-singletons/sockets`, and connect each agent through a lightweight stdio-to-socket shim. The broker must isolate JSON-RPC request IDs per client, bound message size, use a minimal environment, set state directories to `0700` and sockets to `0600`, and keep credentials out of plists and generated configuration. `install.doctor` owns the broker, manager, launchd lifecycle, tests, rollback path, and operator documentation.
+3. **Preserve product-supported session boundaries**: Do not place CUA or BrowserMCP behind the generic singleton broker. Keep their supported shared daemon plus per-session frontend/proxy architecture because desktop and browser state is session-scoped. Do not share raw stdio among independent clients without a real multiplexer.
+4. **Prove behavior before migration**: Require initialize, `tools/list`, concurrent duplicate-request-ID isolation, at least one safe real tool call per backend, private-permission checks, restart recovery, and a rollback copy of every changed client configuration. Existing sessions may drain naturally; never kill active session processes merely to make process counts immediately converge.
