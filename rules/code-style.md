@@ -2,7 +2,10 @@
 name: "code-style"
 priority: 2
 pack: "core"
-triggers: []
+triggers:
+  - "typescript runtime schema"
+  - "semantic typescript rename"
+  - "typed eslint custom rule"
 paths:
   - "*"
 last_reviewed: 2026-10-26
