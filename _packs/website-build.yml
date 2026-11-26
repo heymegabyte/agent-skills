@@ -10,6 +10,7 @@ members:
   - 12-media-orchestration
   - 14-independent-idea-engine
   - rules/theme-tools-canonical-components
+  - rules/dogfood-theme-tools-main-and-logo-registry
   - rules/website-build-doctrine
   - rules/predictive-completeness
   - rules/competitor-research
