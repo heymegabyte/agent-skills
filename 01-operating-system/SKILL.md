@@ -167,3 +167,7 @@ After every implementation: "What else?" If anything → do it → ask again →
 ## Theme.tools ecosystem contract (required)
 
 Use `config/theme-tools-skill-map.json` plus `rules/theme-tools-skill-integration.md`; those files own package routing and thin-consumer procedure.
+
+## Temporary workspace cleanup
+
+Before closing a task, clean up the temporary directories and Git worktrees it created. Check for active processes and concurrent users first. Save required evidence outside temporary storage, verify published commits are reachable, and preserve unpublished commits, local changes, and needed artifacts in a durable recovery location. Remove completed worktrees with Git and delete disposable build and test output. Verify the temporary paths are gone and record recovery locations for unfinished work.
