@@ -17,6 +17,7 @@ Every implementation turn targeting a web property, Cloudflare Worker, or SaaS a
 ### 2. Concurrent Parallel Subagent Execution (`invoke_subagent`)
 
 To prevent sequential bottlenecking or skipped ecosystem extraction, the lead orchestrator spawns parallel subagents during the turn:
+
 - **Subagent 1 (`theme.tools` Value Absorber)**: Extracts reusable components, brand presets, and 16-state OKLCH assets into `/Users/Apple/emdash/repositories/theme.tools` and pushes to `origin/main`.
 - **Subagent 2 (`install.doctor` Provisioning & Verifier Absorber)**: Extracts CLI verifiers, shell shims, and domain health probes into `/Users/Apple/emdash/repositories/install.doctor` and pushes to `origin/main`.
 - **Subagent 3 (`agent-skills` System Prompt & Rule Enforcer)**: Codifies the root-cause lesson and OpenSpec change into `/Users/Apple/.agentskills` and global harness system prompts (`~/.gemini/GEMINI.md`, `~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`) and pushes to `origin/main`.
