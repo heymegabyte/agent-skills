@@ -78,6 +78,14 @@ Treat a dry run as evidence of local archive acceptance and routing. After an
 authorized publish, verify the registry archive digest and install the exact
 version in a clean consumer before recording adoption.
 
+Before uploading to Nexus, check every qualified package version against the
+hosted repository. For `theme.tools`, run `pnpm package:release:check-nexus`
+against the qualified archives and receipt. If an existing version has the same
+archive integrity, it can be skipped on a retry. If it has different or missing
+integrity, resolve the collision with a version allowed by the project release
+policy, then rebuild and requalify the affected dependency graph. A metadata
+error needs a fresh successful check before publishing.
+
 ## Semantic Versioning
 
 - **Major** (1.0.0 → 2.0.0) — breaking changes, redesign
