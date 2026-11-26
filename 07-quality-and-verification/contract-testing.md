@@ -25,6 +25,13 @@ Define Zod schema → fetch live endpoint → z.parse(response) → fail on mism
 4. Add compile-only assertions to the actual typecheck input. For Hono RPC, infer the client from the constructed app and check required request fields and status-specific responses. Prove the assertion reacts to drift with a failing fixture, then verify the restored candidate.
 5. Pair compile checks with relevant runtime validation. Test malformed external inputs and preserved authorization behavior. Include clean packed-consumer checks when changing published exports or declarations.
 
+When the installed shared testing package exposes `theme-ts-references`, run
+`pnpm exec theme-ts-references <tsconfig> <file> <line> <column> --rename-locations`
+to preview a rename. Match the preview's source digests against the current
+compiler-decoded text before applying edits. Keep the compiler's prefix and
+suffix text so shorthand properties and aliases retain their intended names.
+Typecheck the edited projects and verify any affected package exports.
+
 [TypeScript language service](https://github.com/microsoft/TypeScript/wiki/Using-the-Language-Service-API) · [Hono RPC](https://hono.dev/docs/guides/rpc)
 
 ## Drizzle v1 Schema-to-Zod (Auto-Derive Contracts)
