@@ -59,6 +59,7 @@ The required CI path (`.github/workflows/ci-required-5min.yml`) enforces a stric
 **Fail-Closed Gate Rules**:
 - Any missing, cancelled, timed-out, or zero-test shard/task fails the gate immediately (`F12.11`, `F14.19`).
 - Passing on retry is classified as `flaky_passed_on_retry` with the first-failure message/trace preserved (`F13.06`).
+- Keep the full Playwright JSON report, including setup and teardown errors. Use `collectPlaywrightExecutionEvidence` from the qualified `@theme-tools/testing/ci-gate` export. Map reporter paths to the repository-relative paths in the manifest. Pass `runErrors` to shard reconciliation and preserve the runner's exit result. A skipped-only or interrupted-only spec supplies no completed execution evidence.
 
 ## 5. Cloudflare Browser Run Parallel CDP Rules (`@theme-tools/testing/browser-run`)
 

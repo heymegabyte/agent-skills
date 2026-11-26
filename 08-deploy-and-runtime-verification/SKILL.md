@@ -49,6 +49,12 @@ For OpenTofu plan review, load `08-deploy-and-runtime-verification/ci-cd-pipelin
 
 Activate this loop only for authorized repository changes. Read-only prompts, explicit local-only requests, prohibited deployment, unavailable authority/credentials, destructive approval gaps, failed required validation, and required PR/review are `BLOCKED`, not reasons to bypass controls.
 
+When a repository supports hosted and local deployment, share the preflight
+entrypoint for both. Include required asset existence before publishing.
+After deployment and any required cache purge, verify the deployed revision,
+HTTP status, and expected media type for the public assets in the release
+contract.
+
 1. Build + typecheck
 2. Commit only the intended tested tree and push that exact commit normally to `main`
 3. `wrangler deploy` (or the repository's established platform equivalent) for that exact commit
