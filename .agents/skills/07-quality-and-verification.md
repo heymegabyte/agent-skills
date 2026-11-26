@@ -108,6 +108,8 @@ After every deploy: browser console must show 0 CSP violations, 0 JS errors, 0 f
 - `e2e/COVERAGE.yml` — feature→spec map; CI fails on any feature without entry/test
 - Pre-commit lint: new component without matching `e2e/<feature>/` warns
 
+For compiler-assisted TypeScript refactors, load `07-quality-and-verification/contract-testing.md` and verify the saved rename preview before editing.
+
 ## See submodules: ai-vision-qa.md, multi-agent-testing.md, visual-regression.md.
 
 ## Prompt Hydration verification handoff
