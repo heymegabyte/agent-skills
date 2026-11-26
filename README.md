@@ -50,10 +50,10 @@ GitHub schedules project loops on the persistent Ubuntu host. OpenClaw routes of
 
 | Building... | Skills Load | Install |
 |---|---|---|
-| **SaaS product** | 01-OS → 02-Brief → 05-Arch → 06-Build → 07-QA → 08-Deploy + all agents | `claude plugin install heymegabyte/agent-skills` |
+| **SaaS product** | 01-OS → 02-Brief → 05-Arch → 06-Build → 07-QA → 08-Deploy + all agents | [Claude Code plugin](#install) |
 | **API / backend** | 01-OS → 05-Arch → 06-Build → 08-Deploy → 13-Observability | `npm i @heymegabyte/agent-skills` |
 | **Marketing site** | 01-OS → 09-Brand → 10-Design → 11-Motion → 12-Media | `npm i @heymegabyte/agent-skills` |
-| **Features on existing project** | 01-OS → 06-Build → 07-QA (skill router auto-selects from context) | `claude plugin install heymegabyte/agent-skills` |
+| **Features on existing project** | 01-OS → 06-Build → 07-QA (skill router auto-selects from context) | [Claude Code plugin](#install) |
 | **Just rules for your AI tool** | No skills — use a platform variant file directly | See [32 variants](#cross-platform-support-32-variants) below |
 
 ## How It Works
@@ -108,7 +108,8 @@ The package/plugin commands below install tool content. Canonical policy project
 gh skill install heymegabyte/agent-skills
 
 # Claude Code plugin
-claude plugin install heymegabyte/agent-skills
+claude plugin marketplace add heymegabyte/agent-skills
+claude plugin install claude-skills@claude-skills
 
 # npm (includes all 32+ platform variants)
 npm i @heymegabyte/agent-skills
@@ -124,9 +125,15 @@ git clone https://github.com/heymegabyte/agent-skills agent-skills
 git -C agent-skills rev-parse HEAD
 ```
 
+To verify Gemini CLI skill discovery, run `gemini skills list` from a trusted
+checkout or from the unpacked npm archive's `package/` directory. The
+`Location` for each workspace skill should point to that directory's
+`.agents/skills/<name>/SKILL.md`. This command lists skills without a model
+request. See [Gemini CLI skill discovery](https://geminicli.com/docs/cli/using-agent-skills/).
+
 ## Cross-Platform Support (32 variants)
 
-Auto-generated on every push to master. Each format uses native frontmatter for its tool.
+Generated adapters use the native format for each tool.
 
 | Format | Path | Notes |
 |--------|------|-------|
@@ -143,7 +150,7 @@ Auto-generated on every push to master. Each format uses native frontmatter for 
 | **Aider** | `.aider-conventions.md` | Plain markdown |
 | **Zed** | `.rules` | Plain markdown |
 | **Codex** | `CODEX.md` + `.agents/skills/` | SKILL.md per category |
-| **Gemini CLI** | `GEMINI.md` | Plain markdown |
+| **Gemini CLI** | `GEMINI.md` + `.agents/skills/` | Workspace instructions and discoverable skills |
 | **Amp** | `AMP.md` | Plain markdown |
 | **Replit** | `replit.md` | Plain markdown |
 | **Devin** | `.devin/skills/emdash/SKILL.md` | SKILL.md with frontmatter |
