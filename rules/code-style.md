@@ -22,7 +22,7 @@ Use strict TypeScript, Google TypeScript style, and module settings that match t
 ## TypeScript (Google TS Style)
 
 - Keep the pinned project compiler authoritative. Evaluate native compiler upgrades against actual diagnostics, declaration emit, and semantic tooling compatibility. Enable `isolatedDeclarations` and `erasableSyntaxOnly` where the supported compiler, package contract, and runtime justify them.
-- For shared compiler and lint configuration, inspect the installed theme.tools exports first. Select profiles by runtime and keep path mappings, bindings, project roots, and exceptions in the consumer. Verify effective options and a failing fixture before adopting a profile.
+- For shared compiler and lint configuration, inspect the installed theme.tools exports first. Select profiles by runtime and keep path mappings, bindings, project roots, and exceptions in the consumer. Verify effective options and a failing fixture before adopting a profile. For published profiles, test both fixtures using the package export in a disposable install. Verify that browser projects reject Node-only globals, Worker projects reject DOM-only globals, and a failing library compilation emits no files.
 - Before editing a public contract, resolve the declaration, references, export and consumers from the pinned TypeScript project. Verify type and runtime behavior using [the contract verification workflow](../07-quality-and-verification/contract-testing.md).
 - camelCase vars/fns · PascalCase types · CONSTANT_CASE consts.
 - `interface` over `type`. Relative imports. Never `any` — use `unknown`. Never `@ts-ignore`.
