@@ -2,11 +2,28 @@
 /** Verify that canonical skills and pack members are both present and publishable. */
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, posix, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const required = new Set(['package.json', 'README.md', 'LICENSE']);
+const required = new Set(['package.json', 'README.md', 'LICENSE', 'CLAUDE.md']);
+
+for (const path of ['.codex-plugin/plugin.json', '.opencode/config.json', '.kimi-plugin/plugin.json']) {
+  required.add(path);
+  const location = join(ROOT, path);
+  if (!existsSync(location)) continue;
+  const manifest = JSON.parse(readFileSync(location, 'utf8'));
+  required.add(manifest.policy.source);
+  for (const file of manifest.files ?? []) required.add(file);
+  if (Array.isArray(manifest.instructions)) {
+    for (const file of manifest.instructions) required.add(file);
+  }
+  const base = path === '.kimi-plugin/plugin.json' ? posix.dirname(path) : '.';
+  for (const { path: file } of manifest.skills ?? []) {
+    required.add(posix.normalize(posix.join(base, file)));
+  }
+}
+
 
 for (const entry of readdirSync(ROOT, { withFileTypes: true })) {
   if (!entry.isDirectory() || !/^(?:\d\d-|openclaw-integration$)/.test(entry.name)) continue;
