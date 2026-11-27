@@ -2,6 +2,8 @@
 
 The strategies below inform planning in `bin/prompt-hydrator.ts` and `bin/scrum-deliberation-quorum.ts`. Execution requires approved host adapters for `bin/evidence-gated-orchestrator.ts`:
 
+Schedule independent ready changes concurrently whenever it improves verified turnaround. Delegate all suitable work to OpenCode with DeepSeek via LiteLLM. Refill available approved capacity as dependencies clear. Use Codex, Gemini, or Claude where premium capability or independent review materially improves the result. Treat allocation estimates as planning inputs and verify actual dispatch from scheduler receipts.
+
 1. **Zero-Latency `UserPromptSubmit` Hyper-Saturation & Codebase Gap Audit (`prompt-hydrator.ts`)**:
    Intercept every prompt at submission time to combine skill routing, active OpenSpec reconciliation, and an automatic repository gap scan that detects unfinished surfaces (such as `"Settings"`, `"Billing"`, or missing `@theme.tools/*` adapters) and adds them to the execution contract automatically.
 2. **Recursive Categorical Web-Research Saturation & Parallel Plugin-Catalog Factory**:
@@ -12,7 +14,7 @@ The strategies below inform planning in `bin/prompt-hydrator.ts` and `bin/scrum-
    Exploit uncorrelated model strengths in parallel: **Claude (`opus`)** for system architecture, UI/UX craft, and synthesis; **Codex (`codex`)** for adversarial security/algorithm verification and backend rigor; **Gemini (`gemini`)** for 1M–2M token cross-repo cartography and multimodal visual QA.
 5. **Contract-First OpenSpec DAG Compiler (`task-graph.json`)**:
    Lock Zod schemas, Hono RPC routes, and TypeScript interfaces in OpenSpec *before* spawning worker swarms so parallel worktrees compile against immutable boundary contracts with zero integration drift.
-6. **Automatic 80%+ OpenCode (DeepSeek) Swarm Offload Engine**:
+6. **OpenCode with DeepSeek as the default for suitable work**:
    Classify every OpenSpec DAG node as `frontier-required` or `throughput-safe`, routing all `throughput-safe` implementation, plugin catalogs, tests, and docs to parallel `opencode` workers over the 4-key LiteLLM DeepSeek rotation pool (`https://llm.megabyte.space/v1`).
 7. **Pre-Warmed Ephemeral Git Worktree Pool with Zero-Copy Symlink Hydration (`worktree-pool.sh`)**:
    Maintain a pool of isolated Git worktrees pre-linked to shared `node_modules`, `.wrangler`, `.cache`, and `.turbo` directories so parallel `claude`, `codex`, `gemini`, and `opencode` agents launch in `<300ms` without file locks or index corruption.

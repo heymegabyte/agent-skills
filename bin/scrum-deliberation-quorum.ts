@@ -532,14 +532,14 @@ export function conveneScrumQuorum(prompt: string, missingSurfaces: string[] = [
     consensusDecisions: [
       'Lock all schemas and OpenSpec artifacts via Frontier Architect (Claude/Codex/Gemini) before spawning worker swarms.',
       'Auto-include audited product gaps (including full multi-tab Settings and 12-plugin starter catalog) in same-turn scope.',
-      `Offload ${offloadPercentage}% of implementation, plugin catalog, unit test, E2E spec, and documentation volume to parallel OpenCode (DeepSeek) worktree swarms.`,
+      'Dispatch all suitable ready work to OpenCode with DeepSeek via LiteLLM. Run independent work concurrently when it improves verified turnaround and refill approved capacity as dependencies clear. Use Codex, Gemini, or Claude where premium capability or independent review materially improves delivery.',
       'Enforce 100% unit test coverage + parallel Cloudflare Browser Run (@cloudflare/playwright) E2E verification across 6 breakpoints before main commit and production Cloudflare deploy.',
     ],
     dissentRegister: [
       {
         topic: 'Single-thread frontier implementation vs. sharded OpenCode DeepSeek worktree swarm',
         challenger: 'codex',
-        resolution: 'Rejected single-thread implementation; contract-locked OpenCode DeepSeek swarm reduces frontier quota burn by >75% while finishing all plugin shards in parallel.',
+        resolution: 'After contracts are verified, dispatch independent plugin shards through OpenCode with DeepSeek. Measure the actual dispatch and delivery results.',
       },
       {
         topic: 'Local-only Playwright vs. Cloudflare Browser Run (@cloudflare/playwright) edge E2E',
@@ -554,7 +554,7 @@ export function conveneScrumQuorum(prompt: string, missingSurfaces: string[] = [
       opencodeDeepseekTasks,
       offloadPercentage,
     },
-    synthesisDirective: `Right-sized SCRUM quorum (${selectedAgents.length}/28 specialists convened: ${selectedAgents.map((a) => `${a.agentId}[${a.harness}]`).join(', ')}) locked ${dagTasks.length} parallel OpenSpec DAG tasks with ${offloadPercentage}% OpenCode (DeepSeek) swarm offload.`,
+    synthesisDirective: `Right-sized SCRUM quorum (${selectedAgents.length}/28 specialists convened: ${selectedAgents.map((a) => `${a.agentId}[${a.harness}]`).join(', ')}) proposed ${dagTasks.length} OpenSpec DAG tasks with ${offloadPercentage}% initially assigned to OpenCode (DeepSeek). Verify contracts and record actual dispatch using scheduler receipts.`,
   };
 }
 

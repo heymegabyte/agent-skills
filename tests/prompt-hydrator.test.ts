@@ -12,6 +12,7 @@ import {
   hydratePrompt,
   writeOpenSpecFixture,
 } from '../bin/prompt-hydrator.ts';
+import { conveneScrumQuorum } from '../bin/scrum-deliberation-quorum.ts';
 
 function fixtureCheckout(): string {
   const root = mkdtempSync(join(tmpdir(), 'prompt-hydrator-'));
@@ -45,7 +46,7 @@ test('hydrates live context before execution and preserves evidence safely', asy
   assert.match(formatHydratedBrief(first), /Original request \(verbatim\)/);
   assert.match(formatHydratedBrief(first), /Decision-readiness gate/);
   assert.match(formatHydratedBrief(first), /Dispatch every task that DeepSeek can complete correctly to OpenCode/);
-  assert.match(formatHydratedBrief(first), /Launch independent tasks concurrently/);
+  assert.match(formatHydratedBrief(first), /Launch independent tasks concurrently and refill approved capacity/);
   assert.match(formatHydrationExplanation(first), /Omissions and fallbacks/);
   assert.equal(first.decisionReadiness.materialDecision, true);
   assert.equal(first.decisionReadiness.architectureReady, false);
@@ -169,7 +170,7 @@ test('Claude UserPromptSubmit adapter hydrates before execution', () => {
   assert.match(output.hookSpecificOutput.additionalContext, /Product & Architecture Gap Audit/);
   assert.match(output.hookSpecificOutput.additionalContext, /Settings & Preferences/);
   assert.match(output.hookSpecificOutput.additionalContext, /Right-Sized Collaborative SCRUM Deliberation Quorum/);
-  assert.match(output.hookSpecificOutput.additionalContext, /OpenCode \(DeepSeek\) Offload\*\*: \*\*0%\*\*/);
+  assert.match(output.hookSpecificOutput.additionalContext, /No dispatch plan is enabled for this brief/);
   assert.match(output.hookSpecificOutput.additionalContext, /Architecture ready: \*\*false\*\*/);
   assert.match(output.hookSpecificOutput.additionalContext, /Bounded fixed-point improvement loop/);
 });
@@ -194,6 +195,17 @@ test('product gap audit, SCRUM deliberation quorum, and 15-strategy multi-swarm 
   assert.equal(hydrated.swarmExecutionPlan.finishLineContract.gitBranch, 'main');
   assert.ok(hydrated.handoff.pendingWorkIds.includes('parallel-end-of-round-triad-meaning-extraction'));
   assert.match(formatHydratedBrief(hydrated), /Minimum-Prompt Ecosystem Completeness Assumption/);
+  const quorum = conveneScrumQuorum('Add AI workflow builder with extensible plugin catalog and settings');
+  assert.ok(quorum.consensusDecisions.some((decision) =>
+    decision.includes('Dispatch all suitable ready work to OpenCode with DeepSeek via LiteLLM')));
+  assert.match(quorum.synthesisDirective, /proposed .* initially assigned/);
+
+  hydrated.swarmExecutionPlan.opencodeDeepseekOffload.enabled = true;
+  hydrated.swarmExecutionPlan.opencodeDeepseekOffload.targetOffloadRatio = 0.78;
+  const plannedBrief = formatHydratedBrief(hydrated);
+  assert.match(plannedBrief, /Planned OpenCode \(DeepSeek\) allocation\*\*: 78% of candidate DAG tasks/);
+  assert.match(plannedBrief, /record actual dispatch using scheduler receipts/);
+
 });
 
 test('fail-closed hydration refuses OpenSpec and false deployment claims', async () => {
