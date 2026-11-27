@@ -1019,6 +1019,21 @@ function resolveClaudeOAuthAccessToken() {
       }
     } catch {}
   }
+  if (process.platform === "darwin") {
+    try {
+      const raw = execSync('security find-generic-password -s "Claude Code-credentials" -w', {
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
+      }).trim();
+      if (raw.startsWith("{")) {
+        const parsed = JSON.parse(raw);
+        const tok = parsed?.claudeAiOauth?.accessToken;
+        if (tok) return String(tok).trim();
+      } else if (raw.startsWith("sk-ant-oat")) {
+        return raw;
+      }
+    } catch {}
+  }
   return "";
 }
 
@@ -1051,6 +1066,24 @@ function runGmailMcpServer() {
           threadId: { type: "string", description: "The ID of the thread" },
         },
         required: ["threadId"],
+      },
+      annotations: { readOnlyHint: true },
+    },
+    {
+      name: "get_message",
+      title: "Get Gmail Message",
+      description: "Retrieve a Gmail message by messageId with optional messageFormat (PLAIN_TEXT, FULL_CONTENT, RAW, MINIMAL, METADATA_ONLY).",
+      inputSchema: {
+        type: "object",
+        properties: {
+          messageId: { type: "string", description: "The ID of the message" },
+          messageFormat: {
+            type: "string",
+            enum: ["MESSAGE_FORMAT_UNSPECIFIED", "MINIMAL", "FULL_CONTENT", "METADATA_ONLY", "PLAIN_TEXT", "RAW"],
+            description: "Format of the message returned (use RAW for full MIME headers including List-Unsubscribe, FULL_CONTENT for htmlBody/plaintextBody)",
+          },
+        },
+        required: ["messageId"],
       },
       annotations: { readOnlyHint: true },
     },
