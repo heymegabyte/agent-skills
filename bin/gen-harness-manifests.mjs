@@ -95,16 +95,18 @@ if (process.argv.includes('--publish-instructions') || process.argv.includes('--
  * Returns { name, description } extracted from the leading --- block.
  *
  * @param {string} src - Raw file contents.
- * @returns {{ name: string; description: string }}
+ * @returns {{ name: string; description: string; submodules: string[] }}
  */
 function parseFrontmatter(src) {
   const match = src.match(/^---\n([\s\S]*?)\n---/);
-  if (!match) return { name: '', description: '' };
+  if (!match) return { name: '', description: '', submodules: [] };
   const block = match[1];
+  const submoduleList = block.match(/^submodules:\n((?:  - [^\n]+\n)+)/m)?.[1] ?? '';
   const nameMatch = block.match(/^name:\s*["']?([^"'\n]+)["']?$/m);
   const descMatch = block.match(/^description:\s*["']?([\s\S]*?)["']?(?=\n\w|\n$|$)/m);
   return {
     name: nameMatch ? nameMatch[1].trim() : '',
+    submodules: [...submoduleList.matchAll(/^  - ([^\s]+\.md)$/gm)].map(([, file]) => file),
     description: descMatch ? descMatch[1].trim().replace(/\n\s+/g, ' ') : '',
   };
 }
@@ -126,7 +128,7 @@ function readVersion(root) {
  * Discover all canonical numbered skills plus approved named skills.
  *
  * @param {string} root - Repo root path.
- * @returns {Array<{ dir: string; path: string; name: string; description: string }>}
+ * @returns {Array<{ dir: string; path: string; name: string; description: string; referencePaths: string[] }>}
  */
 function discoverSkills(root) {
   const entries = readdirSync(root, { withFileTypes: true });
@@ -138,8 +140,9 @@ function discoverSkills(root) {
     const skillPath = join(root, entry.name, 'SKILL.md');
     if (!existsSync(skillPath)) continue;
     const src = readFileSync(skillPath, 'utf8');
-    const { name, description } = parseFrontmatter(src);
-    skills.push({ dir: entry.name, path: `${entry.name}/SKILL.md`, name, description });
+    const { name, description, submodules } = parseFrontmatter(src);
+    const referencePaths = submodules.map((file) => `${entry.name}/${file}`);
+    skills.push({ dir: entry.name, path: `${entry.name}/SKILL.md`, name, description, referencePaths });
   }
   skills.sort((a, b) => a.dir.localeCompare(b.dir));
   return skills;
@@ -245,8 +248,8 @@ const codexManifest = {
   policy: canonicalPolicyMetadata,
   name: 'heymegabyte-skills',
   version,
-  instructions: 'Load rules/ directory. Each .md file is a standing instruction.',
-  files: [...alwaysLoadRules, ...skillPaths],
+  instructions: 'Load rules/ directory as standing instructions. Load skill files and their references on demand.',
+  files: [...new Set([...alwaysLoadRules, ...skillPaths, ...skills.flatMap((skill) => skill.referencePaths)])],
 };
 
 writeJson(join(ROOT, '.codex-plugin', 'plugin.json'), codexManifest);

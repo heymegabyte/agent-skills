@@ -7,14 +7,19 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const required = new Set(['package.json', 'README.md', 'LICENSE', 'CLAUDE.md']);
+const codexManifestPath = '.codex-plugin/plugin.json';
+const codexFiles = new Set();
 
-for (const path of ['.codex-plugin/plugin.json', '.opencode/config.json', '.kimi-plugin/plugin.json']) {
+for (const path of [codexManifestPath, '.opencode/config.json', '.kimi-plugin/plugin.json']) {
   required.add(path);
   const location = join(ROOT, path);
   if (!existsSync(location)) continue;
   const manifest = JSON.parse(readFileSync(location, 'utf8'));
   required.add(manifest.policy.source);
-  for (const file of manifest.files ?? []) required.add(file);
+  for (const file of manifest.files ?? []) {
+    required.add(file);
+    if (path === codexManifestPath) codexFiles.add(file);
+  }
   if (Array.isArray(manifest.instructions)) {
     for (const file of manifest.instructions) required.add(file);
   }
@@ -53,7 +58,11 @@ for (const entry of readdirSync(ROOT, { withFileTypes: true })) {
   required.add(`.agents/skills/${name}/SKILL.md`);
   const submodules = text.match(/^submodules:\n((?:  - [^\n]+\n)+)/m)?.[1] ?? '';
   for (const [, file] of submodules.matchAll(/^  - ([^\s]+\.md)$/gm)) {
-    required.add(`${entry.name}/${file}`);
+    const reference = `${entry.name}/${file}`;
+    required.add(reference);
+    if (!codexFiles.has(reference)) {
+      throw new Error(`Codex asset manifest is missing skill reference ${reference}`);
+    }
   }
 }
 if (claudeSkillDirectories.size) {
