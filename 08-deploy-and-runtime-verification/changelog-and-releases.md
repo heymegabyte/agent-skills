@@ -87,11 +87,14 @@ response contracts with the project's production probes.
 
 For a consumer using vendored npm archives, run the installed
 `theme-verify-npm-archives` to match archive bytes to the lockfile's SHA-512
-integrity. Use a qualified version with physical path validation when the
-consumer requires self-contained releases. Keep the regular tarballs at their
-declared paths under `vendor/theme-tools`. Record source qualification,
-consumer installation, and live verification according to the evidence
-actually obtained.
+integrity. For self-contained consumer releases, run
+`theme-verify-npm-archives --require-local-theme-tools` using a qualified build
+that validates physical paths and the embedded npm package name and version.
+Keep the regular tarballs at their declared paths under `vendor/theme-tools`.
+If a digest matches but the identity fails, reconcile the archive, lockfile,
+and release receipt against the qualified version. For an npm alias, compare
+the embedded name with the lockfile's target package name. Record source
+qualification, consumer installation, and live verification separately.
 
 After deploying, confirm the active version and traffic allocation through the
 provider. Use the provider's deployment timestamp or active status rather than
