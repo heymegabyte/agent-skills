@@ -2,6 +2,14 @@
 
 This repository contains 23 skill categories, 55 agents, and 151 reference docs for autonomous product building.
 
+## Scoped shared platform
+
+For products and migration sources in [the reviewed platform scope](reference/platform-stack.json),
+including their shared infrastructure, load
+[rules/platform-shared-capabilities.md](rules/platform-shared-capabilities.md)
+and its relevant modules on demand. The same manifest identifies ProjectSites
+as a migration source and lists the policy pack and convergence prompt.
+
 ## Stack
 
 CF Workers + Hono | React 19 + Vite + ui.theme.tools (`@theme.tools/ui` — exclusive component system for ALL sites, apps, dashboards, admin consoles, calendars, and portals; NO Angular / NO Spartan UI) | D1/Neon | Drizzle v1-rc | Better Auth | Stripe + Link (default) · Square on request | Inngest | Amazon SES | Bun | Playwright v1.63+ | PostHog | Sentry

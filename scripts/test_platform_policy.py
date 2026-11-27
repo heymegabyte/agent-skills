@@ -20,9 +20,9 @@ class PolicyTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         manifest = json.loads((ROOT / 'reference/platform-stack.json').read_text())
-        paths = MODULE.RULES + manifest['distributionFiles'] + [
-            'AGENTS.md', 'control-plane/RUNTIME.md', 'package.json',
-            '_packs/platform.yml', 'scripts/check-platform-policy.py',
+        paths = [
+            *MODULE.RULES, *MODULE.PACKS.values(), *manifest['distributionFiles'],
+            *MODULE.ENTRYPOINTS, 'package.json', 'scripts/check-platform-policy.py',
         ]
         for path in paths:
             target = self.root / path
@@ -52,8 +52,41 @@ class PolicyTests(unittest.TestCase):
         self.assertIn('Product scope drift', MODULE.validate(self.root))
 
     def test_unsupported_schema(self):
-        self.patch_json('reference/platform-stack.json', lambda d: d.update(schemaVersion=2))
-        self.assertIn('Unsupported policy schemaVersion', MODULE.validate(self.root))
+        for unsupported in [1, 3, 2.0, '2']:
+            with self.subTest(schema=unsupported):
+                self.patch_json('reference/platform-stack.json', lambda d: d.update(schemaVersion=unsupported))
+                self.assertIn('Unsupported policy schemaVersion', MODULE.validate(self.root))
+
+    def test_retired_scope_cannot_return(self):
+        self.patch_json('reference/platform-stack.json', lambda d: d['scope'].append('linkbl.ink'))
+        self.assertIn('Product scope drift', MODULE.validate(self.root))
+
+    def test_duplicate_scope_is_invalid(self):
+        self.patch_json('reference/platform-stack.json', lambda d: d['scope'].append('status.charity'))
+        self.assertIn('Product scope drift', MODULE.validate(self.root))
+
+    def test_missing_migration_source(self):
+        self.patch_json('reference/platform-stack.json', lambda d: d.update(migrationSources=[]))
+        self.assertIn('Migration source drift', MODULE.validate(self.root))
+
+    def test_wrong_module_order(self):
+        self.patch_json('reference/platform-stack.json', lambda d: d['rules'].reverse())
+        self.assertIn('Required policy modules drift', MODULE.validate(self.root))
+
+    def test_wrong_platform_pack_path(self):
+        self.patch_json('reference/platform-stack.json', lambda d: d.update(pack='_packs/core.yml'))
+        self.assertIn('Platform pack path drift', MODULE.validate(self.root))
+
+    def test_missing_cross_pack_members(self):
+        for rule, pack in [('theme-tools-canonical-components', 'design'), ('total-convergence-and-openspec-handoff', 'core')]:
+            with self.subTest(pack=pack):
+                path = self.root / f'_packs/{pack}.yml'
+                path.write_text(path.read_text().replace(f'  - rules/{rule}\n', ''))
+                self.assertIn(f'rules/{rule}.md: absent from {pack} pack', MODULE.validate(self.root))
+
+    def test_manifest_distribution_omission(self):
+        self.patch_json('reference/platform-stack.json', lambda d: d['distributionFiles'].remove(d['prompt']))
+        self.assertIn('Policy distributionFiles omits prompts/platform-convergence.md', MODULE.validate(self.root))
 
     def test_missing_pack_member(self):
         path = self.root / '_packs/platform.yml'
@@ -70,8 +103,10 @@ class PolicyTests(unittest.TestCase):
         self.assertIn('Distribution excludes prompts/platform-convergence.md', MODULE.validate(self.root))
 
     def test_missing_entrypoint(self):
-        (self.root / 'control-plane/RUNTIME.md').write_text('No policy route here.\n')
-        self.assertTrue(any('missing scoped policy entrypoint' in e for e in MODULE.validate(self.root)))
+        for entrypoint in MODULE.ENTRYPOINTS:
+            with self.subTest(entrypoint=entrypoint):
+                (self.root / entrypoint).write_text('No policy route here.\n')
+                self.assertIn(f'{entrypoint}: missing scoped policy entrypoint', MODULE.validate(self.root))
 
     def test_missing_source(self):
         (self.root / 'reference/platform-research-2026-10-31.md').unlink()
