@@ -32,6 +32,8 @@ export interface CompiledArtifact {
 export interface ExecutionNode {
   id: string;
   title: string;
+  /** Task details supplied by the approved compiler and bound by the graph digest. */
+  workerPrompt?: string;
   dependsOn: string[];
   provider: ExecutionProvider;
   classification: 'architecture' | 'sensitive' | 'bounded';
@@ -193,6 +195,9 @@ export function validateTaskGraph(nodes: ExecutionNode[]): void {
   const ports = new Set<number>();
   for (const node of nodes) {
     if (!node.id.trim() || !node.title.trim()) throw new Error('Every task requires an identifier and title');
+    if (node.workerPrompt !== undefined && (typeof node.workerPrompt !== 'string' || !node.workerPrompt.trim() || node.workerPrompt.includes('\0'))) {
+      throw new Error(`Invalid worker prompt in task ${node.id}`);
+    }
     if (!node.acceptance.length) throw new Error(`Task ${node.id} has no acceptance command`);
     if (worktrees.has(node.worktree)) throw new Error(`Duplicate worktree lease: ${node.worktree}`);
     if (!/^[-a-zA-Z0-9/_]+$/.test(node.branch) || node.branch.startsWith('/') || node.branch.includes('..')) throw new Error(`Unsafe branch lease: ${node.branch}`);

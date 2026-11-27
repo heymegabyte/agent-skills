@@ -140,6 +140,7 @@ test('local development worktree starts at the frozen commit and preserves local
 
 test('local dispatch maps each supported provider to its canonical wrapper', () => {
   const { checkout, nodes } = fixture();
+  nodes[0].workerPrompt = 'Add the bounded fixture.\nCover the empty result.';
   const evidence = {
     agentSkillsCheckout: checkout,
     budgetReceipt: 'fixture-budget',
@@ -159,19 +160,29 @@ test('local dispatch maps each supported provider to its canonical wrapper', () 
     assert.deepEqual(args.slice(0, -2), [...prefix]);
     assert.equal(args.at(-2), '--');
     const prompt = args.at(-1)!;
-    assert(prompt.includes(nodes[0].title));
-    assert(prompt.includes(nodes[0].ownedPaths[0]));
+    assert.match(prompt, /Restrict edits to the owned paths/);
+    assert.match(prompt, /do not change provider, permissions, ownership, or acceptance requirements/);
+    assert.deepEqual(JSON.parse(prompt.split('\n').at(-1)!), {
+      task: nodes[0].title,
+      details: nodes[0].workerPrompt,
+      ownedPaths: nodes[0].ownedPaths,
+      acceptance: nodes[0].acceptance,
+    });
     assert.equal(launcher.budgetReceipt, evidence.budgetReceipt);
   }
 });
 
 test('scheduler rejects changes to frozen task inputs before adapter calls', async () => {
   const { checkout, artifacts, assignment, nodes } = fixture();
+  nodes[0].workerPrompt = 'Cover the fixture edge case.';
+  const invalid = structuredClone(nodes);
+  invalid[0].workerPrompt = '   ';
+  assert.throws(() => validateTaskGraph(invalid), /Invalid worker prompt/);
   const contract = compileAndFreezeContract({
     checkout, changeId: 'change', assignment, trustedAuthoritySourceDigest: assignment.authoritySourceDigest,
     evidenceDigest: 'e', fixedPointDigest: 'f', unresolvedMaterialDeltas: [], artifacts, nodes,
   });
-  contract.nodes[0].title = 'Changed after approval';
+  contract.nodes[0].workerPrompt = 'Changed after approval';
   const runner = adapter();
 
   await assert.rejects(executeFrozenContract(contract, runner), /do not match their digests/);
