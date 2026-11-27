@@ -332,7 +332,7 @@ Canonical stack table + version pins: [CONVENTIONS.md](CONVENTIONS.md) § Stack.
 
 ## Task Routing
 
-The router loads the smallest useful subset per task — never the full 149 docs. See [`_router.md`](_router.md) for the complete routing table. This plugin ships 149 reference docs across 23 skill categories.
+The router loads the smallest useful subset per task — never the full 150 docs. See [`_router.md`](_router.md) for the complete routing table. This plugin ships 150 reference docs across 23 skill categories.
 
 | When you say... | Skills loaded |
 |-----------------|---------------|

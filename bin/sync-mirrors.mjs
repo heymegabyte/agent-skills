@@ -52,7 +52,7 @@ const MANAGED = [
     // stubs (CODEX.md / GEMINI.md / AMP.md / QODO.MD / replit.md). Keep in step
     // with bin/check-doc-counts.sh derived actuals (gate 14 asserts these files).
     pattern: /\d+ categories, \d+ reference docs, \d+ agents\./g,
-    canonical: '23 categories, 149 reference docs, 28 agents.',
+    canonical: '23 categories, 150 reference docs, 28 agents.',
   },
   {
     name: 'desc-category-count',

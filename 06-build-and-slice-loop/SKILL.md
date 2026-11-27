@@ -29,6 +29,7 @@ submodules:
   - microcopy-library.md
   - notification-center.md
   - onboarding-and-first-run.md
+  - parallel-swarm-planning.md
   - pre-digested-builds.md
   - pwa-kit.md
   - realtime-and-websockets.md
