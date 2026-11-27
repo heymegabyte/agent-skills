@@ -115,21 +115,41 @@ worktrees. If the checkout changes during qualification, discard that
 attempt and rerun from the exact candidate. Retain source revision,
 receipt, archive digests, and consumer results together.
 
+For a clean local handoff, run the Theme Tools packer from the tool checkout
+against the exact qualified source checkout.
+
+```bash
+node scripts/pack-release-tarballs.mjs \
+  --workspace "$QUALIFIED_CHECKOUT" \
+  --provenance-receipt "$QUALIFICATION_RECEIPT" \
+  --output "$NEW_BUNDLE_DIRECTORY"
+```
+
+The packer verifies the retained artifacts and emits
+`package-slsa-provenance-attestation.json` into the bundle. Its local builder
+identity and qualification receipt digest establish the local custody chain.
+Keep hosted attestation and registry publication evidence separate.
+
 Before uploading to Nexus, run `pnpm package:release:check-nexus` against
 the qualified archives and provenance receipt. Missing versions are
 eligible for a publish attempt with the scoped credentials and required
 release approvals. An existing version is reusable only if hosted
 metadata and the served archive bytes match the qualification. Resolve
 collisions through the repository's version policy and requalify the
-affected graph. After publication, use `pnpm package:release:verify-nexus`
+affected graph. Compare any tracked consumer archive for the same name and
+version as well. A registry can lack metadata for an identity already in use.
+For a consumer repin, verify the exact first-party dependency closure,
+lockfile integrity, and installed package trees. After publication, use
+`pnpm package:release:verify-nexus`
 to require a matching hosted read-back for every version. Verify the
 consumer install from the group URL independently.
 
 For a Theme Tools registry outage rehearsal, use
 `pnpm package:consumer --offline --bundle <directory> --receipt-sha256 <digest>`.
-Use the receipt digest recorded separately during qualification. The gate
-checks receipt and archive identity before installing with the restored
-store. For npm consumers with a fully integrity-pinned lockfile, test
+Pass the separately recorded SHA-256 of the bundle's
+`package-slsa-provenance-attestation.json`. The packer's qualification receipt
+digest is a separate input. The consumer gate checks manifest and archive
+identity before installing with the restored store. For npm consumers with a fully integrity-pinned lockfile, test
 `npm ci --offline` from a fresh install directory using platform-matched
 cache blobs and the tracked vendored packages. A cache that depends on
 registry metadata may require the original registry URL as a cache key.
