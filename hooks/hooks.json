@@ -1,5 +1,5 @@
 {
-  "description": "Hydrate every submitted prompt before Claude Code executes it.",
+  "description": "Hydrate every submitted prompt + reinforce OpenSpec change-ownership checkpoints (SessionStart, PreCompact).",
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -8,6 +8,28 @@
             "type": "command",
             "command": "node ${CLAUDE_PLUGIN_ROOT}/bin/prompt-hydration-hook.mjs",
             "timeout": 25
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/openspec-ownership-session-start.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/openspec-ownership-precompact.sh",
+            "timeout": 10
           }
         ]
       }

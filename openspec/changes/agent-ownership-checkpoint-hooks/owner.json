@@ -1,0 +1,16 @@
+{
+  "changeId": "agent-ownership-checkpoint-hooks",
+  "owner": "claude-session-fire3",
+  "state": "active",
+  "dependencies": [
+    "agent-change-ownership-policy",
+    "change-ownership-atomic-dispatcher"
+  ],
+  "allowedWriteAreas": [
+    "hooks/",
+    "bin/install-hooks.sh"
+  ],
+  "claimedAt": "2026-11-27T04:05:18.477Z",
+  "updatedAt": "2026-11-27T04:05:18.477Z",
+  "handoff": []
+}
