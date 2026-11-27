@@ -44,6 +44,8 @@ test('hydrates live context before execution and preserves evidence safely', asy
   assert.doesNotMatch(formatHydrationExplanation(first), /ghp_abcdefghijklmnopqrstuvwxyz123456/);
   assert.match(formatHydratedBrief(first), /Original request \(verbatim\)/);
   assert.match(formatHydratedBrief(first), /Decision-readiness gate/);
+  assert.match(formatHydratedBrief(first), /Dispatch every task that DeepSeek can complete correctly to OpenCode/);
+  assert.match(formatHydratedBrief(first), /Launch independent tasks concurrently/);
   assert.match(formatHydrationExplanation(first), /Omissions and fallbacks/);
   assert.equal(first.decisionReadiness.materialDecision, true);
   assert.equal(first.decisionReadiness.architectureReady, false);
