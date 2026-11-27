@@ -49,6 +49,7 @@ Every clickable element / form field / nav link / API endpoint / modal / keyboar
 ### Inventory + test-account discipline
 
 - `e2e/FEATURES.md` (feature · dir · spec count · last-pass commit); `e2e/COVERAGE.yml` (CI fails any feature with `specs: 0`). Pre-commit warns on new component/route without a matching spec.
+- In repositories with an affected browser selector, update its inventory in the same change when adding, moving, or removing a live spec. Register the exact spec path, the story or route it exercises, shared fixtures and package dependencies, and a duration estimate based on observed browser execution. Before merging to main, run the repository’s registration and affected-selection checks, such as `pnpm package:selector:test` in Theme Tools. Confirm that the spec is selected for its inputs and that the existing shard count and time limits still pass.
 - `test@megabyte.space` (customer) / `crew-test@megabyte.space` (crew); passwords/OTPs from env, never hardcoded. Real-user navigation only (`click`/`keyboard`); bare API calls only for seed/teardown.
 
 ### Playwright Test Agents (v1.59+ MCP) + failure triage
