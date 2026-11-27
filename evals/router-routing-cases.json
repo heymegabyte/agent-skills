@@ -69,6 +69,21 @@
       "id": "generic-language-mention",
       "prompt": "Summarize a history of TypeScript syntax",
       "forbidden_trigger_matches": ["07-quality-and-verification"]
+    },
+    {
+      "id": "offline-package-recovery",
+      "prompt": "Prepare offline package recovery for the pinned lockfile",
+      "required_trigger_matches": ["08-deploy-and-runtime-verification"]
+    },
+    {
+      "id": "registry-outage-recovery",
+      "prompt": "Rehearse a registry outage with the qualified package archives",
+      "required_trigger_matches": ["08-deploy-and-runtime-verification"]
+    },
+    {
+      "id": "general-cache-explanation",
+      "prompt": "Explain how an npm cache stores bytes",
+      "forbidden_trigger_matches": ["08-deploy-and-runtime-verification"]
     }
   ]
 }

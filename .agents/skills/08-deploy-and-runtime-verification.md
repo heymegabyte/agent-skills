@@ -15,7 +15,7 @@ source: "08-deploy-and-runtime-verification/SKILL.md (heymegabyte/agent-skills)"
 
 Enforce `rules/production-delivery-closure.md` after every authorized code-changing prompt: validate → exact tested commit → normal main push → established deploy → exact-commit production E2E. Fail closed rather than bypassing authority or evidence gates.
 
-For package qualification and registry publication, load `08-deploy-and-runtime-verification/changelog-and-releases.md` for archive verification and publication evidence.
+For package qualification, registry publication and offline package recovery, load `08-deploy-and-runtime-verification/changelog-and-releases.md` for archive verification and publication evidence.
 
 For OpenTofu plan review, load `08-deploy-and-runtime-verification/ci-cd-pipeline.md` for private rendering, Conftest validation, and saved-plan identity checks.
 

@@ -133,6 +133,15 @@ store. For npm consumers with a fully integrity-pinned lockfile, test
 `npm ci --offline` from a fresh install directory using platform-matched
 cache blobs and the tracked vendored packages. A cache that depends on
 registry metadata may require the original registry URL as a cache key.
+
+With a qualified testing package that includes it, run
+`theme-prepare-npm-recovery --lockfile <file> --cache <npm-cache> --output <new-directory>`.
+It verifies cached public package bytes against the npm v3 lockfile and
+records absent optional blobs. Use a cache seeded for the receiver's
+platform, keep the tracked vendored packages in the checkout, and
+qualify npm's offline install and the application checks. The export
+receipt identifies the captured bytes. The offline install verifies
+whether that artifact covers the selected platform.
 Run recovery with networking disabled and record the OS, architecture,
 package-manager version, lockfile digest, artifact digest and actual
 consumer checks. Track hosted publication, local restore and off-host
