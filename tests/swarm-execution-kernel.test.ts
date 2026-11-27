@@ -189,6 +189,34 @@ test('scheduler rejects changes to frozen task inputs before adapter calls', asy
   assert.deepEqual(runner.calls, []);
 });
 
+test('verified worker prompt and nested task inputs stay fixed through adapter dispatch', async (t) => {
+  const { checkout, artifacts, assignment, nodes } = fixture();
+  t.after(() => rmSync(checkout, { recursive: true, force: true }));
+  nodes[0].workerPrompt = 'Implement the approved fixture.';
+  const contract = compileAndFreezeContract({
+    checkout, changeId: 'change', assignment, trustedAuthoritySourceDigest: assignment.authoritySourceDigest,
+    evidenceDigest: 'e', fixedPointDigest: 'f', unresolvedMaterialDeltas: [], artifacts, nodes,
+  });
+  const launched: string[] = [];
+  const runner = adapter({
+    async preflight(_provider, node) {
+      if (node.id === 'bounded') {
+        assert.throws(() => { node.workerPrompt = 'Changed during launch preparation'; }, TypeError);
+        assert.throws(() => { node.ownedPaths.push('src/other.ts'); }, TypeError);
+        assert.throws(() => { node.acceptance[0].args.push('--help'); }, TypeError);
+      }
+      return { ok: true };
+    },
+    async launch(_provider, node) {
+      if (node.workerPrompt) launched.push(node.workerPrompt);
+      return processReceipt();
+    },
+  });
+  const receipts = await executeFrozenContract(contract, runner);
+  assert.deepEqual(launched, ['Implement the approved fixture.']);
+  assert.deepEqual(receipts.map(({ status }) => status), ['integrated', 'integrated']);
+});
+
 test('scheduler bounds independent ready work to the configured wave size', async () => {
   const { checkout, artifacts, assignment, nodes } = fixture();
   nodes[1].dependsOn = [];

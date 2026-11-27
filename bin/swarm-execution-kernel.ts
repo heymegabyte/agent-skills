@@ -425,6 +425,12 @@ function pathsAreOwned(changed: string[], owned: string[]): boolean {
   return changed.every((file) => owned.some((scope) => file === scope || file.startsWith(`${scope}/`)));
 }
 
+function freezeTaskInput(value: unknown): void {
+  if (value === null || typeof value !== 'object' || Object.isFrozen(value)) return;
+  Object.freeze(value);
+  for (const child of Object.values(value)) freezeTaskInput(child);
+}
+
 export async function executeFrozenContract(
   contract: FrozenContract,
   adapter: SchedulerAdapter,
@@ -451,6 +457,7 @@ export async function executeFrozenContract(
   const expected = digest({ changeId: contract.changeId, assignmentDigest: contract.assignmentDigest, evidenceDigest: contract.evidenceDigest, fixedPointDigest: contract.fixedPointDigest, artifactDigest: contract.artifactDigest, graphDigest: contract.graphDigest, frozenBaseRevision: contract.frozenBaseRevision });
   if (expected !== contract.contractDigest) throw new Error('Frozen contract digest mismatch');
   validateTaskGraph(nodes);
+  freezeTaskInput(nodes);
   const runId = randomUUID(); const receipts: NodeExecutionReceipt[] = []; const integrated = new Set<string>();
   const controller = new AbortController();
   if (options.signal?.aborted) controller.abort(options.signal.reason);
