@@ -473,91 +473,98 @@ export async function executeFrozenContract(
       else slots.active -= 1;
     }
   };
+  const runNode = async (node: ExecutionNode) => {
+    let provider = node.provider; let terminal: NodeExecutionReceipt | undefined;
+    const providers = [provider, ...(node.fallbackProviders ?? [])];
+    const maxAttempts = Math.max(1, node.maxAttempts ?? 1);
+    for (let attempt = 1; attempt <= maxAttempts && !terminal; attempt += 1) {
+      provider = providers[Math.min(attempt - 1, providers.length - 1)];
+      const receipt: NodeExecutionReceipt = { runId, nodeId: node.id, provider, attempt, status: 'running', worktree: node.worktree, sourceDigestBefore: '', changedFiles: [], acceptance: [] };
+      try {
+        const preflight = await adapter.preflight(provider, node);
+        if (!preflight.ok) {
+          terminal = { ...receipt, status: 'failed', failure: `Preflight rejected: ${preflight.reason ?? 'unknown'}`, recoveryAction: 'Correct approved launcher, budget, or provider policy and resume the node' };
+          break;
+        }
+        if (options.cancelled?.()) controller.abort('Run cancelled');
+        controller.signal.throwIfAborted();
+        const created = await adapter.createWorktree(node, frozenBaseRevision);
+        receipt.sourceDigestBefore = created.sourceDigest;
+        controller.signal.throwIfAborted();
+        receipt.launcher = await withProviderSlot(provider, () =>
+          adapter.launch(provider, node, `${runId}:${node.id}:${attempt}`, controller.signal));
+        if (receipt.launcher.exitCode !== 0) throw new Error(`Launcher exited ${receipt.launcher.exitCode}`);
+        receipt.changedFiles = await adapter.changedFiles(node);
+        if (!pathsAreOwned(receipt.changedFiles, node.ownedPaths)) throw new Error('Worker changed files outside its ownership contract');
+        for (const check of node.acceptance) {
+          const result = await adapter.runAcceptance(node, check, controller.signal); receipt.acceptance.push(result);
+          if (result.exitCode !== 0) throw new Error(`Acceptance failed: ${check.command} ${check.args.join(' ')}`);
+        }
+        receipt.sourceDigestAfter = await adapter.sourceDigest(node);
+        receipt.status = 'accepted';
+        if (options.reviewBeforeIntegration) {
+          if (!receipt.changedFiles.length || !receipt.acceptance.length) {
+            throw new Error('Independent review requires an owned diff and executed acceptance');
+          }
+          controller.signal.throwIfAborted();
+          const review = await options.reviewBeforeIntegration(structuredClone(node), structuredClone(receipt), controller.signal);
+          receipt.review = review;
+          if (!review.approved || !review.reviewer.trim() || review.sourceDigest !== receipt.sourceDigestAfter) {
+            throw new Error('Independent review did not approve the accepted source');
+          }
+        }
+        const integration = await withIntegrationLock(async () => {
+          controller.signal.throwIfAborted();
+          const sourceImmediatelyBeforeMerge = await adapter.sourceDigest(node);
+          if (sourceImmediatelyBeforeMerge !== receipt.sourceDigestAfter) throw new Error('Accepted source changed before integration');
+          return adapter.integrate(node, receipt.sourceDigestAfter!, frozenBaseRevision);
+        });
+        if (integration.sourceDigest !== receipt.sourceDigestAfter) throw new Error('Integrated source differs from accepted source');
+        receipt.status = 'integrated'; integrated.add(node.id); terminal = receipt;
+      } catch (error) {
+        receipt.status = 'failed'; receipt.failure = error instanceof Error ? error.message : String(error);
+        receipt.recoveryAction = `Resume ${node.id} from preserved worktree ${node.worktree}`;
+        try {
+          await adapter.preserveForRecovery(node, receipt.failure);
+        } catch (recoveryError) {
+          receipt.recoveryAction = `Recovery also failed: ${String(recoveryError)}`;
+        }
+        if (controller.signal.aborted) receipt.status = 'cancelled';
+        if (attempt === maxAttempts || controller.signal.aborted) terminal = receipt;
+        else receipts.push(receipt);
+      }
+    }
+    if (terminal) receipts.push(terminal);
+  };
+
   const remaining = new Map(nodes.map((node) => [node.id, node]));
-  while (remaining.size) {
-    if (options.cancelled?.() || controller.signal.aborted) {
+  const active = new Map<string, { provider: ExecutionProvider; finished: Promise<void> }>();
+  while (remaining.size || active.size) {
+    const cancelled = options.cancelled?.() || controller.signal.aborted;
+    if (cancelled) {
       controller.abort('Run cancelled');
       for (const node of remaining.values()) receipts.push({ runId, nodeId: node.id, provider: node.provider, attempt: 0, status: 'cancelled', worktree: node.worktree, sourceDigestBefore: '', changedFiles: [], acceptance: [], failure: 'Run cancelled before launch' });
-      break;
+      remaining.clear();
+    } else {
+      const admitted = new Map<ExecutionProvider, number>();
+      for (const { provider } of active.values()) admitted.set(provider, (admitted.get(provider) ?? 0) + 1);
+      for (const node of remaining.values()) {
+        if (active.size === concurrency) break;
+        if (!node.dependsOn.every((dep) => integrated.has(dep))) continue;
+        const providerCount = admitted.get(node.provider) ?? 0;
+        if (providerCount >= (providerConcurrency[node.provider] ?? concurrency)) continue;
+        admitted.set(node.provider, providerCount + 1);
+        remaining.delete(node.id);
+        const finished = runNode(node).finally(() => { active.delete(node.id); });
+        active.set(node.id, { provider: node.provider, finished });
+      }
     }
-    const admitted = new Map<ExecutionProvider, number>();
-    const ready: ExecutionNode[] = [];
-    for (const node of remaining.values()) {
-      if (!node.dependsOn.every((dep) => integrated.has(dep))) continue;
-      const active = admitted.get(node.provider) ?? 0;
-      if (active >= (providerConcurrency[node.provider] ?? concurrency)) continue;
-      admitted.set(node.provider, active + 1);
-      ready.push(node);
-      if (ready.length === concurrency) break;
-    }
-    if (!ready.length) {
+    if (active.size) {
+      await Promise.race([...active.values()].map(({ finished }) => finished));
+    } else if (remaining.size) {
       for (const node of remaining.values()) receipts.push({ runId, nodeId: node.id, provider: node.provider, attempt: 0, status: 'blocked', worktree: node.worktree, sourceDigestBefore: '', changedFiles: [], acceptance: [], failure: 'Dependency did not integrate' });
       break;
     }
-    await Promise.all(ready.map(async (node) => {
-      let provider = node.provider; let terminal: NodeExecutionReceipt | undefined;
-      const providers = [provider, ...(node.fallbackProviders ?? [])];
-      const maxAttempts = Math.max(1, node.maxAttempts ?? 1);
-      for (let attempt = 1; attempt <= maxAttempts && !terminal; attempt += 1) {
-        provider = providers[Math.min(attempt - 1, providers.length - 1)];
-        const receipt: NodeExecutionReceipt = { runId, nodeId: node.id, provider, attempt, status: 'running', worktree: node.worktree, sourceDigestBefore: '', changedFiles: [], acceptance: [] };
-        try {
-          const preflight = await adapter.preflight(provider, node);
-          if (!preflight.ok) {
-            terminal = { ...receipt, status: 'failed', failure: `Preflight rejected: ${preflight.reason ?? 'unknown'}`, recoveryAction: 'Correct approved launcher, budget, or provider policy and resume the node' };
-            break;
-          }
-          if (options.cancelled?.()) controller.abort('Run cancelled');
-          controller.signal.throwIfAborted();
-          const created = await adapter.createWorktree(node, frozenBaseRevision);
-          receipt.sourceDigestBefore = created.sourceDigest;
-          controller.signal.throwIfAborted();
-          receipt.launcher = await withProviderSlot(provider, () =>
-            adapter.launch(provider, node, `${runId}:${node.id}:${attempt}`, controller.signal));
-          if (receipt.launcher.exitCode !== 0) throw new Error(`Launcher exited ${receipt.launcher.exitCode}`);
-          receipt.changedFiles = await adapter.changedFiles(node);
-          if (!pathsAreOwned(receipt.changedFiles, node.ownedPaths)) throw new Error('Worker changed files outside its ownership contract');
-          for (const check of node.acceptance) {
-            const result = await adapter.runAcceptance(node, check, controller.signal); receipt.acceptance.push(result);
-            if (result.exitCode !== 0) throw new Error(`Acceptance failed: ${check.command} ${check.args.join(' ')}`);
-          }
-          receipt.sourceDigestAfter = await adapter.sourceDigest(node);
-          receipt.status = 'accepted';
-          if (options.reviewBeforeIntegration) {
-            if (!receipt.changedFiles.length || !receipt.acceptance.length) {
-              throw new Error('Independent review requires an owned diff and executed acceptance');
-            }
-            controller.signal.throwIfAborted();
-            const review = await options.reviewBeforeIntegration(structuredClone(node), structuredClone(receipt), controller.signal);
-            receipt.review = review;
-            if (!review.approved || !review.reviewer.trim() || review.sourceDigest !== receipt.sourceDigestAfter) {
-              throw new Error('Independent review did not approve the accepted source');
-            }
-          }
-          const integration = await withIntegrationLock(async () => {
-            controller.signal.throwIfAborted();
-            const sourceImmediatelyBeforeMerge = await adapter.sourceDigest(node);
-            if (sourceImmediatelyBeforeMerge !== receipt.sourceDigestAfter) throw new Error('Accepted source changed before integration');
-            return adapter.integrate(node, receipt.sourceDigestAfter!, frozenBaseRevision);
-          });
-          if (integration.sourceDigest !== receipt.sourceDigestAfter) throw new Error('Integrated source differs from accepted source');
-          receipt.status = 'integrated'; integrated.add(node.id); terminal = receipt;
-        } catch (error) {
-          receipt.status = 'failed'; receipt.failure = error instanceof Error ? error.message : String(error);
-          receipt.recoveryAction = `Resume ${node.id} from preserved worktree ${node.worktree}`;
-          try {
-            await adapter.preserveForRecovery(node, receipt.failure);
-          } catch (recoveryError) {
-            receipt.recoveryAction = `Recovery also failed: ${String(recoveryError)}`;
-          }
-          if (controller.signal.aborted) receipt.status = 'cancelled';
-          if (attempt === maxAttempts || controller.signal.aborted) terminal = receipt;
-          else receipts.push(receipt);
-        }
-      }
-      if (terminal) receipts.push(terminal);
-      remaining.delete(node.id);
-    }));
   }
   return receipts;
 }

@@ -195,6 +195,49 @@ test('scheduler bounds independent ready work to the configured wave size', asyn
   assert(runner.calls.indexOf('integrate:bounded') < runner.calls.indexOf('preflight:codex:integrate'));
 });
 
+test('scheduler fills freed capacity after a dependency integrates while unrelated work continues', async (t) => {
+  const { checkout, artifacts, assignment, nodes } = fixture();
+  t.after(() => rmSync(checkout, { recursive: true, force: true }));
+  const slowNode: ExecutionNode = {
+    ...nodes[0], id: 'slow', worktree: 'w3', branch: 'swarm/slow', port: 4120, ownedPaths: ['src/slow.ts'],
+  };
+  nodes.splice(1, 0, slowNode);
+  const tasks = artifacts.find(({ kind }) => kind === 'tasks')!;
+  tasks.content += '- [ ] [slow] Run the independent fixture task. (requirements: R1; scenarios: S1)\n';
+  writeFileSync(join(checkout, tasks.path), tasks.content);
+  const contract = compileAndFreezeContract({
+    checkout, changeId: 'change', assignment, trustedAuthoritySourceDigest: assignment.authoritySourceDigest,
+    evidenceDigest: 'e', fixedPointDigest: 'f', unresolvedMaterialDeltas: [], artifacts, nodes,
+  });
+  const events: string[] = [];
+  let releaseSlow!: () => void;
+  let markFirstIntegration!: () => void;
+  const slow = new Promise<void>((resolve) => { releaseSlow = resolve; });
+  const firstIntegration = new Promise<void>((resolve) => { markFirstIntegration = resolve; });
+  const runner = adapter({
+    async launch(_provider, node) {
+      events.push('launch:' + node.id);
+      if (node.id === 'slow') await slow;
+      return processReceipt();
+    },
+    async changedFiles(node) { return [...node.ownedPaths]; },
+    async integrate(node, sourceDigest) {
+      events.push('integrate:' + node.id);
+      if (node.id === 'bounded') markFirstIntegration();
+      return { sourceDigest };
+    },
+  });
+  const execution = executeFrozenContract(contract, runner, { concurrency: 2 });
+  await firstIntegration;
+  await new Promise<void>((resolve) => setImmediate(resolve));
+  const dependentStartedEarly = events.includes('launch:integrate');
+  releaseSlow();
+  const receipts = await execution;
+  assert.equal(dependentStartedEarly, true);
+  assert(events.indexOf('integrate:bounded') < events.indexOf('launch:integrate'));
+  assert.equal(receipts.filter(({ status }) => status === 'integrated').length, 3);
+});
+
 test('configured 8, 24 and 76 worker caps are enforced across a ready backlog', async () => {
   const { checkout, artifacts, assignment } = fixture();
   const nodes: ExecutionNode[] = Array.from({ length: 77 }, (_, index) => ({
