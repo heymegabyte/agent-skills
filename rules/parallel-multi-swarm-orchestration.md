@@ -69,7 +69,7 @@ Every material prompt entered into a supported harness triggers a deterministic 
 
 ### Stage 6 — Massive Multi-Swarm Parallel Implementation (`Claude` + `Codex` + `Gemini` + `OpenCode` DeepSeek Offload)
 
-1. `bin/multi-swarm-orchestrator.ts` executes the OpenSpec DAG in parallel waves across isolated Git worktrees (`worktree-pool.sh`).
+1. The host-configured `bin/evidence-gated-orchestrator.ts` executes the verified OpenSpec DAG through approved scheduler adapters across isolated Git worktrees. The legacy `bin/multi-swarm-orchestrator.ts` compiles planning examples only.
 2. **80%+ OpenCode (DeepSeek) Offload Mandate**: Every `throughput-safe` DAG task (feature shards with locked contracts, full plugin catalogs, UI components across all 16 states, 100% unit tests, Playwright E2E specs, Drizzle migrations, docs) is offloaded to parallel **`opencode` swarms powered by DeepSeek** (`litellm/deepseek-v4-pro` and `litellm/deepseek-flash` via `https://llm.megabyte.space/v1` and `bin/opencode-deepseek.sh`), preserving premium `claude`, `codex`, and `gemini` subscription quota.
 3. **Parallel Frontier Triad Swarms (`Claude` + `Codex` + `Gemini`)**: When frontier cognition is required, `claude`, `codex`, and `gemini` run in parallel on distinct architectural shards, speculative critical-path races, or cross-model adversarial reviews.
 
@@ -88,7 +88,7 @@ Every material prompt entered into a supported harness triggers a deterministic 
 
 ## 2. Top 15 Frontier Ideas for Leveraging Parallel Swarms of Claude, Codex, Gemini & OpenCode (DeepSeek)
 
-All 15 ideas below are active doctrine and implemented in `bin/prompt-hydrator.ts`, `bin/scrum-deliberation-quorum.ts`, and `bin/multi-swarm-orchestrator.ts`:
+The strategies below inform planning in `bin/prompt-hydrator.ts` and `bin/scrum-deliberation-quorum.ts`. Execution requires approved host adapters for `bin/evidence-gated-orchestrator.ts`:
 
 1. **Zero-Latency `UserPromptSubmit` Hyper-Saturation & Codebase Gap Audit (`prompt-hydrator.ts`)**:
    Intercept every prompt at submission time to combine skill routing, active OpenSpec reconciliation, and an automatic repository gap scan that detects unfinished surfaces (such as `"Settings"`, `"Billing"`, or missing `@theme.tools/*` adapters) and adds them to the execution contract automatically.

@@ -5,9 +5,8 @@
 # Per rules/agent-provider-policy.md (ADR-0057): routine/high-volume internal
 # implementation runs on OpenCode + DeepSeek / Ollama (hybrid-coder, ollama-coder,
 # deepseek-v4-pro, deepseek-flash, deepseek-chat, deepseek-reasoner).
-# Keys are resolved at runtime via `get-secret DEEPSEEK_API_KEY` and
-# `get-secret LITELLM_API_KEY` and injected into the opencode CHILD process env
-# ONLY — never touching parent shell or disk.
+# Resolve the selected provider's credential from the environment or secret
+# broker. Keep direct DeepSeek and LiteLLM credentials separate.
 #
 # Usage:
 #   opencode-deepseek.sh run -m litellm/deepseek-v4-pro "reply OK"
@@ -25,21 +24,42 @@ if ! OPENCODE_BIN="$(command -v opencode 2>/dev/null)"; then
   exit 127
 fi
 
-# Use the existing child environment directly; consult the broker only if absent.
-if [ -z "${DEEPSEEK_API_KEY:-}" ] && [ -z "${LITELLM_API_KEY:-}" ] && ! command -v get-secret >/dev/null 2>&1; then
-  printf 'opencode-deepseek.sh: error: get-secret not found on PATH\n' >&2
-  exit 3
+model=""
+args=("$@")
+for ((index = 0; index < $#; index++)); do
+  arg="${args[index]}"
+  case "${arg}" in
+    --) break ;;
+    -h | --help | -v | --version) exec "${OPENCODE_BIN}" "$@" ;;
+    -m | --model)
+      index=$((index + 1))
+      model="${args[index]:-}"
+      ;;
+    --model=*) model="${arg#--model=}" ;;
+  esac
+done
+
+case "${model}" in
+  "" | litellm/*) credential_name=LITELLM_API_KEY ;;
+  deepseek/*) credential_name=DEEPSEEK_API_KEY ;;
+  *)
+    printf 'opencode-deepseek.sh: error: model must use the LiteLLM or direct DeepSeek route\n' >&2
+    exit 2
+    ;;
+esac
+
+credential="${!credential_name:-}"
+if [ -z "${credential}" ]; then
+  if ! command -v get-secret >/dev/null 2>&1; then
+    printf 'opencode-deepseek.sh: error: get-secret unavailable for %s\n' "${credential_name}" >&2
+    exit 3
+  fi
+  credential="$(get-secret "${credential_name}" 2>/dev/null || true)"
 fi
-
-DEEPSEEK_API_KEY="${DEEPSEEK_API_KEY:-$(get-secret DEEPSEEK_API_KEY 2>/dev/null || true)}"
-LITELLM_API_KEY="${LITELLM_API_KEY:-$(get-secret LITELLM_API_KEY 2>/dev/null || true)}"
-
-if [ -z "${DEEPSEEK_API_KEY}" ] && [ -z "${LITELLM_API_KEY}" ]; then
-  printf 'opencode-deepseek.sh: error: neither DEEPSEEK_API_KEY nor LITELLM_API_KEY available from get-secret\n' >&2
+if [ -z "${credential}" ]; then
+  printf 'opencode-deepseek.sh: error: %s unavailable from get-secret\n' "${credential_name}" >&2
   exit 4
 fi
 
-exec env \
-  DEEPSEEK_API_KEY="${DEEPSEEK_API_KEY:-${LITELLM_API_KEY}}" \
-  LITELLM_API_KEY="${LITELLM_API_KEY:-${DEEPSEEK_API_KEY}}" \
-  "${OPENCODE_BIN}" "$@"
+export "${credential_name}=${credential}"
+exec "${OPENCODE_BIN}" "$@"
