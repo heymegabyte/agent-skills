@@ -6,6 +6,7 @@ import importlib.util
 import json
 import os
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -24,20 +25,26 @@ def load_router():
 def main() -> int:
     os.environ["AGENT_SKILLS_DISABLE_EMBEDDINGS"] = "1"
     router = load_router()
-    router.cmd_sync_metadata(quiet=True)
     fixture = json.loads(CASES_PATH.read_text())
     failures, results = [], []
-    for case in fixture["cases"]:
-        first = router.cmd_route(case["prompt"], cwd=str(ROOT))
-        second = router.cmd_route(case["prompt"], cwd=str(ROOT))
-        selected = {row["id"]: row["reason"] for row in first["selected"]}
-        missing = [item for item in case.get("required", []) if item not in selected]
-        forbidden = [item for item in case.get("forbidden_trigger_matches", []) if selected.get(item) == "trigger-match"]
-        deterministic = first["selected"] == second["selected"]
-        row = {"id": case["id"], "missing": missing, "forbidden": forbidden, "deterministic": deterministic}
-        results.append(row)
-        if missing or forbidden or not deterministic:
-            failures.append(row)
+    with tempfile.TemporaryDirectory(prefix="agent-skills-router-eval-") as directory:
+        router.DATA_DIR = Path(directory)
+        router.DB_PATH = router.DATA_DIR / "skills.db"
+        for case in fixture["cases"]:
+            first = router.cmd_route(case["prompt"], cwd=str(ROOT))
+            second = router.cmd_route(case["prompt"], cwd=str(ROOT))
+            selected = {row["id"]: row["reason"] for row in first["selected"]}
+            missing = [item for item in case.get("required", []) if item not in selected]
+            missing_triggers = [
+                item for item in case.get("required_trigger_matches", [])
+                if selected.get(item) != "trigger-match"
+            ]
+            forbidden = [item for item in case.get("forbidden_trigger_matches", []) if selected.get(item) == "trigger-match"]
+            deterministic = first["selected"] == second["selected"]
+            row = {"id": case["id"], "missing": missing, "missing_trigger_matches": missing_triggers, "forbidden": forbidden, "deterministic": deterministic}
+            results.append(row)
+            if missing or missing_triggers or forbidden or not deterministic:
+                failures.append(row)
     print(json.dumps({"status": "fail" if failures else "pass", "cases": results}, indent=2))
     return 1 if failures else 0
 

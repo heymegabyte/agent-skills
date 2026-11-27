@@ -19,6 +19,9 @@ jobs:
       - name: Validate skills
         run: bash scripts/validate-skills.sh
 
+      - name: Evaluate deterministic skill routing
+        run: python3 bin/eval-skill-router.py
+
       - name: Verify npm package closure
         run: node bin/check-package-closure.mjs
 

@@ -47,6 +47,12 @@ triggers:
   - "verify"
   - "qa"
   - "lighthouse"
+  - "typescript contract"
+  - "semantic rename"
+  - "typed lint"
+  - "typed eslint rule"
+  - "typescript declaration tarball"
+  - "negative type assertion"
 paths:
   - "*"
 ---

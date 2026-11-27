@@ -34,6 +34,41 @@
       "prompt": "fix the mega menu title changing on hover",
       "required": ["01-operating-system"],
       "forbidden_trigger_matches": ["rules/greenfield-saas-prompt-hydration"]
+    },
+    {
+      "id": "typed-contract",
+      "prompt": "Change the TypeScript contract for the parsed queue event",
+      "required_trigger_matches": ["07-quality-and-verification"]
+    },
+    {
+      "id": "semantic-rename",
+      "prompt": "Perform a semantic rename of the exported command",
+      "required_trigger_matches": ["07-quality-and-verification"]
+    },
+    {
+      "id": "typed-lint-config",
+      "prompt": "Wire typed lint into the migration script",
+      "required_trigger_matches": ["07-quality-and-verification"]
+    },
+    {
+      "id": "typed-custom-rule",
+      "prompt": "Write a typed ESLint rule for an unsafe contract",
+      "required_trigger_matches": ["07-quality-and-verification"]
+    },
+    {
+      "id": "typed-release",
+      "prompt": "Inspect the TypeScript declaration tarball before publishing",
+      "required_trigger_matches": ["07-quality-and-verification"]
+    },
+    {
+      "id": "typed-runtime-verification",
+      "prompt": "Add a negative type assertion for this event",
+      "required_trigger_matches": ["07-quality-and-verification"]
+    },
+    {
+      "id": "generic-language-mention",
+      "prompt": "Summarize a history of TypeScript syntax",
+      "forbidden_trigger_matches": ["07-quality-and-verification"]
     }
   ]
 }
