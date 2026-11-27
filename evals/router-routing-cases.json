@@ -66,6 +66,16 @@
       "required_trigger_matches": ["07-quality-and-verification"]
     },
     {
+      "id": "installed-typescript-references-command",
+      "prompt": "Run theme-ts-references on the selected symbol",
+      "required_trigger_matches": ["07-quality-and-verification"]
+    },
+    {
+      "id": "typescript-references-command-near-match",
+      "prompt": "List the arguments of theme-ts-referencesx",
+      "forbidden_trigger_matches": ["07-quality-and-verification"]
+    },
+    {
       "id": "generic-language-mention",
       "prompt": "Summarize a history of TypeScript syntax",
       "forbidden_trigger_matches": ["07-quality-and-verification"]
