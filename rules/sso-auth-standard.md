@@ -30,14 +30,13 @@ offer Google + GitHub + email magic-link; non-public/internal services sign in t
 WHICH sign-in methods a human gets; `[[oauth2-provider-discipline]]` governs how you BUILD OAuth,
 `[[login-screen-webgl]]` how the screen LOOKS, `[[public-front-door]]` where `/login` sits.
 
-## Public apps (customer-facing) — three methods, always
+## Public apps (customer-facing) — `/login` canonical route & `@theme-tools/ui` `<CanonicalLogin />` template
 
-- [MUST] Every public app offers exactly these human sign-in methods: **Google**, **GitHub**, and
-  **email magic-link** (passwordless). No bare username/password-only login ships.
-- [SHOULD] Magic-link is the no-OAuth fallback for users without a Google/GitHub account — never the
-  only method. Implement via the app's auth layer (Better Auth / the estate auth rail), not hand-rolled.
-- [MUST] The three buttons live on the `/login` screen (`[[public-front-door]]` keeps the apex public,
-  the app behind `/login`); style per `[[login-screen-webgl]]`.
+- [MUST] The canonical login route across all projects is **`/login`** by default (never `/sign-in` or `/sign-up` as the primary route; legacy `/sign-in` and `/sign-up` paths must redirect to `/login` preserving query parameters such as `?next=` and `?error=`).
+- [MUST] Every public app offers these three human sign-in methods in the `/login` UI: **Google OAuth**, **GitHub OAuth**, and **email magic-link** (passwordless), plus a **username/password endpoint (`POST /api/auth/password` / `POST /api/auth/test-login`) strictly for automated testing (never rendered in the visible UI)**.
+- [MUST] Source the `/login` UI from `@theme-tools/ui/primitives` (`<CanonicalLogin />` / `<AuthLoginTemplate />`) rather than hand-rolling per-project login cards.
+- [SHOULD] Magic-link is the no-OAuth fallback for users without a Google/GitHub account — never the only method. Implement via the app's auth layer (Better Auth / the estate auth rail), not hand-rolled.
+- [MUST] The three buttons live on the `/login` screen (`[[public-front-door]]` keeps the apex public, the app behind `/login`); style per `[[login-screen-webgl]]`.
 
 ## Non-public / internal services (Coolify, Proxmox, Grafana, admin tools) — Authentik → Google
 
