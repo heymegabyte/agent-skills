@@ -1,0 +1,16 @@
+{
+  "changeId": "change-ownership-verification-suite",
+  "owner": "claude-session-fire4",
+  "state": "active",
+  "dependencies": [
+    "agent-change-ownership-policy",
+    "change-ownership-atomic-dispatcher",
+    "agent-ownership-checkpoint-hooks"
+  ],
+  "allowedWriteAreas": [
+    "bin/verify-change-ownership.sh"
+  ],
+  "claimedAt": "2026-11-27T04:34:58.625Z",
+  "updatedAt": "2026-11-27T04:34:58.625Z",
+  "handoff": []
+}
