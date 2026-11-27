@@ -5,8 +5,8 @@
 # agent/host, reported honestly — never faked). Exit 0 only when all STATIC + RUNTIME checks pass.
 # Read-only + idempotent (the idempotency probe uses a disposable tmp dir). Canonical: rules/openspec-change-ownership.md
 set -uo pipefail
-REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-cd "$REPO"
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)" || exit 1
+cd "$REPO" || exit 1
 if [ -f "$HOME/.claude/hooks/style.sh" ]; then . "$HOME/.claude/hooks/style.sh" || true; fi
 if ! command -v emdash_log >/dev/null 2>&1; then
   emdash_log() { printf '%s\n' "$*"; }
@@ -15,10 +15,21 @@ if ! command -v emdash_log >/dev/null 2>&1; then
   emdash_error() { printf '✗ %s\n' "$*" >&2; }
   emdash_header() { printf '\n=== %s ===\n' "$*"; }
 fi
-PASS=0; FAIL=0; LIMITED=0
-ok()  { PASS=$((PASS + 1)); emdash_success "$1"; }
-no()  { FAIL=$((FAIL + 1)); emdash_error "$1"; }
-lim() { LIMITED=$((LIMITED + 1)); emdash_warn "LIMITED — $1"; }
+PASS=0
+FAIL=0
+LIMITED=0
+ok() {
+  PASS=$((PASS + 1))
+  emdash_success "$1"
+}
+no() {
+  FAIL=$((FAIL + 1))
+  emdash_error "$1"
+}
+lim() {
+  LIMITED=$((LIMITED + 1))
+  emdash_warn "LIMITED — $1"
+}
 
 MARK="Change Ownership — Plan & Decompose Early"
 CHANGES="agent-change-ownership-policy change-ownership-atomic-dispatcher agent-ownership-checkpoint-hooks change-ownership-verification-suite openspec-four-agent-global-integration"
@@ -29,7 +40,8 @@ emdash_header "change-ownership workflow verification (§7)"
 # 1 STATIC — invariant reaches each installed agent file EXACTLY ONCE (no dup from re-sync).
 emdash_log "[STATIC] invariant present exactly once per agent"
 for f in "$HOME/.claude/CLAUDE.md" "$HOME/.codex/AGENTS.md" "$HOME/.config/opencode/AGENTS.md" "$HOME/.gemini/GEMINI.md"; do
-  c=$(grep -cF "$MARK" "$f" 2>/dev/null || true); c=${c:-0}
+  c=$(grep -cF "$MARK" "$f" 2>/dev/null || true)
+  c=${c:-0}
   [ "$c" = "1" ] && ok "  ${f/#$HOME/~} (1)" || no "  ${f/#$HOME/~} (count=$c, expected 1)"
 done
 
@@ -53,22 +65,26 @@ for ch in $CHANGES; do
 done
 
 # 5 RUNTIME — plugin hook manifest: one handler per event (no duplicate handlers).
-if python3 - <<'PY' 2>/dev/null
+if python3 - <<'PY' 2>/dev/null; then ok "[RUNTIME] hooks.json — one handler per event (no duplicates)"; else no "[RUNTIME] hooks.json duplicate/missing handler"; fi
 import json, sys
 h = json.load(open("hooks/hooks.json"))["hooks"]
 bad = [e for e in ("UserPromptSubmit", "SessionStart", "PreCompact") if len(h.get(e, [])) != 1]
 sys.exit(1 if bad else 0)
 PY
-then ok "[RUNTIME] hooks.json — one handler per event (no duplicates)"; else no "[RUNTIME] hooks.json duplicate/missing handler"; fi
-
 # 6 RUNTIME — distribution is idempotent: re-copy canonical == source; installed == canonical (no drift).
 emdash_log "[RUNTIME] idempotent sync (overwrite-copy, no drift)"
-tmp=$(mktemp -d); drift=0
+tmp=$(mktemp -d)
+drift=0
 for pair in "CLAUDE.md|$HOME/.claude/CLAUDE.md" "AGENTS.md|$HOME/.codex/AGENTS.md" "AGENTS.md|$HOME/.config/opencode/AGENTS.md" "GEMINI.md|$HOME/.gemini/GEMINI.md"; do
-  src="${pair%%|*}"; inst="${pair##*|}"
-  cp "$REPO/$src" "$tmp/x"; cp "$REPO/$src" "$tmp/x"   # copy twice → still identical
+  src="${pair%%|*}"
+  inst="${pair##*|}"
+  cp "$REPO/$src" "$tmp/x"
+  cp "$REPO/$src" "$tmp/x" # copy twice → still identical
   cmp -s "$REPO/$src" "$tmp/x" || drift=1
-  cmp -s "$REPO/$src" "$inst" || { drift=1; emdash_warn "  installed drift: ${inst/#$HOME/~}"; }
+  cmp -s "$REPO/$src" "$inst" || {
+    drift=1
+    emdash_warn "  installed drift: ${inst/#$HOME/~}"
+  }
 done
 rm -rf "$tmp"
 [ "$drift" = 0 ] && ok "[RUNTIME] re-copy idempotent + installed==canonical" || no "[RUNTIME] distribution drift detected"
@@ -76,7 +92,8 @@ rm -rf "$tmp"
 # 7 STATIC — every workflow proposal carries real content (not a bare dir/metadata file).
 emdash_log "[STATIC] proposals carry real content"
 for ch in $CHANGES; do
-  f="openspec/changes/$ch/proposal.md"; b=$(wc -c <"$f" 2>/dev/null || echo 0)
+  f="openspec/changes/$ch/proposal.md"
+  b=$(wc -c <"$f" 2>/dev/null || echo 0)
   [ "$b" -gt 400 ] && ok "  $ch ($b bytes)" || no "  $ch proposal too thin ($b bytes)"
 done
 
@@ -92,4 +109,10 @@ lim "cross-host/remote distribution beyond 'git push origin main' (each host act
 
 emdash_header "summary"
 emdash_log "PASS=$PASS  FAIL=$FAIL  LIMITED=$LIMITED (reported)"
-if [ "$FAIL" = 0 ]; then emdash_success "all STATIC + RUNTIME checks passed"; exit 0; else emdash_error "$FAIL check(s) failed"; exit 1; fi
+if [ "$FAIL" = 0 ]; then
+  emdash_success "all STATIC + RUNTIME checks passed"
+  exit 0
+else
+  emdash_error "$FAIL check(s) failed"
+  exit 1
+fi
