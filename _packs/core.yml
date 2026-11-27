@@ -17,6 +17,7 @@ members:
   - rules/split-work-into-ledger
   - rules/prompt-as-training-signal
   - rules/openspec-operating-contract
+  - rules/openspec-change-ownership
   - rules/total-convergence-and-openspec-handoff
   - rules/production-delivery-closure
   - rules/universal-competitor-api-backwards-compatibility
