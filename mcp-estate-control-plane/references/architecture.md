@@ -10,6 +10,8 @@
 
 Profiles are deny-by-default. A server/tool allowlist controls discovery but is not a substitute for upstream authorization.
 
+Canonical install assignments are generated from `registry/client-profiles.json` into `generated/profiles/` in `heymegabyte/mcp.megabyte.space`. A client reconciler owns only remote entries whose names begin with `megabyte-`; it preserves unrelated registrations and the profile's `preserveLocalServers` entries. Never use the human primary endpoint as an automation fallback or reuse one host's service-token references on another host.
+
 ## Cloudflare-native availability baseline
 
 Baseline portal operation may depend only on Cloudflare Portal, Access, DNS, Gateway, Workers, and independently hosted remote SaaS MCPs with recorded failure-domain evidence. It must not depend on home Internet, Coolify, Proxmox, private LAN routes, tunnels to those origins, local stdio, CUA Driver, BrowserMCP, filesystem, shell, Docker, or an interactive workstation session. Those tools remain local or in explicitly labeled extended profiles. An outage of an extended origin must not prevent baseline authentication, initialize, `tools/list`, an allowed baseline call, or an unauthorized-call denial.

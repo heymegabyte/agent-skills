@@ -1,6 +1,6 @@
 # Emdash Skills — Agent Instructions
 
-This repository contains 23 skill categories, 52 agents, and 149 reference docs for autonomous product building.
+This repository contains 23 skill categories, 55 agents, and 149 reference docs for autonomous product building.
 
 ## Stack
 

@@ -16,11 +16,13 @@ Use `heymegabyte/mcp.megabyte.space` as the secret-free source of truth for serv
 4. Keep CUA, local BrowserMCP, filesystem, shell, and other host-control servers local and lazy.
 5. Keep Cloudflare's own Code Mode MCP direct; nested Code Mode is unsupported. Start portal Code Mode opt-in.
 6. The Cloudflare-native baseline must initialize, discover tools, execute an allowed read-only call, and deny an unauthorized call when home Internet, Coolify, Proxmox, LAN origins, tunnels to those origins, and workstation sessions are unavailable. Keep those dependencies in explicitly extended/local profiles, never the baseline.
+7. Select an install manifest from `heymegabyte/mcp.megabyte.space/generated/profiles/index.json`; do not invent a universal profile. `macos-human` and `ubuntu-human` are interactive OAuth profiles. `macos-automation` and `ubuntu-automation` use different Infisical projects and different Access service tokens. `canary-human`, `sandbox-human`, and `ops-human` are explicit-only.
 
 ## Identity contract
 
 - WARP is a device-posture/private-routing signal, not an MCP credential. Humans complete Cloudflare Access browser OAuth.
 - Use one Access service token per machine workload. Require Service Auth at the portal and every linked upstream; set `on_behalf=false` only for explicitly approved admin-credential execution.
+- Service-token headers must be resolved at process launch from the exact runtime references in the selected generated profile. Missing, empty, expired, cross-host, or shared-fleet references fail closed.
 - Protect upstream endpoints independently. Portal policy alone does not prevent direct URL bypass.
 - Keep credentials out of generated files and Git; inject machine headers through the approved secret broker.
 
