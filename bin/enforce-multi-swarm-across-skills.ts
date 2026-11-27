@@ -19,6 +19,9 @@ const TRIAD_BULLET_MARKER = '**End-of-Round Parallel Meaning & Preference Triad 
 const DELIVERY_CLOSURE_MARKER = '**Concurrent End-of-Prompt Delivery Closure**';
 const AGENT_SECTION_HEADING = '## 8. End-of-Round Parallel Meaning & Preference Triad Extraction & Multi-Swarm Mandate';
 
+const DISPATCH_MARKER = '**DeepSeek-first parallel dispatch**';
+const DISPATCH_DIRECTIVE = `- ${DISPATCH_MARKER} At intake and after each dependency clears, dispatch independent work concurrently whenever doing so reduces time to verified delivery. Delegate every suitable task to OpenCode with DeepSeek through LiteLLM when it meets the acceptance bar and improves throughput. Use Codex, Gemini, or Claude for work that benefits materially from premium capability or independent review, and record concrete reasons for premium routing or limited dispatch. Scale worker count to ready work, isolation, and approved capacity.`;
+
 const DOMAIN_GUIDANCE: Record<string, string> = {
   '01-operating-system':
     'Intercept every prompt via `bin/prompt-hydrator.ts`, audit missing product surfaces (e.g., `Settings`, `Plugin Catalogs`, `@theme.tools/*`), convene a right-sized SCRUM deliberation quorum (`bin/scrum-deliberation-quorum.ts`) across `claude`, `codex`, and `gemini`, lock OpenSpec DAG contracts, and offload 80%+ of throughput-safe volume to parallel `opencode` (DeepSeek) worktree swarms.',
@@ -86,6 +89,9 @@ function findSkillFiles(rootDir: string): string[] {
     if (existsSync(directSkill) && statSync(directSkill).isFile()) {
       results.push(directSkill);
     }
+    if (entry.name === '.agents') {
+      results.push(...findSkillFiles(join(rootDir, entry.name)));
+    }
     if (entry.name === 'skills') {
       const skillsDir = join(rootDir, 'skills');
       for (const sub of readdirSync(skillsDir, { withFileTypes: true })) {
@@ -122,6 +128,7 @@ function buildSkillSection(skillDirName: string): string {
     '- **Massive OpenCode (DeepSeek) Offload**: Whenever a task slice is throughput-safe (bounded implementation, plugin catalog shards, 100% unit test generation, Playwright E2E specs, migrations, or documentation), offload it to parallel **`opencode` swarms powered by DeepSeek** (`~/.agentskills/bin/opencode-deepseek.sh` via the LiteLLM 4-key pool `https://llm.megabyte.space/v1`) rather than consuming premium `claude`, `codex`, or `gemini` client quota.',
     '- **Tri-Frontier Parallel Swarms & Right-Sized SCRUM Quorum**: When complex architectural synthesis, speculative critical-path racing, or adversarial verification is needed, run `claude`, `codex`, and `gemini` in parallel across isolated Git worktrees using approved host adapters (`bin/evidence-gated-orchestrator.ts`) guided by a right-sized collaborative SCRUM meeting (`bin/scrum-deliberation-quorum.ts`) of only the required specialist agents. See `rules/parallel-multi-swarm-orchestration.md`.',
     TRIAD_BULLET,
+    DISPATCH_DIRECTIVE,
     DELIVERY_CLOSURE_BULLET,
     '',
   ].join('\n');
@@ -140,6 +147,7 @@ function buildAgentSection(agentFileName: string): string {
     '  1. **`heymegabyte/agent-skills` (AI Skills, Rules & Agent Master Prompts)** — updated under the **Minimum-Prompt Ecosystem Completeness Assumption**: always author and refine skills assuming they *should have already been written* so that the operator writes **as few prompts as possible (ideally one)** to finish **as complete a product (or entire multi-repo ecosystem) as possible** by automatically expanding scope and executing via massive parallel agent swarms (`Claude` + `Codex` + `Gemini` + 80%+ `OpenCode` DeepSeek offload).',
     '  2. **`heymegabyte/theme.tools` (Site & Application Code)** — extracting reusable UI components (16 visual states, `0.333s` OKLCH transitions), themes, calculators, workflows, validators, hooks, and plugin adapters into the 28 canonical `@theme.tools/*` libraries so consumer repositories remain thin shells.',
     '  3. **`heymegabyte/install.doctor` (System & Host Code)** — extracting reusable dotfiles, shell environment defaults, lazy CLI shims (`cnf-build-shims`), daemon units, and workstation/server provisioning logic.',
+    DISPATCH_DIRECTIVE,
     DELIVERY_CLOSURE_BULLET,
     '',
   ].join('\n');
@@ -161,6 +169,7 @@ export function enforceAcrossRoot(rootDir: string): {
       skillsUpdated += 1;
     } else {
       const missingDirectives = [
+        !content.includes(DISPATCH_MARKER) ? DISPATCH_DIRECTIVE : '',
         !content.includes(TRIAD_BULLET_MARKER) ? TRIAD_BULLET : '',
         !content.includes(DELIVERY_CLOSURE_MARKER) ? DELIVERY_CLOSURE_BULLET : '',
       ].filter(Boolean);
@@ -178,10 +187,16 @@ export function enforceAcrossRoot(rootDir: string): {
       const nextContent = `${content.replace(/\s+$/, '')}\n${buildAgentSection(basename(agentPath))}`;
       writeFileSync(agentPath, nextContent, 'utf8');
       agentsUpdated += 1;
-    } else if (!content.includes(DELIVERY_CLOSURE_MARKER)) {
-      const nextContent = `${content.replace(/\s+$/, '')}\n${DELIVERY_CLOSURE_BULLET}\n`;
-      writeFileSync(agentPath, nextContent, 'utf8');
-      agentsUpdated += 1;
+    } else {
+      const missingDirectives = [
+        !content.includes(DISPATCH_MARKER) ? DISPATCH_DIRECTIVE : '',
+        !content.includes(DELIVERY_CLOSURE_MARKER) ? DELIVERY_CLOSURE_BULLET : '',
+      ].filter(Boolean);
+      if (missingDirectives.length) {
+        const nextContent = `${content.replace(/\s+$/, '')}\n${missingDirectives.join('\n')}\n`;
+        writeFileSync(agentPath, nextContent, 'utf8');
+        agentsUpdated += 1;
+      }
     }
   }
 

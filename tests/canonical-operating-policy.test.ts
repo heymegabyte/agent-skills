@@ -6,8 +6,8 @@ import test from 'node:test';
 
 const root = join(import.meta.dirname, '..');
 const policyPath = join(root, 'policies', 'operational-prompt-hydration.md');
-const compactCore = 'Hydrate engineering requests into complete intended outcomes using repository context, current research, explicit requirements, and recorded assumptions. Use a small team of role-based agents to challenge the architecture, then express the work in OpenSpec and execute independent tasks in parallel. Use OpenCode through LiteLLM and DeepSeek for most work where a premium model would not improve quality. Scale swarms to the independent work available and the approved scheduler, host, provider, and budget limits. Give workers disjoint ownership and acceptance checks, verify integrated results, and record concrete limits on dispatch. Build reusable capabilities in theme.tools and consume its packages. Verify behavior, update documentation, and promptly commit and push coherent changes to main. Learn reusable lessons and user preferences from evidence. After delivering the requested outcome, implement applicable improvements and repeat across the product until no justified work remains or execution must pause. Preserve exact resumable state. Respect explicit scope, current user corrections, platform constraints, and existing authorization.';
-const expectedDigest = 'cfd8f01fd2b03a2b92ad524fd716cd3dcc057477f8e41e9545e40bea976f4e7d';
+const compactCore = 'Hydrate engineering requests into complete intended outcomes using repository context, current research, explicit requirements, and recorded assumptions. Use role-based agents to challenge material architecture decisions and express the work in OpenSpec. At intake and after each dependency clears, dispatch independent work concurrently whenever doing so reduces time to verified delivery. Delegate every suitable task to OpenCode with DeepSeek through LiteLLM when it meets the acceptance bar and improves throughput. Use Codex, Gemini, or Claude for work that benefits materially from premium capability or independent review, and record concrete reasons for premium routing or limited dispatch. Scale worker count to ready work, isolation, and approved capacity. Give workers disjoint ownership and acceptance checks, verify integrated results, and record concrete limits on dispatch. Build reusable capabilities in theme.tools and consume its packages. Verify behavior, update documentation, and promptly commit and push coherent changes to main. Learn reusable lessons and user preferences from evidence. After delivering the requested outcome, implement applicable improvements and repeat across the product until no justified work remains or execution must pause. Preserve exact resumable state. Respect explicit scope, current user corrections, platform constraints, and existing authorization.';
+const expectedDigest = '3fc4501dfaeb75a4aaa3eac70fb6ae77211d4d6a4de2f9680d032b1587471647';
 
 function markdownFiles(directory: string): string[] {
   const files: string[] = [];
@@ -24,7 +24,7 @@ test('canonical compact core is verbatim and digest-addressed', () => {
   const policy = readFileSync(policyPath, 'utf8');
   assert.ok(policy.includes(`> ${compactCore}`));
   assert.match(policy, /^policy_id: operational-prompt-hydration$/m);
-  assert.match(policy, /^policy_version: 1\.1\.0$/m);
+  assert.match(policy, /^policy_version: 1\.2\.0$/m);
   assert.match(policy, new RegExp(`^core_digest: ${expectedDigest}$`, 'm'));
   assert.equal(createHash('sha256').update(compactCore).digest('hex'), expectedDigest);
 });

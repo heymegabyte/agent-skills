@@ -40,6 +40,7 @@ source: "27-trust-compliance/SKILL.md (heymegabyte/agent-skills)"
 ## Email domain authentication
 
 - Sending domain publishes SPF + DKIM + DMARC (BIMI where a VMC exists). These records live on the SENDING domain's zone (may differ from the site domain — surface any mismatch before staging).
+- Every bulk or marketing email dispatch must enforce **RFC 8058 One-Click Unsubscribe** (`List-Unsubscribe` HTTPS + `mailto:` URI pair and `List-Unsubscribe-Post: List-Unsubscribe=One-Click` signed with HMAC-SHA256), honor immediate global suppression on `POST /api/public/unsubscribe`, and pass live inbox header inspection (`SPF=PASS`, `DKIM=PASS`, `DMARC=PASS`, and `List-Unsubscribe-Post` present via `gmail-mcp` `get_message` with `messageFormat: "RAW"`).
 
 ## Multi-Swarm Parallelization & OpenCode (DeepSeek) Offload Mandate
 
@@ -52,3 +53,4 @@ source: "27-trust-compliance/SKILL.md (heymegabyte/agent-skills)"
 ## Theme.tools ecosystem contract (required)
 
 Before implementation, load `rules/theme-tools-skill-integration.md` from the agent-skills repository and the entry for this skill in `config/theme-tools-skill-map.json`. Apply catalog-first reuse, upstream contribution, thin-consumer adoption, UI-first theme.tools implementation and test-driven verification, and `.tools/telemetry` routing proportionally to this task.
+- **DeepSeek-first parallel dispatch** At intake and after each dependency clears, dispatch independent work concurrently whenever doing so reduces time to verified delivery. Delegate every suitable task to OpenCode with DeepSeek through LiteLLM when it meets the acceptance bar and improves throughput. Use Codex, Gemini, or Claude for work that benefits materially from premium capability or independent review, and record concrete reasons for premium routing or limited dispatch. Scale worker count to ready work, isolation, and approved capacity.

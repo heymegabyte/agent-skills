@@ -42,6 +42,11 @@ source: "28-cf-integrations-reference/SKILL.md (heymegabyte/agent-skills)"
 - Tracing / errors: **Workers Tracing** (OTLP) · **Sentry** alert rules (HTTP API).
 - Growth: conversion-optimization patterns; in-app user-feedback widget.
 - Bulk email: **Listmonk** (newsletters/campaigns) — the bulk rail (Amazon SES = transactional per app-foundation).
+- **Cloudflare-Native 8-Surface Mail Compatibility & `@theme.tools/mail-*` Canonical Package Suite (`@theme.tools/mail-schema`, `@theme.tools/mail-client`, `@theme.tools/mail-templates`)**:
+  - **8-Surface Multi-Protocol Edge Gateway**: Expose Listmonk REST v1 (`/api/subscribers`, `/api/lists`, `/api/campaigns`, `/api/tx`), SendGrid v3 (`/v3/mail/send`), Resend v1 (`/emails`, `/emails/batch`), Mailchimp v3 (`/3.0/lists/:id/members`), SES v2 (`/v2/email/outbound-emails`), Postal v1 (`/api/v1/send/message`), OpenAPI 3.1 (`/api/openapi.json`), and MCP JSON-RPC 2.0 (`/api/mcp`) through a single Cloudflare Worker (`mail.megabyte.space`) backed by `@theme.tools/mail-*`.
+  - **D1 100-Parameter SQLite Chunking**: Cloudflare D1 enforces a strict 100-bound-parameter ceiling per SQL statement; chunk all bulk subscriber, suppression, and campaign-recipient inserts/upserts (e.g., 16-row batches for 6-column subscriber upserts = 96 parameters) inside `db.batch()`.
+  - **Queue 128 KB R2 Spillover**: Cloudflare Queues messages have a 128 KB payload limit; automatically spill oversized HTML/MIME bodies or attachment payloads (>96 KB threshold) to R2 (`r2SpillKey`) and hydrate on consumer dequeue.
+  - **RFC 8058 One-Click List-Unsubscribe + Live Gmail MCP Delivery Verification**: Inject `List-Unsubscribe: <https://.../api/public/unsubscribe?token=...>, <mailto:unsubscribe@...>` and `List-Unsubscribe-Post: List-Unsubscribe=One-Click` headers with HMAC-SHA256 signed tokens on all bulk/marketing dispatches, and verify live inbox delivery + raw MIME headers via `gmail-mcp` (`search_threads` + `get_message` with `messageFormat: "RAW"`).
 
 ## Payments (route by model — see app-foundation)
 
@@ -65,3 +70,4 @@ source: "28-cf-integrations-reference/SKILL.md (heymegabyte/agent-skills)"
 ## Theme.tools ecosystem contract (required)
 
 Before implementation, load `rules/theme-tools-skill-integration.md` from the agent-skills repository and the entry for this skill in `config/theme-tools-skill-map.json`. Apply catalog-first reuse, upstream contribution, thin-consumer adoption, UI-first theme.tools implementation and test-driven verification, and `.tools/telemetry` routing proportionally to this task.
+- **DeepSeek-first parallel dispatch** At intake and after each dependency clears, dispatch independent work concurrently whenever doing so reduces time to verified delivery. Delegate every suitable task to OpenCode with DeepSeek through LiteLLM when it meets the acceptance bar and improves throughput. Use Codex, Gemini, or Claude for work that benefits materially from premium capability or independent review, and record concrete reasons for premium routing or limited dispatch. Scale worker count to ready work, isolation, and approved capacity.

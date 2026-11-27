@@ -120,3 +120,5 @@ Apply the updates immediately: edit files, merge overlaps, archive dead weight.
 ## Last updated
 
 2026-06-30
+
+For engineering and audit work, apply the [parallel dispatch policy](../rules/parallel-multi-swarm-orchestration.md). Run independent work concurrently and assign all suitable work to OpenCode with DeepSeek via LiteLLM when it improves delivery time at the required quality. Use Codex, Gemini, or Claude for work that materially benefits from premium capability or independent review.

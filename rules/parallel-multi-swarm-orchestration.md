@@ -69,6 +69,8 @@ Every material prompt entered into a supported harness triggers a deterministic 
 
 ### Stage 6 — Massive Multi-Swarm Parallel Implementation (`Claude` + `Codex` + `Gemini` + `OpenCode` DeepSeek Offload)
 
+At intake and after each dependency clears, dispatch independent work concurrently whenever doing so reduces time to verified delivery. Delegate every suitable task to OpenCode with DeepSeek through LiteLLM when it meets the acceptance bar and improves throughput. Use Codex, Gemini, or Claude for work that benefits materially from premium capability or independent review, and record concrete reasons for premium routing or limited dispatch. Scale worker count to ready work, isolation, and approved capacity.
+
 1. The host-configured `bin/evidence-gated-orchestrator.ts` executes the verified OpenSpec DAG through approved scheduler adapters across isolated Git worktrees. The legacy `bin/multi-swarm-orchestrator.ts` compiles planning examples only.
 2. **80%+ OpenCode (DeepSeek) Offload Mandate**: Every `throughput-safe` DAG task (feature shards with locked contracts, full plugin catalogs, UI components across all 16 states, 100% unit tests, Playwright E2E specs, Drizzle migrations, docs) is offloaded to parallel **`opencode` swarms powered by DeepSeek** (`litellm/deepseek-v4-pro` and `litellm/deepseek-flash` via `https://llm.megabyte.space/v1` and `bin/opencode-deepseek.sh`), preserving premium `claude`, `codex`, and `gemini` subscription quota.
 3. **Parallel Frontier Triad Swarms (`Claude` + `Codex` + `Gemini`)**: When frontier cognition is required, `claude`, `codex`, and `gemini` run in parallel on distinct architectural shards, speculative critical-path races, or cross-model adversarial reviews.

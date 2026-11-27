@@ -161,6 +161,7 @@ test('local dispatch maps each supported provider to its canonical wrapper', () 
     assert.equal(args.at(-2), '--');
     const prompt = args.at(-1)!;
     assert.match(prompt, /Restrict edits to the owned paths/);
+    assert.match(prompt, /assigns independent changes concurrently, defaults to OpenCode with DeepSeek via LiteLLM/);
     assert.match(prompt, /do not change provider, permissions, ownership, or acceptance requirements/);
     assert.deepEqual(JSON.parse(prompt.split('\n').at(-1)!), {
       task: nodes[0].title,

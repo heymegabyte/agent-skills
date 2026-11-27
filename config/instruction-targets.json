@@ -3,10 +3,10 @@
   "schemaVersion": "1.0.0",
   "canonicalPolicy": {
     "policyId": "operational-prompt-hydration",
-    "policyVersion": "1.1.0",
+    "policyVersion": "1.2.0",
     "sourcePath": "policies/operational-prompt-hydration.md",
-    "sourceDigest": "sha256:acd9b75e97374a506bc477f5ddb04e73659240362e62818c52e87ec798e66701",
-    "coreDigest": "sha256:cfd8f01fd2b03a2b92ad524fd716cd3dcc057477f8e41e9545e40bea976f4e7d"
+    "sourceDigest": "sha256:c30476a5a84ed3e7dd0295f6287877c3817b021b8cac1a28afb4ca12585a7bc0",
+    "coreDigest": "sha256:3fc4501dfaeb75a4aaa3eac70fb6ae77211d4d6a4de2f9680d032b1587471647"
   },
   "authorityBoundary": {
     "instructionAuthority": "user-controlled-customization-only",
@@ -20,7 +20,7 @@
       "supportLevel": "generated",
       "deliveryMechanism": "managed-block",
       "nativePromptHook": false,
-      "canonicalSourceDigest": "sha256:acd9b75e97374a506bc477f5ddb04e73659240362e62818c52e87ec798e66701",
+      "canonicalSourceDigest": "sha256:c30476a5a84ed3e7dd0295f6287877c3817b021b8cac1a28afb4ca12585a7bc0",
       "authority": "user-controlled-customization-only",
       "evidenceRequired": "managed-block check bound to source revision"
     },
@@ -30,7 +30,7 @@
       "supportLevel": "installed",
       "deliveryMechanism": "plugin-bundle",
       "nativePromptHook": false,
-      "canonicalSourceDigest": "sha256:acd9b75e97374a506bc477f5ddb04e73659240362e62818c52e87ec798e66701",
+      "canonicalSourceDigest": "sha256:c30476a5a84ed3e7dd0295f6287877c3817b021b8cac1a28afb4ca12585a7bc0",
       "authority": "user-controlled-customization-only",
       "evidenceRequired": "installed bundle digest and explicit source revision"
     },
@@ -40,7 +40,7 @@
       "supportLevel": "generated",
       "deliveryMechanism": "generated-manifest",
       "nativePromptHook": false,
-      "canonicalSourceDigest": "sha256:acd9b75e97374a506bc477f5ddb04e73659240362e62818c52e87ec798e66701",
+      "canonicalSourceDigest": "sha256:c30476a5a84ed3e7dd0295f6287877c3817b021b8cac1a28afb4ca12585a7bc0",
       "authority": "user-controlled-customization-only",
       "evidenceRequired": "manifest schema and canonical digest check"
     },
@@ -50,7 +50,7 @@
       "supportLevel": "launch-bound",
       "deliveryMechanism": "launch-receipt",
       "nativePromptHook": false,
-      "canonicalSourceDigest": "sha256:acd9b75e97374a506bc477f5ddb04e73659240362e62818c52e87ec798e66701",
+      "canonicalSourceDigest": "sha256:c30476a5a84ed3e7dd0295f6287877c3817b021b8cac1a28afb4ca12585a7bc0",
       "authority": "user-controlled-customization-only",
       "evidenceRequired": "fresh launch receipt naming policy, digest, revision, role, and provenance"
     },
@@ -60,7 +60,7 @@
       "supportLevel": "launch-bound",
       "deliveryMechanism": "launch-receipt",
       "nativePromptHook": false,
-      "canonicalSourceDigest": "sha256:acd9b75e97374a506bc477f5ddb04e73659240362e62818c52e87ec798e66701",
+      "canonicalSourceDigest": "sha256:c30476a5a84ed3e7dd0295f6287877c3817b021b8cac1a28afb4ca12585a7bc0",
       "authority": "user-controlled-customization-only",
       "evidenceRequired": "fresh delegated launch receipt with matching coordinator digest and invoked skill"
     },
@@ -70,7 +70,7 @@
       "supportLevel": "profile-wrapper",
       "deliveryMechanism": "explicit-wrapper",
       "nativePromptHook": false,
-      "canonicalSourceDigest": "sha256:acd9b75e97374a506bc477f5ddb04e73659240362e62818c52e87ec798e66701",
+      "canonicalSourceDigest": "sha256:c30476a5a84ed3e7dd0295f6287877c3817b021b8cac1a28afb4ca12585a7bc0",
       "authority": "user-controlled-customization-only",
       "evidenceRequired": "profile or wrapper fixture; native interception must not be claimed"
     },
@@ -80,7 +80,7 @@
       "supportLevel": "profile-wrapper",
       "deliveryMechanism": "explicit-wrapper",
       "nativePromptHook": false,
-      "canonicalSourceDigest": "sha256:acd9b75e97374a506bc477f5ddb04e73659240362e62818c52e87ec798e66701",
+      "canonicalSourceDigest": "sha256:c30476a5a84ed3e7dd0295f6287877c3817b021b8cac1a28afb4ca12585a7bc0",
       "authority": "user-controlled-customization-only",
       "evidenceRequired": "profile or wrapper fixture; native interception must not be claimed"
     },
@@ -90,7 +90,7 @@
       "supportLevel": "installed",
       "deliveryMechanism": "managed-block",
       "nativePromptHook": false,
-      "canonicalSourceDigest": "sha256:acd9b75e97374a506bc477f5ddb04e73659240362e62818c52e87ec798e66701",
+      "canonicalSourceDigest": "sha256:c30476a5a84ed3e7dd0295f6287877c3817b021b8cac1a28afb4ca12585a7bc0",
       "authority": "user-controlled-customization-only",
       "evidenceRequired": "installed-file digest plus bounded subscription-CLI loading receipt"
     },
@@ -100,7 +100,7 @@
       "supportLevel": "installed",
       "deliveryMechanism": "plugin-bundle",
       "nativePromptHook": true,
-      "canonicalSourceDigest": "sha256:acd9b75e97374a506bc477f5ddb04e73659240362e62818c52e87ec798e66701",
+      "canonicalSourceDigest": "sha256:c30476a5a84ed3e7dd0295f6287877c3817b021b8cac1a28afb4ca12585a7bc0",
       "authority": "user-controlled-customization-only",
       "evidenceRequired": "installed plugin digest, hook fixture, and bounded subscription-CLI loading receipt"
     },
@@ -110,7 +110,7 @@
       "supportLevel": "installed",
       "deliveryMechanism": "managed-block",
       "nativePromptHook": false,
-      "canonicalSourceDigest": "sha256:acd9b75e97374a506bc477f5ddb04e73659240362e62818c52e87ec798e66701",
+      "canonicalSourceDigest": "sha256:c30476a5a84ed3e7dd0295f6287877c3817b021b8cac1a28afb4ca12585a7bc0",
       "authority": "user-controlled-customization-only",
       "evidenceRequired": "installed-file digest and wrapper fixture; no live claim without executable provider probe"
     },
@@ -120,7 +120,7 @@
       "supportLevel": "installed",
       "deliveryMechanism": "managed-block",
       "nativePromptHook": false,
-      "canonicalSourceDigest": "sha256:acd9b75e97374a506bc477f5ddb04e73659240362e62818c52e87ec798e66701",
+      "canonicalSourceDigest": "sha256:c30476a5a84ed3e7dd0295f6287877c3817b021b8cac1a28afb4ca12585a7bc0",
       "authority": "user-controlled-customization-only",
       "evidenceRequired": "installed-file digest plus brokered-launch receipt or explicit unavailable result"
     }
