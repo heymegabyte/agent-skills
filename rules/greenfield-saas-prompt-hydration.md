@@ -44,6 +44,8 @@ For sizable clones, hundreds of focused prompts and substantive requirements/sce
 
 Prefer Serena for symbol discovery, Context7 for installed-version documentation, scoped Repomix for broad context in repositories we own, theme.tools for reusable web components/patterns, and install.doctor for reusable system configuration. Give optional providers a deadline and record the local fallback. Never claim unavailable tools or unverified reference behavior as evidence.
 
+For local Repomix JSON packs, use an exact path allowlist with `--include`, a trusted `--config` with security scanning enabled, and a private `--output` path. Check the exit status and exact JSON `files` keys before use or sharing. Repomix 1.19.0 can exit successfully after excluding a detected file's contents and still expose its filename in the tree or summary. Set `output.directoryStructure` and `output.fileSummary` to `false` when those filenames must stay private. Keep scanner logs private.
+
 ## Workflow-resolution OpenSpec
 
 Each workflow specifies actor/permission, entry point, actions, persisted effects, cross-surface effects, failure/retry/recovery, and observable scenarios. Maintain goal → capability → workflow → requirement → scenario → test → verification traceability. Architect assignment and Figma approval rules still apply.
