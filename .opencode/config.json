@@ -2,9 +2,9 @@
   "_generated_by": "bin/gen-harness-manifests.mjs — do not edit directly",
   "policy": {
     "id": "operational-prompt-hydration",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "source": "policies/operational-prompt-hydration.md",
-    "source_digest": "sha256:acd9b75e97374a506bc477f5ddb04e73659240362e62818c52e87ec798e66701"
+    "source_digest": "sha256:c30476a5a84ed3e7dd0295f6287877c3817b021b8cac1a28afb4ca12585a7bc0"
   },
   "instructions": [
     "rules/always.md",

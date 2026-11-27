@@ -1,5 +1,5 @@
 ---
-name: "'cf-integrations-reference'"
+name: "cf-integrations-reference"
 description: "'The consolidated, world-class Cloudflare + integrations reference — CF platform/data/AI-edge patterns, media pipeline, observability/growth, payments, and the site-generation pipeline. The non-inferable choices that build the greatest web apps.'"
 compatibility:
   agentskills: ">=1.0.0"
