@@ -128,16 +128,12 @@ def build_command(provider_model: str, home: Path, skills_root: Path, system_pro
         cmd = [opencode_wrapper, 'run', '--format', 'json', '-m', 'litellm/hybrid-coder']
         return cmd, False, run_env
 
-    if provider_model == 'deepseek-flash':
-        cmd = [opencode_wrapper, 'run', '--format', 'json', '-m', 'deepseek/deepseek-chat']
-        return cmd, False, run_env
-
-    if provider_model == 'deepseek-v4-pro':
-        cmd = [opencode_wrapper, 'run', '--format', 'json', '-m', 'deepseek/deepseek-chat']
-        return cmd, False, run_env
-
-    # Default throughput model: deepseek / opencode via direct DeepSeek API (fast tool-calling, zero proxy 429s)
-    cmd = [opencode_wrapper, 'run', '--format', 'json', '-m', 'deepseek/deepseek-chat']
+    gateway_key = resolve_secret('LITELLM_API_KEY', run_env)
+    model = 'deepseek/deepseek-chat'
+    if gateway_key:
+        run_env['LITELLM_API_KEY'] = gateway_key
+        model = 'litellm/deepseek-flash' if provider_model == 'deepseek-flash' else 'litellm/deepseek-v4-pro'
+    cmd = [opencode_wrapper, 'run', '--format', 'json', '-m', model]
     return cmd, False, run_env
 
 
