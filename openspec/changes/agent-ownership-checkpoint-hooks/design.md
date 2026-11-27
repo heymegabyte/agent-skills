@@ -1,6 +1,7 @@
 # Design: Agent Ownership Checkpoint Hooks
 
 ## Mechanism (Claude Code, canonical plugin-hook wiring)
+
 - agent-skills is an installed Claude Code plugin; plugin hooks are declared in `hooks/hooks.json`
   (declarative → idempotent: re-applying the manifest creates no duplicate handler). This is additive to,
   and does not touch, the user's `~/.claude/settings.json`.
@@ -12,6 +13,7 @@
     owner/progress/recommendations into OpenSpec before compaction. Satisfies §6 "before compaction/handoff."
 
 ## Scope boundary (intentional — per "hooks do not launch a model after every tool call")
+
 - **before-dispatch** readiness/ownership/conflict is enforced by `bin/change-ownership.ts claim`
   (refuse-on-conflict, exit 3) — not a per-tool-call model hook.
 - **before-completion** reconcile is left to the existing `agentskills-stop-gate.sh` (not modified here to
@@ -20,6 +22,7 @@
   Claude Code. Porting is a documented follow-up.
 
 ## Activation
+
 - Plugin-hook changes take effect when Claude Code reloads the plugin (new session / restart). The config
   is complete + verified here (scripts run standalone, manifest is valid JSON with single entries); the
   only remaining step is a Claude Code restart to load the new SessionStart/PreCompact handlers.
