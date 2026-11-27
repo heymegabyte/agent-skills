@@ -550,16 +550,22 @@ export async function executeFrozenContract(
   };
 
   const remaining = new Map(nodes.map((node) => [node.id, node]));
-  const active = new Map<string, { provider: ExecutionProvider; finished: Promise<void> }>();
+  const active = new Map<string, ExecutionProvider>();
+  let wakeScheduler: (() => void) | undefined;
+  let schedulerFailure: { error: unknown } | undefined;
+  const finishNode = (nodeId: string) => {
+    active.delete(nodeId);
+    wakeScheduler?.();
+  };
   while (remaining.size || active.size) {
     const cancelled = options.cancelled?.() || controller.signal.aborted;
-    if (cancelled) {
+    if (cancelled || schedulerFailure) {
       controller.abort('Run cancelled');
       for (const node of remaining.values()) receipts.push({ runId, nodeId: node.id, provider: node.provider, attempt: 0, status: 'cancelled', worktree: node.worktree, sourceDigestBefore: '', changedFiles: [], acceptance: [], failure: 'Run cancelled before launch' });
       remaining.clear();
     } else {
       const admitted = new Map<ExecutionProvider, number>();
-      for (const { provider } of active.values()) admitted.set(provider, (admitted.get(provider) ?? 0) + 1);
+      for (const provider of active.values()) admitted.set(provider, (admitted.get(provider) ?? 0) + 1);
       for (const node of remaining.values()) {
         if (active.size === concurrency) break;
         if (!node.dependsOn.every((dep) => integrated.has(dep))) continue;
@@ -567,16 +573,26 @@ export async function executeFrozenContract(
         if (providerCount >= (providerConcurrency[node.provider] ?? concurrency)) continue;
         admitted.set(node.provider, providerCount + 1);
         remaining.delete(node.id);
-        const finished = runNode(node).finally(() => { active.delete(node.id); });
-        active.set(node.id, { provider: node.provider, finished });
+        active.set(node.id, node.provider);
+        void runNode(node).then(
+          () => finishNode(node.id),
+          (error: unknown) => {
+            schedulerFailure ??= { error };
+            finishNode(node.id);
+          },
+        );
       }
     }
     if (active.size) {
-      await Promise.race([...active.values()].map(({ finished }) => finished));
+      // Subscribe once per task, so a slow worker does not accumulate
+      // Promise.race handlers while other slots cycle through a backlog.
+      await new Promise<void>((resolve) => { wakeScheduler = resolve; });
+      wakeScheduler = undefined;
     } else if (remaining.size) {
       for (const node of remaining.values()) receipts.push({ runId, nodeId: node.id, provider: node.provider, attempt: 0, status: 'blocked', worktree: node.worktree, sourceDigestBefore: '', changedFiles: [], acceptance: [], failure: 'Dependency did not integrate' });
       break;
     }
   }
+  if (schedulerFailure) throw schedulerFailure.error;
   return receipts;
 }
