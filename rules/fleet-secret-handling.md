@@ -8,6 +8,7 @@ Applies to local OpenClaw/native CLI execution, including the primary Ubuntu VM.
 - Resolve a particular needed credential through the broker. Do not bulk-read sibling projects' `.env` files, browser profiles or authentication homes for discovery. Check deployed secret names when appropriate; listing a name does not reveal its value.
 - Official Codex/Claude CLIs own OAuth. Never parse/copy their credentials into a gateway, application API or GitHub artifact. Local DeepSeek receives its key directly; no Cloudflare AI Gateway.
 - Generate a new app-owned signing secret only when the task authorizes that app/configuration and no existing value needs preservation. Never overwrite live data-encryption keys or rotate third-party credentials blindly.
+- Track encrypted secrets as `store:name`; validate, route, and retire each exact source with evidence. Keep human-admin, WARP enrollment, MCP/application Access, and runtime capabilities separate, and treat provider-derived caches as regenerable metadata. See the [secret-estate spec](../openspec/changes/harden-infisical-secret-estate-routing/specs/fleet-secret-estate/spec.md).
 - If exposure is confirmed, stop the leaking path, remove confirmed public logs, record non-secret provenance, and arrange provider rotation. Log deletion is containment, not revocation. Report the limits of the audit.
 
 Canonical host operations: [FLEET.md](../control-plane/FLEET.md). Generic product provisioning: [secret-provisioning.md](secret-provisioning.md).
