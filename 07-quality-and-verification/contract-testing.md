@@ -40,6 +40,14 @@ edit list. Keep the compiler's prefix and suffix text so shorthand properties
 and aliases retain their intended names. Typecheck the edited projects and
 verify affected package exports.
 
+A ts-morph default rename can compile while changing a shorthand object key
+and removing the original direct export. For an implementation-only rename,
+review `usePrefixAndSuffixText: true` edits for explicit keys and export
+aliases. Keep string renaming disabled unless the migration owns those values.
+Compare runtime keys, imports through existing aliases, and stored string
+values with the original, then run the consumer's compiler.
+[ts-morph renaming](https://ts-morph.com/manipulation/renaming)
+
 For project references, choose the consuming or declaring TSConfig that
 contains the symbol's actual scope. Supported builds follow authored sources
 when source redirects are enabled and reject previews targeting generated
