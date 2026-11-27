@@ -187,6 +187,63 @@ export const FREE_CONFIG_RULES = [
   },
 ] as const;
 
+export const MEGABYTE_SPACE_ROWY_FIREBASE_CONFIG_RULE = {
+  action: "set_config",
+  description: "[Free-Config-2] Firebase Hosting Origin SSL Compatibility for rowy.megabyte.space",
+  enabled: true,
+  expression: '(http.host eq "rowy.megabyte.space")',
+  action_parameters: {
+    ssl: "full",
+  },
+} as const;
+
+export interface CloudflareConfigRule {
+  readonly action: string;
+  readonly description: string;
+  readonly enabled: boolean;
+  readonly expression: string;
+  readonly action_parameters: Record<string, unknown>;
+}
+
+export function buildZoneConfigRules(
+  zoneName: string,
+  existingRules: ReadonlyArray<Record<string, unknown>> = [],
+): CloudflareConfigRule[] {
+  const rules: CloudflareConfigRule[] = [...FREE_CONFIG_RULES];
+  const seenExpressions = new Set<string>(rules.map((r) => r.expression));
+
+  if (zoneName === "megabyte.space") {
+    rules.push(MEGABYTE_SPACE_ROWY_FIREBASE_CONFIG_RULE);
+    seenExpressions.add(MEGABYTE_SPACE_ROWY_FIREBASE_CONFIG_RULE.expression);
+  }
+
+  for (const existing of existingRules) {
+    const actionParams = (existing.action_parameters ?? {}) as Record<string, unknown>;
+    const expression = typeof existing.expression === "string" ? existing.expression : "";
+    const description =
+      typeof existing.description === "string"
+        ? existing.description
+        : "[Free-Config-Custom] Host-Specific Origin SSL Override";
+    if (
+      existing.action === "set_config" &&
+      actionParams.ssl === "full" &&
+      expression.length > 0 &&
+      !seenExpressions.has(expression)
+    ) {
+      rules.push({
+        action: "set_config",
+        description,
+        enabled: existing.enabled !== false,
+        expression,
+        action_parameters: actionParams,
+      });
+      seenExpressions.add(expression);
+    }
+  }
+
+  return rules;
+}
+
 export const FREE_ZONE_SETTINGS_ITEMS = [
   { id: "0rtt", value: "on" },
   { id: "always_online", value: "on" },
@@ -264,6 +321,14 @@ async function hardenZone(zone: CfZone): Promise<{
   readonly compressionRulesCount: number;
   readonly configRulesCount: number;
 }> {
+  const existingCfgRes = await cfRequest<{ rules?: Array<Record<string, unknown>> }>(
+    `/zones/${zone.id}/rulesets/phases/http_config_settings/entrypoint`,
+  );
+  const zoneConfigRules = buildZoneConfigRules(
+    zone.name,
+    Array.isArray(existingCfgRes.result?.rules) ? existingCfgRes.result.rules : [],
+  );
+
   const [
     settingsRes,
     speedBrainRes,
@@ -379,7 +444,7 @@ async function hardenZone(zone: CfZone): Promise<{
         body: JSON.stringify({
           name: "default",
           description: "Sovereign Free-Tier Edge Config Rules",
-          rules: FREE_CONFIG_RULES,
+          rules: zoneConfigRules,
         }),
       },
     ),
@@ -473,7 +538,7 @@ async function main(): Promise<void> {
     securityHeadersConfiguredZones: results.filter((r) => r.securityHeaderRulesCount === 1).length,
     cacheRulesConfiguredZones: results.filter((r) => r.cacheRulesCount === 2).length,
     compressionRulesConfiguredZones: results.filter((r) => r.compressionRulesCount === 1).length,
-    configRulesConfiguredZones: results.filter((r) => r.configRulesCount === 1).length,
+    configRulesConfiguredZones: results.filter((r) => r.configRulesCount >= 1).length,
     tieredCacheConfiguredZones: results.filter((r) => r.tieredCacheEnabled).length,
     botFightModeConfiguredZones: results.filter((r) => r.botFightModeEnabled).length,
     leakedCredsConfiguredZones: results.filter((r) => r.leakedCredsEnabled).length,

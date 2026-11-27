@@ -26,8 +26,9 @@ metadata:
    - `[Free-Cache-2]` Aggressive Edge (`30d`) & Browser (`1y`) Cache for Immutable Hashed Static Assets (`/assets/*`, `.woff2`, `.avif`, `.webp`).
 5. **1 Free Zstandard (`zstd` + `brotli` + `gzip`) Compression Rule (`http_response_compression` phase — `59/59` zones)**:
    - `[Free-Compress-1]` Prefer `zstd`, `brotli`, and `gzip` across all compressible web, JSON/RFC 9457 (`application/problem+json`), SVG, XML, and WebAssembly responses.
-6. **1 Free API-Safe Config Rule (`http_config_settings` phase — `59/59` zones)**:
+6. **Free API-Safe & Origin-SSL Compatibility Config Rules (`http_config_settings` phase — `59/59` zones)**:
    - `[Free-Config-1]` Disable Email Obfuscation (`email_obfuscation: false`) on `/api/*`, `/webhook*`, and `/mcp*` JSON endpoints so `@` email strings inside JSON responses are never rewritten.
+   - `[Free-Config-2]` Firebase Hosting Origin SSL Compatibility for `rowy.megabyte.space` on `megabyte.space` (`(http.host eq "rowy.megabyte.space")` -> `action_parameters: { ssl: "full" }` for Firebase Hosting origin `199.36.158.100`), plus automatic preservation of any existing host-specific `ssl: "full"` rules across sweeps to prevent HTTP 526 Invalid SSL Certificate errors.
 7. **Free Smart Tiered Cache (`tiered_cache_smart_topology_enable = "on"` — `59/59` zones)**.
 8. **Free Bot Fight Mode & AI Scraper Block (`enable_js: true`, `fight_mode: true`, `ai_bots_protection: "block"` — `59/59` zones)**.
 9. **Free Leaked Credential Checks (`POST /zones/:id/leaked-credential-checks` `enabled: true` — `59/59` zones)**.
