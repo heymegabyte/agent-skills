@@ -3,7 +3,7 @@
  * Fleet 55-Repository Multi-Axis Converger (`bin/fleet-55-repo-multi-axis-converger.ts`)
  *
  * Uses parallel worker batching (`Promise.all`) to converge every repository in the fleet across 8 axes:
- *   1. `AGENTS.md` — Canonical 4-Harness (`cr`), `@theme.tools/*` 28-library thin-shell, VoiceKit ($17k credits),
+ *   1. `AGENTS.md` — DeepSeek-first parallel execution, `@theme.tools/*` 28-library thin-shell, VoiceKit ($17k credits),
  *      13-dimension Cloudflare Free-Tier hardening, and Sovereign 8-Pillar Telemetry contract.
  *   2. `CLAUDE.md` — Canonical Claude Code & OpenSpec Architect entrypoint.
  *   3. `openspec/project.md` — OpenSpec project specification, capability bindings & 16-state OKLCH convergence contract.
@@ -32,13 +32,15 @@ This repository (\`${repoName}\` · \`https://${domain}\`) is part of the Sovere
 ## 1. Stack & \`@theme.tools/*\` Thin-Shell Architecture
 
 - **Runtime & Edge**: Cloudflare Workers + Hono + D1/Neon + Drizzle ORM + Better Auth + Stripe + VoiceKit (\`$17,000\` Startup Credits Grant).
-- **Frontend**: React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps), Dark-First \`#060610\` background & \`#00E5FF\` accent, \`0.333s\` OKLCH transitions across all 16 interaction states, APCA \`Lc >= 60\`.
+- **Frontend**: React 19 + Vite with \`@theme.tools/ui\` (\`ui.theme.tools\`) as the exclusive component system for sites, apps, dashboards, admin consoles, calendars, and portals. Use a dark-first \`#060610\` background & \`#00E5FF\` accent, \`0.333s\` OKLCH transitions across all 16 interaction states, APCA \`Lc >= 60\`.
 - **Canonical Shared Libraries (\`@theme.tools/*\` 28 Default Packages)**: Extract all reusable UI components, calculators, workflows, auth, billing, CRM, media/video, SEO/GEO, and telemetry logic into \`heymegabyte/theme.tools\`. Keep this repository a clean thin-shell composition layer.
 
-## 2. 4-Harness + Local Fallback Routing (\`cr\`) & OpenSpec Governance
+## 2. Parallel Execution & OpenSpec Governance
 
 - **Frontier Architect Only for OpenSpec (\`claude-1/2/3\` / \`codex\` / \`gemini\` — NEVER \`opencode\`)**: Author and update \`openspec/project.md\` and \`openspec/changes/<change-id>/\` before material behavior, UI, or schema changes.
-- **DeepSeek Off-Peak (\`16:30–00:30 UTC\`) & Local GPU Ollama Offload**: Offload mechanical, batch, and throughput-safe tasks onto \`deepseek-v4-pro\`, \`deepseek-flash\`, and local \`ollama\` (\`hybrid-coder\`) via Claw Router (\`cr\`) and LiteLLM Gateway (\`https://llm.megabyte.space\`).
+- **Parallel dispatch**: Dispatch independent work concurrently at intake and whenever a dependency clears if doing so reduces time to verified delivery. Scale the worker count to ready work, isolation, and approved capacity. Assign disjoint ownership and acceptance checks, then verify the integrated results.
+- **DeepSeek-first routing**: Delegate every suitable task to OpenCode with DeepSeek via LiteLLM when it meets the acceptance bar and improves throughput. Use Codex, Gemini, or Claude when specialist capability or independent review materially improves the result. Record concrete reasons for premium routing or limited dispatch.
+- **Policy source**: Load \`~/.agentskills/policies/operational-prompt-hydration.md\` for the canonical operating policy.
 
 ## 3. VoiceKit (\`$17,000\` Credits Tier — Replaces ElevenLabs Everywhere)
 
