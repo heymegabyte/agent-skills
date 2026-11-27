@@ -93,6 +93,19 @@ declared paths under `vendor/theme-tools`. Record source qualification,
 consumer installation, and live verification according to the evidence
 actually obtained.
 
+After deploying, confirm the active version and traffic allocation through the
+provider. Use the provider's deployment timestamp or active status rather than
+the position of an entry in a history list. Check the live routes and compare
+immutable asset hashes when the same compiled files should be served.
+
+If production CSP blocks a test script, keep the policy in place. Load audited,
+pinned test instrumentation through the browser harness in a clean context.
+Report the original harness failure and the resulting accessibility checks.
+For Lighthouse failures, record the weighted audit IDs and their source URLs.
+Compare the custom domain and matching immutable deployment with the same
+browser and Lighthouse versions. Keep an unmet score floor visible even when
+a provider-injected script contributes to the result.
+
 Before uploading to Nexus, check every qualified package version against the
 hosted repository. For `theme.tools`, run `pnpm package:release:check-nexus`
 against the qualified archives and receipt. If an existing version has the same
