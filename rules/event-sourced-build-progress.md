@@ -8,7 +8,7 @@ triggers:
   - "build event"
   - "stream"
   - "oneprompt"
-  - "draftl.ink"
+  - "projectsites.dev"
   - "incremental preview"
 paths:
   - "concern:ai-features"
@@ -20,7 +20,7 @@ AI build progress MUST emit durable, typed, replayable events. Dashboards then s
 
 ## OnePrompt streaming build and fast preview
 
-- Show immediate, honest progress for parallel research and real agent work. Render a **cached, precompiled draftl.ink/Storybook theme shell** first; distinguish that draft shell from researched content, passing checks and a published result. Never fabricate progress, research findings or completion percentages.
+- Show immediate, honest progress for parallel research and real agent work. Render a **cached, precompiled theme.tools/Storybook theme shell** first; distinguish that draft shell from researched content, passing checks and a published result. Never fabricate progress, research findings or completion percentages.
 - Reuse the shared Storybook components, approved design tokens and section contracts. Start independent section/content/data/asset agents concurrently after their contracts are known; do not serialize the whole build behind one model response or cosmetic reveal sequence.
 - Have agents return **typed section/asset payloads**. A **single assembler owns file writes**, shared manifests, dependency changes and patch ordering. Use deterministic scripts/templates for routine assembly and **ast-grep** for targeted structural edits rather than regenerating whole files with a model.
 - Apply content-only **slot/manifest patches without rebuilding the project**. Rebuild only the affected code/dependency boundary when necessary. Version granular file/component patches with a base revision, resulting revision, content hash and stable target; reject stale patches and reconcile conflicting edits.

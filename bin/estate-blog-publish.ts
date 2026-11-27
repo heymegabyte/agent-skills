@@ -535,12 +535,6 @@ export const CURATED_TOPICS: Record<
     summary: "Git-triggered buildpacks, isolated bridge networks, automated healthcheck probes, and encrypted offsite volume snapshots.",
     category: "workstation-infra",
   },
-  "draftl.ink": {
-    title: "Collaborative Editorial Drafting at the Edge: Conflict-Free Markdown Revisions and Instant Preview Links",
-    keyphrase: "collaborative markdown drafting engine",
-    summary: "CRDT-inspired revision histories, shareable cryptographic preview tokens, and automated style/citation linting.",
-    category: "saas-platform",
-  },
   "grafana.megabyte.space": {
     title: "Full-Stack Observability Dashboards: Correlating Prometheus Metrics, Loki Logs, and Tempo Traces",
     keyphrase: "unified observability dashboard architecture",

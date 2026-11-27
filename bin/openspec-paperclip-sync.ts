@@ -145,12 +145,6 @@ export const CANONICAL_PROJECT_MAP: Record<string, PaperclipProjectMapping> = {
     defaultBranch: 'main',
     defaultAssigneeAgentId: PAPERCLIP_SPECIALIST_AGENTS.devSecOps,
   },
-  'draftl.ink': {
-    projectId: 'd9a251a1-f2f2-4d7a-b552-0af9a60e2d07',
-    githubRepo: 'heymegabyte/draftl.ink',
-    defaultBranch: 'main',
-    defaultAssigneeAgentId: PAPERCLIP_SPECIALIST_AGENTS.fullStackEngineer,
-  },
   'fundl.ink': {
     projectId: '6c03c9a9-2240-45a3-b203-ae749f1b3f59',
     githubRepo: 'heymegabyte/fundl.ink',

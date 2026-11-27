@@ -66,7 +66,7 @@ Complete each feature end-to-end through its required layers (UI → API → DB 
 - Deploy before adding any other route — establishes design system, auth layer, analytics tier, deploy pipeline
 - Per `rules/website-build-doctrine.md` Phase 0 / Phase 1
 
-For the **OnePrompt streaming builder**, render the cached draftl.ink/Storybook shell immediately while independent research/section/data work proceeds. Content-only slot patches do not rebuild the project. Follow `rules/event-sourced-build-progress.md`: typed agent results, one assembler, deterministic scripts/ast-grep, versioned patches and an isolated preview iframe. Preserve normal validation/promotion gates; a draft preview is not a production deployment.
+For the **OnePrompt streaming builder**, render the cached theme.tools/Storybook shell immediately while independent research/section/data work proceeds. Content-only slot patches do not rebuild the project. Follow `rules/event-sourced-build-progress.md`: typed agent results, one assembler, deterministic scripts/ast-grep, versioned patches and an isolated preview iframe. Preserve normal validation/promotion gates; a draft preview is not a production deployment.
 
 ## Anti-placeholder (NON-NEGOTIABLE)
 

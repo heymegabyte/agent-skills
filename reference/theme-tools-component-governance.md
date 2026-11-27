@@ -1,6 +1,6 @@
 # Canonical Components, Themes, and Approval
 
-User directive, 2026-10-31. This rule supersedes older instructions that make draftl.ink or per-application copied UI the canonical component source. It does not authorize production deployment, paid services, or unapproved screen implementation.
+User directive, 2026-10-31. This rule supersedes older instructions that make per-application copied UI the canonical component source. It does not authorize production deployment, paid services, or unapproved screen implementation.
 
 ## One canonical UI & shared-utilities home (`@theme.tools`)
 

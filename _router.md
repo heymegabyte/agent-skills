@@ -36,7 +36,7 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 - **Build feature** → `05`, `06`, `07`, `24`, `rules/parallel-multi-swarm-orchestration`, `rules/feature-expansion-mandate`
 - **Go CLI / TUI / terminal prompts / aid / install.doctor** → `rules/terminal-styling`, `rules/package-preference-registry`, `rules/agent-provider-policy`, `05`
 - **Rust / WASM / native runner** → `05`, `rules/cloudflare-hostable-supervisor`, `07/performance-optimization`
-- **OnePrompt / draftl.ink / streaming build / incremental preview** → `rules/event-sourced-build-progress`, `06`, `10`
+- **OnePrompt / projectsites.dev / streaming build / incremental preview** → `rules/event-sourced-build-progress`, `06`, `10`
 - **Debug / CI failure** → `07`, `08` — especially `gh-fix-ci`, `spec-driven-development`
 - **Deploy / launch** → `08`, `26` — add `09` if SEO/content changed
 - **Design / frontend polish** → `09`, `10`, `11`, `12`, `22`
