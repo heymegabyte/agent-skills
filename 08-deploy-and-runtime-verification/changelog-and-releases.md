@@ -109,21 +109,34 @@ Compare the custom domain and matching immutable deployment with the same
 browser and Lighthouse versions. Keep an unmet score floor visible even when
 a provider-injected script contributes to the result.
 
-Before uploading to Nexus, check every qualified package version against the
-hosted repository. For `theme.tools`, run `pnpm package:release:check-nexus`
-against the qualified archives and receipt. If an existing version has the same
-archive integrity, it can be skipped on a retry. If it has different or missing
-integrity, resolve the collision with a version allowed by the project release
-policy, then rebuild and requalify the affected dependency graph. A metadata
-error needs a fresh successful check before publishing.
+Use a dedicated checkout for qualification and keep it at the chosen
+revision through receipt creation. Give parallel implementers different
+worktrees. If the checkout changes during qualification, discard that
+attempt and rerun from the exact candidate. Retain source revision,
+receipt, archive digests, and consumer results together.
 
-For a theme.tools registry outage rehearsal, use
+Before uploading to Nexus, run `pnpm package:release:check-nexus` against
+the qualified archives and provenance receipt. Missing versions are
+eligible for a publish attempt with the scoped credentials and required
+release approvals. An existing version is reusable only if hosted
+metadata and the served archive bytes match the qualification. Resolve
+collisions through the repository's version policy and requalify the
+affected graph. After publication, use `pnpm package:release:verify-nexus`
+to require a matching hosted read-back for every version. Verify the
+consumer install from the group URL independently.
+
+For a Theme Tools registry outage rehearsal, use
 `pnpm package:consumer --offline --bundle <directory> --receipt-sha256 <digest>`.
-Use the receipt digest recorded separately during qualification. The
-gate checks the receipt, package inventory, and exact archive digests
-before installing from the local bundle and a warmed pnpm store.
-Record the result as offline consumer evidence. Verify registry access
-and publication separately.
+Use the receipt digest recorded separately during qualification. The gate
+checks receipt and archive identity before installing with the restored
+store. For npm consumers with a fully integrity-pinned lockfile, test
+`npm ci --offline` from a fresh install directory using platform-matched
+cache blobs and the tracked vendored packages. A cache that depends on
+registry metadata may require the original registry URL as a cache key.
+Run recovery with networking disabled and record the OS, architecture,
+package-manager version, lockfile digest, artifact digest and actual
+consumer checks. Track hosted publication, local restore and off-host
+retrieval as separate evidence.
 
 ## Semantic Versioning
 
