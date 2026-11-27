@@ -47,8 +47,11 @@ changes the plan.
 - **Every implementation assignment carries:** the change ID + artifact path · the single owner · scope,
   acceptance, dependencies, allowed write areas · the full task list + verification expectations ·
   "retain ownership through review fixes + completion."
-- **Prevent duplicate ownership with the existing claim mechanism** (dispatcher / atomic lock). If none
-  exists, **serialize assignment** — a YAML owner field or separate Git checkouts are NOT an atomic lock.
+- **Prevent duplicate ownership with the atomic claim mechanism.** Claim via `bin/change-ownership.ts`
+  (`claim`/`release`/`transfer`/`show`/`list`) — it exclusive-creates `openspec/changes/<id>/owner.json`
+  (`wx` = `O_CREAT|O_EXCL`), so two concurrent claims yield exactly one winner; the rest are refused (exit 3
+  → wait/queue). A YAML owner field or separate Git checkouts are NOT an atomic lock. Where none applies,
+  **serialize assignment**.
 - **Serialize changes that conflict** over shared files/interfaces; preserve the main-only branch policy
   (`[[main-only-branch]]`). One agent may complete multiple changes sequentially.
 - **Preserve ownership across compaction/resume.** On owner unavailability, explicitly transfer the

@@ -1,0 +1,15 @@
+{
+  "changeId": "change-ownership-atomic-dispatcher",
+  "owner": "claude-session-fire2",
+  "state": "active",
+  "dependencies": [
+    "agent-change-ownership-policy"
+  ],
+  "allowedWriteAreas": [
+    "bin/change-ownership.ts",
+    "bin/change-ownership.test.mjs"
+  ],
+  "claimedAt": "2026-11-27T03:39:38.449Z",
+  "updatedAt": "2026-11-27T03:39:38.449Z",
+  "handoff": []
+}
