@@ -33,6 +33,7 @@ submodules:
   - stagehand-ai-fallback.md
   - stagehand-ai-testing.md
   - tdd-verification.md
+  - typescript-engineering.md
   - testing-matrices.md
   - ui-completeness-sweep.md
   - visual-inspection-loop.md
@@ -56,7 +57,7 @@ Run the 5-level verification pyramid (static→unit→E2E→AI visual→post-dep
 
 ## 5-level pyramid (bottom to top)
 
-1. **Static** — TS strict + ESLint + oxlint + Prettier + knip (dead code)
+1. **Static** — Follow the [TypeScript engineering workflow](../07-quality-and-verification/typescript-engineering.md) for compiler checks, typed lint, and changes to shared contracts.
 2. **Unit** — Vitest 5 (browser mode default, static test discovery, Playwright-trace links)
 3. **Playwright E2E** — homepage-first, 6 viewports × 3 browsers, hermetic, parallel
 4. **AI visual** — vision rubric ≥9/10 per route in focused one- or two-viewport critique passes; use 4+ simultaneously only for a documented breakpoint risk
