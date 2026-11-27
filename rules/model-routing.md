@@ -123,10 +123,10 @@ Warm-cache savings depend on provider-side cache retention and are reported by `
 
 ## Agent routing
 
-Generated from `agents/*.md` frontmatter — run `bash bin/check-agent-routing.sh` to verify; edit the agent file, not this list.
+Keep this list synchronized with `agents/*.md` frontmatter and aliases. Update the agent file to change its tier, then verify the list with `bash bin/check-agent-routing.sh`.
 
 - **Opus** — architect, ceo, completeness-checker, computer-use-operator, incident-responder, meta-orchestrator, performance-profiler, security-reviewer (each has `model_fallback: claude-sonnet-4-6` + `effort_fallback: high` per `opus-quota-fallback`)
-- **Sonnet** — a11y-auditor, accessibility-auditor, appsec, backend-engineer, browser-operator, content-writer, database-engineer, deploy-verifier, devsecops, finops, full-stack-engineer, fullstack-engineer, growth-strategist, hr, hr-director, information-architect, media-orchestrator, migration-agent, model-router, motion-choreographer, performance-engineer, product-manager, qa-verification, refactorer, release-manager, resource-broker, seo-auditor, sre, support-dispatcher, swarm-dispatcher, technical-writer, test-writer, ui-designer, visual-qa
+- **Sonnet** — a11y-auditor, accessibility-auditor, appsec, backend-engineer, browser-operator, content-writer, database-engineer, deploy-verifier, devsecops, finops, full-stack-engineer, fullstack-engineer, growth-strategist, hr, hr-director, information-architect, media-orchestrator, migration-agent, model-router, motion-choreographer, performance-engineer, product-manager, qa-verification, refactorer, release-manager, resource-broker, seo-auditor, sre, support-dispatcher, swarm-dispatcher, technical-writer, test-writer, theme-tools-designer, theme.tools-designer, ui-designer, ui-ux-designer, visual-qa
 - **Haiku** — changelog-drafter, changelog-generator, code-simplifier, cost-estimator, dead-code-remover, dependency-auditor, formatter, renamer, summarizer, transcriber
 
 ## Quota-aware routing

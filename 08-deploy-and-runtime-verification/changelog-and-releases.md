@@ -78,6 +78,21 @@ Treat a dry run as evidence of local archive acceptance and routing. After an
 authorized publish, verify the registry archive digest and install the exact
 version in a clean consumer before recording adoption.
 
+For an installed release toolchain that includes the clean-checkout gate, run
+`theme-verify-release-head <full-git-sha>` after build and verification and
+immediately before deployment. It checks local `HEAD`, remote `origin/main`,
+and Git-visible changes, including untracked files and dirty submodules.
+Qualify ignored build outputs separately and verify the deployed revision and
+response contracts with the project's production probes.
+
+For a consumer using vendored npm archives, run the installed
+`theme-verify-npm-archives` to match archive bytes to the lockfile's SHA-512
+integrity. Use a qualified version with physical path validation when the
+consumer requires self-contained releases. Keep the regular tarballs at their
+declared paths under `vendor/theme-tools`. Record source qualification,
+consumer installation, and live verification according to the evidence
+actually obtained.
+
 Before uploading to Nexus, check every qualified package version against the
 hosted repository. For `theme.tools`, run `pnpm package:release:check-nexus`
 against the qualified archives and receipt. If an existing version has the same
