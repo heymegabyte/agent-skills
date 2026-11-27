@@ -129,7 +129,9 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 - `security-reviewer`
 - `seo-auditor`
 - `test-writer`
+- `theme-tools-designer` (`theme.tools-designer` / `ui-ux-designer`)
 - `transcriber`
+- `ui-designer`
 - `visual-qa`
 
 - **OpenClaw / fleet orchestration / runner context** → `openclaw-integration`; use `control-plane/RUNTIME.md` for coding turns and `control-plane/FLEET.md` for host configuration.
