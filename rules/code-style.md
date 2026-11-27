@@ -8,6 +8,8 @@ triggers:
   - "rename a typescript symbol"
   - "typed eslint custom rule"
   - "custom typed eslint rule"
+  - "typed lint coverage"
+  - "typescript project configuration"
 paths:
   - "*"
 last_reviewed: 2026-10-26
@@ -42,7 +44,8 @@ Use strict TypeScript, Google TypeScript style, and module settings that match t
 
 ### Lint
 
-- Use the supported ESLint flat-config and typescript-eslint versions for the project. Set project service to the consumer's absolute root, include linted TypeScript files in their project, and use the shared strict or migration profile from `@theme-tools/testing/typed-eslint-config` where installed. Verify that valid TypeScript parses and a type-aware rule detects a planted violation.
+- Use the ESLint flat config and typescript-eslint versions supported by the installed compiler. With `@theme-tools/testing/typed-eslint-config`, use the consumer's absolute root and default Project Service for nearest-project discovery. Pass `project` and scoped `files` for tooling or tests owned by a named TSConfig. Keep any migration scope explicit and default new files to the strict profile.
+- When the installed package exposes `theme-verify-source-coverage`, pass every compiler project with repeated `--project` options. It checks every tracked JavaScript and TypeScript file for compiler membership and typed lint coverage and runs ESLint. Continue running the compiler projects for type diagnostics. Record exact source exemptions and verify that an omitted file and a planted lint violation each fail the gate.
 - **oxlint** pre-commit speed pass (50-100× ESLint, no formatting).
 - **knip** dead code/unused deps (CI weekly). **jscpd** duplicate detection (≤1%). **dependency-cruiser** architecture rules.
 - Prettier formats (`.prettierrc`). Pre-commit: `oxlint && eslint --fix && prettier --write`.

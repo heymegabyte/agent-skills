@@ -40,6 +40,14 @@ edit list. Keep the compiler's prefix and suffix text so shorthand properties
 and aliases retain their intended names. Typecheck the edited projects and
 verify affected package exports.
 
+For project references, choose the consuming or declaring TSConfig that
+contains the symbol's actual scope. Supported builds follow authored sources
+when source redirects are enabled and reject previews targeting generated
+declarations. Query a consumer import to rename its local alias. Query the
+authored library declaration to prepare a change to the exported symbol and
+check each affected consumer independently. Rebuild referenced projects
+after applying a rename.
+
 [TypeScript language service](https://github.com/microsoft/TypeScript/wiki/Using-the-Language-Service-API) · [Hono RPC](https://hono.dev/docs/guides/rpc)
 
 ## Drizzle v1 Schema-to-Zod (Auto-Derive Contracts)

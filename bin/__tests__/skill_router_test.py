@@ -388,7 +388,10 @@ class SkillRouterTest(unittest.TestCase):
             ("Add a TypeScript runtime schema to this Worker", "rules/code-style"),
             ("Rename a TypeScript symbol across packages", "rules/code-style"),
             ("Write a custom typed ESLint rule with an autofix", "rules/code-style"),
+            ("Configure strict typed lint coverage for tooling scripts", "rules/code-style"),
+            ("Update the TypeScript project configuration for browser tests", "rules/code-style"),
             ("Review release provenance before publishing", "08-deploy-and-runtime-verification"),
+            ("Check the release contract against the deployed Worker", "08-deploy-and-runtime-verification"),
             ("Review a saved OpenTofu plan", "08-deploy-and-runtime-verification"),
         )
         for prompt, skill in cases:

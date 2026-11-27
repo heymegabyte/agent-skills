@@ -27,7 +27,10 @@ When a repository supports hosted and local deployment, share the preflight
 entrypoint for both. Include required asset existence before publishing.
 After deployment and any required cache purge, verify the deployed revision,
 HTTP status, and expected media type for the public assets in the release
-contract.
+contract. For API probes, validate both release identity and response bodies
+using the declared wire schemas. Retry stale revisions or transient edge
+errors within a fixed limit. Fail on a confirmed candidate contract
+violation even if a concurrent probe reports a transient error.
 
 1. Build + typecheck
 2. Commit only the intended tested tree and push that exact commit normally to `main`
