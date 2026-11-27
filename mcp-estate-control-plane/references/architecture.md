@@ -10,7 +10,13 @@
 
 Profiles are deny-by-default. A server/tool allowlist controls discovery but is not a substitute for upstream authorization.
 
-Canonical install assignments are generated from `registry/client-profiles.json` into `generated/profiles/` in `heymegabyte/mcp.megabyte.space`. A client reconciler owns only remote entries whose names begin with `megabyte-`; it preserves unrelated registrations and the profile's `preserveLocalServers` entries. Never use the human primary endpoint as an automation fallback or reuse one host's service-token references on another host.
+Canonical install assignments are generated from `registry/client-profiles.json` into `generated/profiles/` in `heymegabyte/mcp.megabyte.space`. Select through `generated/profiles/index.json` using the exact host role and supported client kind. Pin consumption to the manifest's recorded source digest or canonical revision and reject a missing, stale, mismatched, or unknown selector. `install.doctor` consumes and merges the pinned manifest; it must not maintain a copied endpoint table or infer a broader profile. A client reconciler owns only remote entries whose names begin with `megabyte-`; it preserves unrelated registrations and the profile's `preserveLocalServers` entries. Never use the human primary endpoint as an automation fallback or reuse one host's service-token references on another host.
+
+## Canary and inventory constraints
+
+Brandfetch is a paid-read, per-human OAuth/DCR canary upstream. Its server is default-disabled and its only enabled tools are `brand_search`, `get_brand_data`, `get_brand_context`, and `build_logo_urls`. Keep `get_brand`, `get_brands`, `enrich_transaction`, and `send_feedback` disabled. A synchronized catalog change grants nothing: review the new tool, update the canonical allowlist, and repeat discovery, forced-denial, quota, revocation, isolation, and rollback verification before any grant or promotion.
+
+GitHub public inventory is discovery evidence only. A public endpoint, public repository, tool catalog, or successful unauthenticated metadata request does not create a portal attachment or profile/tool entitlement. Its effective grant is zero until the canonical registry names the server, endpoint, authentication and delegation mode, profiles, exact tools, direct-endpoint protection, and live positive and negative authorization evidence. Do not translate a public inventory entry into a generated client grant.
 
 ## Cloudflare-native availability baseline
 
@@ -37,6 +43,7 @@ LiteLLM owns model/provider routing, virtual keys, teams, budgets, and applicati
 - Positive and negative authorization at both `tools/list` and `tools/call`.
 - Expired/revoked OAuth, stale capability sync, rate limit, DLP block, upstream outage, timeout/job polling, and rollback tests.
 - One correlation ID across Access, Portal, upstream, LiteLLM when applicable, and observability systems without raw secrets or sensitive payloads.
+- Per-consumer cutover receipts naming the host/client manifest digest, replacement endpoint, successful initialize/discovery/allowed call, expected denial, and tested rollback. Retire a predecessor only after every in-scope live consumer has such a receipt; source configuration, inventory, generation, and canary success alone are insufficient.
 
 Primary documentation:
 

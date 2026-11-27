@@ -17,6 +17,8 @@ Use `heymegabyte/mcp.megabyte.space` as the secret-free source of truth for serv
 5. Keep Cloudflare's own Code Mode MCP direct; nested Code Mode is unsupported. Start portal Code Mode opt-in.
 6. The Cloudflare-native baseline must initialize, discover tools, execute an allowed read-only call, and deny an unauthorized call when home Internet, Coolify, Proxmox, LAN origins, tunnels to those origins, and workstation sessions are unavailable. Keep those dependencies in explicitly extended/local profiles, never the baseline.
 7. Select an install manifest from `heymegabyte/mcp.megabyte.space/generated/profiles/index.json`; do not invent a universal profile. `macos-human` and `ubuntu-human` are interactive OAuth profiles. `macos-automation` and `ubuntu-automation` use different Infisical projects and different Access service tokens. `canary-human`, `sandbox-human`, and `ops-human` are explicit-only.
+8. Treat inventory as evidence, not authorization. A discovered public GitHub MCP endpoint or repository receives zero portal, profile, server, and tool grants until the canonical registry records a reviewed grant and live authorization evidence.
+9. Brandfetch remains canary-only: per-human OAuth/DCR, default-disabled, with only `brand_search`, `get_brand_data`, `get_brand_context`, and `build_logo_urls` enabled. Do not promote it or enable newly synchronized tools implicitly.
 
 ## Identity contract
 
@@ -30,7 +32,9 @@ Use `heymegabyte/mcp.megabyte.space` as the secret-free source of truth for serv
 
 - Begin with a sanitized inventory of every actual client registration and running process. Never print secret values.
 - Update the canonical registry first, regenerate, and validate deterministic output.
+- Install only the exact host/client manifest selected by the canonical index, pinned to its recorded source digest or revision. Consumers merge that manifest; they do not copy endpoint tables or reconstruct grants.
 - Migrate one upstream at a time through shadow and canary. Prove initialize, tool discovery, an allowed call, forbidden discovery, a forced forbidden call, expiry/revocation, failure handling, and rollback before removing a local route.
+- Retire no local or predecessor route until every named live consumer has used the replacement successfully and rollback evidence is retained. Repository declarations, generated manifests, and a single canary client are not consumer proof.
 - Operations that may exceed Cloudflare's 60-second upstream timeout use job/status/cancel/result tools.
 - Preserve unrelated client entries and make installation atomic with a rollback copy.
 
