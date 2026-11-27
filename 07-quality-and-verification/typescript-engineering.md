@@ -34,3 +34,25 @@ subpaths you plan to use. Current shared entry points include
   boundaries and compile positive and negative type assertions. Reproduce
   failing behavior on the previous revision when practical. Re-run the normal
   target on the candidate and capture results and elapsed time.
+
+## Native TypeScript and compiler API selection
+
+Check the consumer's installed compiler with the normal typecheck entry point.
+Record its version separately from the backend used for typed lint and semantic
+navigation. A native TypeScript 7 installation can compile the project while
+its JavaScript package entry point lacks the classic language service.
+
+Use the installed `theme-ts-references` CLI with its default compiler when that
+compiler supplies the supported language service. When the consumer has a
+qualified classic compiler in a separate installed package, pass its package
+name with `--compiler-api` and record the backend and version in the evidence.
+Check the installed typescript-eslint peer range before changing the root
+compiler. Verify that the two compilers resolve the intended project and
+that navigation reports the expected declaration. Map each use to the
+[TypeScript 7 migration guidance](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/).
+
+During rollouts, use `theme-verify-source-coverage --typecheck` when the
+coverage receipt needs to prove both project membership and compiler
+diagnostics. Check the installed CLI's result for `typechecked: true`.
+Exercise a source file with a known type error, confirm it fails, and check
+the clean result using the same projects and required file list.
