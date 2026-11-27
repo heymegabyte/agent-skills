@@ -13,6 +13,12 @@
       "options": {
         "singleQuote": false
       }
+    },
+    {
+      "files": "openspec/changes/*/owner.json",
+      "options": {
+        "parser": "json-stringify"
+      }
     }
   ]
 }
