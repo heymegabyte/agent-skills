@@ -57,6 +57,15 @@ Read `control-plane/FLEET.md` and the matching `machines/` profile for host oper
 - `progress.md` at 60% context → fresh agent.
 - Crons = monitoring ONLY.
 
+## OpenSpec Change Ownership — Plan & Decompose Early (every substantial task)
+
+<!-- EMDASH:CHANGE-OWNERSHIP v1 — canonical: rules/openspec-change-ownership.md -->
+
+- **Plan & decompose early.** Before substantial implementation, map the authorized work into coherent **OpenSpec changes** — each a single clear outcome with bounded scope, acceptance criteria, interfaces, dependencies, and a verification plan; small enough for one agent to finish. Re-decompose when new evidence changes the plan.
+- **One owner per change = direct execution of the WHOLE change.** Each active OpenSpec change has exactly ONE owning agent instance, and that same agent directly performs EVERY subtask — detailed design, implementation, tests, docs, fixes, artifact upkeep, completion verification. NEVER split one change's checklist across different implementation agents. An independent reviewer may inspect + report; the **owning agent** applies the resulting fixes.
+- **Parallelize ACROSS changes, not within one.** Many coherent changes run in parallel across agents (claude/codex/gemini/opencode); to add implementers, first split into more changes. This refines the swarm doctrine — the dispatch unit is the whole change, owned end-to-end (`[[parallel-multi-swarm-orchestration]]`, `[[split-work-into-ledger]]`, `[[openspec-change-ownership]]`).
+- **Capture strong recommendations the moment you find them.** At ANY phase, when a concrete high-value improvement surfaces, preserve it in OpenSpec right then with real content (problem · evidence · improvement · benefit · scope · priority · dependencies · acceptance) — update the matching change or open a scoped proposal; if another agent owns it, route the finding to that owner without competing edits. Capturing a proposal is NOT authorization to build it. Full procedure: `rules/openspec-change-ownership.md`.
+
 ## Value Extraction (every prompt — via [[prompt-as-training-signal]])
 
 - Every prompt is a gradient. If user is prompting on same surface, prior turn under-delivered. Extract lesson BEFORE doing work; write to durable layer SAME TURN. Cross-link siblings.
