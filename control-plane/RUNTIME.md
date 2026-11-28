@@ -128,3 +128,8 @@ gets the same contract, acceptance exit codes, and approved evidence in a
 separate session. The coordinator retains the model family, session ID, and
 request and response digests. Configure two distinct families for independent
 or protected-risk runs.
+
+Use `createLocalClaudeDeliberation` from `bin/local-claude-deliberation.ts`
+with the approved `bin/with-subscription-cli.sh` launcher for a second local
+review family. The adapter disables tools and MCP, uses stdin, and requires a
+successful Claude result with a session ID.
