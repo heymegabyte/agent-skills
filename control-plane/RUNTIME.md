@@ -95,3 +95,10 @@ proposal path, and commit-qualified citation. `refreshImprovements` receives
 those findings in the same run. Proposal persistence preserves the candidate
 for admission. Authority to implement and publish any destination change
 comes from the host's OpenSpec admission policy.
+
+Use `createModelOpenSpecPlanner` from `bin/model-openspec-planner.ts` in the
+host compiler to request a JSON change plan from the assigned architect.
+The host supplies the approved launcher for that assignment, reviews the
+proposed paths and dependencies, assigns execution settings, and materializes
+the Markdown before the coordinator freezes the contracts. Keep the planner's
+session ID with the host compiler receipt.

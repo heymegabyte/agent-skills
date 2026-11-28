@@ -152,3 +152,5 @@
 - [x] Align conflicting domain-specific directives with the existing orchestration policy. Keep tests and browser checks with the change owner, reserve architecture for the assigned architect, send only admitted improvements to execution, and let capability and capacity govern provider dispatch. Verify generated text and installed skill links.
 
 - [x] Align live hydrated briefs and fleet bootstrap guidance with frozen OpenSpec ownership. The runtime-generated text still instructed agents to dispatch individual tasks and review reuse only at closeout. Distinguish task-level estimates from the whole-change dispatch unit, keep acceptance with the owner, and route implementation-time reuse to same-run admission. Verify all three prompt generators.
+
+- [x] Provide an assigned-architect planning adapter for host compilers. Convert the saturated brief into independent OpenSpec change drafts via an approved architect session, carrying the session receipt and checking basic change shape. The trusted host retains materialization, authority, and execution settings. Verify independent draft output and duplicate-ID rejection.
