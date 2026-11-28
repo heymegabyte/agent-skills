@@ -240,7 +240,7 @@ export async function invokeProviderCritiqueRound(
     const participant = participants.find((item) => item.id === assignment.participantId);
     if (!participant || participant.family !== assignment.family) throw new Error(`Missing capability-backed participant for ${assignment.participantId}`);
     const input = JSON.stringify({
-      instruction: 'Independently challenge the peer briefs from your assigned responsibility, revise your recommendation, and return one Critique JSON object. Include decisions, alternatives with dispositions, evidence references, unresolved assumptions, and a concise revision. Preserve material dissent.',
+      instruction: 'Independently challenge the peer briefs from your assigned responsibility, revise your recommendation, and return only one JSON object with family (copy participant.family), materialDeltas (string array), dissent (array), and revision (string). Use empty arrays when there are no material deltas or dissent. Include decisions, alternatives with dispositions, evidence references, and unresolved assumptions in revision. Preserve material dissent.',
       round,
       participant,
       responsibility: assignment.responsibility,
@@ -297,7 +297,7 @@ export async function invokeIndependentBriefs(
     : plan.assignments;
   const invoke = async (assignment: ConferenceRoleAssignment, sequence: number) => {
     const family = assignment.family;
-    const input = `Produce a ${assignment.responsibility} conference brief as ${family}. Do not claim model independence beyond the supplied capability plan. Return JSON only.\nCAPABILITY:${JSON.stringify({ mode: plan.mode, independent: plan.independent, limitation: plan.limitation, sequence })}\nEVIDENCE:${bundle}`;
+    const input = `Produce a ${assignment.responsibility} conference brief as ${family}. Do not claim model independence beyond the supplied capability plan. Return only a JSON object with family set to "${family}", summary (string), recommendations (string array), risks (string array), and decisions (array of objects with topic, position, and material boolean).\nCAPABILITY:${JSON.stringify({ mode: plan.mode, independent: plan.independent, limitation: plan.limitation, sequence })}\nEVIDENCE:${bundle}`;
     const result = await launcher(family, input);
     if (!result.launcher.startsWith('approved:')) throw new Error(`Unapproved provider launcher for ${family}`);
     const parsed = JSON.parse(result.output) as StructuredBrief;
