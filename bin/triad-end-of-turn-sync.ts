@@ -42,7 +42,7 @@ export interface AgentWindowExtractionInput {
 }
 
 export interface TriadMeaningExtractionReceipt {
-  executedInParallel: true;
+  executedInParallel: false;
   extractedAt: string;
   minimumPromptAssumption: string;
   destinations: {
@@ -86,51 +86,27 @@ export const DEFAULT_TRIAD_TARGETS: TriadSyncTarget[] = [
 export async function extractAndRouteEndOfRoundMeaning(
   input: AgentWindowExtractionInput,
 ): Promise<TriadMeaningExtractionReceipt> {
-  const promptText = input.prompt.trim() || 'Autonomous prompt round convergence';
-  const [agentSkillsStream, themeToolsStream, installDoctorStream] = await Promise.all([
-    Promise.resolve({
-      repo: 'heymegabyte/agent-skills' as const,
-      domain: 'AI skills, rules, agent master prompts & multi-swarm orchestration' as const,
-      minimumPromptCompletenessRule:
-        'Update skills/rules assuming they should have already been written so the operator writes as few prompts as possible (ideally 1) to deliver a complete product or entire ecosystem via massive parallel Claude/Codex/Gemini + 80%+ OpenCode (DeepSeek) swarms.',
-      extractedLessons: input.extractedPreferences?.length
-        ? input.extractedPreferences
-        : [
-            `Pre-emptively hydrate and auto-expand "${promptText.slice(0, 90)}" on pass 1 so future builds require zero follow-up prompts.`,
-            'Enforce end-of-round parallel triad extraction across all skills, system prompts, and agent master prompts.',
-          ],
-    }),
-    Promise.resolve({
-      repo: 'heymegabyte/theme.tools' as const,
-      domain: 'Site & app code across 28 canonical @theme.tools/* libraries (thin-shell consumers)' as const,
-      extractedComponentsAndEngines: input.siteCodeCandidates?.length
-        ? input.siteCodeCandidates
-        : [
-            '@theme.tools/ui 16-state OKLCH components, multi-tab Settings, and 12-plugin starter catalog adapters',
-            '@theme.tools/testing parallel Cloudflare Browser Run (@cloudflare/playwright) 6-breakpoint E2E harness',
-          ],
-    }),
-    Promise.resolve({
-      repo: 'heymegabyte/install.doctor' as const,
-      domain: 'System & host code, dotfiles, lazy CLI shims (cnf-build-shims) & provisioning' as const,
-      extractedSystemConfigs: input.systemCodeCandidates?.length
-        ? input.systemCodeCandidates
-        : [
-            'UserPromptSubmit + Stop hook parallel hydration & triad-extraction wiring in settings.json',
-            'Worktree pool, port lease, and LiteLLM DeepSeek swarm environment defaults',
-          ],
-    }),
-  ]);
-
   return {
-    executedInParallel: true,
+    executedInParallel: false,
     extractedAt: new Date().toISOString(),
-    minimumPromptAssumption:
-      'Write as few prompts as possible to finish as complete a product or ecosystem as possible by fully leveraging massive agent parallelization.',
+    minimumPromptAssumption: 'Capture evidence-backed reuse so future requests need less repeated context.',
     destinations: {
-      agentSkills: agentSkillsStream,
-      themeTools: themeToolsStream,
-      installDoctor: installDoctorStream,
+      agentSkills: {
+        repo: 'heymegabyte/agent-skills',
+        domain: 'AI skills, rules, agent master prompts & multi-swarm orchestration',
+        minimumPromptCompletenessRule: 'Retain transferable procedures supported by verified work.',
+        extractedLessons: [...(input.extractedPreferences ?? [])],
+      },
+      themeTools: {
+        repo: 'heymegabyte/theme.tools',
+        domain: 'Site & app code across 28 canonical @theme.tools/* libraries (thin-shell consumers)',
+        extractedComponentsAndEngines: [...(input.siteCodeCandidates ?? [])],
+      },
+      installDoctor: {
+        repo: 'heymegabyte/install.doctor',
+        domain: 'System & host code, dotfiles, lazy CLI shims (cnf-build-shims) & provisioning',
+        extractedSystemConfigs: [...(input.systemCodeCandidates ?? [])],
+      },
     },
   };
 }
