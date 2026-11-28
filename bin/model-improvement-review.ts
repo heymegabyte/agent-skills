@@ -1,5 +1,5 @@
 import { digest } from './orchestration-run-state.ts';
-import type { ProviderLauncher } from './evidence-gated-deliberation.ts';
+import { parseProviderJson, type ProviderLauncher } from './evidence-gated-deliberation.ts';
 import type { PipelineAdapters } from './evidence-gated-orchestrator.ts';
 import type { DurableImprovementCandidate } from './recursive-improvement.ts';
 
@@ -48,7 +48,7 @@ export function createModelImprovementReview(options: {
     if (!response.launcher.startsWith('approved:') || !response.sessionId?.trim()) {
       throw new Error('Improvement review requires an approved provider session');
     }
-    const suggestions: unknown = JSON.parse(response.output);
+    const suggestions: unknown = parseProviderJson(response.output);
     if (!Array.isArray(suggestions)) throw new Error('Improvement review must return an array');
     const candidates: DurableImprovementCandidate[] = [];
     for (const suggestion of suggestions) {

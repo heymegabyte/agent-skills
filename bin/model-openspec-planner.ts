@@ -1,3 +1,4 @@
+import { parseProviderJson } from './evidence-gated-deliberation.ts';
 import { parseOpenSpecArtifacts, validateOwnershipGraph } from './swarm-execution-kernel.ts';
 import type { OpenSpecCompilerInput } from './evidence-gated-orchestrator.ts';
 
@@ -32,7 +33,7 @@ export function createModelOpenSpecPlanner(
     if (!response.launcher.startsWith('approved:') || !response.sessionId?.trim()) {
       throw new Error('OpenSpec planning requires an approved architect session');
     }
-    const plan: unknown = JSON.parse(response.output);
+    const plan: unknown = parseProviderJson(response.output);
     if (!plan || typeof plan !== 'object' || !('changes' in plan) || !Array.isArray(plan.changes)
       || plan.changes[0]?.changeId !== input.changeId) {
       throw new Error('OpenSpec plan must start with the assigned change');

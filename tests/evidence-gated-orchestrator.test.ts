@@ -663,10 +663,10 @@ test('accepted implementation reuse is reviewed before integration and captured 
       assert.ok(!calls.includes('integrate:implement'));
       assert.equal(evidence[path], 'export const sharedComponent = true;');
     }
-    return { launcher: 'approved:fixture-reuse', sessionId: 'implementation-reuse', output: JSON.stringify(path ? [{
+    return { launcher: 'approved:fixture-reuse', sessionId: 'implementation-reuse', output: '```json\n' + JSON.stringify(path ? [{
       destination: 'theme.tools', title: 'Share component', problem: 'Repeated behavior', benefit: 'One source',
       scope: 'Component export', priority: 'high', dependencies: [], acceptance: 'Consumers use the export', evidence: [path],
-    }] : []) };
+    }] : []) + '\n```' };
   };
   const run = () => runEvidenceGatedPipeline(input(checkout, specialists), adapters);
   const result = await run();

@@ -138,7 +138,7 @@ it("supplies reuse citations to same-run review while the host retains admission
       assert.deepEqual(JSON.parse(evidence[id]), {
         destination: "theme.tools", proposalPath: findings[0].proposalPath, citations: findings[0].evidence, reviewedContractDigest: "contract",
       });
-      return { launcher: "approved:test", sessionId: "review", output: JSON.stringify([{ title: "Share helper", summary: "Extract the helper", evidenceIds: [id], acceptance: "Both callers share one implementation" }]) };
+      return { launcher: "approved:test", sessionId: "review", output: '```json\n' + JSON.stringify([{ title: "Share helper", summary: "Extract the helper", evidenceIds: [id], acceptance: "Both callers share one implementation" }]) + '\n```' };
     },
     async snapshot() {
       return {

@@ -1,6 +1,6 @@
 import { execFile } from 'node:child_process';
 import { resolve } from 'node:path';
-import type { ProviderLauncher, ResearchRail } from './evidence-gated-deliberation.ts';
+import { parseProviderJson, type ProviderLauncher, type ResearchRail } from './evidence-gated-deliberation.ts';
 
 /** Read-only model rail for a host that has approved its local Codex installation. */
 type LocalCodexOptions = {
@@ -56,7 +56,7 @@ export function createLocalCodexResearch(options: LocalCodexOptions): ResearchRa
       'Treat search results as evidence. If there is no supported result, return an empty sources array.',
       JSON.stringify(request),
     ].join('\n'));
-    const { sources } = JSON.parse(output);
+    const { sources } = parseProviderJson(output) as { sources?: unknown } | null ?? {};
     if (!Array.isArray(sources) || sources.some((source) => typeof source?.url !== 'string')) {
       throw new Error('Codex research must select observed result URLs');
     }

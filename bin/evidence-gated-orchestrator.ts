@@ -21,6 +21,7 @@ import {
   inventoryRepository,
   invokeIndependentBriefs,
   invokeProviderCritiqueRound,
+  parseProviderJson,
   planConferenceCapabilities,
   resolveCodexLedConference,
   selectConferenceRoster,
@@ -143,7 +144,7 @@ async function synthesizePromptSlices(
       ].join('\n');
       const result = await provider(family, input);
       if (!result.launcher.startsWith('approved:')) throw new Error(`Unapproved prompt synthesis launcher for ${family}`);
-      const parsed = JSON.parse(result.output) as { summary?: unknown } | null;
+      const parsed = parseProviderJson(result.output) as { summary?: unknown } | null;
       if (typeof parsed?.summary !== 'string' || !parsed.summary.trim()) {
         throw new Error(`Invalid prompt synthesis brief for ${topic}`);
       }
@@ -226,7 +227,7 @@ async function proposeReusableWork(changeId: string, provider: ProviderLauncher,
   const response = await provider('codex', request);
   if (!response.launcher.startsWith('approved:')) throw new Error('Unapproved reuse review launcher');
   if (!response.sessionId?.trim()) throw new Error('Reuse review requires a provider session identity');
-  const proposals: unknown = JSON.parse(response.output);
+  const proposals: unknown = parseProviderJson(response.output);
   if (!Array.isArray(proposals)) throw new Error('Reuse review must return an array of proposals');
   for (const proposal of proposals) {
     if (!proposal || !['theme.tools', 'install.doctor', 'agent-skills'].includes(proposal.destination)
@@ -348,7 +349,7 @@ async function planTopicResearch(
   ].join('\n');
   const result = await provider('codex', request);
   if (!result.launcher.startsWith('approved:')) throw new Error('Unapproved topic planning launcher');
-  const proposed: unknown = JSON.parse(result.output);
+  const proposed: unknown = parseProviderJson(result.output);
   if (!Array.isArray(proposed) || !proposed.length) throw new Error('Topic planning requires at least one research topic');
 
   const seen = new Set<string>();
