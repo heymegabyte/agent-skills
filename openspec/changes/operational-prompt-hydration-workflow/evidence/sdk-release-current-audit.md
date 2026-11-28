@@ -18,3 +18,14 @@ The latest package qualification job again stopped before its first step with Gi
 ## Built SDK import
 
 During local qualification of `d1229ba5`, the distribution build produced the SDK. With the pinned Node `22.23.5`, a package self-reference imported `@theme.tools/sdk/release-lineage` from the built export and called `evaluateSharedCapabilityReleaseChain`. An adoption claim with no evidence was rejected, and the result identified `source-validation` as the first required stage. This is a workspace build smoke check. The separate qualification process was still running its UI typecheck when observed. A packed consumer and hosted registry verification remain open.
+
+## Qualified private bundle and standalone consumer
+
+The clean `theme.tools` source at `d1229ba51ac75c3b57e872bd7c5f9ec05de946b3` (tree `e7ecd97cdb67bf258df88d4ffc3b60328a8dcd74`) produced 44 distribution archives under Node `22.23.5` and pnpm `11.28.2`. The six fresh provenance checks passed with Python 3.13 for pinned Semgrep and public npm configured for pnpm consumer dependency resolution. The local bundle materializer verified the fresh receipt and generated a local SLSA-format manifest.
+
+- Fresh provenance receipt SHA-256: `ef598fb57da1975846d1a1542c27acb239992df9e69fd94da6f005e356d9bc33`.
+- Local bundle manifest SHA-256: `a45fd3dd365855e14da6d0065170993e40ec73f6d86dd46191187afe4a4403a2`.
+- `@theme.tools/sdk@1.0.4` archive SHA-256: `10289c0349adbaaf3f1c55aad559cad238a8b4d65712ef2ad881abb006e4d22a` (matches the manifest subject).
+- Standalone consumer result SHA-256: `67fa44a45907481a1db2854fe1cc2930f8596694f9979274b568346c037995c6`. The consumer gate pinned the manifest digest, checked all 44 archives, passed all 23 results, and reported no workspace aliases or issues.
+
+The bundle, provenance receipt, and logs are retained in the local qualification evidence directory. The standalone fixture verifies installation from exact packaged bytes. Hosted registry publication and adoption by the intended repository remain unverified.
