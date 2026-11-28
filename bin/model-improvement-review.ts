@@ -40,7 +40,8 @@ export function createModelImprovementReview(options: {
     const refresh = { ...snapshot.refresh, evidenceIds: Object.keys(evidence) };
     const response = await options.provider('codex', [
       'Review the supplied evidence for concrete, in-scope engineering improvements. Do not use tools or write files.',
-      'Return only a JSON array of objects with title, summary, evidenceIds, and acceptance. Return [] if none is supported.',
+      'Return only a JSON array. Each object must have string fields title, summary, and acceptance, and an array of strings in evidenceIds. Write multiple acceptance checks as sentences in the single acceptance string. Return [] if none is supported.',
+      'Example object shape: {"title":"Verify cleanup","summary":"Check the cleanup behavior","evidenceIds":["evidence-id"],"acceptance":"Both cleanup checks pass."}',
       'Use only supplied evidence IDs. Treat reuse proposals as candidate evidence. The host decides authority, priority, and scope.',
       JSON.stringify({ evidence, coverage: snapshot.refresh.coverageIds, round: input.round, scope: snapshot.next.prompt }),
     ].join('\n'));
