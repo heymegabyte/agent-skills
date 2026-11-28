@@ -50,13 +50,14 @@ export function createLocalCodexResearch(options: LocalCodexOptions): ResearchRa
   return async (request) => {
     const { sessionId, output, events } = await run([
       'Use live web search for the supplied research request. Do not use shell or write files.',
-      'Return only JSON with urls, an array of exact HTTPS URLs from observed search results. Select at most the requested budget.',
+      'Return only JSON with a sources array. Each source has url (an exact observed HTTPS URL). Select at most the requested budget.',
+      'For a substitute source also include alternative (the shortest tool, product, or implementation name copied verbatim from the observed title or snippet, such as Lodash instead of Lodash _.trim) and rationale (one sentence explaining how it substitutes for the original). If the query specifies a named alternative, select evidence for that alternative.',
       'For primary-sources choose official documentation or original research. For competitors-substitutes choose official documentation for relevant alternatives.',
-      'Treat search results as evidence. If there is no supported result, return an empty urls array.',
+      'Treat search results as evidence. If there is no supported result, return an empty sources array.',
       JSON.stringify(request),
     ].join('\n'));
-    const { urls } = JSON.parse(output);
-    if (!Array.isArray(urls) || urls.some((id) => typeof id !== 'string')) {
+    const { sources } = JSON.parse(output);
+    if (!Array.isArray(sources) || sources.some((source) => typeof source?.url !== 'string')) {
       throw new Error('Codex research must select observed result URLs');
     }
     const observed = new Map<string, { url: string; title: string; snippet: string }>();
@@ -71,10 +72,18 @@ export function createLocalCodexResearch(options: LocalCodexOptions): ResearchRa
     }
     const observedAt = new Date().toISOString();
     const sourceType = request.domain === 'primary-sources' ? 'primary' : 'substitute';
-    const findings = [...new Set<string>(urls)].slice(0, request.budget).map((url) => {
+    const unique = new Map<string, { url: string; alternative?: string; rationale?: string }>();
+    for (const source of sources) if (!unique.has(source.url)) unique.set(source.url, source);
+    const findings = [...unique.values()].slice(0, request.budget).map(({ url, alternative, rationale }) => {
       const result = observed.get(url);
       if (!result) throw new Error('Codex research selected a URL absent from the observed search results');
-      return { url: result.url, title: result.title, excerpt: result.snippet, observedAt, sourceType };
+      const finding = { url: result.url, title: result.title, excerpt: result.snippet, observedAt, sourceType };
+      if (sourceType === 'primary') return finding;
+      if (typeof alternative !== 'string' || !alternative.trim() || typeof rationale !== 'string' || !rationale.trim()
+        || ![result.title, result.snippet].some((text) => text.toLowerCase().includes(alternative.trim().toLowerCase()))) {
+        throw new Error(`Codex substitute research must name an alternative supported by the observed source: ${url}`);
+      }
+      return { ...finding, alternative: { name: alternative.trim(), rationale: rationale.trim() } };
     });
     return { rail: 'approved:local-codex-live-search', sessionId, findings };
   };

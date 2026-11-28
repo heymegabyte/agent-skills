@@ -267,3 +267,23 @@ test('live research observations are checked when the reply arrives', async () =
   });
   assert.equal(receipt.coverage.satisfied, true);
 });
+
+test('alternative research requires distinct evidence while permitting shared context', async () => {
+  let distinct = false;
+  const requests = [
+    { domain: 'primary-sources' as const, query: 'Primary specification', budget: 1 },
+    { domain: 'competitors-substitutes' as const, query: 'Alternative implementation', budget: 2 },
+  ];
+  const research = () => executeResearch(requests, async ({ domain }) => {
+    const primary = domain === 'primary-sources';
+    const sourceType = primary ? 'primary' as const : 'substitute' as const;
+    const finding = { title: 'Source', excerpt: 'Observed evidence', observedAt: new Date().toISOString(), sourceType };
+    return { rail: 'approved:fixture', findings: [
+      { ...finding, url: primary ? 'https://example.test/spec' : 'https://example.test/spec#alternative' },
+      ...(!primary && distinct ? [{ ...finding, url: 'https://alternative.test/docs' }] : []),
+    ] };
+  });
+  await assert.rejects(research(), /Alternative research requires at least one distinct source/);
+  distinct = true;
+  assert.equal((await research())[1].findings.length, 2);
+});

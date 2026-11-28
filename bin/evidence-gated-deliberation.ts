@@ -26,7 +26,7 @@ export interface EstateInventory {
 }
 
 export interface ResearchRequest { domain: 'primary-sources' | 'competitors-substitutes'; query: string; budget: number; topic?: string; }
-export interface ResearchFinding { url: string; title: string; observedAt: string; publishedAt?: string; excerpt: string; sourceType: 'primary' | 'competitor' | 'substitute'; }
+export interface ResearchFinding { url: string; title: string; observedAt: string; publishedAt?: string; excerpt: string; alternative?: { name: string; rationale: string }; sourceType: 'primary' | 'competitor' | 'substitute'; }
 export interface ResearchReceipt {
   request: ResearchRequest;
   rail: string;
@@ -214,6 +214,13 @@ export async function executeResearch(requests: ResearchRequest[], rail: Researc
     for (const result of wave) {
       if (result.status === 'rejected') throw result.reason;
       receipts.push(result.value);
+    }
+  }
+  const primaryUrls = new Set(receipts.filter(({ request }) => request.domain === 'primary-sources')
+    .flatMap(({ findings }) => findings.map(({ url }) => url)));
+  for (const { request, findings } of receipts) {
+    if (request.domain === 'competitors-substitutes' && !findings.some(({ url }) => !primaryUrls.has(url))) {
+      throw new Error(`Alternative research requires at least one distinct source for: ${request.query}`);
     }
   }
   return receipts;
