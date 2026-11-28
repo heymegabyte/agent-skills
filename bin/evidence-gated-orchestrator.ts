@@ -388,6 +388,18 @@ export class ArchitectureConvergenceError extends Error {
   }
 }
 
+export class SwarmIntegrationError extends Error {
+  readonly executions: NodeExecutionReceipt[];
+  readonly reuseExtractions: ReuseExtractionReceipt[];
+
+  constructor(failures: string[], executions: NodeExecutionReceipt[], reuseExtractions: ReuseExtractionReceipt[]) {
+    super(`Swarm execution did not integrate every node: ${failures.join(', ')}`);
+    this.name = 'SwarmIntegrationError';
+    this.executions = executions;
+    this.reuseExtractions = reuseExtractions;
+  }
+}
+
 export async function runEvidenceGatedPipeline(input: PipelineInput, configured: Partial<PipelineAdapters>): Promise<PipelineResult> {
   requireAdapters(configured);
   const captureReuse = configured.captureReuseProposal ?? (configured.reuseProposalRoots && createReuseProposalWriter(configured.reuseProposalRoots));
@@ -602,7 +614,7 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
       });
     }
   }
-  if (failures.length) throw new Error(`Swarm execution did not integrate every node: ${failures.join(', ')}`);
+  if (failures.length) throw new SwarmIntegrationError(failures, executions, reuseExtractions);
   if (reuseResult.status === 'rejected') throw reuseResult.reason;
   const [reuseExtraction] = reuseExtractions;
   state = advance(state, 'swarm-execution', { executions, reuseExtractions });

@@ -4,7 +4,7 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
-import { ArchitectureConvergenceError, runEvidenceGatedPipeline, type PipelineAdapters, type ReuseProposal } from '../bin/evidence-gated-orchestrator.ts';
+import { ArchitectureConvergenceError, SwarmIntegrationError, runEvidenceGatedPipeline, type PipelineAdapters, type ReuseProposal } from '../bin/evidence-gated-orchestrator.ts';
 import { issueArchitectAssignment, type ProcessReceipt, type SchedulerAdapter } from '../bin/swarm-execution-kernel.ts';
 import type { ModelFamily, Specialist } from '../bin/evidence-gated-deliberation.ts';
 import { createHash } from 'node:crypto';
@@ -895,7 +895,14 @@ test('reuse from the second independent change can seed a same-run supplemental 
       return node.id === 'implement' ? { ...receipt, exitCode: 1 } : receipt;
     };
     adapters.refreshImprovements = async () => { throw new Error('Failed wave must not admit supplemental changes'); };
-    await assert.rejects(runEvidenceGatedPipeline(request, adapters), /implement:failed/);
+    await assert.rejects(runEvidenceGatedPipeline(request, adapters), (error) => {
+      assert.ok(error instanceof SwarmIntegrationError);
+      assert.match(error.message, /implement:failed/);
+      assert.equal(error.executions.find(({ nodeId }) => nodeId === 'implement')?.launcher?.exitCode, 1);
+      assert.equal(error.executions.find(({ nodeId }) => nodeId === 'second')?.status, 'integrated');
+      assert.ok(error.reuseExtractions.some(({ findings }) => findings.some(({ evidence }) => evidence.includes(captured))));
+      return true;
+    });
     assert.match(captured, /:src\/second\.ts$/);
     assert.ok(!calls.includes('verify:adversarial'));
   } finally {

@@ -149,3 +149,8 @@ When a conference exhausts its critique rounds, the library throws
 dissent, provider receipts, and exchanges for diagnosis. Unresolved dissent is
 carried into every later critique, including when it was omitted from the
 previous response. Compilation remains blocked until the conference converges.
+
+When a wave fails integration, the library throws `SwarmIntegrationError`
+with all attempt receipts and any captured reuse findings from integrated
+changes. Keep raw process output in the trusted host. Publish only the
+redacted fields needed to diagnose the failure.
