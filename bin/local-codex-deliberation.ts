@@ -48,7 +48,7 @@ export function createLocalCodexDeliberation(options: LocalCodexOptions): Provid
 export function createLocalCodexResearch(options: LocalCodexOptions): ResearchRail {
   const run = createLocalCodexSession(options, true);
   return async (request) => {
-    const { output, events } = await run([
+    const { sessionId, output, events } = await run([
       'Use live web search for the supplied research request. Do not use shell or write files.',
       'Return only JSON with urls, an array of exact HTTPS URLs from observed search results. Select at most the requested budget.',
       'For primary-sources choose official documentation or original research. For competitors-substitutes choose official documentation for relevant alternatives.',
@@ -76,6 +76,6 @@ export function createLocalCodexResearch(options: LocalCodexOptions): ResearchRa
       if (!result) throw new Error('Codex research selected a URL absent from the observed search results');
       return { url: result.url, title: result.title, excerpt: result.snippet, observedAt, sourceType };
     });
-    return { rail: 'approved:local-codex-live-search', findings };
+    return { rail: 'approved:local-codex-live-search', sessionId, findings };
   };
 }

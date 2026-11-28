@@ -30,6 +30,7 @@ export interface ResearchFinding { url: string; title: string; observedAt: strin
 export interface ResearchReceipt {
   request: ResearchRequest;
   rail: string;
+  sessionId?: string;
   findings: ResearchFinding[];
   conflicts: string[];
   coverage: { requestedDomain: ResearchRequest['domain']; citedSources: number; budget: number; satisfied: boolean };
@@ -37,7 +38,7 @@ export interface ResearchReceipt {
   digest: string;
 }
 export interface ResearchConflictDisposition { conflict: string; resolution: string; evidence: string[]; }
-export type ResearchRail = (request: ResearchRequest) => Promise<{ rail: string; findings: ResearchFinding[]; conflicts?: string[]; cacheHit?: boolean }>;
+export type ResearchRail = (request: ResearchRequest) => Promise<{ rail: string; sessionId?: string; findings: ResearchFinding[]; conflicts?: string[]; cacheHit?: boolean }>;
 
 export interface SaturationDisposition { domain: EvidenceDomain; status: 'satisfied' | 'irrelevant' | 'externally-blocked' | 'missing'; evidence: string[]; reason?: string; }
 export interface SaturationResult { ready: boolean; dispositions: SaturationDisposition[]; blockers: string[]; digest: string; }
@@ -204,7 +205,7 @@ export async function executeResearch(requests: ResearchRequest[], rail: Researc
     const conflicts = [...new Set((result.conflicts ?? []).map((conflict) => conflict.trim()).filter(Boolean))];
     const cache = { hit: result.cacheHit ?? false, key: digest(request), freshnessMs };
     const coverage = { requestedDomain: request.domain, citedSources: findings.length, budget: request.budget, satisfied: findings.length > 0 };
-    const base = { request, rail: result.rail, findings, conflicts, coverage, cache };
+    const base = { request, rail: result.rail, ...(result.sessionId ? { sessionId: result.sessionId } : {}), findings, conflicts, coverage, cache };
     return { ...base, digest: digest(base) };
   };
   const receipts: ResearchReceipt[] = [];
