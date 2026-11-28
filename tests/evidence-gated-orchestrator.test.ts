@@ -40,7 +40,7 @@ function configured(checkout: string, paths: string[], calls: string[]): Pipelin
     async changedFiles() { return ['src/app.ts']; },
     async runAcceptance(node) { calls.push(`accept:${node.id}`); return completedProcess(); },
     async sourceDigest() { return 'accepted-source'; },
-    async integrate(node, expected) { calls.push(`integrate:${node.id}`); return { sourceDigest: expected }; },
+    async integrate(node, expected) { calls.push(`integrate:${node.id}`); return { sourceDigest: expected, integratedRevision: `revision-${node.id}` }; },
     async preserveForRecovery() {},
   };
   return {

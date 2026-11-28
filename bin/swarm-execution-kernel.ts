@@ -96,12 +96,12 @@ export interface NodeExecutionReceipt {
 
 export interface SchedulerAdapter {
   preflight(provider: ExecutionProvider, node: ExecutionNode): Promise<{ ok: boolean; reason?: string }>;
-  createWorktree(node: ExecutionNode, frozenBaseRevision?: string): Promise<{ sourceDigest: string }>;
+  createWorktree(node: ExecutionNode, frozenBaseRevision?: string, prerequisiteRevisions?: Readonly<Record<string, string>>): Promise<{ sourceDigest: string }>;
   launch(provider: ExecutionProvider, node: ExecutionNode, correlationId: string, signal: AbortSignal): Promise<ProcessReceipt>;
   changedFiles(node: ExecutionNode): Promise<string[]>;
   runAcceptance(node: ExecutionNode, check: { command: string; args: string[] }, signal: AbortSignal): Promise<ProcessReceipt>;
   sourceDigest(node: ExecutionNode): Promise<string>;
-  integrate(node: ExecutionNode, expectedSourceDigest: string, frozenBaseRevision: string): Promise<{ sourceDigest: string }>;
+  integrate(node: ExecutionNode, expectedSourceDigest: string, frozenBaseRevision: string): Promise<{ sourceDigest: string; integratedRevision?: string }>;
   preserveForRecovery(node: ExecutionNode, reason: string): Promise<void>;
 }
 
@@ -124,10 +124,10 @@ export interface ProcessAdapterOptions {
   allowedAcceptanceArgs?: (command: string, args: string[]) => boolean;
   processTimeoutMs?: number;
   resolveSecretReference: (reference: string) => string | undefined;
-  createWorktree: (node: ExecutionNode, frozenBaseRevision?: string) => Promise<{ directory: string; sourceDigest: string }>;
+  createWorktree: (node: ExecutionNode, frozenBaseRevision?: string, prerequisiteRevisions?: Readonly<Record<string, string>>) => Promise<{ directory: string; sourceDigest: string }>;
   listChangedFiles: (node: ExecutionNode, directory: string) => Promise<string[]>;
   sourceDigest: (node: ExecutionNode, directory: string) => Promise<string>;
-  integrate: (node: ExecutionNode, directory: string, expectedSourceDigest: string, frozenBaseRevision: string) => Promise<{ sourceDigest: string }>;
+  integrate: (node: ExecutionNode, directory: string, expectedSourceDigest: string, frozenBaseRevision: string) => Promise<{ sourceDigest: string; integratedRevision?: string }>;
   preserveForRecovery: (node: ExecutionNode, directory: string | undefined, reason: string) => Promise<void>;
 }
 
@@ -280,8 +280,8 @@ export function createApprovedProcessAdapter(options: ProcessAdapterOptions): Sc
       for (const reference of node.secretReferences ?? []) if (options.resolveSecretReference(reference) === undefined) return { ok: false, reason: `Unresolved secret reference ${reference}` };
       return { ok: true };
     },
-    async createWorktree(node, frozenBaseRevision) {
-      const created = await options.createWorktree(node, frozenBaseRevision);
+    async createWorktree(node, frozenBaseRevision, prerequisiteRevisions) {
+      const created = await options.createWorktree(node, frozenBaseRevision, prerequisiteRevisions);
       const directory = assertSafeWorktree(created.directory, options.safeWorktreeRoots);
       directories.set(node.id, directory);
       return { sourceDigest: created.sourceDigest };
@@ -481,7 +481,7 @@ export async function executeFrozenChanges(
       return dependency.id;
     }),
   }));
-  return executeNodes(nodes, frozenBaseRevision, adapter, options);
+  return executeNodes(nodes, frozenBaseRevision, adapter, options, true);
 }
 
 async function executeNodes(
@@ -489,6 +489,7 @@ async function executeNodes(
   frozenBaseRevision: string,
   adapter: SchedulerAdapter,
   options: SchedulerOptions,
+  bindPrerequisites = false,
 ): Promise<NodeExecutionReceipt[]> {
   const concurrency = options.concurrency ?? 8;
   if (!Number.isSafeInteger(concurrency) || concurrency < 1) throw new Error('Concurrency must be a positive integer');
@@ -500,6 +501,7 @@ async function executeNodes(
   validateTaskGraph(nodes);
   freezeTaskInput(nodes);
   const runId = randomUUID(); const receipts: NodeExecutionReceipt[] = []; const integrated = new Set<string>();
+  const integratedRevisions = new Map<string, string>();
   const controller = new AbortController();
   if (options.signal?.aborted) controller.abort(options.signal.reason);
   else options.signal?.addEventListener('abort', () => controller.abort(options.signal?.reason), { once: true });
@@ -541,7 +543,14 @@ async function executeNodes(
         }
         if (options.cancelled?.()) controller.abort('Run cancelled');
         controller.signal.throwIfAborted();
-        const created = await adapter.createWorktree(node, frozenBaseRevision);
+        const prerequisiteRevisions = bindPrerequisites && node.dependsOn.length
+          ? Object.fromEntries(node.dependsOn.map((id) => {
+            const revision = integratedRevisions.get(id);
+            if (!revision) throw new Error(`Prerequisite ${id} has no integrated revision receipt`);
+            return [id, revision];
+          }))
+          : undefined;
+        const created = await adapter.createWorktree(node, frozenBaseRevision, prerequisiteRevisions);
         receipt.sourceDigestBefore = created.sourceDigest;
         controller.signal.throwIfAborted();
         receipt.launcher = await withProviderSlot(provider, () =>
@@ -573,6 +582,7 @@ async function executeNodes(
           return adapter.integrate(node, receipt.sourceDigestAfter!, frozenBaseRevision);
         });
         if (integration.sourceDigest !== receipt.sourceDigestAfter) throw new Error('Integrated source differs from accepted source');
+        if (integration.integratedRevision?.trim()) integratedRevisions.set(node.id, integration.integratedRevision);
         receipt.status = 'integrated'; integrated.add(node.id); terminal = receipt;
       } catch (error) {
         receipt.status = 'failed'; receipt.failure = error instanceof Error ? error.message : String(error);

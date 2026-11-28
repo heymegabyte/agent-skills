@@ -53,7 +53,7 @@ function adapter(overrides: Partial<SchedulerAdapter> = {}): SchedulerAdapter & 
     async changedFiles(node) { calls.push(`changed:${node.id}`); return [`src/${node.id === 'bounded' ? 'a' : 'b'}.ts`]; },
     async runAcceptance(node) { calls.push(`accept:${node.id}`); return processReceipt(); },
     async sourceDigest(node) { return `after-${node.id}`; },
-    async integrate(node, sourceDigest) { calls.push(`integrate:${node.id}`); return { sourceDigest }; },
+    async integrate(node, sourceDigest) { calls.push(`integrate:${node.id}`); return { sourceDigest, integratedRevision: `revision-${node.id}` }; },
     async preserveForRecovery(node) { calls.push(`preserve:${node.id}`); },
     ...overrides,
   };
@@ -617,13 +617,22 @@ test('whole-change queue validates each frozen contract and follows inter-change
       nodes: [{ ...node, dependsOn: [] }],
     });
   });
-  const scheduler = adapter();
+  const scheduler = adapter({
+    async createWorktree(node, _, prerequisites) {
+      assert.deepEqual(prerequisites, node.id === 'integrate' ? { bounded: 'revision-bounded' } : undefined);
+      return { sourceDigest: `before-${node.id}` };
+    },
+  });
   const changes = contracts.map((contract, index) => ({ contract, dependsOn: index ? [contracts[0].changeId] : [] }));
   await assert.rejects(() => executeFrozenChanges([{ ...changes[1] }], scheduler), /Unknown change dependency/);
   assert.equal(scheduler.calls.length, 0);
   const receipts = await executeFrozenChanges(changes, scheduler);
   assert.ok(receipts.every(({ status }) => status === 'integrated'));
   assert.ok(scheduler.calls.indexOf('integrate:bounded') < scheduler.calls.indexOf('launch:codex:integrate'));
+  const missingRevision = adapter({ async integrate(_, sourceDigest) { return { sourceDigest }; } });
+  const missingReceipts = await executeFrozenChanges(changes, missingRevision);
+  assert.match(missingReceipts.find(({ nodeId }) => nodeId === 'integrate')?.failure ?? '', /no integrated revision receipt/);
+  assert.ok(!missingRevision.calls.includes('launch:codex:integrate'));
   let active = 0;
   let peak = 0;
   let bothStarted!: () => void;
