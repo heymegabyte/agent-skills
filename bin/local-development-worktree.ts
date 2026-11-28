@@ -77,3 +77,20 @@ export function readCommittedReuseEvidence(
   }
   return { sourceDigest, excerpts: Object.fromEntries(excerpts) };
 }
+
+/** Collect committed and uncommitted paths without losing Git status columns or rename endpoints. */
+export function listDevelopmentChangedFiles(directory: string, baseRevision: string): string[] {
+  if (!/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/.test(baseRevision)) {
+    throw new Error('Git ownership evidence requires a full worktree base commit');
+  }
+  const git = (...args: string[]): Buffer =>
+    execFileSync('git', ['-C', directory, '--no-replace-objects', ...args], {
+      stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 8 * 1024 * 1024,
+    });
+  git('merge-base', '--is-ancestor', baseRevision, 'HEAD');
+  const decoder = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
+  const entries = (output: Buffer) => decoder.decode(output).split('\0').filter(Boolean);
+  const committed = entries(git('diff', '--name-only', '-z', '--no-renames', '--ignore-submodules=none', baseRevision, 'HEAD', '--'));
+  const working = entries(git('status', '--porcelain=v1', '-z', '--untracked-files=all', '--no-renames', '--ignore-submodules=none'));
+  return [...new Set([...committed, ...working.map((entry) => entry.slice(3))])].sort();
+}

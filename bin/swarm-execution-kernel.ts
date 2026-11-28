@@ -5,7 +5,7 @@ import { existsSync, readFileSync, realpathSync } from 'node:fs';
 import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve, relative, sep } from 'node:path';
-import { readCommittedReuseEvidence } from './local-development-worktree.ts';
+import { listDevelopmentChangedFiles, readCommittedReuseEvidence } from './local-development-worktree.ts';
 
 export type ArchitectFamily = 'claude' | 'codex' | 'gemini' | 'antigravity';
 export type ExecutionProvider = ArchitectFamily | 'opencode-deepseek';
@@ -134,7 +134,7 @@ export interface ProcessAdapterOptions {
   createWorktree: (node: ExecutionNode, frozenBaseRevision?: string, prerequisiteRevisions?: Readonly<Record<string, string>>) => Promise<{ directory: string; sourceDigest: string }>;
   /** Opt in only for paths approved for disclosure to the reuse reviewer. */
   approveReusePath?: (node: ExecutionNode, path: string) => boolean;
-  listChangedFiles: (node: ExecutionNode, directory: string) => Promise<string[]>;
+  listChangedFiles?: (node: ExecutionNode, directory: string) => Promise<string[]>;
   sourceDigest: (node: ExecutionNode, directory: string) => Promise<string>;
   integrate: (node: ExecutionNode, directory: string, expectedSourceDigest: string, frozenBaseRevision: string) => Promise<{ sourceDigest: string; integratedRevision?: string }>;
   preserveForRecovery: (node: ExecutionNode, directory: string | undefined, reason: string) => Promise<void>;
@@ -323,6 +323,7 @@ async function runIsolatedOpenCode(
 export function createApprovedProcessAdapter(options: ProcessAdapterOptions): SchedulerAdapter {
   const directories = new Map<string, string>();
   const verifiedHeads = new Map<string, string>();
+  const worktreeBases = new Map<string, string>();
   const git = (directory: string, ...args: string[]) =>
     execFileSync('git', ['-C', directory, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
   const directoryFor = (node: ExecutionNode): string => {
@@ -362,7 +363,11 @@ export function createApprovedProcessAdapter(options: ProcessAdapterOptions): Sc
         if (created.sourceDigest !== head) throw new Error('Dependent worktree source receipt does not match Git HEAD');
         verifiedHeads.set(node.id, head);
       }
+      if (!options.listChangedFiles && git(directory, 'rev-parse', '--verify', 'HEAD') !== created.sourceDigest) {
+        throw new Error('Git ownership evidence requires the returned base to match the created worktree HEAD');
+      }
       directories.set(node.id, directory);
+      worktreeBases.set(node.id, created.sourceDigest);
       return { sourceDigest: created.sourceDigest };
     },
     async launch(provider, node, correlationId, signal) {
@@ -400,7 +405,11 @@ export function createApprovedProcessAdapter(options: ProcessAdapterOptions): Sc
           : { sourceDigest: receipt.sourceDigestAfter, excerpts: {} };
       },
     }),
-    async changedFiles(node) { return options.listChangedFiles(node, directoryFor(node)); },
+    async changedFiles(node) {
+      const directory = directoryFor(node);
+      return options.listChangedFiles?.(node, directory)
+        ?? listDevelopmentChangedFiles(directory, worktreeBases.get(node.id)!);
+    },
     async runAcceptance(node, check, signal) {
       if (!options.allowedAcceptanceExecutables.includes(check.command)) throw new Error(`Acceptance executable is not allowlisted: ${check.command}`);
       validateAcceptanceArgs(check.command, check.args);
