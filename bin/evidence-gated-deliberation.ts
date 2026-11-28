@@ -49,7 +49,7 @@ export interface StructuredBrief {
   provenance?: { mode: ConferenceExecutionMode; providerFamily: ModelFamily; independent: boolean; sequence: number; capabilityEvidence: string };
 }
 export interface ProviderReceipt { family: ModelFamily; launcher: string; inputDigest: string; outputDigest: string; invokedAt: string; }
-export type ProviderLauncher = (family: ModelFamily, input: string) => Promise<{ launcher: string; output: string }>;
+export type ProviderLauncher = (family: ModelFamily, input: string) => Promise<{ launcher: string; output: string; sessionId?: string }>;
 
 export interface Specialist { id: string; expertise: string[]; family: ModelFamily; architectEligible: boolean; }
 export interface ConferenceRoster { seed: string; participants: Specialist[]; secondArchitect: boolean; reasons: string[]; diversity: { families: number; expertise: number }; }

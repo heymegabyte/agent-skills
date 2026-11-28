@@ -464,3 +464,29 @@ test('an admitted improvement must appear in the OpenSpec artifacts before dispa
   assert.deepEqual(withWave.contracts.map(({ changeId }) => changeId), [request.changeId, 'improvement-wave']);
   assert.match(withWave.contracts[1].nodes[0].workerPrompt ?? '', /Verify reuse/);
 });
+
+test('configured proposal capture invokes a dedicated provider and records cited reuse', async () => {
+  const { checkout, paths, specialists } = fixture();
+  const calls: string[] = [];
+  const adapters = configured(checkout, paths, calls);
+  const provider = adapters.provider;
+  adapters.provider = async (family, request) => {
+    if (!request.startsWith('Review the OpenSpec evidence')) return provider(family, request);
+    return {
+      launcher: 'approved:fixture-reuse', sessionId: 'reuse-session-1',
+      output: JSON.stringify([{
+        destination: 'agent-skills', title: 'Share verification guidance', problem: 'Guidance is duplicated',
+        benefit: 'One source', scope: 'Agent verification guidance', acceptance: 'Both routes resolve to the same guidance',
+        evidence: [paths[0]],
+      }]),
+    };
+  };
+  adapters.captureReuseProposal = async (proposal) => {
+    assert.equal(proposal.problem, 'Guidance is duplicated');
+    assert.deepEqual(proposal.evidence, [paths[0]]);
+    return 'openspec/changes/share-verification/proposal.md';
+  };
+  const result = await runEvidenceGatedPipeline(input(checkout, specialists), adapters);
+  assert.equal(result.reuseExtraction?.ownerSession, 'reuse-session-1');
+  assert.equal(result.reuseExtraction?.findings[0].destination, 'agent-skills');
+});
