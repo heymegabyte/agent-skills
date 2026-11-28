@@ -192,3 +192,5 @@
 - [ ] Exercise final review again with host-approved acceptance fixture and baseline evidence. Bind exact accepted scope and release disposition to the review, and verify that the same end-to-end path can reach completion.
 
 - [x] Supply host-approved acceptance files and baseline excerpts from Git. The final review adapter now receives the exact test file from the accepted source and checks that integration preserved it. Verify that uncommitted replacements do not affect reviewers and that a committed integration-time test change fails closed.
+
+- [x] Verify live final review with the new acceptance evidence. A disposable fixture ran the checked-in Bun assertions in a detached worktree before integrating `8c4a9f8a0c4cdb4291b04e9cfa80c3ffb2f99332`. Both reviewers received the integrated source, the pre-change source, and the exact accepted test file. Claude session `3fe748bd-4e99-4989-a7ae-43865fb10811` and Codex session `01a22203-e011-7a10-a883-c67628c182e2` both passed on input digest `2fff28227c80f2f005666c3e86daf8b43fd48383ae0a0d812ac09b6ecc5d6f6b`. This verifies the review leg with a fixture contract. The full coordinator rerun remains open.
