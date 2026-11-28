@@ -160,3 +160,9 @@ adapter. Return a failed preflight with `throttled: true` and, if reported by
 the provider, `retryAt`. The scheduler records the cooldown before creating a
 worktree. It uses a different provider only if that provider was approved in
 the frozen fallback sequence and the attempt budget permits it.
+
+Use `createProviderReadiness` from `bin/provider-readiness.ts` with a
+host-approved probe that returns HTTP status and the optional `Retry-After`
+header. Concurrent preflights share the in-flight request. HTTP 429 cooldowns
+apply until the reported timestamp. The host owns the authenticated probe
+and its timeout, and may omit probes for providers it does not actively check.

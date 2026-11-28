@@ -1,3 +1,5 @@
+import { createProviderReadiness } from '../bin/provider-readiness.ts';
+
 import assert from 'node:assert/strict';
 import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -799,4 +801,24 @@ test('throttling skips process launch and uses only a frozen fallback within the
   assert.equal(withoutFallback[0].status, 'failed');
   assert.equal(withoutFallback[1].status, 'blocked');
   assert.ok(!runner.calls.some((call) => call.startsWith('worktree:') || call.startsWith('launch:')));
+});
+
+test('readiness shares a provider probe and respects the reported cooldown', async () => {
+  let current = Date.parse('2026-11-28T14:00:00Z');
+  let observations = 0;
+  const readiness = createProviderReadiness({
+    async 'opencode-deepseek'() {
+      observations += 1;
+      return observations === 1 ? { status: 429, retryAfter: '5' } : { status: 200 };
+    },
+  }, () => current);
+  const [first, second] = await Promise.all([readiness('opencode-deepseek'), readiness('opencode-deepseek')]);
+  assert.deepEqual(first, second);
+  assert.equal(first.retryAt, '2026-11-28T14:00:05.000Z');
+  assert.equal(observations, 1);
+  assert.deepEqual(await readiness('opencode-deepseek'), first);
+  assert.deepEqual(await readiness('codex'), { ok: true });
+  current += 5000;
+  assert.deepEqual(await readiness('opencode-deepseek'), { ok: true });
+  assert.equal(observations, 2);
 });
