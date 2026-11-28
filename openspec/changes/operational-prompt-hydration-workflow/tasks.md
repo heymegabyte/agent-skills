@@ -168,3 +168,5 @@
 - [x] Bind worker contracts to the host's materialized OpenSpec commit. The compiler previously froze the pre-materialization source revision, so newly committed artifacts were missing from detached worker worktrees. Verify the reported commit, ancestry, and artifact bytes before using it as the worker base. Exercise the path with real Git and reject uncommitted artifact edits.
 
 - [x] Provide the local Git implementation of the OpenSpec materializer. Assemble approved artifacts in an isolated index, reject dirty checkouts and existing files, verify the resulting diff, and return the fast-forwarded commit with an architect session trailer. Verify exact commit scope, clean state, and preservation of unrelated files.
+
+- [x] Verify the compiler, Git materializer, coordinator, and detached worktree together. The integration fixture checks that the worker sees the exact approved checklist from the materialization commit and that the commit descends directly from the researched revision. Provider inference, worker implementation, and verification responses are fixture-controlled in this test.

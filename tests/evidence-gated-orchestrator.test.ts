@@ -1,6 +1,6 @@
 import { execFileSync } from 'node:child_process';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
@@ -8,6 +8,10 @@ import { runEvidenceGatedPipeline, type PipelineAdapters, type ReuseProposal } f
 import { issueArchitectAssignment, type ProcessReceipt, type SchedulerAdapter } from '../bin/swarm-execution-kernel.ts';
 import type { ModelFamily, Specialist } from '../bin/evidence-gated-deliberation.ts';
 import { createHash } from 'node:crypto';
+import { createModelOpenSpecPlanner } from '../bin/model-openspec-planner.ts';
+import { createModelOpenSpecCompiler } from '../bin/model-openspec-compiler.ts';
+import { materializeLocalOpenSpec } from '../bin/local-openspec-materializer.ts';
+import { createDetachedDevelopmentWorktree } from '../bin/local-development-worktree.ts';
 
 const completedProcess = (): ProcessReceipt => ({ exitCode: 0, stdout: '', stderr: '', startedAt: '2026-11-22T00:00:00Z', finishedAt: '2026-11-22T00:00:01Z' });
 
@@ -684,4 +688,57 @@ test('materialized OpenSpec commit becomes the frozen worker base', async () => 
 
   writeFileSync(join(checkout, paths[0]), readFileSync(join(checkout, paths[0]), 'utf8') + '\nUncommitted edit\n');
   await assert.rejects(runEvidenceGatedPipeline(request, adapters), /Materialized OpenSpec revision lacks compiled artifact/);
+});
+
+
+test('approved model drafts reach an isolated worker through the Git materializer', async () => {
+  const { checkout, paths, specialists } = fixture();
+  const worktreeRoot = mkdtempSync(join(tmpdir(), 'openspec-worker-test-'));
+  const git = (...args: string[]) => execFileSync('git', ['-C', checkout, ...args], { encoding: 'utf8' }).trim();
+  let directory: string | undefined;
+  try {
+    const [proposal, design, spec, tasks] = paths.map((path) => readFileSync(join(checkout, path), 'utf8'));
+    rmSync(join(checkout, 'openspec'), { recursive: true });
+    git('init', '-q');
+    git('add', '.');
+    git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.test', 'commit', '-qm', 'Research base');
+    const sourceRevision = git('rev-parse', 'HEAD');
+    const request = { ...input(checkout, specialists), sourceRevision };
+    const adapters = configured(checkout, paths, []);
+    const artifactsRoot = `openspec/changes/${request.changeId}`;
+    const checklist = tasks.replace('[implement]', `[${request.changeId}]`);
+    adapters.compileOpenSpec = createModelOpenSpecCompiler({
+      plan: createModelOpenSpecPlanner(async () => ({
+        launcher: 'approved:fixture', sessionId: 'architect-fixture',
+        output: JSON.stringify({ changes: [{
+          changeId: request.changeId, title: 'Implement bounded slice', dependsOn: [], ownedPaths: ['src/app.ts'],
+          proposal, design, spec, tasks: checklist,
+        }] }),
+      })),
+      async approve({ assignment }) {
+        return new Map([[request.changeId, { assignment, execution: {
+          provider: 'opencode-deepseek', classification: 'bounded', worktree: 'fixture',
+          branch: 'swarm/fixture', port: 4100, acceptance: [{ command: 'node', args: ['--test'] }],
+        } }]]);
+      },
+      materialize: materializeLocalOpenSpec,
+    });
+    adapters.scheduler.createWorktree = async (_node, base, prerequisites) => {
+      const created = createDetachedDevelopmentWorktree(checkout, worktreeRoot, base!, prerequisites);
+      directory = created.directory;
+      assert.equal(readFileSync(join(directory, artifactsRoot, 'tasks.md'), 'utf8'), checklist);
+      assert.equal(created.sourceDigest, git('rev-parse', 'HEAD'));
+      return created;
+    };
+    const result = await runEvidenceGatedPipeline(request, adapters);
+    assert.equal(result.status, 'complete');
+    assert.ok(directory);
+    assert.equal(result.contract.frozenBaseRevision, git('rev-parse', 'HEAD'));
+    assert.equal(git('rev-parse', 'HEAD^'), sourceRevision);
+    assert.match(git('log', '-1', '--format=%B'), /Architect-Session: architect-fixture/);
+  } finally {
+    if (directory) git('worktree', 'remove', directory);
+    rmSync(worktreeRoot, { recursive: true, force: true });
+    rmSync(checkout, { recursive: true, force: true });
+  }
 });
