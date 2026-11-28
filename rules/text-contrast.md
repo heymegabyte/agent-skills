@@ -174,3 +174,11 @@ Define `--text-bg-light` + apply via `.text-bg--light` for future light surface 
 - Ship static brand color for body text on light theme below 4.5:1
 - Rely on `text-shadow` alone for contrast (defensive layer, not primary)
 - `mix-blend-mode: difference` for "guaranteed" contrast (breaks under prefers-contrast-high, looks broken on most palettes)
+
+## Contrast-safe BY CONSTRUCTION — overlay text on a guaranteed backdrop, don't rescue it
+
+When text sits on a **variable / model-chosen / unknown background color** (a template whose accent the AI picks, a user-themed card, an image overlay), do NOT try to RESCUE legibility after the fact with `text-shadow`/`-webkit-text-stroke` — those are too weak for small runs on a light backdrop (a dark halo on white glyphs reads as fuzz, not crispness, at body sizes). Instead make the backdrop **dark by construction**: layer the variable color UNDER a heavy fixed dark overlay so the composite is always dark enough for white text regardless of the input hue.
+
+- Pattern: `background: linear-gradient(135deg, rgba(6,7,16,0.66), rgba(6,7,16,0.84)), var(--accent);` → the accent supplies the HUE, the >=0.66 dark overlay supplies the CONTRAST. White text clears AA for ANY accent (even `#fff` -> ~34% composite lightness -> ~4.7:1). Add one small element in the RAW accent (a rule/bar/dot) for the color pop.
+- The inverse (light text on a light-by-default surface) is the trap: a shadow/stroke floor can't fix it — give the text its own dark substrate instead.
+- Reference incident (pdf.kitchen, 2026-11-28): naive AI postcards rendered white-on-light -> illegible; 3 shadow/stroke iterations failed. Fix = a deterministic card template whose bg is the accent under a >=0.66 dark overlay (`renderCard`), contrast-safe by construction, live-verified gorgeous. Cross-links [[logo-contrast]], [[gorgeous-by-default]].
