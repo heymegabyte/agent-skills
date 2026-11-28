@@ -53,3 +53,8 @@ Set `routeSliceSkills: createLocalSliceSkillRouter(skillsRoot)` in the host adap
 module to use the installed Python skill router. Choose the trusted skills
 checkout explicitly. The adapter reads up to six trigger-matched documents
 offline and supplies up to 8,000 characters per document to the synthesis call.
+
+For automatic research, use `createLocalCodexResearch` from the same module
+and add `approved:local-codex-live-search` to the input's approved research
+rails. The adapter selects evidence from observed native web search events
+and rejects model-selected URLs absent from those events.
