@@ -3,8 +3,8 @@ name: "parallel-multi-swarm-orchestration"
 description: "Evidence-gated prompt hydration, right-sized frontier architecture, parallel OpenSpec DAGs, massive bounded OpenCode throughput, and verified fixed-point improvement without inventing deployment or external authority."
 last_reviewed: 2026-11-21
 superseded_by: null
-priority: 1
-pack: "core"
+priority: 2
+pack: "platform"
 triggers:
   - "hydrate"
   - "hydration"
@@ -16,8 +16,10 @@ triggers:
   - "openspec"
   - "plugin catalog"
   - "browser run"
-paths:
-  - "*"
+  - "build a feature"
+  - "implement a feature"
+  - "build an app"
+paths: []
 ---
 
 # Prompt hydration and parallel OpenSpec delivery

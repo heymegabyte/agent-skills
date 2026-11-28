@@ -5,3 +5,4 @@ members:
   - rules/platform-agent-ui
   - rules/platform-knowledge-integrations
   - rules/platform-content-media
+  - rules/parallel-multi-swarm-orchestration
