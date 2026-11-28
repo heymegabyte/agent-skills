@@ -111,3 +111,8 @@
 - [x] Wire the coordinator's optional accepted-source reader into reuse review before integration. Limit evidence to changed paths and 32 KiB per observation, reject stale digests, and publish proposals only from the successful integration attempt. Controlled coverage verifies citation and rejection. Production host configuration and a live multi-worker reuse run remain open.
 - [x] Supply immutable Git excerpts through the process scheduler when the host opts in with a path disclosure policy. Verify that dirty worktree edits and unmatched paths do not enter the reviewer evidence. Production host activation and live multi-worker verification remain open.
 - [x] Reject a host's accepted-source reader without a proposal writer before research or planning starts. Verify that the invalid configuration incurs no provider or worker calls.
+
+## Full-suite verification
+
+- [x] Register the ownership check with the test runner. Root-level `bun test` previously exited from the standalone ownership script before reaching the remaining suites.
+- [ ] Reconcile full-suite failures against the workflow contract. At `b0bd9b63`, a clean `bun test ./tests` ran 263 tests with 259 passing. Failures covered installed drift status, a duplicate lifecycle orchestration section, a mismatched generated delivery trace, and a timed-out coordinator wrapper. Verify each individually before assigning root cause and require a full-suite pass after remediation.
