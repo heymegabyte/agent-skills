@@ -88,7 +88,9 @@ test('local materializer commits exactly the approved batch and preserves a dirt
   try {
     const git = (...args: string[]) => execFileSync('git', ['-C', checkout, ...args], { encoding: 'utf8' }).trim();
     git('init', '-q');
-    git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.test', 'commit', '--allow-empty', '-qm', 'Base');
+    writeFileSync(join(checkout, 'acceptance.ts'), 'export const expected = true;');
+    git('add', 'acceptance.ts');
+    git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.test', 'commit', '-qm', 'Base');
     const base = git('rev-parse', 'HEAD');
     const artifact = { kind: 'proposal' as const, path: 'openspec/changes/first/proposal.md',
       content: '# Fixture\n', requirements: [], scenarios: [], traceabilityIds: [] };
@@ -113,6 +115,20 @@ test('local materializer commits exactly the approved batch and preserves a dirt
     writeFileSync(join(checkout, artifact.path), 'Uncommitted replacement');
     assert.deepEqual(await readEvidence(review), { [`${revision}:${artifact.path}`]: artifact.content });
     await assert.rejects(readEvidence({ ...review, executions: [] }), /integrated Git commit/);
+    const withAcceptance = createLocalDeliveryEvidence({
+      checkout, approvePath: (_, path) => path === artifact.path, acceptancePaths: () => ['acceptance.ts'],
+    });
+    review.contract.frozenBaseRevision = base;
+    review.executions[0].sourceDigestAfter = revision;
+    review.executions[0].integration!.sourceDigest = revision;
+    writeFileSync(join(checkout, 'acceptance.ts'), 'Uncommitted replacement');
+    assert.equal((await withAcceptance(review))[`acceptance:${revision}:acceptance.ts`], 'export const expected = true;');
+    writeFileSync(join(checkout, 'acceptance.ts'), 'export const expected = false;');
+    writeFileSync(join(checkout, artifact.path), artifact.content);
+    git('add', 'acceptance.ts');
+    git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.test', 'commit', '-qm', 'Change fixture after acceptance');
+    review.executions[0].integration!.integratedRevision = git('rev-parse', 'HEAD');
+    await assert.rejects(withAcceptance(review), /differs after integration/);
     writeFileSync(join(checkout, artifact.path), artifact.content);
     await assert.rejects(materializeLocalOpenSpec(checkout, [artifact], 'fixture'), /artifact already exists/);
   } finally {

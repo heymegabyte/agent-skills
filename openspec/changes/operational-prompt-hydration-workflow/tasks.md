@@ -190,3 +190,5 @@
 
 - [x] Exercise the live local path in one coordinator run through final review. Live native research recorded distinct TC39 and Lodash sources, the Codex and Claude conference converged, the compiler committed the live architect draft, and OpenCode implemented and integrated the change after acceptance. Final live review failed closed because the evidence omitted the checked-in acceptance fixture, the baseline diff, and release scope. The review adapter now includes the frozen base and accepted source revisions and correlates exit codes with frozen check digests without disclosing host command arguments.
 - [ ] Exercise final review again with host-approved acceptance fixture and baseline evidence. Bind exact accepted scope and release disposition to the review, and verify that the same end-to-end path can reach completion.
+
+- [x] Supply host-approved acceptance files and baseline excerpts from Git. The final review adapter now receives the exact test file from the accepted source and checks that integration preserved it. Verify that uncommitted replacements do not affect reviewers and that a committed integration-time test change fails closed.

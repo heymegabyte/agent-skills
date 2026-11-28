@@ -138,3 +138,8 @@ For local Git hosts, use `createLocalDeliveryEvidence({ checkout, approvePath })
 from `bin/local-delivery-evidence.ts` for the final review evidence callback.
 It selects approved changed paths from each recorded integration commit
 reachable from the host HEAD and cites them as `commit:path`.
+
+Set `acceptancePaths` on the local evidence reader to disclose specific
+host-approved test files. The reader includes those files from the accepted
+commit, checks their content against the integration commit, and supplies
+baseline excerpts for the approved implementation paths.
