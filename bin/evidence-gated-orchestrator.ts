@@ -369,6 +369,17 @@ async function planTopicResearch(
   return { researchRequests, receipt: { launcher: result.launcher, inputDigest: digest(request), outputDigest: digest(result.output) } };
 }
 
+export class ArchitectureConvergenceError extends Error {
+  constructor(
+    readonly fixedPoint: Awaited<ReturnType<typeof convergeArchitecture>>,
+    readonly critiqueReceipts: Awaited<ReturnType<typeof invokeProviderCritiqueRound>>['receipts'],
+    readonly conferenceExchanges: Awaited<ReturnType<typeof invokeProviderCritiqueRound>>['exchanges'],
+  ) {
+    super(fixedPoint.blocker ?? 'Architecture fixed point did not converge');
+    this.name = 'ArchitectureConvergenceError';
+  }
+}
+
 export async function runEvidenceGatedPipeline(input: PipelineInput, configured: Partial<PipelineAdapters>): Promise<PipelineResult> {
   requireAdapters(configured);
   const captureReuse = configured.captureReuseProposal ?? (configured.reuseProposalRoots && createReuseProposalWriter(configured.reuseProposalRoots));
@@ -421,10 +432,10 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
   }
   const roleAssignments = capabilityPlan.assignments;
   state = advance(state, 'heterogeneous-conference', { conference: { ...roster, roleAssignments, leadFamily: 'codex', highRisk: riskGate.categories.length > 0, riskGate } });
-  const critiqueReceipts: unknown[] = [];
+  const critiqueReceipts = [] as Awaited<ReturnType<typeof invokeProviderCritiqueRound>>['receipts'];
   const conferenceExchanges = [] as Awaited<ReturnType<typeof invokeProviderCritiqueRound>>['exchanges'];
-  const fixedPoint = await convergeArchitecture(independent.briefs, async (round, briefs, prior) => {
-    const invoked = await invokeProviderCritiqueRound(round, briefs, prior, roster.participants, provider, new Date().toISOString(), roleAssignments);
+  const fixedPoint = await convergeArchitecture(independent.briefs, async (round, briefs, prior, unresolvedDissent) => {
+    const invoked = await invokeProviderCritiqueRound(round, briefs, prior, roster.participants, provider, new Date().toISOString(), roleAssignments, unresolvedDissent);
     critiqueReceipts.push(...invoked.receipts);
     conferenceExchanges.push(...invoked.exchanges);
     for (const critique of invoked.critiques) {
@@ -435,7 +446,7 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
     }
     return invoked.critiques;
   }, input.maxCritiqueRounds);
-  if (!fixedPoint.converged) throw new Error(fixedPoint.blocker ?? 'Architecture fixed point did not converge');
+  if (!fixedPoint.converged) throw new ArchitectureConvergenceError(fixedPoint, critiqueReceipts, conferenceExchanges);
   const conferenceResolution = resolveCodexLedConference(roleAssignments, conferenceExchanges, fixedPoint.converged);
   const fixedPointDigest = digest(fixedPoint);
   state = advance(state, 'architecture-fixed-point', { fixedPoint, critiqueReceipts, conferenceExchanges, conferenceResolution });

@@ -4,7 +4,7 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
-import { runEvidenceGatedPipeline, type PipelineAdapters, type ReuseProposal } from '../bin/evidence-gated-orchestrator.ts';
+import { ArchitectureConvergenceError, runEvidenceGatedPipeline, type PipelineAdapters, type ReuseProposal } from '../bin/evidence-gated-orchestrator.ts';
 import { issueArchitectAssignment, type ProcessReceipt, type SchedulerAdapter } from '../bin/swarm-execution-kernel.ts';
 import type { ModelFamily, Specialist } from '../bin/evidence-gated-deliberation.ts';
 import { createHash } from 'node:crypto';
@@ -290,6 +290,27 @@ test('production pipeline rejects unresolved research conflicts and unbound diss
     return { ...result, output: JSON.stringify(parsed) };
   };
   await assert.rejects(() => runEvidenceGatedPipeline(input(checkout, specialists), tampered), /not bound to the approved provider call/);
+
+  const calls: string[] = [];
+  const stalled = configured(checkout, paths, calls);
+  const original = stalled.provider;
+  stalled.provider = async (family, providerInput) => {
+    const result = await original(family, providerInput);
+    if (!providerInput.startsWith('{')) return result;
+    const { round, unresolvedDissent } = JSON.parse(providerInput);
+    const finding = { topic: 'coverage', position: 'Verify blank input', evidence: ['fixture'] };
+    if (round === 3) assert.deepEqual(unresolvedDissent, [finding]);
+    const output = { ...JSON.parse(result.output), dissent: round === 1 ? [finding] : [] };
+    return { ...result, sessionId: `session-${round}-${family}`, output: JSON.stringify(output) };
+  };
+  await assert.rejects(runEvidenceGatedPipeline({ ...input(checkout, specialists), maxCritiqueRounds: 3 }, stalled), (error) => {
+    assert.ok(error instanceof ArchitectureConvergenceError);
+    assert.equal(error.fixedPoint.rounds.length, 3);
+    assert.equal(error.fixedPoint.dissent[0].position, 'Verify blank input');
+    assert.ok(error.critiqueReceipts.every(({ sessionId }) => sessionId));
+    return true;
+  });
+  assert.ok(!calls.includes('compile:openspec'));
 });
 
 test('composition root fails closed when any production adapter is absent', async () => {

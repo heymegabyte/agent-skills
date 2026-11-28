@@ -143,3 +143,9 @@ Set `acceptancePaths` on the local evidence reader to disclose specific
 host-approved test files. The reader includes those files from the accepted
 commit, checks their content against the integration commit, and supplies
 baseline excerpts for the approved implementation paths.
+
+When a conference exhausts its critique rounds, the library throws
+`ArchitectureConvergenceError`. Hosts can inspect its fixed-point rounds,
+dissent, provider receipts, and exchanges for diagnosis. Unresolved dissent is
+carried into every later critique, including when it was omitted from the
+previous response. Compilation remains blocked until the conference converges.

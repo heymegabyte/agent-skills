@@ -254,18 +254,20 @@ export async function invokeProviderCritiqueRound(
   launcher: ProviderLauncher,
   now = new Date().toISOString(),
   roleAssignments = assignConferenceResponsibilities(participants),
+  unresolvedDissent: Critique['dissent'] = [],
 ): Promise<{ critiques: Critique[]; receipts: Array<ProviderReceipt & { participantId: string; receiptDigest: string }>; exchanges: ConferenceExchangeReceipt[] }> {
   if (!roleAssignments.length) throw new Error('Conference requires at least one capability-backed responsibility assignment');
   const results = await Promise.all(roleAssignments.map(async (assignment) => {
     const participant = participants.find((item) => item.id === assignment.participantId);
     if (!participant || participant.family !== assignment.family) throw new Error(`Missing capability-backed participant for ${assignment.participantId}`);
     const input = JSON.stringify({
-      instruction: 'Use only the supplied peer briefs and prior round. Do not call tools, inspect the checkout, or add commentary or Markdown fences. Review from your assigned responsibility and return only one raw JSON object with family (copy participant.family), materialDeltas (string array), dissent (array), and revision (string). Treat prior revisions as the latest proposals. Report only material changes still required relative to those proposals in materialDeltas. If the latest proposals are sufficient, use an empty materialDeltas array and explain why in revision. Do not relist incorporated changes as new blockers. Use an empty dissent array only when you have no dissent to record or update. Include decisions, alternatives with dispositions, evidence references, and unresolved assumptions in revision. Preserve material dissent.',
+      instruction: 'Use only the supplied peer briefs and prior round. Do not call tools, inspect the checkout, or add commentary or Markdown fences. Review from your assigned responsibility and return only one raw JSON object with family (copy participant.family), materialDeltas (string array), dissent (array), and revision (string). Treat prior revisions as the latest proposals. Report only material changes still required relative to those proposals in materialDeltas. If the latest proposals are sufficient, use an empty materialDeltas array and explain why in revision. Do not relist incorporated changes as new blockers. Use an empty dissent array only when you have no dissent to record or update. Include decisions, alternatives with dispositions, evidence references, and unresolved assumptions in revision. Address each supplied unresolved dissent explicitly. If you resolve it, return its original topic and position, the supporting evidence, and resolutionOwner. Leave providerReceipt to the coordinator. Preserve material dissent.',
       round,
       participant,
       responsibility: assignment.responsibility,
       briefs,
       prior,
+      ...(unresolvedDissent.length ? { unresolvedDissent } : {}),
     });
     const result = await launcher(participant.family, input);
     if (!result.launcher.startsWith('approved:')) throw new Error(`Unapproved critique launcher for ${participant.id}`);
@@ -483,20 +485,21 @@ export function resolveCodexLedConference(assignments: ConferenceRoleAssignment[
   return { ...base, receiptId: digest(base) };
 }
 
-export async function convergeArchitecture(briefs: StructuredBrief[], critique: (round: number, briefs: StructuredBrief[], prior: Critique[]) => Promise<Critique[]>, maxRounds = 4): Promise<FixedPointResult> {
+export async function convergeArchitecture(briefs: StructuredBrief[], critique: (round: number, briefs: StructuredBrief[], prior: Critique[], unresolvedDissent: Critique['dissent']) => Promise<Critique[]>, maxRounds = 4): Promise<FixedPointResult> {
   if (!briefs.length) throw new Error('Fixed point requires at least one capability-backed brief');
   const rounds: FixedPointResult['rounds'] = [];
   const dissentLedger = new Map<string, Critique['dissent'][number]>();
   let prior: Critique[] = [];
+  let unresolvedDissent: Critique['dissent'] = [];
   for (let index = 1; index <= maxRounds; index++) {
-    const critiques = await critique(index, briefs, prior);
+    const critiques = await critique(index, briefs, prior, unresolvedDissent);
     if (!critiques.length) throw new Error('Every critique round requires at least one capability-backed critique');
     const responsibilities = new Set(critiques.map((item) => item.responsibility).filter(Boolean));
     if (responsibilities.size > 0 && !(['lead-resolution', 'product-completeness', 'architecture-verification'] as ConferenceResponsibility[]).every((role) => responsibilities.has(role))) throw new Error('Every critique round must cover all conference responsibilities');
     const materialDeltas = [...new Set(critiques.flatMap((item) => item.materialDeltas).filter(Boolean))];
     for (const item of critiques.flatMap((entry) => entry.dissent)) dissentLedger.set(`${item.topic}:${item.position}`, item);
     rounds.push({ index, critiques, materialDeltas });
-    const unresolvedDissent = [...dissentLedger.values()].filter((item) => !item.resolutionOwner?.trim() || !item.providerReceipt?.trim());
+    unresolvedDissent = [...dissentLedger.values()].filter((item) => !item.resolutionOwner?.trim() || !item.providerReceipt?.trim());
     if (!materialDeltas.length && !unresolvedDissent.length) return { converged: true, rounds, dissent: [...dissentLedger.values()] };
     prior = critiques;
   }
