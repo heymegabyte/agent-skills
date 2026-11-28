@@ -13,7 +13,7 @@ test('assigned architect proposes independent changes before host materializatio
     tasks: '- [ ] [first] Normalize input (requirements: Normalize input; scenarios: Padded input)',
   };
   const changes = [change, { ...change, changeId: 'second', ownedPaths: ['src/second.ts'], tasks: change.tasks.replace('[first]', '[second]') }];
-  let output = JSON.stringify({ changes });
+  let output = JSON.stringify({ changes: changes.map((draft) => ({ ...draft, provider: 'unapproved', acceptance: ['unapproved'] })) });
   const plan = createModelOpenSpecPlanner(async (assignment, prompt) => {
     assert.equal(assignment, input.assignment);
     assert.ok(!prompt.includes(input.checkout));
@@ -24,6 +24,10 @@ test('assigned architect proposes independent changes before host materializatio
   assert.deepEqual((await plan(input)).changes, changes.map((draft) => ({
     ...draft, requirements: ['Normalize input'], scenarios: ['Padded input'], traceabilityIds: [draft.changeId],
   })));
+  const improvement = { id: 'follow-up', title: 'Verify cleanup', tasks: [{ id: 'check-cleanup' }] };
+  await assert.rejects(plan({
+    ...input, admittedImprovements: [improvement] as OpenSpecCompilerInput['admittedImprovements'],
+  }), /Admitted improvement follow-up is missing/);
   output = JSON.stringify({ changes: [{ ...change, tasks: change.tasks + '.' }] });
   await assert.rejects(plan(input), /no semantic traceability mappings/);
   output = JSON.stringify({ changes: [change, change] });

@@ -1,6 +1,17 @@
 import { parseOpenSpecArtifacts, validateOwnershipGraph } from './swarm-execution-kernel.ts';
 import type { OpenSpecCompilerInput } from './evidence-gated-orchestrator.ts';
 
+interface ArchitectDraft {
+  changeId: string;
+  title: string;
+  dependsOn: string[];
+  ownedPaths: string[];
+  proposal: string;
+  design: string;
+  spec: string;
+  tasks: string;
+}
+
 type ArchitectSession = { launcher: string; sessionId?: string; output: string };
 
 /** Obtain a plan from the assigned architect before the host materializes its artifacts. */
@@ -26,9 +37,9 @@ export function createModelOpenSpecPlanner(
       || plan.changes[0]?.changeId !== input.changeId) {
       throw new Error('OpenSpec plan must start with the assigned change');
     }
-    const changes = plan.changes;
+    const changes: ArchitectDraft[] = [];
     const ids = new Set<string>();
-    for (const change of changes) {
+    for (const change of plan.changes) {
       if (!change || !['changeId', 'title', 'proposal', 'design', 'spec', 'tasks'].every((key) =>
         typeof change[key] === 'string' && change[key].trim())
         || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(change.changeId) || ids.has(change.changeId)
@@ -37,7 +48,9 @@ export function createModelOpenSpecPlanner(
         || !change.ownedPaths.length) {
         throw new Error('OpenSpec plan contains a malformed or duplicate change');
       }
-      ids.add(change.changeId);
+      const { changeId, title, dependsOn, ownedPaths, proposal, design, spec, tasks } = change;
+      ids.add(changeId);
+      changes.push({ changeId, title, dependsOn, ownedPaths, proposal, design, spec, tasks });
     }
     for (const { ownedPaths } of changes) {
       if (ownedPaths.some((path: string) =>
@@ -54,6 +67,13 @@ export function createModelOpenSpecPlanner(
       const { requirements, scenarios, traceabilityIds } = parsed[0];
       return { ...change, requirements, scenarios, traceabilityIds };
     });
+    for (const improvement of input.admittedImprovements ?? []) {
+      const heading = `${improvement.id} — ${improvement.title}`;
+      if (!tracedChanges.some(({ requirements, traceabilityIds }) =>
+        requirements.includes(heading) && improvement.tasks.every(({ id }) => traceabilityIds.includes(id)))) {
+        throw new Error(`Admitted improvement ${improvement.id} is missing from the OpenSpec drafts`);
+      }
+    }
     return { changes: tracedChanges, launcher: response.launcher, sessionId: response.sessionId };
   };
 }
