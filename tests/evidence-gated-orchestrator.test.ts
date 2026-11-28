@@ -509,7 +509,7 @@ test('configured proposal capture invokes a dedicated provider and records cited
       launcher: 'approved:fixture-reuse', sessionId: 'reuse-session-1',
       output: JSON.stringify(Object.keys(roots).map((destination) => ({
         destination, title: 'Share verification guidance', problem: 'Guidance is duplicated',
-        benefit: 'One source', scope: 'Agent verification guidance', acceptance: 'Both routes resolve to the same guidance',
+        benefit: 'One source', scope: 'Agent verification guidance', priority: 'high', dependencies: ['Confirm ownership'], acceptance: 'Both routes resolve to the same guidance',
         evidence: [paths[0]],
       }))),
     };
@@ -520,6 +520,8 @@ test('configured proposal capture invokes a dedicated provider and records cited
   for (const finding of result.reuseExtraction!.findings) {
     const text = readFileSync(join(roots[finding.destination], finding.proposalPath), 'utf8');
     assert.match(text, /Guidance is duplicated/);
+    assert.match(text, /## Priority\n\nhigh\n/);
+    assert.match(text, /## Dependencies\n\n- Confirm ownership/);
     assert.ok(text.includes(paths[0]));
   }
   const repeated = await runEvidenceGatedPipeline(input(checkout, specialists), adapters);

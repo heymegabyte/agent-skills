@@ -16,6 +16,8 @@ export function createReuseProposalWriter(roots: Record<ReuseProposal['destinati
       `## Why\n\n${proposal.problem}`,
       `## What Changes\n\n${proposal.scope}`,
       `## Benefit\n\n${proposal.benefit}`,
+      `## Priority\n\n${proposal.priority}`,
+      `## Dependencies\n\n${proposal.dependencies.map((dependency) => `- ${dependency}`).join('\n') || 'None identified.'}`,
       `## Acceptance\n\n${proposal.acceptance}`,
       `## Evidence\n\n${proposal.evidence.map((path) => `- ${path}`).join('\n')}`,
     ].join('\n\n') + '\n';
