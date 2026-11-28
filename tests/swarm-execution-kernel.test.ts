@@ -11,6 +11,7 @@ import {
   compileAndFreezeContract,
   createApprovedProcessAdapter,
   executeFrozenContract,
+  executeFrozenChanges,
   issueArchitectAssignment,
   validateTaskGraph,
   type CompiledArtifact,
@@ -602,4 +603,41 @@ test('process adapter rejects worktrees outside safe roots and symlink swaps bef
     async integrate(_node, _directory, sourceDigest) { return { sourceDigest }; }, async preserveForRecovery() {},
   });
   await assert.rejects(() => missingRoots.createWorktree(nodes[0]), /safe worktree root is required/);
+});
+
+test('whole-change queue validates each frozen contract and follows inter-change dependencies', async () => {
+  const { checkout, artifacts, assignment, nodes } = fixture();
+  const { receiptDigest: _, schemaVersion: __, ...authority } = assignment;
+  const contracts = nodes.map((node, index) => {
+    const changeId = `change-${index}`;
+    const assigned = issueArchitectAssignment({ ...authority, changeId }, { digest: authority.authoritySourceDigest });
+    return compileAndFreezeContract({
+      checkout, changeId, assignment: assigned, trustedAuthoritySourceDigest: authority.authoritySourceDigest,
+      evidenceDigest: 'e', fixedPointDigest: 'f', unresolvedMaterialDeltas: [], artifacts,
+      nodes: [{ ...node, dependsOn: [] }],
+    });
+  });
+  const scheduler = adapter();
+  const changes = contracts.map((contract, index) => ({ contract, dependsOn: index ? [contracts[0].changeId] : [] }));
+  await assert.rejects(() => executeFrozenChanges([{ ...changes[1] }], scheduler), /Unknown change dependency/);
+  assert.equal(scheduler.calls.length, 0);
+  const receipts = await executeFrozenChanges(changes, scheduler);
+  assert.ok(receipts.every(({ status }) => status === 'integrated'));
+  assert.ok(scheduler.calls.indexOf('integrate:bounded') < scheduler.calls.indexOf('launch:codex:integrate'));
+  let active = 0;
+  let peak = 0;
+  let bothStarted!: () => void;
+  const ready = new Promise<void>((resolve) => { bothStarted = resolve; });
+  const parallel = adapter({
+    async launch() {
+      active += 1;
+      peak = Math.max(peak, active);
+      if (active === 2) bothStarted();
+      await ready;
+      active -= 1;
+      return processReceipt();
+    },
+  });
+  await executeFrozenChanges(contracts.map((contract) => ({ contract, dependsOn: [] })), parallel, { concurrency: 2 });
+  assert.equal(peak, 2);
 });

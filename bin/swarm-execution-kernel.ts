@@ -431,16 +431,64 @@ function freezeTaskInput(value: unknown): void {
   for (const child of Object.values(value)) freezeTaskInput(child);
 }
 
-export async function executeFrozenContract(
-  contract: FrozenContract,
-  adapter: SchedulerAdapter,
-  options: {
+type SchedulerOptions = {
     cancelled?: () => boolean;
     signal?: AbortSignal;
     concurrency?: number;
     providerConcurrency?: Partial<Record<ExecutionProvider, number>>;
     reviewBeforeIntegration?: (node: ExecutionNode, receipt: Readonly<NodeExecutionReceipt>, signal: AbortSignal) => Promise<IndependentReviewReceipt>;
-  } = {},
+  };
+
+function verifiedContractNodes(contract: FrozenContract): ExecutionNode[] {
+  const nodes = structuredClone(contract.nodes);
+  if (digest(nodes) !== contract.graphDigest || digest(contract.artifacts) !== contract.artifactDigest) {
+    throw new Error('Frozen contract contents do not match their digests');
+  }
+  const expected = digest({ changeId: contract.changeId, assignmentDigest: contract.assignmentDigest, evidenceDigest: contract.evidenceDigest, fixedPointDigest: contract.fixedPointDigest, artifactDigest: contract.artifactDigest, graphDigest: contract.graphDigest, frozenBaseRevision: contract.frozenBaseRevision });
+  if (expected !== contract.contractDigest) throw new Error('Frozen contract digest mismatch');
+  return nodes;
+}
+
+export async function executeFrozenContract(
+  contract: FrozenContract,
+  adapter: SchedulerAdapter,
+  options: SchedulerOptions = {},
+): Promise<NodeExecutionReceipt[]> {
+  return executeNodes(verifiedContractNodes(contract), contract.frozenBaseRevision, adapter, options);
+}
+
+/** Run independently frozen changes from one repository through a shared execution queue. */
+export async function executeFrozenChanges(
+  changes: ReadonlyArray<{ contract: FrozenContract; dependsOn: readonly string[] }>,
+  adapter: SchedulerAdapter,
+  options: SchedulerOptions = {},
+): Promise<NodeExecutionReceipt[]> {
+  if (!changes.length) return [];
+  const frozenBaseRevision = changes[0].contract.frozenBaseRevision;
+  const ownerNodes = new Map<string, ExecutionNode>();
+  for (const { contract } of changes) {
+    const nodes = verifiedContractNodes(contract);
+    if (nodes.length !== 1 || nodes[0].dependsOn.length) throw new Error(`Change ${contract.changeId} must have one whole-change node`);
+    if (contract.frozenBaseRevision !== frozenBaseRevision) throw new Error('Queued changes must share a frozen repository revision');
+    if (ownerNodes.has(contract.changeId)) throw new Error(`Duplicate queued change: ${contract.changeId}`);
+    ownerNodes.set(contract.changeId, nodes[0]);
+  }
+  const nodes = changes.map(({ contract, dependsOn }) => ({
+    ...ownerNodes.get(contract.changeId)!,
+    dependsOn: dependsOn.map((changeId) => {
+      const dependency = ownerNodes.get(changeId);
+      if (!dependency) throw new Error(`Unknown change dependency: ${changeId}`);
+      return dependency.id;
+    }),
+  }));
+  return executeNodes(nodes, frozenBaseRevision, adapter, options);
+}
+
+async function executeNodes(
+  nodes: ExecutionNode[],
+  frozenBaseRevision: string,
+  adapter: SchedulerAdapter,
+  options: SchedulerOptions,
 ): Promise<NodeExecutionReceipt[]> {
   const concurrency = options.concurrency ?? 8;
   if (!Number.isSafeInteger(concurrency) || concurrency < 1) throw new Error('Concurrency must be a positive integer');
@@ -449,13 +497,6 @@ export async function executeFrozenContract(
     if (!Number.isSafeInteger(limit) || limit < 1) throw new Error('Provider concurrency must be a positive integer');
   }
 
-  const nodes = structuredClone(contract.nodes);
-  const frozenBaseRevision = contract.frozenBaseRevision;
-  if (digest(nodes) !== contract.graphDigest || digest(contract.artifacts) !== contract.artifactDigest) {
-    throw new Error('Frozen contract contents do not match their digests');
-  }
-  const expected = digest({ changeId: contract.changeId, assignmentDigest: contract.assignmentDigest, evidenceDigest: contract.evidenceDigest, fixedPointDigest: contract.fixedPointDigest, artifactDigest: contract.artifactDigest, graphDigest: contract.graphDigest, frozenBaseRevision: contract.frozenBaseRevision });
-  if (expected !== contract.contractDigest) throw new Error('Frozen contract digest mismatch');
   validateTaskGraph(nodes);
   freezeTaskInput(nodes);
   const runId = randomUUID(); const receipts: NodeExecutionReceipt[] = []; const integrated = new Set<string>();
