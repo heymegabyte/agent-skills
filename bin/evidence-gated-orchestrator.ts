@@ -64,7 +64,7 @@ async function synthesizePromptSlices(
 ): Promise<PromptSliceBrief[]> {
   const topics = new Map<string, typeof evidence.research>();
   for (const receipt of evidence.research) {
-    const topic = receipt.request.query.trim();
+    const topic = (receipt.request.topic ?? receipt.request.query).trim();
     if (!receipt.coverage.satisfied) continue;
     const related = topics.get(topic) ?? [];
     related.push(receipt);
@@ -109,6 +109,7 @@ type HydratedArchitectBrief = {
     inventory: ReturnType<typeof inventoryRepository>;
     research: Awaited<ReturnType<typeof executeResearch>>;
     saturation: ReturnType<typeof evaluateSaturation>;
+    topicPlanReceipt?: Awaited<ReturnType<typeof planTopicResearch>>['receipt'];
   };
   slices: PromptSliceBrief[];
   synthesis: Awaited<ReturnType<typeof invokeIndependentBriefs>>;
@@ -152,7 +153,7 @@ export interface PipelineInput {
   changeId: string;
   sourceRevision: string;
   trustedAuthoritySourceDigest: string;
-  researchRequests: ResearchRequest[];
+  researchRequests?: ResearchRequest[];
   requiredEvidence: EvidenceDomain[];
   specialists: Specialist[];
   conferenceSeed?: string;
@@ -185,14 +186,46 @@ function advance(state: RunState, phase: Parameters<typeof transitionRun>[1], ev
   return transitionRun(state, phase, evidence);
 }
 
+async function planTopicResearch(
+  intake: HydratedArchitectBrief['evidence']['intake'],
+  inventory: ReturnType<typeof inventoryRepository>,
+  provider: ProviderLauncher,
+) {
+  const request = [
+    'Decompose the user request into independent, decision-relevant topics. Preserve every requested outcome and constraint.',
+    'Return a JSON array. Each entry must have a unique topic, a primaryQuery for authoritative sources, and an alternativesQuery for substitutes or comparable approaches.',
+    'Split when topics need different evidence. Keep coupled decisions together and avoid overlapping topics.',
+    JSON.stringify({ intake, inventory }),
+  ].join('\n');
+  const result = await provider('codex', request);
+  if (!result.launcher.startsWith('approved:')) throw new Error('Unapproved topic planning launcher');
+  const proposed: unknown = JSON.parse(result.output);
+  if (!Array.isArray(proposed) || !proposed.length) throw new Error('Topic planning requires at least one research topic');
+
+  const seen = new Set<string>();
+  const researchRequests = proposed.flatMap((entry): ResearchRequest[] => {
+    const { topic, primaryQuery, alternativesQuery } = entry ?? {};
+    if (![topic, primaryQuery, alternativesQuery].every((value) => typeof value === 'string' && value.trim())) {
+      throw new Error('Invalid topic research plan');
+    }
+    const name = topic.trim();
+    const key = name.toLowerCase();
+    if (seen.has(key)) throw new Error(`Duplicate research topic: ${name}`);
+    seen.add(key);
+    return [
+      { topic: name, domain: 'primary-sources', query: primaryQuery.trim(), budget: 5 },
+      { topic: name, domain: 'competitors-substitutes', query: alternativesQuery.trim(), budget: 5 },
+    ];
+  });
+  return { researchRequests, receipt: { launcher: result.launcher, inputDigest: digest(request), outputDigest: digest(result.output) } };
+}
+
 export async function runEvidenceGatedPipeline(input: PipelineInput, configured: Partial<PipelineAdapters>): Promise<PipelineResult> {
   requireAdapters(configured);
   if (!input.prompt.trim() || !input.changeId.trim() || !input.sourceRevision.trim()) throw new Error('Prompt, changeId, and exact sourceRevision are required');
-  if (!input.researchRequests.length) throw new Error('At least one executed research request is required');
   const mandatoryEvidence: EvidenceDomain[] = ['primary-sources', 'competitors-substitutes'];
   for (const domain of mandatoryEvidence) {
     if (!input.requiredEvidence.includes(domain)) throw new Error(`Production pipeline requires evidence domain: ${domain}`);
-    if (!input.researchRequests.some((request) => request.domain === domain && request.query.trim())) throw new Error(`Production pipeline requires non-empty research for: ${domain}`);
   }
   if (!input.approvedResearchRails.length) throw new Error('Production pipeline requires an explicit approved research rail allowlist');
   let state = createRunState(randomUUID(), input.changeId);
@@ -200,12 +233,6 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
   const inventory = inventoryRepository(input.checkout, input.sourceRevision);
   const intake = { prompt: input.prompt, sourceRevision: input.sourceRevision };
   state = advance(state, 'estate-inventory', { inventory, intake });
-  const research = await executeResearch(input.researchRequests, configured.research, Date.now(), 30 * 86400_000, new Set(input.approvedResearchRails));
-  state = advance(state, 'research', { research });
-  const saturation = evaluateSaturation(inventory, research, input.requiredEvidence, {}, input.conflictDispositions);
-  if (!saturation.ready) throw new Error(`Saturation gate failed closed: ${saturation.blockers.join('; ')}`);
-  state = advance(state, 'saturation-gate', { saturation });
-  const evidenceBundle = { intake, inventory, research, saturation };
   const roster = selectConferenceRoster(input.conferenceSeed ?? state.runId, input.prompt, input.specialists);
   const defaultCapabilities = (['claude', 'codex', 'gemini'] as const).map((family) => ({ family, available: roster.participants.some((participant) => participant.family === family), slots: 1, evidence: 'configured-specialist-roster' }));
   const discoveredCapabilities = input.providerCapabilitySnapshot
@@ -214,6 +241,23 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
   const capabilityPlan = planConferenceCapabilities(input.providerCapabilities ?? discoveredCapabilities ?? defaultCapabilities, roster.participants);
   const riskGate = evaluateConferenceRiskGate(input.prompt, input.riskReview, capabilityPlan);
   if (riskGate.decision === 'block') throw new Error(`High-risk conference blocked: ${riskGate.blockers.join('; ')}`);
+  const topicPlan = input.researchRequests === undefined ? await planTopicResearch(intake, inventory, configured.provider) : undefined;
+  const researchRequests = topicPlan?.researchRequests ?? input.researchRequests ?? [];
+  for (const domain of mandatoryEvidence) {
+    if (!researchRequests.some((request) => request.domain === domain && request.query.trim())) {
+      throw new Error(`Production pipeline requires non-empty research for: ${domain}`);
+    }
+  }
+  const research = await executeResearch(researchRequests, configured.research, Date.now(), 30 * 86400_000, new Set(input.approvedResearchRails));
+  if (topicPlan && research.some((receipt) => !receipt.coverage.satisfied)) {
+    throw new Error('Automatic topic research lacks cited findings for a planned query');
+  }
+  const topicPlanReceipt = topicPlan?.receipt;
+  state = advance(state, 'research', { research, topicPlanReceipt });
+  const saturation = evaluateSaturation(inventory, research, input.requiredEvidence, {}, input.conflictDispositions);
+  if (!saturation.ready) throw new Error(`Saturation gate failed closed: ${saturation.blockers.join('; ')}`);
+  state = advance(state, 'saturation-gate', { saturation });
+  const evidenceBundle = { intake, inventory, research, saturation, topicPlanReceipt };
   const slices = await synthesizePromptSlices(evidenceBundle, capabilityPlan, configured.provider);
   const independent = await invokeIndependentBriefs(saturation, { ...evidenceBundle, slices }, configured.provider, new Date().toISOString(), capabilityPlan);
   state = advance(state, 'independent-briefs', { ...independent, slices });

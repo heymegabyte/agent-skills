@@ -299,3 +299,32 @@ test('invalid slice synthesis prevents architecture assignment and execution', a
   await assert.rejects(() => runEvidenceGatedPipeline(input(checkout, specialists), adapters), /Invalid prompt synthesis brief/);
   assert.ok(!calls.some((call) => /^(assign|compile|launch):/.test(call)));
 });
+
+test('automatic topic planning researches and synthesizes separate requested outcomes', async () => {
+  const { checkout, paths, specialists } = fixture();
+  const calls: string[] = [];
+  const adapters = configured(checkout, paths, calls);
+  const provider = adapters.provider;
+  const compile = adapters.compileOpenSpec;
+  const prompt = 'Build a product catalog and add shipment tracking';
+  adapters.provider = (family, request) => {
+    if (!request.startsWith('Decompose the user request')) return provider(family, request);
+    assert.equal(family, 'codex');
+    assert.equal(JSON.parse(request.split('\n').at(-1)!).intake.prompt, prompt);
+    return Promise.resolve({
+      launcher: 'approved:fixture-codex',
+      output: JSON.stringify([
+        { topic: 'Product catalog', primaryQuery: 'catalog documentation', alternativesQuery: 'catalog alternatives' },
+        { topic: 'Shipment tracking', primaryQuery: 'shipment documentation', alternativesQuery: 'shipment alternatives' },
+      ]),
+    });
+  };
+  adapters.compileOpenSpec = (request) => {
+    assert.equal(request.hydratedBrief.evidence.research.length, 4);
+    assert.equal(request.hydratedBrief.evidence.topicPlanReceipt?.launcher, 'approved:fixture-codex');
+    assert.deepEqual(request.hydratedBrief.slices.map(({ topic }) => topic), ['Product catalog', 'Shipment tracking']);
+    assert.ok(request.hydratedBrief.slices.every(({ researchDigests }) => researchDigests.length === 2));
+    return compile(request);
+  };
+  await runEvidenceGatedPipeline({ ...input(checkout, specialists), prompt, researchRequests: undefined }, adapters);
+});

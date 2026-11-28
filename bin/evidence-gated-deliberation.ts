@@ -25,7 +25,7 @@ export interface EstateInventory {
   sharedServices: Array<{ name: string; declaredBy: string; localPath?: string; status: 'resolved' | 'external-gap' }>;
 }
 
-export interface ResearchRequest { domain: 'primary-sources' | 'competitors-substitutes'; query: string; budget: number; }
+export interface ResearchRequest { domain: 'primary-sources' | 'competitors-substitutes'; query: string; budget: number; topic?: string; }
 export interface ResearchFinding { url: string; title: string; observedAt: string; publishedAt?: string; excerpt: string; sourceType: 'primary' | 'competitor' | 'substitute'; }
 export interface ResearchReceipt {
   request: ResearchRequest;
