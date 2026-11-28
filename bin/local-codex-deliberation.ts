@@ -45,9 +45,18 @@ export function createLocalCodexDeliberation(options: LocalCodexOptions): Provid
   };
 }
 
-export function createLocalCodexResearch(options: LocalCodexOptions): ResearchRail {
+export function createLocalCodexResearch(options: LocalCodexOptions & { reuseEvidenceMs?: number }): ResearchRail {
   const run = createLocalCodexSession(options, true);
+  const reuseEvidenceMs = options.reuseEvidenceMs ?? 0;
+  if (!Number.isSafeInteger(reuseEvidenceMs) || reuseEvidenceMs < 0) {
+    throw new Error('Codex research evidence reuse requires a non-negative duration');
+  }
+  const evidence = new Map<string, { expiresAt: number; result: Awaited<ReturnType<ResearchRail>> }>();
   return async (request) => {
+    const key = JSON.stringify([request.domain, request.query, request.budget, request.topic]);
+    const previous = evidence.get(key);
+    if (previous && previous.expiresAt > Date.now()) return { ...structuredClone(previous.result), cacheHit: true };
+    evidence.delete(key);
     const { sessionId, output, events } = await run([
       'Use live web search for the supplied research request. Do not use shell or write files.',
       'Return only JSON with a sources array. Each source has refId (the exact citation reference ID shown by the search tool, such as turn0search0). If the tool shows no reference ID, provide url (the exact observed HTTPS URL). Select at most the requested budget.',
@@ -91,6 +100,10 @@ export function createLocalCodexResearch(options: LocalCodexOptions): ResearchRa
       }
       return { ...finding, alternative: { name: alternative.trim(), rationale: rationale.trim() } };
     });
-    return { rail: 'approved:local-codex-live-search', sessionId, findings };
+    const result = { rail: 'approved:local-codex-live-search', sessionId, findings };
+    if (reuseEvidenceMs && findings.length) {
+      evidence.set(key, { expiresAt: Date.parse(observedAt) + reuseEvidenceMs, result: structuredClone(result) });
+    }
+    return result;
   };
 }

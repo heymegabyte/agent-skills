@@ -177,3 +177,8 @@ For Claude final review, configure a dedicated deliberation adapter with
 `jsonSchema: deliveryVerdictSchema` from `bin/model-delivery-verification.ts`.
 It supplies the schema to the subscription CLI and uses its structured output
 field for verdict validation.
+
+Set `reuseEvidenceMs` on `createLocalCodexResearch` to reuse fresh observations
+for exact repeat queries within the same host adapter. Reused receipts retain
+the original observation and session and report a cache hit. Changed queries
+still run live research.
