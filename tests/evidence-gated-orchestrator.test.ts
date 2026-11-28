@@ -55,6 +55,11 @@ function configured(checkout: string, paths: string[], calls: string[]): Pipelin
         calls.push(`critique:${participant.id}`);
         return { launcher: `approved:fake-${family}`, output: JSON.stringify({ family, participantId: participant.id, materialDeltas: [], dissent: [] }) };
       }
+      if (input.startsWith('Enhance these instructions')) {
+        const { topic } = JSON.parse(input.split('\n').at(-1)!);
+        calls.push(`slice:${topic}`);
+        return { launcher: `approved:fake-${family}`, output: JSON.stringify({ summary: `Principal prompt for ${topic}` }) };
+      }
       calls.push(`brief:${family}`);
       return { launcher: `approved:fake-${family}`, output: JSON.stringify({ family, summary: `${family} independent brief`, recommendations: [], risks: [], decisions: [] }) };
     },
@@ -102,6 +107,11 @@ test('composition root executes the receipt-gated production sequence through ve
   adapters.assignArchitect = (request) => {
     assert.equal(request.hydratedBrief.evidence.intake.prompt, request.prompt);
     assert.equal(request.hydratedBrief.evidence.research.length, 2);
+    assert.deepEqual(request.hydratedBrief.slices.map(({ topic }) => topic), ['official product documentation', 'product competitors']);
+    for (const [index, slice] of request.hydratedBrief.slices.entries()) {
+      assert.deepEqual(slice.researchDigests, [request.hydratedBrief.evidence.research[index].digest]);
+      assert.equal(slice.brief, `Principal prompt for ${slice.topic}`);
+    }
     assert.equal(request.hydratedBrief.synthesis.briefs.length, 3);
     assert.equal(request.hydratedBrief.synthesis.receipts.length, 3);
     architectEvidenceDigest = request.evidenceDigest;
@@ -120,6 +130,7 @@ test('composition root executes the receipt-gated production sequence through ve
   assert.equal(result.state.phase, 'complete');
   assert.equal(result.state.receipts.length, 13);
   assert.deepEqual(calls.slice(0, 2), ['research:primary-sources', 'research:competitors-substitutes']);
+  assert.ok(calls.indexOf('slice:product competitors') < calls.indexOf('brief:gemini'));
   assert.ok(calls.indexOf('brief:gemini') < calls.indexOf('critique:claude-architect'));
   assert.ok(calls.indexOf('compile:openspec') < calls.indexOf('launch:opencode-deepseek:implement'));
   assert.ok(calls.indexOf('integrate:implement') < calls.indexOf('verify:adversarial'));
@@ -275,4 +286,16 @@ test('cross-family verification rejects a single family and forged receipts', as
     { reviewerFamily: 'gemini', launcher: 'approved:gemini', inputDigest: 'a'.repeat(64), outputDigest: 'b'.repeat(64), reviewedContractDigest: contract.contractDigest, passed: true },
   ] });
   await assert.rejects(() => runEvidenceGatedPipeline(input(checkout, specialists), forged), /Invalid cross-family verification receipt/);
+});
+
+test('invalid slice synthesis prevents architecture assignment and execution', async () => {
+  const { checkout, paths, specialists } = fixture();
+  const calls: string[] = [];
+  const adapters = configured(checkout, paths, calls);
+  const provider = adapters.provider;
+  adapters.provider = (family, request) => request.startsWith('Enhance these instructions')
+    ? Promise.resolve({ launcher: 'approved:fixture', output: '{"summary":" "}' })
+    : provider(family, request);
+  await assert.rejects(() => runEvidenceGatedPipeline(input(checkout, specialists), adapters), /Invalid prompt synthesis brief/);
+  assert.ok(!calls.some((call) => /^(assign|compile|launch):/.test(call)));
 });
