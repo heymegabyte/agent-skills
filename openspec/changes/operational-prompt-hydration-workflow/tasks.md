@@ -237,3 +237,5 @@
 - [x] Gate worker slots on observed provider throttling. Add a trusted readiness callback after normal launcher approval and record cooldown before creating a worktree. A throttled preflight can advance only to a different frozen fallback within the attempt budget. Verify the bounded fallback and the terminal cooldown path. The live gateway readiness source is still host-owned.
 
 - [x] Interpret gateway throttling in shared worker preflight. An approved host probe supplies HTTP status and Retry-After. Concurrent checks share one observation and use the same recorded cooldown. A live authenticated DeepSeek Flash probe returned HTTP 429 and both callers received the same retry timestamp from one network request. The production host binding remains open.
+
+- [x] Verify the local DeepSeek readiness callback in the coordinator. With the authenticated gateway returning HTTP 429, both independent changes received the same cooldown receipt. The live fixture confirmed zero worktrees and zero worker launches. Production host activation and eventual successful dispatch after the provider cooldown remain open.

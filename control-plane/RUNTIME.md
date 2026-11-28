@@ -166,3 +166,9 @@ host-approved probe that returns HTTP status and the optional `Retry-After`
 header. Concurrent preflights share the in-flight request. HTTP 429 cooldowns
 apply until the reported timestamp. The host owns the authenticated probe
 and its timeout, and may omit probes for providers it does not actively check.
+
+For a local OpenCode host, `createLocalDeepSeekReadiness` from
+`bin/local-deepseek-readiness.ts` supplies that callback. It makes a bounded
+authenticated DeepSeek Flash inference request through the configured curl
+executable. Provide the same credential broker used by the worker. The probe
+passes the credential through stdin and returns only readiness data.
