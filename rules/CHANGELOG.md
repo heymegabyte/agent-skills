@@ -6,6 +6,10 @@ superseded_by: null
 
 # Rules Changelog — auto-maintained by the router-reconcile hook.
 
+## 2026-11-28
+
+- **complete-saas-before-first-review** — feat(rules): new core rule — deliver the evidence-complete intended SaaS before Brian's first manual review; captures the unique principles from the 12-section delivery doctrine not already in verification-loop/intent-complete-delivery/production-delivery-closure: evidence-over-percentages (`tests passed` ≠ proof of user outcome), numeric coverage+mutation gates (85/80 · 90 changed-lines · 95 critical-module · mutation 80/90), E2E anti-cheat (seed prerequisites not outcomes; no forced-click/hidden-route/fixture-write-as-action), single deployment authority + per-app release lease + newer-deploy-invalidates + evidence-bound-to-SHA, endpoint-contract honesty (never force 201/202/204/401/403/404→200/HTML), async-200/202 ≠ durable completion, synthetic-prod-tenant isolation (never charge real customers / rewind prod data / change prod time), old-client+new-backend lifecycle compat, @theme.tools consumer-propagation verification, verify-the-verifier meta-gates + negative controls, browser-profile tiering + emulation honesty; enrolled in core pack + prompt-cache load order + CLAUDE.md Hard Gate 14
+
 ## 2026-11-09
 
 - **automated-alert-hygiene-and-hysteresis** — feat(rules): fleet-wide alert false-positive + hysteresis doctrine from 30-day incident remediation — macOS active+wired+compressor memory, APFS Data-volume/mount-label filtering, QEMU SMBIOS DIMM silence, Exos X16 smartd `-I 190 -W 4,55,60`, IPv4-only Postfix + authenticated SES relay, mandatory trigger/clear hold windows across Netdata/Pulse/Grafana/@theme.tools/status; added to core + infra packs

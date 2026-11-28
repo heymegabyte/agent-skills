@@ -95,6 +95,7 @@ members:
   - rules/feature-expansion-mandate
   - rules/ideal-architecture-loop
   - rules/intent-complete-delivery
+  - rules/complete-saas-before-first-review
   - rules/context-hydration
   - rules/greenfield-saas-prompt-hydration
   - rules/theme-tools-skill-integration
