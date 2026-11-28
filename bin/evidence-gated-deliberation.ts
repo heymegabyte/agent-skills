@@ -240,7 +240,7 @@ export async function invokeProviderCritiqueRound(
     const participant = participants.find((item) => item.id === assignment.participantId);
     if (!participant || participant.family !== assignment.family) throw new Error(`Missing capability-backed participant for ${assignment.participantId}`);
     const input = JSON.stringify({
-      instruction: 'Independently challenge the peer briefs from your assigned responsibility, revise your recommendation, and return only one JSON object with family (copy participant.family), materialDeltas (string array), dissent (array), and revision (string). Use empty arrays when there are no material deltas or dissent. Include decisions, alternatives with dispositions, evidence references, and unresolved assumptions in revision. Preserve material dissent.',
+      instruction: 'Review the peer briefs and prior round from your assigned responsibility, then return only one JSON object with family (copy participant.family), materialDeltas (string array), dissent (array), and revision (string). Treat prior revisions as the latest proposals. Report only material changes still required relative to those proposals in materialDeltas. If the latest proposals are sufficient, use an empty materialDeltas array and explain why in revision. Do not relist incorporated changes as new blockers. Use an empty dissent array only when you have no dissent to record or update. Include decisions, alternatives with dispositions, evidence references, and unresolved assumptions in revision. Preserve material dissent.',
       round,
       participant,
       responsibility: assignment.responsibility,
