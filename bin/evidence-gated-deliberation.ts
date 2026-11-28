@@ -49,7 +49,7 @@ export interface StructuredBrief {
   responsibility?: ConferenceResponsibility;
   provenance?: { mode: ConferenceExecutionMode; providerFamily: ModelFamily; independent: boolean; sequence: number; capabilityEvidence: string };
 }
-export interface ProviderReceipt { family: ModelFamily; launcher: string; inputDigest: string; outputDigest: string; invokedAt: string; }
+export interface ProviderReceipt { family: ModelFamily; launcher: string; sessionId?: string; inputDigest: string; outputDigest: string; invokedAt: string; }
 export type ProviderLauncher = (family: ModelFamily, input: string) => Promise<{ launcher: string; output: string; sessionId?: string }>;
 
 export interface Specialist { id: string; expertise: string[]; family: ModelFamily; architectEligible: boolean; }
@@ -253,7 +253,7 @@ export async function invokeProviderCritiqueRound(
     const participant = participants.find((item) => item.id === assignment.participantId);
     if (!participant || participant.family !== assignment.family) throw new Error(`Missing capability-backed participant for ${assignment.participantId}`);
     const input = JSON.stringify({
-      instruction: 'Review the peer briefs and prior round from your assigned responsibility, then return only one JSON object with family (copy participant.family), materialDeltas (string array), dissent (array), and revision (string). Treat prior revisions as the latest proposals. Report only material changes still required relative to those proposals in materialDeltas. If the latest proposals are sufficient, use an empty materialDeltas array and explain why in revision. Do not relist incorporated changes as new blockers. Use an empty dissent array only when you have no dissent to record or update. Include decisions, alternatives with dispositions, evidence references, and unresolved assumptions in revision. Preserve material dissent.',
+      instruction: 'Use only the supplied peer briefs and prior round. Do not call tools, inspect the checkout, or add commentary or Markdown fences. Review from your assigned responsibility and return only one raw JSON object with family (copy participant.family), materialDeltas (string array), dissent (array), and revision (string). Treat prior revisions as the latest proposals. Report only material changes still required relative to those proposals in materialDeltas. If the latest proposals are sufficient, use an empty materialDeltas array and explain why in revision. Do not relist incorporated changes as new blockers. Use an empty dissent array only when you have no dissent to record or update. Include decisions, alternatives with dispositions, evidence references, and unresolved assumptions in revision. Preserve material dissent.',
       round,
       participant,
       responsibility: assignment.responsibility,
@@ -266,7 +266,7 @@ export async function invokeProviderCritiqueRound(
     if (critique.family !== participant.family || !Array.isArray(critique.materialDeltas) || !Array.isArray(critique.dissent)) throw new Error(`Invalid critique from ${participant.id}`);
     critique.participantId = participant.id;
     critique.responsibility = assignment.responsibility;
-    const receipt = { family: participant.family, participantId: participant.id, launcher: result.launcher, inputDigest: digest(input), outputDigest: digest(result.output), invokedAt: now };
+    const receipt = { family: participant.family, participantId: participant.id, launcher: result.launcher, ...(result.sessionId ? { sessionId: result.sessionId } : {}), inputDigest: digest(input), outputDigest: digest(result.output), invokedAt: now };
     const receiptDigest = digest(receipt);
     for (const dissent of critique.dissent) {
       if (dissent.providerReceipt && dissent.providerReceipt !== receiptDigest) throw new Error(`Dissent resolution is not bound to the approved provider call for ${participant.id}`);
@@ -310,7 +310,7 @@ export async function invokeIndependentBriefs(
     : plan.assignments;
   const invoke = async (assignment: ConferenceRoleAssignment, sequence: number) => {
     const family = assignment.family;
-    const input = `Produce a ${assignment.responsibility} conference brief as ${family}. Do not claim model independence beyond the supplied capability plan. Return only a JSON object with family set to "${family}", summary (string), recommendations (string array), risks (string array), and decisions (array of objects with topic, position, and material boolean).\nCAPABILITY:${JSON.stringify({ mode: plan.mode, independent: plan.independent, limitation: plan.limitation, sequence })}\nEVIDENCE:${bundle}`;
+    const input = `Produce a ${assignment.responsibility} conference brief as ${family}. Use only the supplied evidence. Do not call tools, inspect the checkout, or add commentary or Markdown fences. Do not claim model independence beyond the supplied capability plan. Return only a raw JSON object with family set to "${family}", summary (string), recommendations (string array), risks (string array), and decisions (array of objects with topic, position, and material boolean).\nCAPABILITY:${JSON.stringify({ mode: plan.mode, independent: plan.independent, limitation: plan.limitation, sequence })}\nEVIDENCE:${bundle}`;
     const result = await launcher(family, input);
     if (!result.launcher.startsWith('approved:')) throw new Error(`Unapproved provider launcher for ${family}`);
     const parsed = JSON.parse(result.output) as StructuredBrief;
@@ -318,7 +318,7 @@ export async function invokeIndependentBriefs(
     const capability = plan.capabilities.find((item) => item.family === family)!;
     return {
       brief: { ...parsed, responsibility: assignment.responsibility, provenance: { mode: plan.mode, providerFamily: family, independent: plan.independent, sequence, capabilityEvidence: capability.evidence } },
-      receipt: { family, launcher: result.launcher, inputDigest: digest(input), outputDigest: digest(result.output), invokedAt: now },
+      receipt: { family, launcher: result.launcher, ...(result.sessionId ? { sessionId: result.sessionId } : {}), inputDigest: digest(input), outputDigest: digest(result.output), invokedAt: now },
     };
   };
   const results: Array<Awaited<ReturnType<typeof invoke>>> = [];
