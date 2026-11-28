@@ -1,0 +1,3 @@
+- [x] Bind the sync publication step to the validated revision.
+- [x] Exercise unchanged, successful and rejected publication with isolated Git repositories.
+- [ ] Verify the workflow on canonical main.

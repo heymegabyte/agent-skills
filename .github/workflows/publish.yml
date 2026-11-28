@@ -38,6 +38,9 @@ jobs:
       - name: Check bounded canonical/generated/installed/publish drift
         run: node --experimental-strip-types bin/bounded-drift-detector.ts --source-root "$GITHUB_WORKSPACE" --source-revision "$(git rev-parse HEAD)" --json
 
+      - name: Verify generated instruction publication outcomes
+        run: node --test tests/generated-instruction-push.test.mjs
+
       - name: Validate pack cross-link integrity
         run: node scripts/validate-packs.mjs
 
@@ -172,8 +175,6 @@ jobs:
 
       - name: Commit cross-platform files
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add AGENTS.md .cursorrules .windsurfrules .clinerules GEMINI.md \
             .github/copilot-instructions.md .github/instructions/ llms-full.txt \
             .amazonq/ .rules .junie/ .augment-guidelines .augment/ \
@@ -181,9 +182,7 @@ jobs:
             .kilo/ .roo/ .continue/ .cursor/ .windsurf/ .openhands/ \
             .aiassistant/ .kiro/ .void/ .bolt/ QODO.MD \
             .claude-plugin/ replit.md .devin/ .goose/
-          # shellcheck disable=SC2015  # intentional: stage→if-empty-echo else-commit; echo cannot fail
-          git diff --cached --quiet && echo "No changes" || git commit -m "chore: sync cross-platform rule files [skip ci]"
-          git push || true
+          bash bin/push-generated-instructions.sh "$GITHUB_REF" "$GITHUB_SHA"
 
   publish-npm:
     runs-on: ubuntu-latest
