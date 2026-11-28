@@ -48,3 +48,8 @@ Codex provider rail. It uses an ephemeral, read-only session, supplies the
 prompt on stdin, and returns a provider result only after observing a completed
 turn and its session ID. Route other model families through their own approved
 adapters.
+
+Set `routeSliceSkills: createLocalSliceSkillRouter(skillsRoot)` in the host adapter
+module to use the installed Python skill router. Choose the trusted skills
+checkout explicitly. The adapter reads up to six trigger-matched documents
+offline and supplies up to 8,000 characters per document to the synthesis call.
