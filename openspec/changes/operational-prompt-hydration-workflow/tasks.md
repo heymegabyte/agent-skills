@@ -103,3 +103,4 @@
 ## Provider availability
 
 - [x] Coordinator owner: honor explicit provider unavailability over installation and authentication. The Antigravity probes initialized sessions but were rejected before inference. Reserve zero conference slots when the host explicitly reports unavailability. Preserve legacy discovery for snapshots without an availability result. Verify the conflicting flags with a regression test.
+- [x] Coordinator owner: enforce explicit host availability for primary and additional architect assignments before accepting compiled work. Keep Antigravity's availability separate from standalone Gemini. Verify an authorized but unavailable assignment is rejected before compilation.

@@ -559,3 +559,20 @@ test('a forged architect assignment fails before OpenSpec compilation', async ()
   await assert.rejects(() => runEvidenceGatedPipeline(input(checkout, specialists), adapters), /Architect assignment digest mismatch/);
   assert.ok(!calls.includes('compile:openspec'));
 });
+
+test('an authorized but unavailable architect cannot start OpenSpec compilation', async () => {
+  const { checkout, paths, specialists } = fixture();
+  const calls: string[] = [];
+  const adapters = configured(checkout, paths, calls);
+  const assign = adapters.assignArchitect;
+  adapters.assignArchitect = async (request) => {
+    const assignment = await assign(request);
+    const { changeId, architectIdentity, assignedBy, authorityEvidence, authoritySourceDigest, assignedAt } = assignment;
+    return issueArchitectAssignment({ changeId, architectFamily: 'antigravity', architectIdentity, assignedBy, authorityEvidence, authoritySourceDigest, assignedAt }, { digest: authoritySourceDigest });
+  };
+  await assert.rejects(() => runEvidenceGatedPipeline({
+    ...input(checkout, specialists),
+    providerCapabilitySnapshot: { codex: { available: true }, antigravity: { available: false } },
+  }, adapters), /Architect provider is unavailable: antigravity/);
+  assert.ok(!calls.includes('compile:openspec'));
+});

@@ -79,6 +79,7 @@ export interface ProviderCapabilitySnapshot {
   claude?: { installed?: boolean; authenticated?: boolean; available?: boolean };
   codex?: { installed?: boolean; authenticated?: boolean; available?: boolean };
   gemini?: { installed?: boolean; authenticated?: boolean; available?: boolean };
+  antigravity?: { installed?: boolean; authenticated?: boolean; available?: boolean };
 }
 export interface ConferenceCapabilityPlan {
   mode: ConferenceExecutionMode;

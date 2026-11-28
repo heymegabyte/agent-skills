@@ -71,6 +71,12 @@ interface PromptSliceBrief {
   launcher: string;
 }
 
+function requireAvailableArchitect(assignment: ArchitectAssignmentReceipt, snapshot?: ProviderCapabilitySnapshot): void {
+  if (snapshot?.[assignment.architectFamily]?.available === false) {
+    throw new Error(`Architect provider is unavailable: ${assignment.architectFamily}`);
+  }
+}
+
 function limitProviderSlots(provider: ProviderLauncher, plan: ConferenceCapabilityPlan): ProviderLauncher {
   const families = new Map<ModelFamily, { available: number; waiting: Array<() => void> }>();
   for (const { family } of plan.assignments) {
@@ -428,6 +434,7 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
     fixedPointDigest,
   });
   verifyArchitectAssignment(assignment, input.changeId, input.trustedAuthoritySourceDigest);
+  requireAvailableArchitect(assignment, input.providerCapabilitySnapshot);
   state = advance(state, 'architect-assignment', { assignment, evidenceDigest });
 
   const conferenceExecution: OpenSpecCompilerInput['conferenceExecution'] = {
@@ -449,6 +456,7 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
     ...(compiled.additionalChanges ?? []),
   ];
   const changes = plans.map((change) => {
+    requireAvailableArchitect(change.assignment, input.providerCapabilitySnapshot);
     const changeId = change.assignment.changeId;
     if (change.nodes.length !== 1) {
       throw new Error('OpenSpec compilation must assign exactly one implementation node to the whole change');
