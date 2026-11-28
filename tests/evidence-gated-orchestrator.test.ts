@@ -4,7 +4,7 @@ import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
-import { runEvidenceGatedPipeline, type PipelineAdapters } from '../bin/evidence-gated-orchestrator.ts';
+import { runEvidenceGatedPipeline, type PipelineAdapters, type ReuseProposal } from '../bin/evidence-gated-orchestrator.ts';
 import { issueArchitectAssignment, type ProcessReceipt, type SchedulerAdapter } from '../bin/swarm-execution-kernel.ts';
 import type { ModelFamily, Specialist } from '../bin/evidence-gated-deliberation.ts';
 import { createHash } from 'node:crypto';
@@ -597,4 +597,55 @@ test('an unavailable architect on an additional change prevents all worker launc
   }, adapters), /Architect provider is unavailable: antigravity/);
   assert.ok(calls.includes('compile:openspec'));
   assert.ok(calls.every((call) => !call.startsWith('launch:')));
+});
+
+test('accepted implementation reuse is reviewed before integration and captured afterward', async () => {
+  const { checkout, paths, specialists } = fixture();
+  const calls: string[] = [];
+  const adapters = configured(checkout, paths, calls);
+  const provider = adapters.provider;
+  const proposals: ReuseProposal[] = [];
+  adapters.captureReuseProposal = async (proposal) => {
+    assert.ok(calls.includes('integrate:implement'));
+    proposals.push(proposal);
+    return 'openspec/changes/shared-component/proposal.md';
+  };
+  adapters.readAcceptedReuseEvidence = async (_node, receipt) => ({
+    sourceDigest: receipt.sourceDigestAfter!,
+    excerpts: { 'src/app.ts': 'export const sharedComponent = true;' },
+  });
+  adapters.provider = async (family, request) => {
+    if (!request.startsWith('Review the OpenSpec evidence')) return provider(family, request);
+    const { evidence } = JSON.parse(request.split('\n').at(-1)!);
+    const path = Object.keys(evidence).find((key) => key.endsWith(':src/app.ts'));
+    if (path) {
+      assert.ok(!calls.includes('integrate:implement'));
+      assert.equal(evidence[path], 'export const sharedComponent = true;');
+    }
+    return { launcher: 'approved:fixture-reuse', sessionId: 'implementation-reuse', output: JSON.stringify(path ? [{
+      destination: 'theme.tools', title: 'Share component', problem: 'Repeated behavior', benefit: 'One source',
+      scope: 'Component export', priority: 'high', dependencies: [], acceptance: 'Consumers use the export', evidence: [path],
+    }] : []) };
+  };
+  const run = () => runEvidenceGatedPipeline(input(checkout, specialists), adapters);
+  const result = await run();
+  assert.equal(result.reuseExtractions[1].findings.length, 1);
+  assert.match(proposals[0].evidence[0], /:src\/app\.ts$/);
+
+  calls.length = 0;
+  adapters.readAcceptedReuseEvidence = async (_node, receipt) => ({
+    sourceDigest: receipt.sourceDigestAfter!,
+    excerpts: { 'src/unowned.ts': 'unowned' },
+  });
+  await assert.rejects(run, /did not integrate/);
+  assert.ok(!calls.includes('integrate:implement'));
+  assert.equal(proposals.length, 1);
+
+  adapters.readAcceptedReuseEvidence = async () => ({
+    sourceDigest: 'stale-source',
+    excerpts: { 'src/app.ts': 'stale' },
+  });
+  await assert.rejects(run, /did not integrate/);
+  assert.ok(!calls.includes('integrate:implement'));
+  assert.equal(proposals.length, 1);
 });

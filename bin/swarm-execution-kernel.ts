@@ -471,6 +471,7 @@ type SchedulerOptions = {
     signal?: AbortSignal;
     concurrency?: number;
     providerConcurrency?: Partial<Record<ExecutionProvider, number>>;
+    observeAcceptedSource?: (node: ExecutionNode, receipt: Readonly<NodeExecutionReceipt>, signal: AbortSignal) => Promise<void>;
     reviewBeforeIntegration?: (node: ExecutionNode, receipt: Readonly<NodeExecutionReceipt>, signal: AbortSignal) => Promise<IndependentReviewReceipt>;
   };
 
@@ -609,6 +610,10 @@ async function executeNodes(
           if (!review.approved || !review.reviewer.trim() || review.sourceDigest !== receipt.sourceDigestAfter) {
             throw new Error('Independent review did not approve the accepted source');
           }
+        }
+        if (options.observeAcceptedSource) {
+          controller.signal.throwIfAborted();
+          await options.observeAcceptedSource(structuredClone(node), structuredClone(receipt), controller.signal);
         }
         // Dependent worktrees start at a verified descendant of the original base.
         const integrationBase = prerequisiteRevisions ? created.sourceDigest : frozenBaseRevision;
