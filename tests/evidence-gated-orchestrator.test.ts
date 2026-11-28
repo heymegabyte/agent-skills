@@ -663,3 +663,25 @@ test('a host reuse reader without a writer fails before research or provider cal
   );
   assert.deepEqual(calls, []);
 });
+
+test('materialized OpenSpec commit becomes the frozen worker base', async () => {
+  const { checkout, paths, specialists } = fixture();
+  const git = (...args: string[]) => execFileSync('git', ['-C', checkout, ...args], { encoding: 'utf8' }).trim();
+  const commit = (message: string) => git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.test', 'commit', '-qm', message);
+  git('init', '-q');
+  git('add', 'AGENTS.md', 'src');
+  commit('Base');
+  const sourceRevision = git('rev-parse', 'HEAD');
+  git('add', 'openspec');
+  commit('Materialize OpenSpec');
+  const materializedRevision = git('rev-parse', 'HEAD');
+  const adapters = configured(checkout, paths, []);
+  const compile = adapters.compileOpenSpec;
+  adapters.compileOpenSpec = async (job) => ({ ...await compile(job), materializedRevision });
+  const request = { ...input(checkout, specialists), sourceRevision };
+  const result = await runEvidenceGatedPipeline(request, adapters);
+  assert.equal(result.contract.frozenBaseRevision, materializedRevision);
+
+  writeFileSync(join(checkout, paths[0]), readFileSync(join(checkout, paths[0]), 'utf8') + '\nUncommitted edit\n');
+  await assert.rejects(runEvidenceGatedPipeline(request, adapters), /Materialized OpenSpec revision lacks compiled artifact/);
+});

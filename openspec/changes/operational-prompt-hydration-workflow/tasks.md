@@ -164,3 +164,5 @@
 - [x] Return a typed architect draft that omits model-supplied execution settings. Reject missing admitted requirements or checklist IDs before the host writes artifacts. Verify that extra provider and acceptance fields never reach the compiler and that omitted improvements fail before materialization.
 
 - [x] Connect the model planner to the host compiler interface. Require trusted approval for every draft, preserve the author's assignment, construct one execution node and canonical OpenSpec paths per change, and validate the combined graph before materialization. Verify that partial approval writes nothing and that the approved compiler emits both changes.
+
+- [x] Bind worker contracts to the host's materialized OpenSpec commit. The compiler previously froze the pre-materialization source revision, so newly committed artifacts were missing from detached worker worktrees. Verify the reported commit, ancestry, and artifact bytes before using it as the worker base. Exercise the path with real Git and reject uncommitted artifact edits.

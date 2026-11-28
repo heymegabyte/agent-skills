@@ -11,7 +11,7 @@ type ApprovedChange = {
 export function createModelOpenSpecCompiler(options: {
   plan: ReturnType<typeof createModelOpenSpecPlanner>;
   approve: (input: OpenSpecCompilerInput, plan: Plan) => Promise<ReadonlyMap<string, ApprovedChange>>;
-  materialize: (checkout: string, artifacts: CompiledArtifact[], sessionId: string) => Promise<void>;
+  materialize: (checkout: string, artifacts: CompiledArtifact[], sessionId: string) => Promise<void | string>;
 }): PipelineAdapters['compileOpenSpec'] {
   return async (input) => {
     const plan = await options.plan(input);
@@ -41,7 +41,7 @@ export function createModelOpenSpecCompiler(options: {
       throw new Error('OpenSpec host approval must retain the primary architect assignment');
     }
     validateTaskGraph(changes.map(({ nodes: [node], dependsOn }) => ({ ...node, dependsOn })));
-    await options.materialize(input.checkout, changes.flatMap(({ artifacts }) => artifacts), plan.sessionId);
-    return { ...primary, additionalChanges };
+    const materializedRevision = await options.materialize(input.checkout, changes.flatMap(({ artifacts }) => artifacts), plan.sessionId);
+    return { ...primary, additionalChanges, ...(materializedRevision ? { materializedRevision } : {}) };
   };
 }

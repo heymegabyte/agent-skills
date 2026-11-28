@@ -262,7 +262,7 @@ export interface PipelineAdapters {
   routeSliceSkills?: SliceSkillRouter;
   provider: ProviderLauncher;
   assignArchitect: (input: { changeId: string; prompt: string; hydratedBrief: HydratedArchitectBrief; evidenceDigest: string; roster: ReturnType<typeof selectConferenceRoster>; fixedPointDigest: string }) => Promise<ArchitectAssignmentReceipt>;
-  compileOpenSpec: (input: OpenSpecCompilerInput) => Promise<CompiledChange & { additionalChanges?: Array<CompiledChange & { assignment: ArchitectAssignmentReceipt }> }>;
+  compileOpenSpec: (input: OpenSpecCompilerInput) => Promise<CompiledChange & { materializedRevision?: string; additionalChanges?: Array<CompiledChange & { assignment: ArchitectAssignmentReceipt }> }>;
   scheduler: SchedulerAdapter;
   assessImprovements?: (input: { hydratedBrief: HydratedArchitectBrief; assignment: ArchitectAssignmentReceipt }) => Promise<{ candidates: DurableImprovementCandidate[]; policy: ImprovementPolicy }>;
   refreshImprovements?: (input: { round: number; contracts: FrozenContract[]; executions: NodeExecutionReceipt[]; reuseExtraction?: ReuseExtractionReceipt; reuseExtractions: ReuseExtractionReceipt[] }) => Promise<{
@@ -467,6 +467,25 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
     { artifacts: compiled.artifacts, nodes: compiled.nodes, dependsOn: compiled.dependsOn, assignment },
     ...(compiled.additionalChanges ?? []),
   ];
+  const frozenBaseRevision = compiled.materializedRevision ?? input.sourceRevision;
+  if (compiled.materializedRevision !== undefined) {
+    const git = (...args: string[]) => execFileSync('git', ['-C', input.checkout, '--no-replace-objects', ...args], {
+      encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'],
+    }).trim();
+    if (!/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/.test(frozenBaseRevision)
+      || git('rev-parse', '--verify', 'HEAD') !== frozenBaseRevision) {
+      throw new Error('Materialized OpenSpec revision must match the current Git commit');
+    }
+    git('merge-base', '--is-ancestor', input.sourceRevision, frozenBaseRevision);
+    for (const { artifacts } of plans) {
+      for (const { path, content } of artifacts) {
+        const blob = execFileSync('git', ['-C', input.checkout, '--no-replace-objects', 'show', `${frozenBaseRevision}:${path}`], { stdio: ['ignore', 'pipe', 'pipe'] });
+        if (!blob.equals(Buffer.from(content))) {
+          throw new Error(`Materialized OpenSpec revision lacks compiled artifact: ${path}`);
+        }
+      }
+    }
+  }
   const changes = plans.map((change) => {
     requireAvailableArchitect(change.assignment, input.providerCapabilitySnapshot);
     const changeId = change.assignment.changeId;
@@ -488,7 +507,7 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
     const contract = compileAndFreezeContract({
       checkout: input.checkout, changeId, assignment: change.assignment,
       trustedAuthoritySourceDigest: input.trustedAuthoritySourceDigest, evidenceDigest, fixedPointDigest,
-      unresolvedMaterialDeltas: [], frozenBaseRevision: input.sourceRevision, artifacts: change.artifacts, nodes,
+      unresolvedMaterialDeltas: [], frozenBaseRevision, artifacts: change.artifacts, nodes,
     });
     return { contract, dependsOn: change.dependsOn ?? [] };
   });

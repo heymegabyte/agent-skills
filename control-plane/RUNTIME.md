@@ -109,3 +109,9 @@ all proposed ownership and dependencies and supplies the architect assignments,
 execution leases, provider, and acceptance commands. The materializer receives
 the complete approved Markdown batch and architect session ID. Persist the batch
 through the host's repository write boundary and retain the session receipt.
+
+A materializer that commits the OpenSpec batch may return the full Git commit
+ID. The coordinator checks that it matches the current commit, descends from
+the researched revision, and contains the exact compiled artifacts. Worker
+contracts then use that revision so isolated worktrees contain the OpenSpec
+files.
