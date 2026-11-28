@@ -12,7 +12,7 @@ GitHub owns scheduling and run history. Work in the provided isolated worktree; 
 
 Read only relevant skills/resources on demand. Website deployment, SEO and visual gates apply to website delivery, not machine setup, documentation or unrelated native applications. Machine preferences come from ~/.config/agent-fleet/machine.json; inspect the full machine profile only when the task needs host configuration.
 
-OpenClaw delegates through official Codex/Claude CLIs and Claw Router; native CLI tools, auth and compaction remain available. OpenCode/DeepSeek uses DEEPSEEK_API_KEY directly through get-secret. Never use paid OpenAI/Anthropic API fallbacks or Cloudflare AI Gateway for local compute. Simple interactive work may use the native CLI directly without orchestration.
+OpenClaw delegates through official Codex/Claude CLIs and Claw Router; native CLI tools, auth and compaction remain available. For bounded implementation, use the approved OpenCode DeepSeek launcher through LiteLLM by default. The direct DeepSeek route uses the separate DEEPSEEK_API_KEY via get-secret as a fallback. Follow `rules/agent-provider-policy.md` and record the route actually observed. Never use paid OpenAI/Anthropic API fallbacks or Cloudflare AI Gateway for local compute. Simple interactive work may use the native CLI directly without orchestration.
 
 Use context.json as a bounded index of project surfaces, previous receipts and retained worktrees. Verify current files/commits; prior success is not publication evidence. Do not bulk-read ledgers, other projects' transcripts or credentials. If interrupted, preserve actual state for the next GitHub tick; there is no durable execution queue or blind retry.
 
@@ -64,3 +64,30 @@ for a live discovery adapter. Supply a refresh snapshot with reviewed evidence
 excerpts and an assessment callback that independently sets scope, scores, and
 authority. The provider proposes evidence-backed work. The host and admission
 evaluator decide which proposals enter supplemental OpenSpec execution.
+
+### Review accepted implementation for reuse
+
+In the trusted adapter module, set `reuseProposalRoots` to the approved
+checkout roots for `theme.tools`, `install.doctor`, and `agent-skills`.
+The built-in reviewer uses the configured Codex provider to review frozen
+OpenSpec artifacts. To add accepted implementation, construct the scheduler
+with `createApprovedProcessAdapter` and supply `approveReusePath(node, path)`
+using the host's disclosure policy. Approve specific changed source paths
+whose committed contents may be sent to the reviewer. Leave the option unset
+if the run lacks that approval.
+
+The process adapter reads regular text blobs from the accepted Git commit.
+Its `sourceDigest` callback must report the full accepted commit ID, and
+workers must commit the accepted changes in their worktrees. The reader skips
+unapproved paths and limits the returned text to 32 KiB. For a scheduler that
+uses another source representation, supply a trusted
+`readAcceptedReuseEvidence` adapter that returns bounded excerpts bound to its
+accepted source digest.
+
+The coordinator asks for implementation reuse review before integration and
+writes proposals from the successful attempt after integration. Inspect
+`reuseExtractions` for the reviewer session, contract digest, destination,
+proposal path, and commit-qualified citation. `refreshImprovements` receives
+those findings in the same run. Proposal persistence preserves the candidate
+for admission. Authority to implement and publish any destination change
+comes from the host's OpenSpec admission policy.
