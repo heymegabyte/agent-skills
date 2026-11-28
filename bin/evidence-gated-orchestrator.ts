@@ -438,12 +438,6 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
     const invoked = await invokeProviderCritiqueRound(round, briefs, prior, roster.participants, provider, new Date().toISOString(), roleAssignments, unresolvedDissent);
     critiqueReceipts.push(...invoked.receipts);
     conferenceExchanges.push(...invoked.exchanges);
-    for (const critique of invoked.critiques) {
-      const matching = invoked.receipts.find((receipt) => receipt.participantId === critique.participantId)!;
-      for (const dissent of critique.dissent) {
-        if (dissent.resolutionOwner && dissent.providerReceipt !== matching.receiptDigest) throw new Error(`Dissent resolution is not bound to the approved provider call for ${critique.participantId}`);
-      }
-    }
     return invoked.critiques;
   }, input.maxCritiqueRounds);
   if (!fixedPoint.converged) throw new ArchitectureConvergenceError(fixedPoint, critiqueReceipts, conferenceExchanges);

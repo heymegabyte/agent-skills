@@ -246,6 +246,12 @@ export function evaluateSaturation(inventory: EstateInventory, research: Researc
   return { ...base, digest: digest(base) };
 }
 
+function parseConferenceResponse(output: string): unknown {
+  const trimmed = output.trim();
+  const fenced = /^```json\r?\n([^]*?)\r?\n```$/i.exec(trimmed);
+  return JSON.parse(fenced ? fenced[1] : trimmed);
+}
+
 export async function invokeProviderCritiqueRound(
   round: number,
   briefs: StructuredBrief[],
@@ -271,7 +277,7 @@ export async function invokeProviderCritiqueRound(
     });
     const result = await launcher(participant.family, input);
     if (!result.launcher.startsWith('approved:')) throw new Error(`Unapproved critique launcher for ${participant.id}`);
-    const critique = JSON.parse(result.output) as Critique;
+    const critique = parseConferenceResponse(result.output) as Critique;
     if (critique.family !== participant.family || !Array.isArray(critique.materialDeltas) || !Array.isArray(critique.dissent)) throw new Error(`Invalid critique from ${participant.id}`);
     critique.participantId = participant.id;
     critique.responsibility = assignment.responsibility;
@@ -322,7 +328,7 @@ export async function invokeIndependentBriefs(
     const input = `Produce a ${assignment.responsibility} conference brief as ${family}. Use only the supplied evidence. Do not call tools, inspect the checkout, or add commentary or Markdown fences. Do not claim model independence beyond the supplied capability plan. Return only a raw JSON object with family set to "${family}", summary (string), recommendations (string array), risks (string array), and decisions (array of objects with topic, position, and material boolean).\nCAPABILITY:${JSON.stringify({ mode: plan.mode, independent: plan.independent, limitation: plan.limitation, sequence })}\nEVIDENCE:${bundle}`;
     const result = await launcher(family, input);
     if (!result.launcher.startsWith('approved:')) throw new Error(`Unapproved provider launcher for ${family}`);
-    const parsed = JSON.parse(result.output) as StructuredBrief;
+    const parsed = parseConferenceResponse(result.output) as StructuredBrief;
     if (parsed.family !== family || !parsed.summary || !Array.isArray(parsed.decisions)) throw new Error(`Invalid ${family} structured brief`);
     const capability = plan.capabilities.find((item) => item.family === family)!;
     return {

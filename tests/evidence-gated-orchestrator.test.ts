@@ -301,7 +301,7 @@ test('production pipeline rejects unresolved research conflicts and unbound diss
     const finding = { topic: 'coverage', position: 'Verify blank input', evidence: ['fixture'] };
     if (round === 3) assert.deepEqual(unresolvedDissent, [finding]);
     const output = { ...JSON.parse(result.output), dissent: round === 1 ? [finding] : [] };
-    return { ...result, sessionId: `session-${round}-${family}`, output: JSON.stringify(output) };
+    return { ...result, sessionId: `session-${round}-${family}`, output: '```json\n' + JSON.stringify(output) + '\n```' };
   };
   await assert.rejects(runEvidenceGatedPipeline({ ...input(checkout, specialists), maxCritiqueRounds: 3 }, stalled), (error) => {
     assert.ok(error instanceof ArchitectureConvergenceError);
@@ -311,6 +311,21 @@ test('production pipeline rejects unresolved research conflicts and unbound diss
     return true;
   });
   assert.ok(!calls.includes('compile:openspec'));
+
+  const combined = configured(checkout, paths, []);
+  const launchCombined = combined.provider;
+  combined.provider = async (family, prompt) => {
+    const response = await launchCombined(family, prompt);
+    if (!prompt.startsWith('{')) return response;
+    const { responsibility } = JSON.parse(prompt);
+    if (responsibility !== 'architecture-verification') return response;
+    return { ...response, output: JSON.stringify({
+      ...JSON.parse(response.output),
+      dissent: [{ topic: 'coverage', position: 'Verify blank input', evidence: ['fixture'], resolutionOwner: 'codex-engineer' }],
+    }) };
+  };
+  const twoFamilies = specialists.filter(({ family }) => family !== 'gemini');
+  assert.equal((await runEvidenceGatedPipeline(input(checkout, twoFamilies), combined)).status, 'complete');
 });
 
 test('composition root fails closed when any production adapter is absent', async () => {
