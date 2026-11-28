@@ -134,6 +134,26 @@ test('local development worktree starts at the frozen commit and preserves local
     assert.equal(readFileSync(join(created.directory, 'fixture.txt'), 'utf8'), 'frozen source');
     assert.equal(readFileSync(source, 'utf8'), 'concurrent local edits');
     assert.throws(() => createDetachedDevelopmentWorktree(checkout, root, 'HEAD'), /full Git commit identity/);
+    git(checkout, 'add', 'fixture.txt');
+    const commit = (message: string) =>
+      git(checkout, '-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.test', 'commit', '-qm', message);
+    commit('Integrate first prerequisite');
+    const first = git(checkout, 'rev-parse', 'HEAD');
+    writeFileSync(join(checkout, 'second.txt'), 'second prerequisite');
+    git(checkout, 'add', 'second.txt');
+    commit('Integrate second prerequisite');
+    const second = git(checkout, 'rev-parse', 'HEAD');
+    const dependent = createDetachedDevelopmentWorktree(checkout, root, base, { first, second });
+    assert.equal(dependent.sourceDigest, second);
+    assert.equal(readFileSync(join(dependent.directory, 'fixture.txt'), 'utf8'), 'concurrent local edits');
+    assert.equal(readFileSync(join(dependent.directory, 'second.txt'), 'utf8'), 'second prerequisite');
+
+    git(checkout, 'switch', '--detach', base);
+    writeFileSync(source, 'divergent source');
+    git(checkout, 'add', 'fixture.txt');
+    commit('Divergent prerequisite');
+    const divergent = git(checkout, 'rev-parse', 'HEAD');
+    assert.throws(() => createDetachedDevelopmentWorktree(checkout, root, base, { second, divergent }), /contains the frozen base and every prerequisite/);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
