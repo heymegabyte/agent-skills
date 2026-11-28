@@ -90,3 +90,12 @@
 
 - Archive `operational-prompt-hydration-workflow` only after review, synchronization, remote integration, installation, and external release/consumer evidence are complete or precisely blocked under project policy.
 - Verify the archived change and regenerate any archive-derived indexes without altering implementation history.
+
+## Current instruction and routing audit
+
+- [ ] Compare installed managed blocks and skill routes with canonical policy. Verify supported harness loading using current evidence.
+- [ ] Reconcile instructions for whole-change ownership, research-backed split synthesis, concurrent reusable-value extraction, and same-round improvement admission. Run prompt-policy and routing checks.
+- [ ] Verify remaining live release and consumer edges from the registry and consumer runtime. Reconcile the OpenSpec trace with observed results.
+- [ ] Wire the pre-architecture stage to generate evidence-backed synthesis for independent prompt slices. Verify that the architect receives the synthesized briefs and their evidence digests through a supported entrypoint.
+- [ ] Dispatch independently owned changes across dependency waves. Verify that scheduler admission rejects task-level ownership transfers within a change.
+- [ ] Run dedicated reusable-value extraction concurrently and feed admitted discoveries back into OpenSpec during execution. Verify destination-specific receipts and refreshed convergence before completion.

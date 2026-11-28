@@ -103,6 +103,7 @@ export interface PipelineResult {
   executions: NodeExecutionReceipt[];
   verificationReceipts: VerificationReceipt[];
   conferenceResolution: ConferenceResolutionReceipt;
+  conferenceExecution: OpenSpecCompilerInput['conferenceExecution'];
 }
 
 function requireAdapters(adapters: Partial<PipelineAdapters>): asserts adapters is PipelineAdapters {
@@ -174,7 +175,12 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
   state = advance(state, 'architect-assignment', { assignment });
 
   const evidenceDigest = digest(evidenceBundle);
-  const compiled = await configured.compileOpenSpec({ checkout: input.checkout, changeId: input.changeId, prompt: input.prompt, evidenceDigest, fixedPointDigest, assignment, conference: fixedPoint, conferenceResolution });
+  const conferenceExecution: OpenSpecCompilerInput['conferenceExecution'] = {
+    mode: capabilityPlan.mode,
+    independent: capabilityPlan.independent,
+    ...(capabilityPlan.limitation ? { limitation: capabilityPlan.limitation } : {}),
+  };
+  const compiled = await configured.compileOpenSpec({ checkout: input.checkout, changeId: input.changeId, prompt: input.prompt, evidenceDigest, fixedPointDigest, assignment, conference: fixedPoint, conferenceResolution, conferenceExecution });
   state = advance(state, 'openspec-compilation', { contract: compiled });
   const contract = compileAndFreezeContract({ checkout: input.checkout, changeId: input.changeId, assignment, trustedAuthoritySourceDigest: input.trustedAuthoritySourceDigest, evidenceDigest, fixedPointDigest, unresolvedMaterialDeltas: [], frozenBaseRevision: input.sourceRevision, ...compiled });
   state = advance(state, 'contract-freeze', { contract });
@@ -208,7 +214,7 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
   state = advance(state, 'complete', { complete: true, verification });
   return {
     status: 'complete', state, contract, executions, verificationReceipts: verification.receipts, conferenceResolution,
-    conferenceExecution: { mode: capabilityPlan.mode, independent: capabilityPlan.independent, ...(capabilityPlan.limitation ? { limitation: capabilityPlan.limitation } : {}) },
+    conferenceExecution,
   };
 }
 

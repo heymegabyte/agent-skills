@@ -53,13 +53,8 @@ For reusable work, route ownership before implementation: agent behavior to `age
 
 For material work, map the outcome to cohesive capabilities and testable requirements; cover applicable edge states, compatibility, permissions, telemetry, rollout, rollback, and ownership; then decompose implementation into meaningful independently verifiable tasks with dependencies and acceptance evidence.
 
-## Same-turn execution & multi-swarm parallelization
+## Same-turn execution
 
-OpenSpec is an execution control, not a conversational delay. When the original request authorizes implementation and no approval-required action, material ambiguity, or genuine blocker remains:
-
-1. Run the **Product & Architecture Gap Audit** (`auditProductGaps` in `bin/prompt-hydrator.ts`) so missing or stubbed surfaces (such as `"Settings"`, `"Billing"`, `"Notifications"`, `"Plugin Catalog"`, or `@theme.tools/*` bindings) are folded into the OpenSpec scope automatically.
-2. Convene the **Right-Sized Collaborative SCRUM Deliberation Quorum** (`bin/scrum-deliberation-quorum.ts`) with *only* the specialist agents required by the active domain across `claude`, `codex`, and `gemini`.
-3. Have the Frontier Architect (`claude` / `codex` / `gemini` — never `opencode`) author the OpenSpec artifacts (`proposal.md`, `design.md`, `tasks.md`, `specs/`, `task-graph.json`) and enrich repository docs/comments via web research.
-4. Immediately apply and verify in the same turn using **massive parallel swarms** (approved host adapters for `bin/evidence-gated-orchestrator.ts`), offloading 80%+ of throughput-safe implementation, full plugin catalogs, 100% unit tests, and parallel Cloudflare Browser Run (`@cloudflare/playwright`) E2E suites to `opencode` (DeepSeek) worktree swarms through production Cloudflare deployment on `main`.
+Use [prompt hydration and parallel OpenSpec delivery](parallel-multi-swarm-orchestration.md) to synthesize separate briefs, admit evidence-backed product gaps, and queue independently owned changes. Apply the relevant verification and delivery gates for each change.
 
 Cross-links: `[[parallel-multi-swarm-orchestration]]` · `[[intent-complete-delivery]]` · `[[openspec-operating-contract]]` · `[[working-backwards]]` · `[[agent-self-manages-context]]`.
