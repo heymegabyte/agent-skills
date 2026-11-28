@@ -9,13 +9,15 @@
  * reports the wrong version to every MCP client.
  */
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
 import { SERVER_INFO } from '../src/index.js';
 
-/** The package manifest, resolved from the compiled test file in `dist/test`. */
+/** Resolve the manifest from either the source test or its compiled output. */
+const sourceManifest = new URL('../package.json', import.meta.url);
+const manifestUrl = existsSync(sourceManifest) ? sourceManifest : new URL('../../package.json', import.meta.url);
 const manifest = JSON.parse(
-  readFileSync(new URL('../../package.json', import.meta.url), 'utf8'),
+  readFileSync(manifestUrl, 'utf8'),
 ) as { name: string; version: string };
 
 describe('server info', () => {

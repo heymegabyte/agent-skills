@@ -123,20 +123,24 @@ const verificationSourceByPhase: Record<string, string> = {
   '10': '79ec6f2287a7423bae48754378cf2f21ff7e9c7e',
 };
 
-function verificationForTask(root: string, id: string, evidenceFile?: string) {
+function verificationForTask(root: string, id: string, phaseDigests: Map<string, string>, evidenceFile?: string) {
   const phase = id.split('.')[0];
   const tests = verificationTests[phase];
   if (!tests) throw new Error(`Missing verification manifest for task ${id}`);
-  const testPaths = tests.split(' ');
-  const revision = verificationSourceByPhase[phase] ?? integratedAgentSkillsRevision;
-  const digestInput = testPaths.map((path) => execFileSync('git', [
-    '--no-replace-objects', 'show', `${revision}:${path}`,
-  ], { cwd: root, encoding: 'utf8' })).join('\n');
+  let evidenceDigest = phaseDigests.get(phase);
+  if (!evidenceDigest) {
+    const revision = verificationSourceByPhase[phase] ?? integratedAgentSkillsRevision;
+    const digestInput = tests.split(' ').map((path) => execFileSync('git', [
+      '--no-replace-objects', 'show', `${revision}:${path}`,
+    ], { cwd: root, encoding: 'utf8' })).join('\n');
+    evidenceDigest = sha(digestInput);
+    phaseDigests.set(phase, evidenceDigest);
+  }
   const receipts: Record<string, unknown>[] = [{
     id: `VERIFY:TASK-${id}:FOCUSED`,
     command: `node --experimental-strip-types --test ${tests}`,
     status: 'pass',
-    evidenceDigest: sha(digestInput),
+    evidenceDigest,
     observedAt: '2026-11-25T07:34:56.000Z'
   }];
   if (evidenceFile && id !== '1.1') {
@@ -225,11 +229,12 @@ export function compileOperationalChangeTrace(root: string, sourceRevision: stri
   if (scopeRequirements.some((requirement) => !requirement.tasks.length)) throw new Error('Every requirement must map to at least one task');
   const scope: HydratedDeliveryScope = { changeId, title: 'Operational Prompt Hydration Workflow', summary: 'Trace the implemented workflow without treating checkboxes or indirect evidence as delivery closure.', sourceRevision, architectIdentity: 'assigned Codex architect', evidenceIds: ['EVIDENCE:CHANGE-REVIEW'], requirements: scopeRequirements };
   const compiled = compileHydratedDeliveryScope(scope, schema); const lineById = new Map(lines.map((line) => [taskId(line), line]));
+  const phaseDigests = new Map<string, string>();
   const evidence: TaskDeliveryEvidence[] = lines.map((line) => {
     const id = taskId(line); const task = `TASK-${id}`; const isChecked = line.startsWith('- [x]'); const blocker = blocked[id]; const evidenceFile = evidenceByTask[id]; const item: TaskDeliveryEvidence = { taskId: task, checkboxComplete: isChecked };
     if (isChecked) {
       item.codePaths = pathsForTask(id, true);
-      item.verification = verificationForTask(root, id, evidenceFile);
+      item.verification = verificationForTask(root, id, phaseDigests, evidenceFile);
       item.integration = integratedEvidence(id);
     }
     if (blocker) item.blockers = [{ id: `BLOCKER:${task}`, edge: blocker.edge, reason: blocker.reason, owner: line.match(/Owner:\s*([^;]+)/)?.[1] ?? 'assigned owner', nextAction: blocker.next, status: 'active', evidenceIds: [evidenceFile ? `EVIDENCE:${evidenceFile.replace(/[^A-Za-z0-9._:-]/g, '-')}` : `EVIDENCE:${task}:BLOCKER`] }];
