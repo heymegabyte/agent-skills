@@ -62,6 +62,30 @@ interface PromptSliceBrief {
   launcher: string;
 }
 
+function limitProviderSlots(provider: ProviderLauncher, plan: ConferenceCapabilityPlan): ProviderLauncher {
+  const families = new Map<ModelFamily, { available: number; waiting: Array<() => void> }>();
+  for (const { family } of plan.assignments) {
+    if (families.has(family)) continue;
+    const capability = plan.capabilities.find((candidate) => candidate.family === family && candidate.available);
+    const slots = capability?.slots ?? 0;
+    if (!Number.isSafeInteger(slots) || slots < 1) throw new Error(`Invalid provider slot capacity for ${family}`);
+    families.set(family, { available: slots, waiting: [] });
+  }
+  return async (family, request) => {
+    const slots = families.get(family);
+    if (!slots) throw new Error(`No approved provider slot for ${family}`);
+    if (slots.available > 0) slots.available -= 1;
+    else await new Promise<void>((resume) => slots.waiting.push(resume));
+    try {
+      return await provider(family, request);
+    } finally {
+      const next = slots.waiting.shift();
+      if (next) next();
+      else slots.available += 1;
+    }
+  };
+}
+
 async function synthesizePromptSlices(
   evidence: HydratedArchitectBrief['evidence'],
   plan: ConferenceCapabilityPlan,
@@ -321,9 +345,10 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
     ? discoverProviderSlotCapabilities(input.providerCapabilitySnapshot, input.providerSlotLimits)
     : undefined;
   const capabilityPlan = planConferenceCapabilities(input.providerCapabilities ?? discoveredCapabilities ?? defaultCapabilities, roster.participants);
+  const provider = limitProviderSlots(configured.provider, capabilityPlan);
   const riskGate = evaluateConferenceRiskGate(input.prompt, input.riskReview, capabilityPlan);
   if (riskGate.decision === 'block') throw new Error(`High-risk conference blocked: ${riskGate.blockers.join('; ')}`);
-  const topicPlan = input.researchRequests === undefined ? await planTopicResearch(intake, inventory, configured.provider) : undefined;
+  const topicPlan = input.researchRequests === undefined ? await planTopicResearch(intake, inventory, provider) : undefined;
   const researchRequests = topicPlan?.researchRequests ?? input.researchRequests ?? [];
   for (const domain of mandatoryEvidence) {
     if (!researchRequests.some((request) => request.domain === domain && request.query.trim())) {
@@ -340,8 +365,8 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
   if (!saturation.ready) throw new Error(`Saturation gate failed closed: ${saturation.blockers.join('; ')}`);
   state = advance(state, 'saturation-gate', { saturation });
   const evidenceBundle = { intake, inventory, research, saturation, topicPlanReceipt };
-  const slices = await synthesizePromptSlices(evidenceBundle, capabilityPlan, configured.provider);
-  const independent = await invokeIndependentBriefs(saturation, { ...evidenceBundle, slices }, configured.provider, new Date().toISOString(), capabilityPlan);
+  const slices = await synthesizePromptSlices(evidenceBundle, capabilityPlan, provider);
+  const independent = await invokeIndependentBriefs(saturation, { ...evidenceBundle, slices }, provider, new Date().toISOString(), capabilityPlan);
   state = advance(state, 'independent-briefs', { ...independent, slices });
 
   if (/\b(auth|security|payment|billing|migration|tenant|credential|architecture)\b/i.test(input.prompt) && !roster.secondArchitect) {
@@ -352,7 +377,7 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
   const critiqueReceipts: unknown[] = [];
   const conferenceExchanges = [] as Awaited<ReturnType<typeof invokeProviderCritiqueRound>>['exchanges'];
   const fixedPoint = await convergeArchitecture(independent.briefs, async (round, briefs, prior) => {
-    const invoked = await invokeProviderCritiqueRound(round, briefs, prior, roster.participants, configured.provider, new Date().toISOString(), roleAssignments);
+    const invoked = await invokeProviderCritiqueRound(round, briefs, prior, roster.participants, provider, new Date().toISOString(), roleAssignments);
     critiqueReceipts.push(...invoked.receipts);
     conferenceExchanges.push(...invoked.exchanges);
     for (const critique of invoked.critiques) {
@@ -435,7 +460,7 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
   state = advance(state, 'contract-freeze', { contract, contracts });
   const captureReuse = configured.captureReuseProposal ?? (configured.reuseProposalRoots && createReuseProposalWriter(configured.reuseProposalRoots));
   const extractReuse = configured.extractReuse ?? (captureReuse
-    ? () => reviewReusableWork(contract, configured.provider, captureReuse)
+    ? () => reviewReusableWork(contract, provider, captureReuse)
     : undefined);
   const [executionResult, reuseResult] = await Promise.allSettled([
     executeFrozenChanges(changes, configured.scheduler, configured.schedulerOptions),

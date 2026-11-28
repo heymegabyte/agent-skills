@@ -196,12 +196,26 @@ test('low-risk pipeline completes with one provider through labeled sequential r
     providerSlotLimits: { codex: 1 },
   };
   const adapters = configured(checkout, paths, calls);
+  const provider = adapters.provider;
+  let active = 0;
+  let peak = 0;
+  adapters.provider = async (...args) => {
+    active += 1;
+    peak = Math.max(peak, active);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1));
+      return await provider(...args);
+    } finally {
+      active -= 1;
+    }
+  };
   adapters.verify = async ({ contract, executions }) => ({
     passed: executions.every((execution) => execution.status === 'integrated'),
     receipts: [{ reviewerFamily: 'codex', launcher: 'approved:codex-subscription', inputDigest: 'a'.repeat(64), outputDigest: 'b'.repeat(64), reviewedContractDigest: contract.contractDigest, passed: true }],
   });
   const result = await runEvidenceGatedPipeline(request, adapters);
   assert.equal(result.status, 'complete');
+  assert.equal(peak, 1);
   assert.equal(result.conferenceExecution.mode, 'sequential-single-agent');
   assert.equal(result.conferenceExecution.independent, false);
   assert.match(result.conferenceExecution.limitation ?? '', /not independent evidence/);
