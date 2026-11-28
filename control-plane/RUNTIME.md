@@ -41,3 +41,10 @@ bun bin/evidence-gated-orchestrator.ts \
 The command emits the run result as JSON after integration and verification.
 Keep adapter diagnostics on stderr. Select the adapter module from trusted
 local configuration. Its code runs with the host process's permissions.
+
+A host that approves the local Codex CLI can use
+`createLocalCodexDeliberation` from `bin/local-codex-deliberation.ts` for its
+Codex provider rail. It uses an ephemeral, read-only session, supplies the
+prompt on stdin, and returns a provider result only after observing a completed
+turn and its session ID. Route other model families through their own approved
+adapters.
