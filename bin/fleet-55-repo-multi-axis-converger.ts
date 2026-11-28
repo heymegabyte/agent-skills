@@ -38,8 +38,8 @@ This repository (\`${repoName}\` · \`https://${domain}\`) is part of the Sovere
 ## 2. Parallel Execution & OpenSpec Governance
 
 - **Frontier Architect Only for OpenSpec (\`claude-1/2/3\` / \`codex\` / \`gemini\` — NEVER \`opencode\`)**: Author and update \`openspec/project.md\` and \`openspec/changes/<change-id>/\` before material behavior, UI, or schema changes.
-- **Parallel dispatch**: Dispatch independent work concurrently at intake and whenever a dependency clears if doing so reduces time to verified delivery. Scale the worker count to ready work, isolation, and approved capacity. Assign disjoint ownership and acceptance checks, then verify the integrated results.
-- **DeepSeek-first routing**: Delegate every suitable task to OpenCode with DeepSeek via LiteLLM when it meets the acceptance bar and improves throughput. Use Codex, Gemini, or Claude when specialist capability or independent review materially improves the result. Record concrete reasons for premium routing or limited dispatch.
+- **Parallel dispatch**: Dispatch independent OpenSpec changes concurrently at intake and whenever a dependency clears if doing so reduces time to verified delivery. Scale the worker count to ready work, isolation, and approved capacity. Assign disjoint ownership and acceptance checks, then verify the integrated results.
+- **DeepSeek-first routing**: Delegate suitable whole OpenSpec changes to OpenCode with DeepSeek via LiteLLM when it meets the acceptance bar and improves throughput. Use Codex, Gemini, or Claude when specialist capability or independent review materially improves the result. Record concrete reasons for premium routing or limited dispatch.
 - **Policy source**: Load \`~/.agentskills/policies/operational-prompt-hydration.md\` for the canonical operating policy.
 
 ## 3. VoiceKit (\`$17,000\` Credits Tier — Replaces ElevenLabs Everywhere)

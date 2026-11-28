@@ -46,8 +46,8 @@ test('hydrates live context before execution and preserves evidence safely', asy
   assert.doesNotMatch(formatHydrationExplanation(first), /ghp_abcdefghijklmnopqrstuvwxyz123456/);
   assert.match(formatHydratedBrief(first), /Original request \(verbatim\)/);
   assert.match(formatHydratedBrief(first), /Decision-readiness gate/);
-  assert.match(formatHydratedBrief(first), /Dispatch every task that DeepSeek can complete correctly to OpenCode/);
-  assert.match(formatHydratedBrief(first), /Launch independent tasks concurrently and refill approved capacity/);
+  assert.match(formatHydratedBrief(first), /Dispatch suitable whole OpenSpec changes to OpenCode/);
+  assert.match(formatHydratedBrief(first), /Launch independent changes concurrently and refill approved capacity/);
   assert.match(formatHydrationExplanation(first), /Omissions and fallbacks/);
   assert.equal(first.decisionReadiness.materialDecision, true);
   assert.equal(first.decisionReadiness.architectureReady, false);
@@ -200,7 +200,7 @@ test('product gap audit, SCRUM deliberation quorum, and 15-strategy multi-swarm 
   assert.equal(hydrated.swarmExecutionPlan.finishLineContract.e2eRunner, 'cloudflare-browser-run-parallel');
   assert.equal(hydrated.swarmExecutionPlan.finishLineContract.gitBranch, 'main');
   assert.ok(hydrated.handoff.pendingWorkIds.includes('parallel-end-of-round-triad-meaning-extraction'));
-  assert.match(formatHydratedBrief(hydrated), /Minimum-Prompt Ecosystem Completeness Assumption/);
+  assert.match(formatHydratedBrief(hydrated), /Submit authorized findings to same-run OpenSpec admission/);
   const quorum = conveneScrumQuorum('Add AI workflow builder with extensible plugin catalog and settings');
   assert.ok(quorum.consensusDecisions.some((decision) =>
     decision.includes('Dispatch all suitable ready work to OpenCode with DeepSeek via LiteLLM')));

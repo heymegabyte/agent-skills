@@ -21,7 +21,7 @@ const DELIVERY_CLOSURE_MARKER = '**Concurrent End-of-Prompt Delivery Closure**';
 const AGENT_SECTION_HEADING = '## 8. End-of-Round Parallel Meaning & Preference Triad Extraction & Multi-Swarm Mandate';
 
 const DISPATCH_MARKER = '**DeepSeek-first parallel dispatch**';
-const DISPATCH_DIRECTIVE = `- ${DISPATCH_MARKER} At intake and after each dependency clears, dispatch independent work concurrently whenever doing so reduces time to verified delivery. Delegate every suitable task to OpenCode with DeepSeek through LiteLLM when it meets the acceptance bar and improves throughput. Use Codex, Gemini, or Claude for work that benefits materially from premium capability or independent review, and record concrete reasons for premium routing or limited dispatch. Scale worker count to ready work, isolation, and approved capacity.`;
+const DISPATCH_DIRECTIVE = `- ${DISPATCH_MARKER} At intake and after each dependency clears, dispatch independent OpenSpec changes concurrently whenever doing so reduces time to verified delivery. Delegate suitable whole OpenSpec changes to OpenCode with DeepSeek through LiteLLM when it meets the acceptance bar and improves throughput. Use Codex, Gemini, or Claude for work that benefits materially from premium capability or independent review, and record concrete reasons for premium routing or limited dispatch. Scale worker count to ready work, isolation, and approved capacity.`;
 
 const DOMAIN_GUIDANCE: Record<string, string> = {
   '01-operating-system':
