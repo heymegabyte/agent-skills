@@ -649,3 +649,17 @@ test('accepted implementation reuse is reviewed before integration and captured 
   assert.ok(!calls.includes('integrate:implement'));
   assert.equal(proposals.length, 1);
 });
+
+test('a host reuse reader without a writer fails before research or provider calls', async () => {
+  const { checkout, paths, specialists } = fixture();
+  const calls: string[] = [];
+  const adapters = configured(checkout, paths, calls);
+  adapters.scheduler.readAcceptedReuseEvidence = async () => {
+    throw new Error('The accepted-source reader should never run');
+  };
+  await assert.rejects(
+    () => runEvidenceGatedPipeline(input(checkout, specialists), adapters),
+    /Accepted-source reuse requires a proposal writer/,
+  );
+  assert.deepEqual(calls, []);
+});

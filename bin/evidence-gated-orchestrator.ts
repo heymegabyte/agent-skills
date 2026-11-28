@@ -366,6 +366,10 @@ async function planTopicResearch(
 
 export async function runEvidenceGatedPipeline(input: PipelineInput, configured: Partial<PipelineAdapters>): Promise<PipelineResult> {
   requireAdapters(configured);
+  const captureReuse = configured.captureReuseProposal ?? (configured.reuseProposalRoots && createReuseProposalWriter(configured.reuseProposalRoots));
+  const readAccepted = configured.readAcceptedReuseEvidence
+    ?? configured.scheduler.readAcceptedReuseEvidence?.bind(configured.scheduler);
+  if (readAccepted && !captureReuse) throw new Error('Accepted-source reuse requires a proposal writer');
   if (!input.prompt.trim() || !input.changeId.trim() || !input.sourceRevision.trim()) throw new Error('Prompt, changeId, and exact sourceRevision are required');
   const mandatoryEvidence: EvidenceDomain[] = ['primary-sources', 'competitors-substitutes'];
   for (const domain of mandatoryEvidence) {
@@ -498,7 +502,6 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
   }
   state = advance(state, 'openspec-compilation', { contract: compiled, improvementPhase });
   state = advance(state, 'contract-freeze', { contract, contracts });
-  const captureReuse = configured.captureReuseProposal ?? (configured.reuseProposalRoots && createReuseProposalWriter(configured.reuseProposalRoots));
   const extractReuse = configured.extractReuse ?? (captureReuse
     ? ({ contract }: { contract: FrozenContract }) => reviewReusableWork(contract, provider, captureReuse)
     : undefined);
@@ -519,9 +522,6 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
     return receipts;
   };
   const pendingReuse = new Map<string, Awaited<ReturnType<typeof proposeReusableWork>>>();
-  const readAccepted = configured.readAcceptedReuseEvidence
-    ?? configured.scheduler.readAcceptedReuseEvidence?.bind(configured.scheduler);
-  if (readAccepted && !captureReuse) throw new Error('Accepted-source reuse requires a proposal writer');
   const schedulerOptions = readAccepted ? {
     ...configured.schedulerOptions,
     async observeAcceptedSource(node: ExecutionNode, receipt: Readonly<NodeExecutionReceipt>, signal: AbortSignal) {
