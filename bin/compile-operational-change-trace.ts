@@ -3,7 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { isCliEntrypoint } from './cli-entrypoint.ts';
 
 import { compileHydratedDeliveryScope, type HydratedDeliveryScope, type ScopeRequirement, type TaskDeliveryEvidence } from './openspec-delivery-compiler.ts';
 import { validateDeliveryTraceInstance } from './validate-delivery-trace.ts';
@@ -252,4 +252,4 @@ function awaitReconcile(ledger: Record<string, any>, evidence: TaskDeliveryEvide
   for (const record of next.records) { const item = byTask.get(record.task.id); if (item?.codePaths) record.implementation = { state: item.blockers?.length ? 'blocked' : 'implemented', codePaths: item.codePaths }; if (item?.verification) record.verification = item.verification; if (item?.integration) record.integration = item.integration; if (item?.delivery) record.delivery = item.delivery; if (item?.blockers) record.blockers = item.blockers; }
   return next;
 }
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) { const root = resolve(process.argv[2] ?? '.'); const revision = process.argv[3]; if (!revision) throw new Error('usage: compile-operational-change-trace.ts ROOT SOURCE_REVISION'); const schema = JSON.parse(readFileSync(join(root, 'schemas/delivery-trace.schema.json'), 'utf8')); process.stdout.write(`${JSON.stringify(compileOperationalChangeTrace(root, revision, schema), null, 2)}\n`); }
+if (isCliEntrypoint(import.meta.url)) { const root = resolve(process.argv[2] ?? '.'); const revision = process.argv[3]; if (!revision) throw new Error('usage: compile-operational-change-trace.ts ROOT SOURCE_REVISION'); const schema = JSON.parse(readFileSync(join(root, 'schemas/delivery-trace.schema.json'), 'utf8')); process.stdout.write(`${JSON.stringify(compileOperationalChangeTrace(root, revision, schema), null, 2)}\n`); }

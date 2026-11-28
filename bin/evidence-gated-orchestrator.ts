@@ -10,7 +10,8 @@ import { execFileSync } from 'node:child_process';
 import { createHash, randomUUID } from 'node:crypto';
 import { resolve } from 'node:path';
 import { readFile } from 'node:fs/promises';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { pathToFileURL } from 'node:url';
+import { isCliEntrypoint } from './cli-entrypoint.ts';
 import {
   convergeArchitecture,
   discoverProviderSlotCapabilities,
@@ -682,7 +683,7 @@ async function runHostCommand(args: string[]): Promise<void> {
   process.stdout.write(`${JSON.stringify(result)}\n`);
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isCliEntrypoint(import.meta.url)) {
   runHostCommand(process.argv.slice(2)).catch((error: unknown) => {
     process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
     process.exitCode = 2;

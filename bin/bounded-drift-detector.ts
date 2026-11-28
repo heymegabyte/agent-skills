@@ -2,7 +2,7 @@
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { isAbsolute, join, resolve } from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { isCliEntrypoint } from './cli-entrypoint.ts';
 
 import { canonicalSourceRevision, checkManagedPolicy, ManagedPolicyError } from './manage-policy-blocks.ts';
 
@@ -50,4 +50,4 @@ function cli(): void {
   const result = detectBoundedDrift({ sourceRoot, sourceRevision, manifest, installedRoot: value('--installed-root') ? resolve(value('--installed-root')!) : undefined });
   process.stdout.write(`${JSON.stringify(result, null, args.includes('--json') ? 2 : 0)}\n`); process.exitCode = result.status === 'DRIFT' ? 1 : 0;
 }
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) try { cli(); } catch (error) { console.error(error instanceof Error ? error.message : error); process.exitCode = 2; }
+if (isCliEntrypoint(import.meta.url)) try { cli(); } catch (error) { console.error(error instanceof Error ? error.message : error); process.exitCode = 2; }

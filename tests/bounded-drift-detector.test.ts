@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, it } from 'node:test';
@@ -52,4 +53,26 @@ describe('bounded drift detector', () => {
     const f = fixture(); const result = detectBoundedDrift({ sourceRoot: f.root, sourceRevision: revision, manifest: f.manifest });
     assert.equal(result.status, 'UNVERIFIED'); assert.equal(result.findings.find((item) => item.id === 'installed')?.classification, 'installed-root-not-supplied');
   });
+});
+
+
+it('runs installed workflow CLIs through a symlinked skills checkout', () => {
+  const temporary = mkdtempSync(join(tmpdir(), 'workflow-cli-symlink-'));
+  const checkout = join(import.meta.dirname, '..');
+  const installed = join(temporary, 'installed');
+  symlinkSync(checkout, installed, 'dir');
+  try {
+    for (const [name, expected] of [
+      ['bounded-drift-detector', /source-revision is required/],
+      ['manage-policy-blocks', /invalid-mode/],
+      ['compile-operational-change-trace', /SOURCE_REVISION/],
+      ['evidence-gated-orchestrator', /trusted-local-module/],
+    ] as const) {
+      const result = spawnSync('node', [join(installed, 'bin', `${name}.ts`)], { encoding: 'utf8', timeout: 10_000 });
+      assert.notEqual(result.status, 0, name);
+      assert.match(result.stderr, expected);
+    }
+  } finally {
+    rmSync(temporary, { recursive: true, force: true });
+  }
 });

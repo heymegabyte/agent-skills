@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { pathToFileURL } from 'node:url';
+import { isCliEntrypoint } from './cli-entrypoint.ts';
 
 const BEGIN_PREFIX = '<!-- EMDASH:POLICY:BEGIN';
 const END = '<!-- EMDASH:POLICY:END -->';
@@ -229,4 +229,4 @@ function runCli(args: string[]): number {
   }
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] || '').href) process.exitCode = runCli(process.argv.slice(2));
+if (isCliEntrypoint(import.meta.url)) process.exitCode = runCli(process.argv.slice(2));
