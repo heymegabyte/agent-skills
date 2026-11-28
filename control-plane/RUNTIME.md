@@ -172,3 +172,8 @@ For a local OpenCode host, `createLocalDeepSeekReadiness` from
 authenticated DeepSeek Flash inference request through the configured curl
 executable. Provide the same credential broker used by the worker. The probe
 passes the credential through stdin and returns only readiness data.
+
+For Claude final review, configure a dedicated deliberation adapter with
+`jsonSchema: deliveryVerdictSchema` from `bin/model-delivery-verification.ts`.
+It supplies the schema to the subscription CLI and uses its structured output
+field for verdict validation.

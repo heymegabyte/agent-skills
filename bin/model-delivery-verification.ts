@@ -4,6 +4,13 @@ import { createHash } from 'node:crypto';
 
 type VerificationInput = Parameters<PipelineAdapters['verify']>[0];
 
+export const deliveryVerdictSchema = {
+  type: 'object',
+  properties: { passed: { type: 'boolean' }, blockers: { type: 'array', items: { type: 'string' } } },
+  required: ['passed', 'blockers'],
+  additionalProperties: false,
+};
+
 export function createModelDeliveryVerification(options: {
   provider: ProviderLauncher;
   families: readonly VerificationReceipt['reviewerFamily'][];

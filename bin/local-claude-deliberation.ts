@@ -7,6 +7,7 @@ export function createLocalClaudeDeliberation(options: {
   checkout: string;
   subscriptionLauncher: string;
   timeoutMs?: number;
+  jsonSchema?: Record<string, unknown>;
 }): ProviderLauncher {
   const timeout = options.timeoutMs ?? 120_000;
   if (!Number.isSafeInteger(timeout) || timeout < 1) throw new Error('Claude deliberation requires a positive timeout');
@@ -17,6 +18,7 @@ export function createLocalClaudeDeliberation(options: {
         'claude', '--print', '--output-format', 'json', '--tools', '',
         '--strict-mcp-config', '--mcp-config', '{"mcpServers":{}}', '--setting-sources', '',
         '--disable-slash-commands', '--no-chrome', '--no-session-persistence',
+        ...(options.jsonSchema ? ['--json-schema', JSON.stringify(options.jsonSchema)] : []),
       ], { cwd: resolve(options.checkout), timeout, encoding: 'utf8', maxBuffer: 4_000_000 }, (error, output) => {
         if (error) reject(new Error(`Local Claude deliberation failed (${error.code ?? 'process error'})`));
         else resolveOutput(output);
@@ -27,9 +29,10 @@ export function createLocalClaudeDeliberation(options: {
     const result = JSON.parse(stdout);
     if (result?.type !== 'result' || result.subtype !== 'success' || result.is_error !== false
       || typeof result.session_id !== 'string' || !result.session_id.trim()
-      || typeof result.result !== 'string' || !result.result.trim()) {
+      || (options.jsonSchema ? result.structured_output === undefined
+        : typeof result.result !== 'string' || !result.result.trim())) {
       throw new Error('Local Claude deliberation did not emit a completed session and response');
     }
-    return { launcher: 'approved:local-claude-subscription', sessionId: result.session_id, output: result.result };
+    return { launcher: 'approved:local-claude-subscription', sessionId: result.session_id, output: options.jsonSchema ? JSON.stringify(result.structured_output) : result.result };
   };
 }
