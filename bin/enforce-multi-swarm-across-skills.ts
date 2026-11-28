@@ -15,7 +15,8 @@ import { fileURLToPath } from 'node:url';
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 const SECTION_HEADING = '## Multi-Swarm Parallelization & OpenCode (DeepSeek) Offload Mandate';
-const TRIAD_BULLET_MARKER = '**End-of-Round Parallel Meaning & Preference Triad Extraction (`bin/triad-end-of-turn-sync.ts`)**';
+const TRIAD_BULLET_MARKER = '**Reuse review**';
+const LEGACY_TRIAD_BULLET_MARKER = '**End-of-Round Parallel Meaning & Preference Triad Extraction (`bin/triad-end-of-turn-sync.ts`)**';
 const DELIVERY_CLOSURE_MARKER = '**Concurrent End-of-Prompt Delivery Closure**';
 const AGENT_SECTION_HEADING = '## 8. End-of-Round Parallel Meaning & Preference Triad Extraction & Multi-Swarm Mandate';
 
@@ -118,15 +119,13 @@ function findAgentFiles(rootDir: string): string[] {
 const WHOLE_CHANGE_DISPATCH = '- **Whole-change dispatch**. Apply `rules/openspec-change-ownership.md` and `rules/agent-provider-policy.md`. Assign each OpenSpec change one owner through verification. Route suitable bounded changes to OpenCode with DeepSeek through LiteLLM.';
 
 function buildSkillSection(skillDirName: string): string {
-  const specific =
-    DOMAIN_GUIDANCE[skillDirName] ||
-    'Decompose work into contract-locked OpenSpec DAG nodes, convene a right-sized SCRUM quorum (`claude` + `codex` + `gemini`) for key decisions, and offload all throughput-safe implementation, plugin catalogs, unit tests (100% coverage), and parallel Cloudflare Browser Run E2E suites to `opencode` (DeepSeek) swarms.';
+  const specific = DOMAIN_GUIDANCE[skillDirName];
 
   return [
     '',
     SECTION_HEADING,
     '',
-    `- **Domain Swarm Directive**: ${specific}`,
+    ...(specific ? [`- **Domain Swarm Directive**: ${specific}`] : []),
     WHOLE_CHANGE_DISPATCH,
     '- **Architecture and verification**: Route material decisions through `rules/evidence-gated-autonomous-orchestration.md`. Its conference and risk gates govern provider selection and independence.',
     TRIAD_BULLET,
@@ -168,7 +167,7 @@ export function enforceAcrossRoot(rootDir: string): {
     } else {
       const missingDirectives = [
         !content.includes(DISPATCH_MARKER) ? DISPATCH_DIRECTIVE : '',
-        !content.includes(TRIAD_BULLET_MARKER) ? TRIAD_BULLET : '',
+        !content.includes(TRIAD_BULLET_MARKER) && !content.includes(LEGACY_TRIAD_BULLET_MARKER) ? TRIAD_BULLET : '',
         !content.includes(DELIVERY_CLOSURE_MARKER) ? DELIVERY_CLOSURE_BULLET : '',
       ].filter(Boolean);
       if (missingDirectives.length) {

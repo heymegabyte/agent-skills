@@ -21,7 +21,7 @@ test('delivery closure is propagated once to existing skill and agent sections',
     assert.equal(content.match(/\*\*Concurrent End-of-Prompt Delivery Closure\*\*/g)?.length, 1);
     assert.match(content, /revalidate the exact final tree/i);
   }
-  assert.match(readFileSync(join(root, 'sample', 'SKILL.md'), 'utf8'), /End-of-Round Parallel Meaning & Preference Triad Extraction/);
+  assert.match(readFileSync(join(root, 'sample', 'SKILL.md'), 'utf8'), /Review reuse during implementation/);
 });
 
 test('hydrated briefs carry the exact-tree production closure contract', async () => {

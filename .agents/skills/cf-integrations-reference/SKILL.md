@@ -81,7 +81,7 @@ source: "28-cf-integrations-reference/SKILL.md (heymegabyte/agent-skills)"
 - **Domain Swarm Directive**: Provision Cloudflare Workers, D1, KV, R2, Queues, Workflows, AI, and Browser Rendering (`[browser]` / `@cloudflare/playwright`) bindings in parallel worktrees with deterministic local port leasing.
 - **Whole-change dispatch**. Apply `rules/openspec-change-ownership.md` and `rules/agent-provider-policy.md`. Assign each OpenSpec change one owner through verification. Route suitable bounded changes to OpenCode with DeepSeek through LiteLLM.
 - **Architecture and verification**: Route material decisions through `rules/evidence-gated-autonomous-orchestration.md`. Its conference and risk gates govern provider selection and independence.
-- **End-of-Round Parallel Meaning & Preference Triad Extraction (`bin/triad-end-of-turn-sync.ts`)**: Review reuse during implementation under `control-plane/RUNTIME.md`. Capture cited proposals for application code in `theme.tools`, host configuration in `install.doctor`, and agent guidance in `agent-skills`. Submit authorized findings to same-run OpenSpec admission.
+- **Reuse review**: Review reuse during implementation under `control-plane/RUNTIME.md`. Capture cited proposals for application code in `theme.tools`, host configuration in `install.doctor`, and agent guidance in `agent-skills`. Submit authorized findings to same-run OpenSpec admission.
 
 ## Theme.tools ecosystem contract (required)
 
