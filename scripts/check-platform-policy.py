@@ -26,6 +26,7 @@ RULE_OWNERS = {
     'rules/platform-agent-ui.md': ('platform', '2026-10-31'),
     'rules/platform-knowledge-integrations.md': ('platform', '2026-10-31'),
     'rules/platform-content-media.md': ('platform', '2026-10-31'),
+    'rules/parallel-multi-swarm-orchestration.md': ('platform', '2026-11-21'),
 }
 RULES = list(RULE_OWNERS)
 PACKS = {pack: f'_packs/{pack}.yml' for pack, _ in RULE_OWNERS.values()}

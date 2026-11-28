@@ -43,3 +43,7 @@ Cloudflare-hostable data access first (D1/KV/R2/DO), Neon/Upstash behind adapter
 - **Tenant isolation** — every table carries `org_id`; every query filters by it (defense-in-depth even behind a route gate)
 - **Safe import/export** + **idempotent** operations (re-runnable without double effect)
 - NocoDB only where customers/admins genuinely manage databases — not as a generic admin shortcut
+
+## D1 mutation receipts
+
+A D1 statement can change related rows through triggers or referential actions. In Browse's Workers-runtime regression, the draft update succeeded and revoked a metric mapping while the aggregate change count exceeded one. A conditional write should prove its specific outcome, for example with a returned target ID or a revision-keyed receipt written in the same batch. Use the aggregate count for diagnostics when dependent writes are possible. Test the successful write and its side effects, then test a stale or unauthorized attempt and verify that it leaves both unchanged. Use the actual D1 runtime for this check. [Cloudflare D1 return objects](https://developers.cloudflare.com/d1/worker-api/return-object/)

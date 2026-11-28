@@ -17,7 +17,8 @@
     "rules/total-convergence-and-openspec-handoff.md",
     "rules/platform-agent-ui.md",
     "rules/platform-knowledge-integrations.md",
-    "rules/platform-content-media.md"
+    "rules/platform-content-media.md",
+    "rules/parallel-multi-swarm-orchestration.md"
   ],
   "pack": "_packs/platform.yml",
   "prompt": "prompts/platform-convergence.md",
