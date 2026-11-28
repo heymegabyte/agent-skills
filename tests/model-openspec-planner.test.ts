@@ -1,3 +1,5 @@
+import { createLocalDeliveryEvidence } from '../bin/local-delivery-evidence.ts';
+import type { FrozenContract, NodeExecutionReceipt } from '../bin/swarm-execution-kernel.ts';
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -102,6 +104,16 @@ test('local materializer commits exactly the approved batch and preserves a dirt
     assert.equal(readFileSync(join(checkout, artifact.path), 'utf8'), artifact.content);
     assert.match(git('log', '-1', '--format=%B'), /Architect-Session: fixture/);
     assert.equal(git('status', '--porcelain'), '');
+    const readEvidence = createLocalDeliveryEvidence({ checkout, approvePath: (_, path) => path === artifact.path });
+    const review = {
+      contract: { nodes: [{ id: 'first' }] } as FrozenContract,
+      executions: [{ nodeId: 'first', status: 'integrated', integration: { integratedRevision: revision },
+        changedFiles: [artifact.path, 'unrelated.txt'] }] as NodeExecutionReceipt[],
+    };
+    writeFileSync(join(checkout, artifact.path), 'Uncommitted replacement');
+    assert.deepEqual(await readEvidence(review), { [`${revision}:${artifact.path}`]: artifact.content });
+    await assert.rejects(readEvidence({ ...review, executions: [] }), /integrated Git commit/);
+    writeFileSync(join(checkout, artifact.path), artifact.content);
     await assert.rejects(materializeLocalOpenSpec(checkout, [artifact], 'fixture'), /artifact already exists/);
   } finally {
     rmSync(checkout, { recursive: true, force: true });

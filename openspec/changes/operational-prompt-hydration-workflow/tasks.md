@@ -176,3 +176,5 @@
 - [x] Provide a model-backed adapter for final delivery review. Supply approved integrated evidence without raw worker process logs, retain reviewer session and request/response digests, and require every configured independent verdict to pass. Verify coordinator receipt handling and a negative verdict.
 
 - [x] Verify independent final review with live Claude and Codex. The model verification adapter dispatched the same label-normalization evidence (input digest `87fb32b27431466c4ea8c025a8cca934cf4fc9707de82f0ff7112d81ffb1fc80`) through separate local provider sessions. Claude session `055976c7-8900-42df-a010-34f1bc589fef` and Codex session `01a221f3-6126-7273-849a-02e11d3d90d6` each returned a passing verdict. This probe used fixture contract and execution evidence.
+
+- [x] Read final review evidence from the recorded Git integration commit. Verify commit ancestry, disclose only host-approved changed source paths, and attach commit-qualified citations. The Git fixture verifies that a working-tree edit and an unapproved path do not enter the reviewer prompt.

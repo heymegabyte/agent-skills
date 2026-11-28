@@ -50,20 +50,29 @@ export function readCommittedReuseEvidence(
   sourceDigest: string,
   approvedPaths: readonly string[],
 ): { sourceDigest: string; excerpts: Record<string, string> } {
+  const head = execFileSync('git', ['-C', directory, '--no-replace-objects', 'rev-parse', '--verify', 'HEAD'], {
+    encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'],
+  }).trim();
+  if (head !== sourceDigest) throw new Error('Reuse evidence requires the accepted Git HEAD');
+  return { sourceDigest, excerpts: readDevelopmentCommitExcerpts(directory, sourceDigest, approvedPaths) };
+}
+
+export function readDevelopmentCommitExcerpts(
+  directory: string, revision: string, approvedPaths: readonly string[],
+): Record<string, string> {
   const git = (args: string[], maxBuffer = 65_536): Buffer =>
     execFileSync('git', ['-C', directory, '--no-replace-objects', '--literal-pathspecs', ...args], {
       maxBuffer, stdio: ['ignore', 'pipe', 'pipe'],
     });
-  if (!/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/.test(sourceDigest)
-    || git(['rev-parse', '--verify', 'HEAD']).toString().trim() !== sourceDigest) {
-    throw new Error('Reuse evidence requires the accepted Git HEAD');
+  if (!/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/.test(revision)
+    || git(['rev-parse', '--verify', `${revision}^{commit}`]).toString().trim() !== revision) {
+    throw new Error('Source evidence requires a full Git commit identity');
   }
-
   const excerpts: Array<[string, string]> = [];
   let remaining = 32_768;
   for (const path of new Set(approvedPaths)) {
     if (!remaining) break;
-    const tree = git(['ls-tree', '-z', '--full-tree', sourceDigest, '--', path]).toString();
+    const tree = git(['ls-tree', '-z', '--full-tree', revision, '--', path]).toString();
     const metadata = /^(100644|100755) blob ([a-f0-9]+)\t([^\0]+)\0$/.exec(tree);
     if (!metadata || metadata[3] !== path) continue;
     const object = metadata[2];
@@ -75,7 +84,7 @@ export function readCommittedReuseEvidence(
     excerpts.push([path, content]);
     remaining -= bytes.byteLength;
   }
-  return { sourceDigest, excerpts: Object.fromEntries(excerpts) };
+  return Object.fromEntries(excerpts);
 }
 
 /** Collect committed and uncommitted paths without losing Git status columns or rename endpoints. */
