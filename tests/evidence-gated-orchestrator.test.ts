@@ -809,3 +809,84 @@ test('model delivery verification records both reviewer sessions and blocks a ne
     rmSync(checkout, { recursive: true, force: true });
   }
 });
+
+test('reuse from the second independent change can seed a same-run supplemental change', async () => {
+  const { checkout, paths, specialists } = fixture();
+  const calls: string[] = [];
+  const adapters = configured(checkout, paths, calls);
+  try {
+    const git = (...args: string[]) => execFileSync('git', ['-C', checkout, ...args], { encoding: 'utf8' }).trim();
+    git('init', '-q');
+    git('add', '.');
+    git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.test', 'commit', '-qm', 'Fixture base');
+    const request = { ...input(checkout, specialists), sourceRevision: git('rev-parse', 'HEAD') };
+    const { compileOpenSpec, provider } = adapters;
+    adapters.compileOpenSpec = async (job) => {
+      const primary = await compileOpenSpec(job);
+      if (job.changeId === 'supplement') {
+        const [improvement] = job.admittedImprovements!;
+        for (const artifact of primary.artifacts) {
+          if (artifact.kind === 'spec') artifact.content += `\n### Requirement: ${improvement.id} — ${improvement.title}\n#### Scenario: Reuse checked\n`;
+          if (artifact.kind === 'tasks') artifact.content += `\n- [ ] [${improvement.tasks[0].id}] Verify reuse (requirements: ${improvement.id} — ${improvement.title}; scenarios: Reuse checked)\n`;
+          writeFileSync(join(checkout, artifact.path), artifact.content);
+        }
+        return primary;
+      }
+      const { schemaVersion: _, receiptDigest: __, ...authority } = job.assignment;
+      const assignment = issueArchitectAssignment({ ...authority, changeId: 'second' }, { digest: authority.authoritySourceDigest });
+      const artifacts = primary.artifacts.map((artifact) => {
+        const path = `second-${artifact.path.replaceAll('/', '-')}`;
+        const content = artifact.kind === 'tasks' ? artifact.content.replace('[implement]', '[second]') : artifact.content;
+        writeFileSync(join(checkout, path), content);
+        return { ...artifact, path, content };
+      });
+      return { ...primary, additionalChanges: [{ assignment, artifacts, nodes: [{
+        ...primary.nodes[0], id: 'second', branch: 'swarm/second', worktree: 'second', port: 4200, ownedPaths: ['src/second.ts'],
+      }] }] };
+    };
+    adapters.scheduler.changedFiles = async (node) => node.ownedPaths;
+    const integrate = adapters.scheduler.integrate;
+    adapters.scheduler.integrate = async (...args) => ({ ...await integrate(...args), integratedRevision: request.sourceRevision });
+    adapters.scheduler.readAcceptedReuseEvidence = async (node, receipt) => ({
+      sourceDigest: receipt.sourceDigestAfter!,
+      excerpts: node.id === 'second' ? { 'src/second.ts': 'export const helper = true;' } : {},
+    });
+    let captured = '';
+    adapters.captureReuseProposal = async ({ evidence }) => {
+      assert.ok(calls.includes('integrate:second'));
+      [captured] = evidence;
+      return 'openspec/changes/shared-helper/proposal.md';
+    };
+    adapters.provider = async (family, prompt) => {
+      if (!prompt.startsWith('Review the OpenSpec evidence')) return provider(family, prompt);
+      const { evidence } = JSON.parse(prompt.split('\n').at(-1)!);
+      const citation = Object.keys(evidence).find((key) => key.endsWith(':src/second.ts'));
+      return { launcher: 'approved:fixture', sessionId: 'reuse', output: JSON.stringify(citation ? [{
+        destination: 'theme.tools', title: 'Share helper', problem: 'Duplicate helper', benefit: 'One implementation',
+        scope: 'Local reuse verification', priority: 'high', dependencies: [], acceptance: 'Both callers pass', evidence: [citation],
+      }] : []) };
+    };
+    adapters.refreshImprovements = async (context) => {
+      const finding = context.reuseExtractions.flatMap(({ findings }) => findings).find(({ evidence }) => evidence.includes(captured));
+      assert.ok(finding);
+      assert.equal(finding.destination, 'theme.tools');
+      return {
+        next: { ...request, changeId: 'supplement' },
+        policy: { confidenceFloor: 0.8, valueFloor: 0.5, maxCost: 1, maxWip: 1 },
+        candidates: context.round === 1 ? [{
+          id: 'reuse-second', title: 'Verify reuse', summary: 'Check the shared helper', evidence: 1, expectedValue: 1,
+          novelty: 1, reversibility: 1, verifiability: 1, cost: 0.1, risk: 0, evidenceIds: [captured],
+          authority: { decision: 'allowed', evidenceIds: ['host'] }, verification: { method: 'Run checks', objective: true },
+          conflictsWith: [], affectedPaths: ['src/app.ts'], packages: [], acceptanceCriteria: ['Checks pass'],
+        }] : [],
+        refresh: { evidenceIds: [captured], coverageIds: ['reuse'], refreshedAt: new Date().toISOString() },
+      };
+    };
+    const result = await runEvidenceGatedPipeline(request, adapters);
+    assert.equal(result.status, 'complete');
+    assert.deepEqual(result.contracts.map(({ changeId }) => changeId), ['governed-change', 'second', 'supplement']);
+    assert.match(result.contracts[2].nodes[0].workerPrompt ?? '', /Verify reuse/);
+  } finally {
+    rmSync(checkout, { recursive: true, force: true });
+  }
+});

@@ -216,3 +216,5 @@
 - [x] Restore the installed Node CLI entrypoint. The full Bun run detected that Node's type stripping rejected parameter properties in the new convergence error. Use ordinary constructor assignments and verify the installed symlinked command, coordinator, and Git kernel tests together.
 
 - [x] Apply the validated provider JSON boundary to reuse capture and supplemental admission. Both still used raw parsing after live final review exposed JSON fences. Reuse the strict parser across the coordinator's remaining model responses so a plain JSON value or one JSON fence reaches the existing authorization and evidence checks. Verify fenced reuse proposals and improvement suggestions.
+
+- [x] Verify the second parallel contract's accepted-source citation reaches same-run admission. The coordinator integration test supplies two dependency-free changes, captures a theme.tools proposal only from the second accepted source after integration, and admits a distinct supplemental OpenSpec change that traces the cited requirement through execution. This test uses a real Git base with fixture providers, scheduler, and proposal writer. Live combined verification remains open.
