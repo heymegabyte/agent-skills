@@ -655,7 +655,12 @@ test('whole-change queue validates each frozen contract and follows inter-change
   const scheduler = adapter({
     async createWorktree(node, _, prerequisites) {
       assert.deepEqual(prerequisites, node.id === 'integrate' ? { bounded: 'revision-bounded' } : undefined);
-      return { sourceDigest: `before-${node.id}` };
+      return { sourceDigest: prerequisites?.bounded ?? `before-${node.id}` };
+    },
+    async integrate(node, sourceDigest, base) {
+      assert.equal(base, node.id === 'integrate' ? 'revision-bounded' : contracts[0].frozenBaseRevision);
+      scheduler.calls.push(`integrate:${node.id}`);
+      return { sourceDigest, integratedRevision: `revision-${node.id}` };
     },
   });
   const changes = contracts.map((contract, index) => ({ contract, dependsOn: index ? [contracts[0].changeId] : [] }));

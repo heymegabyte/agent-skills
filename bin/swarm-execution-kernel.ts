@@ -613,7 +613,9 @@ async function executeNodes(
           controller.signal.throwIfAborted();
           const sourceImmediatelyBeforeMerge = await adapter.sourceDigest(node);
           if (sourceImmediatelyBeforeMerge !== receipt.sourceDigestAfter) throw new Error('Accepted source changed before integration');
-          return adapter.integrate(node, receipt.sourceDigestAfter!, frozenBaseRevision);
+          // Dependent worktrees start at a verified descendant of the original base.
+          const integrationBase = prerequisiteRevisions ? created.sourceDigest : frozenBaseRevision;
+          return adapter.integrate(node, receipt.sourceDigestAfter!, integrationBase);
         });
         if (integration.sourceDigest !== receipt.sourceDigestAfter) throw new Error('Integrated source differs from accepted source');
         if (integration.integratedRevision?.trim()) integratedRevisions.set(node.id, integration.integratedRevision);
