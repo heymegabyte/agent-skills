@@ -14,3 +14,7 @@ At `theme.tools` main revision `3bebd89116b9d64e10da3ea4bc8ca723d6b09eb4`, the p
 At `theme.tools` revision `d1229ba51ac75c3b57e872bd7c5f9ec05de946b3`, the SDK manifest still declares `1.0.4`. The clean main checkout passed all 20 tests in `pnpm --filter @theme.tools/sdk test`, including the tests that require an observed publication before a release claim and ordered evidence before an adoption claim.
 
 The latest package qualification job again stopped before its first step with GitHub's billing annotation. Both Nexus npm metadata URLs redirected to Cloudflare Access sign-in and returned HTML when followed. The response bodies provided no package version or integrity metadata. The SDK tests establish source conformance. Publication and consumer adoption still require authenticated registry evidence and an observed consumer run. [Latest qualification job](https://github.com/heymegabyte/theme.tools/actions/runs/46129188140/job/140930407282)
+
+## Built SDK import
+
+During local qualification of `d1229ba5`, the distribution build produced the SDK. With the pinned Node `22.23.5`, a package self-reference imported `@theme.tools/sdk/release-lineage` from the built export and called `evaluateSharedCapabilityReleaseChain`. An adoption claim with no evidence was rejected, and the result identified `source-validation` as the first required stage. This is a workspace build smoke check. The separate qualification process was still running its UI typecheck when observed. A packed consumer and hosted registry verification remain open.
