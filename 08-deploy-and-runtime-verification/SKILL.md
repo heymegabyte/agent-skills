@@ -33,6 +33,8 @@ triggers:
   - "release contract"
   - "registry publication"
   - "registry outage"
+  - "retire public endpoint"
+  - "verify delivery"
   - "offline package recovery"
   - "opentofu plan"
   - "saved infrastructure plan"
@@ -72,6 +74,28 @@ violation even if a concurrent probe reports a transient error.
 9. Only then mark DONE
 
 "Local typecheck + build pass" is NOT done. Per `rules/verification-loop.md`.
+
+## Retired endpoints and delivery evidence
+
+For a sensitive retired endpoint, remove active UI entry points and define the
+response for clients that still call the old route. Use a generic response
+uniform across inputs and record existence. For permanent withdrawal of a
+known public route, use `410 Gone` where its existence is safe to disclose.
+Set `Cache-Control: no-store` and return before reading submission data or
+performing side effects. Verify the declared methods and response contract on
+the canonical production URL and known serving aliases. Check previously
+cacheable variants through the authorized purge and verification path. Probe
+with approved synthetic inputs and retain observations without private request
+data, historical records, or credentials.
+
+For email, webhook, analytics, and other external delivery claims, record the
+strongest observed state: accepted by the app, queued, accepted by the provider,
+or observed at the destination. Use an approved synthetic marker and a scoped
+receiver lookup or receipt, tied to the operation ID, revision and timestamp.
+When only a sender-side result exists, leave destination delivery unverified.
+
+References: [HTTP status semantics](https://www.rfc-editor.org/rfc/rfc9110.html#name-410-gone)
+and [Cloudflare URL purge and cache variants](https://developers.cloudflare.com/cache/how-to/purge-cache/purge-by-single-file/).
 
 ## Auth fallback chain
 
