@@ -29,6 +29,13 @@ export function createModelOpenSpecPlanner(
       'In spec use ### Requirement: <requirement> and #### Scenario: <scenario>. In tasks use one checklist line per task: - [ ] [task-id] Description (requirements: <requirement>; scenarios: <scenario>). Include a checklist line whose task-id equals the changeId for the whole-change owner. End the line at the closing parenthesis, with no trailing punctuation. Match requirement and scenario titles exactly, using comma-separated lists when needed.',
       'Every requirement needs at least one nested scenario. Trace every requirement and scenario to a checklist line. Keep implementation notes with the applicable requirement instead of creating untested requirements. For a documentation deliverable that is a requirement, include an observable review scenario and trace it to a checklist line.',
       'The host assigns authority, provider, and execution settings and materializes validated artifacts.',
+      ...(input.admittedImprovements ?? []).flatMap((improvement) => {
+        const heading = `${improvement.id} — ${improvement.title}`;
+        return [
+          `Copy this exact spec line: ### Requirement: ${heading}`,
+          ...improvement.tasks.map(({ id }) => `Copy this exact task identifier [${id}] and map it to requirements: ${heading}. Use the exact nested scenario title in its scenarios mapping.`),
+        ];
+      }),
       JSON.stringify(brief),
     ].join('\n'));
     if (!response.launcher.startsWith('approved:') || !response.sessionId?.trim()) {
