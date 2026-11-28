@@ -886,6 +886,18 @@ test('reuse from the second independent change can seed a same-run supplemental 
     assert.equal(result.status, 'complete');
     assert.deepEqual(result.contracts.map(({ changeId }) => changeId), ['governed-change', 'second', 'supplement']);
     assert.match(result.contracts[2].nodes[0].workerPrompt ?? '', /Verify reuse/);
+
+    calls.length = 0;
+    captured = '';
+    const launch = adapters.scheduler.launch;
+    adapters.scheduler.launch = async (family, node, ...args) => {
+      const receipt = await launch(family, node, ...args);
+      return node.id === 'implement' ? { ...receipt, exitCode: 1 } : receipt;
+    };
+    adapters.refreshImprovements = async () => { throw new Error('Failed wave must not admit supplemental changes'); };
+    await assert.rejects(runEvidenceGatedPipeline(request, adapters), /implement:failed/);
+    assert.match(captured, /:src\/second\.ts$/);
+    assert.ok(!calls.includes('verify:adversarial'));
   } finally {
     rmSync(checkout, { recursive: true, force: true });
   }

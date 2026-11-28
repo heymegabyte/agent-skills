@@ -582,19 +582,18 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
     reviewAllChanges(),
   ]);
   if (executionResult.status === 'rejected') throw executionResult.reason;
-  if (reuseResult.status === 'rejected') throw reuseResult.reason;
   const executions = executionResult.value;
-  const reuseExtractions = reuseResult.value;
+  const reuseExtractions = reuseResult.status === 'fulfilled' ? reuseResult.value : [];
   const latestByNode = new Map(executions.map((receipt) => [receipt.nodeId, receipt]));
   const failures = contracts.flatMap(({ nodes }) => nodes).flatMap(({ id }) => {
     const status = latestByNode.get(id)?.status;
     return status === 'integrated' ? [] : [`${id}:${status ?? 'missing'}`];
   });
-  if (failures.length) throw new Error(`Swarm execution did not integrate every node: ${failures.join(', ')}`);
   const terminalExecutions = [...latestByNode.values()];
   if (captureReuse) {
     for (const owner of contracts) {
-      const receipt = latestByNode.get(owner.nodes[0].id)!;
+      const receipt = latestByNode.get(owner.nodes[0].id);
+      if (receipt?.status !== 'integrated') continue;
       const reviewed = pendingReuse.get(`${receipt.nodeId}:${receipt.attempt}`);
       if (!reviewed) continue;
       reuseExtractions.push({
@@ -603,6 +602,8 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
       });
     }
   }
+  if (failures.length) throw new Error(`Swarm execution did not integrate every node: ${failures.join(', ')}`);
+  if (reuseResult.status === 'rejected') throw reuseResult.reason;
   const [reuseExtraction] = reuseExtractions;
   state = advance(state, 'swarm-execution', { executions, reuseExtractions });
   state = advance(state, 'integration', { executions: terminalExecutions });
