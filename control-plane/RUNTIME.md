@@ -102,3 +102,10 @@ The host supplies the approved launcher for that assignment, reviews the
 proposed paths and dependencies, assigns execution settings, and materializes
 the Markdown before the coordinator freezes the contracts. Keep the planner's
 session ID with the host compiler receipt.
+
+Set `compileOpenSpec: createModelOpenSpecCompiler({ plan, approve, materialize })`
+to assemble that planner into the host compiler. The approval callback reviews
+all proposed ownership and dependencies and supplies the architect assignments,
+execution leases, provider, and acceptance commands. The materializer receives
+the complete approved Markdown batch and architect session ID. Persist the batch
+through the host's repository write boundary and retain the session receipt.

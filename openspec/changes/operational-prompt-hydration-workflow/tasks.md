@@ -162,3 +162,5 @@
 - [x] Parse model-authored OpenSpec traceability before materialization. The live architect probe showed that malformed Markdown could pass planner shape validation and fail only at contract freeze. Run the same content parser on the drafts, require the whole-change owner task to appear in the checklist, and return the derived requirements, scenarios, and task IDs. Verify rejection of the punctuation regression and retain freeze-time checks against disk.
 
 - [x] Return a typed architect draft that omits model-supplied execution settings. Reject missing admitted requirements or checklist IDs before the host writes artifacts. Verify that extra provider and acceptance fields never reach the compiler and that omitted improvements fail before materialization.
+
+- [x] Connect the model planner to the host compiler interface. Require trusted approval for every draft, preserve the author's assignment, construct one execution node and canonical OpenSpec paths per change, and validate the combined graph before materialization. Verify that partial approval writes nothing and that the approved compiler emits both changes.
