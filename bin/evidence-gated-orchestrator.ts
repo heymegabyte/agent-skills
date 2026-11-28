@@ -251,7 +251,7 @@ export interface PipelineAdapters {
   compileOpenSpec: (input: OpenSpecCompilerInput) => Promise<CompiledChange & { additionalChanges?: Array<CompiledChange & { assignment: ArchitectAssignmentReceipt }> }>;
   scheduler: SchedulerAdapter;
   assessImprovements?: (input: { hydratedBrief: HydratedArchitectBrief; assignment: ArchitectAssignmentReceipt }) => Promise<{ candidates: DurableImprovementCandidate[]; policy: ImprovementPolicy }>;
-  refreshImprovements?: (input: { round: number; contracts: FrozenContract[]; executions: NodeExecutionReceipt[]; reuseExtraction?: ReuseExtractionReceipt }) => Promise<{
+  refreshImprovements?: (input: { round: number; contracts: FrozenContract[]; executions: NodeExecutionReceipt[]; reuseExtraction?: ReuseExtractionReceipt; reuseExtractions: ReuseExtractionReceipt[] }) => Promise<{
     next: PipelineInput;
     candidates: DurableImprovementCandidate[];
     policy: ImprovementPolicy;
@@ -301,6 +301,7 @@ export interface PipelineResult {
   conferenceResolution: ConferenceResolutionReceipt;
   conferenceExecution: OpenSpecCompilerInput['conferenceExecution'];
   reuseExtraction?: ReuseExtractionReceipt;
+  reuseExtractions: ReuseExtractionReceipt[];
 }
 
 function requireAdapters(adapters: Partial<PipelineAdapters>): asserts adapters is PipelineAdapters {
@@ -481,24 +482,33 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
   state = advance(state, 'contract-freeze', { contract, contracts });
   const captureReuse = configured.captureReuseProposal ?? (configured.reuseProposalRoots && createReuseProposalWriter(configured.reuseProposalRoots));
   const extractReuse = configured.extractReuse ?? (captureReuse
-    ? () => reviewReusableWork(contract, provider, captureReuse)
+    ? ({ contract }: { contract: FrozenContract }) => reviewReusableWork(contract, provider, captureReuse)
     : undefined);
+  const reviewAllChanges = async (): Promise<ReuseExtractionReceipt[]> => {
+    if (!extractReuse) return [];
+    const receipts: ReuseExtractionReceipt[] = [];
+    for (const contract of contracts) {
+      const receipt = await extractReuse({ contract: structuredClone(contract), hydratedBrief: structuredClone(hydratedBrief) });
+      if (!receipt?.ownerSession.trim() || receipt.reviewedContractDigest !== contract.contractDigest
+        || receipt.findings.some((finding) =>
+          !['theme.tools', 'install.doctor', 'agent-skills'].includes(finding.destination)
+          || !/^openspec\/changes\/[a-z0-9][a-z0-9-]*\/proposal\.md$/.test(finding.proposalPath)
+          || !finding.evidence.some((value) => value.trim()))) {
+        throw new Error('Reuse extraction receipt must identify the owner, reviewed contract, and evidence-backed OpenSpec findings');
+      }
+      receipts.push(receipt);
+    }
+    return receipts;
+  };
   const [executionResult, reuseResult] = await Promise.allSettled([
     executeFrozenChanges(changes, configured.scheduler, configured.schedulerOptions),
-    Promise.resolve().then(() => extractReuse?.({ contract: structuredClone(contract), hydratedBrief: structuredClone(hydratedBrief) })),
+    reviewAllChanges(),
   ]);
   if (executionResult.status === 'rejected') throw executionResult.reason;
   if (reuseResult.status === 'rejected') throw reuseResult.reason;
   const executions = executionResult.value;
-  const reuseExtraction = reuseResult.value;
-  if (extractReuse && (!reuseExtraction?.ownerSession.trim()
-    || reuseExtraction.reviewedContractDigest !== contract.contractDigest
-    || reuseExtraction.findings.some((finding) =>
-      !['theme.tools', 'install.doctor', 'agent-skills'].includes(finding.destination)
-      || !/^openspec\/changes\/[a-z0-9][a-z0-9-]*\/proposal\.md$/.test(finding.proposalPath)
-      || !finding.evidence.some((value) => value.trim())))) {
-    throw new Error('Reuse extraction receipt must identify the owner, reviewed contract, and evidence-backed OpenSpec findings');
-  }
+  const reuseExtractions = reuseResult.value;
+  const [reuseExtraction] = reuseExtractions;
   const latestByNode = new Map(executions.map((receipt) => [receipt.nodeId, receipt]));
   const failures = contracts.flatMap(({ nodes }) => nodes).flatMap(({ id }) => {
     const status = latestByNode.get(id)?.status;
@@ -506,7 +516,7 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
   });
   if (failures.length) throw new Error(`Swarm execution did not integrate every node: ${failures.join(', ')}`);
   const terminalExecutions = [...latestByNode.values()];
-  state = advance(state, 'swarm-execution', { executions, reuseExtraction });
+  state = advance(state, 'swarm-execution', { executions, reuseExtractions });
   state = advance(state, 'integration', { executions: terminalExecutions });
   const verified = await Promise.all(contracts.map(async (contract) => {
     const verification = await configured.verify({ contract, executions: terminalExecutions.filter(({ nodeId }) => contract.nodes.some(({ id }) => id === nodeId)) });
@@ -537,7 +547,7 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
     let cleanRounds = 0;
     for (let round = 1; cleanRounds < 2; round += 1) {
       if (round > 8) throw new Error('Improvement review did not converge within eight rounds');
-      const refreshed = await configured.refreshImprovements(structuredClone({ round, contracts, executions, reuseExtraction }));
+      const refreshed = await configured.refreshImprovements(structuredClone({ round, contracts, executions, reuseExtraction, reuseExtractions }));
       const phase = evaluateImprovementPhase({
         candidates: refreshed.candidates, policy: refreshed.policy, priorFingerprints: seenImprovements,
         runId: state.runId, runStateDigest: state.stateDigest, changeId: input.changeId,
@@ -569,6 +579,7 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
       for (const item of accepted) seenImprovements.add(item.fingerprint);
       contracts.push(...delivered.contracts);
       executions.push(...delivered.executions);
+      reuseExtractions.push(...delivered.reuseExtractions);
       verification.receipts.push(...delivered.verificationReceipts);
       waves.push({ phase, stateDigest: delivered.state.stateDigest });
     }
@@ -580,6 +591,7 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
     status: 'complete', state, contract, contracts, executions, verificationReceipts: verification.receipts, conferenceResolution,
     conferenceExecution,
     reuseExtraction,
+    reuseExtractions,
   };
 }
 

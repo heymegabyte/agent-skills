@@ -427,8 +427,12 @@ test('architect output queues all compiled changes and verifies each against its
     assert.deepEqual(request.executions.map(({ nodeId }) => nodeId), request.contract.nodes.map(({ id }) => id));
     return verify(request);
   };
+  adapters.extractReuse = async ({ contract }) => ({
+    ownerSession: `fixture-reuse-${contract.changeId}`, reviewedContractDigest: contract.contractDigest, findings: [],
+  });
   const result = await runEvidenceGatedPipeline(input(checkout, specialists), adapters);
   assert.deepEqual(result.contracts.map(({ changeId }) => changeId), ['governed-change', 'follow-up']);
+  assert.deepEqual(result.reuseExtractions.map(({ reviewedContractDigest }) => reviewedContractDigest), result.contracts.map(({ contractDigest }) => contractDigest));
   assert.equal(new Set(result.verificationReceipts.map(({ reviewedContractDigest }) => reviewedContractDigest)).size, 2);
   assert.ok(calls.indexOf('integrate:implement') < calls.indexOf('launch:opencode-deepseek:follow-up'));
 });
