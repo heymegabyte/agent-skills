@@ -233,3 +233,14 @@ test('research dispatch overlaps independent queries without reordering their re
   assert.equal(peak, 2);
   assert.deepEqual(receipts.map(({ request }) => request.query), ['first', 'second', 'third']);
 });
+
+test('live research observations are checked when the reply arrives', async () => {
+  const [receipt] = await executeResearch([{ domain: 'primary-sources', query: 'fixture', budget: 1 }], async () => {
+    await new Promise((resolve) => setTimeout(resolve, 5));
+    return { rail: 'approved:fixture', findings: [{
+      url: 'https://example.test/fixture', title: 'Fixture', excerpt: 'Observed after dispatch',
+      observedAt: new Date().toISOString(), sourceType: 'primary',
+    }] };
+  });
+  assert.equal(receipt.coverage.satisfied, true);
+});

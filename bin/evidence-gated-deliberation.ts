@@ -172,13 +172,14 @@ export function inventoryRepository(checkout: string, sourceRevision = 'working-
   return { checkout: root, sourceRevision, entries, sharedServices };
 }
 
-export async function executeResearch(requests: ResearchRequest[], rail: ResearchRail, now = Date.now(), freshnessMs = 30 * 86400_000, approvedRails?: ReadonlySet<string>, concurrency = 4): Promise<ResearchReceipt[]> {
+export async function executeResearch(requests: ResearchRequest[], rail: ResearchRail, now?: number, freshnessMs = 30 * 86400_000, approvedRails?: ReadonlySet<string>, concurrency = 4): Promise<ResearchReceipt[]> {
   if (!Number.isSafeInteger(concurrency) || concurrency < 1) throw new Error('Research concurrency must be a positive integer');
   if (requests.some((request) => !request.query.trim() || !Number.isSafeInteger(request.budget) || request.budget < 1)) {
     throw new Error('Research requires a non-empty query and positive budget');
   }
   const fetchReceipt = async (request: ResearchRequest): Promise<ResearchReceipt> => {
     const result = await rail(request);
+    const receiptTime = now ?? Date.now();
     if (!/^approved:[a-z0-9][a-z0-9-]{1,63}$/i.test(result.rail) || (approvedRails && !approvedRails.has(result.rail))) throw new Error(`Unapproved research rail: ${result.rail}`);
     const byUrl = new Map<string, ResearchFinding>();
     for (const finding of result.findings) {
@@ -187,8 +188,8 @@ export async function executeResearch(requests: ResearchRequest[], rail: Researc
       url.hash = ''; const normalizedUrl = url.toString();
       const observedAt = Date.parse(finding.observedAt);
       const publishedAt = finding.publishedAt ? Date.parse(finding.publishedAt) : undefined;
-      if (!finding.title.trim() || !finding.excerpt.trim() || Number.isNaN(observedAt) || observedAt > now + 5 * 60_000) throw new Error(`Invalid research finding: ${finding.url}`);
-      if (publishedAt !== undefined && (Number.isNaN(publishedAt) || publishedAt > now + 5 * 60_000)) throw new Error(`Invalid publication date: ${finding.url}`);
+      if (!finding.title.trim() || !finding.excerpt.trim() || Number.isNaN(observedAt) || observedAt > receiptTime + 5 * 60_000) throw new Error(`Invalid research finding: ${finding.url}`);
+      if (publishedAt !== undefined && (Number.isNaN(publishedAt) || publishedAt > receiptTime + 5 * 60_000)) throw new Error(`Invalid publication date: ${finding.url}`);
       const allowedTypes = request.domain === 'primary-sources' ? new Set(['primary']) : new Set(['competitor', 'substitute']);
       if (!allowedTypes.has(finding.sourceType)) throw new Error(`Source type ${finding.sourceType} cannot satisfy ${request.domain}`);
       const normalized = { ...finding, url: normalizedUrl };
@@ -197,7 +198,7 @@ export async function executeResearch(requests: ResearchRequest[], rail: Researc
       byUrl.set(normalizedUrl, normalized);
     }
     const findings = [...byUrl.values()].slice(0, request.budget);
-    const stale = findings.filter((finding) => now - Date.parse(finding.observedAt) > freshnessMs || Date.parse(finding.observedAt) > now);
+    const stale = findings.filter((finding) => receiptTime - Date.parse(finding.observedAt) > freshnessMs || Date.parse(finding.observedAt) > receiptTime);
     if (!findings.length || stale.length) throw new Error(stale.length ? `Stale research evidence: ${stale.map((f) => f.url).join(', ')}` : `Research returned no cited evidence for ${request.domain}`);
     const conflicts = [...new Set((result.conflicts ?? []).map((conflict) => conflict.trim()).filter(Boolean))];
     const cache = { hit: result.cacheHit ?? false, key: digest(request), freshnessMs };
