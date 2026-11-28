@@ -40,7 +40,8 @@ export function localDevelopmentLauncher(
     return {
       ...launcher,
       executable: join(bin, 'opencode-deepseek.sh'),
-      fixedArgs: ['run', '--pure', '-m', 'litellm/deepseek-v4-pro'],
+      runtimeProfile: 'isolated-opencode',
+      fixedArgs: ['run', '--pure', '-m', 'litellm/deepseek-flash'],
       taskArgs: (node, _correlationId, worktree) => ['--dir', worktree, '--', developmentPrompt(node)],
     };
   }

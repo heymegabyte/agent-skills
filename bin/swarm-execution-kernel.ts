@@ -2,7 +2,9 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { execFileSync, spawn } from 'node:child_process';
 import { existsSync, readFileSync, realpathSync } from 'node:fs';
-import { resolve, relative, sep } from 'node:path';
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join, resolve, relative, sep } from 'node:path';
 import { readCommittedReuseEvidence } from './local-development-worktree.ts';
 
 export type ArchitectFamily = 'claude' | 'codex' | 'gemini' | 'antigravity';
@@ -111,6 +113,7 @@ export interface SchedulerAdapter {
 
 export interface ApprovedLauncher {
   executable: string;
+  runtimeProfile?: 'isolated-opencode';
   fixedArgs: string[];
   taskArgs?: (node: ExecutionNode, correlationId: string, worktree: string) => string[];
   approved: boolean;
@@ -272,6 +275,35 @@ function runProcess(executable: string, args: string[], cwd: string, env: NodeJS
   });
 }
 
+async function runIsolatedOpenCode(
+  launch: (environment: NodeJS.ProcessEnv) => Promise<ProcessReceipt>,
+): Promise<ProcessReceipt> {
+  const directory = await mkdtemp(join(tmpdir(), 'opencode-worker-'));
+  try {
+    const config = join(directory, 'opencode.json');
+    await writeFile(config, JSON.stringify({
+      permission: { '*': 'deny', read: 'allow', edit: 'allow' },
+      provider: {
+        litellm: {
+          npm: '@ai-sdk/openai-compatible',
+          name: 'LiteLLM',
+          options: { baseURL: 'https://llm.megabyte.space/v1', apiKey: '{env:LITELLM_API_KEY}' },
+          models: { 'deepseek-flash': { name: 'DeepSeek Flash', tool_call: true } },
+        },
+      },
+    }), { mode: 0o600 });
+    return await launch({
+      OPENCODE_CONFIG: config,
+      OPENCODE_CONFIG_DIR: directory,
+      XDG_CONFIG_HOME: join(directory, 'config'),
+      XDG_DATA_HOME: join(directory, 'data'),
+      XDG_STATE_HOME: join(directory, 'state'),
+    });
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+}
+
 /**
  * Production execution adapter. Launchers must be explicit broker/subscription
  * executables; no shell is used, secret values are resolved just-in-time, and
@@ -333,7 +365,7 @@ export function createApprovedProcessAdapter(options: ProcessAdapterOptions): Sc
       const secretEnv = Object.fromEntries((node.secretReferences ?? []).map((reference, index) => [`BROKERED_SECRET_REF_${index}`, reference]));
       const taskArgs = launcher.taskArgs?.(node, correlationId, directory)
         ?? ['--task-id', node.id, '--correlation-id', correlationId, '--worktree', directory];
-      return runProcess(launcher.executable, [...launcher.fixedArgs, ...taskArgs], directory, {
+      const launch = (runtimeEnvironment: NodeJS.ProcessEnv) => runProcess(launcher.executable, [...launcher.fixedArgs, ...taskArgs], directory, {
         PATH: process.env.PATH,
         ...((provider === 'claude' || provider === 'codex') && {
           HOME: process.env.HOME,
@@ -342,8 +374,10 @@ export function createApprovedProcessAdapter(options: ProcessAdapterOptions): Sc
           XDG_CONFIG_HOME: process.env.XDG_CONFIG_HOME,
         }),
         ...secretEnv,
+        ...runtimeEnvironment,
         SWARM_ALLOWED_EGRESS_HOSTS: (node.allowedEgressHosts ?? []).join(','),
       }, signal, options.processTimeoutMs ?? 30 * 60_000);
+      return launcher.runtimeProfile === 'isolated-opencode' ? runIsolatedOpenCode(launch) : launch({});
     },
     ...(options.approveReusePath && {
       async readAcceptedReuseEvidence(node: ExecutionNode, receipt: Readonly<NodeExecutionReceipt>, signal: AbortSignal) {

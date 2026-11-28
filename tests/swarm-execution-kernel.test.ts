@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
@@ -191,7 +191,7 @@ test('local dispatch maps each supported provider to its canonical wrapper', () 
   const paths = [
     ['codex', 'with-subscription-cli.sh', ['codex', 'exec', '--sandbox', 'workspace-write', '--cd', checkout]],
     ['claude', 'with-subscription-cli.sh', ['claude', '--print', '--permission-mode', 'acceptEdits', '--strict-mcp-config']],
-    ['opencode-deepseek', 'opencode-deepseek.sh', ['run', '--pure', '-m', 'litellm/deepseek-v4-pro', '--dir', checkout]],
+    ['opencode-deepseek', 'opencode-deepseek.sh', ['run', '--pure', '-m', 'litellm/deepseek-flash', '--dir', checkout]],
   ] as const;
 
   for (const [provider, wrapper, prefix] of paths) {
@@ -584,6 +584,41 @@ test('headless process adapter closes standard input for child commands', async 
 
   assert.equal(receipt.exitCode, 0);
   assert.equal(receipt.stdout.trim(), 'stdin ended');
+});
+
+test('OpenCode worker profiles use private per-launch directories and clean them up', async () => {
+  const { checkout, nodes } = fixture();
+  const script = [
+    'const fs = require("node:fs");',
+    'const file = process.env.OPENCODE_CONFIG;',
+    'console.log(JSON.stringify({ file, permissions: fs.statSync(file).mode & 511, config: JSON.parse(fs.readFileSync(file, "utf8")), data: process.env.XDG_DATA_HOME }));',
+  ].join(' ');
+  const adapter = createApprovedProcessAdapter({
+    checkout, safeWorktreeRoots: [checkout], allowedAcceptanceExecutables: [],
+    launchers: { 'opencode-deepseek': {
+      executable: 'node', fixedArgs: ['-e', script], taskArgs: () => [], runtimeProfile: 'isolated-opencode',
+      approved: true, budgetReceipt: 'fixture', enforcesWorktreeIsolation: true, enforcesBoundedEgress: false,
+    } }, resolveSecretReference: () => undefined,
+    async createWorktree() { return { directory: checkout, sourceDigest: 'before' }; },
+    async listChangedFiles() { return []; },
+    async sourceDigest() { return 'after'; },
+    async integrate(_node, _directory, sourceDigest) { return { sourceDigest }; },
+    async preserveForRecovery() {},
+  });
+  const node = nodes[0];
+  await adapter.createWorktree(node);
+  const signal = new AbortController().signal;
+  const receipts = await Promise.all(['first', 'second'].map((id) => adapter.launch('opencode-deepseek', node, id, signal)));
+  const profiles = receipts.map((receipt) => {
+    assert.equal(receipt.exitCode, 0, receipt.stderr);
+    return JSON.parse(receipt.stdout);
+  });
+  assert.notEqual(profiles[0].data, profiles[1].data);
+  for (const { file, permissions, config } of profiles) {
+    assert.equal(permissions, 0o600);
+    assert.equal(config.provider.litellm.options.apiKey, '{env:LITELLM_API_KEY}');
+    assert.equal(existsSync(file), false);
+  }
 });
 
 test('process adapter rejects hostile acceptance arguments beyond executable allowlisting', async () => {
