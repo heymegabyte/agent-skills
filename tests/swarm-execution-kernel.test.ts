@@ -771,3 +771,32 @@ test('ownership validation permits shared paths across a transitive dependency o
   assert.doesNotThrow(() => validateTaskGraph([first, middle, final]));
   assert.throws(() => validateTaskGraph([first, { ...middle, dependsOn: [] }, final]), /Parallel ownership collision/);
 });
+
+test('throttling skips process launch and uses only a frozen fallback within the attempt budget', async () => {
+  const { checkout, artifacts, assignment, nodes } = fixture();
+  const makeContract = () => compileAndFreezeContract({
+    checkout, changeId: 'change', assignment, trustedAuthoritySourceDigest: assignment.authoritySourceDigest,
+    evidenceDigest: 'e', fixedPointDigest: 'f', unresolvedMaterialDeltas: [], artifacts, nodes,
+  });
+  const retryAt = '2026-11-28T14:00:00Z';
+  const runner = adapter({
+    async preflight(provider) {
+      return provider === 'opencode-deepseek'
+        ? { ok: false, throttled: true, reason: 'HTTP 429', retryAt }
+        : { ok: true };
+    },
+  });
+  const withFallback = await executeFrozenContract(makeContract(), runner);
+  assert.equal(withFallback[0].launcher, undefined);
+  assert.match(withFallback[0].recoveryAction ?? '', /2026-11-28T14:00:00Z/);
+  assert.equal(withFallback[1].provider, 'codex');
+  assert.equal(withFallback[1].status, 'integrated');
+  assert.ok(!runner.calls.includes('launch:opencode-deepseek:bounded'));
+
+  nodes[0].maxAttempts = 1;
+  runner.calls.length = 0;
+  const withoutFallback = await executeFrozenContract(makeContract(), runner);
+  assert.equal(withoutFallback[0].status, 'failed');
+  assert.equal(withoutFallback[1].status, 'blocked');
+  assert.ok(!runner.calls.some((call) => call.startsWith('worktree:') || call.startsWith('launch:')));
+});

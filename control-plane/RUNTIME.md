@@ -154,3 +154,9 @@ When a wave fails integration, the library throws `SwarmIntegrationError`
 with all attempt receipts and any captured reuse findings from integrated
 changes. Keep raw process output in the trusted host. Publish only the
 redacted fields needed to diagnose the failure.
+
+A trusted host can supply `checkProviderReadiness` to the approved process
+adapter. Return a failed preflight with `throttled: true` and, if reported by
+the provider, `retryAt`. The scheduler records the cooldown before creating a
+worktree. It uses a different provider only if that provider was approved in
+the frozen fallback sequence and the attempt budget permits it.

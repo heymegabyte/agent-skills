@@ -98,10 +98,12 @@ export interface NodeExecutionReceipt {
   recoveryAction?: string;
 }
 
+export interface ProviderPreflight { ok: boolean; reason?: string; throttled?: boolean; retryAt?: string; }
+
 export interface SchedulerAdapter {
   readAcceptedReuseEvidence?: (node: ExecutionNode, receipt: Readonly<NodeExecutionReceipt>, signal: AbortSignal) =>
     Promise<{ sourceDigest: string; excerpts: Record<string, string> }>;
-  preflight(provider: ExecutionProvider, node: ExecutionNode): Promise<{ ok: boolean; reason?: string }>;
+  preflight(provider: ExecutionProvider, node: ExecutionNode): Promise<ProviderPreflight>;
   createWorktree(node: ExecutionNode, frozenBaseRevision?: string, prerequisiteRevisions?: Readonly<Record<string, string>>): Promise<{ sourceDigest: string }>;
   launch(provider: ExecutionProvider, node: ExecutionNode, correlationId: string, signal: AbortSignal): Promise<ProcessReceipt>;
   changedFiles(node: ExecutionNode): Promise<string[]>;
@@ -131,6 +133,7 @@ export interface ProcessAdapterOptions {
   allowedAcceptanceExecutables: string[];
   allowedAcceptanceArgs?: (command: string, args: string[]) => boolean;
   processTimeoutMs?: number;
+  checkProviderReadiness?: (provider: ExecutionProvider) => Promise<ProviderPreflight>;
   resolveSecretReference: (reference: string) => string | undefined;
   createWorktree: (node: ExecutionNode, frozenBaseRevision?: string, prerequisiteRevisions?: Readonly<Record<string, string>>) => Promise<{ directory: string; sourceDigest: string }>;
   /** Opt in only for paths approved for disclosure to the reuse reviewer. */
@@ -352,7 +355,7 @@ export function createApprovedProcessAdapter(options: ProcessAdapterOptions): Sc
       if (!launcher.enforcesWorktreeIsolation) return { ok: false, reason: `${provider} launcher does not enforce worktree isolation` };
       if ((node.allowedEgressHosts?.length ?? 0) > 0 && !launcher.enforcesBoundedEgress) return { ok: false, reason: `${provider} launcher cannot enforce bounded egress` };
       for (const reference of node.secretReferences ?? []) if (options.resolveSecretReference(reference) === undefined) return { ok: false, reason: `Unresolved secret reference ${reference}` };
-      return { ok: true };
+      return options.checkProviderReadiness ? options.checkProviderReadiness(provider) : { ok: true };
     },
     async createWorktree(node, frozenBaseRevision, prerequisiteRevisions) {
       const created = await options.createWorktree(node, frozenBaseRevision, prerequisiteRevisions);
@@ -666,7 +669,17 @@ async function executeNodes(
       try {
         const preflight = await adapter.preflight(provider, node);
         if (!preflight.ok) {
-          terminal = { ...receipt, status: 'failed', failure: `Preflight rejected: ${preflight.reason ?? 'unknown'}`, recoveryAction: 'Correct approved launcher, budget, or provider policy and resume the node' };
+          const recoveryAction = preflight.throttled
+            ? `Resume after provider cooldown${preflight.retryAt ? ` at ${preflight.retryAt}` : ''}`
+            : 'Correct approved launcher, budget, or provider policy and resume the node';
+          const rejected: NodeExecutionReceipt = {
+            ...receipt, status: 'failed', failure: `Preflight rejected: ${preflight.reason ?? 'unknown'}`, recoveryAction,
+          };
+          if (preflight.throttled && attempt < maxAttempts && providers[attempt] && providers[attempt] !== provider) {
+            receipts.push(rejected);
+            continue;
+          }
+          terminal = rejected;
           break;
         }
         if (options.cancelled?.()) controller.abort('Run cancelled');
