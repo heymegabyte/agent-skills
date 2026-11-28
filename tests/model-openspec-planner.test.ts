@@ -11,6 +11,8 @@ test('assigned architect proposes independent changes before host materializatio
   const plan = createModelOpenSpecPlanner(async (assignment, prompt) => {
     assert.equal(assignment, input.assignment);
     assert.ok(!prompt.includes(input.checkout));
+    assert.ok(prompt.includes("### Requirement: <requirement>"));
+    assert.ok(prompt.includes("End the line at the closing parenthesis"));
     return { launcher: 'approved:fixture', sessionId: 'fixture', output };
   });
   assert.deepEqual((await plan(input)).changes, changes);

@@ -12,6 +12,8 @@ export function createModelOpenSpecPlanner(
       'Design the OpenSpec changes for the supplied request and evidence. Return JSON only. Do not use tools or write files.',
       'Return an object with a changes array. Each change has changeId, title, dependsOn (array of change IDs), ownedPaths (array of repository-relative paths), proposal, design, spec, and tasks (Markdown strings).',
       'Use the supplied changeId for the first change. Split independent outcomes into separate changes with distinct ownership and verifiable acceptance. Give each change one owner for all tasks. Include every admitted improvement in the spec and checklist with its exact requirement and task identifiers.',
+      'Use these exact Markdown forms. Proposal sections: ## Why and ## What Changes. Design declaration: **Architect Role:** assigned. Design sections: ## Context, ## Goals / Non-Goals, and ## Decisions. Give each section substantive text.',
+      'In spec use ### Requirement: <requirement> and #### Scenario: <scenario>. In tasks use one checklist line per task: - [ ] [task-id] Description (requirements: <requirement>; scenarios: <scenario>). Include a checklist line whose task-id equals the changeId for the whole-change owner. End the line at the closing parenthesis, with no trailing punctuation. Match requirement and scenario titles exactly, using comma-separated lists when needed.',
       'The host assigns authority, provider, and execution settings and materializes validated artifacts.',
       JSON.stringify(brief),
     ].join('\n'));
