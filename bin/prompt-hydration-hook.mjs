@@ -81,7 +81,11 @@ try {
         maxBuffer: 1_000_000,
       });
       const parsed = JSON.parse(routerRaw);
-      const selected = Array.isArray(parsed.selected) ? parsed.selected.slice(0, 15) : [];
+      const routed = Array.isArray(parsed.selected) ? parsed.selected : [];
+      const selected = [
+        ...routed.filter(({ reason }) => reason === 'trigger-match'),
+        ...routed.filter(({ reason }) => reason !== 'trigger-match'),
+      ].slice(0, 15);
       if (selected.length > 0) {
         routerSection = `\n## Skill router — top matches for this prompt\n(Token use: ${Number(parsed.total_tokens || 0).toLocaleString()} / ${Number(parsed.budget || 0).toLocaleString()} budget)\n\n${selected.map((entry) => `- \`${entry.id}\` — ${entry.reason}`).join('\n')}\n`;
       }
