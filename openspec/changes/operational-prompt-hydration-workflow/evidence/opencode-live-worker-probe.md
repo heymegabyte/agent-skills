@@ -42,3 +42,9 @@
 - The authenticated Cloudflare Security Events query matched Ray ID `a6178f69ee14fbc3-EWR` at `2026-11-28T07:11:43Z` for `/v1/chat/completions`.
 - The event reported action `block`, source `bic`, and rule ID `bic`. This identifies Browser Integrity Check as the cause of that direct gateway probe's rejection. The prior OpenCode failures lack Ray IDs, so their exact causes remain unverified.
 - No edge policy mutation was made. Verify the intended machine-client access policy and run a newly correlated OpenCode request after the gateway owner reconciles it.
+
+## OpenCode-specific correlation attempt
+
+- The configured OpenCode LiteLLM base is `https://llm.megabyte.space/v1`. A fresh Flash request ran from `2026-11-28T07:53:53Z` through `07:54:01Z`, returned `UnknownError`, and exited 1.
+- The Cloudflare Security Events query for that hostname from `07:53:40Z` through `07:54:15Z` returned no rows. The earlier query for `/v1/chat/completions` returned three Browser Integrity Check events identified as Python clients.
+- The empty sampled event set does not establish whether OpenCode reached the gateway. The exact Python probe attribution therefore does not extend to OpenCode without a client response identifier or an upstream trace.
