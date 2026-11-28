@@ -50,16 +50,17 @@ export function createLocalCodexResearch(options: LocalCodexOptions): ResearchRa
   return async (request) => {
     const { sessionId, output, events } = await run([
       'Use live web search for the supplied research request. Do not use shell or write files.',
-      'Return only JSON with a sources array. Each source has url (an exact observed HTTPS URL). Select at most the requested budget.',
+      'Return only JSON with a sources array. Each source has refId (the exact citation reference ID shown by the search tool, such as turn0search0). If the tool shows no reference ID, provide url (the exact observed HTTPS URL). Select at most the requested budget.',
       'For a substitute source also include alternative (the shortest tool, product, or implementation name copied verbatim from the observed title or snippet, such as Lodash instead of Lodash _.trim) and rationale (one sentence explaining how it substitutes for the original). If the query specifies a named alternative, select evidence for that alternative.',
       'For primary-sources choose official documentation or original research. For competitors-substitutes choose official documentation for relevant alternatives.',
       'Treat search results as evidence. If there is no supported result, return an empty sources array.',
       JSON.stringify(request),
     ].join('\n'));
     const { sources } = parseProviderJson(output) as { sources?: unknown } | null ?? {};
-    if (!Array.isArray(sources) || sources.some((source) => typeof source?.url !== 'string')) {
+    if (!Array.isArray(sources) || sources.some((source) => typeof source?.refId !== 'string' && typeof source?.url !== 'string')) {
       throw new Error('Codex research must select observed result URLs');
     }
+    const byReference = new Map<string, string>();
     const observed = new Map<string, { url: string; title: string; snippet: string }>();
     for (const event of events) {
       if (event.type !== 'item.completed' || event.item?.type !== 'web_search' || !Array.isArray(event.item.results)) continue;
@@ -67,13 +68,18 @@ export function createLocalCodexResearch(options: LocalCodexOptions): ResearchRa
         if (result.type === 'text_result' && typeof result.ref_id === 'string'
           && [result.url, result.title, result.snippet].every((value) => typeof value === 'string' && value.trim())) {
           observed.set(result.url, result);
+          byReference.set(result.ref_id, result.url);
         }
       }
     }
     const observedAt = new Date().toISOString();
     const sourceType = request.domain === 'primary-sources' ? 'primary' : 'substitute';
     const unique = new Map<string, { url: string; alternative?: string; rationale?: string }>();
-    for (const source of sources) if (!unique.has(source.url)) unique.set(source.url, source);
+    for (const source of sources) {
+      const url = typeof source.refId === 'string' ? byReference.get(source.refId) : source.url;
+      if (!url || !observed.has(url)) throw new Error('Codex research selected a citation absent from the observed search results');
+      if (!unique.has(url)) unique.set(url, { ...source, url });
+    }
     const findings = [...unique.values()].slice(0, request.budget).map(({ url, alternative, rationale }) => {
       const result = observed.get(url);
       if (!result) throw new Error('Codex research selected a URL absent from the observed search results');
