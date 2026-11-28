@@ -6,6 +6,7 @@
  * approved research, model, OpenSpec compiler, scheduler, and verification adapters. Missing or
  * incomplete adapters fail closed; a plan or launcher command is never treated as execution.
  */
+import { execFileSync } from 'node:child_process';
 import { createHash, randomUUID } from 'node:crypto';
 import { resolve } from 'node:path';
 import { readFile } from 'node:fs/promises';
@@ -567,6 +568,24 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
       if (seenChanges.has(refreshed.next.changeId) || refreshed.next.checkout !== input.checkout
         || refreshed.next.trustedAuthoritySourceDigest !== input.trustedAuthoritySourceDigest) {
         throw new Error('Supplemental improvements require a distinct change under the original repository and authority');
+      }
+      const git = (...args: string[]) => execFileSync('git', ['-C', input.checkout, ...args], {
+        encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'],
+      }).trim();
+      const head = git('rev-parse', '--verify', 'HEAD');
+      if (head !== refreshed.next.sourceRevision) {
+        throw new Error('Supplemental improvements must start at the current integrated Git revision');
+      }
+      for (const execution of executions.filter(({ status }) => status === 'integrated')) {
+        const revision = execution.integration?.integratedRevision;
+        if (!revision || !/^[a-f0-9]{40}$/.test(revision)) {
+          throw new Error(`Supplemental improvements require an exact Git integration receipt for ${execution.nodeId}`);
+        }
+        try {
+          git('merge-base', '--is-ancestor', revision, head);
+        } catch {
+          throw new Error(`Supplemental improvement base does not contain integration ${revision}`);
+        }
       }
       const delivered = await runEvidenceGatedPipeline(refreshed.next, {
         ...configured, refreshImprovements: undefined,

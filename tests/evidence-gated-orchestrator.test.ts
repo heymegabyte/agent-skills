@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process';
 import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -477,6 +478,13 @@ test('an admitted improvement must appear in the OpenSpec artifacts before dispa
   assert.equal(result.status, 'complete');
   assert.match(result.contract.nodes[0].workerPrompt ?? '', /Verify reuse/);
   paths.forEach((path, index) => writeFileSync(join(checkout, path), originalArtifacts[index]));
+  const git = (...args: string[]) => execFileSync('git', ['-C', checkout, ...args], { encoding: 'utf8' }).trim();
+  git('init', '-q');
+  git('add', '.');
+  git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.test', 'commit', '-qm', 'Integration fixture');
+  const integratedRevision = git('rev-parse', 'HEAD');
+  adapters.scheduler.integrate = async (_, sourceDigest) => ({ sourceDigest, integratedRevision });
+  let nextRevision = 'b'.repeat(40);
   const assess = adapters.assessImprovements;
   adapters.assessImprovements = undefined;
   const refreshRounds: number[] = [];
@@ -485,7 +493,7 @@ test('an admitted improvement must appear in the OpenSpec artifacts before dispa
     assert.ok(executions.some(({ status }) => status === 'integrated'));
     const { candidates, policy } = await assess!({} as never);
     return {
-      next: { ...request, changeId: 'improvement-wave', sourceRevision: 'b'.repeat(40) },
+      next: { ...request, changeId: 'improvement-wave', sourceRevision: nextRevision },
       candidates: round === 1 ? candidates : [],
       policy,
       refresh: {
@@ -495,6 +503,9 @@ test('an admitted improvement must appear in the OpenSpec artifacts before dispa
       },
     };
   };
+  await assert.rejects(() => runEvidenceGatedPipeline(request, adapters), /current integrated Git revision/);
+  refreshRounds.length = 0;
+  nextRevision = integratedRevision;
   const withWave = await runEvidenceGatedPipeline(request, adapters);
   assert.deepEqual(refreshRounds, [1, 2, 3, 4]);
   assert.deepEqual(withWave.contracts.map(({ changeId }) => changeId), [request.changeId, 'improvement-wave']);
