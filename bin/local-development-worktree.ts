@@ -94,3 +94,36 @@ export function listDevelopmentChangedFiles(directory: string, baseRevision: str
   const working = entries(git('status', '--porcelain=v1', '-z', '--untracked-files=all', '--no-renames', '--ignore-submodules=none'));
   return [...new Set([...committed, ...working.map((entry) => entry.slice(3))])].sort();
 }
+
+/** Seal a checked-out Git worktree before acceptance commands inspect it. */
+export function snapshotDevelopmentChanges(
+  directory: string,
+  baseRevision: string,
+  changedFiles: readonly string[],
+): string {
+  const git = (...args: string[]): string =>
+    execFileSync('git', ['-C', directory, '--no-replace-objects', '--literal-pathspecs', ...args], {
+      encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'],
+    }).trimEnd();
+  const current = () => listDevelopmentChangedFiles(directory, baseRevision);
+  const expected = [...new Set(changedFiles)].sort();
+  const verifyChangedFiles = () => {
+    if (JSON.stringify(current()) !== JSON.stringify(expected)) {
+      throw new Error('Git changed paths differ from the approved worker diff');
+    }
+  };
+  verifyChangedFiles();
+  const status = () => git('status', '--porcelain=v1', '-z', '--untracked-files=all', '--ignore-submodules=none');
+  if (status()) {
+    const head = git('rev-parse', '--verify', 'HEAD');
+    const unstagedPaths = listDevelopmentChangedFiles(directory, head);
+    git('add', '--all', '--', ...unstagedPaths);
+    verifyChangedFiles();
+    git('-c', 'core.hooksPath=/dev/null', '-c', 'user.name=OpenSpec Scheduler',
+      '-c', 'user.email=openspec@localhost', 'commit', '--no-gpg-sign', '-qm', 'Snapshot worker changes for acceptance');
+  }
+  if (status()) throw new Error('Git acceptance snapshot is not clean');
+  verifyChangedFiles();
+  git('diff', '--check', baseRevision, 'HEAD', '--');
+  return git('rev-parse', '--verify', 'HEAD');
+}

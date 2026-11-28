@@ -78,7 +78,11 @@ if the run lacks that approval.
 
 The process adapter reads regular text blobs from the accepted Git commit.
 Its `sourceDigest` callback must report the full accepted commit ID, and
-workers must commit the accepted changes in their worktrees. The reader skips
+the worktree must contain that commit. For workers that only edit files, set
+`snapshotGitBeforeAcceptance: true` on the approved process adapter. It seals
+the owned Git changes before checks, checks the committed diff against its
+base, and verifies that the commit stays clean and unchanged through
+integration. Acceptance commands run on the clean snapshot. The reader skips
 unapproved paths and limits the returned text to 32 KiB. For a scheduler that
 uses another source representation, supply a trusted
 `readAcceptedReuseEvidence` adapter that returns bounded excerpts bound to its

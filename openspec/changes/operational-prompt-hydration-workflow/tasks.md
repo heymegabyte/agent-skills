@@ -132,3 +132,5 @@
 - [x] Align advisory swarm output with the verified scheduler. Retire obsolete shell commands and the second-owner challenger suggestion. Keep dependency waves and routing hints, and direct callers to the governed coordinator for execution. Verify the manifest through the installed CLI path.
 
 - [x] Provide the Git host with a shared ownership-evidence reader. The live reuse fixture's line-oriented status reader dropped the first path character, and status alone can miss committed changes. Read NUL-delimited Git output from the original worktree base, include working-tree and untracked paths, and verify that both sides of a rename reach the ownership gate.
+
+- [x] Add an opt-in Git snapshot before acceptance. The live reuse fixture needed a custom host callback to commit worker changes before review. Seal only the previously reported owned changes, run acceptance against that commit, and require the same clean commit at review and integration. Verify with a real Git worktree and use the existing disclosure policy for reviewer excerpts.

@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import test from 'node:test';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { createDetachedDevelopmentWorktree, listDevelopmentChangedFiles, readCommittedReuseEvidence } from '../bin/local-development-worktree.ts';
+import { createDetachedDevelopmentWorktree, listDevelopmentChangedFiles, readCommittedReuseEvidence, snapshotDevelopmentChanges } from '../bin/local-development-worktree.ts';
 import { localDevelopmentLauncher } from '../bin/local-development-launchers.ts';
 import {
   compileAndFreezeContract,
@@ -141,9 +141,14 @@ test('local development worktree starts at the frozen commit and preserves local
     git(created.directory, 'mv', 'fixture.txt', 'renamed fixture.txt');
     git(created.directory, '-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.test', 'commit', '-qm', 'Rename fixture');
     writeFileSync(join(created.directory, 'untracked\nfixture.txt'), 'untracked');
-    assert.deepEqual(listDevelopmentChangedFiles(created.directory, base), [
-      'fixture.txt', 'renamed fixture.txt', 'untracked\nfixture.txt',
-    ]);
+    const workerFiles = ['fixture.txt', 'renamed fixture.txt', 'untracked\nfixture.txt'];
+    assert.deepEqual(listDevelopmentChangedFiles(created.directory, base), workerFiles);
+    assert.throws(() => snapshotDevelopmentChanges(created.directory, base, workerFiles.slice(0, 2)), /approved worker diff/);
+    const snapshot = snapshotDevelopmentChanges(created.directory, base, workerFiles);
+    assert.equal(git(created.directory, 'status', '--porcelain'), '');
+    assert.deepEqual(readCommittedReuseEvidence(created.directory, snapshot, ['renamed fixture.txt']).excerpts, {
+      'renamed fixture.txt': 'unaccepted local edits',
+    });
     assert.throws(() => readCommittedReuseEvidence(created.directory, '0'.repeat(40), ['fixture.txt']), /accepted Git HEAD/);
     assert.throws(() => createDetachedDevelopmentWorktree(checkout, root, 'HEAD'), /full Git commit identity/);
     git(checkout, 'add', 'fixture.txt');
@@ -164,7 +169,7 @@ test('local development worktree starts at the frozen commit and preserves local
     let selected = created;
     const processAdapter = createApprovedProcessAdapter({
       checkout, safeWorktreeRoots: [root], launchers: {}, allowedAcceptanceExecutables: [],
-      resolveSecretReference: () => undefined,
+      resolveSecretReference: () => undefined, snapshotGitBeforeAcceptance: true,
       async createWorktree() { return selected; },
       async sourceDigest() { return selected.sourceDigest; },
       async integrate(_, __, sourceDigest) { return { sourceDigest }; },
@@ -174,7 +179,12 @@ test('local development worktree starts at the frozen commit and preserves local
     selected = dependent;
     assert.equal((await processAdapter.createWorktree(nodes[0], base, { first, second })).sourceDigest, second);
     writeFileSync(join(dependent.directory, 'fixture.txt'), 'updated');
-    assert.deepEqual(await processAdapter.changedFiles(nodes[0]), ['fixture.txt']);
+    const changedFiles = await processAdapter.changedFiles(nodes[0]);
+    assert.deepEqual(changedFiles, ['fixture.txt']);
+    const prepared = await processAdapter.prepareAcceptance!(nodes[0], changedFiles);
+    assert.equal(await processAdapter.sourceDigest(nodes[0]), prepared);
+    writeFileSync(join(dependent.directory, 'fixture.txt'), 'changed after preparation');
+    await assert.rejects(() => processAdapter.sourceDigest(nodes[0]), /no longer clean/);
 
     git(checkout, 'switch', '--detach', base);
     writeFileSync(source, 'divergent source');

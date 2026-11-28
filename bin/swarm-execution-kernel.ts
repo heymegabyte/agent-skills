@@ -5,7 +5,7 @@ import { existsSync, readFileSync, realpathSync } from 'node:fs';
 import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve, relative, sep } from 'node:path';
-import { listDevelopmentChangedFiles, readCommittedReuseEvidence } from './local-development-worktree.ts';
+import { listDevelopmentChangedFiles, readCommittedReuseEvidence, snapshotDevelopmentChanges } from './local-development-worktree.ts';
 
 export type ArchitectFamily = 'claude' | 'codex' | 'gemini' | 'antigravity';
 export type ExecutionProvider = ArchitectFamily | 'opencode-deepseek';
@@ -105,6 +105,7 @@ export interface SchedulerAdapter {
   createWorktree(node: ExecutionNode, frozenBaseRevision?: string, prerequisiteRevisions?: Readonly<Record<string, string>>): Promise<{ sourceDigest: string }>;
   launch(provider: ExecutionProvider, node: ExecutionNode, correlationId: string, signal: AbortSignal): Promise<ProcessReceipt>;
   changedFiles(node: ExecutionNode): Promise<string[]>;
+  prepareAcceptance?(node: ExecutionNode, changedFiles: readonly string[]): Promise<string>;
   runAcceptance(node: ExecutionNode, check: { command: string; args: string[] }, signal: AbortSignal): Promise<ProcessReceipt>;
   sourceDigest(node: ExecutionNode): Promise<string>;
   integrate(node: ExecutionNode, expectedSourceDigest: string, frozenBaseRevision: string): Promise<{ sourceDigest: string; integratedRevision?: string }>;
@@ -135,6 +136,7 @@ export interface ProcessAdapterOptions {
   /** Opt in only for paths approved for disclosure to the reuse reviewer. */
   approveReusePath?: (node: ExecutionNode, path: string) => boolean;
   listChangedFiles?: (node: ExecutionNode, directory: string) => Promise<string[]>;
+  snapshotGitBeforeAcceptance?: boolean;
   sourceDigest: (node: ExecutionNode, directory: string) => Promise<string>;
   integrate: (node: ExecutionNode, directory: string, expectedSourceDigest: string, frozenBaseRevision: string) => Promise<{ sourceDigest: string; integratedRevision?: string }>;
   preserveForRecovery: (node: ExecutionNode, directory: string | undefined, reason: string) => Promise<void>;
@@ -324,6 +326,9 @@ export function createApprovedProcessAdapter(options: ProcessAdapterOptions): Sc
   const directories = new Map<string, string>();
   const verifiedHeads = new Map<string, string>();
   const worktreeBases = new Map<string, string>();
+  if (options.snapshotGitBeforeAcceptance && options.listChangedFiles) {
+    throw new Error('Git acceptance snapshots require the built-in Git ownership reader');
+  }
   const git = (directory: string, ...args: string[]) =>
     execFileSync('git', ['-C', directory, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
   const directoryFor = (node: ExecutionNode): string => {
@@ -410,6 +415,11 @@ export function createApprovedProcessAdapter(options: ProcessAdapterOptions): Sc
       return options.listChangedFiles?.(node, directory)
         ?? listDevelopmentChangedFiles(directory, worktreeBases.get(node.id)!);
     },
+    ...(options.snapshotGitBeforeAcceptance && {
+      async prepareAcceptance(node: ExecutionNode, changedFiles: readonly string[]) {
+        return snapshotDevelopmentChanges(directoryFor(node), worktreeBases.get(node.id)!, changedFiles);
+      },
+    }),
     async runAcceptance(node, check, signal) {
       if (!options.allowedAcceptanceExecutables.includes(check.command)) throw new Error(`Acceptance executable is not allowlisted: ${check.command}`);
       validateAcceptanceArgs(check.command, check.args);
@@ -417,7 +427,14 @@ export function createApprovedProcessAdapter(options: ProcessAdapterOptions): Sc
       const directory = directoryFor(node);
       return runProcess(check.command, check.args, directory, { PATH: process.env.PATH, CI: '1' }, signal, options.processTimeoutMs ?? 30 * 60_000);
     },
-    async sourceDigest(node) { return options.sourceDigest(node, directoryFor(node)); },
+    async sourceDigest(node) {
+      const directory = directoryFor(node);
+      if (!options.snapshotGitBeforeAcceptance) return options.sourceDigest(node, directory);
+      if (git(directory, 'status', '--porcelain=v1', '--untracked-files=all', '--ignore-submodules=none')) {
+        throw new Error('Git acceptance snapshot is no longer clean');
+      }
+      return git(directory, 'rev-parse', '--verify', 'HEAD');
+    },
     async integrate(node, expected, frozenBaseRevision) { return options.integrate(node, directoryFor(node), expected, frozenBaseRevision); },
     async preserveForRecovery(node, reason) {
       const directory = directories.has(node.id) ? directoryFor(node) : undefined;
@@ -663,11 +680,13 @@ async function executeNodes(
         if (receipt.launcher.exitCode !== 0) throw new Error(`Launcher exited ${receipt.launcher.exitCode}`);
         receipt.changedFiles = await adapter.changedFiles(node);
         if (!pathsAreOwned(receipt.changedFiles, node.ownedPaths)) throw new Error('Worker changed files outside its ownership contract');
+        const preparedSource = await adapter.prepareAcceptance?.(node, receipt.changedFiles);
         for (const check of node.acceptance) {
           const result = await adapter.runAcceptance(node, check, controller.signal); receipt.acceptance.push(result);
           if (result.exitCode !== 0) throw new Error(`Acceptance failed: ${check.command} ${check.args.join(' ')}`);
         }
         receipt.sourceDigestAfter = await adapter.sourceDigest(node);
+        if (preparedSource && preparedSource !== receipt.sourceDigestAfter) throw new Error('Source changed during acceptance');
         receipt.status = 'accepted';
         if (options.reviewBeforeIntegration) {
           if (!receipt.changedFiles.length || !receipt.acceptance.length) {
