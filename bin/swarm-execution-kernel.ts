@@ -3,6 +3,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { execFileSync, spawn } from 'node:child_process';
 import { existsSync, readFileSync, realpathSync } from 'node:fs';
 import { resolve, relative, sep } from 'node:path';
+import { readCommittedReuseEvidence } from './local-development-worktree.ts';
 
 export type ArchitectFamily = 'claude' | 'codex' | 'gemini' | 'antigravity';
 export type ExecutionProvider = ArchitectFamily | 'opencode-deepseek';
@@ -96,6 +97,8 @@ export interface NodeExecutionReceipt {
 }
 
 export interface SchedulerAdapter {
+  readAcceptedReuseEvidence?: (node: ExecutionNode, receipt: Readonly<NodeExecutionReceipt>, signal: AbortSignal) =>
+    Promise<{ sourceDigest: string; excerpts: Record<string, string> }>;
   preflight(provider: ExecutionProvider, node: ExecutionNode): Promise<{ ok: boolean; reason?: string }>;
   createWorktree(node: ExecutionNode, frozenBaseRevision?: string, prerequisiteRevisions?: Readonly<Record<string, string>>): Promise<{ sourceDigest: string }>;
   launch(provider: ExecutionProvider, node: ExecutionNode, correlationId: string, signal: AbortSignal): Promise<ProcessReceipt>;
@@ -126,6 +129,8 @@ export interface ProcessAdapterOptions {
   processTimeoutMs?: number;
   resolveSecretReference: (reference: string) => string | undefined;
   createWorktree: (node: ExecutionNode, frozenBaseRevision?: string, prerequisiteRevisions?: Readonly<Record<string, string>>) => Promise<{ directory: string; sourceDigest: string }>;
+  /** Opt in only for paths approved for disclosure to the reuse reviewer. */
+  approveReusePath?: (node: ExecutionNode, path: string) => boolean;
   listChangedFiles: (node: ExecutionNode, directory: string) => Promise<string[]>;
   sourceDigest: (node: ExecutionNode, directory: string) => Promise<string>;
   integrate: (node: ExecutionNode, directory: string, expectedSourceDigest: string, frozenBaseRevision: string) => Promise<{ sourceDigest: string; integratedRevision?: string }>;
@@ -340,6 +345,16 @@ export function createApprovedProcessAdapter(options: ProcessAdapterOptions): Sc
         SWARM_ALLOWED_EGRESS_HOSTS: (node.allowedEgressHosts ?? []).join(','),
       }, signal, options.processTimeoutMs ?? 30 * 60_000);
     },
+    ...(options.approveReusePath && {
+      async readAcceptedReuseEvidence(node: ExecutionNode, receipt: Readonly<NodeExecutionReceipt>, signal: AbortSignal) {
+        signal.throwIfAborted();
+        const approve = options.approveReusePath!;
+        const paths = receipt.changedFiles.filter((path) => approve(node, path));
+        if (!receipt.sourceDigestAfter) throw new Error('Missing accepted source digest');
+        return paths.length ? readCommittedReuseEvidence(directoryFor(node), receipt.sourceDigestAfter, paths)
+          : { sourceDigest: receipt.sourceDigestAfter, excerpts: {} };
+      },
+    }),
     async changedFiles(node) { return options.listChangedFiles(node, directoryFor(node)); },
     async runAcceptance(node, check, signal) {
       if (!options.allowedAcceptanceExecutables.includes(check.command)) throw new Error(`Acceptance executable is not allowlisted: ${check.command}`);

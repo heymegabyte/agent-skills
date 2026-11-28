@@ -610,7 +610,7 @@ test('accepted implementation reuse is reviewed before integration and captured 
     proposals.push(proposal);
     return 'openspec/changes/shared-component/proposal.md';
   };
-  adapters.readAcceptedReuseEvidence = async (_node, receipt) => ({
+  adapters.scheduler.readAcceptedReuseEvidence = async (_node, receipt) => ({
     sourceDigest: receipt.sourceDigestAfter!,
     excerpts: { 'src/app.ts': 'export const sharedComponent = true;' },
   });
@@ -633,7 +633,7 @@ test('accepted implementation reuse is reviewed before integration and captured 
   assert.match(proposals[0].evidence[0], /:src\/app\.ts$/);
 
   calls.length = 0;
-  adapters.readAcceptedReuseEvidence = async (_node, receipt) => ({
+  adapters.scheduler.readAcceptedReuseEvidence = async (_node, receipt) => ({
     sourceDigest: receipt.sourceDigestAfter!,
     excerpts: { 'src/unowned.ts': 'unowned' },
   });
@@ -641,7 +641,7 @@ test('accepted implementation reuse is reviewed before integration and captured 
   assert.ok(!calls.includes('integrate:implement'));
   assert.equal(proposals.length, 1);
 
-  adapters.readAcceptedReuseEvidence = async () => ({
+  adapters.scheduler.readAcceptedReuseEvidence = async () => ({
     sourceDigest: 'stale-source',
     excerpts: { 'src/app.ts': 'stale' },
   });

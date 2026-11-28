@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import test from 'node:test';
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { createDetachedDevelopmentWorktree } from '../bin/local-development-worktree.ts';
+import { createDetachedDevelopmentWorktree, readCommittedReuseEvidence } from '../bin/local-development-worktree.ts';
 import { localDevelopmentLauncher } from '../bin/local-development-launchers.ts';
 import {
   compileAndFreezeContract,
@@ -133,6 +133,11 @@ test('local development worktree starts at the frozen commit and preserves local
     assert.equal(git(created.directory, 'status', '--porcelain'), '');
     assert.equal(readFileSync(join(created.directory, 'fixture.txt'), 'utf8'), 'frozen source');
     assert.equal(readFileSync(source, 'utf8'), 'concurrent local edits');
+    writeFileSync(join(created.directory, 'fixture.txt'), 'unaccepted local edits');
+    assert.deepEqual(readCommittedReuseEvidence(created.directory, base, ['fixture.txt', 'missing', '*']), {
+      sourceDigest: base, excerpts: { 'fixture.txt': 'frozen source' },
+    });
+    assert.throws(() => readCommittedReuseEvidence(created.directory, '0'.repeat(40), ['fixture.txt']), /accepted Git HEAD/);
     assert.throws(() => createDetachedDevelopmentWorktree(checkout, root, 'HEAD'), /full Git commit identity/);
     git(checkout, 'add', 'fixture.txt');
     const commit = (message: string) =>

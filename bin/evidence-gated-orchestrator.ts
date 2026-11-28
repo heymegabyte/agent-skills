@@ -519,7 +519,8 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
     return receipts;
   };
   const pendingReuse = new Map<string, Awaited<ReturnType<typeof proposeReusableWork>>>();
-  const readAccepted = configured.readAcceptedReuseEvidence;
+  const readAccepted = configured.readAcceptedReuseEvidence
+    ?? configured.scheduler.readAcceptedReuseEvidence?.bind(configured.scheduler);
   if (readAccepted && !captureReuse) throw new Error('Accepted-source reuse requires a proposal writer');
   const schedulerOptions = readAccepted ? {
     ...configured.schedulerOptions,
