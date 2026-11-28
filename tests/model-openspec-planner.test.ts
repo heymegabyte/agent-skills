@@ -35,6 +35,7 @@ test('assigned architect proposes independent changes before host materializatio
     assert.ok(!prompt.includes(input.checkout));
     assert.ok(prompt.includes("### Requirement: <requirement>"));
     assert.ok(prompt.includes("End the line at the closing parenthesis"));
+    assert.ok(prompt.includes('Every requirement needs at least one nested scenario'));
     return { launcher: 'approved:fixture', sessionId: 'fixture', output };
   });
   assert.deepEqual((await plan(input)).changes, changes.map((draft) => ({

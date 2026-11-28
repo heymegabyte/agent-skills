@@ -27,6 +27,7 @@ export function createModelOpenSpecPlanner(
       'Use the supplied changeId for the first change. Split independent outcomes into separate changes with distinct ownership and verifiable acceptance. Give each change one owner for all tasks. Include every admitted improvement in the spec and checklist with its exact requirement and task identifiers.',
       'Use these exact Markdown forms. Proposal sections: ## Why and ## What Changes. Design declaration: **Architect Role:** assigned. Design sections: ## Context, ## Goals / Non-Goals, and ## Decisions. Give each section substantive text.',
       'In spec use ### Requirement: <requirement> and #### Scenario: <scenario>. In tasks use one checklist line per task: - [ ] [task-id] Description (requirements: <requirement>; scenarios: <scenario>). Include a checklist line whose task-id equals the changeId for the whole-change owner. End the line at the closing parenthesis, with no trailing punctuation. Match requirement and scenario titles exactly, using comma-separated lists when needed.',
+      'Every requirement needs at least one nested scenario. Trace every requirement and scenario to a checklist line. Keep implementation notes with the applicable requirement instead of creating untested requirements. For a documentation deliverable that is a requirement, include an observable review scenario and trace it to a checklist line.',
       'The host assigns authority, provider, and execution settings and materializes validated artifacts.',
       JSON.stringify(brief),
     ].join('\n'));
