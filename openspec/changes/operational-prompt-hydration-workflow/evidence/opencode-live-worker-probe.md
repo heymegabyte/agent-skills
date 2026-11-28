@@ -30,3 +30,9 @@
 - On `47e758ea`, the frozen-change queue dispatched one live Codex worker through the process adapter and recorded the throughput-provider exception. The worker edited only the owned README path. The configured `git diff --check` command exited zero.
 - The initial probe stopped on its staged-patch digest check. A separate reproduction showed that Git's configured prefixes differed between worktree and staged output for the same file content. The repeated fixture used explicit source and destination prefixes for both patch digests.
 - The retry returned an `integrated` receipt. The disposable repository contained the expected README edit in a commit and had a clean working tree. This verifies the live fallback through local scheduling and integration for one controlled change. The OpenCode route and multi-change production integration remain open.
+
+## Dependent live fallback changes
+
+- On `11887800`, the frozen-change queue dispatched two live Codex fixture changes that shared an owned README path. The second declared the first as a prerequisite.
+- The dependent worktree started at the exact first integration commit and contained the first change's expected text before its worker launched. Both workers changed only README.md and passed `git diff --check`.
+- Both receipts reported `integrated`. The disposable repository contained both expected edits and was clean at the end. This verifies dependent execution and integration on the premium fallback. Independent production parallelism and OpenCode throughput are still open.
