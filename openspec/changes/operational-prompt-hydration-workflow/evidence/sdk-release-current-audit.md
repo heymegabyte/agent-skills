@@ -8,3 +8,9 @@
 ## GitHub-hosted release qualification
 
 At `theme.tools` main revision `3bebd89116b9d64e10da3ea4bc8ca723d6b09eb4`, the package distribution qualification job failed before its first step. The job's check-run annotation reports that recent account payments failed or the spending limit needs to be increased. GitHub's billing settings are needed to distinguish those cases. The checked-in release workflow also uses a GitHub-hosted `ubuntu-latest` job. A fresh dispatch has no qualification value until hosted jobs can start. After billing access is restored, qualify the current revision through the release workflow's `dry_run=true` path before attempting publication. [Package distribution job](https://github.com/heymegabyte/theme.tools/actions/runs/46124804501/job/140916948519)
+
+## Current source and release checks
+
+At `theme.tools` revision `d1229ba51ac75c3b57e872bd7c5f9ec05de946b3`, the SDK manifest still declares `1.0.4`. The clean main checkout passed all 20 tests in `pnpm --filter @theme.tools/sdk test`, including the tests that require an observed publication before a release claim and ordered evidence before an adoption claim.
+
+The latest package qualification job again stopped before its first step with GitHub's billing annotation. Both Nexus npm metadata URLs redirected to Cloudflare Access sign-in and returned HTML when followed. The response bodies provided no package version or integrity metadata. The SDK tests establish source conformance. Publication and consumer adoption still require authenticated registry evidence and an observed consumer run. [Latest qualification job](https://github.com/heymegabyte/theme.tools/actions/runs/46129188140/job/140930407282)
