@@ -56,9 +56,9 @@ Enable the expanded profile for complex work (`openspec config profile`, then `o
 
 ## Parallel Triad OpenSpec & Paperclip Registration Mandate
 
-1. **Parallel End-of-Turn Triad (`agent-skills` + `install.doctor` + `theme.tools` + Touched Projects)**:
-   - At the end of every prompt pass, infer reusable updates across `heymegabyte/agent-skills`, `heymegabyte/install.doctor`, and `heymegabyte/theme.tools` (`ui.theme.tools`) in parallel, plus any other touched project.
-   - Save in-flight or follow-up work via OpenSpec (`openspec/changes/<change-id>/{proposal.md,design.md,tasks.md,specs/}`) in each respective repository.
+1. **Concurrent reuse review**:
+   - Start during material implementation using [the parallel delivery workflow](parallel-multi-swarm-orchestration.md).
+   - Record a concrete proposal in the owning repository as discoveries surface. Dispatch admitted work under [change ownership](openspec-change-ownership.md).
 2. **Mandatory Paperclip Issue Linkage**:
    - Every repository where an OpenSpec definition is added or updated MUST have a corresponding task/issue created or updated in its **Paperclip** project (`agent-skills`, `install.doctor`, `theme.tools`, `legion.megabyte.space`, etc.) containing a **direct deep link to the OpenSpec files** (via `~/.agentskills/bin/openspec-paperclip-sync.ts`, Paperclip MCP, or `paperclipai issue create`).
 3. **Huge-Prompt Triage, Unfinished Sub-Features ("Give-Up" Boundary) & Recommendations**:
