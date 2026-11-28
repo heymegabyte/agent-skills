@@ -133,6 +133,14 @@ export function snapshotDevelopmentChanges(
   }
   if (status()) throw new Error('Git acceptance snapshot is not clean');
   verifyChangedFiles();
-  git('diff', '--check', baseRevision, 'HEAD', '--');
-  return git('rev-parse', '--verify', 'HEAD');
+  const revision = git('rev-parse', '--verify', 'HEAD');
+  try {
+    git('diff', '--check', baseRevision, revision, '--');
+  } catch (error) {
+    if ((error as { status?: number }).status === 2) {
+      throw new Error(`Git whitespace check failed for worker snapshot ${revision}`, { cause: error });
+    }
+    throw error;
+  }
+  return revision;
 }

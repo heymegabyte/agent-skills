@@ -150,6 +150,14 @@ test('local development worktree starts at the frozen commit and preserves local
       'renamed fixture.txt': 'unaccepted local edits',
     });
     assert.throws(() => readCommittedReuseEvidence(created.directory, '0'.repeat(40), ['fixture.txt']), /accepted Git HEAD/);
+    writeFileSync(join(created.directory, 'renamed fixture.txt'), 'failed formatting\n\n');
+    assert.throws(() => snapshotDevelopmentChanges(created.directory, base, workerFiles), (error) => {
+      assert.ok(error instanceof Error);
+      const failedRevision = git(created.directory, 'rev-parse', 'HEAD');
+      assert.notEqual(failedRevision, snapshot);
+      assert.equal(error.message, `Git whitespace check failed for worker snapshot ${failedRevision}`);
+      return true;
+    });
     assert.throws(() => createDetachedDevelopmentWorktree(checkout, root, 'HEAD'), /full Git commit identity/);
     git(checkout, 'add', 'fixture.txt');
     const commit = (message: string) =>
