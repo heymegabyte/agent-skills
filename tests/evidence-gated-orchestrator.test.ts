@@ -371,3 +371,37 @@ test('reuse extraction overlaps implementation and supplies OpenSpec findings be
   assert.equal(result.reuseExtraction?.findings[0].destination, 'agent-skills');
   assert.ok(calls.indexOf('reuse:captured') < calls.indexOf('verify:adversarial'));
 });
+
+test('architect output queues all compiled changes and verifies each against its own contract', async () => {
+  const { checkout, paths, specialists } = fixture();
+  const calls: string[] = [];
+  const adapters = configured(checkout, paths, calls);
+  const { compileOpenSpec, verify } = adapters;
+  adapters.compileOpenSpec = async (request) => {
+    const primary = await compileOpenSpec(request);
+    const { schemaVersion: _, receiptDigest: __, ...authority } = request.assignment;
+    const assignment = issueArchitectAssignment({ ...authority, changeId: 'follow-up' }, { digest: authority.authoritySourceDigest });
+    const artifacts = primary.artifacts.map((artifact) => {
+      const path = `follow-up-${artifact.path.replaceAll('/', '-')}`;
+      const content = artifact.kind === 'tasks' ? artifact.content.replace('[implement]', '[follow-up]') : artifact.content;
+      writeFileSync(join(checkout, path), content);
+      return { ...artifact, path, content };
+    });
+    return {
+      ...primary,
+      additionalChanges: [{
+        assignment, artifacts, dependsOn: [request.changeId],
+        nodes: [{ ...primary.nodes[0], id: 'follow-up', branch: 'swarm/follow-up', worktree: 'follow-up', port: 4200, ownedPaths: ['src/follow-up.ts'] }],
+      }],
+    };
+  };
+  adapters.scheduler.changedFiles = async (node) => node.ownedPaths;
+  adapters.verify = (request) => {
+    assert.deepEqual(request.executions.map(({ nodeId }) => nodeId), request.contract.nodes.map(({ id }) => id));
+    return verify(request);
+  };
+  const result = await runEvidenceGatedPipeline(input(checkout, specialists), adapters);
+  assert.deepEqual(result.contracts.map(({ changeId }) => changeId), ['governed-change', 'follow-up']);
+  assert.equal(new Set(result.verificationReceipts.map(({ reviewedContractDigest }) => reviewedContractDigest)).size, 2);
+  assert.ok(calls.indexOf('integrate:implement') < calls.indexOf('launch:opencode-deepseek:follow-up'));
+});

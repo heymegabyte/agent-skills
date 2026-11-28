@@ -35,6 +35,7 @@ import {
 } from './evidence-gated-deliberation.ts';
 import {
   compileAndFreezeContract,
+  executeFrozenChanges,
   executeFrozenContract,
   type ArchitectAssignmentReceipt,
   type CompiledArtifact,
@@ -140,11 +141,17 @@ interface ReuseExtractionReceipt {
   findings: ReuseFinding[];
 }
 
+interface CompiledChange {
+  artifacts: CompiledArtifact[];
+  nodes: ExecutionNode[];
+  dependsOn?: string[];
+}
+
 export interface PipelineAdapters {
   research: ResearchRail;
   provider: ProviderLauncher;
   assignArchitect: (input: { changeId: string; prompt: string; hydratedBrief: HydratedArchitectBrief; evidenceDigest: string; roster: ReturnType<typeof selectConferenceRoster>; fixedPointDigest: string }) => Promise<ArchitectAssignmentReceipt>;
-  compileOpenSpec: (input: OpenSpecCompilerInput) => Promise<{ artifacts: CompiledArtifact[]; nodes: ExecutionNode[] }>;
+  compileOpenSpec: (input: OpenSpecCompilerInput) => Promise<CompiledChange & { additionalChanges?: Array<CompiledChange & { assignment: ArchitectAssignmentReceipt }> }>;
   scheduler: SchedulerAdapter;
   extractReuse?: (input: { contract: FrozenContract; hydratedBrief: HydratedArchitectBrief }) => Promise<ReuseExtractionReceipt>;
   schedulerOptions?: Parameters<typeof executeFrozenContract>[2];
@@ -183,6 +190,7 @@ export interface PipelineResult {
   status: 'complete';
   state: RunState;
   contract: FrozenContract;
+  contracts: FrozenContract[];
   executions: NodeExecutionReceipt[];
   verificationReceipts: VerificationReceipt[];
   conferenceResolution: ConferenceResolutionReceipt;
@@ -317,26 +325,41 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
     ...(capabilityPlan.limitation ? { limitation: capabilityPlan.limitation } : {}),
   };
   const compiled = await configured.compileOpenSpec({ checkout: input.checkout, changeId: input.changeId, prompt: input.prompt, hydratedBrief: structuredClone(hydratedBrief), evidenceDigest, fixedPointDigest, assignment, conference: fixedPoint, conferenceResolution, conferenceExecution });
-  if (compiled.nodes.length !== 1) {
-    throw new Error('OpenSpec compilation must assign exactly one implementation node to the whole change');
-  }
-  const [ownerNode] = compiled.nodes;
-  const checklist = compiled.artifacts.find(({ kind }) => kind === 'tasks');
-  if (!checklist) throw new Error('Missing OpenSpec tasks artifact');
-  const nodes = [{
-    ...ownerNode,
-    workerPrompt: [
-      `Own OpenSpec change ${input.changeId} through implementation, verification, documentation, and review fixes.`,
-      'Complete the full checklist as one owner and preserve ownership through completion.',
-      ownerNode.workerPrompt,
-      `OpenSpec checklist from ${checklist.path}:\n${checklist.content}`,
-    ].filter(Boolean).join('\n\n'),
-  }];
-  state = advance(state, 'openspec-compilation', { contract: { artifacts: compiled.artifacts, nodes } });
-  const contract = compileAndFreezeContract({ checkout: input.checkout, changeId: input.changeId, assignment, trustedAuthoritySourceDigest: input.trustedAuthoritySourceDigest, evidenceDigest, fixedPointDigest, unresolvedMaterialDeltas: [], frozenBaseRevision: input.sourceRevision, artifacts: compiled.artifacts, nodes });
-  state = advance(state, 'contract-freeze', { contract });
+  const plans = [
+    { artifacts: compiled.artifacts, nodes: compiled.nodes, dependsOn: compiled.dependsOn, assignment },
+    ...(compiled.additionalChanges ?? []),
+  ];
+  const changes = plans.map((change) => {
+    const changeId = change.assignment.changeId;
+    if (change.nodes.length !== 1) {
+      throw new Error('OpenSpec compilation must assign exactly one implementation node to the whole change');
+    }
+    const [ownerNode] = change.nodes;
+    const checklist = change.artifacts.find(({ kind }) => kind === 'tasks');
+    if (!checklist) throw new Error('Missing OpenSpec tasks artifact');
+    const nodes = [{
+      ...ownerNode,
+      workerPrompt: [
+        `Own OpenSpec change ${changeId} through implementation, verification, documentation, and review fixes.`,
+        'Complete the full checklist as one owner and preserve ownership through completion.',
+        ownerNode.workerPrompt,
+        `OpenSpec checklist from ${checklist.path}:\n${checklist.content}`,
+      ].filter(Boolean).join('\n\n'),
+    }];
+    const contract = compileAndFreezeContract({
+      checkout: input.checkout, changeId, assignment: change.assignment,
+      trustedAuthoritySourceDigest: input.trustedAuthoritySourceDigest, evidenceDigest, fixedPointDigest,
+      unresolvedMaterialDeltas: [], frozenBaseRevision: input.sourceRevision, artifacts: change.artifacts, nodes,
+    });
+    return { contract, dependsOn: change.dependsOn ?? [] };
+  });
+  if (changes[0].contract.changeId !== input.changeId) throw new Error('Architect assignment is not bound to the requested change');
+  const contracts = changes.map(({ contract }) => contract);
+  const [contract] = contracts;
+  state = advance(state, 'openspec-compilation', { contract: compiled });
+  state = advance(state, 'contract-freeze', { contract, contracts });
   const [executionResult, reuseResult] = await Promise.allSettled([
-    executeFrozenContract(contract, configured.scheduler, configured.schedulerOptions),
+    executeFrozenChanges(changes, configured.scheduler, configured.schedulerOptions),
     Promise.resolve().then(() => configured.extractReuse?.({ contract: structuredClone(contract), hydratedBrief: structuredClone(hydratedBrief) })),
   ]);
   if (executionResult.status === 'rejected') throw executionResult.reason;
@@ -352,7 +375,7 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
     throw new Error('Reuse extraction receipt must identify the owner, reviewed contract, and evidence-backed OpenSpec findings');
   }
   const latestByNode = new Map(executions.map((receipt) => [receipt.nodeId, receipt]));
-  const failures = contract.nodes.flatMap(({ id }) => {
+  const failures = contracts.flatMap(({ nodes }) => nodes).flatMap(({ id }) => {
     const status = latestByNode.get(id)?.status;
     return status === 'integrated' ? [] : [`${id}:${status ?? 'missing'}`];
   });
@@ -360,26 +383,30 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
   const terminalExecutions = [...latestByNode.values()];
   state = advance(state, 'swarm-execution', { executions, reuseExtraction });
   state = advance(state, 'integration', { executions: terminalExecutions });
-  const verification = await configured.verify({ contract, executions: terminalExecutions });
-  if (!verification.passed || !verification.receipts.length) throw new Error(`Adversarial verification failed closed: ${(verification.blockers ?? ['missing verification receipts']).join('; ')}`);
-  const reviewerFamilies = new Set(verification.receipts.map((receipt) => receipt.reviewerFamily));
-  const highRisk = riskGate.categories.length > 0;
-  const requiredReviewerFamilies = capabilityPlan.independent || highRisk ? 2 : 1;
-  if (reviewerFamilies.size < requiredReviewerFamilies) throw new Error('Adversarial verification requires at least two distinct frontier model families when independent capacity or high-risk scope is present');
-  for (const receipt of verification.receipts) {
-    if (!['claude', 'codex', 'gemini'].includes(receipt.reviewerFamily)
-      || !receipt.launcher.startsWith('approved:')
-      || !/^[a-f0-9]{64}$/.test(receipt.inputDigest)
-      || !/^[a-f0-9]{64}$/.test(receipt.outputDigest)
-      || receipt.reviewedContractDigest !== contract.contractDigest
-      || !receipt.passed) {
-      throw new Error(`Invalid cross-family verification receipt from ${String(receipt.reviewerFamily)}`);
+  const verified = await Promise.all(contracts.map(async (contract) => {
+    const verification = await configured.verify({ contract, executions: terminalExecutions.filter(({ nodeId }) => contract.nodes.some(({ id }) => id === nodeId)) });
+    if (!verification.passed || !verification.receipts.length) throw new Error(`Adversarial verification failed closed: ${(verification.blockers ?? ['missing verification receipts']).join('; ')}`);
+    const reviewerFamilies = new Set(verification.receipts.map((receipt) => receipt.reviewerFamily));
+    const highRisk = riskGate.categories.length > 0;
+    const requiredReviewerFamilies = capabilityPlan.independent || highRisk ? 2 : 1;
+    if (reviewerFamilies.size < requiredReviewerFamilies) throw new Error('Adversarial verification requires at least two distinct frontier model families when independent capacity or high-risk scope is present');
+    for (const receipt of verification.receipts) {
+      if (!['claude', 'codex', 'gemini'].includes(receipt.reviewerFamily)
+        || !receipt.launcher.startsWith('approved:')
+        || !/^[a-f0-9]{64}$/.test(receipt.inputDigest)
+        || !/^[a-f0-9]{64}$/.test(receipt.outputDigest)
+        || receipt.reviewedContractDigest !== contract.contractDigest
+        || !receipt.passed) {
+        throw new Error(`Invalid cross-family verification receipt from ${String(receipt.reviewerFamily)}`);
+      }
     }
-  }
+    return verification;
+  }));
+  const verification = { passed: true, receipts: verified.flatMap(({ receipts }) => receipts) };
   state = advance(state, 'adversarial-verification', { reviews: verification.receipts });
   state = advance(state, 'complete', { complete: true, verification });
   return {
-    status: 'complete', state, contract, executions, verificationReceipts: verification.receipts, conferenceResolution,
+    status: 'complete', state, contract, contracts, executions, verificationReceipts: verification.receipts, conferenceResolution,
     conferenceExecution,
     reuseExtraction,
   };
