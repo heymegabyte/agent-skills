@@ -6,8 +6,8 @@ import test from 'node:test';
 
 const root = join(import.meta.dirname, '..');
 const policyPath = join(root, 'policies', 'operational-prompt-hydration.md');
-const compactCore = 'Hydrate engineering requests into complete intended outcomes using repository context, current research, explicit requirements, and recorded assumptions. Use role-based agents to challenge material architecture decisions and express the work in OpenSpec. At intake and after each dependency clears, dispatch independent work concurrently whenever doing so reduces time to verified delivery. Delegate every suitable task to OpenCode with DeepSeek through LiteLLM when it meets the acceptance bar and improves throughput. Use Codex, Gemini, or Claude for work that benefits materially from premium capability or independent review, and record concrete reasons for premium routing or limited dispatch. Scale worker count to ready work, isolation, and approved capacity. Give workers disjoint ownership and acceptance checks, verify integrated results, and record concrete limits on dispatch. Build reusable capabilities in theme.tools and consume its packages. Verify behavior, update documentation, and promptly commit and push coherent changes to main. Learn reusable lessons and user preferences from evidence. After delivering the requested outcome, implement applicable improvements and repeat across the product until no justified work remains or execution must pause. Preserve exact resumable state. Respect explicit scope, current user corrections, platform constraints, and existing authorization.';
-const expectedDigest = '3fc4501dfaeb75a4aaa3eac70fb6ae77211d4d6a4de2f9680d032b1587471647';
+const compactCore = 'Split material engineering requests into research-backed briefs guided by repository context and applicable skills. Have a frontier architect compile independently verifiable OpenSpec changes. Give each change one owner through verification. Dispatch ready changes concurrently within approved capacity, using OpenCode with DeepSeek through LiteLLM where suitable and recording provider exceptions. During implementation, capture and admit justified improvements in OpenSpec, and route reusable application code, host configuration, and agent procedures to theme.tools, install.doctor, and agent-skills respectively. Verify integrated results, update documentation and consumers, and deliver authorized changes. Refresh evidence until no justified in-scope work remains and preserve resumable state.';
+const expectedDigest = '11c96ba6b77b7e166047bdf15b5277c59ce32e9418f0d15a5809591ee734429d';
 
 function markdownFiles(directory: string): string[] {
   const files: string[] = [];
@@ -24,7 +24,7 @@ test('canonical compact core is verbatim and digest-addressed', () => {
   const policy = readFileSync(policyPath, 'utf8');
   assert.ok(policy.includes(`> ${compactCore}`));
   assert.match(policy, /^policy_id: operational-prompt-hydration$/m);
-  assert.match(policy, /^policy_version: 1\.2\.0$/m);
+  assert.match(policy, /^policy_version: 1\.3\.0$/m);
   assert.match(policy, new RegExp(`^core_digest: ${expectedDigest}$`, 'm'));
   assert.equal(createHash('sha256').update(compactCore).digest('hex'), expectedDigest);
 });

@@ -1,14 +1,14 @@
 ---
 policy_id: operational-prompt-hydration
-policy_version: 1.2.0
+policy_version: 1.3.0
 core_digest_algorithm: sha256
-core_digest: 3fc4501dfaeb75a4aaa3eac70fb6ae77211d4d6a4de2f9680d032b1587471647
+core_digest: 11c96ba6b77b7e166047bdf15b5277c59ce32e9418f0d15a5809591ee734429d
 status: canonical
 ---
 
 # Operational Prompt Hydration Policy
 
-> Hydrate engineering requests into complete intended outcomes using repository context, current research, explicit requirements, and recorded assumptions. Use role-based agents to challenge material architecture decisions and express the work in OpenSpec. At intake and after each dependency clears, dispatch independent work concurrently whenever doing so reduces time to verified delivery. Delegate every suitable task to OpenCode with DeepSeek through LiteLLM when it meets the acceptance bar and improves throughput. Use Codex, Gemini, or Claude for work that benefits materially from premium capability or independent review, and record concrete reasons for premium routing or limited dispatch. Scale worker count to ready work, isolation, and approved capacity. Give workers disjoint ownership and acceptance checks, verify integrated results, and record concrete limits on dispatch. Build reusable capabilities in theme.tools and consume its packages. Verify behavior, update documentation, and promptly commit and push coherent changes to main. Learn reusable lessons and user preferences from evidence. After delivering the requested outcome, implement applicable improvements and repeat across the product until no justified work remains or execution must pause. Preserve exact resumable state. Respect explicit scope, current user corrections, platform constraints, and existing authorization.
+> Split material engineering requests into research-backed briefs guided by repository context and applicable skills. Have a frontier architect compile independently verifiable OpenSpec changes. Give each change one owner through verification. Dispatch ready changes concurrently within approved capacity, using OpenCode with DeepSeek through LiteLLM where suitable and recording provider exceptions. During implementation, capture and admit justified improvements in OpenSpec, and route reusable application code, host configuration, and agent procedures to theme.tools, install.doctor, and agent-skills respectively. Verify integrated results, update documentation and consumers, and deliver authorized changes. Refresh evidence until no justified in-scope work remains and preserve resumable state.
 
 This file is the sole canonical copy of the compact core. Generated instruction surfaces may embed it only inside managed blocks carrying this policy ID, version, core digest, and an explicit source revision. Detailed procedures belong to the focused sources below and must not be copied back into this policy.
 
