@@ -1,3 +1,4 @@
+import { digest } from './orchestration-run-state.ts';
 import type { ProviderLauncher } from './evidence-gated-deliberation.ts';
 import type { PipelineAdapters } from './evidence-gated-orchestrator.ts';
 import type { DurableImprovementCandidate } from './recursive-improvement.ts';
@@ -25,10 +26,22 @@ export function createModelImprovementReview(options: {
       if (!Object.hasOwn(excerpts, id) || !excerpts[id].trim()) throw new Error('Missing improvement review evidence excerpt');
       return [id, excerpts[id]];
     }));
+    for (const { reviewedContractDigest, findings } of input.reuseExtractions) {
+      for (const { destination, proposalPath, evidence: citations } of findings) {
+        const finding = { destination, proposalPath, citations, reviewedContractDigest };
+        const id = `reuse:${digest(finding)}`;
+        const excerpt = JSON.stringify(finding);
+        if (Object.hasOwn(evidence, id) && evidence[id] !== excerpt) {
+          throw new Error('Reuse evidence identifier conflicts with the host snapshot');
+        }
+        evidence[id] = excerpt;
+      }
+    }
+    const refresh = { ...snapshot.refresh, evidenceIds: Object.keys(evidence) };
     const response = await options.provider('codex', [
       'Review the supplied evidence for concrete, in-scope engineering improvements. Do not use tools or write files.',
       'Return only a JSON array of objects with title, summary, evidenceIds, and acceptance. Return [] if none is supported.',
-      'Use only supplied evidence IDs. Describe observable acceptance. The host decides authority, priority, and scope.',
+      'Use only supplied evidence IDs. Treat reuse proposals as candidate evidence. The host decides authority, priority, and scope.',
       JSON.stringify({ evidence, coverage: snapshot.refresh.coverageIds, round: input.round, scope: snapshot.next.prompt }),
     ].join('\n'));
     if (!response.launcher.startsWith('approved:') || !response.sessionId?.trim()) {
@@ -47,6 +60,6 @@ export function createModelImprovementReview(options: {
       const candidate = await options.assess(suggestion, input);
       if (candidate) candidates.push(candidate);
     }
-    return { ...snapshot, candidates };
+    return { ...snapshot, refresh, candidates };
   };
 }

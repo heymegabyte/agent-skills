@@ -18,6 +18,7 @@ import {
   saveImprovementConvergenceState,
   type DurableImprovementCandidate,
 } from "../bin/recursive-improvement.ts";
+import { createModelImprovementReview } from "../bin/model-improvement-review.ts";
 import { createRunState } from "../bin/orchestration-run-state.ts";
 
 const fixture = JSON.parse(readFileSync(new URL("../fixtures/orchestration/improvement-phase/candidates.json", import.meta.url), "utf8")) as {
@@ -122,4 +123,33 @@ describe("persisted post-request improvement phase", () => {
     assert.equal(persisted.resetRoundOffsets.at(-1), 2);
     assert.deepEqual(persisted.reopenings[0].evidenceIds, ["EVIDENCE:BASELINE", "EVIDENCE:LATE"]);
   });
+});
+
+
+it("supplies reuse citations to same-run review while the host retains admission", async () => {
+  const findings = [{ destination: "theme.tools" as const, proposalPath: "openspec/changes/share-helper/proposal.md", evidence: ["abc123:src/helper.ts"] }];
+  const input = { round: 1, contracts: [], executions: [], reuseExtractions: [{ ownerSession: "reviewer", reviewedContractDigest: "contract", findings }] };
+  let proposedEvidence: string[] = [];
+  const review = createModelImprovementReview({
+    async provider(_family, request) {
+      const { evidence } = JSON.parse(request.split("\n").at(-1)!);
+      const [id] = Object.keys(evidence).filter((key) => key.startsWith("reuse:"));
+      assert.ok(id);
+      assert.deepEqual(JSON.parse(evidence[id]), {
+        destination: "theme.tools", proposalPath: findings[0].proposalPath, citations: findings[0].evidence, reviewedContractDigest: "contract",
+      });
+      return { launcher: "approved:test", sessionId: "review", output: JSON.stringify([{ title: "Share helper", summary: "Extract the helper", evidenceIds: [id], acceptance: "Both callers share one implementation" }]) };
+    },
+    async snapshot() {
+      return {
+        next: { prompt: "Review the helper", checkout: "/fixture", changeId: "next", sourceRevision: "base", trustedAuthoritySourceDigest: "authority", requiredEvidence: [], specialists: [], approvedResearchRails: [] },
+        policy: fixture.policy, refresh: { evidenceIds: ["local"], coverageIds: ["reuse"], refreshedAt: fixture.evaluatedAt }, excerpts: { local: "Integration is clean" },
+      };
+    },
+    async assess(suggestion) { proposedEvidence = suggestion.evidenceIds; return undefined; },
+  });
+  const result = await review(input);
+  assert.deepEqual(result.candidates, []);
+  assert.deepEqual(result.refresh.evidenceIds, ["local", ...proposedEvidence]);
+  assert.ok(proposedEvidence[0]?.startsWith("reuse:"));
 });

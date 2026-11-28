@@ -134,3 +134,5 @@
 - [x] Provide the Git host with a shared ownership-evidence reader. The live reuse fixture's line-oriented status reader dropped the first path character, and status alone can miss committed changes. Read NUL-delimited Git output from the original worktree base, include working-tree and untracked paths, and verify that both sides of a rename reach the ownership gate.
 
 - [x] Add an opt-in Git snapshot before acceptance. The live reuse fixture needed a custom host callback to commit worker changes before review. Seal only the previously reported owned changes, run acceptance against that commit, and require the same clean commit at review and integration. Verify with a real Git worktree and use the existing disclosure policy for reviewer excerpts.
+
+- [x] Feed captured reuse findings into the model-backed same-run refresh. The coordinator supplies the findings to the host, but the review adapter currently depends on a second custom mapping from each proposal to an evidence excerpt. Include stable proposal references and cited source paths, retain the host's authority decision, and verify that a proposal can be cited without being automatically admitted.
