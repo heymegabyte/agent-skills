@@ -1,5 +1,5 @@
 import type { PipelineAdapters, VerificationReceipt } from './evidence-gated-orchestrator.ts';
-import type { ProviderLauncher } from './evidence-gated-deliberation.ts';
+import { parseProviderJson, type ProviderLauncher } from './evidence-gated-deliberation.ts';
 import { createHash } from 'node:crypto';
 
 type VerificationInput = Parameters<PipelineAdapters['verify']>[0];
@@ -38,7 +38,7 @@ export function createModelDeliveryVerification(options: {
       if (!response.launcher.startsWith('approved:') || !response.sessionId?.trim()) {
         throw new Error(`Delivery verification requires an approved ${reviewerFamily} session`);
       }
-      const verdict = JSON.parse(response.output);
+      const verdict = parseProviderJson(response.output) as { passed?: unknown; blockers?: unknown } | null;
       if (typeof verdict?.passed !== 'boolean' || !Array.isArray(verdict.blockers)
         || !verdict.blockers.every((item: unknown) => typeof item === 'string' && item.trim())
         || verdict.passed !== (verdict.blockers.length === 0)) {
