@@ -106,13 +106,20 @@ export function renderManagedBlock(canonical: string, metadata: PolicyMetadata):
   return `${BEGIN_PREFIX} id="${metadata.policyId}" version="${metadata.version}" digest="sha256:${metadata.digest}" source-revision="${metadata.sourceRevision}" -->\n${body}\n${END}`;
 }
 
-export function projectManagedPolicy(target: string, canonical: string, sourceRevision: string): Projection {
+export function projectManagedPolicy(target: string, canonical: string, sourceRevision: string, previousCanonical?: string): Projection {
   const metadata = canonicalMetadata(canonical, sourceRevision);
   const bounds = existingBounds(target);
   if (bounds) {
     const installedDigest = digestFromBegin(bounds.begin);
     if (installedDigest && installedDigest !== metadata.digest) {
-      throw new ManagedPolicyError('foreign-managed-digest', `target digest ${installedDigest} differs from canonical ${metadata.digest}`);
+      const priorRevision = /source-revision="([0-9a-f]{40})"/.exec(bounds.begin)?.[1];
+      if (!previousCanonical || !priorRevision || installedDigest !== sha256(previousCanonical)) {
+        throw new ManagedPolicyError('foreign-managed-digest', `target digest ${installedDigest} differs from canonical ${metadata.digest}`);
+      }
+      const prior = checkManagedPolicy(target, previousCanonical, priorRevision);
+      if (prior.metadata.policyId !== metadata.policyId) {
+        throw new ManagedPolicyError('foreign-managed-digest', 'previous policy identity differs from canonical');
+      }
     }
   }
   const block = renderManagedBlock(canonical, metadata);
@@ -152,7 +159,7 @@ type CliOptions = Record<string, string | boolean>;
 function parseArgs(args: string[]): { mode: string; options: CliOptions } {
   const [mode, ...rest] = args;
   if (!['check', 'render', 'install'].includes(mode)) {
-    throw new ManagedPolicyError('invalid-mode', 'usage: manage-policy-blocks.ts <check|render|install> --canonical FILE --target FILE --source-root DIR --expected-revision SHA [--output FILE] [--json]');
+    throw new ManagedPolicyError('invalid-mode', 'usage: manage-policy-blocks.ts <check|render|install> --canonical FILE --target FILE --source-root DIR --expected-revision SHA [--previous-canonical FILE] [--output FILE] [--json]');
   }
   const options: CliOptions = {};
   for (let index = 0; index < rest.length; index += 1) {
@@ -188,9 +195,11 @@ function runCli(args: string[]): number {
     const canonical = readFileSync(canonicalPath, 'utf8');
     const target = readFileSync(targetPath, 'utf8');
     const policySourceRevision = canonicalSourceRevision(canonical);
+    const previousCanonical = typeof options['previous-canonical'] === 'string'
+      ? readFileSync(resolve(options['previous-canonical']), 'utf8') : undefined;
     const projection = mode === 'check'
       ? checkManagedPolicy(target, canonical, policySourceRevision)
-      : projectManagedPolicy(target, canonical, policySourceRevision);
+      : projectManagedPolicy(target, canonical, policySourceRevision, previousCanonical);
     let output: string | null = null;
     if (mode === 'install') {
       output = options['in-place'] === true ? targetPath : resolve(required(options, 'output'));

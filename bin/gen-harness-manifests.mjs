@@ -58,6 +58,8 @@ async function projectPublishInstructions(mode) {
   generator.verifySourceRevision(selectedRoot, expectedRevision);
   const canonicalContent = readFileSync(canonical, 'utf8');
   const policySourceRevision = generator.canonicalSourceRevision(canonicalContent);
+  const previousPath = argumentValue('--previous-canonical');
+  const previousCanonical = previousPath ? readFileSync(resolve(previousPath), 'utf8') : undefined;
   const receipts = [];
   for (const relativeTarget of PUBLISH_INSTRUCTION_TARGETS) {
     const target = join(selectedRoot, relativeTarget);
@@ -68,7 +70,7 @@ async function projectPublishInstructions(mode) {
     const targetContent = readFileSync(target, 'utf8');
     const projection = mode === 'check'
       ? generator.checkManagedPolicy(targetContent, canonicalContent, policySourceRevision)
-      : generator.projectManagedPolicy(targetContent, canonicalContent, policySourceRevision);
+      : generator.projectManagedPolicy(targetContent, canonicalContent, policySourceRevision, previousCanonical);
     if (mode === 'install') writeFileSync(target, projection.content);
     receipts.push({
       target: relativeTarget,

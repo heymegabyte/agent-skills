@@ -115,3 +115,8 @@ This produces a verified prior bundle in an isolated worktree. Promotion to inst
 | `foreign-managed-digest` | The block belongs to another canonical digest | Select the correct source or perform an explicit migration |
 
 Validation and controlled fixtures prove generation mechanics. They do not prove that a provider loaded the policy, that a coordinator delegated with it, or that Paperclip/OpenClaw exposes a native hook. Those stronger claims require the runtime receipts described above.
+
+For a known version upgrade, pass `--previous-canonical /absolute/path/to/prior-policy.md`
+to the projection command. Use the canonical file from the verified prior
+revision. The projector checks the prior digest, policy identity, and entire
+installed block before replacing it.

@@ -122,3 +122,16 @@ test('CLI rejects a source revision mismatch', () => {
   assert.notEqual(run.status, 0);
   assert.equal(JSON.parse(run.stderr).classification, 'source-revision-mismatch');
 });
+
+test('explicit prior policy permits an exact upgrade while preserving surrounding instructions', () => {
+  const next = canonical.replace(/^(policy_version|version): .+$/m, '$1: 99.0.0');
+  assert.notEqual(next, canonical);
+  const prior = projectManagedPolicy('', canonical, revision).block;
+  const target = `before\n${prior}\nafter\n`;
+  assert.throws(() => projectManagedPolicy(target, next, revision), /differs from canonical/);
+  const upgraded = projectManagedPolicy(target, next, revision, canonical);
+  assert.equal(upgraded.content, `before\n${upgraded.block}\nafter\n`);
+  assert.doesNotThrow(() => checkManagedPolicy(upgraded.content, next, revision));
+  const edited = target.replace('\n<!-- EMDASH:POLICY:END', '\nlocal drift\n<!-- EMDASH:POLICY:END');
+  assert.throws(() => projectManagedPolicy(edited, next, revision, canonical), /has drifted/);
+});
