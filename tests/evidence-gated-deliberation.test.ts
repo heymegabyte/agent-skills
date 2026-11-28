@@ -193,6 +193,19 @@ test('provider discovery treats installation without authenticated availability 
   assert.ok(capabilities.every((capability) => capability.evidence.startsWith('provider-capability-snapshot:')));
 });
 
+test('explicit inference unavailability overrides installation and authentication', () => {
+  const [claude, codex, gemini] = discoverProviderSlotCapabilities({
+    claude: { installed: true, authenticated: true },
+    codex: { available: true },
+    gemini: { installed: true, authenticated: true, available: false },
+  }, { gemini: 4 });
+  assert.equal(claude.slots, 1);
+  assert.equal(codex.slots, 1);
+  assert.equal(gemini.available, false);
+  assert.equal(gemini.slots, 0);
+  assert.match(gemini.evidence, /available=false$/);
+});
+
 test('cross-critique preserves dissent and blocks compilation until architecture fixed point', async () => {
   const briefs = (['claude', 'codex', 'gemini'] as ModelFamily[]).map((family) => ({ family, summary: family, recommendations: [], risks: [], decisions: [] }));
   const result = await convergeArchitecture(briefs, async (round) => (['claude', 'codex', 'gemini'] as ModelFamily[]).map((family) => ({

@@ -99,3 +99,7 @@
 - [x] Wire the pre-architecture stage to generate evidence-backed synthesis for independent prompt slices. The supported orchestrator function delivered two live Codex slices and matching digests to its architect assignment callback. See [live architect handoff](evidence/codex-live-architect-handoff.md).
 - [ ] Dispatch independently owned changes across dependency waves. Controlled tests reject split ownership and exercise parallel readiness. The live Codex fixture proved dependent dispatch and integration. Live OpenCode throughput and independent production dispatch remain open. See [worker evidence](evidence/opencode-live-worker-probe.md).
 - [ ] Run dedicated reusable-value extraction concurrently and feed admitted discoveries back into OpenSpec during execution. Controlled tests cover overlap, writes to three isolated roots, and supplemental dispatch. The [live Codex review](evidence/codex-live-reuse-review.md) verified one isolated write. Production capture and same-run supplemental execution remain open.
+
+## Provider availability
+
+- [x] Coordinator owner: honor explicit provider unavailability over installation and authentication. The Antigravity probes initialized sessions but were rejected before inference. Reserve zero conference slots when the host explicitly reports unavailability. Preserve legacy discovery for snapshots without an availability result. Verify the conflicting flags with a regression test.

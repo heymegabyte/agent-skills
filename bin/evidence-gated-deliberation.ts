@@ -419,7 +419,7 @@ export function planConferenceCapabilities(capabilities: ProviderSlotCapability[
 export function discoverProviderSlotCapabilities(snapshot: ProviderCapabilitySnapshot, slotLimits: Partial<Record<ModelFamily, number>> = {}): ProviderSlotCapability[] {
   return (['claude', 'codex', 'gemini'] as ModelFamily[]).map((family) => {
     const observed = snapshot[family];
-    const available = observed?.available === true || (observed?.installed === true && observed?.authenticated === true);
+    const available = observed?.available ?? (observed?.installed === true && observed?.authenticated === true);
     return {
       family,
       available,
