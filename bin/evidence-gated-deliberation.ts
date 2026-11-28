@@ -321,7 +321,11 @@ function seeded(seed: string, value: string) { return parseInt(digest(`${seed}:$
 export function selectConferenceRoster(seed: string, prompt: string, candidates: Specialist[]): ConferenceRoster {
   const words = new Set(prompt.toLowerCase().split(/\W+/).filter(Boolean));
   const relevant = candidates.filter((candidate) => candidate.expertise.some((skill) => [...words].some((word) => skill.toLowerCase().includes(word) || word.includes(skill.toLowerCase()))));
-  const pool = relevant.length ? relevant : candidates.filter((c) => c.id.includes('architect'));
+  const pool = relevant.length ? [...relevant] : candidates.filter(({ architectEligible }) => architectEligible);
+  if (!pool.some(({ family }) => family === 'codex')) {
+    const lead = candidates.find(({ family, architectEligible }) => family === 'codex' && architectEligible);
+    if (lead) pool.push(lead);
+  }
   const base = [...pool].sort((a, b) => seeded(seed, a.id) - seeded(seed, b.id));
   const selected: Specialist[] = [];
   for (const family of ['claude', 'codex', 'gemini'] as ModelFamily[]) {

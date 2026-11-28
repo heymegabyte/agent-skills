@@ -208,3 +208,12 @@ test('cross-critique preserves dissent and blocks compilation until architecture
   assert.equal(blocked.converged, false);
   assert.match(blocked.blocker!, /OpenSpec compilation is blocked/);
 });
+
+test('roster fallback uses architect eligibility and retains an eligible Codex lead', () => {
+  const lead = { id: 'local-reviewer', expertise: ['git'], family: 'codex' as const, architectEligible: true };
+  const specialist = { id: 'documentation-reviewer', expertise: ['markdown'], family: 'claude' as const, architectEligible: false };
+  assert.deepEqual(selectConferenceRoster('fixture', 'Organize folders', [lead]).participants, [lead]);
+  const selected = selectConferenceRoster('fixture', 'Review Markdown', [lead, specialist]).participants;
+  assert.ok(selected.includes(lead));
+  assert.ok(selected.includes(specialist));
+});
