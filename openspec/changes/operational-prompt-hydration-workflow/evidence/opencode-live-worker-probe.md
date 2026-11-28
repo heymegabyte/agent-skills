@@ -54,3 +54,7 @@
 - At `deeedff4`, the frozen-change queue ran two independent changes through the live Codex development launcher, using two approved fixture slots. The measured peak was two overlapping launcher calls.
 - Each worker changed only its distinct owned Markdown file, passed `git diff --check`, and returned an integrated receipt. The host serialized the exact accepted patches onto the disposable Git repository. Both expected edits were committed and the checkout was clean.
 - The fixture demonstrates live parallel scheduling and local integration using a documented premium fallback. It does not establish live OpenCode capacity, remote delivery, or production orchestration.
+
+## Pinned runtime comparison
+
+The host CLI reported OpenCode 1.19.4. The `install.doctor` lock at `b7b84dfd` pinned 2.2.5 for its desktop runtime. A temporary macOS ARM64 copy matched the lock's archive size and SHA-256, and the extracted binary reported 2.2.5. The same broker-backed LiteLLM Flash reply probe still exited 1 with no text response. The installed CLI was left in place. This shows that using the pinned desktop runtime alone did not restore inference in the tested environment.
