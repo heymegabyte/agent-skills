@@ -58,3 +58,9 @@ For automatic research, use `createLocalCodexResearch` from the same module
 and add `approved:local-codex-live-search` to the input's approved research
 rails. The adapter selects evidence from observed native web search events
 and rejects model-selected URLs absent from those events.
+
+Use `createModelImprovementReview` from `bin/model-improvement-review.ts`
+for a live discovery adapter. Supply a refresh snapshot with reviewed evidence
+excerpts and an assessment callback that independently sets scope, scores, and
+authority. The provider proposes evidence-backed work. The host and admission
+evaluator decide which proposals enter supplemental OpenSpec execution.

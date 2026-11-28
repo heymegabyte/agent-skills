@@ -1,0 +1,52 @@
+import type { ProviderLauncher } from './evidence-gated-deliberation.ts';
+import type { PipelineAdapters } from './evidence-gated-orchestrator.ts';
+import type { DurableImprovementCandidate } from './recursive-improvement.ts';
+
+type Refresh = NonNullable<PipelineAdapters['refreshImprovements']>;
+type RefreshInput = Parameters<Refresh>[0];
+type RefreshOutput = Awaited<ReturnType<Refresh>>;
+
+interface ImprovementSuggestion {
+  title: string;
+  summary: string;
+  evidenceIds: string[];
+  acceptance: string;
+}
+
+/** Discover improvements without letting the provider determine their authority or score. */
+export function createModelImprovementReview(options: {
+  provider: ProviderLauncher;
+  snapshot: (input: RefreshInput) => Promise<Omit<RefreshOutput, 'candidates'> & { excerpts: Record<string, string> }>;
+  assess: (suggestion: ImprovementSuggestion, input: RefreshInput) => Promise<DurableImprovementCandidate | undefined>;
+}): Refresh {
+  return async (input) => {
+    const { excerpts, ...snapshot } = await options.snapshot(input);
+    const evidence = Object.fromEntries(snapshot.refresh.evidenceIds.map((id) => {
+      if (!Object.hasOwn(excerpts, id) || !excerpts[id].trim()) throw new Error('Missing improvement review evidence excerpt');
+      return [id, excerpts[id]];
+    }));
+    const response = await options.provider('codex', [
+      'Review the supplied evidence for concrete, in-scope engineering improvements. Do not use tools or write files.',
+      'Return only a JSON array of objects with title, summary, evidenceIds, and acceptance. Return [] if none is supported.',
+      'Use only supplied evidence IDs. Describe observable acceptance. The host decides authority, priority, and scope.',
+      JSON.stringify({ evidence, coverage: snapshot.refresh.coverageIds, round: input.round, scope: snapshot.next.prompt }),
+    ].join('\n'));
+    if (!response.launcher.startsWith('approved:') || !response.sessionId?.trim()) {
+      throw new Error('Improvement review requires an approved provider session');
+    }
+    const suggestions: unknown = JSON.parse(response.output);
+    if (!Array.isArray(suggestions)) throw new Error('Improvement review must return an array');
+    const candidates: DurableImprovementCandidate[] = [];
+    for (const suggestion of suggestions) {
+      if (!suggestion || !['title', 'summary', 'acceptance'].every((key) =>
+        typeof suggestion[key] === 'string' && suggestion[key].trim())
+        || !Array.isArray(suggestion.evidenceIds) || !suggestion.evidenceIds.length
+        || !suggestion.evidenceIds.every((id: unknown) => typeof id === 'string' && Object.hasOwn(evidence, id))) {
+        throw new Error('Improvement suggestion lacks valid scope or evidence');
+      }
+      const candidate = await options.assess(suggestion, input);
+      if (candidate) candidates.push(candidate);
+    }
+    return { ...snapshot, candidates };
+  };
+}
