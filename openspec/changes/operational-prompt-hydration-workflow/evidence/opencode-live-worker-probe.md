@@ -24,3 +24,9 @@
 - On `86d002ae`, the documented direct `deepseek/deepseek-chat` fallback exited with code 4 because the configured broker did not supply its credential. The implementation fixture remained unchanged.
 - The Codex development launcher completed the equivalent documentation fixture in a detached Git worktree. The worker changed only `README.md`, the expected line was present, `git diff --check` passed, and the source checkout remained clean.
 - This establishes live bounded worktree execution on the premium fallback. OpenCode throughput and integration from the live scheduler remain unverified.
+
+## Scheduled fallback integration
+
+- On `47e758ea`, the frozen-change queue dispatched one live Codex worker through the process adapter and recorded the throughput-provider exception. The worker edited only the owned README path. The configured `git diff --check` command exited zero.
+- The initial probe stopped on its staged-patch digest check. A separate reproduction showed that Git's configured prefixes differed between worktree and staged output for the same file content. The repeated fixture used explicit source and destination prefixes for both patch digests.
+- The retry returned an `integrated` receipt. The disposable repository contained the expected README edit in a commit and had a clean working tree. This verifies the live fallback through local scheduling and integration for one controlled change. The OpenCode route and multi-change production integration remain open.
