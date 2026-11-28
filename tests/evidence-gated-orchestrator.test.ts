@@ -576,3 +576,25 @@ test('an authorized but unavailable architect cannot start OpenSpec compilation'
   }, adapters), /Architect provider is unavailable: antigravity/);
   assert.ok(!calls.includes('compile:openspec'));
 });
+
+test('an unavailable architect on an additional change prevents all worker launches', async () => {
+  const { checkout, paths, specialists } = fixture();
+  const calls: string[] = [];
+  const adapters = configured(checkout, paths, calls);
+  const compile = adapters.compileOpenSpec;
+  adapters.compileOpenSpec = async (request) => {
+    const primary = await compile(request);
+    const { schemaVersion: _, receiptDigest: __, ...authority } = request.assignment;
+    const assignment = issueArchitectAssignment({
+      ...authority, changeId: 'follow-up', architectFamily: 'antigravity', architectIdentity: 'antigravity-architect',
+    }, { digest: authority.authoritySourceDigest });
+    return { ...primary, additionalChanges: [{ ...primary, assignment }] };
+  };
+
+  await assert.rejects(() => runEvidenceGatedPipeline({
+    ...input(checkout, specialists),
+    providerCapabilitySnapshot: { codex: { available: true }, antigravity: { available: false } },
+  }, adapters), /Architect provider is unavailable: antigravity/);
+  assert.ok(calls.includes('compile:openspec'));
+  assert.ok(calls.every((call) => !call.startsWith('launch:')));
+});
