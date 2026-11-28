@@ -9,3 +9,9 @@ This verifies Antigravity policy loading. The standalone `gemini` executable rem
 ## Antigravity architect availability
 
 Antigravity listed the Gemini 4 Hydrogen High and Medium models on 2026-11-28. A sandboxed plan-mode connectivity probe with High returned `RESOURCE_EXHAUSTED` (429), and a separate Medium request to partition two documentation outcomes into independently owned OpenSpec changes returned `PERMISSION_DENIED` (403), citing account eligibility in its location. The same planning request with the default model returned the individual quota error (429). Each request emitted a conversation ID and a terminal error with zero tokens and no response. Architect capacity for these attempts is zero. Recheck eligibility or quota before advertising Antigravity as an available architect and use another approved premium provider for current execution.
+
+## Installed instruction and skill audit
+
+The bounded drift manifest now targets the actual home-relative Codex, Claude, and Gemini instruction files. With `--installed-root "$HOME"`, the read-only detector reported all three managed policy blocks in sync against `e1794574`. Without an installed root it reports installed state as unverified.
+
+The separate installed skills checkout behind `~/.agentskills` was at `f5702afc` with ten local modifications. All eight installed lifecycle skills still contained the duplicated orchestration section removed from repository main. At least the operating-system skill and its mirrors overlap with local edits. Synchronizing those skills requires reconciling the local work in that checkout. The managed instruction result applies to the three global policy blocks only.

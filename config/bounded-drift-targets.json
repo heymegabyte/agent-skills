@@ -25,7 +25,21 @@
     {
       "id": "installed-codex",
       "class": "installed",
-      "targetPath": "CODEX.md",
+      "targetPath": ".codex/AGENTS.md",
+      "mode": "managed-block",
+      "optional": true
+    },
+    {
+      "id": "installed-claude",
+      "class": "installed",
+      "targetPath": ".claude/CLAUDE.md",
+      "mode": "managed-block",
+      "optional": true
+    },
+    {
+      "id": "installed-gemini",
+      "class": "installed",
+      "targetPath": ".gemini/GEMINI.md",
       "mode": "managed-block",
       "optional": true
     },
