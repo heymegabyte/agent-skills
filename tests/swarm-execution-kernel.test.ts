@@ -591,7 +591,7 @@ test('OpenCode worker profiles use private per-launch directories and clean them
   const script = [
     'const fs = require("node:fs");',
     'const file = process.env.OPENCODE_CONFIG;',
-    'console.log(JSON.stringify({ file, permissions: fs.statSync(file).mode & 511, config: JSON.parse(fs.readFileSync(file, "utf8")), data: process.env.XDG_DATA_HOME }));',
+    'console.log(JSON.stringify({ file, permissions: fs.statSync(file).mode & 511, config: JSON.parse(fs.readFileSync(file, "utf8")), data: process.env.XDG_DATA_HOME, projectConfigDisabled: process.env.OPENCODE_DISABLE_PROJECT_CONFIG }));',
   ].join(' ');
   const adapter = createApprovedProcessAdapter({
     checkout, safeWorktreeRoots: [checkout], allowedAcceptanceExecutables: [],
@@ -614,11 +614,14 @@ test('OpenCode worker profiles use private per-launch directories and clean them
     return JSON.parse(receipt.stdout);
   });
   assert.notEqual(profiles[0].data, profiles[1].data);
-  for (const { file, permissions, config } of profiles) {
+  for (const { file, permissions, config, projectConfigDisabled } of profiles) {
     assert.equal(permissions, 0o600);
+    assert.equal(projectConfigDisabled, '1');
+    assert.deepEqual(config.permission.edit, { '*': 'deny', 'src/a.ts': 'allow', 'src/a.ts/*': 'allow' });
     assert.equal(config.provider.litellm.options.apiKey, '{env:LITELLM_API_KEY}');
     assert.equal(existsSync(file), false);
   }
+  await assert.rejects(() => adapter.launch('opencode-deepseek', { ...node, ownedPaths: ['src/*'] }, 'pattern', signal), /literal repository-relative/);
 });
 
 test('process adapter rejects hostile acceptance arguments beyond executable allowlisting', async () => {

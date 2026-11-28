@@ -276,13 +276,23 @@ function runProcess(executable: string, args: string[], cwd: string, env: NodeJS
 }
 
 async function runIsolatedOpenCode(
+  ownedPaths: readonly string[],
   launch: (environment: NodeJS.ProcessEnv) => Promise<ProcessReceipt>,
 ): Promise<ProcessReceipt> {
+  const editRules: Record<string, 'deny' | 'allow'> = { '*': 'deny' };
+  for (const path of ownedPaths) {
+    if (/[?*~{}\[\]\\]/.test(path) || (path === '$HOME' || path.startsWith('$HOME/'))
+      || path.split('/').some((segment) => !segment || segment === '.' || segment === '..')) {
+      throw new Error('OpenCode edit permissions require literal repository-relative owned paths');
+    }
+    editRules[path] = 'allow';
+    editRules[`${path}/*`] = 'allow';
+  }
   const directory = await mkdtemp(join(tmpdir(), 'opencode-worker-'));
   try {
     const config = join(directory, 'opencode.json');
     await writeFile(config, JSON.stringify({
-      permission: { '*': 'deny', read: 'allow', edit: 'allow' },
+      permission: { '*': 'deny', read: 'allow', edit: editRules },
       provider: {
         litellm: {
           npm: '@ai-sdk/openai-compatible',
@@ -295,6 +305,7 @@ async function runIsolatedOpenCode(
     return await launch({
       OPENCODE_CONFIG: config,
       OPENCODE_CONFIG_DIR: directory,
+      OPENCODE_DISABLE_PROJECT_CONFIG: '1',
       XDG_CONFIG_HOME: join(directory, 'config'),
       XDG_DATA_HOME: join(directory, 'data'),
       XDG_STATE_HOME: join(directory, 'state'),
@@ -377,7 +388,7 @@ export function createApprovedProcessAdapter(options: ProcessAdapterOptions): Sc
         ...runtimeEnvironment,
         SWARM_ALLOWED_EGRESS_HOSTS: (node.allowedEgressHosts ?? []).join(','),
       }, signal, options.processTimeoutMs ?? 30 * 60_000);
-      return launcher.runtimeProfile === 'isolated-opencode' ? runIsolatedOpenCode(launch) : launch({});
+      return launcher.runtimeProfile === 'isolated-opencode' ? runIsolatedOpenCode(node.ownedPaths, launch) : launch({});
     },
     ...(options.approveReusePath && {
       async readAcceptedReuseEvidence(node: ExecutionNode, receipt: Readonly<NodeExecutionReceipt>, signal: AbortSignal) {
