@@ -36,6 +36,7 @@ import {
 } from './evidence-gated-deliberation.ts';
 import {
   compileAndFreezeContract,
+  verifyArchitectAssignment,
   executeFrozenChanges,
   executeFrozenContract,
   type ArchitectAssignmentReceipt,
@@ -376,6 +377,7 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
     roster,
     fixedPointDigest,
   });
+  verifyArchitectAssignment(assignment, input.changeId, input.trustedAuthoritySourceDigest);
   state = advance(state, 'architect-assignment', { assignment, evidenceDigest });
 
   const conferenceExecution: OpenSpecCompilerInput['conferenceExecution'] = {
@@ -391,7 +393,7 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
     changeId: input.changeId, sourceRevision: input.sourceRevision, evaluatedAt: new Date().toISOString(),
   });
   const admittedImprovements = improvementPhase && acceptedImprovementRequirements(improvementPhase);
-  const compiled = await configured.compileOpenSpec({ checkout: input.checkout, changeId: input.changeId, prompt: input.prompt, hydratedBrief: structuredClone(hydratedBrief), admittedImprovements: structuredClone(admittedImprovements), evidenceDigest, fixedPointDigest, assignment, conference: fixedPoint, conferenceResolution, conferenceExecution });
+  const compiled = await configured.compileOpenSpec({ checkout: input.checkout, changeId: input.changeId, prompt: input.prompt, hydratedBrief: structuredClone(hydratedBrief), admittedImprovements: structuredClone(admittedImprovements), evidenceDigest, fixedPointDigest, assignment: structuredClone(assignment), conference: fixedPoint, conferenceResolution, conferenceExecution });
   const plans = [
     { artifacts: compiled.artifacts, nodes: compiled.nodes, dependsOn: compiled.dependsOn, assignment },
     ...(compiled.additionalChanges ?? []),
@@ -420,7 +422,6 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
     });
     return { contract, dependsOn: change.dependsOn ?? [] };
   });
-  if (changes[0].contract.changeId !== input.changeId) throw new Error('Architect assignment is not bound to the requested change');
   const contracts = changes.map(({ contract }) => contract);
   const [contract] = contracts;
   for (const requirement of admittedImprovements ?? []) {

@@ -498,3 +498,15 @@ test('configured proposal capture invokes a dedicated provider and records cited
   const repeated = await runEvidenceGatedPipeline(input(checkout, specialists), adapters);
   assert.deepEqual(repeated.reuseExtraction?.findings, result.reuseExtraction?.findings);
 });
+
+test('a forged architect assignment fails before OpenSpec compilation', async () => {
+  const { checkout, paths, specialists } = fixture();
+  const calls: string[] = [];
+  const adapters = configured(checkout, paths, calls);
+  const assign = adapters.assignArchitect;
+  adapters.assignArchitect = async (request) => ({
+    ...await assign(request), architectIdentity: 'unverified-architect',
+  });
+  await assert.rejects(() => runEvidenceGatedPipeline(input(checkout, specialists), adapters), /Architect assignment digest mismatch/);
+  assert.ok(!calls.includes('compile:openspec'));
+});
