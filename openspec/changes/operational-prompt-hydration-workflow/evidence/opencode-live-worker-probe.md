@@ -66,3 +66,7 @@ A fresh OpenCode 1.19.4 Flash reply probe emitted `UnknownError` with a generic 
 In separate authenticated requests, the LiteLLM `/v1/models` and `/v1/chat/completions` endpoints both returned HTTP 403 with plain-text responses and Ray IDs `a618ca2d1ea0fbc3-EWR` and `a618ca2e7b61fbc3-EWR`, respectively. These IDs identify the direct requests only. The earlier Browser Integrity Check attribution was for a different, correlated Ray. Live OpenCode capacity remains unverified.
 
 Cloudflare Security Events matched both direct-request Rays at `2026-11-28T10:46:36Z`. Each event had action `block` and source and rule ID `bic`, on the expected hostname and path. This confirms Browser Integrity Check blocked both direct probes. OpenCode's own error still lacks a matching edge event.
+
+## Gateway authentication configuration
+
+Read-only Cloudflare checks showed Browser Integrity Check enabled on the zone. Neither of the two enabled configuration rules sets BIC. Cloudflare Access has distinct applications for the LiteLLM hostname, admin UI, and API. The API application has a bypass decision and is described as virtual-key gated. The hostname application lists identity and machine policies, and the admin UI has its own allow policy. The API application metadata indicates that its credential check is expected at LiteLLM. Actual rejection of unauthenticated API requests at the gateway origin remains unverified because the correlated requests stopped at BIC.
