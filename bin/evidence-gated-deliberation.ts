@@ -248,7 +248,7 @@ export function evaluateSaturation(inventory: EstateInventory, research: Researc
 
 export function parseProviderJson(output: string): unknown {
   const trimmed = output.trim();
-  const fenced = /^```json\r?\n([^]*?)\r?\n```$/i.exec(trimmed);
+  const fenced = /^```(?:json)?[ \t]*\r?\n([^]*?)\r?\n```$/i.exec(trimmed);
   return JSON.parse(fenced ? fenced[1] : trimmed);
 }
 

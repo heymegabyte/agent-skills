@@ -796,7 +796,7 @@ test('model delivery verification records both reviewer sessions and blocks a ne
         const blockers = block && family === 'claude' ? ['Missing behavior'] : [];
         return {
           launcher: `approved:${family}`, sessionId: `session-${family}`,
-          output: '```json\n' + JSON.stringify({ passed: !blockers.length, blockers }) + '\n```',
+          output: (family === 'claude' ? '```\n' : '```json\n') + JSON.stringify({ passed: !blockers.length, blockers }) + '\n```',
         };
       },
       async evidence() { return { 'src/app.ts': 'export {};' }; },
