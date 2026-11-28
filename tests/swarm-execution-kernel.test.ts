@@ -668,6 +668,10 @@ test('whole-change queue validates each frozen contract and follows inter-change
   assert.equal(scheduler.calls.length, 0);
   const receipts = await executeFrozenChanges(changes, scheduler);
   assert.ok(receipts.every(({ status }) => status === 'integrated'));
+  assert.deepEqual(receipts.map(({ integration }) => integration), [
+    { baseRevision: contracts[0].frozenBaseRevision, sourceDigest: 'after-bounded', integratedRevision: 'revision-bounded' },
+    { baseRevision: 'revision-bounded', sourceDigest: 'after-integrate', integratedRevision: 'revision-integrate' },
+  ]);
   assert.ok(scheduler.calls.indexOf('integrate:bounded') < scheduler.calls.indexOf('launch:codex:integrate'));
   const missingRevision = adapter({ async integrate(_, sourceDigest) { return { sourceDigest }; } });
   const missingReceipts = await executeFrozenChanges(changes, missingRevision);

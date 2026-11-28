@@ -90,6 +90,7 @@ export interface NodeExecutionReceipt {
   launcher?: ProcessReceipt;
   acceptance: ProcessReceipt[];
   review?: IndependentReviewReceipt;
+  integration?: { baseRevision: string; sourceDigest: string; integratedRevision?: string };
   failure?: string;
   recoveryAction?: string;
 }
@@ -609,16 +610,18 @@ async function executeNodes(
             throw new Error('Independent review did not approve the accepted source');
           }
         }
+        // Dependent worktrees start at a verified descendant of the original base.
+        const integrationBase = prerequisiteRevisions ? created.sourceDigest : frozenBaseRevision;
         const integration = await withIntegrationLock(async () => {
           controller.signal.throwIfAborted();
           const sourceImmediatelyBeforeMerge = await adapter.sourceDigest(node);
           if (sourceImmediatelyBeforeMerge !== receipt.sourceDigestAfter) throw new Error('Accepted source changed before integration');
-          // Dependent worktrees start at a verified descendant of the original base.
-          const integrationBase = prerequisiteRevisions ? created.sourceDigest : frozenBaseRevision;
           return adapter.integrate(node, receipt.sourceDigestAfter!, integrationBase);
         });
         if (integration.sourceDigest !== receipt.sourceDigestAfter) throw new Error('Integrated source differs from accepted source');
-        if (integration.integratedRevision?.trim()) integratedRevisions.set(node.id, integration.integratedRevision);
+        const integratedRevision = integration.integratedRevision?.trim() || undefined;
+        if (integratedRevision) integratedRevisions.set(node.id, integratedRevision);
+        receipt.integration = { baseRevision: integrationBase, sourceDigest: integration.sourceDigest, integratedRevision };
         receipt.status = 'integrated'; integrated.add(node.id); terminal = receipt;
       } catch (error) {
         receipt.status = 'failed'; receipt.failure = error instanceof Error ? error.message : String(error);
