@@ -1,19 +1,7 @@
 #!/usr/bin/env node
-/**
- * Multi-Swarm Parallel Orchestrator (Claude + Codex + Gemini + OpenCode DeepSeek).
- *
- * Implements the Top 15 parallel swarm orchestration strategies:
- * - Topological DAG wave compiler from OpenSpec task-graph.json
- * - Disjoint file-ownership verification across parallel worktrees
- * - Deterministic per-worktree port leasing (4100 + workerIndex * 10)
- * - Automatic 80%+ throughput-safe offload to OpenCode (DeepSeek via LiteLLM / opencode-deepseek.sh)
- * - Heterogeneous Tri-Frontier ensemble scheduling (Claude + Codex + Gemini)
- * - Speculative dual-harness racing on critical-path bottleneck nodes
- * - Parallel Cloudflare Browser Run (@cloudflare/playwright) E2E & 100% unit test gate
- */
+// Advisory dependency waves for prompt hydration. Execution is owned by the evidence-gated coordinator.
 import { conveneScrumQuorum, type DagTaskNode, type SwarmHarness } from './scrum-deliberation-quorum.ts';
-import { resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { isCliEntrypoint } from './cli-entrypoint.ts';
 
 export interface SwarmWave {
   waveIndex: number;
@@ -21,19 +9,15 @@ export interface SwarmWave {
     taskId: string;
     title: string;
     harness: SwarmHarness;
-    launcherCommand: string;
     worktreeSlot: string;
     portLease: number;
     ownedFiles: string[];
-    speculativeChallenger?: {
-      harness: SwarmHarness;
-      worktreeSlot: string;
-      portLease: number;
-    };
   }>;
 }
 
 export interface MultiSwarmExecutionManifest {
+  planningOnly: true;
+  executionEntrypoint: string;
   prompt: string;
   scrumMeetingId: string;
   top15StrategiesEnabled: string[];
@@ -60,10 +44,10 @@ export const TOP_15_SWARM_STRATEGIES: string[] = [
   '3. Dynamic Right-Sized SCRUM Deliberation Quorum (Minimum Required Specialists)',
   '4. Heterogeneous Tri-Frontier Cognitive Division (Claude + Codex + Gemini)',
   '5. Contract-First OpenSpec DAG Compiler (Locked Zod/Hono/OpenAPI Schemas)',
-  '6. Automatic 80%+ OpenCode (DeepSeek via LiteLLM 4-Key Pool) Swarm Offload Engine',
+  '6. OpenCode with DeepSeek via LiteLLM for suitable bounded changes',
   '7. Pre-Warmed Ephemeral Git Worktree Pool with Zero-Copy Symlink Hydration',
   '8. Deterministic Per-Worktree Port & Local D1/Miniflare Resource Leasing',
-  '9. Speculative Dual-Harness Racing on Critical-Path Bottleneck Nodes',
+  '9. Independent review for critical-path changes',
   '10. Mid-Task Altitude Downgrade (Frontier Contract Lock -> OpenCode DeepSeek Volume Finish)',
   '11. 28-Library @theme.tools/* Thin-Shell Extraction & Consumer Convergence Swarm',
   '12. Parallel Cloudflare Browser Run (@cloudflare/playwright) 6-Breakpoint x 16-State E2E Swarm',
@@ -71,19 +55,6 @@ export const TOP_15_SWARM_STRATEGIES: string[] = [
   '14. Continuous Parallel Context, Inline Comment & Documentation Enrichment Swarm',
   '15. Autonomous Production Finish Line (main Commit + CF Bindings + Domain SSL + CDN Purge + Triad Sync)',
 ];
-
-function buildLauncherCommand(task: DagTaskNode): string {
-  if (task.assignedHarness === 'opencode-deepseek') {
-    return `~/.agentskills/bin/opencode-deepseek.sh run --model litellm/deepseek-v4-pro --worktree ${task.worktreeSlot} --port ${task.portLease} --task "${task.id}"`;
-  }
-  if (task.assignedHarness === 'claude') {
-    return `~/.agentskills/bin/with-subscription-cli.sh claude --worktree ${task.worktreeSlot} -p "Execute OpenSpec task ${task.id}: ${task.title}"`;
-  }
-  if (task.assignedHarness === 'codex') {
-    return `~/.agentskills/bin/with-subscription-cli.sh codex exec --cd .worktrees/${task.worktreeSlot} "Execute OpenSpec task ${task.id}: ${task.title}"`;
-  }
-  return `gemini -p "Execute OpenSpec task ${task.id} in .worktrees/${task.worktreeSlot}: ${task.title}"`;
-}
 
 export function compileSwarmWaves(tasks: DagTaskNode[]): SwarmWave[] {
   const completed = new Set<string>();
@@ -101,19 +72,9 @@ export function compileSwarmWaves(tasks: DagTaskNode[]): SwarmWave[] {
       taskId: task.id,
       title: task.title,
       harness: task.assignedHarness,
-      launcherCommand: buildLauncherCommand(task),
       worktreeSlot: task.worktreeSlot,
       portLease: task.portLease,
       ownedFiles: task.ownedFiles,
-      ...(waveIndex === 1 && task.classification === 'frontier-required'
-        ? {
-            speculativeChallenger: {
-              harness: 'codex' as SwarmHarness,
-              worktreeSlot: `${task.worktreeSlot}-challenger`,
-              portLease: task.portLease + 5,
-            },
-          }
-        : {}),
     }));
 
     waves.push({ waveIndex, parallelWorkers });
@@ -132,6 +93,8 @@ export function planMultiSwarmExecution(prompt: string, missingSurfaces: string[
   const scrum = conveneScrumQuorum(prompt, missingSurfaces);
   const waves = compileSwarmWaves(scrum.dagTasks);
   return {
+    planningOnly: true,
+    executionEntrypoint: 'bin/evidence-gated-orchestrator.ts',
     prompt,
     scrumMeetingId: scrum.meetingId,
     top15StrategiesEnabled: TOP_15_SWARM_STRATEGIES,
@@ -153,7 +116,7 @@ export function planMultiSwarmExecution(prompt: string, missingSurfaces: string[
   };
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isCliEntrypoint(import.meta.url)) {
   const prompt = process.argv.slice(2).join(' ') || 'Build full SaaS feature with plugin catalog, settings, and Cloudflare Browser Run E2E';
   console.log(JSON.stringify(planMultiSwarmExecution(prompt), null, 2));
 }

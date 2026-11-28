@@ -1,3 +1,4 @@
+import { planMultiSwarmExecution } from '../bin/multi-swarm-orchestrator.ts';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -187,6 +188,11 @@ test('product gap audit, SCRUM deliberation quorum, and 15-strategy multi-swarm 
   assert.ok(hydrated.productAudit.categoricalAspects.length >= 5);
   assert.ok(hydrated.scrumQuorum.selectedAgents.length >= 4 && hydrated.scrumQuorum.selectedAgents.length <= 7);
   assert.ok(hydrated.scrumQuorum.excludedAgentCount >= 21);
+  const advisory = planMultiSwarmExecution('Add a settings panel');
+  assert.equal(advisory.planningOnly, true);
+  assert.equal(advisory.executionEntrypoint, 'bin/evidence-gated-orchestrator.ts');
+  assert.ok(advisory.waves.flatMap(({ parallelWorkers }) => parallelWorkers)
+    .every((worker) => !('launcherCommand' in worker) && !('speculativeChallenger' in worker)));
   assert.equal(hydrated.swarmExecutionPlan.top15ActiveStrategies.length, 15);
   assert.equal(hydrated.swarmExecutionPlan.opencodeDeepseekOffload.targetOffloadRatio, 0);
   assert.equal(hydrated.swarmExecutionPlan.opencodeDeepseekOffload.enabled, false);
