@@ -111,7 +111,7 @@ test('hostile graphs fail before launch', () => {
   assert.throws(() => validateTaskGraph(collision), /ownership collision/);
 });
 
-test('local development worktree starts at the frozen commit and preserves local edits', () => {
+test('local development worktree starts at the frozen commit and preserves local edits', async () => {
   const root = mkdtempSync(join(tmpdir(), 'development-worktree-test-'));
   const checkout = join(root, 'source');
   mkdirSync(checkout);
@@ -147,6 +147,21 @@ test('local development worktree starts at the frozen commit and preserves local
     assert.equal(dependent.sourceDigest, second);
     assert.equal(readFileSync(join(dependent.directory, 'fixture.txt'), 'utf8'), 'concurrent local edits');
     assert.equal(readFileSync(join(dependent.directory, 'second.txt'), 'utf8'), 'second prerequisite');
+
+    const { nodes } = fixture();
+    let selected = created;
+    const processAdapter = createApprovedProcessAdapter({
+      checkout, safeWorktreeRoots: [root], launchers: {}, allowedAcceptanceExecutables: [],
+      resolveSecretReference: () => undefined,
+      async createWorktree() { return selected; },
+      async listChangedFiles() { return []; },
+      async sourceDigest() { return selected.sourceDigest; },
+      async integrate(_, __, sourceDigest) { return { sourceDigest }; },
+      async preserveForRecovery() {},
+    });
+    await assert.rejects(() => processAdapter.createWorktree(nodes[0], base, { first, second }), /does not contain required revision/);
+    selected = dependent;
+    assert.equal((await processAdapter.createWorktree(nodes[0], base, { first, second })).sourceDigest, second);
 
     git(checkout, 'switch', '--detach', base);
     writeFileSync(source, 'divergent source');

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { createHash, randomUUID } from 'node:crypto';
-import { spawn } from 'node:child_process';
+import { execFileSync, spawn } from 'node:child_process';
 import { existsSync, readFileSync, realpathSync } from 'node:fs';
 import { resolve, relative, sep } from 'node:path';
 
@@ -263,6 +263,9 @@ function runProcess(executable: string, args: string[], cwd: string, env: NodeJS
  */
 export function createApprovedProcessAdapter(options: ProcessAdapterOptions): SchedulerAdapter {
   const directories = new Map<string, string>();
+  const verifiedHeads = new Map<string, string>();
+  const git = (directory: string, ...args: string[]) =>
+    execFileSync('git', ['-C', directory, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
   const directoryFor = (node: ExecutionNode): string => {
     const directory = directories.get(node.id);
     if (!directory) throw new Error(`Worktree ${node.worktree} was not created`);
@@ -283,6 +286,23 @@ export function createApprovedProcessAdapter(options: ProcessAdapterOptions): Sc
     async createWorktree(node, frozenBaseRevision, prerequisiteRevisions) {
       const created = await options.createWorktree(node, frozenBaseRevision, prerequisiteRevisions);
       const directory = assertSafeWorktree(created.directory, options.safeWorktreeRoots);
+      directories.delete(node.id);
+      verifiedHeads.delete(node.id);
+      if (prerequisiteRevisions && Object.keys(prerequisiteRevisions).length) {
+        const head = git(directory, 'rev-parse', '--verify', 'HEAD');
+        for (const revision of [frozenBaseRevision, ...Object.values(prerequisiteRevisions)]) {
+          if (!revision || !/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/.test(revision)) {
+            throw new Error('Dependent worktree requires full Git commit identities');
+          }
+          try {
+            git(directory, 'merge-base', '--is-ancestor', revision, head);
+          } catch {
+            throw new Error(`Dependent worktree HEAD does not contain required revision ${revision}`);
+          }
+        }
+        if (created.sourceDigest !== head) throw new Error('Dependent worktree source receipt does not match Git HEAD');
+        verifiedHeads.set(node.id, head);
+      }
       directories.set(node.id, directory);
       return { sourceDigest: created.sourceDigest };
     },
@@ -290,6 +310,10 @@ export function createApprovedProcessAdapter(options: ProcessAdapterOptions): Sc
       const launcher = options.launchers[provider];
       if (!launcher?.approved) throw new Error(`Launcher ${provider} was not approved`);
       const directory = directoryFor(node);
+      const verifiedHead = verifiedHeads.get(node.id);
+      if (verifiedHead && git(directory, 'rev-parse', '--verify', 'HEAD') !== verifiedHead) {
+        throw new Error('Dependent worktree HEAD changed before launch');
+      }
       const secretEnv = Object.fromEntries((node.secretReferences ?? []).map((reference, index) => [`BROKERED_SECRET_REF_${index}`, reference]));
       const taskArgs = launcher.taskArgs?.(node, correlationId, directory)
         ?? ['--task-id', node.id, '--correlation-id', correlationId, '--worktree', directory];
