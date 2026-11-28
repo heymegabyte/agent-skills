@@ -36,13 +36,13 @@ test('canonical lifecycle skills consume Prompt Hydration artifacts without copi
   }
 });
 
-test('narrow repair routing stays on the smallest lifecycle set', () => {
+test('narrow repair routing stays on the smallest lifecycle set', { timeout: 20_000 }, () => {
   const selected = route('Fix the mega menu title changing on hover');
   for (const required of ['01-operating-system', '04-preference-and-memory', '07-quality-and-verification']) assert.ok(selected.includes(required));
   for (const excluded of ['02-goal-and-brief', '05-architecture-and-stack', '06-build-and-slice-loop', '08-deploy-and-runtime-verification', '14-independent-idea-engine']) assert.ok(!selected.includes(excluded), `narrow repair unexpectedly loaded ${excluded}`);
 });
 
-test('architecture and improvement prompts add only their coherent lifecycle specialization', () => {
+test('architecture and improvement prompts add only their coherent lifecycle specialization', { timeout: 35_000 }, () => {
   const architecture = route('Architect the provider runtime');
   assert.ok(architecture.includes('05-architecture-and-stack'));
   for (const excluded of ['02-goal-and-brief', '06-build-and-slice-loop', '08-deploy-and-runtime-verification', '14-independent-idea-engine']) assert.ok(!architecture.includes(excluded), `architecture prompt unexpectedly loaded ${excluded}`);
