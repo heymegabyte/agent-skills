@@ -115,6 +115,8 @@ function findAgentFiles(rootDir: string): string[] {
     .sort();
 }
 
+const WHOLE_CHANGE_DISPATCH = '- **Whole-change dispatch**. Apply `rules/openspec-change-ownership.md` and `rules/agent-provider-policy.md`. Assign each OpenSpec change one owner through verification. Route suitable bounded changes to OpenCode with DeepSeek through LiteLLM.';
+
 function buildSkillSection(skillDirName: string): string {
   const specific =
     DOMAIN_GUIDANCE[skillDirName] ||
@@ -125,7 +127,7 @@ function buildSkillSection(skillDirName: string): string {
     SECTION_HEADING,
     '',
     `- **Domain Swarm Directive**: ${specific}`,
-    '- **Massive OpenCode (DeepSeek) Offload**: Whenever a task slice is throughput-safe (bounded implementation, plugin catalog shards, 100% unit test generation, Playwright E2E specs, migrations, or documentation), offload it to parallel **`opencode` swarms powered by DeepSeek** (`~/.agentskills/bin/opencode-deepseek.sh` via the LiteLLM 4-key pool `https://llm.megabyte.space/v1`) rather than consuming premium `claude`, `codex`, or `gemini` client quota.',
+    WHOLE_CHANGE_DISPATCH,
     '- **Architecture and verification**: Route material decisions through `rules/evidence-gated-autonomous-orchestration.md`. Its conference and risk gates govern provider selection and independence.',
     TRIAD_BULLET,
     DISPATCH_DIRECTIVE,
@@ -134,15 +136,14 @@ function buildSkillSection(skillDirName: string): string {
   ].join('\n');
 }
 
-function buildAgentSection(agentFileName: string): string {
-  const agentName = agentFileName.replace(/\.md$/, '');
+function buildAgentSection(): string {
   return [
     '',
     '---',
     '',
     AGENT_SECTION_HEADING,
     '',
-    `- **Massive Parallel Swarm Execution (\`${agentName}\`)**: Participate in right-sized collaborative SCRUM deliberation quorums (\`bin/scrum-deliberation-quorum.ts\`) only when your domain is active, and offload all throughput-safe implementation, plugin catalog shards, 100% unit tests, parallel Cloudflare Browser Run (\`@cloudflare/playwright\`) E2E suites, migrations, and documentation to parallel **\`opencode\` (DeepSeek)** worktree swarms using approved host adapters (\`bin/evidence-gated-orchestrator.ts\`).`,
+    WHOLE_CHANGE_DISPATCH,
     '- **End-of-Round Parallel Triad Meaning & Preference Extraction (`bin/triad-end-of-turn-sync.ts`)**: In parallel with Phase 4 Debrief & Verification at the end of every prompt round, extract any possible meaning, operator preference, architectural insight, reusable site component, or system config from the current agent window and store it concurrently into:',
     '  1. **`heymegabyte/agent-skills` (AI Skills, Rules & Agent Master Prompts)** — updated under the **Minimum-Prompt Ecosystem Completeness Assumption**: always author and refine skills assuming they *should have already been written* so that the operator writes **as few prompts as possible (ideally one)** to finish **as complete a product (or entire multi-repo ecosystem) as possible** by automatically expanding scope and executing via massive parallel agent swarms (`Claude` + `Codex` + `Gemini` + 80%+ `OpenCode` DeepSeek offload).',
     '  2. **`heymegabyte/theme.tools` (Site & Application Code)** — extracting reusable UI components (16 visual states, `0.333s` OKLCH transitions), themes, calculators, workflows, validators, hooks, and plugin adapters into the 28 canonical `@theme.tools/*` libraries so consumer repositories remain thin shells.',
@@ -184,7 +185,7 @@ export function enforceAcrossRoot(rootDir: string): {
   for (const agentPath of findAgentFiles(rootDir)) {
     const content = readFileSync(agentPath, 'utf8');
     if (!content.includes(AGENT_SECTION_HEADING)) {
-      const nextContent = `${content.replace(/\s+$/, '')}\n${buildAgentSection(basename(agentPath))}`;
+      const nextContent = `${content.replace(/\s+$/, '')}\n${buildAgentSection()}`;
       writeFileSync(agentPath, nextContent, 'utf8');
       agentsUpdated += 1;
     } else {
