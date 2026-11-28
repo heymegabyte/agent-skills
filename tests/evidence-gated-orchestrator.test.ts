@@ -96,7 +96,26 @@ function input(checkout: string, specialists: Specialist[]) {
 
 test('composition root executes the receipt-gated production sequence through verification', async () => {
   const { checkout, paths, specialists } = fixture(); const calls: string[] = [];
-  const result = await runEvidenceGatedPipeline(input(checkout, specialists), configured(checkout, paths, calls));
+  const adapters = configured(checkout, paths, calls);
+  const { assignArchitect, compileOpenSpec } = adapters;
+  let architectEvidenceDigest: string | undefined;
+  adapters.assignArchitect = (request) => {
+    assert.equal(request.hydratedBrief.evidence.intake.prompt, request.prompt);
+    assert.equal(request.hydratedBrief.evidence.research.length, 2);
+    assert.equal(request.hydratedBrief.synthesis.briefs.length, 3);
+    assert.equal(request.hydratedBrief.synthesis.receipts.length, 3);
+    architectEvidenceDigest = request.evidenceDigest;
+    request.hydratedBrief.synthesis.briefs.length = 0;
+    return assignArchitect(request);
+  };
+  adapters.compileOpenSpec = (request) => {
+    assert.equal(request.hydratedBrief.synthesis.briefs.length, 3);
+    assert.equal(request.evidenceDigest, architectEvidenceDigest);
+    assert.equal(createHash('sha256').update(JSON.stringify(request.hydratedBrief)).digest('hex'), request.evidenceDigest);
+    return compileOpenSpec(request);
+  };
+  const result = await runEvidenceGatedPipeline(input(checkout, specialists), adapters);
+  assert.equal(result.contract.evidenceDigest, architectEvidenceDigest);
   assert.equal(result.status, 'complete');
   assert.equal(result.state.phase, 'complete');
   assert.equal(result.state.receipts.length, 13);

@@ -46,11 +46,22 @@ import { createRunState, transitionRun, type RunState } from './orchestration-ru
 
 const digest = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 
+type HydratedArchitectBrief = {
+  evidence: {
+    intake: { prompt: string; sourceRevision: string };
+    inventory: ReturnType<typeof inventoryRepository>;
+    research: Awaited<ReturnType<typeof executeResearch>>;
+    saturation: ReturnType<typeof evaluateSaturation>;
+  };
+  synthesis: Awaited<ReturnType<typeof invokeIndependentBriefs>>;
+};
+
 export interface OpenSpecCompilerInput {
   checkout: string;
   changeId: string;
   prompt: string;
   evidenceDigest: string;
+  hydratedBrief: HydratedArchitectBrief;
   fixedPointDigest: string;
   assignment: ArchitectAssignmentReceipt;
   conference: Awaited<ReturnType<typeof convergeArchitecture>>;
@@ -61,7 +72,7 @@ export interface OpenSpecCompilerInput {
 export interface PipelineAdapters {
   research: ResearchRail;
   provider: ProviderLauncher;
-  assignArchitect: (input: { changeId: string; prompt: string; roster: ReturnType<typeof selectConferenceRoster>; fixedPointDigest: string }) => Promise<ArchitectAssignmentReceipt>;
+  assignArchitect: (input: { changeId: string; prompt: string; hydratedBrief: HydratedArchitectBrief; evidenceDigest: string; roster: ReturnType<typeof selectConferenceRoster>; fixedPointDigest: string }) => Promise<ArchitectAssignmentReceipt>;
   compileOpenSpec: (input: OpenSpecCompilerInput) => Promise<{ artifacts: CompiledArtifact[]; nodes: ExecutionNode[] }>;
   scheduler: SchedulerAdapter;
   schedulerOptions?: Parameters<typeof executeFrozenContract>[2];
@@ -171,16 +182,24 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
   const conferenceResolution = resolveCodexLedConference(roleAssignments, conferenceExchanges, fixedPoint.converged);
   const fixedPointDigest = digest(fixedPoint);
   state = advance(state, 'architecture-fixed-point', { fixedPoint, critiqueReceipts, conferenceExchanges, conferenceResolution });
-  const assignment = await configured.assignArchitect({ changeId: input.changeId, prompt: input.prompt, roster, fixedPointDigest });
-  state = advance(state, 'architect-assignment', { assignment });
+  const hydratedBrief: HydratedArchitectBrief = { evidence: evidenceBundle, synthesis: independent };
+  const evidenceDigest = digest(hydratedBrief);
+  const assignment = await configured.assignArchitect({
+    changeId: input.changeId,
+    prompt: input.prompt,
+    hydratedBrief: structuredClone(hydratedBrief),
+    evidenceDigest,
+    roster,
+    fixedPointDigest,
+  });
+  state = advance(state, 'architect-assignment', { assignment, evidenceDigest });
 
-  const evidenceDigest = digest(evidenceBundle);
   const conferenceExecution: OpenSpecCompilerInput['conferenceExecution'] = {
     mode: capabilityPlan.mode,
     independent: capabilityPlan.independent,
     ...(capabilityPlan.limitation ? { limitation: capabilityPlan.limitation } : {}),
   };
-  const compiled = await configured.compileOpenSpec({ checkout: input.checkout, changeId: input.changeId, prompt: input.prompt, evidenceDigest, fixedPointDigest, assignment, conference: fixedPoint, conferenceResolution, conferenceExecution });
+  const compiled = await configured.compileOpenSpec({ checkout: input.checkout, changeId: input.changeId, prompt: input.prompt, hydratedBrief: structuredClone(hydratedBrief), evidenceDigest, fixedPointDigest, assignment, conference: fixedPoint, conferenceResolution, conferenceExecution });
   state = advance(state, 'openspec-compilation', { contract: compiled });
   const contract = compileAndFreezeContract({ checkout: input.checkout, changeId: input.changeId, assignment, trustedAuthoritySourceDigest: input.trustedAuthoritySourceDigest, evidenceDigest, fixedPointDigest, unresolvedMaterialDeltas: [], frozenBaseRevision: input.sourceRevision, ...compiled });
   state = advance(state, 'contract-freeze', { contract });
