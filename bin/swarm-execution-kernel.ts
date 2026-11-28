@@ -199,8 +199,6 @@ function assertSafeWorktree(directory: string, safeRoots: string[]): string {
 }
 
 export function validateTaskGraph(nodes: ExecutionNode[]): void {
-  const byId = new Map(nodes.map((node) => [node.id, node]));
-  if (byId.size !== nodes.length) throw new Error('Task identifiers must be unique');
   const worktrees = new Set<string>();
   const branches = new Set<string>();
   const ports = new Set<number>();
@@ -215,7 +213,6 @@ export function validateTaskGraph(nodes: ExecutionNode[]): void {
     if (branches.has(node.branch)) throw new Error(`Duplicate branch lease: ${node.branch}`);
     if (ports.has(node.port)) throw new Error(`Duplicate port lease: ${node.port}`);
     worktrees.add(node.worktree); branches.add(node.branch); ports.add(node.port);
-    for (const dep of node.dependsOn) if (!byId.has(dep)) throw new Error(`Task ${node.id} has unknown dependency ${dep}`);
     if (node.provider === 'opencode-deepseek' && node.classification !== 'bounded') throw new Error(`OpenCode cannot own ${node.classification} task ${node.id}`);
     if (node.classification === 'bounded' && node.provider !== 'opencode-deepseek' && !node.providerExceptionReason?.trim()) {
       throw new Error(`Bounded task ${node.id} requires OpenCode or a concrete exception receipt`);
@@ -225,6 +222,15 @@ export function validateTaskGraph(nodes: ExecutionNode[]): void {
     }
     for (const reference of node.secretReferences ?? []) if (!/^secret:\/\/[a-zA-Z0-9/_-]+$/.test(reference)) throw new Error(`Unsafe secret reference in ${node.id}: ${reference}`);
     for (const host of node.allowedEgressHosts ?? []) if (!/^[a-z0-9.-]+$/i.test(host) || host.includes('..')) throw new Error(`Unsafe egress host in ${node.id}: ${host}`);
+  }
+  validateOwnershipGraph(nodes);
+}
+
+export function validateOwnershipGraph(nodes: Array<Pick<ExecutionNode, 'id' | 'dependsOn' | 'ownedPaths'>>): void {
+  const byId = new Map(nodes.map((node) => [node.id, node]));
+  if (byId.size !== nodes.length) throw new Error('Task identifiers must be unique');
+  for (const node of nodes) {
+    for (const dep of node.dependsOn) if (!byId.has(dep)) throw new Error(`Task ${node.id} has unknown dependency ${dep}`);
   }
   const visiting = new Set<string>();
   const prerequisites = new Map<string, Set<string>>();

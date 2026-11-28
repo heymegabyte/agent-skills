@@ -18,4 +18,10 @@ test('assigned architect proposes independent changes before host materializatio
   assert.deepEqual((await plan(input)).changes, changes);
   output = JSON.stringify({ changes: [change, change] });
   await assert.rejects(plan(input), /duplicate change/);
+  output = JSON.stringify({ changes: [{ ...changes[0], dependsOn: ['second'] }, { ...changes[1], dependsOn: ['first'] }] });
+  await assert.rejects(plan(input), /Cycle detected/);
+  output = JSON.stringify({ changes: [change, { ...changes[1], ownedPaths: ['src'] }] });
+  await assert.rejects(plan(input), /Parallel ownership collision/);
+  output = JSON.stringify({ changes: [{ ...change, ownedPaths: ['../outside.ts'] }] });
+  await assert.rejects(plan(input), /unsafe owned path/);
 });

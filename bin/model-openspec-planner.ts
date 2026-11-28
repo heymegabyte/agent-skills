@@ -1,3 +1,4 @@
+import { validateOwnershipGraph } from './swarm-execution-kernel.ts';
 import type { OpenSpecCompilerInput } from './evidence-gated-orchestrator.ts';
 
 type ArchitectSession = { launcher: string; sessionId?: string; output: string };
@@ -38,9 +39,13 @@ export function createModelOpenSpecPlanner(
       }
       ids.add(change.changeId);
     }
-    if (changes.some(({ changeId, dependsOn }) => dependsOn.some((id: string) => id === changeId || !ids.has(id)))) {
-      throw new Error('OpenSpec plan contains an invalid change dependency');
+    for (const { ownedPaths } of changes) {
+      if (ownedPaths.some((path: string) =>
+        path.includes('\\') || path.includes('\0') || path.split('/').some((part) => !part || part === '.' || part === '..'))) {
+        throw new Error('OpenSpec plan contains an unsafe owned path');
+      }
     }
+    validateOwnershipGraph(changes.map(({ changeId, dependsOn, ownedPaths }) => ({ id: changeId, dependsOn, ownedPaths })));
     return { changes, launcher: response.launcher, sessionId: response.sessionId };
   };
 }
