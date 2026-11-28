@@ -1,0 +1,2 @@
+- [x] Reconcile outdated managed stack and count literals with current canonical text.
+- [x] Verify generated mirrors and actual documentation counts.

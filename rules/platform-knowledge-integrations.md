@@ -55,6 +55,7 @@ Applies under [shared platform policy](platform-shared-capabilities.md). Sources
 - External effects use provider idempotency keys or reconciliation. Do not claim exactly-once sends, payments or writes because a Workflow step or Queue message retried.
 - Adapt legally reusable Activepieces actions/triggers and author independent equivalents where necessary. Pin flow and piece versions; test suspended-run compatibility. Replace Redis/BullMQ/process assumptions with tested Workers/DO/Workflows/Queues adapters, not dependency-name substitutions.
 - Connector code requiring unsupported Node/native libraries runs only in an approved isolated runtime. Untrusted connector/code execution receives capability-scoped network/filesystem access, not control-plane bindings.
+- Qualify packed server-only exports with the consumer's installed bundler and effective conditions. Cloudflare Vite Workers may resolve with both Worker and browser conditions. For a Worker-compatible implementation, place its verified Worker-specific condition before the browser-denial condition. Verify the Worker build selects the server implementation and browser-only resolution still selects the denial. Keep the browser guard in the shared package. [Cloudflare Vite plugin](https://developers.cloudflare.com/workers/vite-plugin/)
 - Disconnect revokes tokens where supported, cancels/pauses dependent runs, unregisters webhooks, purges eligible indexes/caches and records retention obligations. Never silently delete legally required audit records.
 
 ## Infisical and Agent Vault

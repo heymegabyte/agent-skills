@@ -40,11 +40,9 @@ const MANAGED = [
   {
     name: 'stack-line',
     // Matches the stack summary in ANY format/spacing (from "CF Workers" to "Sentry").
-    // Two-stack doctrine (CONVENTIONS.md § Stack): React 19+Vite sites / Angular 22+Spartan
-    // apps — never Angular-only. Payments trio: Square accept / Stripe Billing / Connect.
+    // Mirrors the current canonical runtime, frontend and authentication stack.
     pattern: /CF Workers.*?PostHog\s*\|\s*Sentry/g,
-    canonical:
-      'CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1-rc | Clerk | Stripe + Link (default) · Square on request | Inngest | Amazon SES | Bun | Playwright v1.63+ | PostHog | Sentry',
+    canonical: "CF Workers + Hono | React 19 + Vite + ui.theme.tools (`@theme.tools/ui` — exclusive component system for ALL sites, apps, dashboards, admin consoles, calendars, and portals; NO Angular / NO Spartan UI) | D1/Neon | Drizzle v1-rc | Better Auth | Stripe + Link (default) · Square on request | Inngest | Amazon SES | Bun | Playwright v1.63+ | PostHog | Sentry",
   },
   {
     name: 'counts-line',
@@ -52,7 +50,7 @@ const MANAGED = [
     // stubs (CODEX.md / GEMINI.md / AMP.md / QODO.MD / replit.md). Keep in step
     // with bin/check-doc-counts.sh derived actuals (gate 14 asserts these files).
     pattern: /\d+ categories, \d+ reference docs, \d+ agents\./g,
-    canonical: '23 categories, 150 reference docs, 28 agents.',
+    canonical: '23 categories, 151 reference docs, 55 agents.',
   },
   {
     name: 'desc-category-count',

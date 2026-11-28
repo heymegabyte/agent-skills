@@ -1,0 +1,3 @@
+- [x] Add the runtime-conditional qualification rule to the existing canonical integration module.
+- [x] Verify the packed candidate in the Workerd and browser-only conditions.
+- [ ] Verify canonical hosted validation and generated synchronization.

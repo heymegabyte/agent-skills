@@ -5,10 +5,10 @@ description: "Emdash Skills — 23-category product-building OS for Augment Code
 # Emdash Skills for Augment Code
 
 Load CONVENTIONS.md for stack defaults. Load _router.md for skill routing.
-23 categories, 150 reference docs, 28 agents.
+23 categories, 151 reference docs, 55 agents.
 
 ## Stack
-CF Workers + Hono | React 19 + Vite + shadcn/ui (sites) / Angular 22 + Spartan UI (apps) | D1/Neon | Drizzle v1-rc | Clerk | Stripe + Link (default) · Square on request | Inngest | Amazon SES | Bun | Playwright v1.63+ | PostHog | Sentry
+CF Workers + Hono | React 19 + Vite + ui.theme.tools (`@theme.tools/ui` — exclusive component system for ALL sites, apps, dashboards, admin consoles, calendars, and portals; NO Angular / NO Spartan UI) | D1/Neon | Drizzle v1-rc | Better Auth | Stripe + Link (default) · Square on request | Inngest | Amazon SES | Bun | Playwright v1.63+ | PostHog | Sentry
 
 ## Rules
 - TypeScript strict, never `any`, prefer `interface` over `type`
