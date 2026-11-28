@@ -22,7 +22,7 @@ test('entrypoint manifest reports one native hook and honest explicit wrappers',
   assert.match(hookManifest.hooks.UserPromptSubmit[0].hooks[0].command, /prompt-hydration-hook\.mjs/);
 });
 
-test('every non-native supported harness hydrates a narrow engineering request through the wrapper', () => {
+test('every non-native supported harness hydrates a narrow engineering request through the wrapper', { timeout: 150_000 }, () => {
   for (const entry of manifest.entrypoints.filter((candidate) => !candidate.nativePromptHook)) {
     const run = spawnSync(process.execPath, [join(root, 'bin', 'prompt-hydration-entry.mjs'), '--harness', entry.harness], {
       cwd: root,

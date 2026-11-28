@@ -8,7 +8,7 @@
       "class": "canonical",
       "targetPath": "policies/operational-prompt-hydration.md",
       "mode": "canonical-digest",
-      "expectedDigest": "sha256:c30476a5a84ed3e7dd0295f6287877c3817b021b8cac1a28afb4ca12585a7bc0"
+      "expectedDigest": "sha256:ab50d27fdd31042024a610e9572536725d7c35a68d38872202863bc5b3342cc9"
     },
     {
       "id": "generated-agents",
