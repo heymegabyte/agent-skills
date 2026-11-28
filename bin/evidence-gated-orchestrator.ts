@@ -44,6 +44,7 @@ import {
   type NodeExecutionReceipt,
   type SchedulerAdapter,
 } from './swarm-execution-kernel.ts';
+import { acceptedImprovementRequirements, evaluateImprovementPhase, type DurableImprovementCandidate, type ImprovementPolicy } from './recursive-improvement.ts';
 import { createRunState, transitionRun, type RunState } from './orchestration-run-state.ts';
 
 const digest = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
@@ -122,6 +123,7 @@ export interface OpenSpecCompilerInput {
   prompt: string;
   evidenceDigest: string;
   hydratedBrief: HydratedArchitectBrief;
+  admittedImprovements?: ReturnType<typeof acceptedImprovementRequirements>;
   fixedPointDigest: string;
   assignment: ArchitectAssignmentReceipt;
   conference: Awaited<ReturnType<typeof convergeArchitecture>>;
@@ -153,6 +155,7 @@ export interface PipelineAdapters {
   assignArchitect: (input: { changeId: string; prompt: string; hydratedBrief: HydratedArchitectBrief; evidenceDigest: string; roster: ReturnType<typeof selectConferenceRoster>; fixedPointDigest: string }) => Promise<ArchitectAssignmentReceipt>;
   compileOpenSpec: (input: OpenSpecCompilerInput) => Promise<CompiledChange & { additionalChanges?: Array<CompiledChange & { assignment: ArchitectAssignmentReceipt }> }>;
   scheduler: SchedulerAdapter;
+  assessImprovements?: (input: { hydratedBrief: HydratedArchitectBrief; assignment: ArchitectAssignmentReceipt }) => Promise<{ candidates: DurableImprovementCandidate[]; policy: ImprovementPolicy }>;
   extractReuse?: (input: { contract: FrozenContract; hydratedBrief: HydratedArchitectBrief }) => Promise<ReuseExtractionReceipt>;
   schedulerOptions?: Parameters<typeof executeFrozenContract>[2];
   verify: (input: { contract: FrozenContract; executions: NodeExecutionReceipt[] }) => Promise<{ passed: boolean; receipts: VerificationReceipt[]; blockers?: string[] }>;
@@ -324,7 +327,15 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
     independent: capabilityPlan.independent,
     ...(capabilityPlan.limitation ? { limitation: capabilityPlan.limitation } : {}),
   };
-  const compiled = await configured.compileOpenSpec({ checkout: input.checkout, changeId: input.changeId, prompt: input.prompt, hydratedBrief: structuredClone(hydratedBrief), evidenceDigest, fixedPointDigest, assignment, conference: fixedPoint, conferenceResolution, conferenceExecution });
+  const assessment = await configured.assessImprovements?.({
+    hydratedBrief: structuredClone(hydratedBrief), assignment: structuredClone(assignment),
+  });
+  const improvementPhase = assessment && evaluateImprovementPhase({
+    ...assessment, runId: state.runId, runStateDigest: state.stateDigest,
+    changeId: input.changeId, sourceRevision: input.sourceRevision, evaluatedAt: new Date().toISOString(),
+  });
+  const admittedImprovements = improvementPhase && acceptedImprovementRequirements(improvementPhase);
+  const compiled = await configured.compileOpenSpec({ checkout: input.checkout, changeId: input.changeId, prompt: input.prompt, hydratedBrief: structuredClone(hydratedBrief), admittedImprovements: structuredClone(admittedImprovements), evidenceDigest, fixedPointDigest, assignment, conference: fixedPoint, conferenceResolution, conferenceExecution });
   const plans = [
     { artifacts: compiled.artifacts, nodes: compiled.nodes, dependsOn: compiled.dependsOn, assignment },
     ...(compiled.additionalChanges ?? []),
@@ -356,7 +367,14 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
   if (changes[0].contract.changeId !== input.changeId) throw new Error('Architect assignment is not bound to the requested change');
   const contracts = changes.map(({ contract }) => contract);
   const [contract] = contracts;
-  state = advance(state, 'openspec-compilation', { contract: compiled });
+  for (const requirement of admittedImprovements ?? []) {
+    const heading = `${requirement.id} — ${requirement.title}`;
+    if (!contracts.some((item) => item.artifacts.some((artifact) => artifact.requirements.includes(heading)
+      && requirement.tasks.every(({ id }) => artifact.traceabilityIds.includes(id))))) {
+      throw new Error(`Admitted improvement ${requirement.id} is missing from the compiled OpenSpec changes`);
+    }
+  }
+  state = advance(state, 'openspec-compilation', { contract: compiled, improvementPhase });
   state = advance(state, 'contract-freeze', { contract, contracts });
   const [executionResult, reuseResult] = await Promise.allSettled([
     executeFrozenChanges(changes, configured.scheduler, configured.schedulerOptions),

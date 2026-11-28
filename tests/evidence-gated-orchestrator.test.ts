@@ -405,3 +405,42 @@ test('architect output queues all compiled changes and verifies each against its
   assert.equal(new Set(result.verificationReceipts.map(({ reviewedContractDigest }) => reviewedContractDigest)).size, 2);
   assert.ok(calls.indexOf('integrate:implement') < calls.indexOf('launch:opencode-deepseek:follow-up'));
 });
+
+test('an admitted improvement must appear in the OpenSpec artifacts before dispatch', async () => {
+  const { checkout, paths, specialists } = fixture();
+  const calls: string[] = [];
+  const adapters = configured(checkout, paths, calls);
+  const compile = adapters.compileOpenSpec;
+  adapters.assessImprovements = async () => ({
+    policy: { confidenceFloor: 0.8, valueFloor: 0.5, maxCost: 1, maxWip: 1 },
+    candidates: [{
+      id: 'reuse', title: 'Reuse the validator', summary: 'Both workflows use the same validator',
+      evidence: 1, expectedValue: 1, novelty: 1, reversibility: 1, verifiability: 1, cost: 0.1, risk: 0,
+      evidenceIds: ['repo-fixture'], authority: { decision: 'allowed', evidenceIds: ['request-fixture'] },
+      verification: { method: 'Exercise both workflows', objective: true },
+      conflictsWith: [], affectedPaths: ['src/app.ts'], packages: [], acceptanceCriteria: ['Both workflows pass'],
+    }],
+  });
+  let includeImprovement = false;
+  adapters.compileOpenSpec = async (request) => {
+    assert.equal(request.admittedImprovements?.length, 1);
+    const [improvement] = request.admittedImprovements!;
+    assert.equal(improvement.title, 'Reuse the validator');
+    const compiled = await compile(request);
+    if (includeImprovement) {
+      for (const artifact of compiled.artifacts) {
+        if (artifact.kind === 'spec') artifact.content += `\n### Requirement: ${improvement.id} — ${improvement.title}\n\n#### Scenario: Reuse checked\n`;
+        if (artifact.kind === 'tasks') artifact.content += `\n- [ ] [${improvement.tasks[0].id}] Verify reuse. (requirements: ${improvement.id} — ${improvement.title}; scenarios: Reuse checked)\n`;
+        writeFileSync(join(checkout, artifact.path), artifact.content);
+      }
+    }
+    return compiled;
+  };
+  const request = { ...input(checkout, specialists), sourceRevision: 'a'.repeat(40) };
+  await assert.rejects(() => runEvidenceGatedPipeline(request, adapters), /Admitted improvement .* is missing/);
+  assert.ok(!calls.some((call) => call.startsWith('launch:')));
+  includeImprovement = true;
+  const result = await runEvidenceGatedPipeline(request, adapters);
+  assert.equal(result.status, 'complete');
+  assert.match(result.contract.nodes[0].workerPrompt ?? '', /Verify reuse/);
+});
