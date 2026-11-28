@@ -336,7 +336,8 @@ export function selectConferenceRoster(seed: string, prompt: string, candidates:
   const pool = relevant.length ? [...relevant] : candidates.filter(({ architectEligible }) => architectEligible);
   if (!pool.some(({ family }) => family === 'codex')) {
     const lead = candidates.find(({ family, architectEligible }) => family === 'codex' && architectEligible);
-    if (lead) pool.push(lead);
+    const fallback = lead ?? candidates.find(({ family }) => family === 'codex');
+    if (fallback) pool.push(fallback);
   }
   const base = [...pool].sort((a, b) => seeded(seed, a.id) - seeded(seed, b.id));
   const selected: Specialist[] = [];

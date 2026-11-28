@@ -229,6 +229,16 @@ test('roster fallback uses architect eligibility and retains an eligible Codex l
   const selected = selectConferenceRoster('fixture', 'Review Markdown', [lead, specialist]).participants;
   assert.ok(selected.includes(lead));
   assert.ok(selected.includes(specialist));
+
+  const conferenceLead = { ...lead, architectEligible: false };
+  const independentArchitect = { ...specialist, architectEligible: true };
+  const fallback = selectConferenceRoster('fixture', 'Review Markdown', [conferenceLead, independentArchitect]);
+  assert.ok(fallback.participants.includes(conferenceLead));
+  assert.equal(fallback.secondArchitect, false);
+  assert.throws(
+    () => selectConferenceRoster('fixture', 'Review Markdown migration', [conferenceLead, independentArchitect]),
+    /requires a second eligible architect/,
+  );
 });
 
 test('research dispatch overlaps independent queries without reordering their receipts', async () => {
