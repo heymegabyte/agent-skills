@@ -36,3 +36,9 @@
 - On `11887800`, the frozen-change queue dispatched two live Codex fixture changes that shared an owned README path. The second declared the first as a prerequisite.
 - The dependent worktree started at the exact first integration commit and contained the first change's expected text before its worker launched. Both workers changed only README.md and passed `git diff --check`.
 - Both receipts reported `integrated`. The disposable repository contained both expected edits and was clean at the end. This verifies dependent execution and integration on the premium fallback. Independent production parallelism and OpenCode throughput are still open.
+
+## Cloudflare event correlation
+
+- The authenticated Cloudflare Security Events query matched Ray ID `a6178f69ee14fbc3-EWR` at `2026-11-28T07:11:43Z` for `/v1/chat/completions`.
+- The event reported action `block`, source `bic`, and rule ID `bic`. This identifies Browser Integrity Check as the cause of that direct gateway probe's rejection. The prior OpenCode failures lack Ray IDs, so their exact causes remain unverified.
+- No edge policy mutation was made. Verify the intended machine-client access policy and run a newly correlated OpenCode request after the gateway owner reconciles it.
