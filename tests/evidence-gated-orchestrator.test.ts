@@ -126,6 +126,7 @@ test('composition root executes the receipt-gated production sequence through ve
   };
   const result = await runEvidenceGatedPipeline(input(checkout, specialists), adapters);
   assert.equal(result.contract.evidenceDigest, architectEvidenceDigest);
+  assert.ok(result.contract.nodes[0].workerPrompt?.includes(result.contract.artifacts.find(({ kind }) => kind === 'tasks')!.content));
   assert.equal(result.status, 'complete');
   assert.equal(result.state.phase, 'complete');
   assert.equal(result.state.receipts.length, 13);
@@ -327,4 +328,17 @@ test('automatic topic planning researches and synthesizes separate requested out
     return compile(request);
   };
   await runEvidenceGatedPipeline({ ...input(checkout, specialists), prompt, researchRequests: undefined }, adapters);
+});
+
+test('production compilation refuses to spread a change across implementation nodes', async () => {
+  const { checkout, paths, specialists } = fixture();
+  const calls: string[] = [];
+  const adapters = configured(checkout, paths, calls);
+  const compile = adapters.compileOpenSpec;
+  adapters.compileOpenSpec = async (request) => {
+    const compiled = await compile(request);
+    return { ...compiled, nodes: [...compiled.nodes, { ...compiled.nodes[0], id: 'docs' }] };
+  };
+  await assert.rejects(() => runEvidenceGatedPipeline(input(checkout, specialists), adapters), /exactly one implementation node/);
+  assert.ok(!calls.some((call) => call.startsWith('launch:')));
 });

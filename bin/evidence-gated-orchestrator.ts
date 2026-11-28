@@ -303,8 +303,23 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
     ...(capabilityPlan.limitation ? { limitation: capabilityPlan.limitation } : {}),
   };
   const compiled = await configured.compileOpenSpec({ checkout: input.checkout, changeId: input.changeId, prompt: input.prompt, hydratedBrief: structuredClone(hydratedBrief), evidenceDigest, fixedPointDigest, assignment, conference: fixedPoint, conferenceResolution, conferenceExecution });
-  state = advance(state, 'openspec-compilation', { contract: compiled });
-  const contract = compileAndFreezeContract({ checkout: input.checkout, changeId: input.changeId, assignment, trustedAuthoritySourceDigest: input.trustedAuthoritySourceDigest, evidenceDigest, fixedPointDigest, unresolvedMaterialDeltas: [], frozenBaseRevision: input.sourceRevision, ...compiled });
+  if (compiled.nodes.length !== 1) {
+    throw new Error('OpenSpec compilation must assign exactly one implementation node to the whole change');
+  }
+  const [ownerNode] = compiled.nodes;
+  const checklist = compiled.artifacts.find(({ kind }) => kind === 'tasks');
+  if (!checklist) throw new Error('Missing OpenSpec tasks artifact');
+  const nodes = [{
+    ...ownerNode,
+    workerPrompt: [
+      `Own OpenSpec change ${input.changeId} through implementation, verification, documentation, and review fixes.`,
+      'Complete the full checklist as one owner and preserve ownership through completion.',
+      ownerNode.workerPrompt,
+      `OpenSpec checklist from ${checklist.path}:\n${checklist.content}`,
+    ].filter(Boolean).join('\n\n'),
+  }];
+  state = advance(state, 'openspec-compilation', { contract: { artifacts: compiled.artifacts, nodes } });
+  const contract = compileAndFreezeContract({ checkout: input.checkout, changeId: input.changeId, assignment, trustedAuthoritySourceDigest: input.trustedAuthoritySourceDigest, evidenceDigest, fixedPointDigest, unresolvedMaterialDeltas: [], frozenBaseRevision: input.sourceRevision, artifacts: compiled.artifacts, nodes });
   state = advance(state, 'contract-freeze', { contract });
   const executions = await executeFrozenContract(contract, configured.scheduler, configured.schedulerOptions);
   const latestByNode = new Map(executions.map((receipt) => [receipt.nodeId, receipt]));
