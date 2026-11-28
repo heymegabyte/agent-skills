@@ -215,16 +215,26 @@ export function validateTaskGraph(nodes: ExecutionNode[]): void {
     for (const reference of node.secretReferences ?? []) if (!/^secret:\/\/[a-zA-Z0-9/_-]+$/.test(reference)) throw new Error(`Unsafe secret reference in ${node.id}: ${reference}`);
     for (const host of node.allowedEgressHosts ?? []) if (!/^[a-z0-9.-]+$/i.test(host) || host.includes('..')) throw new Error(`Unsafe egress host in ${node.id}: ${host}`);
   }
-  const visiting = new Set<string>(); const visited = new Set<string>();
-  const visit = (id: string): void => {
+  const visiting = new Set<string>();
+  const prerequisites = new Map<string, Set<string>>();
+  const visit = (id: string): Set<string> => {
     if (visiting.has(id)) throw new Error(`Cycle detected at ${id}`);
-    if (visited.has(id)) return;
-    visiting.add(id); for (const dep of byId.get(id)!.dependsOn) visit(dep); visiting.delete(id); visited.add(id);
+    const known = prerequisites.get(id);
+    if (known) return known;
+    visiting.add(id);
+    const ancestors = new Set<string>();
+    for (const dependency of byId.get(id)!.dependsOn) {
+      ancestors.add(dependency);
+      for (const ancestor of visit(dependency)) ancestors.add(ancestor);
+    }
+    visiting.delete(id);
+    prerequisites.set(id, ancestors);
+    return ancestors;
   };
   for (const id of byId.keys()) visit(id);
   for (let i = 0; i < nodes.length; i += 1) for (let j = i + 1; j < nodes.length; j += 1) {
     const a = nodes[i]; const b = nodes[j];
-    const ordered = a.dependsOn.includes(b.id) || b.dependsOn.includes(a.id);
+    const ordered = prerequisites.get(a.id)!.has(b.id) || prerequisites.get(b.id)!.has(a.id);
     const overlap = a.ownedPaths.some((left) => b.ownedPaths.some((right) => left === right || left.startsWith(`${right}/`) || right.startsWith(`${left}/`)));
     if (overlap && !ordered) throw new Error(`Parallel ownership collision: ${a.id} and ${b.id}`);
   }

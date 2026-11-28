@@ -685,3 +685,11 @@ test('whole-change queue validates each frozen contract and follows inter-change
   await executeFrozenChanges(contracts.map((contract) => ({ contract, dependsOn: [] })), parallel, { concurrency: 2 });
   assert.equal(peak, 2);
 });
+
+test('ownership validation permits shared paths across a transitive dependency only', () => {
+  const { nodes } = fixture();
+  const [first, middle] = nodes;
+  const final = { ...first, id: 'final', worktree: 'w3', branch: 'swarm/final', port: 4120, dependsOn: [middle.id] };
+  assert.doesNotThrow(() => validateTaskGraph([first, middle, final]));
+  assert.throws(() => validateTaskGraph([first, { ...middle, dependsOn: [] }, final]), /Parallel ownership collision/);
+});
