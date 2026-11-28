@@ -1,0 +1,3 @@
+- [x] Document the verified runtime behavior in the canonical integration rule.
+- [x] Verify Browse and a separate Workerd fixture.
+- [ ] Confirm hosted synchronization and downstream distribution.
