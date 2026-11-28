@@ -166,6 +166,7 @@ test('digestFor is stable for a given entry list and tracks size', () => {
 
 test('watcher re-indexes an added skill file and publishes it', async () => {
   const root = fixture({ 'rules/alpha.md': '---\nname: alpha\ndescription: first\n---\n# Alpha\n' });
+  mkdirSync(join(root, 'rules'), { recursive: true });
   let index: IndexFile = buildIndex(root);
   const events: Array<{ digest: string; changed: string[] }> = [];
   const watcher = startIndexWatcher({
@@ -179,6 +180,8 @@ test('watcher re-indexes an added skill file and publishes it', async () => {
     persistent: false,
   });
   try {
+    await waitForRulesWatch(root, () => index);
+    events.length = 0;
     mkdirSync(join(root, '06-build-and-slice-loop'), { recursive: true });
     writeFileSync(
       join(root, '06-build-and-slice-loop/SKILL.md'),
@@ -199,6 +202,23 @@ test('watcher re-indexes an added skill file and publishes it', async () => {
   }
 });
 
+// Observe a publication from the same watched directory before testing changes.
+async function waitForRulesWatch(root: string, currentIndex: () => IndexFile): Promise<void> {
+  const path = 'rules/watcher-ready.md';
+  const file = join(root, path);
+  const indexed = () => currentIndex().entries.some((entry) => entry.path === path);
+  try {
+    for (let attempt = 0; attempt < 20 && !indexed(); attempt++) {
+      writeFileSync(file, '---\nname: watcher-ready\n---\n# Ready\n');
+      await new Promise((resolve) => setTimeout(resolve, 125));
+    }
+    assert.ok(indexed(), 'watcher did not publish the readiness file');
+  } finally {
+    unlinkSync(file);
+  }
+  await waitFor(() => !indexed());
+}
+
 test('watcher re-reads a modified file and drops a deleted one', async () => {
   const root = fixture({
     'rules/alpha.md': '---\nname: alpha\ndescription: original\n---\n# Alpha\n',
@@ -214,13 +234,14 @@ test('watcher re-reads a modified file and drops a deleted one', async () => {
     debounceMs: 20,
   });
   try {
+    await waitForRulesWatch(root, () => index);
     writeFileSync(join(root, 'rules/alpha.md'), '---\nname: alpha\ndescription: corrected words\n---\n# Alpha\n');
-    await waitFor(() => watcher.pending().length > 0);
+    await waitFor(() => index.entries.find((entry) => entry.name === 'alpha')?.description === 'corrected words');
     watcher.flush();
     assert.match(index.entries.find((e) => e.name === 'alpha')!.description, /corrected words/);
 
     unlinkSync(join(root, 'rules/beta.md'));
-    await waitFor(() => watcher.pending().length > 0);
+    await waitFor(() => !index.entries.some((entry) => entry.name === 'beta'));
     watcher.flush();
     assert.equal(index.entries.some((e) => e.name === 'beta'), false);
   } finally {
@@ -268,6 +289,7 @@ test('a renamed rule drops its old name and answers under the new one', async ()
     debounceMs: 20,
   });
   try {
+    await waitForRulesWatch(root, () => index);
     assert.ok(view.names.get('alpha'), 'precondition: alpha is indexed');
 
     // A rename is `mv` plus an edit: the platform reports the new path, never a
@@ -291,6 +313,7 @@ test('a renamed rule drops its old name and answers under the new one', async ()
 
 test('a renamed skill directory rebuilds and retires the old tree', async () => {
   const root = fixture({ '06-old-name/SKILL.md': '---\nname: old-name\ndescription: skill before rename\n---\n# Old\n' });
+  mkdirSync(join(root, 'rules'), { recursive: true });
   let index: IndexFile = buildIndex(root);
   const view = new GatewayView(() => index);
   const modes: string[] = [];
@@ -304,6 +327,8 @@ test('a renamed skill directory rebuilds and retires the old tree', async () => 
     debounceMs: 20,
   });
   try {
+    await waitForRulesWatch(root, () => index);
+    modes.length = 0;
     assert.ok(view.names.get('old-name'), 'precondition: old-name is indexed');
 
     renameSync(join(root, '06-old-name'), join(root, '07-new-name'));
@@ -335,6 +360,8 @@ test('an editor save plus a write burst collapses into one rebuild', async () =>
     debounceMs: 100,
   });
   try {
+    await waitForRulesWatch(root, () => index);
+    published = 0;
     const target = join(root, 'rules/alpha.md');
     const temp = join(root, 'rules/alpha.md.tmp');
     // Atomic save: write a sibling temp file, then rename it over the target.
