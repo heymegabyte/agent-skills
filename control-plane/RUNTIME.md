@@ -23,3 +23,21 @@ Write the required JSON report with observed majorActions, tests (command/status
 When working on a product or migration source listed in `reference/platform-stack.json`, or their shared infrastructure, read `rules/platform-shared-capabilities.md` from this checked-out shared revision, then the relevant modules and `prompts/platform-convergence.md`. Load `_packs/platform.yml` when the whole shared capability set is involved. These scoped user choices supersede conflicting older stack defaults.
 
 Record the policy revision and capability status/evidence in the required report. Use the existing deadline and budgets; require a complete browser-verified theme.tools UI scaffold before feature depth, plus license/runtime checks, tenant-safe authorization and complete journey evidence. Prioritize the highest-value ready slice and checkpoint blockers. On skills changes, run `python3 scripts/check-platform-policy.py` plus existing validators. Update consumer pins only after compatibility checks and record acknowledgements; a canonical commit is not proof of host sync. Do not create a new schedule or silently replace the existing loop infrastructure.
+
+## Run the evidence-gated pipeline from a host
+
+Provide a trusted local JavaScript or TypeScript module exporting
+`createPipelineAdapters(input)` and a JSON file containing the pipeline input.
+The module supplies the approved model, research, architect assignment, OpenSpec
+compiler, scheduler, and verification adapters. Configure reuse persistence and
+improvement refresh in that module when the run calls for them.
+
+```bash
+bun bin/evidence-gated-orchestrator.ts \
+  --adapters /absolute/path/to/host-adapters.ts \
+  --input /absolute/path/to/pipeline-input.json
+```
+
+The command emits the run result as JSON after integration and verification.
+Keep adapter diagnostics on stderr. Select the adapter module from trusted
+local configuration. Its code runs with the host process's permissions.

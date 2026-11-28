@@ -8,7 +8,8 @@
  */
 import { createHash, randomUUID } from 'node:crypto';
 import { resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { readFile } from 'node:fs/promises';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
   convergeArchitecture,
   discoverProviderSlotCapabilities,
@@ -535,7 +536,24 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
   };
 }
 
+async function runHostCommand(args: string[]): Promise<void> {
+  const [adapterFlag, adapterPath, inputFlag, inputPath] = args;
+  if (args.length !== 4 || adapterFlag !== '--adapters' || !adapterPath || inputFlag !== '--input' || !inputPath) {
+    throw new Error('Usage: evidence-gated-orchestrator.ts --adapters <trusted-local-module> --input <pipeline-input.json>');
+  }
+  const input = JSON.parse(await readFile(resolve(inputPath), 'utf8')) as PipelineInput;
+  const host = await import(pathToFileURL(resolve(adapterPath)).href);
+  if (typeof host.createPipelineAdapters !== 'function') {
+    throw new Error('The trusted host module must export createPipelineAdapters(input)');
+  }
+  const adapters = await host.createPipelineAdapters(structuredClone(input));
+  const result = await runEvidenceGatedPipeline(input, adapters ?? {});
+  process.stdout.write(`${JSON.stringify(result)}\n`);
+}
+
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  process.stderr.write('This governed entrypoint requires host-configured approved adapters. Import runEvidenceGatedPipeline; static CLI planning is not execution.\n');
-  process.exitCode = 2;
+  runHostCommand(process.argv.slice(2)).catch((error: unknown) => {
+    process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+    process.exitCode = 2;
+  });
 }
