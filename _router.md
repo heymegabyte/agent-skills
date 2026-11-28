@@ -55,6 +55,7 @@ Route prompts to smallest useful subset. Load `01-operating-system` FIRST always
 - **Enterprise / multi-tenant** → `05/enterprise-multi-tenancy`, `05/auth-and-session-management`, `13/stripe-billing`
 - **Infra / self-hosted** → `05/coolify-docker-proxmox`, `05/cf-auto-provision`, `08/uptime-and-health`
 - **Skills / config** → `01`, `04`
+- **Prompt synthesis / OpenSpec orchestration / instruction distribution** → `rules/context-hydration`, `rules/parallel-multi-swarm-orchestration`, `rules/openspec-change-ownership`, `control-plane/INSTRUCTION-POLICY.md`
 - **Iterative loop arcs / doctrinal extraction** → `rules/loop-driven-development`, `01/autonomous-orchestrator`, `rules/monitor-orchestration`
 - **Security audit** → `07/agentic-security`, `07/security-hardening`, `07/semgrep-codebase-rules`, `27`
 - **AI site generation** → `15` — add `09`, `10`, `12` for brand/design/media
