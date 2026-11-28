@@ -18,3 +18,9 @@
 - A minimal chat-completion request sent through the documented LiteLLM endpoint with the configured broker credential returned HTTP 403 for both `deepseek-flash` and `deepseek-v4-pro`. Neither response provided a LiteLLM JSON error object.
 - A repeat Flash request reported `Server: cloudflare`, `Content-Type: text/plain`, and Ray ID `a6178f69ee14fbc3-EWR`. The response had no recognized Cloudflare Access or block-page marker.
 - The rejection reproduces without the OpenCode CLI. Correlate the Ray ID with edge and upstream logs before altering launcher configuration or attributing the rejection to a specific layer.
+
+## Fallback comparison
+
+- On `86d002ae`, the documented direct `deepseek/deepseek-chat` fallback exited with code 4 because the configured broker did not supply its credential. The implementation fixture remained unchanged.
+- The Codex development launcher completed the equivalent documentation fixture in a detached Git worktree. The worker changed only `README.md`, the expected line was present, `git diff --check` passed, and the source checkout remained clean.
+- This establishes live bounded worktree execution on the premium fallback. OpenCode throughput and integration from the live scheduler remain unverified.
