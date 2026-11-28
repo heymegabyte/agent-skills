@@ -1,3 +1,8 @@
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { materializeLocalOpenSpec } from '../bin/local-openspec-materializer.ts';
 import { strict as assert } from 'node:assert';
 import test from 'node:test';
 import { createHash } from 'node:crypto';
@@ -73,4 +78,32 @@ test('assigned architect proposes independent changes before host materializatio
   await assert.rejects(plan(input), /Parallel ownership collision/);
   output = JSON.stringify({ changes: [{ ...change, ownedPaths: ['../outside.ts'] }] });
   await assert.rejects(plan(input), /unsafe owned path/);
+});
+
+
+test('local materializer commits exactly the approved batch and preserves a dirty checkout', async () => {
+  const checkout = mkdtempSync(join(tmpdir(), 'openspec-materializer-test-'));
+  try {
+    const git = (...args: string[]) => execFileSync('git', ['-C', checkout, ...args], { encoding: 'utf8' }).trim();
+    git('init', '-q');
+    git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.test', 'commit', '--allow-empty', '-qm', 'Base');
+    const base = git('rev-parse', 'HEAD');
+    const artifact = { kind: 'proposal' as const, path: 'openspec/changes/first/proposal.md',
+      content: '# Fixture\n', requirements: [], scenarios: [], traceabilityIds: [] };
+    writeFileSync(join(checkout, 'unrelated.txt'), 'Keep this');
+    await assert.rejects(materializeLocalOpenSpec(checkout, [artifact], 'fixture'), /clean host checkout/);
+    assert.equal(git('rev-parse', 'HEAD'), base);
+    assert.equal(readFileSync(join(checkout, 'unrelated.txt'), 'utf8'), 'Keep this');
+    unlinkSync(join(checkout, 'unrelated.txt'));
+    const revision = await materializeLocalOpenSpec(checkout, [artifact], 'fixture');
+    assert.equal(git('rev-parse', 'HEAD'), revision);
+    assert.equal(git('rev-parse', 'HEAD^'), base);
+    assert.equal(git('diff', '--name-only', base, revision), artifact.path);
+    assert.equal(readFileSync(join(checkout, artifact.path), 'utf8'), artifact.content);
+    assert.match(git('log', '-1', '--format=%B'), /Architect-Session: fixture/);
+    assert.equal(git('status', '--porcelain'), '');
+    await assert.rejects(materializeLocalOpenSpec(checkout, [artifact], 'fixture'), /artifact already exists/);
+  } finally {
+    rmSync(checkout, { recursive: true, force: true });
+  }
 });

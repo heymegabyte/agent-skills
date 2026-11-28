@@ -166,3 +166,5 @@
 - [x] Connect the model planner to the host compiler interface. Require trusted approval for every draft, preserve the author's assignment, construct one execution node and canonical OpenSpec paths per change, and validate the combined graph before materialization. Verify that partial approval writes nothing and that the approved compiler emits both changes.
 
 - [x] Bind worker contracts to the host's materialized OpenSpec commit. The compiler previously froze the pre-materialization source revision, so newly committed artifacts were missing from detached worker worktrees. Verify the reported commit, ancestry, and artifact bytes before using it as the worker base. Exercise the path with real Git and reject uncommitted artifact edits.
+
+- [x] Provide the local Git implementation of the OpenSpec materializer. Assemble approved artifacts in an isolated index, reject dirty checkouts and existing files, verify the resulting diff, and return the fast-forwarded commit with an architect session trailer. Verify exact commit scope, clean state, and preservation of unrelated files.
