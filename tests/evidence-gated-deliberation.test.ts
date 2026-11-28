@@ -217,3 +217,19 @@ test('roster fallback uses architect eligibility and retains an eligible Codex l
   assert.ok(selected.includes(lead));
   assert.ok(selected.includes(specialist));
 });
+
+test('research dispatch overlaps independent queries without reordering their receipts', async () => {
+  const requests = ['first', 'second', 'third'].map((query) => ({ domain: 'primary-sources' as const, query, budget: 1 }));
+  const now = Date.now();
+  let active = 0;
+  let peak = 0;
+  const receipts = await executeResearch(requests, async ({ query }) => {
+    active += 1;
+    peak = Math.max(peak, active);
+    await new Promise((resolve) => setTimeout(resolve, query === 'first' ? 8 : 1));
+    active -= 1;
+    return { rail: 'approved:fixture', findings: [{ url: `https://example.test/${query}`, title: query, excerpt: 'Verified fixture', observedAt: new Date(now).toISOString(), sourceType: 'primary' }] };
+  }, now, undefined, undefined, 2);
+  assert.equal(peak, 2);
+  assert.deepEqual(receipts.map(({ request }) => request.query), ['first', 'second', 'third']);
+});

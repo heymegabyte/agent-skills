@@ -172,10 +172,12 @@ export function inventoryRepository(checkout: string, sourceRevision = 'working-
   return { checkout: root, sourceRevision, entries, sharedServices };
 }
 
-export async function executeResearch(requests: ResearchRequest[], rail: ResearchRail, now = Date.now(), freshnessMs = 30 * 86400_000, approvedRails?: ReadonlySet<string>): Promise<ResearchReceipt[]> {
-  const receipts: ResearchReceipt[] = [];
-  for (const request of requests) {
-    if (!request.query.trim() || request.budget < 1) throw new Error('Research requires a non-empty query and positive budget');
+export async function executeResearch(requests: ResearchRequest[], rail: ResearchRail, now = Date.now(), freshnessMs = 30 * 86400_000, approvedRails?: ReadonlySet<string>, concurrency = 4): Promise<ResearchReceipt[]> {
+  if (!Number.isSafeInteger(concurrency) || concurrency < 1) throw new Error('Research concurrency must be a positive integer');
+  if (requests.some((request) => !request.query.trim() || !Number.isSafeInteger(request.budget) || request.budget < 1)) {
+    throw new Error('Research requires a non-empty query and positive budget');
+  }
+  const fetchReceipt = async (request: ResearchRequest): Promise<ResearchReceipt> => {
     const result = await rail(request);
     if (!/^approved:[a-z0-9][a-z0-9-]{1,63}$/i.test(result.rail) || (approvedRails && !approvedRails.has(result.rail))) throw new Error(`Unapproved research rail: ${result.rail}`);
     const byUrl = new Map<string, ResearchFinding>();
@@ -201,7 +203,15 @@ export async function executeResearch(requests: ResearchRequest[], rail: Researc
     const cache = { hit: result.cacheHit ?? false, key: digest(request), freshnessMs };
     const coverage = { requestedDomain: request.domain, citedSources: findings.length, budget: request.budget, satisfied: findings.length > 0 };
     const base = { request, rail: result.rail, findings, conflicts, coverage, cache };
-    receipts.push({ ...base, digest: digest(base) });
+    return { ...base, digest: digest(base) };
+  };
+  const receipts: ResearchReceipt[] = [];
+  for (let offset = 0; offset < requests.length; offset += concurrency) {
+    const wave = await Promise.allSettled(requests.slice(offset, offset + concurrency).map(fetchReceipt));
+    for (const result of wave) {
+      if (result.status === 'rejected') throw result.reason;
+      receipts.push(result.value);
+    }
   }
   return receipts;
 }

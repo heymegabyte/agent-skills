@@ -246,6 +246,7 @@ interface CompiledChange {
 
 export interface PipelineAdapters {
   research: ResearchRail;
+  researchConcurrency?: number;
   routeSliceSkills?: SliceSkillRouter;
   provider: ProviderLauncher;
   assignArchitect: (input: { changeId: string; prompt: string; hydratedBrief: HydratedArchitectBrief; evidenceDigest: string; roster: ReturnType<typeof selectConferenceRoster>; fixedPointDigest: string }) => Promise<ArchitectAssignmentReceipt>;
@@ -379,7 +380,7 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
       throw new Error(`Production pipeline requires non-empty research for: ${domain}`);
     }
   }
-  const research = await executeResearch(researchRequests, configured.research, Date.now(), 30 * 86400_000, new Set(input.approvedResearchRails));
+  const research = await executeResearch(researchRequests, configured.research, Date.now(), 30 * 86400_000, new Set(input.approvedResearchRails), configured.researchConcurrency);
   if (topicPlan && research.some((receipt) => !receipt.coverage.satisfied)) {
     throw new Error('Automatic topic research lacks cited findings for a planned query');
   }
