@@ -462,7 +462,7 @@ function substantiveSection(content: string, heading: RegExp, artifact: string):
   if (body.length < 12) throw new Error(`${artifact} has an empty or superficial semantic section`);
 }
 
-function parseOpenSpecArtifacts(artifacts: CompiledArtifact[], nodes: ExecutionNode[]): CompiledArtifact[] {
+export function parseOpenSpecArtifacts(artifacts: CompiledArtifact[], nodes: Array<Pick<ExecutionNode, 'id'>>): CompiledArtifact[] {
   const byKind = new Map(artifacts.map((artifact) => [artifact.kind, artifact]));
   if (byKind.size !== artifacts.length) throw new Error('OpenSpec artifact kinds must be unique');
   const proposal = byKind.get('proposal')!;

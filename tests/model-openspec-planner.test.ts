@@ -5,8 +5,14 @@ import type { OpenSpecCompilerInput } from '../bin/evidence-gated-orchestrator.t
 
 test('assigned architect proposes independent changes before host materialization', async () => {
   const input = { checkout: '/private/checkout', changeId: 'first', assignment: { changeId: 'first' } } as OpenSpecCompilerInput;
-  const change = { changeId: 'first', title: 'First', dependsOn: [], ownedPaths: ['src/first.ts'], proposal: '# Proposal', design: '# Design', spec: '# Spec', tasks: '# Tasks' };
-  const changes = [change, { ...change, changeId: 'second', ownedPaths: ['src/second.ts'] }];
+  const change = {
+    changeId: 'first', title: 'First', dependsOn: [], ownedPaths: ['src/first.ts'],
+    proposal: '# Proposal\n## Why\nProvide predictable results.\n## What Changes\nImplement the fixture behavior.',
+    design: '**Architect Role:** assigned\n## Context\nThe fixture needs a bounded change.\n## Goals / Non-Goals\nVerify observable behavior.\n## Decisions\nKeep implementation and tests together.',
+    spec: '### Requirement: Normalize input\n#### Scenario: Padded input\nReturn trimmed text.',
+    tasks: '- [ ] [first] Normalize input (requirements: Normalize input; scenarios: Padded input)',
+  };
+  const changes = [change, { ...change, changeId: 'second', ownedPaths: ['src/second.ts'], tasks: change.tasks.replace('[first]', '[second]') }];
   let output = JSON.stringify({ changes });
   const plan = createModelOpenSpecPlanner(async (assignment, prompt) => {
     assert.equal(assignment, input.assignment);
@@ -15,7 +21,11 @@ test('assigned architect proposes independent changes before host materializatio
     assert.ok(prompt.includes("End the line at the closing parenthesis"));
     return { launcher: 'approved:fixture', sessionId: 'fixture', output };
   });
-  assert.deepEqual((await plan(input)).changes, changes);
+  assert.deepEqual((await plan(input)).changes, changes.map((draft) => ({
+    ...draft, requirements: ['Normalize input'], scenarios: ['Padded input'], traceabilityIds: [draft.changeId],
+  })));
+  output = JSON.stringify({ changes: [{ ...change, tasks: change.tasks + '.' }] });
+  await assert.rejects(plan(input), /no semantic traceability mappings/);
   output = JSON.stringify({ changes: [change, change] });
   await assert.rejects(plan(input), /duplicate change/);
   output = JSON.stringify({ changes: [{ ...changes[0], dependsOn: ['second'] }, { ...changes[1], dependsOn: ['first'] }] });

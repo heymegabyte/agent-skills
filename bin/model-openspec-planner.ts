@@ -1,4 +1,4 @@
-import { validateOwnershipGraph } from './swarm-execution-kernel.ts';
+import { parseOpenSpecArtifacts, validateOwnershipGraph } from './swarm-execution-kernel.ts';
 import type { OpenSpecCompilerInput } from './evidence-gated-orchestrator.ts';
 
 type ArchitectSession = { launcher: string; sessionId?: string; output: string };
@@ -46,6 +46,14 @@ export function createModelOpenSpecPlanner(
       }
     }
     validateOwnershipGraph(changes.map(({ changeId, dependsOn, ownedPaths }) => ({ id: changeId, dependsOn, ownedPaths })));
-    return { changes, launcher: response.launcher, sessionId: response.sessionId };
+    const tracedChanges = changes.map((change) => {
+      const artifacts = (['proposal', 'design', 'spec', 'tasks'] as const).map((kind) => ({
+        kind, path: `${kind}.md`, content: change[kind], requirements: [], scenarios: [], traceabilityIds: [],
+      }));
+      const parsed = parseOpenSpecArtifacts(artifacts, [{ id: change.changeId }]);
+      const { requirements, scenarios, traceabilityIds } = parsed[0];
+      return { ...change, requirements, scenarios, traceabilityIds };
+    });
+    return { changes: tracedChanges, launcher: response.launcher, sessionId: response.sessionId };
   };
 }
