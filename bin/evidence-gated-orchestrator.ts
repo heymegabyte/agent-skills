@@ -156,6 +156,11 @@ export interface PipelineAdapters {
   compileOpenSpec: (input: OpenSpecCompilerInput) => Promise<CompiledChange & { additionalChanges?: Array<CompiledChange & { assignment: ArchitectAssignmentReceipt }> }>;
   scheduler: SchedulerAdapter;
   assessImprovements?: (input: { hydratedBrief: HydratedArchitectBrief; assignment: ArchitectAssignmentReceipt }) => Promise<{ candidates: DurableImprovementCandidate[]; policy: ImprovementPolicy }>;
+  refreshImprovements?: (input: { round: number; contracts: FrozenContract[]; executions: NodeExecutionReceipt[]; reuseExtraction?: ReuseExtractionReceipt }) => Promise<{
+    next: PipelineInput;
+    candidates: DurableImprovementCandidate[];
+    policy: ImprovementPolicy;
+  }>;
   extractReuse?: (input: { contract: FrozenContract; hydratedBrief: HydratedArchitectBrief }) => Promise<ReuseExtractionReceipt>;
   schedulerOptions?: Parameters<typeof executeFrozenContract>[2];
   verify: (input: { contract: FrozenContract; executions: NodeExecutionReceipt[] }) => Promise<{ passed: boolean; receipts: VerificationReceipt[]; blockers?: string[] }>;
@@ -422,7 +427,53 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
   }));
   const verification = { passed: true, receipts: verified.flatMap(({ receipts }) => receipts) };
   state = advance(state, 'adversarial-verification', { reviews: verification.receipts });
-  state = advance(state, 'complete', { complete: true, verification });
+  if (configured.refreshImprovements) {
+    const seenChanges = new Set(contracts.map(({ changeId }) => changeId));
+    const seenImprovements = new Set(improvementPhase?.rankedCandidates
+      .filter(({ disposition }) => disposition === 'accepted').map(({ fingerprint }) => fingerprint));
+    const waves = [];
+    let cleanRounds = 0;
+    for (let round = 1; cleanRounds < 2; round += 1) {
+      if (round > 8) throw new Error('Improvement review did not converge within eight rounds');
+      const refreshed = await configured.refreshImprovements(structuredClone({ round, contracts, executions, reuseExtraction }));
+      const phase = evaluateImprovementPhase({
+        candidates: refreshed.candidates, policy: refreshed.policy, priorFingerprints: seenImprovements,
+        runId: state.runId, runStateDigest: state.stateDigest, changeId: input.changeId,
+        sourceRevision: refreshed.next.sourceRevision, evaluatedAt: new Date().toISOString(),
+      });
+      const accepted = phase.rankedCandidates.filter(({ disposition }) => disposition === 'accepted');
+      if (!accepted.length) {
+        cleanRounds += 1;
+        waves.push({ phase });
+        continue;
+      }
+      cleanRounds = 0;
+      if (seenChanges.has(refreshed.next.changeId) || refreshed.next.checkout !== input.checkout
+        || refreshed.next.trustedAuthoritySourceDigest !== input.trustedAuthoritySourceDigest) {
+        throw new Error('Supplemental improvements require a distinct change under the original repository and authority');
+      }
+      const delivered = await runEvidenceGatedPipeline(refreshed.next, {
+        ...configured, refreshImprovements: undefined,
+        assessImprovements: async () => ({ candidates: accepted, policy: refreshed.policy }),
+        async compileOpenSpec(request) {
+          const plan = await configured.compileOpenSpec(request);
+          if (plan.additionalChanges?.some(({ assignment }) => seenChanges.has(assignment.changeId))) {
+            throw new Error('Supplemental plans cannot repeat an integrated change');
+          }
+          return plan;
+        },
+      });
+      for (const item of delivered.contracts) seenChanges.add(item.changeId);
+      for (const item of accepted) seenImprovements.add(item.fingerprint);
+      contracts.push(...delivered.contracts);
+      executions.push(...delivered.executions);
+      verification.receipts.push(...delivered.verificationReceipts);
+      waves.push({ phase, stateDigest: delivered.state.stateDigest });
+    }
+    state = advance(state, 'complete', { complete: true, verification, improvementWaves: waves });
+  } else {
+    state = advance(state, 'complete', { complete: true, verification });
+  }
   return {
     status: 'complete', state, contract, contracts, executions, verificationReceipts: verification.receipts, conferenceResolution,
     conferenceExecution,

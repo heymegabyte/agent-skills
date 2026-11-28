@@ -421,9 +421,11 @@ test('an admitted improvement must appear in the OpenSpec artifacts before dispa
       conflictsWith: [], affectedPaths: ['src/app.ts'], packages: [], acceptanceCriteria: ['Both workflows pass'],
     }],
   });
+  const originalArtifacts = paths.map((path) => readFileSync(join(checkout, path), 'utf8'));
   let includeImprovement = false;
   adapters.compileOpenSpec = async (request) => {
-    assert.equal(request.admittedImprovements?.length, 1);
+    if (!request.admittedImprovements?.length) return compile(request);
+    assert.equal(request.admittedImprovements.length, 1);
     const [improvement] = request.admittedImprovements!;
     assert.equal(improvement.title, 'Reuse the validator');
     const compiled = await compile(request);
@@ -443,4 +445,22 @@ test('an admitted improvement must appear in the OpenSpec artifacts before dispa
   const result = await runEvidenceGatedPipeline(request, adapters);
   assert.equal(result.status, 'complete');
   assert.match(result.contract.nodes[0].workerPrompt ?? '', /Verify reuse/);
+  paths.forEach((path, index) => writeFileSync(join(checkout, path), originalArtifacts[index]));
+  const assess = adapters.assessImprovements;
+  adapters.assessImprovements = undefined;
+  const refreshRounds: number[] = [];
+  adapters.refreshImprovements = async ({ round, executions }) => {
+    refreshRounds.push(round);
+    assert.ok(executions.some(({ status }) => status === 'integrated'));
+    const { candidates, policy } = await assess!({} as never);
+    return {
+      next: { ...request, changeId: 'improvement-wave', sourceRevision: 'b'.repeat(40) },
+      candidates: round === 1 ? candidates : [],
+      policy,
+    };
+  };
+  const withWave = await runEvidenceGatedPipeline(request, adapters);
+  assert.deepEqual(refreshRounds, [1, 2, 3]);
+  assert.deepEqual(withWave.contracts.map(({ changeId }) => changeId), [request.changeId, 'improvement-wave']);
+  assert.match(withWave.contracts[1].nodes[0].workerPrompt ?? '', /Verify reuse/);
 });
