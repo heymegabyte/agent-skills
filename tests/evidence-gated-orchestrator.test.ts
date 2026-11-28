@@ -470,23 +470,31 @@ test('configured proposal capture invokes a dedicated provider and records cited
   const calls: string[] = [];
   const adapters = configured(checkout, paths, calls);
   const provider = adapters.provider;
+  const roots = {
+    'agent-skills': mkdtempSync(join(tmpdir(), 'reuse-skills-')),
+    'theme.tools': mkdtempSync(join(tmpdir(), 'reuse-theme-')),
+    'install.doctor': mkdtempSync(join(tmpdir(), 'reuse-install-')),
+  };
+  adapters.reuseProposalRoots = roots;
   adapters.provider = async (family, request) => {
     if (!request.startsWith('Review the OpenSpec evidence')) return provider(family, request);
     return {
       launcher: 'approved:fixture-reuse', sessionId: 'reuse-session-1',
-      output: JSON.stringify([{
-        destination: 'agent-skills', title: 'Share verification guidance', problem: 'Guidance is duplicated',
+      output: JSON.stringify(Object.keys(roots).map((destination) => ({
+        destination, title: 'Share verification guidance', problem: 'Guidance is duplicated',
         benefit: 'One source', scope: 'Agent verification guidance', acceptance: 'Both routes resolve to the same guidance',
         evidence: [paths[0]],
-      }]),
+      }))),
     };
-  };
-  adapters.captureReuseProposal = async (proposal) => {
-    assert.equal(proposal.problem, 'Guidance is duplicated');
-    assert.deepEqual(proposal.evidence, [paths[0]]);
-    return 'openspec/changes/share-verification/proposal.md';
   };
   const result = await runEvidenceGatedPipeline(input(checkout, specialists), adapters);
   assert.equal(result.reuseExtraction?.ownerSession, 'reuse-session-1');
-  assert.equal(result.reuseExtraction?.findings[0].destination, 'agent-skills');
+  assert.equal(result.reuseExtraction?.findings.length, 3);
+  for (const finding of result.reuseExtraction!.findings) {
+    const text = readFileSync(join(roots[finding.destination], finding.proposalPath), 'utf8');
+    assert.match(text, /Guidance is duplicated/);
+    assert.ok(text.includes(paths[0]));
+  }
+  const repeated = await runEvidenceGatedPipeline(input(checkout, specialists), adapters);
+  assert.deepEqual(repeated.reuseExtraction?.findings, result.reuseExtraction?.findings);
 });

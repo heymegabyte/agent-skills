@@ -45,6 +45,7 @@ import {
   type SchedulerAdapter,
 } from './swarm-execution-kernel.ts';
 import { acceptedImprovementRequirements, evaluateImprovementPhase, type DurableImprovementCandidate, type ImprovementPolicy } from './recursive-improvement.ts';
+import { createReuseProposalWriter } from './reuse-proposal-writer.ts';
 import { createRunState, transitionRun, type RunState } from './orchestration-run-state.ts';
 
 const digest = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
@@ -137,7 +138,7 @@ interface ReuseFinding {
   evidence: string[];
 }
 
-type ReuseProposal = Pick<ReuseFinding, 'destination' | 'evidence'> & {
+export type ReuseProposal = Pick<ReuseFinding, 'destination' | 'evidence'> & {
   title: string;
   problem: string;
   benefit: string;
@@ -208,6 +209,7 @@ export interface PipelineAdapters {
     candidates: DurableImprovementCandidate[];
     policy: ImprovementPolicy;
   }>;
+  reuseProposalRoots?: Parameters<typeof createReuseProposalWriter>[0];
   captureReuseProposal?: (proposal: ReuseProposal) => Promise<string>;
   extractReuse?: (input: { contract: FrozenContract; hydratedBrief: HydratedArchitectBrief }) => Promise<ReuseExtractionReceipt>;
   schedulerOptions?: Parameters<typeof executeFrozenContract>[2];
@@ -429,8 +431,9 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
   }
   state = advance(state, 'openspec-compilation', { contract: compiled, improvementPhase });
   state = advance(state, 'contract-freeze', { contract, contracts });
-  const extractReuse = configured.extractReuse ?? (configured.captureReuseProposal
-    ? () => reviewReusableWork(contract, configured.provider, configured.captureReuseProposal!)
+  const captureReuse = configured.captureReuseProposal ?? (configured.reuseProposalRoots && createReuseProposalWriter(configured.reuseProposalRoots));
+  const extractReuse = configured.extractReuse ?? (captureReuse
+    ? () => reviewReusableWork(contract, configured.provider, captureReuse)
     : undefined);
   const [executionResult, reuseResult] = await Promise.allSettled([
     executeFrozenChanges(changes, configured.scheduler, configured.schedulerOptions),
