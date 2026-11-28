@@ -41,7 +41,7 @@ source: "25-quality-performance/SKILL.md (heymegabyte/agent-skills)"
 
 ## Multi-Swarm Parallelization & OpenCode (DeepSeek) Offload Mandate
 
-- **Domain Swarm Directive**: Enforce 100% unit test coverage, sub-200ms TTFR, and parallel Cloudflare Browser Run (`@cloudflare/playwright`) 6-breakpoint E2E verification using concurrent `opencode` (DeepSeek) test-writer swarms.
+- **Domain Swarm Directive**: Include applicable performance budgets and responsive browser coverage in each change contract. The implementation owner runs those checks.
 - **Whole-change dispatch**. Apply `rules/openspec-change-ownership.md` and `rules/agent-provider-policy.md`. Assign each OpenSpec change one owner through verification. Route suitable bounded changes to OpenCode with DeepSeek through LiteLLM.
 - **Architecture and verification**: Route material decisions through `rules/evidence-gated-autonomous-orchestration.md`. Its conference and risk gates govern provider selection and independence.
 - **Reuse review**: Review reuse during implementation under `control-plane/RUNTIME.md`. Capture cited proposals for application code in `theme.tools`, host configuration in `install.doctor`, and agent guidance in `agent-skills`. Submit authorized findings to same-run OpenSpec admission.

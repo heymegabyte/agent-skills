@@ -25,17 +25,17 @@ const DISPATCH_DIRECTIVE = `- ${DISPATCH_MARKER} At intake and after each depend
 
 const DOMAIN_GUIDANCE: Record<string, string> = {
   '01-operating-system':
-    'Intercept every prompt via `bin/prompt-hydrator.ts`, audit missing product surfaces (e.g., `Settings`, `Plugin Catalogs`, `@theme.tools/*`), convene a right-sized SCRUM deliberation quorum (`bin/scrum-deliberation-quorum.ts`) across `claude`, `codex`, and `gemini`, lock OpenSpec DAG contracts, and offload 80%+ of throughput-safe volume to parallel `opencode` (DeepSeek) worktree swarms.',
+    'Hydrate material requests, audit relevant product gaps, and route approved outcomes through governed OpenSpec execution.',
   '02-goal-and-brief':
-    'Hydrate every brief with parallel web research and competitor tear-downs across all 10 product categories (`C01`–`C10`), convene only the required specialist agents in a SCRUM synthesis meeting, and compile parallel OpenSpec task DAGs for `opencode` (DeepSeek) swarm execution.',
+    'Research each material outcome and its relevant alternatives. Give the architect evidence-backed briefs and candidate acceptance criteria.',
   '04-preference-and-memory':
     'Preserve durable operator preferences across parallel worktree swarms: default to autonomous completion on `main`, full plugin catalog fan-out, and aggressive `opencode` (DeepSeek via LiteLLM) offloading to protect finite `claude`/`codex`/`gemini` subscription windows.',
   '05-architecture-and-stack':
-    'Have the Frontier Architect (`claude` / `codex` / `gemini` — never `opencode`) lock Hono RPC routes, Drizzle schemas, Zod contracts, and OpenSpec DAGs (`task-graph.json`), then fan out independent service, migration, and `@theme.tools/*` adapter shards to parallel `opencode` (DeepSeek) worktree swarms.',
+    'Have the assigned architect freeze Hono RPC, Drizzle, Zod, and shared adapter contracts. Dispatch independent OpenSpec changes after dependency and ownership checks.',
   '06-build-and-slice-loop':
-    'Execute independent slices in parallel worktrees through approved host adapters for `bin/evidence-gated-orchestrator.ts`. Auto-complete audited gaps (such as multi-tab `Settings`, `Notifications`, and `Billing`) by offloading bounded slice implementation to parallel `opencode` (DeepSeek) workers.',
+    'For material product gaps, define bounded OpenSpec changes with end-to-end acceptance. Execute independent changes in isolated worktrees through approved host adapters.',
   '07-quality-and-verification':
-    'Fan out test generation across parallel `opencode` (DeepSeek) swarms to achieve **100% unit test coverage** and **near-100% E2E coverage** executed in parallel via **Cloudflare Browser Run** (`@cloudflare/playwright` bound to `env.MYBROWSER` / `BROWSER`) across all 6 breakpoints and 16 OKLCH visual states, gated by cross-model `codex`/`gemini` adversarial review.',
+    'Keep tests with the change owner. Verify applicable responsive and interaction states using the existing browser rail and escalate consequential findings for independent review.',
   '08-deploy-and-runtime-verification':
     'Run pre-deploy contract gates in parallel, fold verified swarm worktrees cleanly onto `main`, provision Cloudflare Worker bindings (`wrangler.toml`) and custom domain SSL routing, deploy to production, purge the Cloudflare CDN cache, and run parallel post-deploy Browser Run smoke probes.',
   '09-brand-and-content-system':
@@ -49,11 +49,11 @@ const DOMAIN_GUIDANCE: Record<string, string> = {
   '13-observability-and-growth':
     'Wire all 7 observability rails (PostHog, GA4, GTM, Sentry, Cloudflare Web Analytics, OTLP, and Langfuse `2500ms` fail-open tracing) and Stripe/Link billing webhooks in parallel across `opencode` (DeepSeek) worktree shards.',
   '14-independent-idea-engine':
-    'Cycle through every categorical aspect of the product with heavy web research until zero recommendable ideas remain, then implement 100% of recommendable ideas in the same turn via massive parallel `opencode` (DeepSeek) swarms rather than presenting passive recommendation lists.',
+    'Research improvement opportunities during implementation. Preserve concrete findings in OpenSpec and execute admitted follow-ups in the same run.',
   '15-site-generation':
     'Decompose multi-page site generation, pSEO route matrices, local-SEO schemas, and `@theme.tools/*` block composition into disjoint OpenSpec DAG shards executed concurrently by `opencode` (DeepSeek) worker swarms.',
   '16-cinematic-website-prime-directive':
-    'Combine tri-frontier architectural direction (`claude` + `codex` + `gemini` SCRUM quorum) with massive `opencode` (DeepSeek) parallel worktree execution so all 100+ cinematic rules, 6 breakpoints, 16 states, and Cloudflare Browser Run E2E checks finish in a single autonomous pass.',
+    'Translate cinematic requirements into scoped acceptance criteria for responsive layouts, interaction states, and browser checks.',
   '21-app-foundation':
     'Audit and scaffold foundational SaaS pillars (Auth/RBAC, multi-tab Settings, Workspaces, Plugin Registry, `@theme.tools/*` thin-shell config) on pass 1 by fanning out independent foundation modules to parallel `opencode` (DeepSeek) workers.',
   '22-visual-experience':
@@ -61,9 +61,9 @@ const DOMAIN_GUIDANCE: Record<string, string> = {
   '23-content-seo':
     'Generate per-route metadata, JSON-LD graphs, `sitemap.xml`, `llms.txt`, and research-backed editorial content in parallel waves using `opencode` (DeepSeek) workers.',
   '24-functional':
-    'Decompose functional feature requests into contract-locked OpenSpec DAG nodes, implementing full plugin catalogs, Settings panels, and domain workflows in parallel via `opencode` (DeepSeek) swarms.',
+    'Group plugin, settings, and workflow work into independently verifiable OpenSpec changes with end-to-end owners.',
   '25-quality-performance':
-    'Enforce 100% unit test coverage, sub-200ms TTFR, and parallel Cloudflare Browser Run (`@cloudflare/playwright`) 6-breakpoint E2E verification using concurrent `opencode` (DeepSeek) test-writer swarms.',
+    'Include applicable performance budgets and responsive browser coverage in each change contract. The implementation owner runs those checks.',
   '26-platform-delivery':
     'Automate `main`-branch folding, `wrangler.toml` binding provisioning, custom domain connection, Cloudflare production deployment, and CDN cache purging at the conclusion of every multi-swarm build.',
   '27-trust-compliance':
@@ -71,7 +71,7 @@ const DOMAIN_GUIDANCE: Record<string, string> = {
   '28-cf-integrations-reference':
     'Provision Cloudflare Workers, D1, KV, R2, Queues, Workflows, AI, and Browser Rendering (`[browser]` / `@cloudflare/playwright`) bindings in parallel worktrees with deterministic local port leasing.',
   'openclaw-integration':
-    'Coordinate Paperclip governance and OpenClaw 35-agent execution by routing frontier architecture and SCRUM synthesis to `claude`/`codex`/`gemini` while offloading 80%+ of throughput-safe coding and plugin swarms to `opencode` (DeepSeek via LiteLLM).',
+    'Route OpenClaw work through Paperclip governance and governed OpenSpec execution, respecting provider capability and approved worker capacity.',
 };
 
 const TRIAD_BULLET =

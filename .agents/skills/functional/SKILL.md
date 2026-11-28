@@ -47,7 +47,7 @@ source: "24-functional/SKILL.md (heymegabyte/agent-skills)"
 
 ## Multi-Swarm Parallelization & OpenCode (DeepSeek) Offload Mandate
 
-- **Domain Swarm Directive**: Decompose functional feature requests into contract-locked OpenSpec DAG nodes, implementing full plugin catalogs, Settings panels, and domain workflows in parallel via `opencode` (DeepSeek) swarms.
+- **Domain Swarm Directive**: Group plugin, settings, and workflow work into independently verifiable OpenSpec changes with end-to-end owners.
 - **Whole-change dispatch**. Apply `rules/openspec-change-ownership.md` and `rules/agent-provider-policy.md`. Assign each OpenSpec change one owner through verification. Route suitable bounded changes to OpenCode with DeepSeek through LiteLLM.
 - **Architecture and verification**: Route material decisions through `rules/evidence-gated-autonomous-orchestration.md`. Its conference and risk gates govern provider selection and independence.
 - **Reuse review**: Review reuse during implementation under `control-plane/RUNTIME.md`. Capture cited proposals for application code in `theme.tools`, host configuration in `install.doctor`, and agent guidance in `agent-skills`. Submit authorized findings to same-run OpenSpec admission.
