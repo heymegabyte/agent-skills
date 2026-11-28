@@ -48,3 +48,9 @@
 - The configured OpenCode LiteLLM base is `https://llm.megabyte.space/v1`. A fresh Flash request ran from `2026-11-28T07:53:53Z` through `07:54:01Z`, returned `UnknownError`, and exited 1.
 - The Cloudflare Security Events query for that hostname from `07:53:40Z` through `07:54:15Z` returned no rows. The earlier query for `/v1/chat/completions` returned three Browser Integrity Check events identified as Python clients.
 - The empty sampled event set does not establish whether OpenCode reached the gateway. The exact Python probe attribution therefore does not extend to OpenCode without a client response identifier or an upstream trace.
+
+## Independent live fallback changes
+
+- At `deeedff4`, the frozen-change queue ran two independent changes through the live Codex development launcher, using two approved fixture slots. The measured peak was two overlapping launcher calls.
+- Each worker changed only its distinct owned Markdown file, passed `git diff --check`, and returned an integrated receipt. The host serialized the exact accepted patches onto the disposable Git repository. Both expected edits were committed and the checkout was clean.
+- The fixture demonstrates live parallel scheduling and local integration using a documented premium fallback. It does not establish live OpenCode capacity, remote delivery, or production orchestration.
