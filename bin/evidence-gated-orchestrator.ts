@@ -370,13 +370,20 @@ async function planTopicResearch(
 }
 
 export class ArchitectureConvergenceError extends Error {
+  readonly fixedPoint: Awaited<ReturnType<typeof convergeArchitecture>>;
+  readonly critiqueReceipts: Awaited<ReturnType<typeof invokeProviderCritiqueRound>>['receipts'];
+  readonly conferenceExchanges: Awaited<ReturnType<typeof invokeProviderCritiqueRound>>['exchanges'];
+
   constructor(
-    readonly fixedPoint: Awaited<ReturnType<typeof convergeArchitecture>>,
-    readonly critiqueReceipts: Awaited<ReturnType<typeof invokeProviderCritiqueRound>>['receipts'],
-    readonly conferenceExchanges: Awaited<ReturnType<typeof invokeProviderCritiqueRound>>['exchanges'],
+    fixedPoint: ArchitectureConvergenceError['fixedPoint'],
+    critiqueReceipts: ArchitectureConvergenceError['critiqueReceipts'],
+    conferenceExchanges: ArchitectureConvergenceError['conferenceExchanges'],
   ) {
     super(fixedPoint.blocker ?? 'Architecture fixed point did not converge');
     this.name = 'ArchitectureConvergenceError';
+    this.fixedPoint = fixedPoint;
+    this.critiqueReceipts = critiqueReceipts;
+    this.conferenceExchanges = conferenceExchanges;
   }
 }
 
