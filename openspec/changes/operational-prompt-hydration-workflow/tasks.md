@@ -93,9 +93,9 @@
 
 ## Current instruction and routing audit
 
-- [ ] Compare installed managed blocks and skill routes with canonical policy. Verify supported harness loading using current evidence.
-- [ ] Reconcile instructions for whole-change ownership, research-backed split synthesis, concurrent reusable-value extraction, and same-round improvement admission. Run prompt-policy and routing checks.
+- [ ] Compare installed managed blocks and skill routes with canonical policy. Verify supported harness loading using current evidence. Codex and Claude loaded v1.3.0 in fresh sessions. Gemini remains file-verified only. See [live policy loading](evidence/live-policy-1.3.0.md).
+- [x] Reconcile instructions for whole-change ownership, research-backed split synthesis, concurrent reusable-value extraction, and same-round improvement admission. Policy v1.3.0 passed projection checks for all 32 repository targets. See [Claude routing](evidence/claude-live-workflow-routing.md) and [live policy loading](evidence/live-policy-1.3.0.md).
 - [ ] Verify remaining live release and consumer edges from the registry and consumer runtime. Reconcile the OpenSpec trace with observed results.
-- [ ] Wire the pre-architecture stage to generate evidence-backed synthesis for independent prompt slices. Verify that the architect receives the synthesized briefs and their evidence digests through a supported entrypoint.
-- [ ] Dispatch independently owned changes across dependency waves. Verify that scheduler admission rejects task-level ownership transfers within a change.
-- [ ] Run dedicated reusable-value extraction concurrently and feed admitted discoveries back into OpenSpec during execution. Verify destination-specific receipts and refreshed convergence before completion.
+- [x] Wire the pre-architecture stage to generate evidence-backed synthesis for independent prompt slices. The supported orchestrator function delivered two live Codex slices and matching digests to its architect assignment callback. See [live architect handoff](evidence/codex-live-architect-handoff.md).
+- [ ] Dispatch independently owned changes across dependency waves. Controlled tests reject split ownership and exercise parallel readiness. The live Codex fixture proved dependent dispatch and integration. Live OpenCode throughput and independent production dispatch remain open. See [worker evidence](evidence/opencode-live-worker-probe.md).
+- [ ] Run dedicated reusable-value extraction concurrently and feed admitted discoveries back into OpenSpec during execution. Controlled tests cover overlap, writes to three isolated roots, and supplemental dispatch. The [live Codex review](evidence/codex-live-reuse-review.md) verified one isolated write. Production capture and same-run supplemental execution remain open.
