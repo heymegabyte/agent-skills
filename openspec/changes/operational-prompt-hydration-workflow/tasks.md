@@ -116,3 +116,4 @@
 
 - [x] Register the ownership check with the test runner. Root-level `bun test` previously exited from the standalone ownership script before reaching the remaining suites.
 - [ ] Reconcile full-suite failures against the workflow contract. At `b0bd9b63`, a clean `bun test ./tests` ran 263 tests with 259 passing. Failures covered installed drift status, a duplicate lifecycle orchestration section, a mismatched generated delivery trace, and a timed-out coordinator wrapper. Verify each individually before assigning root cause and require a full-suite pass after remediation.
+- [x] Reproduce the existing delivery ledger using historical Git snapshots for focused test hashes. Verified that each hash matches the existing receipt and left the ledger bytes intact.

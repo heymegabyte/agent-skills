@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -116,11 +117,21 @@ function pathsForTask(id: string, checked: boolean): string[] {
   return paths;
 }
 
+// These two suites were added or revised in later evidence commits.
+const verificationSourceByPhase: Record<string, string> = {
+  '4': '7884d642b036435635dafee22c9d5689b423bd29',
+  '10': '79ec6f2287a7423bae48754378cf2f21ff7e9c7e',
+};
+
 function verificationForTask(root: string, id: string, evidenceFile?: string) {
-  const tests = verificationTests[id.split('.')[0]];
+  const phase = id.split('.')[0];
+  const tests = verificationTests[phase];
   if (!tests) throw new Error(`Missing verification manifest for task ${id}`);
   const testPaths = tests.split(' ');
-  const digestInput = testPaths.map((path) => readFileSync(join(root, path), 'utf8')).join('\n');
+  const revision = verificationSourceByPhase[phase] ?? integratedAgentSkillsRevision;
+  const digestInput = testPaths.map((path) => execFileSync('git', [
+    '--no-replace-objects', 'show', `${revision}:${path}`,
+  ], { cwd: root, encoding: 'utf8' })).join('\n');
   const receipts: Record<string, unknown>[] = [{
     id: `VERIFY:TASK-${id}:FOCUSED`,
     command: `node --experimental-strip-types --test ${tests}`,
