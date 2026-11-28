@@ -488,10 +488,15 @@ test('an admitted improvement must appear in the OpenSpec artifacts before dispa
       next: { ...request, changeId: 'improvement-wave', sourceRevision: 'b'.repeat(40) },
       candidates: round === 1 ? candidates : [],
       policy,
+      refresh: {
+        evidenceIds: [round < 3 ? 'initial-evidence' : 'updated-evidence'],
+        coverageIds: ['fixture-coverage'],
+        refreshedAt: new Date().toISOString(),
+      },
     };
   };
   const withWave = await runEvidenceGatedPipeline(request, adapters);
-  assert.deepEqual(refreshRounds, [1, 2, 3]);
+  assert.deepEqual(refreshRounds, [1, 2, 3, 4]);
   assert.deepEqual(withWave.contracts.map(({ changeId }) => changeId), [request.changeId, 'improvement-wave']);
   assert.match(withWave.contracts[1].nodes[0].workerPrompt ?? '', /Verify reuse/);
 });

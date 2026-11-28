@@ -46,7 +46,7 @@ import {
   type NodeExecutionReceipt,
   type SchedulerAdapter,
 } from './swarm-execution-kernel.ts';
-import { acceptedImprovementRequirements, evaluateImprovementPhase, type DurableImprovementCandidate, type ImprovementPolicy } from './recursive-improvement.ts';
+import { acceptedImprovementRequirements, createImprovementConvergenceState, evaluateImprovementPhase, recordImprovementConvergenceRound, type DurableImprovementCandidate, type ImprovementConvergenceState, type ImprovementPolicy, type ImprovementRefreshSnapshot } from './recursive-improvement.ts';
 import { createReuseProposalWriter } from './reuse-proposal-writer.ts';
 import { createRunState, transitionRun, type RunState } from './orchestration-run-state.ts';
 
@@ -255,6 +255,7 @@ export interface PipelineAdapters {
     next: PipelineInput;
     candidates: DurableImprovementCandidate[];
     policy: ImprovementPolicy;
+    refresh: ImprovementRefreshSnapshot;
   }>;
   reuseProposalRoots?: Parameters<typeof createReuseProposalWriter>[0];
   captureReuseProposal?: (proposal: ReuseProposal) => Promise<string>;
@@ -544,8 +545,8 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
     const seenImprovements = new Set(improvementPhase?.rankedCandidates
       .filter(({ disposition }) => disposition === 'accepted').map(({ fingerprint }) => fingerprint));
     const waves = [];
-    let cleanRounds = 0;
-    for (let round = 1; cleanRounds < 2; round += 1) {
+    let convergence: ImprovementConvergenceState | undefined;
+    for (let round = 1; convergence?.status !== 'converged'; round += 1) {
       if (round > 8) throw new Error('Improvement review did not converge within eight rounds');
       const refreshed = await configured.refreshImprovements(structuredClone({ round, contracts, executions, reuseExtraction, reuseExtractions }));
       const phase = evaluateImprovementPhase({
@@ -554,12 +555,15 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
         sourceRevision: refreshed.next.sourceRevision, evaluatedAt: new Date().toISOString(),
       });
       const accepted = phase.rankedCandidates.filter(({ disposition }) => disposition === 'accepted');
+      convergence = recordImprovementConvergenceRound(convergence ?? createImprovementConvergenceState(phase), {
+        ...refreshed.refresh,
+        candidateIds: phase.rankedCandidates.map(({ id }) => id),
+        winnerIds: accepted.map(({ id }) => id),
+      });
       if (!accepted.length) {
-        cleanRounds += 1;
         waves.push({ phase });
         continue;
       }
-      cleanRounds = 0;
       if (seenChanges.has(refreshed.next.changeId) || refreshed.next.checkout !== input.checkout
         || refreshed.next.trustedAuthoritySourceDigest !== input.trustedAuthoritySourceDigest) {
         throw new Error('Supplemental improvements require a distinct change under the original repository and authority');
@@ -583,7 +587,7 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
       verification.receipts.push(...delivered.verificationReceipts);
       waves.push({ phase, stateDigest: delivered.state.stateDigest });
     }
-    state = advance(state, 'complete', { complete: true, verification, improvementWaves: waves });
+    state = advance(state, 'complete', { complete: true, verification, improvementWaves: waves, improvementConvergence: convergence });
   } else {
     state = advance(state, 'complete', { complete: true, verification });
   }
