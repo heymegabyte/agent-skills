@@ -93,7 +93,7 @@
 
 ## Current instruction and routing audit
 
-- [ ] Compare installed managed blocks and skill routes with canonical policy. Verify supported harness loading using current evidence. Codex and Claude loaded v1.3.0 in fresh sessions. Gemini remains file-verified only. See [live policy loading](evidence/live-policy-1.3.0.md).
+- [ ] Compare installed managed blocks and skill routes with canonical policy. Verify supported harness loading using current evidence. Codex, Claude, and Antigravity loaded v1.3.0 in fresh sessions. The standalone Gemini CLI remains file-verified only. See [live policy loading](evidence/live-policy-1.3.0.md).
 - [x] Reconcile instructions for whole-change ownership, research-backed split synthesis, concurrent reusable-value extraction, and same-round improvement admission. Policy v1.3.0 passed projection checks for all 32 repository targets. See [Claude routing](evidence/claude-live-workflow-routing.md) and [live policy loading](evidence/live-policy-1.3.0.md).
 - [ ] Verify remaining live release and consumer edges from the registry and consumer runtime. Reconcile the OpenSpec trace with observed results.
 - [x] Wire the pre-architecture stage to generate evidence-backed synthesis for independent prompt slices. The supported orchestrator function delivered two live Codex slices and matching digests to its architect assignment callback. See [live architect handoff](evidence/codex-live-architect-handoff.md).
