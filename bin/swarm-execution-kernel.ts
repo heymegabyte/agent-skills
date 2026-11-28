@@ -91,6 +91,7 @@ export interface NodeExecutionReceipt {
   sourceDigestAfter?: string;
   changedFiles: string[];
   launcher?: ProcessReceipt;
+  preflight?: ProviderPreflight;
   acceptance: ProcessReceipt[];
   review?: IndependentReviewReceipt;
   integration?: { baseRevision: string; sourceDigest: string; integratedRevision?: string };
@@ -673,7 +674,7 @@ async function executeNodes(
             ? `Resume after provider cooldown${preflight.retryAt ? ` at ${preflight.retryAt}` : ''}`
             : 'Correct approved launcher, budget, or provider policy and resume the node';
           const rejected: NodeExecutionReceipt = {
-            ...receipt, status: 'failed', failure: `Preflight rejected: ${preflight.reason ?? 'unknown'}`, recoveryAction,
+            ...receipt, status: 'failed', preflight, failure: `Preflight rejected: ${preflight.reason ?? 'unknown'}`, recoveryAction,
           };
           if (preflight.throttled && attempt < maxAttempts && providers[attempt] && providers[attempt] !== provider) {
             receipts.push(rejected);

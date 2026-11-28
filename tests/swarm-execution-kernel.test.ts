@@ -790,6 +790,7 @@ test('throttling skips process launch and uses only a frozen fallback within the
   });
   const withFallback = await executeFrozenContract(makeContract(), runner);
   assert.equal(withFallback[0].launcher, undefined);
+  assert.deepEqual(withFallback[0].preflight, { ok: false, throttled: true, reason: 'HTTP 429', retryAt });
   assert.match(withFallback[0].recoveryAction ?? '', /2026-11-28T14:00:00Z/);
   assert.equal(withFallback[1].provider, 'codex');
   assert.equal(withFallback[1].status, 'integrated');

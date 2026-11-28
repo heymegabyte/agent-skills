@@ -239,3 +239,5 @@
 - [x] Interpret gateway throttling in shared worker preflight. An approved host probe supplies HTTP status and Retry-After. Concurrent checks share one observation and use the same recorded cooldown. A live authenticated DeepSeek Flash probe returned HTTP 429 and both callers received the same retry timestamp from one network request. The production host binding remains open.
 
 - [x] Verify the local DeepSeek readiness callback in the coordinator. With the authenticated gateway returning HTTP 429, both independent changes received the same cooldown receipt. The live fixture confirmed zero worktrees and zero worker launches. Production host activation and eventual successful dispatch after the provider cooldown remain open.
+
+- [x] Preserve the structured preflight result in failed attempt receipts. The host can read the provider's retry timestamp directly from `preflight.retryAt` when a worker launch is skipped or an approved fallback succeeds. Verify that the denied primary attempt retains the observation.
