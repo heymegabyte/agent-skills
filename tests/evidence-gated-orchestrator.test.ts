@@ -102,6 +102,15 @@ function input(checkout: string, specialists: Specialist[]) {
 test('composition root executes the receipt-gated production sequence through verification', async () => {
   const { checkout, paths, specialists } = fixture(); const calls: string[] = [];
   const adapters = configured(checkout, paths, calls);
+  const provider = adapters.provider;
+  adapters.routeSliceSkills = async ({ topic }) => [{ id: 'verification', guidance: `Verify ${topic}` }];
+  adapters.provider = (family, request) => {
+    if (request.startsWith('Enhance these instructions')) {
+      const { topic, skills } = JSON.parse(request.split('\n').at(-1)!);
+      assert.deepEqual(skills, [{ id: 'verification', guidance: `Verify ${topic}` }]);
+    }
+    return provider(family, request);
+  };
   const { assignArchitect, compileOpenSpec } = adapters;
   let architectEvidenceDigest: string | undefined;
   adapters.assignArchitect = (request) => {
@@ -111,6 +120,10 @@ test('composition root executes the receipt-gated production sequence through ve
     for (const [index, slice] of request.hydratedBrief.slices.entries()) {
       assert.deepEqual(slice.researchDigests, [request.hydratedBrief.evidence.research[index].digest]);
       assert.equal(slice.brief, `Principal prompt for ${slice.topic}`);
+      assert.deepEqual(slice.skillDigests, [{
+        id: 'verification',
+        digest: createHash('sha256').update(JSON.stringify(`Verify ${slice.topic}`)).digest('hex'),
+      }]);
     }
     assert.equal(request.hydratedBrief.synthesis.briefs.length, 3);
     assert.equal(request.hydratedBrief.synthesis.receipts.length, 3);
