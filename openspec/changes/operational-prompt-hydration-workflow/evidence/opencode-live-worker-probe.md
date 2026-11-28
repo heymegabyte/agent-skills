@@ -58,3 +58,9 @@
 ## Pinned runtime comparison
 
 The host CLI reported OpenCode 1.19.4. The `install.doctor` lock at `b7b84dfd` pinned 2.2.5 for its desktop runtime. A temporary macOS ARM64 copy matched the lock's archive size and SHA-256, and the extracted binary reported 2.2.5. The same broker-backed LiteLLM Flash reply probe still exited 1 with no text response. The installed CLI was left in place. This shows that using the pinned desktop runtime alone did not restore inference in the tested environment.
+
+## Plugin isolation and current gateway responses
+
+A fresh OpenCode 1.19.4 Flash reply probe emitted `UnknownError` with a generic server message and a diagnostic reference. Repeating it with `--pure` and error logging produced the same exit code (1) and no reply. Neither response exposed an HTTP code or Cloudflare Ray ID. The direct DeepSeek fallback exited 4 because its brokered credential was unavailable.
+
+In separate authenticated requests, the LiteLLM `/v1/models` and `/v1/chat/completions` endpoints both returned HTTP 403 with plain-text responses and Ray IDs `a618ca2d1ea0fbc3-EWR` and `a618ca2e7b61fbc3-EWR`, respectively. These IDs identify the direct requests only. The earlier Browser Integrity Check attribution was for a different, correlated Ray. Live OpenCode capacity remains unverified.
