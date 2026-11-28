@@ -281,6 +281,8 @@ export interface PipelineAdapters {
 }
 
 export interface VerificationReceipt {
+  sessionId?: string;
+
   reviewerFamily: 'claude' | 'codex' | 'gemini';
   launcher: string;
   inputDigest: string;

@@ -9,6 +9,7 @@ import { issueArchitectAssignment, type ProcessReceipt, type SchedulerAdapter } 
 import type { ModelFamily, Specialist } from '../bin/evidence-gated-deliberation.ts';
 import { createHash } from 'node:crypto';
 import { createModelOpenSpecPlanner } from '../bin/model-openspec-planner.ts';
+import { createModelDeliveryVerification } from '../bin/model-delivery-verification.ts';
 import { createModelOpenSpecCompiler } from '../bin/model-openspec-compiler.ts';
 import { materializeLocalOpenSpec } from '../bin/local-openspec-materializer.ts';
 import { createDetachedDevelopmentWorktree } from '../bin/local-development-worktree.ts';
@@ -739,6 +740,36 @@ test('approved model drafts reach an isolated worker through the Git materialize
   } finally {
     if (directory) git('worktree', 'remove', directory);
     rmSync(worktreeRoot, { recursive: true, force: true });
+    rmSync(checkout, { recursive: true, force: true });
+  }
+});
+
+
+test('model delivery verification records both reviewer sessions and blocks a negative verdict', async () => {
+  const { checkout, paths, specialists } = fixture();
+  try {
+    const adapters = configured(checkout, paths, []);
+    let block = false;
+    adapters.verify = createModelDeliveryVerification({
+      families: ['codex', 'claude'],
+      async provider(family, request) {
+        const { executions, evidence } = JSON.parse(request.split('\n').at(-1)!);
+        assert.equal(executions[0].status, 'integrated');
+        assert.equal(executions[0].launcher, undefined);
+        assert.equal(evidence['src/app.ts'], 'export {};');
+        const blockers = block && family === 'claude' ? ['Missing behavior'] : [];
+        return {
+          launcher: `approved:${family}`, sessionId: `session-${family}`,
+          output: JSON.stringify({ passed: !blockers.length, blockers }),
+        };
+      },
+      async evidence() { return { 'src/app.ts': 'export {};' }; },
+    });
+    const result = await runEvidenceGatedPipeline(input(checkout, specialists), adapters);
+    assert.deepEqual(result.verificationReceipts.map(({ sessionId }) => sessionId), ['session-codex', 'session-claude']);
+    block = true;
+    await assert.rejects(runEvidenceGatedPipeline(input(checkout, specialists), adapters), /Missing behavior/);
+  } finally {
     rmSync(checkout, { recursive: true, force: true });
   }
 });

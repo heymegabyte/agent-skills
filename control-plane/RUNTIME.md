@@ -120,3 +120,11 @@ For a dedicated local Git checkout, pass `materializeLocalOpenSpec` from
 `bin/local-openspec-materializer.ts` as the compiler's materializer. It
 commits only new approved artifacts using an isolated index, records the
 architect session in the commit, and fast-forwards the clean host checkout.
+
+Set `verify: createModelDeliveryVerification({ provider, families, evidence })`
+from `bin/model-delivery-verification.ts` to use independent model verdicts.
+Supply the host-approved evidence from the integrated revision. Each reviewer
+gets the same contract, acceptance exit codes, and approved evidence in a
+separate session. The coordinator retains the model family, session ID, and
+request and response digests. Configure two distinct families for independent
+or protected-risk runs.
