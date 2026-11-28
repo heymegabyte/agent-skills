@@ -128,12 +128,25 @@ export interface OpenSpecCompilerInput {
   conferenceExecution: Pick<ConferenceCapabilityPlan, 'mode' | 'independent' | 'limitation'>;
 }
 
+interface ReuseFinding {
+  destination: 'theme.tools' | 'install.doctor' | 'agent-skills';
+  proposalPath: string;
+  evidence: string[];
+}
+
+interface ReuseExtractionReceipt {
+  ownerSession: string;
+  reviewedContractDigest: string;
+  findings: ReuseFinding[];
+}
+
 export interface PipelineAdapters {
   research: ResearchRail;
   provider: ProviderLauncher;
   assignArchitect: (input: { changeId: string; prompt: string; hydratedBrief: HydratedArchitectBrief; evidenceDigest: string; roster: ReturnType<typeof selectConferenceRoster>; fixedPointDigest: string }) => Promise<ArchitectAssignmentReceipt>;
   compileOpenSpec: (input: OpenSpecCompilerInput) => Promise<{ artifacts: CompiledArtifact[]; nodes: ExecutionNode[] }>;
   scheduler: SchedulerAdapter;
+  extractReuse?: (input: { contract: FrozenContract; hydratedBrief: HydratedArchitectBrief }) => Promise<ReuseExtractionReceipt>;
   schedulerOptions?: Parameters<typeof executeFrozenContract>[2];
   verify: (input: { contract: FrozenContract; executions: NodeExecutionReceipt[] }) => Promise<{ passed: boolean; receipts: VerificationReceipt[]; blockers?: string[] }>;
 }
@@ -174,6 +187,7 @@ export interface PipelineResult {
   verificationReceipts: VerificationReceipt[];
   conferenceResolution: ConferenceResolutionReceipt;
   conferenceExecution: OpenSpecCompilerInput['conferenceExecution'];
+  reuseExtraction?: ReuseExtractionReceipt;
 }
 
 function requireAdapters(adapters: Partial<PipelineAdapters>): asserts adapters is PipelineAdapters {
@@ -321,7 +335,22 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
   state = advance(state, 'openspec-compilation', { contract: { artifacts: compiled.artifacts, nodes } });
   const contract = compileAndFreezeContract({ checkout: input.checkout, changeId: input.changeId, assignment, trustedAuthoritySourceDigest: input.trustedAuthoritySourceDigest, evidenceDigest, fixedPointDigest, unresolvedMaterialDeltas: [], frozenBaseRevision: input.sourceRevision, artifacts: compiled.artifacts, nodes });
   state = advance(state, 'contract-freeze', { contract });
-  const executions = await executeFrozenContract(contract, configured.scheduler, configured.schedulerOptions);
+  const [executionResult, reuseResult] = await Promise.allSettled([
+    executeFrozenContract(contract, configured.scheduler, configured.schedulerOptions),
+    Promise.resolve().then(() => configured.extractReuse?.({ contract: structuredClone(contract), hydratedBrief: structuredClone(hydratedBrief) })),
+  ]);
+  if (executionResult.status === 'rejected') throw executionResult.reason;
+  if (reuseResult.status === 'rejected') throw reuseResult.reason;
+  const executions = executionResult.value;
+  const reuseExtraction = reuseResult.value;
+  if (configured.extractReuse && (!reuseExtraction?.ownerSession.trim()
+    || reuseExtraction.reviewedContractDigest !== contract.contractDigest
+    || reuseExtraction.findings.some((finding) =>
+      !['theme.tools', 'install.doctor', 'agent-skills'].includes(finding.destination)
+      || !/^openspec\/changes\/[a-z0-9][a-z0-9-]*\/proposal\.md$/.test(finding.proposalPath)
+      || !finding.evidence.some((value) => value.trim())))) {
+    throw new Error('Reuse extraction receipt must identify the owner, reviewed contract, and evidence-backed OpenSpec findings');
+  }
   const latestByNode = new Map(executions.map((receipt) => [receipt.nodeId, receipt]));
   const failures = contract.nodes.flatMap(({ id }) => {
     const status = latestByNode.get(id)?.status;
@@ -329,7 +358,7 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
   });
   if (failures.length) throw new Error(`Swarm execution did not integrate every node: ${failures.join(', ')}`);
   const terminalExecutions = [...latestByNode.values()];
-  state = advance(state, 'swarm-execution', { executions });
+  state = advance(state, 'swarm-execution', { executions, reuseExtraction });
   state = advance(state, 'integration', { executions: terminalExecutions });
   const verification = await configured.verify({ contract, executions: terminalExecutions });
   if (!verification.passed || !verification.receipts.length) throw new Error(`Adversarial verification failed closed: ${(verification.blockers ?? ['missing verification receipts']).join('; ')}`);
@@ -352,6 +381,7 @@ export async function runEvidenceGatedPipeline(input: PipelineInput, configured:
   return {
     status: 'complete', state, contract, executions, verificationReceipts: verification.receipts, conferenceResolution,
     conferenceExecution,
+    reuseExtraction,
   };
 }
 

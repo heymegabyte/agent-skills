@@ -342,3 +342,32 @@ test('production compilation refuses to spread a change across implementation no
   await assert.rejects(() => runEvidenceGatedPipeline(input(checkout, specialists), adapters), /exactly one implementation node/);
   assert.ok(!calls.some((call) => call.startsWith('launch:')));
 });
+
+test('reuse extraction overlaps implementation and supplies OpenSpec findings before verification', async () => {
+  const { checkout, paths, specialists } = fixture();
+  const calls: string[] = [];
+  const adapters = configured(checkout, paths, calls);
+  const { launch } = adapters.scheduler;
+  let startExtraction!: () => void;
+  let startImplementation!: () => void;
+  const extractionStarted = new Promise<void>((resolve) => { startExtraction = resolve; });
+  const implementationStarted = new Promise<void>((resolve) => { startImplementation = resolve; });
+  adapters.scheduler.launch = async (...args) => {
+    startImplementation();
+    await extractionStarted;
+    return launch(...args);
+  };
+  adapters.extractReuse = async ({ contract }) => {
+    startExtraction();
+    await implementationStarted;
+    calls.push('reuse:captured');
+    return {
+      ownerSession: 'fixture-reuse-owner',
+      reviewedContractDigest: contract.contractDigest,
+      findings: [{ destination: 'agent-skills', proposalPath: 'openspec/changes/reuse-fixture/proposal.md', evidence: ['Shared verification pattern'] }],
+    };
+  };
+  const result = await runEvidenceGatedPipeline(input(checkout, specialists), adapters);
+  assert.equal(result.reuseExtraction?.findings[0].destination, 'agent-skills');
+  assert.ok(calls.indexOf('reuse:captured') < calls.indexOf('verify:adversarial'));
+});
